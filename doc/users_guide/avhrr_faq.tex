@@ -1,0 +1,534 @@
+\chapter{AVHRR SST Product FAQ}
+
+This list of frequently asked questions is designed to answer
+some of the more in-depth user questions received about AVHRR sea
+surface temperature products.  The NOAA CLASS archive
+(\url{http://www.class.noaa.gov}) holds a long series of
+CoastWatch AVHRR SST products from 1990 to the present.  The data
+is available in close to its original AVHRR LAC pixel resolution
+(1.1 km) in various projections depending on region including
+Mercator and polar stereographic.  CoastWatch IMGMAP (.cwf)
+products are available prior to November 10, 2003 as a set of
+high/medium/low resolution regions with various AVHRR channels,
+SST, cloud, and sensor angle data split into separate files for a
+given AVHRR pass.  CoastWatch HDF (.hdf) products are available
+from November 10, 2003 to the present as high resolution regions
+with all AVHRR channel data, derived data, and angles in one file
+for a given AVHRR pass.  The questions and answers below deal
+with both CWF and HDF files.
+
+\section{Data formats and archiving}
+
+\subsubsection*{What are all the various categories of CoastWatch data files on CLASS?}
+
+There are many CoastWatch products on CLASS to search through --
+following is a guide to the categories:
+\begin{description}
+
+\item[CW\_SWATH]~\\ CoastWatch HDF capture station swath files produced
+starting November 10, 2003 to the present.  The swath files contain
+data in the original AVHRR sensor scan projection before registration
+to a Mercator or polar stereographic map.  Swath files are equivalent
+to NOAA 1b HRPT data but with SST and cloud data computed, and AVHRR
+channels calibrated.
+
+\item[CW\_REGION]~\\ CoastWatch HDF regional node files produced
+starting November 10, 2003 to the present.  Each HDF region file
+contains data from the swath files registered to a map projection.
+
+\item[CWALA, CWCAR, CWGRL, CWGOM, CWHAW, CWNOE, CWSOE, CWWEC]~\\ CWF
+files produced before November 10, 2003 for the Alaska, Caribbean,
+Great Lakes, Gulf of Mexico, Hawaii, Northeast, Southeast, and West
+Coast regions.
+
+\end{description}
+
+\subsubsection*{Why do I get all sorts of error messages when I run cwinfo with the -v option?}
+
+The \shortoption{v} option for the cwinfo tool tells it to print the
+status of file identification.  The code steps through a number of
+file formats before it finds the one that works, prints the file
+information, and then exits with a zero status code (zero indicates
+nothing went wrong).  Leave off the \shortoption{v} option if you only
+want to see normal output and no error messages.  The tool prints the
+file identification tests as Java code {\em exceptions} just as a
+convenience so that programmers can check the line numbers in the code
+for where the identification failed, which is good for debugging, but
+not intended for the average user.
+
+\subsubsection*{When I run the CoastWatch tools on some files from CLASS, I get error messages.  Is there something wrong with the files?}
+
+We have had reports of data files obtained from the CLASS archive that
+are truncated or corrupt in some way.  Users report that CoastWatch
+tools crash, report error messages, or simply don't recognize the file
+format.  In some cases you can re-download the file and try accessing
+it again, because the error occurred during transmission from CLASS to
+your local machine.  CLASS can provided a digital signature file in
+order to check that the downloaded file was not corrupted during
+transmission (see the options in the CLASS shopping cart).  In other
+cases, the files are corrupt in the archive itself, and should be
+reported to CLASS as being invalid.
+
+\subsubsection*{Not all the HDF files I access contain an SST or cloud variable.  Why is that?}
+
+Some NOAA-12 data files covering Hawaii do not have SST and cloud
+computed because of a special arrangement with Hawaii data users who
+wanted AVHRR channel data when no NOAA-12 operational SST equation was
+available.  There are also some NOAA-15 data files covering various US
+regions that do not have SST and cloud due to a processing system bug
+that was corrected by reprocessing the data (although some files were
+missed by the reprocessing).  In general, all AVHRR SST products
+should contain SST and cloud data.  If they don't, report the data
+file to CLASS.
+
+\subsubsection*{Why does the graphics variable in some CWF files not have any data in it?}
+
+Some full regional panel CWF data files such as the ER region for the
+East Coast do not contain any graphics data.  This is due to a problem
+with the processing system for those files.  There is a {\em
+placeholder} for graphics data in CWF files which in some cases
+contains graphics for the smaller 512$\times$512 CWF files, but in
+some larger region CWF files it contains all zeroes.
+
+An easy way to create the missing graphics is to import a CWF SST file
+into HDF with cwimport (make sure to use \verb+--match sst+ so that
+the graphics aren't imported as well) and run the cwgraphics tool on
+it to create and insert coast/land/grid graphics into the HDF file.
+
+\section{SST computation}
+
+\subsubsection*{Can I use the AVHRR SST products for front analysis?}
+
+CoastWatch AVHRR SST data can be used for SST front detection and is
+useful for small areas due to its relatively high spatial resolution.
+See the follow paper for one such front detection algorithm:
+\begin{quote}
+\href{http://ams.allenpress.com/perlserv/?request=get-abstract&doi=10.1175%2F1520-0426%282000%29017%3C1667%3AEOFDMF%3E2.0.CO%3B2}{Ullman,
+D.S., and P.C. Cornillon, 2000: Evaluation of Front Detection Methods
+for Satellite-Derived SST Data Using In Situ Observations. {\it
+J. Atmos. Oceanic Technol.}, 17, 1667-1675.}
+\end{quote}
+
+\subsubsection*{Why are there so many SST algorithms for the CWF data 
+files on CLASS?}
+
+The different SST algorithms listed under ``Datatype'' on CLASS go
+hand-in-hand with the file naming convention -- each SST algorithm
+used has a different code as the last two characters before the {\file
+.cwf} extension.  To search for any available SST, select all of the
+possible SST products.  Generally only one SST product will have been
+produced for a given satellite pass, but various algorithms have been
+used over the time period of the CWF file production so they all
+appear in the Datatype check boxes.
+
+The naming of the SST algorithms may be confusing for new users.
+``MCSST'' stands for multi-channel but really {\em any} SST algorithm
+used by CoastWatch uses multiple channels to compute the SST.
+Sometimes SST is called "moisture corrected" because that's how {\em
+all} of the SST algorithms work -- they generally use channel 4 and
+correct it for moisture in the atmosphere using thermal channel
+difference terms ($ch_4 - ch_5$, $ch_3 - ch_5$, $ch_3 - ch_4$), either
+in a linear combination or non-linear combination.  The most accurate
+algorithm and coefficients to run at a given time is determined by
+NESDIS researchers who call it the ``operational algorithm'' which
+changes from satellite to satellite and time period to time period.
+
+The results of an SST data search on CLASS should return a single SST
+product file per satellite pass whose data is SST -- only advanced
+users comparing AVHRR channel data to SST results should be concerned
+with which algorithm was used, or those who need to provide such
+details with a publication.
+
+As an added note, CoastWatch HDF files are not searchable by SST
+algorithm because only one SST algorithm is available per region: the
+most accurate one according to comparison with buoy measurements.  HDF
+products contain SST in the {\file sst} HDF variable, and the SST
+algorithm used is documented by the {\file sst\_equation} attribute
+attached to the variable.  Some older HDF files may be missing this
+attribute due to a bug in the processing software.
+
+\subsubsection*{What happens when the solar terminator passes close to the center of a scene, which SST algorithm is used?}
+
+NOAA series polar orbiting satellites (for example NOAA-14,
+NOAA-15, NOAA-16 and so on) are launched into a sun synchronous polar
+orbit which results in the satellite passing over low and mid latitude
+regions at roughly the same time every day (as opposed to polar
+regions where it passes over every 100 minutes).  That time is
+initially set up to be once for daytime (sunlight hours) and once for
+nighttime (complete darkness).  Some satellites such as NOAA-15 have
+slipped over time and pass over a region when the region is partially
+lit and partially dark because the sun has set and the satellite is
+viewing the solar terminator.  In these cases, the SST algorithm used
+is switched between a daytime algorithm and a nighttime algorithm
+depending on the sun angle at each pixel.  For CoastWatch data, either
+in CWF or HDF format, the algorithm is switched when the solar zenith
+angle is 85$^{\circ}$.  For $sz \leq 85^{\circ}$, the pixel undergoes a
+daytime SST algorithm, and for $sz > 85^{\circ}$ a nighttime SST
+algorithm.  Note that the cloud masking algorithm (mentioned below)
+uses a different threshold: 80$^{\circ}$ rather than 85$^{\circ}$.
+
+\subsubsection*{Why can I see a discontinuity in the SST values in some mixed day/night scenes?}
+
+See the question above.  When the SST algorithm switches in the middle
+of a mixed day/night scene, the SST values computed often show a
+slight discontinuity at the threshold because the different algorithms
+use different coefficients and possibly use different thermal AVHRR
+channels.  The discontinuity is more pronounced in cloudy data, data
+that should be masked anyway.
+
+\section{Cloud masking}
+
+\subsubsection*{What cloud mask tests were used for day and night scenes?}
+
+The cloud mask tests are different for day and night as follows:
+\begin{description}
+
+\item[Daytime]~\\
+\begin{tabular}{ll}
+Bit 1: & Reflective Gross Cloud Test\\
+Bit 2: & Reflectance Uniformity Test\\
+Bit 3: & Reflectance Ratio Cloud Test\\
+Bit 4: & Channel 3 Albedo Test\\
+Bit 5: & Thermal Uniformity Test\\
+Bit 6: & Four Minus Five Test\\
+Bit 7: & Thermal Gross Cloud Test
+\end{tabular}
+
+\item[Nighttime]~\\
+\begin{tabular}{ll}
+Bit 1: & Thermal Gross Cloud Test \\
+Bit 2: & Thermal Uniformity Test\\
+Bit 3: & Uniform Low Stratus Test\\
+Bit 4: & Four Minus Five Test\\
+Bit 5: & Cirrus Test\\
+Bit 6: & Channel 3B Albedo Test (CLAVR-x, HDF only)\\
+Bit 7: & Channel 3B Albedo Uniformity Test (CLAVR-x, HDF only)
+\end{tabular}
+
+\end{description}
+where bit 1 is the least significant bit, and bit 8 is the most
+significant.  The CWF data files use only CLAVR-1 cloud mask tests as
+described in:
+\begin{quote}
+\href{http://ams.allenpress.com/perlserv/?request=get-abstract&doi=10.1175%2F1520-0426(1999)016%3C0656:SBAIEO%3E2.0.CO%3B2}{Stowe,
+L.L., P.A. Davis, and E.P. McClain, 1999: Scientific Basis and Initial
+Evaluation of the CLAVR-1 Global Clear/Cloud Classification Algorithm
+for the Advanced Very High Resolution Radiometer. {\it
+J. Atmos. Oceanic Technol.}, 16, 656-681.}
+\end{quote}
+The HDF files use mainly CLAVR-1 tests but also two CLAVR-x tests at
+night, described in:
+\begin{quote}
+\href{http://spiedl.aip.org/getabs/servlet/GetabsServlet?prog=normal&id=PSISDG005658000001000292000001&idtype=cvips&gifs=yes}{Jelenak,
+A. and A.K. Heidinger: Validation of CLAVR-x cloud detection over
+ocean using AVHRR GAC sea surface temperature.  Proceedings of SPIE --
+Volume 5658 Applications with Weather Satellites II, W. Paul Menzel,
+Toshiki Iwasaki, Editors, January 2005, pp. 292-298.}
+\end{quote}
+and have modified versions of the RGCT, RUT, and RRCT during the day
+that take advantage of CLAVR-x style thresholds rather than static
+thresholds for these tests.
+
+\subsubsection*{What happens with the cloud mask when a scene contains the solar terminator?}
+
+For data users interested in SST masking, the intended use for the
+cloud mask data is that regardless of scene time (day, night, or mixed
+day/night), the cloud mask should be treated as zero $=$ clear,
+non-zero $=$ cloudy.  If a scene contains the solar terminator then
+the set of cloud mask tests is switched at a solar zenith angle of
+80${^{\circ}}$, but the zero/non-zero rule still applies.  If you need
+more information about exactly which tests were used at each pixel,
+you can use the solar zenith angle data for the pixel.  For $sz \leq
+80^{\circ}$, the pixel has daytime cloud mask tests, and for $sz >
+80^{\circ}$ it has nighttime tests (although see the answer to the
+next question below about cloud test bit mixing).
+
+The CWF and HDF files have the same behaviour with respect to cloud
+mask test switching.  The HDF files always contain the solar zenith
+angle data for day or mixed day/night scenes, but are missing the
+solar zenith angle for night scenes to decrease the file size, and
+because solar zenith angle data is largely useless at night.  CWF SST
+and cloud mask data files may in some cases be accompanied by
+corresponding solar zenith angle files (datatype ZA on CLASS) but not
+always as their production was based on the data requirements at the
+time.  In most cases the scene time of CWF files and hence which set
+of cloud mask tests were used can be determined from the scene time
+output line from the cwinfo tool.
+
+\subsubsection*{Why can I see a discontinuity in the cloud mask data in some mixed day/night scenes?}
+
+See the question above for a partial explanation.  A different set of
+cloud mask tests are used for day pixels versus night pixels, so the
+cloud mask data pixels have different bits set depending on which side
+of the discontinuity they lie.  There is no one-to-one correspondence
+between day and night cloud tests.
+
+In addition to a cloud mask data discontinuity at the solar zenith, in
+some cases the change from day to night tests is not ``clean'', rather
+there are some pixels on the day side of the $sz = 80^{\circ}$ line
+that appear to have bits set the same as the night side of the line
+and vice-versa.  There are two issues that contribute to this:
+\begin{enumerate}
+
+\item The solar zenith angles are rounded to the nearest 1/100th of a
+degree when written to an HDF file (or either 1/100th or 1/128th for a
+CWF file depending on the compression used) so a few pixels with
+values of, for example, 80.003$^{\circ}$ will be rounded down to
+80$^{\circ}$ even though they underwent processing with the nighttime
+cloud tests.
+
+\item The cloud tests in some cases use neighborhood functions.  The
+uniformity tests use a 2$\times$2 box of data pixels to the right and
+below a given pixel in the array to check for a condition being true,
+and the result of the uniformity test flags all pixels in the
+2$\times$2 box with the test results, regardless of whether all those
+pixels are day or night.  Both day and night have uniformity tests, so
+the results of uniformity tests at the day/night boundary are mixed.
+The mixing is generally acceptable because the results are intended to
+be used for SST masking, not cloud type evaluation and the mixing only
+occurs in cloudy conditions, not clear SST conditions.
+
+\end{enumerate}
+
+\section{Navigation correction}
+
+\subsubsection*{What does navigation correction actually do, rewrite all the data in the file?}
+
+No, it only adds metadata to the file header to advise the CoastWatch
+Utilities software of how to read the data.  Think of navigation
+correction like this.  The file metadata says ``this file starts at a
+certain latitude/longitude and has a certain number of rows, columns,
+and pixel size''.  That metadata sets the physical area for the file
+and cannot be changed by the navigation correction.  Performing a
+navigation correction on the file sets up extra metadata in the header
+that says ``for this variable (for example SST), when the user
+requests the pixel data at (0,0), give them the data from
+(0+$x$,0+$y$)'' where $x$ and $y$ are the navigation correction
+offsets.
+
+\subsubsection*{Have the CoastWatch products on CLASS been autonavigated to correct the coastlines, and if so how accurate is the navigation?}
+
+The CW\_REGION and CW\_SWATH files have been autonavigated, but the
+older CWF files listed under other regional node categories have not.
+The autonavigation is accurate to $\pm$1 pixel when it runs
+successfully, which is about 90\% of the time.  If navigation accuracy
+is a major concern, products should be checked by hand and corrected
+if needed.  Starting in 2007, both swath and mapped HDF products
+contain two extra global HDF attributes to indicate the
+success/failure of the autonavigation algorithm: {\file
+autonav\_performed} which indicates {\file true} or {\file false}, and
+{\file autonav\_quality} which is an integer attribute written when
+the autonavigation is successful to give an indication of the quality
+of the navigation as low (0), medium (1), or high (2).
+
+\subsubsection*{Was the cwautonav tool used for autonavigating the 2003 and later HDF files?}
+
+No, the CoastWatch data processing system for AVHRR uses the SeaSpace
+TeraScan software for auto-navigation, which employs a similar
+algorithm to cwautonav.  The cwautonav tool was added to the
+CoastWatch software in 2004, mainly to aid users in working with the
+older CWF data files.
+
+\subsubsection*{Is the autonavigation performed by the CoastWatch AVHRR processing system more accurate than cwautonav?}
+
+Yes, the best spatial accuracy is achieved by correcting navigation
+problems during HDF file production rather than using cwautonav after
+production.  The source of most navigation errors with NOAA satellites
+is an inaccuracy in the on-board clock and an uncertainty in the roll
+of the satellite.  Those errors translate respectively to a shift in
+the scan line direction and sample direction when viewing the image
+data in its original sensor scan geometry.  The AVHRR processing
+system makes the correction while in sensor scan geometry, and then
+registers the data to a map projection.  Once in a map projection, you
+cannot correct the navigation perfectly using a simple x and y shift,
+except in small areas.  Generally CoastWatch regional data files cover
+only small areas of about 500-1000 km in radius, so correcting with an
+x and y shift works well enough in most cases.
+
+\subsubsection*{How can I perform autonavigation of the pre-2003 CWF files?}
+
+The best way to perform navigation of CWF files is to import multiple
+CWF files to an HDF file with cwimport, then run the cwautonav tool on
+the new HDF file.  That way, you only have to run the navigation once
+and the results are applied to all the variables in the HDF file
+selected for navigation (see the question below about variables that
+should be navigated).  Use the cwautonav command line tool with the
+default options.  The key to successful autonavigation is to choose
+many navigation boxes with feature-rich coastline segments (rather
+than a flat coastline with no curves).  Use AVHRR visible channel 2
+for navigation when possible, as channel 2 data provides the most
+contrast between land and water.  At night, you can fall back on AVHRR
+channel 4, channel 3, or SST since SST is very similar to channel 4.
+
+\subsubsection*{After manually navigating a CoastWatch data file in CDAT, how can I access the navigation offsets?}
+
+For CWF files that have been manually navigated, there is no way to
+extract the navigation metadata directly from the file using the most
+recent version (3.x) of the CoastWatch Utilities.  You {\em can} use
+\href{http://coastwatch.noaa.gov/cw_cwfv2.html}{version 2.3} of the
+package, by running the cwfatt tool (see the user's guide in that
+version) and ask it to print the {\file horizontal\_shift} and {\file
+vertical\_shift} attributes.  You can then apply them to other CWF
+files from the same date/time using the cwfnav tool (also in the
+version 2.3 package) as shown by example in the user's guide.  Be
+careful about mixing version 2 (cwfnav) and version 3 (cwnavigate)
+command-line navigation tools -- they use different conventions for
+the navigation offset.  A positive translation offset in the version 2
+tool is a negative translation offset in the version 3 tool and
+vice-versa.  However once the offsets are set (using either the old or
+new tools), CDAT will know how to interpret them correctly.  Note that
+navigating a CWF file and then converting to HDF to get the navigation
+metadata won't work -- when the import to HDF is done, the navigation
+is taken into account by shifting the image data, so the HDF file will
+not contain the navigation metadata.
+
+For HDF files that have been manually navigated, you can extract the
+navigation metadata using the hdatt tool by asking for the {\file
+nav\_affine} attribute for a specific variable since HDF files stored
+navigation metadata individually for each variable.  See
+\autoref{metadata} for a description of HDF navigation metadata.  An
+alternative to hdatt is the hdp command in the
+\href{http://www.hdfgroup.org}{HDF Group} software.
+
+\subsubsection*{Why do the HDF files contain floating-point navigation corrections, but CWF files only contain integer corrections?}
+
+The floating-point values in the HDF files are a feature of the new
+file format.  CWF files can only contain integer-valued translation
+offsets, where as HDF files can contain float-valued affine transform
+coefficients which are much more flexible and can represent rotation,
+scale, shear, and translation transformations.  The CoastWatch
+Utilities software uses whatever offsets it can find in the file and
+converts them internally to floats.  When writing navigation
+corrections to CWF files, the translation offsets are rounded to
+integers and an error occurs if the affine transform represents
+anything but a simple translation.
+
+\subsubsection*{Should navigation corrections in CDAT, cwautonav, and cwnavigate be applied to all variables in an HDF file?}
+
+No, only certain variables should have navigation corrections applied,
+namely those from the AVHRR sensor and sensor data derived variables.
+Graphics, solar zenith, satellite zenith, and relative azimuth angles
+should {\em not} be corrected.  AVHRR channel data, SST, and cloud
+{\em should} be corrected.  If you're using the command line tools,
+you can use the following option to match only the sensor type data:
+{\file -{-}match "avhrr\_ch.*|sst|cloud"}.
+
+\subsubsection*{Are there any other autonavigation algorithms that I can use for CoastWatch data?}
+
+Randy Ferguson et. al. (NOAA, National Centers for Coastal Ocean
+Science, Center for Coastal Fisheries and Habitat Research) have
+written a research paper on their experience with automatic
+registration of daytime CoastWatch SST data:
+
+\href{http://www.asprs.org/publications/pers/2006journal/june/abstracts.html}{Ferguson. R.L.,
+C. Krouse, M. Patterson, and J.A. Hare.  Automated Thematic
+Registration of NOAA, CoastWatch, and AVHRR Images.  {\it
+Photogrammetric Engineering \& Remote Sensing.} Vol. 72, No. 6,
+June 2006, pp. 677-685.}
+
+\section{Map projections}
+
+\subsubsection*{What is the spheroid used for the CWF data files?}
+
+The answer is complicated.  Running the cwinfo tool on a CWF file
+reveals that the files use a WGS-72 spheroid which has a semi-major
+axis of 6378135 m and inverse flattening of 298.26.  The reality is
+that the CWF files were registered to a Mercator or polar
+stereographic map projection using a sphere of radius 6371200 m, but
+the NOAA 1b file (the source of the AVHRR data) used a WGS-72 spheroid
+for the geographic coordinates with geodetic latitudes but the
+geodetic latitudes were not converted (datum shifted) to geocentric
+when the data was registered.  If the data is regarded as having a
+spherical earth model when imported into a GIS system, the coastlines
+at all points in the image are completely wrong in the north-south
+direction.  However assuming WGS-72, you'll find that if you match the
+center points of the CWF files based on coastlines, the image data
+will match the coastlines reasonably well except at the corners and
+edges where a 1-2 pixel error occurs.
+
+\subsubsection*{Are the land mask and other graphics the same for all data files?}
+
+No.  All the HDF files for a given region (for example the ER region)
+have the same land mask and graphics in each file because they all
+cover the same physical area.  However, when the switch from CWF files
+to HDF files occurred in 2003, the map projections were upgraded to
+use a true WGS-84 spheroid rather than the mixed spheroid model as
+discussed above.  Thus, CWF files all have a slightly different land
+mask and graphics data compared to their corresponding HDF files,
+because they represent a slightly different physical area.  This means
+that pixel (0,0) in a CWF file is not at the same latitude/longitude
+as pixel (0,0) in the corresponding HDF file.
+
+\subsubsection*{Which CWF file regions correspond most closely to the new HDF file regions?}
+
+The rough correspondence is as follows (note that some HDF regions
+have no corresponding CWF region):
+
+\begin{tabular}{ll}
+{\bf HDF region} & {\bf CWF node and region} \\
+
+Alaska North & CWALA Northern Alaska \\
+Alaska Sitka & CWALA Vancouver \\
+Alaska South & CWALA Southern Alaska \\
+Alaska West & CWALA Western Alaska \\
+Caribbean East & CWCAR East Caribbean Synoptic \\
+Caribbean West & CWCAR West Caribbean Synoptic \\
+East Coast Bermuda & none \\
+East Coast North & CWNOE Full Regional Panel \\
+East Coast South & CWSOE Full Regional Panel \\
+Great Barrier Reef & none \\
+Great Lakes & CWGRL Full Regional Panel \\
+Great Salt Lake & none \\
+Gulf of Mexico & CWGOM Full Regional Panel \\
+Hawaii & CWHAW Synoptic \\
+West Coast Acapulco & none \\
+West Coast Baja & CWWEC Baja Mexico Synoptic \\
+West Coast North & CWWEC Northwest \\
+West Coast South & CWWEC Southwest
+
+\end{tabular}
+
+\subsubsection*{When converting the Alaska HDF products to an ArcGIS binary grid, why do I end up with the data looking like it's on the wrong side of the earth?}
+
+The CoastWatch HDF files and ArcGIS use different conventions for
+specifying the rotation angle of the central meridian.  For the Alaska
+products, use the following projection string:
+\begin{verbatim}
+PROJCS['WGS_1984_Stereographic_North_Pole',
+  GEOGCS['GCS_WGS_1984',
+    DATUM['D_WGS_1984',SPHEROID['WGS_1984',6378137.0,298.257223563]],
+    PRIMEM['Greenwich',0.0],
+    UNIT['Degree',0.0174532925199433]
+  ],
+  PROJECTION['Stereographic_North_Pole'],
+  PARAMETER['False_Easting',<insert value>],
+  PARAMETER['False_Northing',<insert value>],
+  PARAMETER['Central_Meridian',<insert value>],
+  PARAMETER['Standard_Parallel_1',60.0],
+  UNIT['Meter',1.0]
+]
+\end{verbatim}
+and insert values for the central meridian, false easting, and false
+northing.  The central meridian can be determined from the center
+point longitude reported by running {\file cwinfo -t}, and the false
+easting and northing can be computed from the {\file .hdr} file values
+for {\file xllcorner} and {\file yllcorner} as follows:
+\[
+  \left[ \begin{array}{c}
+           false\;east \\
+           false\;north
+         \end{array}  
+  \right]
+  = 
+  \left[ \begin{array}{cc}
+           1-\cos t & -\sin t \\
+           \sin t & 1-\cos t 
+         \end{array}
+  \right]
+  \left[ \begin{array}{c}
+           xllcorner \\
+           yllcorner
+         \end{array}
+  \right]
+\]
+where $t$ is the central meridian angle.

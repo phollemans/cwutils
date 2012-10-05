@@ -1,0 +1,94 @@
+<html>
+
+<head>
+  <title>CoastWatch Data Analysis Tool Help: Data files</title>
+  <link rel="stylesheet" type="text/css" href="helpstyle.css">
+</head>
+
+<body>
+
+<h1>CoastWatch Data Analysis Tool Help: Data files</h1>
+
+<p>In this section:</p>
+<ul>
+  <li><a href="#opening">Opening and closing</a></li>
+  <li><a href="#info">File information</a></li>
+  <li><a href="#formats">Supported file formats</a></li>
+</ul>
+
+<a name="opening"></a>
+<h2>Opening and closing</h2>
+
+<p>Open a new file using the <span class="gui">File|Open</span>
+menu item or by clicking the <span class="gui">Open</span> button
+on the tool bar:</p>
+
+<p class="centered"><img src="cdat_files.png"></p>
+
+<p>Once the file has been selected, you must choose the variables
+to view from the list of available variables.  More than one
+variable may be selected using Ctrl-click (&#8984;-click on the
+Mac) or Shift-click.  Click <span class="gui">OK</span>, and a
+new tab is added to the file tabs and the first variable is shown
+in the data view.  An open file may be closed by clicking the
+file tab and selecting <span class="gui">File|Close</span> from
+the menu or by clicking <span class="gui">Close</span> on the
+tool bar.</p>
+
+<a name="info"></a>
+<h2>File information</h2>
+
+<p>Once open, a variety of file information may be displayed
+using the <span class="gui">Tools|File Information</span> menu
+item.  Details include the satellite and sensor (or data source),
+date and time, projection information, spheroid, data origin,
+file format, variable names and attributes, and earth location
+boundary data.</p>
+
+<a name="formats"></a>
+<h2>Supported file formats</h2>
+
+<p>CDAT currently supports the following file formats:</p>
+
+<dl>
+
+  <dt>CoastWatch IMGMAP</dt>
+
+  <dd>CoastWatch format (.cwf) files that contain AVHRR SST, cloud,
+  channel, angle, and graphics data.  These files were produced by
+  CoastWatch up to 2004.</dd>
+
+  <dt>CoastWatch HDF and netCDF</dt>
+
+  <dd>HDF 4 and netCDF 3 with CoastWatch HDF or CF metadata (.hdf,
+  .nc).  CF metadata support is still experimental.</dd>
+
+  <dt>SeaSpace HDF</dt>
+
+  <dd>SeaSpace TeraScan files that have been converted to HDF using
+  tdftohdf.  Only the <span class="code">rectangular</span>, <span
+  class="code">polarstereo</span>, <span class="code">mercator</span>,
+  and <span class="code">emercator</span> projections are supported,
+  along with <span class="code">sensor_scan</span> if latitude and
+  longitude angles have been included in the file.</dd>
+
+  <dt>NOAA 1b</dt>
+
+  <dd>NOAA 1b AVHRR data, format versions 1 through 5, GAC or LAC
+  resolutions, 8-bit, 10-bit, and 16-bit sensor word sizes with or
+  without archive header.</dd>
+
+  <dt>OPeNDAP</dt>
+
+  <dd>OPeNDAP datasets with CoastWatch HDF or CF metadata, map
+  projection files only.  CF metadata support is still experimental.
+  Swath datasets and <span class="code"> RasterPixelIsPoint</span>
+  mode are not supported. </dd>
+
+</dl>
+
+<p><a href="cdat_index.html">Back to overview</a></p>
+
+</body>
+
+</html>

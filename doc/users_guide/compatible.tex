@@ -1,0 +1,108 @@
+\chapter{Data Format Compatibility}
+\label{compatible}
+
+Many of the tools automatically detect the input file format and
+perform the same operation for a number of different formats, for
+example CoastWatch IMGMAP files and CoastWatch HDF files. The
+following table shows the file format compatibility of the various
+tools: \\
+\\
+\begin{tabular}{|l|p{5cm}|p{5cm}|}
+  \hline 
+
+  Tool & Input formats & Output formats \\ \hline 
+
+  cdat & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & CWHDF, Binary, Text,
+  ArcGIS, PNG, GIF, JPEG, PDF, GeoTIFF \\ \hline
+
+  cwangles & CWHDF/NC & -- \\ \hline
+
+  cwautonav & CWHDF/NC, CWF & -- \\ \hline
+
+  cwcomposite & CWHDF/NC, CWF, TSHDF, OPeNDAP & CWHDF \\ \hline
+
+  cwcoverage & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & PNG \\ \hline
+
+  cwdownload & -- & -- \\ \hline
+
+  cwexport & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & Binary, Text, ArcGIS \\
+  \hline
+
+  cwgraphics & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & CWHDF \\ \hline
+
+  cwimport & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & CWHDF \\ \hline
+
+  cwinfo & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & -- \\ \hline
+
+  cwmaster & CWHDF/NC, CWF, TSHDF & CWHDF \\ \hline
+
+  cwmath & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & CWHDF \\ \hline
+
+  cwnavigate & CWHDF/NC, CWF & -- \\ \hline
+
+  cwregister & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & CWHDF \\ \hline
+
+\end{tabular}
+
+\begin{tabular}{|l|p{5cm}|p{5cm}|}
+  \hline
+
+  Tool & Input formats & Output formats \\ \hline 
+
+  cwrender & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & PNG, GIF, JPEG, PDF,
+  GeoTIFF \\ \hline
+
+  cwsample & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & Text \\ \hline
+
+  cwstats & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & -- \\ \hline
+
+  cwstatus & -- & -- \\ \hline
+
+\end{tabular}
+
+where:
+
+\begin{description}
+
+  \item[CWHDF/NC] HDF 4 and netCDF 3 with CoastWatch HDF or CF
+  metadata (.hdf, .nc).  CF metadata support is still experimental.
+
+  \item[CWF] CoastWatch format (.cwf) files that contain AVHRR SST, cloud,
+  channel, angle, and graphics data.  These files were produced by
+  CoastWatch up to 2004.
+
+  \item[TSHDF] SeaSpace TeraScan files that have been converted to HDF
+  using tdftohdf.  Only the {\tt rectangular}, {\tt polarstereo}, {\tt
+  mercator}, and {\tt emercator} projections are supported, along with
+  {\tt sensor\_scan} if latitude and longitude angles have been
+  included in the file.
+
+  \item[N1B] NOAA 1b AVHRR data, format versions 1 through 5, GAC or LAC
+  resolutions, 8-bit, 10-bit, and 16-bit sensor word sizes with or
+  without archive header.
+
+  \item[OPeNDAP] OPeNDAP datasets with CoastWatch HDF or CF metadata,
+  map projection files only.  CF metadata support is still
+  experimental.  Swath datasets and {\tt RasterPixelIsPoint} mode are
+  not supported.
+
+  \item[Binary] Raw binary format.  See individual manual pages for a
+  description of the binary file contents.
+
+  \item[Text] Standard ASCII text format.  See individual manual pages
+  for a description of the text file contents.
+
+  \item[ArcGIS] ESRI ArcGIS binary grid format (32-bit IEEE floats) with
+  accompanying header file.
+
+  \item[PNG] Portable Network Graphics with optional world file.
+
+  \item[GIF] Graphics Interchange Format with optional world file.
+
+  \item[JPEG] Joint Photographic Experts Group with optional world file.
+
+  \item[PDF] Adobe Portable Document Format
+
+  \item[GeoTIFF] Tagged Image File Format with georeferencing tags.
+
+\end{description}

@@ -1,0 +1,503 @@
+////////////////////////////////////////////////////////////////////////
+/*
+     FILE: DataColorScale.java
+  PURPOSE: A class to render a color scale with numbers and tick marks.
+   AUTHOR: Peter Hollemans
+     DATE: 2002/09/26
+  CHANGES: 2004/02/06, PFH, modified for better log enhancement behaviour
+           2004/03/31, PFH
+            - added getLinearTickInterval() method
+            - modified annotation label when no units available
+           2004/10/08, PFH, fixed to initialize stroke before drawing
+           2004/10/12, PFH, modified for step enhancement problems
+           2005/05/30, PFH, removed dependency on passing DataVariable object
+           2006/04/03, PFH, changed rectangle plotting to line plotting
+           2006/06/20, PFH, modified to improve log scale labels
+           2006/11/20, PFH, modified to use GraphicsServices.drawRect()
+           2012/08/13, PFH, added setTickLabels
+
+  CoastWatch Software Library and Utilities
+  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+
+*/
+////////////////////////////////////////////////////////////////////////
+
+// Package
+// -------
+package noaa.coastwatch.render;
+
+// Imports
+// -------
+import java.awt.*;
+import java.text.*;
+import java.util.*;
+import java.util.List;
+import java.awt.image.*;
+import noaa.coastwatch.util.*;
+
+/**
+ * A color scale annotates a data enhancement plot with a scale of
+ * colors from a color palette and tick marks at regular intervals for
+ * the data values.  The data variable name and units are also printed
+ * along side the scale.
+ */
+public class DataColorScale 
+  extends Legend {
+
+  // Constants
+  // ---------
+  /** The default number of desired tick marks. */
+  private final static int TICKS = 10;
+
+  /** The default scale width. */
+  private final static int SCALE_WIDTH = 20;
+
+  /** The default tick size. */
+  private final static int TICK_SIZE = 5;
+
+  // Variables
+  // ---------
+  /** The color palette used for the scale. */
+  private Palette palette;
+
+  /** The enhancement function for normalized values. */
+  private EnhancementFunction function;
+
+  /** The text to use for scale annotation. */
+  private String annotation;
+
+  /** An array of tick label strings. */
+  private String[] labels;
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Sets the tick labels.
+   * 
+   * @param labels the new tick labels to use.  Each label is 
+   * a number formatted to a string value/.
+   */
+  public void setTickLabels (
+    String[] labels
+  ) {
+  
+    this.labels = labels;
+    
+  } // setTickLabels
+
+  ////////////////////////////////////////////////////////////
+
+  public void render (
+    Graphics2D g,
+    int x,
+    int y
+  ) {
+
+    // Initialize
+    // ----------
+    Dimension size = getSize(g);
+    int x1, y1, x2, y2;
+    int scaleHeight = size.height - 4*SPACE_SIZE - 2;
+    double[] range = new double[] {function.getInverse (0), 
+      function.getInverse (1)};
+    boolean reverse = (range[0] > range[1]);
+    g.setStroke (DEFAULT_STROKE);
+
+    // Draw background
+    // ---------------
+    if (back != null) {
+      g.setColor (back);
+      g.fillRect (x, y, size.width, size.height);
+      g.setColor (fore);
+      GraphicsServices.drawRect (g, new Rectangle (x, y, size.width, 
+        size.height));
+    } // if
+
+    // Draw scale colors
+    // -----------------
+    x1 = x + SPACE_SIZE*2 + 1;
+    x2 = x1 + SCALE_WIDTH - 1;
+    IndexColorModel model = palette.getModel();
+    int colors = model.getMapSize();
+    for (int i = 0; i < scaleHeight; i++) {
+      y1 = (y + SPACE_SIZE*2 + 1) + (scaleHeight-1-i);
+      y2 = y1;
+      double norm = (double) i / (scaleHeight-1);
+      if (function instanceof StepEnhancement)
+        norm = function.getValue (function.getInverse (norm));
+      if (reverse) norm = 1-norm;
+      int index = (int) Math.round (norm*(colors-1));
+      g.setColor (new Color (model.getRGB (index)));
+      g.drawLine (x1, y1, x2, y2);
+    } /* for */
+
+    // Draw scale border
+    // -----------------
+    g.setColor (fore);
+    GraphicsServices.drawRect (g, new Rectangle (x + SPACE_SIZE*2, 
+      y + SPACE_SIZE*2, SCALE_WIDTH+1, scaleHeight+1));
+
+    // Check for valid range
+    // ---------------------
+    if (Double.isNaN (range[0]) || Double.isNaN (range[1]) || 
+      range[0] == range[1]) return;
+
+    // Draw scale ticks
+    // ----------------
+    x1 = x2 + 2;
+    x2 = x1 + TICK_SIZE - 1;
+    int maxx = x2 + SPACE_SIZE;
+    boolean invert = (range[0] > range[1]);
+    EnhancementFunction tickFunction;
+    /** 
+     * Note that this next statement may only appear to work in
+     * testing because there is currently no way to set the reversal
+     * flag for StepEnhancement objects in cdat (and cwrender
+     * currently does not support step enhancements).
+     */
+    if (function instanceof StepEnhancement)
+      tickFunction = new LinearEnhancement (function.getRange());
+    else 
+      tickFunction = function;
+    for (int i = 0; i < labels.length; i++) {
+
+      // Draw tick
+      // ---------
+      double val = Double.parseDouble (labels[i]);
+      double norm = tickFunction.getValue (val);
+      if (reverse) norm = 1-norm;
+      y1 = y2 = (y + SPACE_SIZE*2 + scaleHeight) - 
+        (int) (norm * (scaleHeight-1));
+      g.drawLine (x1, y1, x2, y2);
+
+      // Draw label
+      // ----------
+      TextElement labelElement = new TextElement (labels[i], font,
+        new Point (x2 + SPACE_SIZE, y1), new double[] {0, 0.5}, 0);
+      labelElement.render (g, fore, null);
+      int endx = x2 + SPACE_SIZE + labelElement.getBounds(g).width;
+      if (endx > maxx) maxx = endx;
+
+      // Draw extra ticks
+      // ----------------
+      if (tickFunction instanceof LogEnhancement && i < labels.length-1) {
+        double nextVal = Double.parseDouble (labels[i+1]);
+        for (int j = 2; j < 10; j++) {
+          double betweenVal = val * j;
+          if (betweenVal >= nextVal) continue;
+          norm = tickFunction.getValue (betweenVal);
+          if (reverse) norm = 1-norm;
+          y1 = y2 = (y + SPACE_SIZE*2 + scaleHeight) - 
+            (int) (norm * (scaleHeight-1));
+          g.drawLine (x1, y1, x2, y2);
+        } // for
+      } // if
+
+    } //for
+
+    // Draw scale legend
+    // -----------------
+    x1 = maxx + SPACE_SIZE;
+    y1 = y + size.height/2;
+    TextElement annotationElement = new TextElement (annotation, font,
+      new Point (x1, y1), new double[] {0.5, 1}, 90);
+    annotationElement.render (g, fore, null);
+
+  } // render
+
+  ////////////////////////////////////////////////////////////
+
+  public Dimension getSize (
+    Graphics2D g
+  ) {
+
+    // Find longest label
+    // ------------------
+    String label = " ";
+    for (int i = 0; i < labels.length; i++) {
+      if (labels[i].length() > label.length())
+        label = labels[i];
+    } // for
+
+    // Create text bounds
+    // ------------------
+    TextElement labelElement = new TextElement (label, font, new Point(), 
+      null, 0);
+    Rectangle labelBounds = labelElement.getBounds(g);
+    TextElement annotationElement = new TextElement (annotation, font, 
+      new Point(), null, 90);
+    Rectangle annotationBounds = annotationElement.getBounds(g);
+
+    // Calculate width
+    // ---------------
+    Dimension size = new Dimension();
+    size.width = SPACE_SIZE*2 + 1 + SCALE_WIDTH + 1 + TICK_SIZE + SPACE_SIZE + 
+      labelBounds.width + SPACE_SIZE + annotationBounds.width + SPACE_SIZE*2;
+
+    // Calculate height
+    // ----------------
+    int requiredHeight = Math.max (labelBounds.height * labels.length * 2,
+      annotationBounds.height);
+    requiredHeight += SPACE_SIZE*4; 
+    if (preferred != null)
+      size.height = Math.max (preferred.height, requiredHeight);
+    else
+      size.height = requiredHeight;
+
+    return (size);
+
+  } // getSize
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Formats a log enhancement tick value for a label.
+   *
+   * @param exponent the exponent category for the tick as a
+   * power of ten.
+   * @param shortFormat the format flag, true to use exponential
+   * notation.
+   * @param value the value to format for the tick label.
+   *
+   * @return the formatted tick label string.
+   */
+  private static String formatLogValue (
+    int exponent,
+    boolean shortFormat,
+    double value
+  ) {
+
+    String pattern = (shortFormat ? "0E0" : exponent >= 0 ? "0" : "0.");
+    if (!shortFormat && exponent < 0) {
+      for (int j = exponent; j <= 0; j++) pattern += "#";
+    } // if
+    DecimalFormat format = new DecimalFormat (pattern);
+    return (format.format (value));
+
+  } // formatLogValue
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets an appropriate set of tick mark labels given the tick
+   * specifications.  This method works well for log enhancement
+   * scales.
+   *
+   * @param min the data value minimum.
+   * @param max the data value maximum.
+   *
+   * @return an array of formatted numbers as strings for the tick
+   * mark labels.
+   */
+  public static String[] getLogTickLabels (
+    double min,
+    double max
+  ) {
+
+    // Find min and max exponents
+    // --------------------------
+    int minExponent = (int) Math.floor (LogEnhancement.log10 (min));
+    int maxExponent = (int) Math.ceil (LogEnhancement.log10 (max));
+    boolean shortFormat = (minExponent < -3 || maxExponent > 3);
+
+    // Create labels
+    // -------------
+    int nticks = maxExponent - minExponent + 1;
+    List labels = new LinkedList();
+    for (int i = 0; i < nticks; i++) {
+      int exponent = minExponent + i;
+      double value = Math.pow (10, exponent);
+      String label;
+      if (value > max)
+        label = formatLogValue (exponent+1, shortFormat, max);
+      else if (value < min)
+        label = formatLogValue (exponent-1, shortFormat, min);
+      else
+        label = formatLogValue (exponent, shortFormat, value);
+      labels.add (label);
+    } // for
+
+    return ((String[]) labels.toArray (new String[] {}));
+
+  } // getLogTickLabels
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets an appropriate tick mark interval given the tick
+   * specifications.  This method works well for linear enhancement
+   * scales.
+   *
+   * @param min the data value minimum.
+   * @param max the data value maximum.
+   * @param desired the approximate number of desired ticks.
+   *
+   * @return the tick interval.
+   */
+  public static double getLinearTickInterval (
+    double min,
+    double max,
+    int desired
+  ) {
+
+    // Find best tick interval
+    // -----------------------
+    int[] bases = new int[] {1, 2, 5, 10, 20, 50};
+    double range = max-min;
+    int exp = (int) Math.floor (LogEnhancement.log10 (range)) - 1;
+    double ticks = range / (bases[0]*Math.pow(10,exp)) + 1;
+    int iticks = 0;
+    for (int i = 1; i < bases.length; i++) {
+      double newticks = range / (bases[i]*Math.pow(10,exp)) + 1;
+      if (Math.abs (newticks - desired) < Math.abs (ticks - desired)) { 
+        ticks = newticks;
+        iticks = i;
+      } // if
+    } // for
+    double interval = bases[iticks]*Math.pow(10,exp);
+
+    return (interval);
+
+  } // getLinearTickInterval
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets an appropriate set of tick mark labels given the tick
+   * specifications.  This method works well for linear enhancement
+   * scales.
+   *
+   * @param min the data value minimum.
+   * @param max the data value maximum.
+   * @param desired the approximate number of desired ticks.
+   *
+   * @return an array of formatted numbers as strings for the tick
+   * mark labels.
+   */
+  public static String[] getLinearTickLabels (
+    double min,
+    double max,
+    int desired
+  ) {
+
+    // Find best tick interval
+    // -----------------------
+    double interval = getLinearTickInterval (min, max, desired);
+
+    // Create decimal format
+    // ---------------------
+    double logint = LogEnhancement.log10 (interval);
+    int decimals = (int) (logint < 0 ? -Math.floor (logint) : 0);
+    String pattern = (decimals == 0 ? "0" : "0.");
+    for (int i = 0; i < decimals; i++) pattern += "#";
+    DecimalFormat format = new DecimalFormat (pattern);
+
+    // Nudge min and max
+    // -----------------
+    double newMin = Math.ceil ((min + Double.MIN_VALUE - 
+      interval)/interval)*interval;
+    double newMax = Math.floor ((max - Double.MIN_VALUE + 
+      interval)/interval)*interval;
+
+    // Create labels
+    // -------------
+    int nticks = (int) Math.round ((newMax - newMin)/interval) + 1;
+    List labelList = new ArrayList();
+    for (int i = 0; i < nticks; i++) {
+      double val = newMin + i*interval;
+      if (val < min || val > max) continue;
+      labelList.add (format.format (val));
+    } // for
+    String[] labels = new String[labelList.size()];
+    return ((String[]) labelList.toArray (labels));
+
+  } // getLinearTickLabels
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a data color scale with the specified parameters.  The
+   * font is set to the default font face, plain style, 12 point, the
+   * preferred size to none,  the foreground color is set to black,
+   * and the background color to none.
+   *
+   * @param function the enhancement function for translating between
+   * data values and normalized values.  The scale is drawn for
+   * normalized values in the range [0..1].
+   * @param palette the palette to use for scale colors.
+   * @param name the data variable name.
+   * @param units the data variable units.
+   */
+  public DataColorScale (
+    EnhancementFunction function,
+    Palette palette,
+    String name,
+    String units
+  ) {
+
+    this (function, palette, name, units, null, null, Color.BLACK, null);
+
+  } // DataColorScale constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a data color scale from the specified parameters.
+   *
+   * @param function the enhancement function for translating between
+   * data values and normalized values.  The scale is drawn for
+   * normalized values in the range [0..1].
+   * @param palette the palette to use for scale colors.
+   * @param name the data variable name.
+   * @param units the data variable units.
+   * @param dim the preferred scale dimensions, or null for none.
+   * @param font the font for variable name, units, and scale values, or 
+   * null for the default font face, plain style, 12 point.
+   * @param fore the foreground color for legend lines and annotations.
+   * @param back the background color, or null for none.
+   */
+  public DataColorScale (
+    EnhancementFunction function,
+    Palette palette,
+    String name,
+    String units,
+    Dimension dim,
+    Font font,
+    Color fore,
+    Color back
+  ) {
+
+    // Initialize variables
+    // --------------------
+    super (dim, font, fore, back);
+    this.palette = palette;
+    this.function = function;
+
+    // Create tick labels
+    // ------------------
+    double min = function.getInverse (0);
+    double max = function.getInverse (1);
+    if (min > max) { double tmp = min; min = max; max = tmp; }
+    if (function instanceof LogEnhancement)
+      labels = getLogTickLabels (min, max);
+    else
+      labels = getLinearTickLabels (min, max, TICKS);
+
+    // Create annotation string
+    // ------------------------
+    StringBuffer buffer = new StringBuffer();
+    buffer.append (name.toUpperCase());
+    if (!units.equals ("")) {
+      buffer.append (" (");
+      buffer.append (units);
+      buffer.append (")");
+    } // if
+    annotation = buffer.toString().replace ('_', ' ');
+
+  } // DataColorScale constructor
+
+  ////////////////////////////////////////////////////////////
+
+} // DataColorScale class
+
+////////////////////////////////////////////////////////////////////////

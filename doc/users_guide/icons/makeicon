@@ -1,0 +1,15 @@
+#!/bin/sh
+
+icon=$1
+if [ -z "$icon" ] ; then
+  echo "Usage: makeicon name"
+  exit 1
+fi
+icondir="/Users/phollema/Documents/Terrenus Projects/IconExperience/ix_ap_all/48x48/shadow"
+if [ ! -f "$icondir/$icon" ] ; then
+  echo "Icon '$icon' does not exist"
+  exit 1
+fi
+
+pngtopnm -mix -background=white "$icondir/$icon" | pnmtopng > $icon
+

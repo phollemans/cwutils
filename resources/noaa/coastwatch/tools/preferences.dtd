@@ -1,0 +1,25 @@
+<!-- 
+
+     FILE: preferences.dtd
+  PURPOSE: Defines the CoastWatch preferences format in XML.
+   AUTHOR: Peter Hollemans
+     DATE: 2004/05/17
+  CHANGES: 2005/02/04, PFH, added "general" element and enhancement functions
+           2006/11/03, PFH, added units attribute
+
+  CoastWatch Software Library and Utilities
+  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+
+-->
+
+<!ELEMENT preferences (enhancement*, general*)>
+<!ELEMENT enhancement EMPTY>
+<!ATTLIST enhancement variable CDATA #REQUIRED>
+<!ATTLIST enhancement palette CDATA #REQUIRED>
+<!ATTLIST enhancement min CDATA #REQUIRED>
+<!ATTLIST enhancement max CDATA #REQUIRED>
+<!ATTLIST enhancement function CDATA "linear">
+<!ATTLIST enhancement units CDATA "">
+<!ELEMENT general EMPTY>
+<!ATTLIST general item CDATA #REQUIRED>
+<!ATTLIST general value CDATA #REQUIRED>

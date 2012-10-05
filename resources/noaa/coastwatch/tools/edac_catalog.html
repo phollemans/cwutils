@@ -1,0 +1,80 @@
+<html>
+
+<head>
+  <title>EDAC Help: Searching the data catalog</title>
+  <link rel="stylesheet" type="text/css" href="helpstyle.css">
+</head>
+
+<body>
+
+<h1>EDAC Help: Searching the data catalog</h1>
+
+<p>In this section:</p>
+<ul>
+  <li><a href="#intro">Introducing the Catalog tab</a></li>
+  <li><a href="#components">Components of the Catalog tab</a></li>
+</ul>
+
+<a name="intro"></a>
+<h2>Introducing the Catalog tab</h2>
+
+<p>The Catalog tab allows the user to quickly search for files in the
+selected dataset that match certain criteria: (i) the percent of data
+coverage for a region of interest, and (ii) the date and time of the
+data measurement.  The catalog results show either a set of icon
+previews for each matching result or a sortable list view of the
+results.  For any given result, the user can show the data in the View
+tab, or access the data by file download or OPeNDAP form.
+
+<a name="components"></a>
+<h2>Components of the Catalog tab</h2>
+
+<p>The following figure shows the main components of the client
+when the Catalog tab is selected:</p>
+
+<p class="centered"><img src="edac_catalog.png"></p>
+
+<dl>
+  
+  <dt>Dataset selector</dt>
+
+  <dd>The name of the current dataset being displayed.  A dataset
+  consists of a number of files, each of which contains data for a
+  specific date and time.  The catalog searches only the selected
+  dataset for matching files.</dd>
+
+  <dt>Region parameters</dt>
+
+  <dd>The region and minimum coverage value to search.  A region may
+  not contain data for a given date and time because of a variety of
+  factors: cloud cover over the region obscuring the surface, ice,
+  rain, the region is beyond the satellite scan path, etc.  Only data
+  with coverage above the specified minimum value in the selected
+  region will be reported.</dd>
+
+  <dt>Date/time parameters</dt>
+
+  <dd>The date and time range to search.  Only data files whose
+  starting date/time fall within the specified time range or past
+  number of days are reported.</dd>
+
+  <dt>Catalog results</dt>
+
+  <dd>The results of the most recent search.  The message at the
+  bottom of the results panel may indicate zero matches if none were
+  found in which case the search parameters should be relaxed.
+  Otherwise, the results panel shows either a set of preview icons for
+  the resulting matches or a detailed sortable list of the matches.
+  Double-click the preview icon or list entry to switch to the View
+  tab and display the data.  As an alternative, users may download the
+  file directly or show the OPeNDAP form using the data access buttons
+  at the bottom (see <a href="edac_access.html">Accessing data
+  files</a> for details).</dd>
+
+</dl>
+
+<p><a href="edac_overview.html">Back to overview</a></p>
+
+</body>
+
+</html>

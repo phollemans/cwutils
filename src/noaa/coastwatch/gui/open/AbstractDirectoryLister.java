@@ -1,0 +1,141 @@
+////////////////////////////////////////////////////////////////////////
+/*
+     FILE: AbstractDirectoryLister.java
+  PURPOSE: Implements most DirectoryLister methods.
+   AUTHOR: Peter Hollemans
+     DATE: 2005/06/26
+  CHANGES: n/a
+
+  CoastWatch Software Library and Utilities
+  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+
+*/
+////////////////////////////////////////////////////////////////////////
+
+// Package
+// -------
+package noaa.coastwatch.gui.open;
+
+// Imports
+// -------
+import java.io.*;
+import java.util.*;
+
+/**
+ * The <code>AbstractDirectoryLister</code> is an abstract helper that
+ * implements most of the {@link DirectoryLister} methods.  Child
+ * classes need only implement:
+ * <ul>
+ *   <li>{@link DirectoryLister#getParent}</li>
+ *   <li>{@link DirectoryLister#getChild}</li>
+ *   <li>{@link #buildEntryList}</li>
+ * </ul>
+ */
+public abstract class AbstractDirectoryLister 
+  implements DirectoryLister, Cloneable {
+
+  // Variables
+  // ---------
+
+  /** The current directory name. */
+  private String name;
+
+  /** The list of entries for the current directory. */
+  private List entryList;
+
+  ////////////////////////////////////////////////////////////
+
+  /** Creates a new lister with empty directory name. */
+  public AbstractDirectoryLister () {
+
+    entryList = new ArrayList();
+
+  } // AbstractDirectoryLister constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the directory name. 
+   * 
+   * @return name the directory name or null if no directory is set.
+   */
+  public String getDirectory () { return (name); }
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets a copy of this object. */
+  public Object clone () {
+
+    AbstractDirectoryLister copy;
+    try { copy = (AbstractDirectoryLister) super.clone(); }
+    catch (CloneNotSupportedException e) { return (null); }
+    copy.entryList = new ArrayList (entryList);
+    return (copy);
+
+  } // clone
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Sets the directory name. 
+   *
+   * @param name the new directory name.
+   *
+   * @throws IOException if an error occurred getting the entries for
+   * the new directory.
+   */
+  public void setDirectory (
+    String name
+  ) throws IOException {
+
+    name = name.trim();
+    List newEntryList = buildEntryList (name);
+    this.name = name;
+    this.entryList = newEntryList;
+
+  } // setDirectory
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Builds the list of directory entries. 
+   *
+   * @throws IOException if an error occurred getting the entries for
+   * the new directory.
+   */
+  protected abstract List buildEntryList (String name) throws IOException;
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Refreshes the entry list based on the current directory name. 
+   *
+   * @throws IOException if an error occurred getting the entries for
+   * the new directory.
+   */
+  public void refresh () throws IOException {
+
+    if (name != null) setDirectory (name);
+
+  } // refresh
+
+  ////////////////////////////////////////////////////////////
+
+  /** Clears the directory name and entry list. */
+  public void clear () {
+
+    name = null;
+    entryList.clear();
+
+  } // clear
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the list of directory entries. */
+  public List getEntries () { return (new ArrayList (entryList)); }
+
+  ////////////////////////////////////////////////////////////
+
+} // AbstractDirectoryLister class
+
+////////////////////////////////////////////////////////////////////////

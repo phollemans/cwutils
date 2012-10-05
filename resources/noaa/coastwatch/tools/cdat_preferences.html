@@ -1,0 +1,149 @@
+<html>
+
+<head>
+  <title>CoastWatch Data Analysis Tool Help: User preferences and resources</title>
+  <link rel="stylesheet" type="text/css" href="helpstyle.css">
+</head>
+
+<body>
+
+<h1>CoastWatch Data Analysis Tool Help: User preferences and resources</h1>
+
+<p>In this section:</p>
+<ul>
+  <li><a href="#preferences">Preferences panel</a></li>
+  <li><a href="#units">Units conversion</a></li>
+  <li><a href="#resources">User-specific resources</a></li>
+</ul>
+
+<a name="preferences"></a>
+<h2>Preferences panel</h2>
+
+<p>Open the preferences panel by selecting the <span
+class="gui">Tools|Preferences</span> menu item.</p>
+
+<dl>
+
+  <dt>General</dt>
+
+  <dd>The <span class="gui">General</span> category only has one item:
+  the preferred format of latitude/longitude coordinate display.</dd>
+
+  <dt>Enhancement</dt>
+
+  <dd>The <span class="gui">Enhancement</span> category allows
+  you to store a preferred color enhancement range, palette,
+  units, and function for a given variable name.  When a data
+  file is first opened, the enhancement preferences are used to
+  setup the initial data view for each variable.  To view the
+  enhancement preferences for a variable, click the variable name
+  from the <span class="gui">Variables</span> list.  To change
+  the preferences, select a new palette name from the <span
+  class="gui">Palettes</span> list and/or modify the <span
+  class="gui">Minimum</span>, <span class="gui">Maximum</span>,
+  <span class="gui">Units</span>, or other controls.  New
+  variables may also be added and existing variables deleted
+  using the <span class="gui">Add</span> and <span
+  class="gui">Remove</span> buttons.  To save changes to the
+  preferences click <span class="gui">OK</span>, or <span
+  class="gui">Cancel</span> to discard them.</dd>
+
+</dl>
+
+<a name="units"></a>
+<h2>Units conversion</h2>
+
+<p>For each data variable, CDAT allows you to specify your
+preferred display units in the enhancement preferences.
+Selecting <span class="gui">Use units from data source</span>
+leaves the data values in the same units as they were written.
+Selecting <span class="gui">Display in units of</span> makes CDAT
+read and convert data values on-the-fly to the new units.  If you
+select your own data units, you should also adjust the minimum
+and maximum values.</p>
+
+<p>To help with units conversion, a number of common units are
+provided in the drop-down units box.  If your preferred units are
+not shown, you can also type in the units.  Most common units are
+supported, and base units can be combined with spaces, slashes,
+and exponentiation.  For example, wind speed in kilometers per
+hour could be written a number of ways:</p>
+
+<p class="quote">
+km/h<br>
+km hr^-1<br>
+kilometers / hour<br>
+kilometers per hour
+</p>
+
+<p>For other possible unit names, see the UDUNITS package from
+UCAR:</p>
+
+<p class="quote">
+http://my.unidata.ucar.edu/content/software/udunits/index.html<br>
+http://my.unidata.ucar.edu/content/software/udunits/udunits.txt
+</p>
+
+<a name="resources"></a>
+<h2>User-specific resources</h2>
+
+<p>Preferences are saved on a per-user basis to a special resources
+directory depending on the operating system:</p>
+
+<ul>
+
+  <li>Windows: <span class="code">C:\Documents&nbsp;and&nbsp;Settings\[User&nbsp;Name]\Application&nbsp;Data\CoastWatch</span></li>
+
+  <li>Mac OS X: <span class="code">~/Library/Application&nbsp;Support/CoastWatch</span></li>
+
+  <li>Unix: <span class="code">~/.coastwatch</span></li>
+
+</ul>
+This directory is created when CDAT is first run, and populated
+with the default preferences.  The resources directory is also
+used to store user-specific customizations.  The current
+customizations are as follows:</p>
+
+<dl>
+
+  <dt>Overlay groups</dt>
+
+  <dd>Overlay groups are created and deleted using the <span
+  class="gui">Overlay Group</span> controls in the overlays tab
+  (see the <a href="cdat_overlays.html">Overlays</a> section).
+  Overlays groups are saved in the <span
+  class="code">overlays</span> subdirectory.  An initial set of
+  overlay groups is copied into the directory when CDAT is first
+  run.  Overlay groups may also be used for command line
+  rendering using the <span class="code">--group</span> option in
+  the cwrender tool. </dd>
+
+  <dt>Palettes</dt>
+
+  <dd>In addition to the default set of palettes, you can create
+  your own palette files and store them in the <span
+  class="code">palettes</span> subdirectory.  Palette files have
+  an XML format as follows:
+
+  <pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;!DOCTYPE palette SYSTEM 
+"http://coastwatch.noaa.gov/xml/palette.dtd"&gt;
+
+&lt;palette name="MyColorPalette" length="256"&gt;
+  &lt;color r="255" g="0" b="72" /&gt;
+  &lt;color r="255" g="0" b="72" /&gt;
+  ...
+  &lt;color r="255" g="170" b="0" /&gt;
+&lt;/palette&gt;
+  </pre>
+
+  </dd>
+
+</dl>
+
+<p><a href="cdat_index.html">Back to overview</a></p>
+
+</body>
+
+</html>

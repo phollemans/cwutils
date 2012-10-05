@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+
+<binaryStream
+  xmlns="http://coastwatch.noaa.gov"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://coastwatch.noaa.gov http://coastwatch.noaa.gov/xml/binaryStream.xsd">
+
+  <!-- Scan line section -->
+  <ushort name="lineNumber"/>
+  <ushort name="year"/>
+  <ushort name="day"/>
+  <uint name="timeUTC" absoluteOffset="8"/>
+  <ushort name="majorFrameCount" absoluteOffset="14"/>
+
+  <!-- Quality section -->
+  <uint name="qualityIndicator" absoluteOffset="24">
+    <bitLabel name="qualityIndicator.doNotUseScan" position="31"/>
+    <bitLabel name="qualityIndicator.timeSequenceError" position="30"/>
+    <bitLabel name="qualityIndicator.dataGap" position="29"/>
+    <bitLabel name="qualityIndicator.insufficientData" position="28"/>
+    <bitLabel name="qualityIndicator.navigationUnavailable" position="27"/>
+    <bitLabel name="qualityIndicator.clockUpdated" position="26"/>
+    <bitLabel name="qualityIndicator.statusChanged" position="25"/>
+    <bitLabel name="qualityIndicator.transmitterStatusChanged" position="4"/>
+    <bitLabel name="qualityIndicator.syncError" position="3"/>
+    <bitLabel name="qualityIndicator.minorFrameError" position="2"/>
+    <bitLabel name="qualityIndicator.majorFrameError" position="1"/>
+    <bitLabel name="qualityIndicator.parityError" position="0"/>
+  </uint>
+  <ushort name="calibrationProblem" absoluteOffset="29">
+    <bitLabel name="calibrationProblem.scanNotCalibrated" position="7"/>
+    <bitLabel name="calibrationProblem.proximityToDataGap" position="6"/>
+    <bitLabel name="calibrationProblem.prtQualityFailed" position="5"/>
+    <bitLabel name="calibrationProblem.prtMarginal" position="4"/>
+    <bitLabel name="calibrationProblem.uncalibratedChannels" position="3"/>
+    <bitLabel name="calibrationProblem.uncalibratedInstrumentMode" position="2"/>
+    <bitLabel name="calibrationProblem.antennaPositionErrorSpaceView" position="1"/>
+    <bitLabel name="calibrationProblem.antennaPositionErrorBlackbodyView" position="0"/>
+  </ushort>
+  <ushortArray name="calibrationQualityFlags" dims="5" absoluteOffset="32"/>
+  
+  <!-- Calibration coefficients -->
+  <int name="chH1SecondOrder" scale="1e-16" absoluteOffset="60"/>
+  <int name="chH1FirstOrder" scale="1e-10"/>
+  <int name="chH1ZerothOrder" scale="1e-6"/>
+  <int name="chH2SecondOrder" scale="1e-16"/>
+  <int name="chH2FirstOrder" scale="1e-10"/>
+  <int name="chH2ZerothOrder" scale="1e-6"/>
+  <int name="chH3SecondOrder" scale="1e-16"/>
+  <int name="chH3FirstOrder" scale="1e-10"/>
+  <int name="chH3ZerothOrder" scale="1e-6"/>
+  <int name="chH4SecondOrder" scale="1e-16"/>
+  <int name="chH4FirstOrder" scale="1e-10"/>
+  <int name="chH4ZerothOrder" scale="1e-6"/>
+  <int name="chH5SecondOrder" scale="1e-16"/>
+  <int name="chH5FirstOrder" scale="1e-10"/>
+  <int name="chH5ZerothOrder" scale="1e-6"/>
+
+  <!-- Navigation section -->
+  <uint name="navigationStatus" absoluteOffset="196"/>
+  <shortArray name="angles" dims="270" absoluteOffset="212"/>
+  <intArray name="earthLocations" dims="180" absoluteOffset="752"/>
+
+  <!-- MHS sensor data -->
+  <ushortArray name="mhsData" dims="540" absoluteOffset="1480"/>
+
+</binaryStream>

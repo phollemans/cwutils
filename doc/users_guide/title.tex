@@ -1,0 +1,146 @@
+\begin{titlepage}
+
+  \begin{center}
+    \includegraphics[height=1in]{icons/cdat.png} \\
+    \vspace{0.5cm}
+    {\Large \bf CoastWatch Software Library and \\ Utilities User's Guide} \\
+    \vspace{1cm}
+    {\large \bf Version 3.2.4 DEVELOPMENT PRERELEASE \\ Revised \today} \\
+    \vspace{6cm} 
+    {\small Prepared by: \\ Peter Hollemans,  
+    Terrenus Earth Sciences} \\
+    \vspace{0.5cm}
+    {\small Modified by: \\ Xiaoming Liu,
+    SP Systems, Inc.} \\
+    \vspace{2cm}
+    {\small U.S. DEPARTMENT OF COMMERCE \\
+    NATIONAL OCEANIC AND ATMOSPHERIC ADMINISTRATION \\
+    NATIONAL ENVIRONMENTAL SATELLITE, DATA, AND INFORMATION SERVICE \\
+    COASTWATCH PROGRAM} \\
+  \end{center}
+
+\end{titlepage}
+
+\pagenumbering{roman}
+
+\section*{Copyright Notice}
+
+CoastWatch Software Library and Utilities \\
+Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
+
+Permission to use, copy, modify, and distribute this software and
+its documentation for any purpose and without fee is hereby granted,
+provided that the above copyright notice appear in all copies, that
+both the copyright notice and this permission notice appear in
+supporting documentation, and that redistributions of modified forms
+of the source or binary code carry prominent notices stating that the
+original code was changed and the date of the change.  This software
+is provided ``as is'' without express or implied warranty.
+
+\section*{Privacy Policy}
+
+On startup, this software queries network servers for up-to-date
+version information, at which time data is collected and stored by the
+server automatically concerning the computer IP address, type of
+operating system, version of the software, and the date and time.
+This information does not identify you personally.  It is used to help
+improve the software by providing usage statistics.  More details on
+NOAA's privacy policy may be found at
+\url{http://www.noaa.gov/privacy.html}.
+
+\section*{Obtaining a Copy}
+
+To download a copy of the CoastWatch Utilities, visit:
+\begin{quote}
+  \url{http://coastwatch.noaa.gov/cw\_cwfv3.html}
+\end{quote}
+For general information on CoastWatch products and services, visit:
+\begin{quote}
+  \url{http://coastwatch.noaa.gov}
+\end{quote}
+
+\section*{Providing Feedback}
+
+Email questions, comments, suggestions, and bug reports to the
+CoastWatch help desk at \\
+\href{mailto:coastwatch.info@noaa.gov}{coastwatch.info@noaa.gov}.
+In order to receive help, you \underline{should} include the
+following information:
+\begin{enumerate}
+
+  \item The version and operating system of the software, for
+  example {\em cwf-3.2.1 on Windows XP}.
+
+  \item The type of data file and where you obtained the file,
+  for example {\em CoastWatch .cwf files obtained from the SAA web
+  site}.  If the data origin is unknown, include some example data
+  filenames.
+
+  \item If sending a bug report or asking for clarification, a
+  description of how to reproduce your result:
+  \begin{itemize}
+
+    \item For a command-line tool, a transcript of the terminal
+    session during which the question or problem arose.  You
+    can cut and paste the contents
+    of the terminal session including the command used and its output
+    directly into the email.
+
+    \item For a graphical interface tool, a list of steps to
+    reproduce the problem.  For example, {\em
+    Open data file xxx, click this button, then that button}.
+
+  \end{itemize}
+
+\end{enumerate}
+
+\newpage
+
+\tableofcontents
+\newpage
+
+\listoffigures
+\newpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+
+\section*{Typographic Conventions}
+
+In this manual, we use the following conventions for the font and
+color of text.  References within the document are in the
+standard font, but are red to emphasize that they are active
+links, for example a reference to a section: ``see
+\autoref{cdatchap} for information on the CoastWatch Data
+Analaysis Tool''.  External references are a {\tt typewriter}
+font in magenta, such as a web site address:
+``\url{http://www.google.com} is a great search engine''.
+Terminal commands, terminal output, file names, and verbatim
+character strings are in a {\file typewriter} font.  Java class
+names are in {\java italics}.  Replacement parameters in command
+line programs are in CAPITALS.
+
+\section*{Acknowledgments}
+
+We would like to acknowledge the following parties for support in
+creating the CoastWatch Utilities software (in no particular
+order):
+\begin{itemize}
+
+  \item John Sapper of NOAA/NESDIS, CoastWatch central
+  operations, and many other NOAA/NESDIS researchers for
+  continued funding support and new requirements.
+
+  \item The CoastWatch node managers, operations managers, and
+  CLASS archive staff who were invaluable in providing feedback.
+
+  \item CoastWatch data users who have provided critical review
+  of the software, bug reports, and new ideas for functionality.
+
+  \item The open source software community for providing high
+  quality code libraries upon which the utilities are built.
+
+\end{itemize}

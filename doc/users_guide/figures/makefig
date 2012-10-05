@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#transfig -L eps *.fig
+#make
+#for fname in *.eps ; do
+#  epstopdf $fname
+#done
+
+set -x
+
+for fname in *.fig ; do
+  fig2dev -L pdf -b 5 $fname `basename $fname .fig`.pdf
+done

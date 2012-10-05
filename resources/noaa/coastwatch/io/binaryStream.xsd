@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+
+<!-- 
+
+     FILE: binaryStream.xsd
+  PURPOSE: Defines the binary stream schema for reading arbitrary
+           streams of binary data.
+   AUTHOR: Peter Hollemans
+     DATE: 2007/08/30
+  CHANGES: n/a
+
+  CoastWatch Software Library and Utilities
+  Copyright 2007, USDOC/NOAA/NESDIS CoastWatch
+
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://coastwatch.noaa.gov"
+  xmlns="http://coastwatch.noaa.gov"
+  elementFormDefault="qualified">
+
+<xs:complexType name="entryType">
+  <xs:attribute name="key" type="xs:string" use="required"/>
+  <xs:attribute name="value" type="xs:string" use="required"/>
+</xs:complexType>
+
+<xs:simpleType name="mapValueType">
+  <xs:restriction base="xs:string">
+    <xs:enumeration value="byte"/>
+    <xs:enumeration value="ubyte"/>
+    <xs:enumeration value="short"/>
+    <xs:enumeration value="ushort"/>
+    <xs:enumeration value="int"/>
+    <xs:enumeration value="uint"/>
+    <xs:enumeration value="long"/>
+    <xs:enumeration value="ulong"/>
+    <xs:enumeration value="float"/>
+    <xs:enumeration value="double"/>
+    <xs:enumeration value="string"/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:complexType name="valueMapType">
+  <xs:sequence>
+    <xs:element name="entry" type="entryType" maxOccurs="unbounded"/>
+  </xs:sequence>
+  <xs:attribute name="valueType" type="mapValueType" use="required"/>
+</xs:complexType>
+
+<xs:simpleType name="nameType">
+  <xs:restriction base="xs:string">
+    <xs:pattern value="[A-Za-z0-9_.]+"/>
+  </xs:restriction>
+</xs:simpleType>
+
+<xs:complexType name="valueType">
+  <xs:attribute name="name" type="nameType" use="required"/>
+  <xs:attribute name="absoluteOffset" type="xs:nonNegativeInteger"/>
+  <xs:attribute name="relativeOffset" type="xs:nonNegativeInteger"/>
+</xs:complexType>
+
+<xs:complexType name="mappableValueType">
+  <xs:complexContent>
+    <xs:extension base="valueType">
+      <xs:sequence>
+        <xs:element name="valueMap" type="valueMapType" minOccurs="0"/>
+      </xs:sequence>
+    </xs:extension>
+  </xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="stringValueType">
+  <xs:complexContent>
+    <xs:extension base="mappableValueType">
+      <xs:attribute name="length" type="xs:positiveInteger"/>
+    </xs:extension>
+  </xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="bitLabelType">
+  <xs:sequence>
+    <xs:element name="valueMap" type="valueMapType" minOccurs="0"/>
+  </xs:sequence>
+  <xs:attribute name="name" type="nameType" use="required"/>
+  <xs:attribute name="position" type="xs:nonNegativeInteger" use="required"/>
+</xs:complexType>
+
+<xs:complexType name="nbitLabelType">
+  <xs:sequence>
+    <xs:element name="valueMap" type="valueMapType" minOccurs="0"/>
+  </xs:sequence>
+  <xs:attribute name="name" type="nameType" use="required"/>
+  <xs:attribute name="range" use="required">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:pattern value="([0-9])+-([0-9])+"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:attribute>
+</xs:complexType>
+
+<xs:complexType name="integerValueType">
+  <xs:complexContent>
+    <xs:extension base="mappableValueType">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="bitLabel" type="bitLabelType"/>
+        <xs:element name="nbitLabel" type="nbitLabelType"/>
+      </xs:choice>
+      <xs:attribute name="scale" type="xs:string"/>
+    </xs:extension>
+  </xs:complexContent>
+</xs:complexType>
+
+<xs:simpleType name="dimsType">
+  <xs:list itemType="xs:nonNegativeInteger"/>
+</xs:simpleType>
+
+<xs:complexType name="arrayType">
+  <xs:complexContent>
+    <xs:extension base="valueType">
+      <xs:attribute name="dims" use="required">
+        <xs:simpleType>
+          <xs:list itemType="xs:nonNegativeInteger"/>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:extension>
+  </xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="skipType">
+  <xs:attribute name="length" type="xs:positiveInteger"/>
+</xs:complexType>
+
+<xs:element name="binaryStream">
+  <xs:complexType>
+    <xs:choice minOccurs="1" maxOccurs="unbounded">
+
+      <xs:element name="byte" type="integerValueType"/>
+      <xs:element name="ubyte" type="integerValueType"/>
+      <xs:element name="short" type="integerValueType"/>
+      <xs:element name="ushort" type="integerValueType"/>
+      <xs:element name="int" type="integerValueType"/>
+      <xs:element name="uint" type="integerValueType"/>
+      <xs:element name="long" type="integerValueType"/>
+      <xs:element name="ulong" type="integerValueType"/>
+      <xs:element name="float" type="valueType"/>
+      <xs:element name="double" type="valueType"/>
+
+      <xs:element name="byteArray" type="arrayType"/>
+      <xs:element name="ubyteArray" type="arrayType"/>
+      <xs:element name="shortArray" type="arrayType"/>
+      <xs:element name="ushortArray" type="arrayType"/>
+      <xs:element name="intArray" type="arrayType"/>
+      <xs:element name="uintArray" type="arrayType"/>
+      <xs:element name="longArray" type="arrayType"/>
+      <xs:element name="ulongArray" type="arrayType"/>
+      <xs:element name="floatArray" type="arrayType"/>
+      <xs:element name="doubleArray" type="arrayType"/>
+
+      <xs:element name="skip" type="skipType"/>
+
+      <xs:element name="string" type="stringValueType"/>
+
+    </xs:choice>
+  </xs:complexType>
+</xs:element>
+
+</xs:schema>

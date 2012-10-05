@@ -1,0 +1,60 @@
+////////////////////////////////////////////////////////////////////////
+/*
+     FILE: DataRecord.java
+  PURPOSE: Reads NOAA 1b format data records.
+   AUTHOR: Peter Hollemans
+     DATE: 2007/08/27
+  CHANGES: n/a
+
+  CoastWatch Software Library and Utilities
+  Copyright 2007, USDOC/NOAA/NESDIS CoastWatch
+
+*/
+////////////////////////////////////////////////////////////////////////
+
+// Package
+// -------
+package noaa.coastwatch.io.noaa1b;
+
+// Imports
+// -------
+import java.nio.*;
+import java.util.*;
+import terrenus.instrument.*;
+
+/**
+ * The <code>DataRecord</code> interface is for reading NOAA
+ * 1b data records.
+ */
+public interface DataRecord {
+
+  /** Gets the scan line number. */
+  public int getScanLine();
+
+  /** Gets the record date. */
+  public Date getDate();
+
+  /** Determines if the sensor data is usable based on quality flags. */
+  public boolean isSensorDataUsable();
+
+  /** Gets the sensor data values as uncalibrated counts. */
+  public short[] getSensorData();
+
+  /** Determines if the calibration data is usable based on quality flags. */
+  public boolean isCalibrationUsable();
+
+  /** Gets the calibration data. */
+  public float[] getCalibration();
+
+  /** Determines if the navigation data is usable based on quality flags. */
+  public boolean isNavigationUsable();
+
+  /** Gets the navigation data. */
+  public float[] getNavigation();
+
+  /** Gets the calibrated and earth located sensor data. */
+  public InstrumentData getData();
+
+} // DataRecord interface
+
+////////////////////////////////////////////////////////////////////////

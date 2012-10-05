@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE preferences SYSTEM "http://coastwatch.noaa.gov/xml/preferences.dtd">
+
+<preferences>
+  <enhancement variable="avhrr_ch1" palette="BW-Linear" min="0.0" max="80.0" function="linear" />
+  <enhancement variable="avhrr_ch2" palette="BW-Linear" min="0.0" max="80.0" function="linear" />
+  <enhancement variable="avhrr_ch3a" palette="BW-Linear" min="0.0" max="80.0" function="linear" />
+  <enhancement variable="avhrr_ch3" palette="HSL256" min="-60.0" max="45.0" function="linear" />
+  <enhancement variable="avhrr_ch4" palette="HSL256" min="-60.0" max="45.0" function="linear" />
+  <enhancement variable="avhrr_ch5" palette="HSL256" min="-60.0" max="45.0" function="linear" />
+  <enhancement variable="cloud" palette="HSL256" min="0.0" max="255.0" function="linear" />
+  <enhancement variable="graphics" palette="BW-Linear" min="0.0" max="15.0" function="linear" />
+  <enhancement variable="sst" palette="HSL256" min="-60.0" max="45.0" function="linear" />
+  <enhancement variable="sat_zenith" palette="BW-Linear" min="0.0" max="90.0" function="linear" />
+  <enhancement variable="sun_zenith" palette="BW-Linear" min="0.0" max="90.0" function="linear" />
+  <enhancement variable="rel_azimuth" palette="BW-Linear" min="0.0" max="180.0" function="linear" />
+  <enhancement variable="chlor_a" palette="Chlora-1" min="0.01" max="64.0" function="log" />
+  <enhancement variable="chlorANOMALY" palette="Chlora-anom" min="0.01" max="1.0" function="log" />
+  <enhancement variable="chlorMEAN" palette="Chlora-1" min="0.01" max="64.0" function="log" />
+  <enhancement variable="CRW_SST" palette="CRW_SST" min="-2.0" max="34.0" function="linear" />
+  <enhancement variable="CRW_SSTANOMALY" palette="CRW_SSTANOMALY" min="-5.0" max="5.0" function="linear" />
+  <enhancement variable="CRW_HOTSPOT" palette="CRW_HOTSPOT" min="0.0" max="5.0" function="linear" />
+  <enhancement variable="CRW_DHW" palette="CRW_DHW" min="0.0" max="16.0" function="linear" />
+  <general item="earthLocationDisplay" value="dd" />
+</preferences>
+

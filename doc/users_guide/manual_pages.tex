@@ -1,0 +1,2792 @@
+\chapter{Manual Pages}
+\label{manual}
+\section{cdat} \hypertarget{cdat}{}
+\subsection*{\underline{Name}}
+
+
+   cdat - performs visual Earth data analysis.  
+\subsection*{\underline{Synopsis}}
+
+
+  cdat [OPTIONS] input \\ 
+ cdat [OPTIONS] 
+\subsubsection*{Options:}
+
+
+  -h, -{-}help \\ 
+ -s, -{-}splash \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+ The CoastWatch Data Analysis Tool (CDAT) allows users to view, survey, and save Earth datasets. Detailed help on the usage of CDAT is available from within the utility using the menu bar under \emph{Help $|$ Help and Support}
+.
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[input]The input data file name. If specified, the data file is opened immediately after CDAT starts.
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[-h, -{-}help]Prints a brief help message.
+\item[-s, -{-}splash]Shows the splash window on startup. The splash window shows the version, author, and web site information.
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+ 0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input file name. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+ The following shows the use of CDAT to view data from a CoastWatch IMGMAP file: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata/2002_319_2144_n16_wl> cdat 
+     2002_319_2144_n16_wl_c2.cwf
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwangles} \hypertarget{cwangles}{}
+\subsection*{\underline{Name}}
+
+
+   cwangles - computes Earth location and solar angles.  
+\subsection*{\underline{Synopsis}}
+
+
+ cwangles [OPTIONS] input
+\subsubsection*{Options:}
+
+
+  -f, -{-}float \\ 
+ -d, -{-}double \\ 
+ -h, -{-}help \\ 
+ -l, -{-}location \\ 
+ -s, -{-}scale=FACTOR/OFFSET \\ 
+ -u, -{-}units=TYPE \\ 
+ -v, -{-}verbose \\ 
+ -z, -{-}sunzenith \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+ The angles tool computes Earth location and solar angles for an Earth data file. Angles may be computed as scaled integer or floating point values, and in radians, degrees, or cosine. The Earth location values computed refer to the center of each pixel.
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[input]The input data file name.
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[-f, -{-}float]Specifies that data should be stored as 32-bit floating point values with no scaling. The default is to store as 16-bit signed integers with a scaling factor of 0.01.
+\item[-d, -{-}double]Specifies that data should be stored as 64-bit floating point values with no scaling. The default is to store as 16-bit signed integers with a scaling factor of 0.01.
+\item[-h, -{-}help]Prints a brief help message.
+\item[-l, -{-}location]Specifies that Earth location latitude and longitude data should be computed.
+\item[-s, -{-}scale=FACTOR/OFFSET]The data scale factor and offset. Data values are scaled to integers using the factor and offset under the equation:\\ 
+\begin{verbatim}
+
+     integer = value/factor + offset
+   
+\end{verbatim}
+ The default factor is 0.01 and offset is 0. This option is ignored if \textbf{-{-}float}
+ or \textbf{-{-}double}
+ is used.
+\item[-v, -{-}verbose]Turns verbose mode on. The current status of data computation is printed periodically. The default is to run quietly.
+\item[-u, -{-}units=TYPE]The units type. Valid units are 'deg' for degrees, 'rad' for radians, or 'cos' for cosine of the angle. The default is to compute angles in degrees.
+\item[-z, -{-}sunzenith]Specifies that solar zenith angle data should be computed.
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+ 0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input file name. 
+\item  No angle computations specified. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  The following shows the computation of latitude and longitude data for a CoastWatch HDF product file: \begin{verbatim}
+ 
+   phollema@localhost:<~/cwatch/satdata/angles_test> cwangles 
+     --float --location 2002_361_1049_n16_ax.hdf
+
+   cwangles: Reading input 2002_361_1049_n16_ax.hdf
+   cwangles: Creating latitude variable
+   cwangles: Creating longitude variable
+   cwangles: Calculating angles
+   cwangles: Computing row 0
+   cwangles: Computing row 100
+   cwangles: Computing row 200
+   cwangles: Computing row 300
+   cwangles: Computing row 400
+   cwangles: Computing row 500
+   cwangles: Computing row 600
+   cwangles: Computing row 700
+   cwangles: Computing row 800
+   cwangles: Computing row 900
+   cwangles: Computing row 1000
+ 
+\end{verbatim}
+ Another example below shows the computation of solar zenith angle, stored as the cosine and scaled to integer data by 0.0001: \begin{verbatim}
+ 
+   phollema@localhost:<~/cwatch/satdata/angles_test> cwangles -v 
+     --sunzenith --units cos --scale 0.0001/0 test_angles.hdf 
+
+   cwangles: Reading input test_angles.hdf
+   cwangles: Creating sun_zenith variable
+   cwangles: Calculating angles
+   cwangles: Computing row 0
+   cwangles: Computing row 100
+   cwangles: Computing row 200
+   cwangles: Computing row 300
+   cwangles: Computing row 400
+   cwangles: Computing row 500
+   cwangles: Computing row 600
+   cwangles: Computing row 700
+   cwangles: Computing row 800
+   cwangles: Computing row 900
+   cwangles: Computing row 1000
+   cwangles: Computing row 1100
+   cwangles: Computing row 1200
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwautonav} \hypertarget{cwautonav}{}
+\subsection*{\underline{Name}}
+
+
+   cwautonav - automatically determines a navigation correction based on Earth image data.  
+\subsection*{\underline{Synopsis}}
+
+
+ cwautonav [OPTIONS] locations-file variable input
+\subsubsection*{Options:}
+
+
+  -c, -{-}correlation=FACTOR \\ 
+ -f, -{-}fraction=FRACTION \\ 
+ -h, -{-}help \\ 
+ -H, -{-}height=PIXELS \\ 
+ -m, -{-}match=PATTERN \\ 
+ -M, -{-}minboxes=N \\ 
+ -s, -{-}search=LEVEL \\ 
+ -S, -{-}separation=DISTANCE \\ 
+ -t, -{-}test \\ 
+ -v, -{-}verbose \\ 
+ -w, -{-}width=PIXELS \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+ The autonavigation tool automatically determines a navigation correction based on Earth image data. The algorithm is as follows: \begin{itemize}
+\item \textbf{Step 1}
+ - The user supplies a number of boxes of coastal data to use for navigation. The boxes are specified by the latitude and longitude of each box center in a text file separate from the Earth data file. The box dimensions are controlled by command line options.
+\item \textbf{Step 2}
+ - Each box is run through an offset estimation algorithm. The algorithm first attempts to separate the pixels within a given box into two classes: land and water. If the classes are sufficiently separable, an image correlation is run by ``shifting'' the image data around to find the maximum correlation between land/water classes and a precomputed land mask database.
+\item \textbf{Step 3}
+ - All navigation boxes with successful offset estimates are used to compute the mean offset for the entire input file. All user-specified variables in the input file are then corrected with the mean offset.
+
+\end{itemize}
+
+
+
+ Note that because of the autonavigation algorithm design, there are a number of \textbf{limitations}
+: \begin{itemize}
+\item \textbf{Coastline features}
+ - The algorithm relies partly on the user being able to specify navigation boxes containing ``wiggly'' coastline features such as peninsulas and bays. A flat coastline can cause the algorithm to generate inaccurate offset estimates.
+\item \textbf{Distinct classes}
+ - Image data in the navigation boxes must be separable into distinct land and water classes. If the image data contains cloud, or if the land and water pixels do not differ significantly (too similar in visible or thermal radiance), then the class separation step will fail for some boxes.
+\item \textbf{Large areas}
+ - The mean offset generated from the set of successful offset estimates in Step 3 may not model the actual navigation correction for data files that cover a large physical area. If the offsets differ significantly for navigation boxes at a great distance from each other, then the user should treat a number of subsets of the data file separately.
+\item \textbf{Rotation or scaling}
+ - An offset correction cannot model the actual navigation correction if the data requires a rotation or scale correction.
+
+\end{itemize}
+
+
+
+ Note that satellite channel data or channel-derived variables should be corrected with navigation but GIS-derived variables such as coastline and lat/lon grid graphics should not be corrected. Applying a navigation correction simply establishes a mapping between desired and actual data coordinates -{-} it does not change the gridded data values themselves. Once a data file has been autonavigated successfully, other CoastWatch tools in this package will take the correction into account when reading the data.
+
+
+ See the \textbf{cwnavigate}
+ tool in this package for details on how to set a navigation correction manually, or to reset the existing navigation.
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[ locations-file ] The file name containing a list of navigation box centers. The file must be a text file containing center points as latitude / longitude pairs, one line per pair, with values separated by spaces or tabs. The points are specified in terms of Earth location latitude and longitude in the range [-90..90] and [-180..180]. 
+\item[ variable ] The variable name to use for image data. 
+\item[ input ] The input data file name. The navigation corrections are applied to the input file in-situ. For CoastWatch HDF files, the corrections are applied to individual variables. For CoastWatch IMGMAP files, corrections are applied to the global attributes and the \textbf{-{-}match}
+ option has no effect. No other file formats are supported.
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[ -c, -{-}correlation=FACTOR ] The minimum allowed image versus land mask correlation factor in the range [0..1]. If the image data matches the precomputed land mask to within the specified correlation factor, the navigation is considered to be successful. The default correlation factor is 0.95. Caution should be used in lowering this value, as it has a significant impact on the quality of navigation results. 
+\item[ -f, -{-}fraction=FRACTION ] The minimum allowed class fraction in the range [0..1]. The class fraction is the count of land or water pixels from the class separation stage, divided by the total number of pixels in the navigation box. If the fraction of either land or water pixels is too low, the image data is rejected. The default minimum fraction is 0.05. 
+\item[ -h, -{-}help ] Prints a brief help message. 
+\item[ -H, -{-}height=PIXELS ] The navigation box height. By default, each navigation box is 100 pixels in height. 
+\item[ -m, -{-}match=PATTERN ] The variable name matching pattern. If specified, the pattern is used as a regular expression to match variable names. Only variables matching the pattern will have the navigation correction applied. By default, no pattern matching is performed and all variables are navigated. 
+\item[ -M, -{-}minboxes=N ] The minimum number of successful navigation boxes needed to apply the navigation correction. The default is 2. 
+\item[ -s, -{-}search=LEVEL ] The search level starting from 0. This option should only be used if the magnitude of the navigation correction is likely to be half or more the size of the navigation box, as it can significantly increase the algorithm running time. In these cases, the offset estimation can often fail because the image data is so far off the correct geographic features that the class separation and image correlation steps are meaningless. When this option is specified, an area of (n+1)\^{}2 times the size of the navigation box is searched, where n is the search level. By default, only image data within the navigation box is used (n = 0). 
+\item[ -S, -{-}separation=DISTANCE ] The minimum allowed class separation distance in standard deviation units. Typical values are in the range [1..4]. The greater the distance, the more distinct the land and water classes are. The default distance is 2.5. 
+\item[ -t, -{-}test ] Turns on test mode. All operations that compute the navigation correction are performed, but no actual correction is applied to the input file. By default, test mode is off and the input file is modified if a correction can be computed. 
+\item[ -v, -{-}verbose ] Turns verbose mode on. Details on offset estimation and navigation correction are printed. The default is to run with minimal messages. 
+\item[ -w, -{-}width=PIXELS ] The navigation box width. By default, each navigation box is 100 pixels in width. 
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input file name. 
+\item  Unsupported input file format. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+ The following example shows an automatic correction of an East Coast CWF (IMGMAP format) file containing AVHHR channel 2 data. A total of 3 navigation boxes are specified in a text file, and the size of each box set to 60 by 60 pixels. The output shows that 2 of the 3 boxes were successful and a final navigation correction of (rows, cols) = (-3, 1) was applied to the file. \begin{verbatim}
+
+   phollema@damdog<~/cwatch/satdata/level3> cwautonav -v --width 60 
+     --height 60 navbox.txt avhrr_ch2 2004_064_1601_n17_er_c2.cwf
+   cwautonav: Reading input 2004_064_1601_n17_er_c2.cwf
+   cwautonav: Testing box at 37.0503 N, 76.2111 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 2.33
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 44.2783 N, 66.1377 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation
+     distance = 3.436
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.965 at
+     offset = (-3, 1)
+   cwautonav: Box offset = (-3, 1)
+   cwautonav: Testing box at 45.1985 N, 65.9262 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 3.814
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.987 at
+     offset = (-3, 1)
+   cwautonav: Box offset = (-3, 1)
+   cwautonav: Mean offset = (-3, 1)
+   cwautonav: Applying navigation correction
+ 
+\end{verbatim}
+ The next example below shows the import and automatic correction of multiple CWF files from the Gulf of Mexico. The AVHRR channel 1, channel 2, SST, and cloud mask variables are first imported to an HDF file. The automatic correction then runs using only data from AVHRR channel 2 which provides high contrast between land and water during the day. The final correction is applied to all variables in the input file. This combination of import and autonavigation is a convenient way of correcting a set of older CWF data files all at once, using just data from AVHRR channel 2. \begin{verbatim}
+
+   phollema@damdog<~/cwatch/satdata/level3> cwimport -v 
+     --match '(avhrr.*|sst|cloud)' 2004_313_1921_n16_mr*.cwf 
+     2004_313_1921_n16_mr.hdf
+   cwimport: Reading input 2004_313_1921_n16_mr_c1.cwf
+   cwimport: Creating output 2004_313_1921_n16_mr.hdf
+   cwimport: Converting file [1/4], 2004_313_1921_n16_mr_c1.cwf
+   cwimport: Writing avhrr_ch1
+   cwimport: Converting file [2/4], 2004_313_1921_n16_mr_c2.cwf
+   cwimport: Writing avhrr_ch2
+   cwimport: Converting file [3/4], 2004_313_1921_n16_mr_cm.cwf
+   cwimport: Writing cloud
+   cwimport: Converting file [4/4], 2004_313_1921_n16_mr_d7.cwf
+   cwimport: Writing sst
+
+   phollema@damdog<~/cwatch/satdata/level3> cwautonav -v --width 60 
+     --height 60 navbox2.txt avhrr_ch2 2004_313_1921_n16_mr.hdf
+   cwautonav: Reading input 2004_313_1921_n16_mr.hdf
+   cwautonav: Testing box at 26.7734 N, 82.1731 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 3.239
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.945 at
+     offset = (-2, 1)
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient correlation
+   cwautonav: Box failed
+   cwautonav: Testing box at 29.1666 N, 83.0324 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 3.54
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.985 at 
+     offset = (-2, 1)
+   cwautonav: Box offset = (-2, 1)
+   cwautonav: Testing box at 29.9141 N, 84.3543 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 4.514
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.976 at 
+     offset = (-2, 0)
+   cwautonav: Box offset = (-2, 0)
+   cwautonav: Testing box at 30.3258 N, 88.1352 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 3.006
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.954 at 
+     offset = (-3, 0)
+   cwautonav: Box offset = (-3, 0)
+   cwautonav: Testing box at 27.8423 N, 82.5433 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 3.59
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.953 at 
+     offset = (-2, 1)
+   cwautonav: Box offset = (-2, 1)
+   cwautonav: Mean offset = (-2.25, 0.5)
+   cwautonav: Applying navigation correction
+ 
+\end{verbatim}
+ Another example below shows the correction of a Hawaii AVHRR HDF file using many 15 by 15 pixel navigation boxes distributed throughout the islands. AVHRR channel 2 data is used to compute the optimal offset, and the final correction is applied only to AVHRR sensor bands and derived variables. \begin{verbatim}
+
+   phollema@damdog<~/cwatch/satdata/level3> cwautonav -v 
+     --match '(avhrr.*|sst|cloud)' --width 15 --height 15 
+     navbox3.txt avhrr_ch2 2005_042_0051_n16_hr.hdf
+   cwautonav: Reading input 2005_042_0051_n16_hr.hdf
+   cwautonav: Testing box at 21.7885 N, 160.2259 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.537
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 21.9856 N, 160.0938 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.395
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 21.6033 N, 158.2847 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.562
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 21.7144 N, 157.9678 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.982
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 21.0961 N, 157.3207 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.517
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 21.2448 N, 157.2547 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 2.252
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 21.2076 N, 156.9774 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 3.236
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.973 at 
+     offset = (-2, 0)
+   cwautonav: Box 
+     offset = (-2, 0)
+   cwautonav: Testing box at 21.1581 N, 156.7001 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 2.293
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 20.9225 N, 157.0698 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.448
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 20.7115 N, 156.9642 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.506
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 21.3067 N, 158.1130 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.601
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 21.3067 N, 157.6508 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.593
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 20.5374 N, 156.7001 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 5.142
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.978 at 
+     offset = (-2, 0)
+   cwautonav: Box 
+     offset = (-2, 0)
+   cwautonav: Testing box at 20.5499 N, 156.5680 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 2.834
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.947 at 
+     offset = (-2, -1)
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient correlation
+   cwautonav: Box failed
+   cwautonav: Testing box at 20.5996 N, 156.4360 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 2.285
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 20.8108 N, 156.5152 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 2.092
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 20.9349 N, 156.4756 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 3.629
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.969 at 
+     offset = (-2, -1)
+   cwautonav: Box 
+     offset = (-2, -1)
+   cwautonav: Testing box at 20.8357 N, 156.1190 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 2.46
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 20.2635 N, 155.8813 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 2.522
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.964 at 
+     offset = (-2, 0)
+   cwautonav: Box 
+     offset = (-2, 0)
+   cwautonav: Testing box at 19.5140 N, 154.7985 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.64
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 19.7392 N, 155.0230 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.833
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 19.7267 N, 155.1022 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.688
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 18.9119 N, 155.6965 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.378
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 19.8642 N, 155.9342 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.583
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 19.0375 N, 155.8813 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.638
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 22.0349 N, 159.7901 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.919
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Testing box at 22.1826 N, 159.3279 W
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
+     distance = 1.496
+   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
+   cwautonav: Box failed
+   cwautonav: Mean offset = (-2, -0.25)
+   cwautonav: Applying navigation correction
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwcomposite} \hypertarget{cwcomposite}{}
+\subsection*{\underline{Name}}
+
+
+   cwcomposite - combines a time series of Earth data.  
+\subsection*{\underline{Synopsis}}
+
+
+  cwcomposite [OPTIONS] input [input2 ...] output\\ 
+ cwcomposite [OPTIONS] \{-i, -{-}inputs=FILE\} output 
+\subsubsection*{Options:}
+
+
+  -c, -{-}coherent=VARIABLE1[/VARIABLE2[...{]}] \\ 
+ -h, -{-}help \\ 
+ -m, -{-}match=PATTERN \\ 
+ -M, -{-}method=TYPE \\ 
+ -p, -{-}pedantic \\ 
+ -v, -{-}verbose \\ 
+ -V, -{-}valid=COUNT \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The composite tool combines a time series of Earth data. Data variables are combined on a pixel-by-pixel basis using one of several statistical or temporal methods: mean, median, minimum, maximum, explicit or latest. The input files must have matching Earth transforms but may have different dates. The composite tool may be used, for example, to combine a number of sea-surface-temperature datasets into one in order to obtain a mean SST for a certain region and help eliminate cloud. Another use is to combine datasets from different regions that are registered to the same Earth transform to create a mosaic. The output dataset is constructed using metadata from each input dataset so that it properly reflects the different input dataset dates and other metadata. 
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[ input [input2 ...] ] The input data file names. At least one input file is required, unless the \textbf{-{-}inputs}
+ option is used. If multiple files are specified, they must have matching Earth transforms. 
+\item[ -i, -{-}inputs=FILE ] The file name containing a list of input data files. The file must be an ASCII text file containing input file names, one per line. If multiple files are listed, they must have matching Earth transforms. If the inputs file name is '-', input is read from standard input.
+\item[ output ] The output data file name. 
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[-c, -{-}coherent=VARIABLE1[/VARIABLE2[...{]}]]Turns on coherent mode (only valid with \textbf{-{-}method latest or -{-}method explicit}
+). In coherent mode, the output values for all variables at a given pixel location are guaranteed to originate from the same input file. The specified variable list is used to prioritize variables to check for a valid latest/last value. If there are no valid values for the first variable at a given location, then the next variable is checked and so on until the latest/last valid value is found. This mode is useful for when data variables and their respective quality flags should be kept together during a composite operation. Without this option, the 'latest' and 'explicit' composite methods may select the latest/last valid data value from one input file, and the latest/last valid quality flag from another input file for a given location.
+\item[-h, -{-}help]Prints a brief help message.
+\item[-m, -{-}match=PATTERN]The variable name matching pattern. If specified, the pattern is used as a regular expression to match variable names. Only variables matching the pattern will be present in the output. By default, no pattern matching is performed and all variables are combined.
+\item[-M, -{-}method=TYPE]The composite method. Valid methods are 'mean', 'median', 'min', 'max', 'explicit' and 'latest'. The default is to calculate the mean.
+\item[-p, -{-}pedantic]Turns pedantic mode on. In pedantic mode, metadata from each input file is combined exactly such that composite attributes in the output file may contain repeated values. When pedantic mode is off, composite attributes are collapsed so that only unique values appear. By default, pedantic mode is off.
+\item[-v, -{-}verbose]Turns verbose mode on. The current status of data combination is printed periodically. The default is to run quietly.
+\item[-V, -{-}valid=COUNT]The minimum number of valid values required to form an aggregate function. By default, only one value per pixel is required. If the actual number of valid values is below this threshold, the output value is set to invalid.
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input or output file names. 
+\item  Unsupported input file format. 
+\item  Input file Earth transforms do not match. 
+\item  No matching variables found. 
+\item  Unsupported composite method. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  The following shows the combination of several Earth datasets into one using the 'latest' composite method: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata/hdf> cwcomposite -v
+     --method latest 2003_097_1428_n17_wi_na.hdf
+     2003_097_1607_n17_wi_na.hdf 2003_097_1751_n17_mo_na.hdf
+     2003_097_1931_n17_mo_na.hdf 2003_097_n17_na.hdf
+
+  cwcomposite: Reading input 2003_097_1428_n17_wi_na.hdf
+  cwcomposite: Adding avhrr_ch1 to composite variables
+  cwcomposite: Adding avhrr_ch2 to composite variables
+  cwcomposite: Adding avhrr_ch4 to composite variables
+  cwcomposite: Reading input 2003_097_1607_n17_wi_na.hdf
+  cwcomposite: Reading input 2003_097_1751_n17_mo_na.hdf
+  cwcomposite: Reading input 2003_097_1931_n17_mo_na.hdf
+  cwcomposite: Creating output 2003_097_n17_na.hdf
+  cwcomposite: Writing avhrr_ch1
+  cwcomposite: Writing avhrr_ch2
+  cwcomposite: Writing avhrr_ch4
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwcoverage} \hypertarget{cwcoverage}{}
+\subsection*{\underline{Name}}
+
+
+   cwcoverage - creates an Earth data coverage map.  
+\subsection*{\underline{Synopsis}}
+
+
+  cwcoverage [OPTIONS] input1 [input2 ...] output \\ 
+ cwcoverage [OPTIONS] output \\ 
+
+\subsubsection*{General options:}
+
+
+  -h, -{-}help \\ 
+ -v, -{-}verbose \\ 
+ -{-}version \\ 
+
+\subsubsection*{Output content and format options:}
+
+
+  -a, -{-}noantialias \\ 
+ -b, -{-}background=COLOR \\ 
+ -c, -{-}center=LATITUDE/LONGITUDE \\ 
+ -f, -{-}foreground=COLOR \\ 
+ -s, -{-}size=PIXELS \\ 
+
+\subsubsection*{Dataset boundary options:}
+
+
+  -H, -{-}highlight=PATTERN \\ 
+ -l, -{-}labels=LABEL1/LABEL2/... \\ 
+ -m, -{-}map=OUTPUT \\ 
+ -x, -{-}box=COLOR \\ 
+
+\subsubsection*{Ground station options:}
+
+
+  -C, -{-}stationcolor=COLOR \\ 
+ -e, -{-}elevation=DEGREES \\ 
+ -E, -{-}height=KILOMETERS \\ 
+ -L, -{-}stationlabels=LABEL1/LABEL2/... \\ 
+ -S, -{-}stations=LAT1/LON1/LAT2/LON2/... \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The coverage tool creates an Earth data coverage map by accessing a number of user-specified Earth data sets and tracing the boundaries onto an orthographic map projection. The map is output as a PNG graphics file. Approximate satellite ground station coverage boundaries may also be added to the map. 
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[input1 [input2 ...{]}]The input data files name(s). If none are specified, the output PNG image contains only map graphics and possibly ground station circles (see the \textbf{-{-}stations}
+ option).
+\item[output]The output PNG file name.
+
+\end{description}
+\subsubsection*{General options:}
+\begin{description}
+\item[ -h, -{-}help ] Prints a brief help message. 
+\item[ -v, -{-}verbose ] Turns verbose mode on. The current status of data rendering is printed periodically. The default is to run quietly. 
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsubsection*{Output content and format options:}
+\begin{description}
+\item[ -a, -{-}noantialias ] Turns off line antialiasing. By default, the edges of lines are smoothed using shades of the drawing color. The use of this option can significantly reduce the size of the output file, while sacrificing visual quality. 
+\item[ -b, -{-}background=COLOR ] The map background color. The color is specified by name or hexadecimal value. The default is black. 
+\item[ -c, -{-}center=LATITUDE/LONGITUDE ] The map center location. By default, the center location is determined from the data sets. 
+\item[ -f, -{-}foreground=COLOR ] The map foreground color. The color is specified by name or hexadecimal value. The default is a gray of 63\% RGB intensity. 
+\item[ -s, -{-}size=PIXELS ] The coverage map size in pixels. By default, the map size is 512 pixels. 
+
+\end{description}
+\subsubsection*{Dataset boundary options:}
+\begin{description}
+\item[ -H, -{-}highlight=PATTERN ] The highlighted input file matching pattern. By default, all input files are highlighted with the box boundary fill and color. With this option, only input files whose names match the pattern are highlighted. The remaining non-matching input file boundaries are drawn using the foreground color. 
+\item[ -l, -{-}labels=LABEL1/LABEL2/... ] The labels for each input file. Labels are drawn at the center point of each dataset boundary. By default, no labels are drawn. 
+\item[ -m, --map=OUTPUT ] The output file for HTML image map output. The output file contains an HTML fragment with an image map and area polygons for each input file, similar to the following: \begin{verbatim}
+
+  <map name="coverage_map">
+    <area shape="poly" id="region_0" coords="111,64,170,63,179,132,108,134,111,64" />
+    <area shape="poly" id="region_1" coords="75,106,132,109,133,179,66,174,75,106" />
+    <area shape="poly" id="region_2" coords="121,124,183,121,192,188,119,191,121,124" />
+  </map>
+   
+\end{verbatim}
+ The map may be used in an HTML document in conjunction with the output PNG coverage image to provide users with a clickable interface for area of interest selection. 
+\item[ -x, -{-}box=COLOR ] The box boundary and fill color. The color is specified by name or hexadecimal value. The default is a color close to cyan. 
+
+\end{description}
+\subsubsection*{Ground station options:}
+\begin{description}
+\item[ -C, -{-}stationcolor=COLOR ] The ground station circle color. This option is only used in conjunction with the \textbf{-{-}stations}
+ option. By default, the box color is used (see the \textbf{-{-}box}
+ option).
+\item[ -e, -{-}elevation=DEGREES ] The minimum elevation of the ground station antenna above the horizon in degrees. This option is only used in conjunction with the \textbf{-{-}stations}
+ option. By default, the antenna elevation is set to 5 degrees, which approximates a NOAA HRPT tracking station with a 1.7 m diameter dish.
+\item[ -E, -{-}height=KILOMETERS ] The orbital height of the theoretical satellite above the Earth surface in kilometers. This option is only used in conjunction with the \textbf{-{-}stations}
+ option. By default, the satellite orbital height is set to 846.5 km which approximates a NOAA polar orbiter.
+\item[ -L, -{-}stationlabels=LABEL1/LABEL2/... ] The ground station labels. This option is only used in conjunction with the \textbf{-{-}stations}
+ option. When specified, each ground station location is labelled with its corresponding label. By default, no labels are drawn.
+\item[ -S, -{-}stations=LAT1/LON1/LAT2/LON2/... ] A list of ground station locations. For each ground station, a circle is drawn on the Earth, centered at the ground station. The circle shows the approximate area that a theoretical satellite can view from orbit while in sight of the station, ie: the ground station's real-time coverage area. See the \textbf{-{-}height}
+ and \textbf{-{-}elevation}
+ options to control the orbital parameters of the theoretical satellite. Note that the swath width of the satellite sensor is not taken into account in drawing the circle, so the area should be used as a conservative estimate of satellite coverage.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Unrecognized color name. 
+\item  Invalid map center or station location. 
+\item  Mismatch between label and file or station count. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  As an example, the following command shows the creation of a coverage plot of the ER and SR CoastWatch regions covering the US East coast: \begin{verbatim}
+
+   phollema@damdog<~/cwatch/satdata/hdf> cwcoverage -v --labels ER/SR 
+     2004_155_1147_n15_er.hdf 2004_155_1147_n15_sr.hdf east_coast.png
+ 
+   cwcoverage: Reading input 2004_155_1147_n15_er.hdf
+   cwcoverage: Reading input 2004_155_1147_n15_sr.hdf
+   cwcoverage: Writing east_coast.png
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwdownload} \hypertarget{cwdownload}{}
+\subsection*{\underline{Name}}
+
+
+   cwdownload - downloads data from a CoastWatch server.  
+\subsection*{\underline{Synopsis}}
+
+
+ cwdownload [OPTIONS] host
+\subsubsection*{General options:}
+
+
+  -c, -{-}script=PATH \\ 
+ -d, -{-}dir=PATH \\ 
+ -f, -{-}force \\ 
+ -h, -{-}help \\ 
+ -t, -{-}test \\ 
+ -T, -{-}timeout=SECONDS \\ 
+ -{-}version \\ 
+
+\subsubsection*{Data file selection options:}
+
+
+  -a, -{-}age=HOURS \\ 
+ -C, -{-}coverage=PERCENT \\ 
+ -G, -{-}station=PATTERN \\ 
+ -p, -{-}projection=TYPE \\ 
+ -r, -{-}region=PATTERN \\ 
+ -s, -{-}satellite=PATTERN \\ 
+ -S, -{-}scenetime=PATTERN \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The download tool retrieves a set of user-specified data files from a CoastWatch data server. Data files may be selected based on satellite, scene time, region, ground station, and other parameters. Without any command line options, all data files on the server are retrieved. The command line options are used to filter the list of data files. Multiple options are used in conjunction, for example if both \textbf{-{-}satellite}
+ and \textbf{-{-}scenetime}
+ are specified, only files matching the specified satellites and scene times will be retrieved. The download tool has a built-in facility for avoiding redundant file downloads. Unless the \textbf{-{-}force}
+ option is used, files are only downloaded if no file with the same name already exists in the local directory. The \textbf{-{-}test}
+ option may be used for testing file download options without downloading any actual data. 
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[ host ] The CoastWatch server host name. There is no default host name. 
+
+\end{description}
+\subsubsection*{General options:}
+\begin{description}
+\item[ -c, -{-}script=PATH ] ADVANCED USERS ONLY. The query script path. The default is /ctera/query.cgi. 
+\item[ -d, -{-}dir=PATH ] The download directory path. The default is to download to the current directory. 
+\item[ -f, -{-}force ] Turns on forced mode. When forced mode is in effect, no check is performed to determine if the file already exists in the download directory. The default is to check if a file of the same name exists, and if so skip the download for that particular file. 
+\item[ -h, -{-}help ] Prints a brief help message. 
+\item[ -t, -{-}test ] Turns on test mode. When the test mode is in effect, the data files are selected based on the specified command line parameters but no actual data is downloaded. The default is to perform the data download. Test mode may be used to determine if a certain set of command line parameters have the desired effect without having to wait for data files to transfer. 
+\item[ -T, -{-}timeout=SECONDS ] The network timeout in seconds. If the network becomes unresponsive for the timeout period, the download is aborted. If there is a file currently in the process of downloading when the timeout occurs, the partial file is deleted. The default timeout is 30 seconds. 
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsubsection*{Data file selection options:}
+\begin{description}
+\item[ -a, -{-}age=HOURS ] The maximum age of the data in hours. Datasets contain a time stamp for the date and time that the data was taken by the sensor. Only datasets created more recently than the specified number of hours ago are retrieved, based on the clock on the host computer running the download. The default is to download regardless of date and time. 
+\item[ -C, -{-}coverage=PERCENT ] The minimum data coverage in percent. Mapped regions may have less than 100\% coverage when the edge of the satellite pass intersects the region area. The default minimum coverage is 0. The use of this option implies \textbf{-{-}projection mapped}
+.
+\item[ -G, -{-}station=PATTERN ] The ground station matching pattern. Multiple ground stations may be specified with a regular expression, for example '(wi$|$mo$|$hi)' for the wi, mo, and hi stations. The default is to download all ground stations. 
+\item[ -p, -{-}projection=TYPE ] The data projection type. Valid values are 'mapped' and 'swath'. Mapped datasets are those that have possibly been reduced in resolution, and registered to a standard map projection. Swath datasets are generally at the full sensor resolution and unregistered sensor scan projection. By default, all types of datasets are downloaded.
+\item[ -r, -{-}region=PATTERN ] The region code matching pattern. Multiple regions may be specified with a regular expression, for example '(er$|$sr$|$gr)' for the 'er', 'sr', and 'gr' regions. The default is to download all regions. The use of this option implies \textbf{-{-}projection mapped}
+.
+\item[ -s, -{-}satellite=PATTERN ] The satellite name matching pattern. For example, 'noaa-16'. Multiple satellites may be specified with a regular expression, for example 'noaa-1[56]' for NOAA-15 and NOAA-16. The default is to download data from all satellites.
+\item[ -S, -{-}scenetime=PATTERN ] The scene time matching pattern. Valid times are 'day', 'night', and 'day/night'. Multiple times may be specified with a regular expression, for example '(day$|$night)' for day and night. The default is to download all scene times.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Cannot contact data server. 
+\item  Invalid or write-protected download directory. 
+\item  Error transferring data file. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  The following shows a download command that retrieves any NOAA-16 daytime data files for the East Coast north and south regions captured at Wallops Island to the ~/cwatch/satdata directory from the fictitious server foobar.noaa.gov: \begin{verbatim}
+
+   phollema@localhost:<~> cwdownload --satellite noaa-16 --scenetime day 
+     --region '(er|sr)' --station wi --dir ~/cwatch/satdata foobar.noaa.gov
+
+   cwdownload: Contacting foobar.noaa.gov
+   cwdownload: Retrieving 2002_197_1719_n16_er.hdf
+   cwdownload: Retrieving 2002_197_1719_n16_sr.hdf
+   cwdownload: Retrieving 2002_197_1900_n16_er.hdf
+   cwdownload: Retrieving 2002_197_1900_n16_sr.hdf
+   cwdownload: Transferred 31715 kb in 4 files
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwexport} \hypertarget{cwexport}{}
+\subsection*{\underline{Name}}
+
+
+   cwexport - translates Earth data into external file formats.  
+\subsection*{\underline{Synopsis}}
+
+
+ cwexport [OPTIONS] input output
+\subsubsection*{General options:}
+
+
+  -f, -{-}format=TYPE \\ 
+ -h, -{-}help \\ 
+ -H, -{-}header \\ 
+ -m, -{-}match=PATTERN \\ 
+ -M, -{-}missing=VALUE \\ 
+ -v, -{-}verbose \\ 
+ -{-}version \\ 
+
+\subsubsection*{Binary raster specific options:}
+
+
+  -c, -{-}scale=FACTOR/OFFSET \\ 
+ -o, -{-}byteorder=ORDER \\ 
+ -r, -{-}range=MIN/MAX \\ 
+ -s, -{-}size=TYPE \\ 
+
+\subsubsection*{ASCII text specific options:}
+
+
+  -d, -{-}dec=DECIMALS \\ 
+ -D, -{-}delimit=STRING \\ 
+ -n, -{-}nocoords \\ 
+ -R, -{-}reverse \\ 
+
+\subsubsection*{NetCDF specific options:}
+
+
+  -S, -{-}dcs \\ 
+ -C, -{-}cw \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The export tool translates Earth data into external formats as described below. In all cases, 2D data sets are exported in row major order starting from row 0. For example, if the Earth data values form the 2D array: \begin{verbatim}
+
+    0  1  2  3
+    4  5  6  7
+    8  9 10 11
+   12 13 14 15
+ 
+\end{verbatim}
+ then values are output in the order: \begin{verbatim}
+
+   0 1 2 3 4 5 6 7 ...
+ 
+\end{verbatim}
+
+
+
+  In the general case, multiple variables may be exported to the same data file. The use of the \textbf{-{-}match}
+ option may be used to select a specific variable or subset of variables.
+\subsubsection*{Binary raster:}
+
+
+  The output is a stream of binary data values -- either 8-bit unsigned bytes, 16-bit signed integers, or 32-bit IEEE floating point values. For 8- and 16-bit output, data values may be scaled to integers using a minimum and maximum or by using a scaling factor and offset. For minimum/maximum scaling, integer data is calculated from data values using the equation: \begin{verbatim}
+
+   integer = type_min + type_range*((value - min) / (max - min))
+ 
+\end{verbatim}
+ where type\_min is 0 for 8-bit and -32768 for 16-bit, and type\_range is 255 for 8-bit and 65535 for 16-bit. For scaling factor and offset, the following equation is used: \begin{verbatim}
+
+   integer = value/factor + offset
+ 
+\end{verbatim}
+ In both cases, the results are rounded to the nearest integer and out of range values are assigned the missing value.
+\subsubsection*{ASCII text:}
+
+
+ The output is an ASCII text file with latitude, longitude, and data value printed -{-} one data value per line.
+\subsubsection*{ArcGIS binary grid:}
+
+
+ The output is a stream of 32-bit IEEE floating point values, ready for input to ArcGIS applications as a binary grid file. A header file may also be created to specify the Earth location and other parameters. In the case of the ArcGIS format, only one variable is allowed per binary grid file. If an attempt to export multiple variables is made, only the first variable is actually written.
+\subsubsection*{NetCDF:}
+
+
+ The output is a NetCDF-3 dataset with CF 1.4 convention metadata. The formatting follows as much as possible the recommendations and examples in the document ``Encoding CoastWatch Satellite Data in NetCDF using the CF Metadata Conventions'', Peter Hollemans, February 2010. In some cases, the source data for some attributes may not be available, in which case the output NetCDF may need to be modified and extended.
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[ input ] The input data file name. 
+\item[ output ] The output data file name. Unless the \textbf{-{-}format}
+ option is used, the output file extension indicates the desired output format: '.raw' for binary, '.txt' for text, '.flt' for ArcGIS, and '.nc' for NetCDF. 
+
+\end{description}
+\subsubsection*{General options:}
+\begin{description}
+\item[ -f, -{-}format=TYPE ] The output format. The current formats are 'bin' for binary raster, 'text' for ASCII text, 'arc' for ArcGIS binary grid, 'netcdf' for NetCDF, or 'auto' to detect the format from the output file name. The default is 'auto'.
+\item[ -h, -{-}help ] Prints a brief help message. 
+\item[ -H, -{-}header ] Specifies that a header should be written with the output data. The header is written before any data and is different depending on the output format: \begin{itemize}
+\item Binary: The header consists of one byte specifying the number of dimensions followed by a series of 32-bit signed integers specifying the dimension lengths.
+\item Text: The header is one line consisting of an integer specifying the number of dimensions followed by a series of integers specifying the dimension lengths.
+\item ArcGIS: The header is a separate file used by ArcGIS applications to determine the dimensions of the data, the geographic position and resolution, and other parameters. The header file name is created by replacing any '.' followed by an extension in the output file name with '.hdr'
+\item NetCDF: Not applicable, all metadata in NetCDF is written into the dataset itself.
+
+\end{itemize}
+ By default no header is written. 
+\item[ -m, -{-}match=PATTERN ] The variable name matching pattern. If specified, the pattern is used as a regular expression to match variable names. Only variables matching the pattern will be exported. By default, no pattern matching is performed and all variables are exported. 
+\item[ -M, -{-}missing=VALUE ] The output value for missing or out of range data. The default missing value is different depending on the output format: \begin{itemize}
+\item Binary: The default is 0 for 8-bit unsigned bytes, -32768 for 16-bit signed integers, and the IEEE NaN value for floating point.
+\item Text: The default is to print 'NaN' for missing values.
+\item ArcGIS: The missing value is fixed at -3.4e38 and the \textbf{-{-}missing}
+ option is ignored.
+\item NetCDF: Not applicable, the missing values for variable data are copied from the input data source.
+
+\end{itemize}
+
+\item[ -v, -{-}verbose ] Turns verbose mode on. The current status of data conversion is printed periodically. The default is to run quietly. 
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsubsection*{Binary raster specific options:}
+\begin{description}
+\item[ -c, -{-}scale=FACTOR/OFFSET ] The data scale factor and offset. Data values are scaled to integers using the factor and offset (see the equation above). The default factor is 1 and offset is 0. 
+\item[ -o, -{-}byteorder=ORDER ] The output byte order. Valid choices are 'host' for the host byte order, 'msb' for most significant byte first, or 'lsb' for least significant byte first. The default is the host byte order. 
+\item[ -r, -{-}range=MIN/MAX ] The data scaling range. Data values are mapped to integers using the minimum and maximum values (see the equation above). There is no default range. 
+\item[ -s, -{-}size=TYPE ] The binary value size. Valid choices are 'byte' for 8-bit unsigned bytes, 'short' for 16-bit signed integers, or 'float' for 32-bit IEEE floating point values. The default is 32-bit floats. 
+
+\end{description}
+\subsubsection*{ASCII text specific options:}
+\begin{description}
+\item[ -d, -{-}dec=DECIMALS ] The number of decimal places for printed geographic coordinate values. The default is 6 decimals. 
+\item[ -D, -{-}delimit=STRING ] The value delimiter string. By default, values are separated with a single space character. 
+\item[ -n, -{-}nocoords ] Turns geographic coordinate printing off. By default, each line has the form 'latitude longitude value' but with no coordinates, each line simply contains the data value. 
+\item[ -R, -{-}reverse ] Specifies that coordinates should be printed in reverse order, 'longitude latitude'. The default is 'latitude longitude'. 
+
+\end{description}
+\subsubsection*{NetCDF specific options:}
+\begin{description}
+\item[ -S, -{-}dcs ] Turns on writing of ocean color Data Content Standard metadata. The default is to write only CF-1.4 metadata. DCS metadata is written as a set of global NetCDF attributes with the namespace prefix 'dcs'. Only the minimal set of 15 required attributes are written. Since the NetCDF file will generally contain more than one variable, the required DCS attributes observedProperty and observedPropertyAlgorithm are set to 'Unknown' and must be modified manually.
+\item[ -C, -{-}cw ] Turns on writing of CoastWatch HDF-style metadata. The default is to write only CF-1.4 metadata. CoastWatch metadata is written as a set of global- and variable-level NetCDF attributes with the namespace prefix 'cw'. Only a very small subset of the original CoastWatch HDF metadata is written, those attributes that have no CF-1.4 equivalent.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input or output file names. 
+\item  Invalid variable name. 
+\item  Unrecognized format, size, or byte order. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  The following shows the export of AVHRR channel 1 data from a CoastWatch HDF file with the default 32-bit IEEE floating point value format, host byte order, no header, in verbose mode: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwexport --verbose 
+     --match 'avhrr_ch1' 2002_216_1853_n16_gr.hdf 2002_216_1853_n16_gr.ch1
+
+   cwexport: writing 'avhrr_ch1'
+ 
+\end{verbatim}
+ The example below shows the export of AVHRR channels 1, 2, and 4 to the same output file from a CoastWatch HDF file using 8-bit unsigned byte format, no header, in verbose mode. Range scaling is used to scale all values between -30 and 30 prior to conversion to byte values in the range 0 to 255. Note that some values may fall outside the range and be clipped, especially albedo values which can range up to 100. The clipped values are assigned the default missing value, which for byte data is 0. \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwexport --verbose 
+     --match 'avhrr_ch[124]' --size byte --range -30/30 
+     2002_216_1853_n16_gr.hdf 2002_216_1853_n16_gr.ch124
+
+   cwexport: writing 'avhrr_ch1'
+   cwexport: writing 'avhrr_ch2'
+   cwexport: writing 'avhrr_ch4'
+ 
+\end{verbatim}
+ The example shows the export of AVHRR channel 4 data to an ASCII text file from a CoastWatch IMGMAP file in verbose mode. The geographic coordinates are printed in the order longitude, latitude, and delimited with a comma character. Any missing values are denoted with the value -999. A one line dimension header is prepended to the dataset. \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwexport --verbose 
+     --match 'avhrr_ch4' --format text --reverse --delimit ',' 
+     --missing -999 --header 2002_214_2057_n16_wv_c4.cwf 
+     2002_214_2057_n16_wv_c4.txt
+
+   cwexport: writing 'avhrr_ch4'
+ 
+\end{verbatim}
+ The first few lines of the resulting text file are as follows: \begin{verbatim}
+
+   2,512,512
+   -127.777901,51.212974,13
+   -127.768008,51.212974,13.75
+   -127.758116,51.212974,13.75
+   -127.748224,51.212974,13.1
+   -127.738332,51.212974,13.1
+   -127.728439,51.212974,13
+   -127.718547,51.212974,8.95
+   -127.708655,51.212974,7.45
+   -127.698763,51.212974,7.45
+ 
+\end{verbatim}
+ The example below shows the export of AVHRR channel 2 data to an ArcGIS binary grid file from a CoastWatch IMGMAP file, verbose mode on. The binary grid data is written to a '.flt' file and the header data to a '.hdr' file. \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwexport --verbose 
+     --format arc --match 'avhrr_ch2' --header 
+     2002_214_2057_n16_wv_c2.cwf 2002_214_2057_n16_wv_c2.flt
+
+   cwexport: writing 'avhrr_ch2'
+ 
+\end{verbatim}
+ The header file contents are as follows: \begin{verbatim}
+
+   nrows 512
+   ncols 512
+   xllcorner -14208797.57
+   yllcorner 6088966.68
+   cellsize 1099.96
+   nodata_value 1.4E-45
+   byteorder MSBFIRST
+ 
+\end{verbatim}
+ A final example shows the export of SST and cloud data to a NetCDF dataset: \begin{verbatim}
+
+   phollema@Bean cwexport -v --match '(sst|cloud)' 
+     2010_040_1636_m02_wj.hdf 2010_040_1636_m02_wj.nc"
+
+   cwexport: Creating output 2010_040_1636_m02_wj.nc
+   cwexport: Writing cloud
+   cwexport: Writing sst
+ 
+\end{verbatim}
+ A dump of the file contents: \begin{verbatim}
+
+   netcdf 2010_040_1636_m02_wj {
+   dimensions:
+     time = 1 ;
+     level = 1 ;
+     row = 1024 ;
+     column = 1024 ;
+   variables:
+     int coord_ref ;
+       coord_ref:grid_mapping_name = "mercator" ;
+       coord_ref:longitude_of_projection_origin = 0. ;
+       coord_ref:standard_parallel = 0. ;
+       coord_ref:false_easting = 0. ;
+       coord_ref:false_northing = 0. ;
+       coord_ref:semi_major_axis = 6378137. ;
+       coord_ref:inverse_flattening = 298.257223653 ;
+       coord_ref:longitude_of_prime_meridian = 0. ;
+     double x(column) ;
+       x:standard_name = "projection_x_coordinate" ;
+       x:units = "m" ;
+     double y(row) ;
+       y:standard_name = "projection_y_coordinate" ;
+       y:units = "m" ;
+     double lat(row, column) ;
+       lat:standard_name = "latitude" ;
+       lat:units = "degrees_north" ;
+     double lon(row, column) ;
+       lon:standard_name = "longitude" ;
+       lon:units = "degrees_east" ;
+     double time(time) ;
+       time:standard_name = "time" ;
+       time:units = "seconds since 1970-01-01 00:00:00 UTC" ;
+     double level(level) ;
+       level:standard_name = "height" ;
+       level:units = "m" ;
+       level:positive = "up" ;
+     byte cloud(time, level, row, column) ;
+       cloud:missing = 0b ;
+       cloud:valid_range = 0, 255 ;
+       cloud:coordinates = "lat lon" ;
+       cloud:cell_methods = "area: mean" ;
+       cloud:grid_mapping = "coord_ref" ;
+     short sst(time, level, row, column) ;
+       sst:scale_factor = 0.01 ;
+       sst:add_offset = -0. ;
+       sst:missing = -32768s ;
+       sst:units = "celsius" ;
+       sst:coordinates = "lat lon" ;
+       sst:cell_methods = "area: mean" ;
+       sst:grid_mapping = "coord_ref" ;
+       sst:source = "nonlinear_split_window linear_triple_window_modified" ;
+ 
+   // global attributes:
+     :Conventions = "CF-1.4" ;
+     :source = "METOP2_AVHRR " ;
+     :institution = "USDOC/NOAA/NESDIS CoastWatch" ;
+     :history = "[2010-03-13 09:46:43 IST cwf-3.2.4-pre-build169 phollema] cwexport -v --match (sst|cloud) 2010_040_1636_m02_wj.hdf 2010_040_1636_m02_wj.nc" ;
+   }
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwgraphics} \hypertarget{cwgraphics}{}
+\subsection*{\underline{Name}}
+
+
+   cwgraphics - creates Earth data annotation graphics.  
+\subsection*{\underline{Synopsis}}
+
+
+  cwgraphics [OPTIONS] input \\ 
+ cwgraphics [OPTIONS] input output 
+\subsubsection*{Options:}
+
+
+  -c, -{-}coast=PLANE \\ 
+ -g, -{-}grid=PLANE \\ 
+ -h, -{-}help \\ 
+ -l, -{-}land=PLANE \\ 
+ -p, -{-}political=PLANE \\ 
+ -v, -{-}verbose \\ 
+ -V, -{-}variable=NAME \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The graphics tool creates Earth data annotation graphics in the form of a byte-valued variable. Each output byte in the new variable contains 8 bits, one for each of 8 possible graphics planes numbered 1 to 8 from the least significant bit to the most significant bit. The graphics planes are independent of one another and encode a bitmask for graphical data annotation, where a bit value of 0 is interpreted as 'off' and a bit value of 1 as 'on'. In this way, 8 separate binary bitmasks may be encoded into one byte value. For example a pixel with graphics planes 2, 3, and 4 on is encoded as: \begin{verbatim}
+
+    Binary value  = 00001110
+    Decimal value = 14
+ 
+\end{verbatim}
+ Following the standard convention for graphics planes in CoastWatch product files, the default behaviour places latitude/longitude grid graphics in plane 2, coast line graphics in plane 3, and land mask graphics in plane 4. Coast lines are derived from GSHHS coast line data, and land polygons are filled GSHHS polygons (see \url{http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html}). The default output variable name is 'graphics'. These defaults may be changed using command line options to alter the planes used for each type of annotation, to exclude or add some types of annotation, and to change the output variable name.
+
+
+ Once the graphics planes are created, they may be used as overlay graphics for rendered Earth data images. The graphics byte data may be exported using the cwexport tool for use in other software packages, or may be used in the cwrender tool with the \textbf{-{-}bitmask}
+ option. 
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[ input ] The input data file name. 
+\item[ output ] The output file name. If the output file name is not specified, the input file name is used and the new variable must not already exist in the input file. 
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[ -c, -{-}coast=PLANE ] The coast line graphics plane. The default is plane 3. If the plane value is 0, no coast graphics are rendered. 
+\item[ -g, -{-}grid=PLANE ] The grid line graphics plane. The default is plane 2. If the plane value is 0, no grid graphics are rendered. 
+\item[ -h, -{-}help ] Prints a brief help message. 
+\item[ -l, -{-}land=PLANE ] The land mask graphics plane. The default is plane 4. If the plane value is 0, no land graphics are rendered. 
+\item[ -p, -{-}political=PLANE ] The political line graphics plane. There is no default plane for political lines, as they are normally excluded from rendering. 
+\item[ -v, -{-}verbose ] Turns verbose mode on. The current status of data rendering is printed periodically. The default is to run quietly. 
+\item[ -V, -{-}variable=NAME ] The output variable name. The default name is 'graphics'. 
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input or output file names. 
+\item  Unsupported input file format. 
+\item  Output variable already exists in input file. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  The following shows the creation of a standard set of graphics planes using cwgraphics. The file being acted upon is a CoastWatch HDF file created using the graphical cwmaster tool: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata/hdf> cwgraphics -v bc_coast.hdf
+   cwgraphics: Reading input bc_coast.hdf
+   cwgraphics: Creating graphics variable
+   cwgraphics: Rendering overlay at plane 2
+   cwgraphics: Rendering overlay at plane 3
+   cwgraphics: Rendering overlay at plane 4
+ 
+\end{verbatim}
+ Another example below shows the alteration of the default options. Only coast line and political line graphics are rendered to plane 1, and the output variable is named 'geography': \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata/hdf> cwgraphics -v --land 0 
+     --grid 0 --coast 1 --political 1 --variable geography bc_coast.hdf
+   cwgraphics: Reading input bc_coast.hdf
+   cwgraphics: Creating geography variable
+   cwgraphics: Rendering overlay at plane 1
+   cwgraphics: Rendering overlay at plane 1
+   cwgraphics: Rendering overlay at plane 1
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwimport} \hypertarget{cwimport}{}
+\subsection*{\underline{Name}}
+
+
+   cwimport - translates Earth data into CoastWatch HDF.  
+\subsection*{\underline{Synopsis}}
+
+
+  cwimport [OPTIONS] input1 [input2 ...] output 
+\subsubsection*{Options:}
+
+
+  -c, -{-}copy \\ 
+ -h, -{-}help \\ 
+ -m, -{-}match=PATTERN \\ 
+ -v, -{-}verbose \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The import tool translates Earth data into CoastWatch HDF format. Multiple input files may be specified, but must have matching Earth transforms and dates. The utility loops over all input files and creates a single CoastWatch HDF output file. The utility does not handle multiple variables with the same name -{-} if a variable in an input file is encountered with the same name as an existing variable from a previous input file, the new variable is skipped. Options are available to alter verbosity and variable name matching. 
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[ input1 [input2 ...] ] The input data file name(s). At least one input file is required. If multiple files are specified, they must have matching dates and Earth transforms. The currently supported input formats are CoastWatch HDF, CoastWatch IMGMAP, TeraScan HDF, and NOAA 1b format GAC/LAC/HRPT AVHRR. 
+\item[ output ] The output data file name. 
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[ -c, -{-}copy ] Turns on copy mode. In copy mode, variables from the input files are copied into an existing output file. The default is to create a new output file and populate it with data. Copy mode is especially useful for copying variables from one CoastWatch HDF file to another.
+\item[ -h, -{-}help ] Prints a brief help message. 
+\item[ -m, -{-}match=PATTERN ] The variable name matching pattern. If specified, the pattern is used as a regular expression to match variable names. Only variables matching the pattern will be imported. By default, no pattern matching is performed and all variables are imported. 
+\item[ -v, -{-}verbose ] Turns verbose mode on. The current status of data conversion is printed periodically. The default is to run quietly. 
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input or output file names. 
+\item  Unsupported input file format. 
+\item  Input file dates or Earth transforms do not match. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  The following shows the import of several .cwf files to CoastWatch HDF with verbose mode on: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwimport --verbose
+     2002_214_2057_n16_wv_*.cwf 2002_214_2057_n16_wv.hdf
+
+   cwimport: Reading file [1/2], 2002_214_2057_n16_wv_c2.cwf
+   cwimport: Writing avhrr_ch2
+   cwimport: Writing graphics
+   cwimport: Reading file [2/2], 2002_214_2057_n16_wv_c4.cwf
+   cwimport: Writing avhrr_ch4
+   cwimport: Writing graphics
+   cwimport: Variable 'graphics' already exists, skipping
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwinfo} \hypertarget{cwinfo}{}
+\subsection*{\underline{Name}}
+
+
+   cwinfo - prints earth data file information.  
+\subsection*{\underline{Synopsis}}
+
+
+  cwinfo [OPTIONS] input 
+\subsubsection*{Options:}
+
+
+  -h, -{-}help \\ 
+ -t, -{-}transform \\ 
+ -c, -{-}coord \\ 
+ -v, -{-}verbose \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The information utility dumps earth data information in a display-friendly format. The global earth information is printed such as satellite name, sensor, date, and earth transform information. The name of each variable is printed along with its data type, dimensions, scaling factor, and so on. For more detailed printing of generic HDF file contents, use the HDF hdp command. 
+
+
+ When the \textbf{-{-}transform}
+ option is used, various additional earth transform information is printed. Let nc and nr be the x and y coordinate dimensions respectively, and mc=(nc-1)/2, mr=(nr-1)/2 be the midpoint coordinates. Note that indexing is zero-based and coordinates refer to the pixel center. Then the following information is computed: \begin{itemize}
+\item Pixel width at (mc,mr)
+\item Pixel height at (mc,mr)
+\item Total width from (0,mr) to (nc-1,mr)
+\item Total height from (mc,0) to (mc,nr-1)
+\item Center lat/lon at (mc,mr)
+\item Upper-left lat/lon at (0,0)
+\item Upper-right lat/lon at (mc-1,0)
+\item Lower-left lat/lon at (0,mr-1)
+\item Lower-right lat/lon at (mc-1,mr-1)
+
+\end{itemize}
+
+
+
+ When the \textbf{-{-}coord}
+ option is used, Common Data Model coordinate systems are printed if available. Generally this style of coordinate system information is only available for files read by the NetCDF Java library.
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[input]The input data file name. 
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[ -h, -{-}help ] Prints a brief help message. 
+\item[ -t, -{-}transform ] Specifies that additional earth transform information should also be printed. The default is to show only global and variable information. 
+\item[ -c, -{-}coord ] Specifies that Common Data Model coordinate system information should also be printed. The default is to show only global and variable information. 
+\item[ -v, -{-}verbose ] Turns verbose mode on. The current status of automatic file identification is printed. This output is useful when trying to understand why a certain file is not being recognized by this and other tools. The default is to run quietly. 
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input file name. 
+\item  Unsupported input file format. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  The following shows an information dump of a CoastWatch HDF file from the West Coast: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwinfo 2002_197_1100_n16_wn.hdf
+
+   Contents of file 2002_197_1100_n16_wn.hdf
+   
+   Global information:
+     Satellite:        noaa-16
+     Sensor:           avhrr
+     Date:             2002/07/16 JD 197
+     Time:             11:00:08 UTC
+     Pass type:        night
+     Projection type:  mapped
+     Map projection:   mercator
+     Map affine:       0 -1469.95 1469.95 0 -15012623.67 6367109.52 
+     Origin:           USDOC/NOAA/NESDIS CoastWatch
+   
+   Variable information:
+     Variable       Type    Dimensions  Units          Scale     Offset    
+     avhrr_ch3      short   1024x1024   temp_deg_c     0.01      0         
+     avhrr_ch4      short   1024x1024   temp_deg_c     0.01      0         
+     avhrr_ch5      short   1024x1024   temp_deg_c     0.01      0         
+     sst            short   1024x1024   temp_deg_c     0.01      0         
+     cloud          byte    1024x1024   -              -         -         
+     sat_zenith     short   1024x1024   -              0.0001    0         
+     graphics       byte    1024x1024   -              -         -         
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwmaster} \hypertarget{cwmaster}{}
+\subsection*{\underline{Name}}
+
+
+   cwmaster - creates map projection master datasets.  
+\subsection*{\underline{Synopsis}}
+
+
+  cwmaster [OPTIONS] input \\ 
+ cwmaster [OPTIONS] 
+\subsubsection*{Options:}
+
+
+  -h, -{-}help \\ 
+ -s, -{-}splash \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The master utility creates map projection master data sets using a graphical user interface. A master projection specifies the translation between grid row and column coordinates and Earth latitude and longitude coordinates. A number of common map projections are available such as Mercator, Transverse Mercator, Polar Stereographic, Orthograpic, Lambert Conformal Conic, and so on. Detailed help on the usage of cwmaster is available from within the utility using the menu bar under \emph{Help $|$ Help and Support}
+.
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[input]The input data file name. If specified, the data file is opened and used as the initial map projection master.
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[-h, -{-}help]Prints a brief help message.
+\item[-s, -{-}splash]Shows the splash window on startup. The splash window shows the version, author, and web site information.
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input file name. 
+\item  Unsupported input file format. 
+\item  Input file does not contain a map projection. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  The following shows the use of cwmaster to load master parameters from a CoastWatch IMGMAP file: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata/2002_319_2144_n16_wl> cwmaster 
+     2002_319_2144_n16_wl_c2.cwf
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwmath} \hypertarget{cwmath}{}
+\subsection*{\underline{Name}}
+
+
+   cwmath - combines Earth data using a mathematical expression.  
+\subsection*{\underline{Synopsis}}
+
+
+  cwmath [OPTIONS] input \\ 
+ cwmath [OPTIONS] input1 [input2 ...] output 
+\subsubsection*{Options:}
+
+
+  -c, -{-}scale=FACTOR/OFFSET \\ 
+ -e, -{-}expr=EXPRESSION \\ 
+ -h, -{-}help \\ 
+ -l, -{-}longname=STRING \\ 
+ -s, -{-}size=TYPE \\ 
+ -t, -{-}template=VARIABLE \\ 
+ -u, -{-}units=STRING \\ 
+ -v, -{-}verbose \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The math tool combines Earth data using a mathematical expression. The expression takes the form: \begin{verbatim}
+
+   variable = formula
+ 
+\end{verbatim}
+ where the variable is the output variable to create and the formula is a mathematical combination of input variables. The formula may contain a number of standard operators, for example addition and subtraction, as well as functions such as sine and cosine and numerical and symbolic constants. The supported operators and functions are as follows:
+
+
+ 
+
+\begin{tabular}{|c|c|}
+\hline 
+Operator &Symbol \\
+ \hline 
+Power &\^{} \\
+ \hline 
+Boolean Not &! \\
+ \hline 
+Unary Plus, Unary Minus &+x, -x \\
+ \hline 
+Modulus &\% \\
+ \hline 
+Division &/ \\
+ \hline 
+Multiplication &* \\
+ \hline 
+Addition, Subtraction &+, - \\
+ \hline 
+Less or Equal, More or Equal &$<$=, $>$= \\
+ \hline 
+Less Than, Greater Than &$<$, $>$ \\
+ \hline 
+Not Equal, Equal &!=, == \\
+ \hline 
+Boolean And &\&\& \\
+ \hline 
+Boolean Or &$|$$|$ \\
+ \hline 
+
+\end{tabular}
+
+
+
+
+ 
+
+\begin{tabular}{|c|c|}
+\hline 
+Function &Calling sequence \\
+ \hline 
+Sine &sin (x) \\
+ \hline 
+Cosine &cos (x) \\
+ \hline 
+Tangent &tan (x) \\
+ \hline 
+Arc Sine &asin (x) \\
+ \hline 
+Arc Cosine &acos (x) \\
+ \hline 
+Arc Tangent &atan (x) \\
+ \hline 
+Hyperbolic Sine &sinh (x) \\
+ \hline 
+Hyperbolic Cosine &cosh (x) \\
+ \hline 
+Hyperbolic Tangent &tanh (x) \\
+ \hline 
+Inverse Hyperbolic Sine &asinh (x) \\
+ \hline 
+Inverse Hyperbolic Cosine &acosh (x) \\
+ \hline 
+Inverse Hyperbolic Tangent &atanh (x) \\
+ \hline 
+Natural Logarithm &ln (x) \\
+ \hline 
+Logarithm base 10 &log (x) \\
+ \hline 
+Angle &angle (x) \\
+ \hline 
+Absolute Value / Magnitude &abs (x) \\
+ \hline 
+Random number (between 0 and 1) &rand () \\
+ \hline 
+Modulus &mod (x) \\
+ \hline 
+Square Root &sqrt (x) \\
+ \hline 
+Sum &sum (x1, x2, ...) \\
+ \hline 
+if (condition is true) then return (x1)\\ 
+ else return (x2) &select (condition, x1, x2) \\
+ \hline 
+Hexadecimal decoder &hex (string) \\
+ \hline 
+if (b (BITWISE OR) mask == 0) then return (x)\\ 
+ else return (Not-a-Number) &mask (x, b, mask) \\
+ \hline 
+Bitwise And &and (x1, x2) \\
+ \hline 
+Bitwise Or &or (x1, x2) \\
+ \hline 
+Bitwise Xor &xor (x1, x2) \\
+ \hline 
+Bitwise Not &not (x) \\
+ \hline 
+
+\end{tabular}
+
+
+
+
+ 
+
+\begin{tabular}{|c|c|}
+\hline 
+Constant &Value \\
+ \hline 
+e &2.7182818... \\
+ \hline 
+pi &3.1415927... \\
+ \hline 
+nan (Not-a-Number) &NaN \\
+ \hline 
+
+\end{tabular}
+
+
+
+
+ Note that boolean expressions are evaluated to be either 1 or 0 (true or false respectively). 
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[input]The single input and output data file. In the case that a single input file is specified and no output file, data is read from and written to the same file. The new variable created by the expression must not already exist in the input file.
+\item[input1 [input2...{]}]The input data file name(s). If multiple input files are specified, variables on the right hand side of the expression (or used in the \textbf{-{-}template}
+ option) must be prefixed by the string 'file$<$N$>$\_' where $<$N$>$ is replaced with the index of the input file which contains the variable and input file indexing starts at 1. For example, to reference the variable 'avhrr\_ch4' in the second input file, use 'file2\_avhrr\_ch4' in the expression.
+\item[output]The output data file name. If specified and the file does not already exist, it will be created using metadata from the first input file. If it does exist, it will be opened and checked for a compatible Earth transform and the new variable data will be added to the file. The new variable created by the expression must not already exist in the output file. The output file can be one of the input files if needed.
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[ -c, --scale=FACTOR/OFFSET ] The output variable scale and offset. The scaling is used to store floating-point values as integers using the equation: \begin{verbatim}
+
+     integer = value/factor + offset
+   
+\end{verbatim}
+ The default is '0.01,0'. This option is ignored if \textbf{-{-}size}
+ is 'float'. 
+\item[ -e, -{-}expr=EXPRESSION ] The mathematical expression. See above for the expression syntax and supported operators and functions. If no expression is specified, the user will be prompted to enter an expression at the keyboard. The latter method is recommended for operating systems such as Microsoft Windows in which the command line shell can mangle some expression characters such as the equals sign. 
+\item[ -h, -{-}help ] Prints a brief help message. 
+\item[ -l, -{-}longname=STRING ] The output variable long name. The long name is a verbose string to describe the variable in common terms. For example, the variable named 'sst' might have the long name 'sea surface temperature'. The default is to use the output variable name as the long name. 
+\item[ -s, -{-}size=TYPE ] The output variable value size. Valid choices are 'byte' or 'ubyte' for 8-bit signed or unsigned bytes, 'short' or 'ushort' for 16-bit signed or unsigned integers, and 'float' for 32-bit floating-point values with no scaling. The default is 'short'. 
+\item[ -t, -{-}template=VARIABLE ] The output template variable. When a template is used, the output variable size, scaling, units, long name, and missing value are all determined from the template variable. Any of these properties set from the command line override the corresponding template property. There is no default template variable. 
+\item[ -f, -{-}full-template ] Turns on full template attribute mode. All attributes from the template variable (except for those overridden at the command line) are copied to the output variable. By default only the minimal set of attributes is written. 
+\item[ -u, -{-}units=STRING ] The output variable units. For example if the output variable data is based on temperature in Celsius, the variable units might be 'celsius'. There is no default units value. 
+\item[ -v, -{-}verbose ] Turns verbose mode on. The current status of computation is printed periodically. The default is to run quietly. 
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input or output file names. 
+\item  Unsupported input file format. 
+\item  Invalid mathematical expression. 
+\item  Output variable already exists in input file. 
+\item  Invalid scale or size specified. 
+\item  Unsupported variable rank detected. 
+\item  Invalid expression variable name. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  The following shows the correction of AVHRR channel 2 data for solar zenith angle. The output variable is named 'avhrr\_ch2\_corr' and is written to the input file: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata/hdf> cwmath -v --units 
+     "percent" --longname "AVHRR channel 2 corrected" 
+     --expr "avhrr_ch2_corr = avhrr_ch2/cos(sun_zenith*pi/180)" 
+     2003_104_1513_n17_er.hdf
+
+   cwmath: Reading input 2003_104_1513_n17_er.hdf
+   cwmath: Creating avhrr_ch2_corr variable
+   cwmath: Computing row 0
+   cwmath: Computing row 100
+   cwmath: Computing row 200
+   cwmath: Computing row 300
+   ...
+ 
+\end{verbatim}
+ Another example below shows the computation of Normalized Difference Vegetation Index (NDVI): \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata/hdf> cwmath -v --longname 
+     "Normalized Difference Vegetation Index" 
+     --expr "ndvi = (avhrr_ch2 - avhrr_ch1)/(avhrr_ch2 + avhrr_ch1)" 
+     2003_104_1513_n17_er.hdf
+
+   cwmath: Reading input 2003_104_1513_n17_er.hdf
+   cwmath: Creating ndvi variable
+   cwmath: Computing row 0
+   cwmath: Computing row 100
+   cwmath: Computing row 200
+   cwmath: Computing row 300
+   ...
+ 
+\end{verbatim}
+ In order to demonstrate the use of the 'mask' function, the example below shows the masking of the 'sst' variable using the 'cloud' variable. Note that a hexadecimal value is used to determine which values from the cloud mask are used in the masking procedure. Since the cloud data is represented by 8-bit bytes, the hexadecimal mask value need only specify two hexadecimal digits. In this case, the value '0x6f' represents bits 1, 2, 3, 4, 6, and 7 (for all cloud mask bits, the value would be '0xff'): \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata/hdf> cwmath -v --template sst
+     --expr 'sst_masked = mask (sst, cloud, hex ("0x6f"))'
+     2003_104_1513_n17_er.hdf
+
+   cwmath: Reading input 2003_104_1513_n17_er.hdf
+   cwmath: Creating sst_masked variable
+   cwmath: Computing row 0
+   cwmath: Computing row 100
+   cwmath: Computing row 200
+   cwmath: Computing row 300
+   ...
+ 
+\end{verbatim}
+ A final example below shows how the tool may be used to compute complex formulas using a Unix Bourne shell script. The example computes the theoretical AVHRR channel 3b albedo at night for NOAA-17 using actual channel 3b temperatures and channel 3b emission temperatures estimated from channel 4 and 5: \begin{verbatim}
+
+   #!/bin/sh
+   
+   input=$1
+   T3E_A=6.82947
+   T3E_B=0.97232
+   T3E_C=1.66366
+   ZERO_C=273.15
+   t3="(avhrr_ch3 + $ZERO_C)"
+   t4="(avhrr_ch4 + $ZERO_C)"
+   t5="(avhrr_ch5 + $ZERO_C)"
+   t3e="($T3E_A + $T3E_B*$t4 + $T3E_C*($t4 - $t5))"
+   planck_c1=1.1910427e-5
+   planck_c2=1.4387752
+   w3=2669.3554
+   c3b_a=1.702380
+   c3b_b=0.997378
+   rad3="(($planck_c1*($w3^3)) / (e^(($planck_c2*$w3)/($c3b_a + $c3b_b*$t3)) - 1.0))"
+   rad3e="(($planck_c1*($w3^3)) / (e^(($planck_c2*$w3)/($c3b_a + $c3b_b*$t3e)) - 1.0))"
+   alb3="(100*(1 - $rad3/$rad3e))"
+   cwmath -v --longname "AVHRR channel 3 albedo" --units "percent" \
+     --expr "avhrr_ch3_albedo=$alb3" $input
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwnavigate} \hypertarget{cwnavigate}{}
+\subsection*{\underline{Name}}
+
+
+   cwnavigate - adds navigation corrections to Earth data.  
+\subsection*{\underline{Synopsis}}
+
+
+  cwnavigate [OPTIONS] \{-t, -{-}trans=ROWS/COLS\} input\\ 
+ cwnavigate [OPTIONS] \{-r, -{-}rotate=ANGLE\} input\\ 
+ cwnavigate [OPTIONS] \{-a, -{-}affine=A/B/C/D/E/F\} input\\ 
+ cwnavigate [OPTIONS] \{-R, -{-}reset\} input\\ 
+
+\subsubsection*{Options:}
+
+
+  -h, -{-}help \\ 
+ -m, -{-}match=PATTERN \\ 
+ -v, -{-}verbose \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The navigation tool adds navigation corrections to 2D variables in an Earth data file by setting navigation transform parameters. The most basic navigation transform consists of additive translation in the row and column data coordinates. As an example of translation, the following diagram shows coastlines in the Earth image data as a '.' (period) symbol and coastlines derived from a GIS database as a '*' (star). Translation has been used to correct the position of the image data: \begin{verbatim}
+
+        ***                              ***
+      ... ***         *****                ***         *****
+        ... ***     **...                    ***     **
+          ... *   .**          ---->           *    **
+            . *  **                            *  **
+            . ****        row trans = 1        ****
+            ....          col trans = -2
+ 
+\end{verbatim}
+
+
+
+ A more generic navigation transform consists of a translation combined with a rotation or shear. To represent generic navigation transforms, an affine transform matrix is used to convert ``desired'' data coordinates to ``actual'' data coordinates as follows: \begin{verbatim}
+
+   |row'|   |a  c  e|  |row|
+   |    |   |       |  |   |
+   |col'| = |b  d  f|  |col|
+   |    |   |       |  |   |   
+   | 1  |   |0  0  1|  | 1 | 
+ 
+\end{verbatim}
+ where [a..f] are the affine transform matrix coefficients and (row',col') is the actual data coordinates at which the desired data value for (row,col) may be found.
+
+
+ To apply a navigation transform to a 2D variable, the existing navigation transform is read and the new transform is applied to it using matrix multiplication to create a combined transform. As an example, suppose that T1 is the initial navigation transform. The application of an additional transform T2 results in a new transform that is equivalent to: \begin{verbatim}
+
+   T2 (T1 (row, col))
+ 
+\end{verbatim}
+
+
+
+ A navigation transform can be applied to a subset of 2D variables, or all variables in the file. Note that satellite channel data or channel-derived variables should be corrected with navigation but GIS-derived variables such as coastline and lat/lon grid graphics should not be corrected. Setting the navigation transform simply establishes a mapping between desired and actual data coordinates -{-} it does not change the gridded data values themselves. Once a navigation transform has been set, other CoastWatch tools in this package will take the transform into account when reading the data. 
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[ -t, -{-}trans=ROWS/COLS ] The translation transform to apply. The actual row and column coordinates are calculated by adding the specified row and column translation to the desired coordinates. 
+\item[ -r, -{-}rotate=ANGLE ] The rotation transform to apply. The actual row and column coordinates are calculated by rotating the desired row and column coordinates about the data center by the specified angle in degrees. Positive angles rotate counter-clockwise while negative angles rotate clockwise.
+\item[ -a, -{-}affine=A/B/C/D/E/F ] The explicit affine transform to apply. The coefficients are used to form the affine transform matrix (see the Description section above) which is applied to the existing transform using matrix multiplication. 
+\item[ -R, -{-}reset ] Specifies that the existing navigation transform should be reset to the identity. Under the identity transform, no navigation correction is performed.
+\item[ input ] The input data file name. The navigation corrections are applied to the input file in-situ. For CoastWatch HDF files, the corrections are applied to individual variables. For CoastWatch IMGMAP files, corrections are applied to the global attributes and the \textbf{-{-}match}
+ option has no effect. No other file formats are supported.
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[ -h, -{-}help ] Prints a brief help message. 
+\item[ -m, -{-}match=PATTERN ] The variable name matching pattern. If specified, the pattern is used as a regular expression to match variable names. Only variables matching the pattern will be navigated. By default, no pattern matching is performed and all variables are navigated. 
+\item[ -v, -{-}verbose ] Turns verbose mode on. The status of navigation correction is printed periodically. The default is to run quietly. 
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input file name. 
+\item  Unsupported input file format. 
+\item  Unsupported navigation correction. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  The following example shows the navigation correction of a NOAA-15 CoastWatch HDF data file from the Gulf of Mexico: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwnavigate --trans -3/3 -v 
+     --match '(avhrr.*|cloud|sst)' 2002_328_1326_n15_ml.hdf
+
+   cwnavigate: Reading input 2002_328_1326_n15_ml.hdf
+   cwnavigate: Applying navigation correction to avhrr_ch1
+   cwnavigate: Applying navigation correction to avhrr_ch2
+   cwnavigate: Applying navigation correction to avhrr_ch4
+   cwnavigate: Applying navigation correction to cloud
+   cwnavigate: Applying navigation correction to sst
+ 
+\end{verbatim}
+ Another example below shows the navigation correction of a NOAA-15 CoastWatch IMGMAP data file from the US east coast: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwnavigate --trans -2/1 -v 
+     2002_326_1330_n15_er_c2.cwf
+
+   cwnavigate: Reading input 2002_326_1330_n15_er_c2.cwf
+   cwnavigate: Applying navigation correction
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwregister} \hypertarget{cwregister}{}
+\subsection*{\underline{Name}}
+
+
+   cwregister - resamples gridded Earth data to a master projection.  
+\subsection*{\underline{Synopsis}}
+
+
+ cwregister [OPTIONS] master input output
+\subsubsection*{Options:}
+
+
+  -h, -{-}help \\ 
+ -m, -{-}match=PATTERN \\ 
+ -M, -{-}method=TYPE \\ 
+ -O, -{-}overwrite=TYPE \\ 
+ -p, -{-}polysize=KILOMETERS \\ 
+ -r, -{-}rectsize=WIDTH/HEIGHT \\ 
+ -v, -{-}verbose \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The register tool resamples gridded Earth data to a master projection. A master projection specifies the translation between grid row and column coordinates and Earth latitude and longitude coordinates. The master projection file is any valid Earth data file from which a set of row and column dimensions and Earth transform parameters may be extracted. This includes standard CoastWatch product files as well as master files created using the \textbf{cwmaster}
+ tool. 
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[master]The master projection file name. Note that the master file is not altered in any way. It is simply accessed in order to determine grid and Earth transform parameters.
+\item[input]The input data file name.
+\item[output]The output data file name.
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[-h, -{-}help]Prints a brief help message.
+\item[-m, -{-}match=PATTERN]The variable name matching pattern. If specified, the pattern is used as a regular expression to match variable names. Only variables in the input file matching the pattern will be registered. By default, no pattern matching is performed and all variables are registered.
+\item[-M, -{-}method=TYPE]The registration resampling method. Valid methods are 'inverse' and 'mixed'. The inverse resampling method divides the destination into rectangles of bounded physical size (see the \textbf{-{-}polysize}
+ option), and computes polynomial approximations for the coordinate transforms on each rectangle in order to determine a source coordinate for each destination coordinate. This is the default method and recommended when the source coordinate transform is smooth and continuous in the destination coordinate space such as with AVHRR LAC swath data. The mixed resampling method divides the source into rectangles of certain dimensions (see the \textbf{-{-}rectsize}
+ option), computes polynomials on each rectangle similar to the inverse method, and follows with a single pixel interpolation. This method is recommended when the source coordinate transform is discontinuous at regular intervals in the destination coordinate space, such as with MODIS swath data.
+\item[-O, -{-}overwrite=TYPE]ADVANCED USERS ONLY. Sets the overwrite policy for 'mixed' mode resampling: either 'always' (the default), 'never', or 'closer'. If during resampling, more than one source pixel maps to a single destination pixel, this option is used to determine if the new value should overwrite the old value. By default, the new value always overwrites the destination pixel (the 'always' mode). If 'never' is specified, the first written value is never overwritten. If 'closer' is specified, the destination pixel is only overwritten if the source pixel is closer in physical location to the destination than any previous source pixel.
+\item[-p, -{-}polysize=KILOMETERS]The polynomial approximation rectangle size in kilometers. This option is only used by the inverse resampling method (see the \textbf{-{-}method}
+ option). The inverse resampling method employs a polynomial approximation to speed up the calculation of data locations. The polynomial rectangle size determines the maximum allowed size of the resampling rectangles in the destination. The default polynomial size is 100 km, which introduces an error of less than 0.15 km for AVHRR LAC data.
+\item[-r, -{-}rectsize=WIDTH/HEIGHT]The polynomial approximation rectangle size in pixels. This option is only used by the mixed resampling method (see the \textbf{-{-}method}
+ option). The mixed resampling method employs a polynomial approximation to speed up the calculation of data locations. The polynomial rectangle size determines the exact dimensions of the resampling rectangles in the source. The default polynomial rectangle size is 50/50, which introduces only a small error for AVHRR LAC data.
+\item[-v, -{-}verbose]Turns verbose mode on. The current status of data conversion is printed periodically. The default is to run quietly.
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid master, input or output file names. 
+\item  Unsupported master or input file format. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  The following shows the registration of NOAA-17 AVHRR channel 2 swath data to a southern California master: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata/2002_318_1826_n17_mo> cwregister 
+     -v --match avhrr_ch2 ws_master.hdf 2002_318_1826_n17_mo.hdf 
+     2002_318_1826_n17_ws.hdf
+
+   cwregister: Reading master ws_master.hdf
+   cwregister: Reading input 2002_318_1826_n17_mo.hdf
+   cwregister: Creating output 2002_318_1826_n17_ws.hdf
+   cwregister: Adding avhrr_ch2 to resampled grids
+   GridResampler: Found 1 grid(s) for resampling
+   GridResampler: Resampling 4788x2048 to 1024x1024
+   GridResampler: Creating location estimators
+   GridResampler: Computing row 0
+   GridResampler: Computing row 100
+   GridResampler: Computing row 200
+   GridResampler: Computing row 300
+   GridResampler: Computing row 400
+   GridResampler: Computing row 500
+   GridResampler: Computing row 600
+   GridResampler: Computing row 700
+   GridResampler: Computing row 800
+   GridResampler: Computing row 900
+   GridResampler: Computing row 1000
+   cwregister: Closing files
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwrender} \hypertarget{cwrender}{}
+\subsection*{\underline{Name}}
+
+
+   cwrender - performs Earth data visualization.  
+\subsection*{\underline{Synopsis}}
+
+
+  cwrender \{-c, -{-}composite=RED/GREEN/BLUE\} [OPTIONS] input output \\ 
+ cwrender \{-e, -{-}enhance=VARIABLE1[/VARIABLE2]\} [OPTIONS] input output 
+\subsubsection*{General options:}
+
+
+  -h, -{-}help \\ 
+ -v, -{-}verbose \\ 
+ -{-}version \\ 
+
+\subsubsection*{Output content and format options:}
+
+
+  -a, -{-}noantialias \\ 
+ -f, -{-}format=TYPE \\ 
+ -i, -{-}indexed \\ 
+ -I, -{-}imagecolors=NUMBER \\ 
+ -l, -{-}nolegends \\ 
+ -m, -{-}magnify=LATITUDE/LONGITUDE/FACTOR \\ 
+ -o, -{-}logo=NAME \\ 
+ -s, -{-}size=PIXELS $|$ full \\ 
+ -T, -{-}tiffcomp=TYPE \\ 
+ -W, -{-}worldfile=FILE 
+\subsubsection*{Plot overlay options:}
+
+
+  -A, -{-}bath=COLOR[/LEVEL1/LEVEL2/...] \\ 
+ -b, -{-}bitmask=VARIABLE/MASK/COLOR \\ 
+ -C, -{-}coast=COLOR[/FILL] \\ 
+ -d, -{-}cloud=COLOR \\ 
+ -g, -{-}grid=COLOR \\ 
+ -H, -{-}shape=FILE/COLOR[/FILL] \\ 
+ -L, -{-}land=COLOR \\ 
+ -p, -{-}political=COLOR \\ 
+ -S, -{-}nostates \\ 
+ -t, -{-}topo=COLOR[/LEVEL1/LEVEL2/...] \\ 
+ -u, -{-}group=GROUP \\ 
+ -w, -{-}water=COLOR \\ 
+ -X, -{-}exprmask=EXPRESSION/COLOR \\ 
+ -{-}watermark=TEXT[/COLOR[/SIZE[/ANGLE{]}]] \\ 
+ -{-}watermarkshadow 
+\subsubsection*{Color enhancement options:}
+
+
+  -E, -{-}enhancevector=STYLE/SYMBOL[/SIZE] \\ 
+ -F, -{-}function=TYPE \\ 
+ -k, -{-}background=COLOR \\ 
+ -M, -{-}missing=COLOR \\ 
+ -P, -{-}palette=NAME \\ 
+ -{-}palettefile=FILE \\ 
+ -{-}palettecolors=COLOR1[/COLOR2[/COLOR3...{]}] \\ 
+ -r, -{-}range=MIN/MAX \\ 
+ -{-}ticklabels=LABEL1[/LABEL2[/LABEL3/...{]}] \\ 
+ -U, -{-}units=UNITS 
+\subsubsection*{Color composite options:}
+
+
+  -B, -{-}bluerange=MIN/MAX \\ 
+ -G, -{-}greenrange=MIN/MAX \\ 
+ -R, -{-}redrange=MIN/MAX \\ 
+ -x, -{-}redfunction=TYPE \\ 
+ -y, -{-}greenfunction=TYPE \\ 
+ -z, -{-}bluefunction=TYPE 
+\subsection*{\underline{Description}}
+\subsubsection*{Overview}
+
+
+ The render tool performs Earth data visualization by converting 2D data sets in the input file to color images. The data values are converted from scientific units to a color using either an enhancement function and color palette or by performing a color composite of three data variables -{-} one for each of the red, green, and blue color components. The resulting Earth data plot may have legends displaying the color scale, data origin, date, time, projection info, as well as data overlays showing latitude/longitude grid lines, coast lines, political boundaries, masks, and shapes.
+\subsubsection*{Overlay colors}
+
+
+ Overlay colors may be specified using simple color names such as 'red', 'gray', 'cyan', 'blue', and 'green'. Overlays may be made to appear slightly transparent (allowing the color behind to show through) by following the color name with a colon ':' and a transparency value in percent, for example 'red:50' would make the overlay red with a 50\% transparency. Transparency values range from 0 (completely opaque) to 100 (completely transparent).
+
+
+ Colors may also be specified using explicit hexadecimal notation for red/green/blue color components and optional alpha component as follows: \begin{verbatim}
+
+   0xAARRGGBB
+     ^ ^ ^ ^          
+     | | | ----- Blue              \
+     | | ------- Green             |---- Range: 00 -> ff
+     | --------- Red               |
+     ----------- Alpha (optional)  /
+ 
+\end{verbatim}
+ Note that the prepended '0x' denotes a hexadecimal constant, and must be used even though it is not part of the color component values. As an example, the simple color names above may be specified as hexadecimal values: \begin{verbatim}
+
+   0xff0000    red
+   0x555555    gray
+   0x00ffff    cyan
+   0x0000ff    blue
+   0x00ff00    green
+   0x80ff0000  red, 50% transparent
+ 
+\end{verbatim}
+
+\subsubsection*{Rendering order}
+
+
+ The data view itself (not including the legends) is rendered in such a way that overlays may overlap each other. For example, latitude/longitude grid lines may fall on top of land polygons because the grid overlay is rendered after the coastline overlay. Knowing the order in which the data and overlays are rendered may answer some questions if the data view doesn't look the way the user expects. The data view is rendered in the following order: \begin{enumerate}
+\item Before any overlay or data, the data view is filled with a background color (normally white) for vector plots or a missing color (normally black) for color enhancement or color composite plots.
+\item Color vectors or image pixels are rendered to the data view. The background or missing color will show though where no vectors or pixels were rendered.
+\item Data overlays are rendered to the view in the following order (see the description of each option below): \begin{itemize}
+\item Cloud mask (\textbf{-{-}cloud}
+)
+\item Bit masks (\textbf{-{-}bitmask}
+), possibly more than one
+\item Expression masks (\textbf{-{-}exprmask}
+), possibly more than one
+\item Water mask (\textbf{-{-}water}
+)
+\item Bathymetric contours (\textbf{-{-}bath}
+)
+\item Land mask (\textbf{-{-}land}
+)
+\item Coastline and filled land polygons (\textbf{-{-}coast}
+)
+\item Political lines (\textbf{-{-}political}
+)
+\item Topography contours (\textbf{-{-}topo}
+)
+\item Shape files (\textbf{-{-}shape}
+), possibly more than one
+\item Latitude/longitude grid lines (\textbf{-{-}grid}
+)
+\item Overlay groups (\textbf{-{-}group}
+)
+
+\end{itemize}
+
+
+\end{enumerate}
+
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[-c, -{-}composite=RED/GREEN/BLUE]Specifies color composite mode using the named variables. The data variable values are converted to colors using an individual linear enhancement function for each variable. The data values are scaled to the range [0..255] and used as the red, green, and blue components of each pixel's color. Either this option or \textbf{-{-}enhance}
+ must be specified, but not both.
+\item[-e, -{-}enhance=VARIABLE1[/VARIABLE2{]}]Specifies color enhancement mode using the named variable(s). The data variable values are converted to colors using an enhancement function and color palette. Either this option or \textbf{-{-}composite}
+ must be specified, but not both. If one variable name is specified, the plot shows color-enhanced image data. If two variable names are specified, the plot shows color-enhanced vectors whose direction is derived using the two variables as vector components. See the \textbf{-{-}enhancevector}
+ and \textbf{-{-}background}
+ options for settings that are specific to vector plots.
+\item[input]The input data file name. 
+\item[output]The output image file name. Unless the \textbf{-{-}format}
+ option is used, the file extension indicates the desired output format: '.png', '.jpg', '.tif', or '.pdf'.
+
+\end{description}
+\subsubsection*{General options:}
+\begin{description}
+\item[-h, -{-}help]Prints a brief help message.
+\item[-v, -{-}verbose]Turns verbose mode on. The current status of data rendering is printed periodically. The default is to run quietly.
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsubsection*{Output content and format options:}
+\begin{description}
+\item[-a, -{-}noantialias]Turns off line and font antialiasing. By default, the edges of lines and fonts are smoothed using shades of the drawing color. It may be necessary to turn off antialiasing if the smoothing is interfering with the readability of annotation graphics, such as in the case of very small fonts. This option only effects raster image output formats such as PNG, GIF and JPEG.
+\item[-f, -{-}format=TYPE]The output format. The current formats are 'png' for Portable Network Graphics, 'gif' for Graphics Interchange Format, 'jpg' for Joint Picture Experts Group, 'tif' for Tagged Image File Format with geolocation tags (GeoTIFF), 'pdf' for Portable Document Format, or 'auto' to detect the format from the output file name. The default is 'auto'. The correct choice of output format is governed by the desired use of the rendered image as follows: \begin{itemize}
+\item \textbf{PNG}
+ is a non-lossy compressed image format supported by most web browsers and image manipulation software. It has similar data compression characteristics to GIF and additionally supports 24-bit color images. 
+\item \textbf{GIF}
+ is a non-lossy compressed format also supported by most web browsers and image manipulation software. The GIF files produced use LZW compression. Images stored in GIF format are run through a color quantization algorithm to reduce the color map to 256 colors or less. Although file sizes are generally smaller than PNG, image quality may be compromised by the reduced color map.
+\item \textbf{JPEG}
+ is a lossy compressed format that should be used with caution for images with sharp color lines such as those found in text and annotation graphics. The JPEG format generally achieves higher compression than PNG or GIF resulting in smaller image file sizes. 
+\item \textbf{GeoTIFF}
+ is a flexible image format with support for Earth location metadata. Many popular GIS packages handle GeoTIFF images and allow the user to combine a GeoTIFF base map image with other sources of raster and vector data. The GeoTIFF images generated are non-lossy uncompressed image data (unless a compression is specified using \textbf{-{-}tiffcomp}
+), and can be much larger than the corresponding PNG, GIF, or JPEG. Since GeoTIFF images are generally destined for import into a GIS system, the use of this format turns on the \textbf{-{-}nolegends}
+ option. In general the GeoTIFFs generated are 24-bit colour images, but when no overlays are specified or the \textbf{-{-}indexed}
+ or \textbf{-{-}imagecolors}
+ options are used, a special 8-bit paletted image file is generated and comments describing the data value scaling are inserting into the image description tags. 
+\item \textbf{PDF}
+ is a standard for high quality publishing developed by Adobe Systems and is used for output to a printer via such tools as the Adobe Acrobat Reader. In general PDF files are slightly larger than the equivalent PNG but retain highly accurate vector graphics components such as lines and fonts. 
+
+\end{itemize}
+
+\item[-i, -{-}indexed]Short for \textbf{-{-}imagecolors 256}
+. See the \textbf{-{-}imagecolors}
+ option below.
+\item[-I, -{-}imagecolors=NUMBER]The number of colors to use for the index color model of the data image, up to 256. Normally the data image uses an unlimited number of colors because this achieves the best visual rendering quality. But in some cases it may be desirable to make the output file smaller by limiting the number of colors to $<$=256 values and using a index color model so that each data pixel can be represented as 8-bit bytes. This option can only be used with PNG, GIF, GeoTIFF, and PDF output formats, and only with color enhancements, not color composites. While in index color mode, antialiasing is turned off.
+\item[-l, -{-}nolegends]Turns the plot legends off. By default, the Earth data view is shown in a frame on the left and to the right color scale and plot information legends are drawn. With no legends, the Earth data is simply rendered by itself with no frame, borders, or legends.
+\item[-m, -{-}magnify=LATITUDE/LONGITUDE/FACTOR]The magnification center and factor. The data view is set to the specified center and pixel magnification factor. The center position is specified in terms of Earth location latitude and longitude in the range [-90..90] and [-180..180] and the magnification factor as a fractional number (0..1] where factors $>$ 1 magnify and factors $<$ 1 shrink. By default, the data view shows the entire data field with an optimal magnification factor to fit the desired view size (see \textbf{-{-}size}
+).
+\item[-o, -{-}logo=NAME]The logo used for plot legends. The current predefined logo names are 'noaa3d' (the default), 'nasa3d', 'nws3d', 'doc3d', and their corresponding non-3D versions 'noaa', 'nasa', 'nws', and 'doc'. The predefined logos are named for their respective government agencies: NOAA, NASA, National Weather Service (NWS), and Department of Commerce (DOC). The user may also specify a custom logo file name, which can be any PNG, GIF, or JPEG file.
+\item[-s, -{-}size=PIXELS $|$ full]The Earth data view size in pixels. The data view is normally accompanied by a set of legends unless the \textbf{-{-}nolegends}
+ option is used. By default, the view size is 512 pixels, plus the size of any legends. If 'full' is specified rather than a size in pixels, the view size is set to match the actual full extent of the data, ie: full resolution.
+\item[-T, -{-}tiffcomp=TYPE]The TIFF compression algorithm. The valid types are 'none' for no compression (the default), 'deflate' for ZIP style compression, and 'pack' for RLE style PackBits compression. This option is only used with GeoTIFF output.
+\item[-W, -{-}worldfile=FILE]The name of the world file to write. A world file is an ASCII text file used for georeferencing images that contains the following lines: \begin{itemize}
+\item Line 1: x-dimension of a pixel in map units
+\item Line 2: rotation parameter
+\item Line 3: rotation parameter
+\item Line 4: NEGATIVE of y-dimension of a pixel in map units
+\item Line 5: x-coordinate of center of upper left pixel
+\item Line 6: y-coordinate of center of upper left pixel
+
+\end{itemize}
+ World files may be written for any GIF, PNG, or JPEG image. The use of this option turns on the \textbf{-{-}nolegends}
+ option. The convention used in GIS is to name the world file similarly to the image file, but with a different extension. GDAL expects world files with a ``.wld'' extension, where as ESRI applications expect ``.pgw'' for PNG, ``.gfw'' for GIF, and ``.jgw'' for JPEG. Users should name their world files accordingly.
+
+\end{description}
+\subsubsection*{Plot overlay options:}
+\begin{description}
+\item[-A, -{-}bath=COLOR[/LEVEL1/LEVEL2/...{]}]The bathymetric contour color and levels. The color is specified by name or hexadecimal value (see above). Bathymetric contours are generated for the specified integer levels in meters. If no levels are specified, contours are drawn at 200 m and 2000 m. The default is not to render bathymetric contours.
+\item[-b, -{-}bitmask=VARIABLE/MASK/COLOR]Specifies that a mask should be rendered on top of the data image whose pixels are obtained by a bitwise AND with the mask value. The named variable is used to mask the Earth data with the specified color and mask. The color is a name or hexadecimal value (see above). The mask is a 32-bit integer hexadecimal value specifying the mask bits. The bitmask is formed by bitwise ANDing the data value and mask value. If the result of the operation is non zero, the pixel is colored with the bitmask color. This option is useful for overlaying graphics on the data image when the graphics are stored as an integer valued variable in the data set. Such variables include cloud and land mask graphics. Multiple values of the \textbf{-{-}bitmask}
+ option may be given, in which case the masks are applied in the order that they are specified.
+\item[-C, -{-}coast=COLOR[/FILL{]}]The coast line color and optional fill color. The colors are specified by name or hexadecimal value (see above). The default is not to render coast lines.
+\item[-d, -{-}cloud=COLOR]The cloud mask color. The color is specified by name or hexadecimal value (see above). Cloud masking requires that a 'cloud' variable exists in the input file. The default is not to render a cloud mask.
+\item[-g, -{-}grid=COLOR]The latitude/longitude grid line color. The color is specified by name or hexadecimal value (see above). The default is not to render grid lines.
+\item[-H, -{-}shape=FILE/COLOR[/FILL{]}]The name and drawing/fill colors for a user-supplied shape file. The colors are specified by name or hexadecimal value (see above). The only file format currently supported is ESRI shapefile format, and only line and polygon data (no point data). The fill color is optional and is used to fill polygons if any are found in the file. Multiple values of the \textbf{-{-}shape}
+ option may be given, in which case the shape overlays are rendered in the order that they are specified.
+\item[-L, -{-}land=COLOR]The land mask color. The color is specified by name or hexadecimal value (see above). Land masking requires that a 'graphics' variable exists in the input file with a land mask at bit 3 where bit numbering starts at 0 for the least significant bit. The default is not to render a land mask. For an alternative to the \textbf{-{-}land}
+ option, try using the \textbf{-{-}coast}
+ option with a fill color.
+\item[-p -{-}political=COLOR]The political boundaries color. The color is specified by name or hexadecimal value (see above). The default is not to render political boundaries.
+\item[-S, -{-}nostates]Turns off state boundary rendering. The default when \textbf{-{-}political}
+ is specified is to render international and state boundaries. With this option is specified, only international boundaries are rendered.
+\item[-t, -{-}topo=COLOR[/LEVEL1/LEVEL2/...{]}]The topographic contour color and levels. The color is specified by name or hexadecimal value (see above). Topographic contours are generated for the specified integer levels in meters. If no levels are specified, contours are drawn at 200 m, 500 m, 1000 m, 2000 m, and 3000 m. The default is not to render topographic contours.
+\item[-u, -{-}group=GROUP]The overlay group name to render. Overlay groups are a concept from the CoastWatch Data Analysis Tool (CDAT). CDAT users can save a set of preferred overlays as a group and then restore those overlays when viewing a new data file. The same group names saved from CDAT are available to be rendered here. This is an extremely useful option that allows users to design a set of overlays graphically and adjust the various overlay properties beyond what can be achieved using the command line options for cwrender. If specified, this option will cause all overlays in the group to be drawn on top of any other overlays specified by command line options. 
+\item[-w, -{-}water=COLOR]The water mask color. The color is specified by name or hexadecimal value (see above). Water masking is performed similarly to land masking (see the \textbf{-{-}land}
+ option), but the sense of the land mask is inverted. The default is not to render a water mask.
+\item[-X, -{-}exprmask=EXPRESSION/COLOR]Specifies that a mask should be rendered on top of the data image whose pixels are obtained by evaluating the expression. The color is specified by name or hexadecimal value (see above). An expression mask is a special type of multipurpose mask similar to a bitmask (see the \textbf{-{-}bitmask}
+ option above) but which allows the user to specify a mathematical expression to determine the mask. If the result of the expression is true (in the case of a boolean result) or non-zero (in the case of a numerical result), the data image is masked at the given location with the given color. Multiple values of the \textbf{-{-}exprmask}
+ option may be given, in which case the masks are applied in the order that they are specified. The syntax for the expression is identical to the right-hand-side of a \textbf{cwmath}
+ expression (see the \textbf{cwmath}
+ tool manual page).
+\item[-{-}watermark=TEXT[/COLOR[/SIZE[/ANGLE{]}]{]}]Specifies the text for a watermark that is placed in the center of the image plot to denote special status such as experimental or restricted, or some other property of the data. The default watermark text is white, 50\% opacity, 50 point font, and 0 degrees rotation. Optional parameters may be specified by appending the watermark color (name or hexadecimal value as described above), the point size, and baseline angle (0 is horizontal, 90 is vertical). For example, -{-}watermark=EXPERIMENTAL/white/36/20 adds the text EXPERIMENTAL in solid white, 36 point font, at a 20 degree baseline rotation.
+\item[-{-}watermarkshadow]Draws a drop shadow behind the watermark to increase visibility. By default the watermark is drawn plain with no drop shadow.
+
+\end{description}
+\subsubsection*{Color enhancement options:}
+\begin{description}
+\item[-E, -{-}enhancevector=STYLE/SYMBOL[/SIZE{]}]The color-enhanced vector specifications. This option is only used if two variable names are passed to the \textbf{-{-}enhance}
+ option. The vector style may be either 'uvcomp' or 'magdir'; the default is 'uvcomp'. In uvcomp mode, the variables that are passed to the \textbf{-{-}enhance}
+ option are taken to be the U (x-direction) and V (y-direction) components of the vector. In magdir mode, the first variable is taken to be the vector magnitude, and the second to be the vector direction in degrees clockwise from north. The vector symbol may be either 'arrow' to draw arrows in the direction of the vector, or 'barb' to draw WMO wind barbs; the default is 'arrow'. If wind barbs are used, the feathered end of the barb points in the direction of the wind. Lastly, the size of the vector symbols in pixels may be specified; the default size is 10.
+\item[-F, -{-}function=TYPE]The color enhancement function. Data values are mapped to the range [0..255] by the enhancement function and range, and then to colors using the color palette. The valid enhancement function types are 'linear', 'boolean', 'stepN', 'log', 'linear-reverse', 'stepN-reverse', and 'log-reverse' where N is the number of steps in the function, for example 'step10'. The 'boolean' function is a shorthand way of specifying 'step2' as the function, and '0/1' as the range, useful for data with only 0 and 1 as data values. The reverse functions are equivalent to the non-reversed functions but map data values to the range [255..0] rather then [0..255]. By default, the enhancement function is 'linear'. A log enhancement may be necessary when the data value range does not scale well with a linear enhancement such as with chlorophyll concentration derived from ocean color data. 
+\item[-k, -{-}background=COLOR]The color for the background of vector plots. The color is specified by name or hexadecimal value (see above). The default background color is white.
+\item[-M, -{-}missing=COLOR]The color for missing or out of range data values. The color is specified by name or hexadecimal value (see above). The default missing color is black.
+\item[-P, --palette=NAME]The color palette for converting data values to colors. The color palettes are dervied in part from the Interactive Data Language (IDL) v5.4 palettes and have similar names. The valid color palette names are as follows (line indexes are simply for reference): \begin{verbatim}
+
+     0  BW-Linear
+     1  HSL256
+     2  RAMSDIS
+     3  Blue-Red
+     4  Blue-White
+     5  Grn-Red-Blu-Wht
+     6  Red-Temperature
+     7  Blue-Green-Red-Yellow
+     8  Std-Gamma-II
+     9  Prism
+     10 Red-Purple
+     11 Green-White-Linear
+     12 Grn-Wht-Exponential
+     13 Green-Pink
+     14 Blue-Red2
+     15 16-Level
+     16 Rainbow
+     17 Steps
+     18 Stern-Special
+     19 Haze
+     20 Blue-Pastel-Red
+     21 Pastels
+     22 Hue-Sat-Lightness-1
+     23 Hue-Sat-Lightness-2
+     24 Hue-Sat-Value-1
+     25 Hue-Sat-Value-2
+     26 Purple-Red-Stripes
+     27 Beach
+     28 Mac-Style
+     29 Eos-A
+     30 Eos-B
+     31 Hardcandy
+     32 Nature
+     33 Ocean
+     34 Peppermint
+     35 Plasma
+     36 Rainbow2
+     37 Blue-Waves
+     38 Volcano
+     39 Waves
+     40 Rainbow18
+     41 Rainbow-white
+     42 Rainbow-black
+     43 NDVI
+     44 GLERL-Archive
+     45 GLERL-30-Degrees
+     46 Chlora-1
+     47 Chlora-anom
+     48 Spectrum
+     49 Wind-0-50
+     50 CRW_SST
+     51 CRW_SSTANOMALY
+     52 CRW_HOTSPOT
+     53 CRW_DHW
+     54 StepSeq25
+     55 HSB-Cycle
+   
+\end{verbatim}
+ By default, the 'BW-Linear' palette is used which is a gray scale color ramp from black to white.
+\item[-{-}palettefile=FILE]The file of color palette XML data for converting data values to colors. The format of the XML file is described in the User's Guide. By default, the 'BW-Linear' palette is used.
+\item[-{-}palettecolors=COLOR1[/COLOR2[/COLOR3...{]}]]The palette colors for converting data values to colors. Up to 256 colors may be specified by name or hexadecimal value (see above). By default, the 'BW-Linear' palette is used.
+\item[-r, -{-}range=MIN/MAX]The color enhancement range. Data values are mapped to colors using the minimum and maximum values and an enhancement function. By default, the enhancement range is derived from the data value mean and standard deviation to form an optimal enhancement window of 1.5 standard deviation units around the mean.
+\item[-{-}ticklabels=LABEL1[/LABEL2[/LABEL3/...{]}]]The numeric tick mark labels to use for the data color scale. By default the tick mark labels are generated automatically. For example -{-}ticklabels=1.0/1.1/1.2/1.3/1.4/1.5 would put tick marks and labels at evenly spaced locations on the color scale from 1.0 to 1.5.
+\item[-U, -{-}units=UNITS]The range and color scale units for the enhancement variable(s). By default, the user must specify the values for the \textbf{-{-}range}
+ option in the standard units indicated in the data. If the user prefers a different set of units to be used, they may be specified here. Many common units are accepted (and various forms of those units), for example 'kelvin', 'celsius' and 'fahrenheit' for temperature data, 'knots', 'meters per second' or 'm/s' for windspeed, and 'mg per m\^{}-3' or 'kg/m-3' for concentration. For other possible unit names, see the conventions used by the Unidata UDUNITS package and its supported units file.
+
+\end{description}
+\subsubsection*{Color composite options:}
+\begin{description}
+\item[-B, -{-}bluerange=MIN/MAX]The blue component enhancement range, see \textbf{-{-}redrange}
+.
+\item[-G, -{-}greenrange=MIN/MAX]The green component enhancement range, see \textbf{-{-}redrange}
+.
+\item[-R, -{-}redrange=MIN/MAX]The red component enhancement range. Data values are mapped to the range [0..255] using the minimum and maximum values and an enhancement function. By default, the enhancement range is derived from the data value mean and standard deviation to form an optimal enhancement window of 1.5 standard deviation units around the mean.
+\item[-x, -{-}redfunction=TYPE]The red component enhancement function. Data values are mapped to the range [0..255] by the enhancement function and range, and then the pixel color is created by compositing the red, green, and blue mapped values into one 32-bit integer color value. See the \textbf{-{-}function}
+ option for valid function types. By default, the red, green, and blue enhancements are linear.
+\item[-y, -{-}greenfunction=TYPE]The green component enhancement function, see \textbf{-{-}redfunction}
+.
+\item[-z, -{-}bluefunction=TYPE]The blue component enhancement function, see \textbf{-{-}redfunction}
+.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+ 0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input or output file names. 
+\item  Invalid variable name. 
+\item  Unrecognized format. 
+\item  Unrecognized color name. 
+\item  Invalid palette name. 
+\item  Invalid magnification center. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+ As an example of color enhancement, the following command shows the rendering of AVHRR channel 2 data from a CoastWatch HDF file to a PNG image, with coast and grid lines in red and the default linear black to white palette. We allow the routine to calculate data statistics on channel 2 for an optimal enhancement range: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwrender --verbose 
+     --enhance avhrr_ch2 --coast red --grid red 2002_288_1435_n17_er.hdf 
+     2002_288_1435_n17_er_ch2.png
+
+   cwrender: Reading input 2002_288_1435_n17_er.hdf
+   cwrender: Normalizing color enhancement
+   EarthDataView: Preparing data image
+   EarthDataView: Rendering overlay noaa.coastwatch.render.CoastOverlay
+   EarthDataView: Rendering overlay noaa.coastwatch.render.LatLonOverlay
+   cwrender: Writing output 2002_288_1435_n17_er_ch2.png
+ 
+\end{verbatim}
+ For a color composite of the same file, the following command shows the rendering of AVHRR channels 1, 2, and 4 to a PNG image. Again, we allow the routine to calculate statistics for optimal enhancement ranges. Note that the final enhancement function is reversed in order to map warm AVHRR channel 4 values to dark and cold values to bright: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwrender --verbose 
+     --composite avhrr_ch1/avhrr_ch2/avhrr_ch4 
+     --bluefunction reverse-linear --coast black --grid gray 
+     2002_288_1435_n17_er.hdf 2002_288_1435_n17_er_ch124.png
+
+   cwrender: Reading input 2002_288_1435_n17_er.hdf
+   cwrender: Normalizing red enhancement
+   cwrender: Normalizing green enhancement
+   cwrender: Normalizing blue enhancement
+   EarthDataView: Preparing data image
+   EarthDataView: Rendering overlay noaa.coastwatch.render.CoastOverlay
+   EarthDataView: Rendering overlay noaa.coastwatch.render.LatLonOverlay
+   cwrender: Writing output 2002_288_1435_n17_er_ch124.png
+ 
+\end{verbatim}
+ A further example below shows the rendering of AVHRR derived sea-surface-temperature data from the same file with a cloud mask applied. The color enhancement uses a blue to red color palette and an explicit range from 5 to 20 degrees Celsius: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwrender --verbose 
+     --enhance sst --coast white --grid white --palette HSL256
+     --range 5/20 --cloud gray 2002_288_1435_n17_er.hdf 
+     2002_288_1435_n17_er_sst.png
+
+   cwrender: Reading input 2002_288_1435_n17_er.hdf
+   EarthDataView: Preparing data image
+   EarthDataView: Rendering overlay noaa.coastwatch.render.BitmaskOverlay
+   EarthDataView: Rendering overlay noaa.coastwatch.render.CoastOverlay
+   EarthDataView: Rendering overlay noaa.coastwatch.render.LatLonOverlay
+   cwrender: Writing output 2002_288_1435_n17_er_sst.png
+ 
+\end{verbatim}
+ An example usage of the \textbf{-{-}magnify}
+ option is shown below to create a plot of cloud masked sea-surface-temperature data off Nova Scotia: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwrender --verbose 
+     --enhance sst --coast white --grid white --palette HSL256 
+     --range 5/20 --cloud gray --magnify 43/-66/1 
+     2002_288_1435_n17_er.hdf 2002_288_1435_n17_er_sst_mag.png
+
+   cwrender: Reading input 2002_288_1435_n17_er.hdf
+   EarthDataView: Preparing data image
+   EarthDataView: Rendering overlay noaa.coastwatch.render.BitmaskOverlay
+   EarthDataView: Rendering overlay noaa.coastwatch.render.CoastOverlay
+   EarthDataView: Rendering overlay noaa.coastwatch.render.LatLonOverlay
+   cwrender: Writing output 2002_288_1435_n17_er_sst_mag.png
+ 
+\end{verbatim}
+
+\subsection*{\underline{Known Bugs}}
+
+
+ When using the \textbf{-{-}coast}
+ option with a fill color and output is to a PDF file, lakes may contain a thin stripe of land in some places. In this case, use the \textbf{-{-}land}
+ for land filling instead.
+
+
+ When using the \textbf{-{-}coast}
+ option with a fill color, map projection discontinuities or swath projection edges may not be filled correctly.
+
+\newpage
+\section{cwsample} \hypertarget{cwsample}{}
+\subsection*{\underline{Name}}
+
+
+   cwsample - extracts data values at specified Earth locations.  
+\subsection*{\underline{Synopsis}}
+
+
+  cwsample \{-s, -{-}sample=LATITUDE/LONGITUDE\} [OPTIONS] input output \\ 
+ cwsample \{-S, -{-}samples=FILE\} [OPTIONS] input output \\ 
+
+\subsubsection*{Options:}
+
+
+  -d, -{-}dec=DECIMALS \\ 
+ -D, -{-}delimit=STRING \\ 
+ -h, -{-}help \\ 
+ -H, -{-}header \\ 
+ -i, -{-}imagecoords \\ 
+ -m, -{-}match=PATTERN \\ 
+ -M, -{-}missing=VALUE \\ 
+ -n, -{-}nocoords \\ 
+ -R, -{-}reverse \\ 
+ -V, -{-}variable=NAME1[/NAME2/...] \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The sampling tool extracts data values at specified Earth locations from 2D data variables. A sample point may be specified on the command line using geographic coordinates, or multiple sample points may be specified using a data file. A number of 2D data variables may be sampled simultaneously. The sampled values are printed as ASCII text to the output file, one line per sample point. Various options are available to modify the output decimals places, delimiters, and so on. 
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[ -s, -{-}sample=LATITUDE/LONGITUDE ] The sample point for a single sampling operation. The point is specified in terms of Earth location latitude and longitude in the range [-90..90] and [-180..180]. 
+\item[ -S, -{-}samples=FILE ] The file name containing a list of sample points for performing multiple sampling operations. The file must be an ASCII text file containing sample points as latitude / longitude pairs, one line per pair, with values separated by spaces or tabs. The points are specified in terms of Earth location latitude and longitude in the range [-90..90] and [-180..180]. 
+\item[ input ] The input data file name. 
+\item[ output ] The output text file name. If the output file name is '-', output is sent to standard output (normally the terminal). 
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[ -d, -{-}dec=DECIMALS ] The number of decimal places for printed geographic coordinate values. The default is 6 decimals. 
+\item[ -D, -{-}delimit=STRING ] The value delimiter string. By default, values are separated with a single space character. 
+\item[ -h, -{-}help ] Prints a brief help message. 
+\item[ -H, -{-}header ] Specifies that a one line header should be written. The header is written before any data and consists of the output column names. By default no header is written. 
+\item[ -i, -{-}imagecoords ] Specifies that image coordinates (row and column) should be printed for each output line. The default is to print only geographic coordinates. 
+\item[ -m, -{-}match=PATTERN ] The variable name matching pattern. If specified, the pattern is used as a regular expression to match variable names. Only variables matching the pattern will be sampled. By default, no pattern matching is performed and all variables are sampled unless the \textbf{-{-}variable}
+ option is used. Note that either \textbf{-{-}variable}
+ or \textbf{-{-}match}
+ may be specified, but not both.
+\item[ -M, -{-}missing=VALUE ] The output value for missing or out of range data. The default is to print 'NaN' for missing values. 
+\item[ -n, -{-}nocoords ] Turns geographic coordinate printing off. By default, each output line has the form 'latitude longitude value(s)' but with no coordinates, each line simply contains the data value(s). 
+\item[ -R, -{-}reverse ] Specifies that coordinates should be printed in reverse order, 'longitude latitude'. The default is 'latitude longitude'. 
+\item[ -V, -{-}variable=NAME1[/NAME2/...] ] The variable names to sample. If specified, the variable sample values are printed in columns in exactly the same order as they are listed. This option is different from the \textbf{-{-}match}
+ option because it (i) specifies the column order, where as \textbf{-{-}match}
+ orders the columns as the variables are encountered in the file, and (ii) does not support pattern matching; all variable names must be specified exactly. Without this option or the \textbf{-{-}match}
+ option, all variables are sampled. Note that either \textbf{-{-}variable}
+ or \textbf{-{-}match}
+ may be specified, but not both.
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input or output file names. 
+\item  Invalid sample coordinates file format. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  In the example below, a sample points file named sample\_locs.txt was set up to follow the 93 W longitude line at regular 0.2 degree intervals as follows: \begin{verbatim}
+
+   28 -93
+   28.2 -93
+   28.4 -93
+   28.6 -93
+   28.8 -93
+   29 -93
+   29.2 -93
+   29.4 -93
+   29.6 -93
+   29.8 -93
+   30 -93
+ 
+\end{verbatim}
+ and a Gulf of Mexico data file sampled for SST and cloud data along this line with output to the terminal screen: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwsample --header 
+     --match '(sst|cloud)' --samples sample_locs.txt 
+     2002_325_1546_n17_mr.hdf -
+
+   latitude longitude sst cloud
+   28 -93 25.24 0
+   28.2 -93 25.24 0
+   28.4 -93 24.78 0
+   28.6 -93 23.84 0
+   28.8 -93 22.72 0
+   29 -93 21.37 0
+   29.2 -93 20.06 0
+   29.4 -93 19.29 0
+   29.6 -93 18.16 0
+   29.8 -93 17.57 6
+   30 -93 17.48 22
+ 
+\end{verbatim}
+ Another example shows the sampling of one SST value as in the case of comparison with a single buoy measurement with output to the terminal screen: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwsample --header 
+     --match sst --sample 28.8/-93 2002_325_1546_n17_mr.hdf -
+
+   latitude longitude sst
+   28.8 -93 22.72
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwstats} \hypertarget{cwstats}{}
+\subsection*{\underline{Name}}
+
+
+   cwstats - calculates Earth data file statistics.  
+\subsection*{\underline{Synopsis}}
+
+
+  cwstats [OPTIONS] input 
+\subsubsection*{Options:}
+
+
+  -h, -{-}help \\ 
+ -i, -{-}region=LAT/LON/RADIUS \\ 
+ -l, -{-}limit=STARTROW/STARTCOL/ENDROW/ENDCOL \\ 
+ -m, -{-}match=PATTERN \\ 
+ -s, -{-}stride=N \\ 
+ -S, -{-}sample=FACTOR \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The statistics utility calculates a number of statistics for each variable in an Earth data file: \begin{itemize}
+\item  Count - the count of total data values sampled. 
+\item  Valid - the number of valid (not missing) data values. 
+\item  Min - the minimum data value. 
+\item  Max - the maximum data value. 
+\item  Mean - the average data value. 
+\item  Stdev - the standard deviation from the mean. 
+\item  Median - the median data value. 
+
+\end{itemize}
+ To speed up the statitics calculations, a subset of the data values in each variable may be specified using either the \textbf{-{-}stride}
+ or \textbf{-{-}sample}
+ options, and the \textbf{-{-}limit}
+ option. The \textbf{-{-}match}
+ option may also be used to limit the statistics calculations to a subset of the variables. 
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[input]The input data file name. 
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[ -h, -{-}help ] Prints a brief help message. 
+\item[ -i, -{-}region=LAT/LON/RADIUS] The sampling region for each two-dimensional variable. The region is specified by the center latitude and longitude in degrees, and the radius from the center in kilometers. Only data within the rectangle specified by the center and radius is sampled. By default, all data is sampled. Either the \textbf{-{-}region}
+ option or the \textbf{-{-}limit}
+ option may be specified, but not both.
+\item[ -l, -{-}limit=STARTROW/ENDROW/STARTCOL/ENDCOL] The sampling limits for each two-dimensional variable in image coordinates. Only data between the limits is sampled. By default, all data is sampled. Either the \textbf{-{-}region}
+ option or the \textbf{-{-}limit}
+ option may be specified, but not both.
+\item[ -m, -{-}match=PATTERN ] The variable name matching pattern. If specified, the pattern is used as a regular expression to match variable names. Only variables matching the pattern are included in the calculations. By default, no pattern matching is performed and all variables are included. 
+\item[ -s, -{-}stride=N ] The sampling frequency for each variable dimension. The default is to sample all data values (stride = 1). 
+\item[ -S, -{-}sample=FACTOR ] The sampling factor for each variable. The sampling factor is a value in the range [0..1] that specifies the number of data values sampled as a fraction of the total number of data values. To sample 1 percent of all data values, the sample factor would be 0.01. The default is to sample all data values (factor = 1). 
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input file name. 
+\item  Unsupported input file format. 
+\item  Error reading input data values. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  The following shows a statistics calculation on a CoastWatch HDF file from the Great Lakes: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwstats 2002_197_1719_n16_gr.hdf
+
+   Variable       Count     Valid     Min       Max       Mean       Stdev     
+   avhrr_ch1      1048576   483728    3.49      74.36     13.059646  11.371605 
+   avhrr_ch2      1048576   483728    1.97      71.35     18.520041  9.844144  
+   avhrr_ch3a     1048576   483728    0.53      52.84     14.664213  8.88201   
+   avhrr_ch4      1048576   483728    -44.8     31.55     11.052207  13.683309 
+   avhrr_ch5      1048576   483728    -45.48    27.05     7.978351   13.185983 
+   sst            1048576   483728    -44.51    51.43     20.166333  16.714169 
+   cloud          1048576   1048576   0         127       23.24175   37.179013 
+   sat_zenith     1048576   483728    0.36      0.7       0.466376   0.077153  
+   sun_zenith     1048576   483728    0.87      0.95      0.907019   0.022209  
+   rel_azimuth    1048576   483728    -0.58     -0.33     -0.465731  0.058149  
+   graphics       1048576   1048576   0         14        6.84576    2.931459  
+ 
+\end{verbatim}
+
+
+\newpage
+\section{cwstatus} \hypertarget{cwstatus}{}
+\subsection*{\underline{Name}}
+
+
+   cwstatus - shows the status of a CoastWatch data server.  
+\subsection*{\underline{Synopsis}}
+
+
+  cwstatus [OPTIONS] \\ 
+ cwstatus [OPTIONS] host 
+\subsubsection*{Options:}
+
+
+  -c, -{-}script=PATH \\ 
+ -h, -{-}help \\ 
+ -s, -{-}splash \\ 
+ -o, -{-}operator \\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+  The status utility shows the status of a CoastWatch data server using a graphical user interface. The incoming, unprocessed, processing, and online data are shown and continually updated as the server is processing data. Individual passes with coverage area and preview image may be selected from a list. The status utility is designed for use by research personnel and system operators to monitor a CoastWatch data processing server and select data of interest. Detailed help on the usage of cwstatus is available from within the utility using the menu bar under \emph{Help $|$ Help and Support}
+.
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[ host ] The CoastWatch server host name. There is no default host name. If specified, the host is contacted and polled for its status immediately after the status utility starts. Otherwise, the user must connect to the server manually using \emph{File $|$ New server}
+ on the menu bar. 
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[ -c, -{-}script=PATH ] ADVANCED USERS ONLY. The query script path. The default is /ctera/query.cgi. 
+\item[ -h, -{-}help ] Prints a brief help message. 
+\item[-s, -{-}splash]Shows the splash window on startup. The splash window shows the version, author, and web site information.
+\item[ -o, -{-}operator ] Specifies that operator messages should be displayed. By default, errors on the server are not of interest to normal users and are not displayed. Operator messages take the form of a special message box that appears when an error occurs.
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+  The following command shows the startup of the status monitor for the fictitious server foobar.noaa.gov: \begin{verbatim}
+
+   phollema@localhost:<~/cwatch/satdata> cwstatus foobar.noaa.gov
+ 
+\end{verbatim}
+
+
+\newpage
+\section{hdatt} \hypertarget{hdatt}{}
+\subsection*{\underline{Name}}
+
+
+   hdatt - reads or writes HDF file attributes.  
+\subsection*{\underline{Synopsis}}
+
+
+  hdatt [OPTIONS] input\\ 
+ hdatt \{-n, -{-}name=STRING\} [OPTIONS] input\\ 
+ hdatt \{-n, -{-}name=STRING\} \{-l, -{-}value=STRING1[/STRING2/...]\} [OPTIONS] input\\ 
+
+\subsubsection*{Options:}
+
+
+  -h, -{-}help\\ 
+ -t, -{-}type=TYPE\\ 
+ -V, -{-}variable=STRING\\ 
+ -{-}version \\ 
+
+\subsection*{\underline{Description}}
+
+
+ The attribute tool reads or writes HDF file attributes using the HDF Scientific Data Sets (SDS) interface. The two modes work as follows: \begin{description}
+\item[Read mode]In read mode, the tool can read from either the global attribute set (the default), or the attribute set specific to a variable (when then \textbf{-{-}variable}
+ option is specified). It can read either all attribute values in the set (the default), or just a single attribute value (when the \textbf{-{-}name}
+ option is specified).
+\item[Write mode]Write mode is specified by the use of the \textbf{-{-}value}
+ option, which provides a value for a named attribute. In write mode, the user is required to supply an attribute name and value, and optionally a type. If no type is specified, the type defaults to 'string' (see the \textbf{-{-}type}
+ option below for the meanings of various type names). Attributes may be written to the global attribute set (the default), or to specific variables in the data file using the \textbf{-{-}variable}
+ option.
+
+\end{description}
+
+
+
+ \textbf{Note:}
+ The attribute tool is currently limited to reading and writing only the signed HDF data types. In read mode, unsigned HDF attribute data are read correctly, but the value displayed as if it were signed.
+\subsection*{\underline{Parameters}}
+\subsubsection*{Main parameters:}
+\begin{description}
+\item[ -n, -{-}name=STRING ] The name of the attribute to read or write. 
+\item[ -l, -{-}value=STRING1[/STRING2/...] ] The value(s) for the named attribute. If specified, this places the tool into write mode, and \textbf{-{-}name}
+ must specify an attribute name. If an attribute already exists, its value is overwritten with the new value. If an attribute with the name does not exist, it is created and the new value assigned to it. By default if this option is not used, the tool is in read mode. 
+\item[ input ] The input data file name. 
+
+\end{description}
+\subsubsection*{Options:}
+\begin{description}
+\item[ -t, -{-}type=TYPE ] The attribute data type (write mode only). The valid types and their HDF equivalents are as follows: 
+
+\begin{tabular}{|c|c|}
+\hline 
+Type name &HDF type \\
+ \hline 
+string &DFNT\_CHAR8 \\
+ \hline 
+byte &DFNT\_INT8 \\
+ \hline 
+short &DFNT\_INT16 \\
+ \hline 
+int &DFNT\_INT32 \\
+ \hline 
+long &DFNT\_INT64 \\
+ \hline 
+float &DFNT\_FLOAT32 \\
+ \hline 
+double &DFNT\_FLOAT64 \\
+ \hline 
+
+\end{tabular}
+
+
+\item[ -V, -{-}variable=STRING ] The variable to read or write the attribute data. By default, the attribute is read from or written to the global attribute set.
+\item[-{-}version]Prints the software version.
+
+\end{description}
+\subsection*{\underline{Exit status}}
+
+
+ 0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+\item  Invalid command line option. 
+\item  Invalid input or output file names. 
+\item  Invalid variable name. 
+\item  Invalid attribute name in read mode. 
+\item  Invalid attribute type in write mode. 
+\item  Value does not convert to the specified attribute data type. 
+
+\end{itemize}
+
+\subsection*{\underline{Examples}}
+
+
+ As an example of read mode, the following command reads and prints all the global attribute data from a CoastWatch HDF file: \begin{verbatim}
+
+   phollema@damdog<~/cwatch/satdata/level3> hdatt 2005_095_1522_n17_er.hdf
+   satellite = noaa-17
+   sensor = avhrr
+   origin = USDOC/NOAA/NESDIS CoastWatch
+   cwhdf_version = 3.2
+   pass_type = day
+   pass_date = 12878
+   start_time = 55371.0
+   projection_type = mapped
+   projection = Mercator
+   gctp_sys = 5
+   gctp_zone = 0
+   gctp_parm = 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+   gctp_datum = 12
+   et_affine = 0.0 -1470.0 1470.0 0.0 -8804259.100925786 5723777.271647277
+   rows = 1401
+   cols = 1302
+   polygon_latitude = 45.83810150571052 45.83810150571052 45.83810150571052 
+     45.83810150571052 45.83810150571052 42.51315402540104 38.99999999998719 
+     35.30179546333813 31.424886223357582 31.424886223357582 31.424886223357582 
+     31.424886223357582 31.424886223357582 35.30179546333813 38.99999999998719 
+     42.51315402540104 45.83810150571052
+   polygon_longitude = -79.09000515710031 -74.79500257855015 -70.5 -66.20499742144985 
+     -61.90999484289969 -61.90999484289969 -61.90999484289969 -61.90999484289969 
+     -61.90999484289969 -66.20499742144985 -70.5 -74.79500257855015 -79.09000515710031 
+     -79.09000515710031 -79.09000515710031 -79.09000515710031 -79.09000515710031
+   history = cwimport product.tshdf product.hdf
+ 
+\end{verbatim}
+ To dump only a single attribute: \begin{verbatim}
+
+   phollema@damdog<~/cwatch/satdata/level3> hdatt --name satellite 
+     2005_095_1522_n17_er.hdf
+   noaa-17
+ 
+\end{verbatim}
+ or a single attribute from a specific variable: \begin{verbatim}
+
+   phollema@damdog<~/cwatch/satdata/level3> hdatt --name units 
+     --variable avhrr_ch3a 2005_095_1522_n17_er.hdf
+   albedo*100%
+ 
+\end{verbatim}
+
+
+
+ As an example of write mode, suppose that we wanted to save the date when the file was originally downloaded from the server: \begin{verbatim}
+
+   phollema@damdog<~/cwatch/satdata/level3> hdatt --name download_date 
+     --value "Mon Apr 11 18:20:15 PDT 2005" 2005_095_1522_n17_er.hdf
+ 
+\end{verbatim}
+ Now suppose we wanted to assign an integer quality value of 65\% to the file based on some test that was performed on the file data: \begin{verbatim}
+
+   phollema@damdog<~/cwatch/satdata/level3> hdatt --name quality_value 
+     --value 65 --type int 2005_095_1522_n17_er.hdf 
+ 
+\end{verbatim}
+ Finally, suppose that we wanted to change the units and scaling factor / offset of a variable, originally in degrees Celsius and scaled by 0.01, to degrees Fahrenheit: \begin{verbatim}
+
+   phollema@damdog<~/cwatch/satdata/level3> hdatt --name units 
+     --value "deg F" --variable sst 2005_095_1522_n17_er.hdf
+   phollema@damdog<~/cwatch/satdata/level3> hdatt --name scale_factor 
+     --value 0.018 --type double --variable sst 2005_095_1522_n17_er.hdf
+   phollema@damdog<~/cwatch/satdata/level3> hdatt --name add_offset 
+     --value -1777.777777 --type double --variable sst 
+     2005_095_1522_n17_er.hdf
+ 
+\end{verbatim}
+
+
+\newpage

@@ -1,0 +1,91 @@
+\contentsline {chapter}{Preface}{1}{chapter*.7}
+\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.1}
+\contentsline {section}{\numberline {1.1}A Brief History}{3}{section.1.1}
+\contentsline {section}{\numberline {1.2}Installation Notes}{4}{section.1.2}
+\contentsline {subsection}{\numberline {1.2.1}System Requirements}{4}{subsection.1.2.1}
+\contentsline {subsection}{\numberline {1.2.2}Downloading}{4}{subsection.1.2.2}
+\contentsline {subsection}{\numberline {1.2.3}Installing on Windows}{4}{subsection.1.2.3}
+\contentsline {subsection}{\numberline {1.2.4}Installing on Mac OS X}{5}{subsection.1.2.4}
+\contentsline {subsection}{\numberline {1.2.5}Installing on Unix}{5}{subsection.1.2.5}
+\contentsline {section}{\numberline {1.3}Using the Software}{5}{section.1.3}
+\contentsline {section}{\numberline {1.4}Third Party Software}{6}{section.1.4}
+\contentsline {chapter}{\numberline {2}Common Tasks}{7}{chapter.2}
+\contentsline {section}{\numberline {2.1}Information and Statistics}{7}{section.2.1}
+\contentsline {section}{\numberline {2.2}Data Processing}{8}{section.2.2}
+\contentsline {section}{\numberline {2.3}Graphics and Visualization}{8}{section.2.3}
+\contentsline {section}{\numberline {2.4}Registration and Navigation}{9}{section.2.4}
+\contentsline {section}{\numberline {2.5}Network}{10}{section.2.5}
+\contentsline {chapter}{\numberline {3}The CoastWatch Data Analysis Tool}{11}{chapter.3}
+\contentsline {section}{\numberline {3.1}Getting to know CDAT}{11}{section.3.1}
+\contentsline {section}{\numberline {3.2}Loading data files}{13}{section.3.2}
+\contentsline {section}{\numberline {3.3}Navigating in CDAT}{14}{section.3.3}
+\contentsline {section}{\numberline {3.4}Changing data image colors}{14}{section.3.4}
+\contentsline {section}{\numberline {3.5}Displaying coastlines, grids, and more}{15}{section.3.5}
+\contentsline {subsection}{\numberline {3.5.1}Types of overlays}{16}{subsection.3.5.1}
+\contentsline {subsection}{\numberline {3.5.2}The {\it Overlay List}}{18}{subsection.3.5.2}
+\contentsline {subsection}{\numberline {3.5.3}Overlay groups}{19}{subsection.3.5.3}
+\contentsline {section}{\numberline {3.6}Measuring distances and data statistics}{20}{section.3.6}
+\contentsline {subsection}{\numberline {3.6.1}Types of surveys}{20}{subsection.3.6.1}
+\contentsline {subsection}{\numberline {3.6.2}The {\it Survey List} and results}{21}{subsection.3.6.2}
+\contentsline {section}{\numberline {3.7}Drawing lines, shapes, and text}{21}{section.3.7}
+\contentsline {subsection}{\numberline {3.7.1}Types of annotations}{21}{subsection.3.7.1}
+\contentsline {subsection}{\numberline {3.7.2}The {\it Annotation List}}{22}{subsection.3.7.2}
+\contentsline {section}{\numberline {3.8}Using composite image mode}{23}{section.3.8}
+\contentsline {section}{\numberline {3.9}Correcting geographic location problems}{23}{section.3.9}
+\contentsline {subsection}{\numberline {3.9.1}Navigation correction}{25}{subsection.3.9.1}
+\contentsline {subsection}{\numberline {3.9.2}Navigation analysis}{26}{subsection.3.9.2}
+\contentsline {section}{\numberline {3.10}Exporting images and data}{28}{section.3.10}
+\contentsline {section}{\numberline {3.11}Setting color, enhancement, and units preferences}{29}{section.3.11}
+\contentsline {subsection}{\numberline {3.11.1}Resources directory}{31}{subsection.3.11.1}
+\contentsline {section}{\numberline {3.12}Connections with command line tools}{32}{section.3.12}
+\contentsline {chapter}{\numberline {4}Programmer's API}{35}{chapter.4}
+\contentsline {section}{\numberline {4.1}How to use the API}{35}{section.4.1}
+\contentsline {section}{\numberline {4.2}Data I/O}{37}{section.4.2}
+\contentsline {section}{\numberline {4.3}Data rendering}{38}{section.4.3}
+\contentsline {section}{\numberline {4.4}Graphical user interface components}{39}{section.4.4}
+\contentsline {section}{\numberline {4.5}General utility classes}{40}{section.4.5}
+\contentsline {section}{\numberline {4.6}Main programs}{41}{section.4.6}
+\contentsline {chapter}{\numberline {A}Manual Pages}{43}{appendix.A}
+\contentsline {section}{\numberline {A.1}cdat}{43}{section.A.1}
+\contentsline {section}{\numberline {A.2}cwangles}{45}{section.A.2}
+\contentsline {section}{\numberline {A.3}cwautonav}{48}{section.A.3}
+\contentsline {section}{\numberline {A.4}cwcomposite}{57}{section.A.4}
+\contentsline {section}{\numberline {A.5}cwcoverage}{60}{section.A.5}
+\contentsline {section}{\numberline {A.6}cwdownload}{64}{section.A.6}
+\contentsline {section}{\numberline {A.7}cwexport}{67}{section.A.7}
+\contentsline {section}{\numberline {A.8}cwgraphics}{75}{section.A.8}
+\contentsline {section}{\numberline {A.9}cwimport}{78}{section.A.9}
+\contentsline {section}{\numberline {A.10}cwinfo}{80}{section.A.10}
+\contentsline {section}{\numberline {A.11}cwmaster}{83}{section.A.11}
+\contentsline {section}{\numberline {A.12}cwmath}{85}{section.A.12}
+\contentsline {section}{\numberline {A.13}cwnavigate}{91}{section.A.13}
+\contentsline {section}{\numberline {A.14}cwregister}{95}{section.A.14}
+\contentsline {section}{\numberline {A.15}cwrender}{98}{section.A.15}
+\contentsline {section}{\numberline {A.16}cwsample}{111}{section.A.16}
+\contentsline {section}{\numberline {A.17}cwstats}{115}{section.A.17}
+\contentsline {section}{\numberline {A.18}cwstatus}{118}{section.A.18}
+\contentsline {section}{\numberline {A.19}hdatt}{120}{section.A.19}
+\contentsline {chapter}{\numberline {B}CoastWatch HDF Metadata Specification}{125}{appendix.B}
+\contentsline {section}{\numberline {B.1}Overview}{125}{section.B.1}
+\contentsline {section}{\numberline {B.2}Global Metadata}{126}{section.B.2}
+\contentsline {section}{\numberline {B.3}Earth Location Metadata}{127}{section.B.3}
+\contentsline {subsection}{\numberline {B.3.1}Version 2 Affine}{129}{subsection.B.3.1}
+\contentsline {subsection}{\numberline {B.3.2}Version 3 Affine}{130}{subsection.B.3.2}
+\contentsline {section}{\numberline {B.4}Variable Metadata}{130}{section.B.4}
+\contentsline {subsection}{\numberline {B.4.1}Calibration Values}{132}{subsection.B.4.1}
+\contentsline {subsection}{\numberline {B.4.2}Navigation Correction}{132}{subsection.B.4.2}
+\contentsline {section}{\numberline {B.5}Swath Earth Location Encoding}{133}{section.B.5}
+\contentsline {section}{\numberline {B.6}GCTP Appendices}{138}{section.B.6}
+\contentsline {chapter}{\numberline {C}Data Format Compatibility}{153}{appendix.C}
+\contentsline {chapter}{\numberline {D}Miscellaneous Formats}{155}{appendix.D}
+\contentsline {section}{\numberline {D.1}Navigation analysis XML output}{155}{section.D.1}
+\contentsline {section}{\numberline {D.2}Navigation analysis CSV output}{157}{section.D.2}
+\contentsline {section}{\numberline {D.3}Color palette XML format}{157}{section.D.3}
+\contentsline {chapter}{\numberline {E}AVHRR SST Product FAQ}{159}{appendix.E}
+\contentsline {section}{\numberline {E.1}Data formats and archiving}{159}{section.E.1}
+\contentsline {section}{\numberline {E.2}SST computation}{161}{section.E.2}
+\contentsline {section}{\numberline {E.3}Cloud masking}{162}{section.E.3}
+\contentsline {section}{\numberline {E.4}Navigation correction}{164}{section.E.4}
+\contentsline {section}{\numberline {E.5}Map projections}{166}{section.E.5}
+\contentsline {chapter}{\numberline {F}Acronyms}{169}{appendix.F}
+\contentsline {chapter}{\numberline {G}History of Changes}{171}{appendix.G}

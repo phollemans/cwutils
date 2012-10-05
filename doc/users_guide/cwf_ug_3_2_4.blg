@@ -1,0 +1,58 @@
+This is BibTeX, Version 0.99d (TeX Live 2012)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: cwf_ug_3_2_4.aux
+The style file: abbrv.bst
+Database file #1: references.bib
+Warning--to sort, need author or key in opendap
+Warning--to sort, need author or key in gctp
+Warning--to sort, need author or key in udunits
+Warning--to sort, need author or key in ncsa
+Warning--to sort, need author or key in idl
+Warning--to sort, need author or key in matlab
+Warning--to sort, need author or key in gshhs
+Warning--to sort, need author, editor, or key in hdf_ug
+Warning--to sort, need author, editor, or key in hdf_ref
+Warning--empty author and editor in hdf_ref
+Warning--empty author and editor in hdf_ug
+You've used 9 entries,
+            2118 wiz_defined-function locations,
+            524 strings with 4385 characters,
+and the built_in function-call counts, 1475 in all, are:
+= -- 128
+> -- 9
+< -- 0
++ -- 9
+- -- 0
+* -- 63
+:= -- 165
+add.period$ -- 18
+call.type$ -- 9
+change.case$ -- 25
+chr.to.int$ -- 0
+cite$ -- 20
+duplicate$ -- 75
+empty$ -- 210
+format.name$ -- 0
+if$ -- 356
+int.to.chr$ -- 0
+int.to.str$ -- 9
+missing$ -- 2
+newline$ -- 39
+num.names$ -- 0
+pop$ -- 91
+preamble$ -- 1
+purify$ -- 18
+quote$ -- 0
+skip$ -- 54
+stack$ -- 0
+substring$ -- 45
+swap$ -- 9
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 32
+warning$ -- 11
+while$ -- 0
+width$ -- 10
+write$ -- 67
+(There were 11 warnings)

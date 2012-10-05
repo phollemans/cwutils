@@ -1,0 +1,126 @@
+\chapter{Miscellaneous Formats}
+\label{misc_formats}
+
+\section{Navigation analysis XML output}
+\label{nav_xml}
+
+\begin{verbatim}
+<?xml version="1.0"?>
+
+<pointList
+  xmlns="http://coastwatch.noaa.gov"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://coastwatch.noaa.gov http://coastwatch.noaa.gov/xml/pointlist.xsd">
+
+  <dataset 
+    name="2006_340_0942_n18_ws.hdf"
+    format="CoastWatch HDF version 3.4"/>
+
+  <point>
+    <earthLoc lat="34.442345084532306" lon="-120.5162100165965"/>
+    <dataLoc row="702.0" col="586.0"/>
+    <northDir row="-1.0" col="0.0"/>
+    <navOffset row="0.0" col="0.0"/>
+    <comment value="Manual"/>
+    <varValue name="avhrr_ch3" value="13.34" units="celsius"/>
+    <varValue name="avhrr_ch4" value="13.75" units="celsius"/>
+    <varValue name="avhrr_ch5" value="13.19" units="celsius"/>
+    <varValue name="sat_zenith" value="27.41" units="degrees"/>
+  </point>
+
+  <point>
+    <earthLoc lat="33.71715205953104" lon="-118.35055152964117"/>
+    <dataLoc row="768.0" col="750.0"/>
+    <northDir row="-1.0" col="0.0"/>
+    <navOffset row="0.0" col="0.0"/>
+    <comment value="Manual"/>
+    <varValue name="avhrr_ch3" value="13.66" units="celsius"/>
+    <varValue name="avhrr_ch4" value="13.38" units="celsius"/>
+    <varValue name="avhrr_ch5" value="13.32" units="celsius"/>
+    <varValue name="sat_zenith" value="12.86" units="degrees"/>
+  </point>
+
+  <point>
+    <earthLoc lat="37.96232720746668" lon="-122.93276796240643"/>
+    <dataLoc row="373.0" col="403.0"/>
+    <northDir row="-1.0" col="0.0"/>
+    <navOffset row="0.0" col="0.0"/>
+    <comment value="Auto failed"/>
+    <varValue name="avhrr_ch3" value="10.77" units="celsius"/>
+    <varValue name="avhrr_ch4" value="11.06" units="celsius"/>
+    <varValue name="avhrr_ch5" value="10.36" units="celsius"/>
+    <varValue name="sat_zenith" value="43" units="degrees"/>
+  </point>
+
+  <point>
+    <earthLoc lat="32.67355292893255" lon="-117.21490134745726"/>
+    <dataLoc row="862.0" col="836.0"/>
+    <northDir row="-1.0" col="0.0"/>
+    <navOffset row="0.0" col="0.0"/>
+    <comment value="Auto OK"/>
+    <varValue name="avhrr_ch3" value="13.97" units="celsius"/>
+    <varValue name="avhrr_ch4" value="14.11" units="celsius"/>
+    <varValue name="avhrr_ch5" value="13.7" units="celsius"/>
+    <varValue name="sat_zenith" value="3.22" units="degrees"/>
+  </point>
+
+  <point>
+    <earthLoc lat="33.992583436357236" lon="-119.92197445615143"/>
+    <dataLoc row="743.0" col="631.0"/>
+    <northDir row="-1.0" col="0.0"/>
+    <navOffset row="0.0" col="0.0"/>
+    <comment value="Auto failed"/>
+    <varValue name="avhrr_ch3" value="12.17" units="celsius"/>
+    <varValue name="avhrr_ch4" value="12.4" units="celsius"/>
+    <varValue name="avhrr_ch5" value="11.91" units="celsius"/>
+    <varValue name="sat_zenith" value="23.27" units="degrees"/>
+  </point>
+
+</pointList>
+\end{verbatim}
+
+\section{Navigation analysis CSV output}
+\label{nav_csv}
+
+Note that long lines are wrapped and continuation lines indented.
+In the actual output, each point is on a single line.
+
+\begin{verbatim}
+"LAT","LON","ROW","COL","ROW_NORTH","COL_NORTH","ROW_OFFSET","COL_OFFSET",
+  "COMMENT","AVHRR_CH3","AVHRR_CH4","AVHRR_CH5","SAT_ZENITH"
+34.442345084532306,-120.5162100165965,702.0,586.0,-1.0,0.0,0.0,0.0,
+  "Manual",13.34,13.75,13.19,27.41
+33.71715205953104,-118.35055152964117,768.0,750.0,-1.0,0.0,0.0,0.0,
+  "Manual",13.66,13.38,13.32,12.86
+37.96232720746668,-122.93276796240643,373.0,403.0,-1.0,0.0,0.0,0.0,
+  "Auto failed",10.77,11.06,10.36,43
+32.67355292893255,-117.21490134745726,862.0,836.0,-1.0,0.0,0.0,0.0,
+  "Auto OK",13.97,14.11,13.7,3.22
+33.992583436357236,-119.92197445615143,743.0,631.0,-1.0,0.0,0.0,0.0,
+  "Auto failed",12.17,12.4,11.91,23.27
+\end{verbatim}
+
+\section{Color palette XML format}
+\label{palette_xml}
+
+\begin{verbatim}
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE palette SYSTEM "http://coastwatch.noaa.gov/xml/palette.dtd">
+
+<palette name="HSL256" length="256">
+  <color r="128" g="0" b="127" />
+  <color r="125" g="3" b="130" />
+  <color r="123" g="5" b="132" />
+  <color r="120" g="8" b="135" />
+  <color r="118" g="10" b="137" />
+
+(... lines omitted ...)
+
+  <color r="140" g="12" b="0" />
+  <color r="137" g="10" b="0" />
+  <color r="135" g="7" b="0" />
+  <color r="132" g="5" b="0" />
+  <color r="130" g="2" b="0" />
+  <color r="128" g="0" b="0" />
+</palette>
+\end{verbatim}

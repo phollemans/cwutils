@@ -1,0 +1,392 @@
+////////////////////////////////////////////////////////////////////////
+/*
+     FILE: EarthPlotInfo.java
+  PURPOSE: A class to render an Earth plot information legend.
+   AUTHOR: Peter Hollemans
+     DATE: 2002/10/03
+  CHANGES: 2002/11/12, PFH, replaced pass type with scene time
+           2002/12/03, PFH, modified for map projection changes
+           2004/09/09, PFH, changed SatellitePlotInfo to EarthPlotInfo
+           2004/09/15, PFH, modified to handle date ranges
+           2004/09/27, PFH, added handling for composite data origins
+           2004/10/08, PFH, fixed to initialize stroke before drawing
+           2005/01/20, PFH, added border around context area
+           2005/02/07, PFH, modified to use EarthLocation.formatSingle()
+           2005/02/14, PFH, added data courtesy notice
+           2005/03/07, PFH, modified courtesy notice to use lineWrap()
+           2006/11/20, PFH, modified to use GraphicsServices.drawRect()
+
+  CoastWatch Software Library and Utilities
+  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+
+*/
+////////////////////////////////////////////////////////////////////////
+
+// Package
+// -------
+package noaa.coastwatch.render;
+
+// Imports
+// -------
+import java.awt.*;
+import java.text.*;
+import java.util.*;
+import java.util.List;
+import java.awt.geom.*;
+import java.awt.font.*;
+import java.awt.image.*;
+import noaa.coastwatch.util.*;
+import noaa.coastwatch.util.trans.*;
+import noaa.coastwatch.tools.*;
+import noaa.coastwatch.gui.*;
+
+/**
+ * A Earth plot information legend annotates an Earth data view with
+ * information about the data source, date, time, projection, and
+ * Earth location.
+ */
+public class EarthPlotInfo 
+  extends Legend {
+
+  // Constants
+  // ---------
+  /** The minimum picture element size. */
+  private static final int MIN_PICTURE_SIZE = 50;
+
+  /** The default date format. */
+  private static final String DATE_FMT = cwinfo.DATE_FMT;
+
+  /** The UTC time format. */
+  private static final String TIME_FMT = cwinfo.TIME_FMT;
+
+  /** The local time format. */
+  private static final String LOCAL_TIME_FMT = "HH:mm:ss Z";
+
+  // Variables
+  // ---------
+  /** The icon element for the top of the legend. */
+  private IconElement icon;
+
+  /** The Earth data information for legend text. */
+  private String[] labels;
+
+  /** The Earth context element for the bottom of the legend. */
+  private EarthContextElement context;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates an Earth plot information legend from the specified
+   * parameters.  The font is set to the default font face, plain
+   * style, 12 point, the preferred size to none, the foreground color
+   * is set to black, and the background color to none.
+   *
+   * @param icon the icon element to use for the top of the legend.
+   * @param info the Earth data information for text annotations.
+   * @param area the Earth area for geographic bounds.
+   * @param context the Earth context for the bottom of the legend.
+   */
+  public EarthPlotInfo (
+    IconElement icon,
+    EarthDataInfo info,
+    EarthArea area,    
+    EarthContextElement context,
+    EarthLocation center
+  ) {
+
+    this (icon, info, area, context, center, null, null, Color.BLACK, null);
+
+  } // EarthPlotInfo constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates an Earth plot information legend from the specified
+   * parameters.
+   *
+   * @param icon the icon element to use for the top of the legend.
+   * @param info the Earth data information for text annotations.
+   * @param area the Earth area for geographic bounds.
+   * @param context the Earth context for the bottom of the legend.
+   * @param center the Earth location of the plot center.
+   * @param dim the preferred scale dimensions, or null for none.
+   * @param font the font for variable name, units, and scale values, or 
+   * null for the default font face, plain style, 12 point.
+   * @param fore the foreground color for legend lines and annotations.
+   * @param back the background color, or null for none.
+   */
+  public EarthPlotInfo (
+    IconElement icon,
+    EarthDataInfo info,
+    EarthArea area,    
+    EarthContextElement context,
+    EarthLocation center,
+    Dimension dim,
+    Font font,
+    Color fore,
+    Color back
+  ) {
+
+    // Initialize pictures
+    // -------------------
+    super (dim, font, fore, back);
+    this.icon = icon;
+    this.context = context;
+
+    // Create strings
+    // --------------
+    Vector strings = new Vector();
+
+    // Add origin
+    // ----------
+    strings.add ("Data courtesy of:");
+    String origin = MetadataServices.format (info.getOrigin(), " ");
+    String[] originArray = GUIServices.lineWrap (origin, 20).split ("\n");
+    for (int i = 0; i < originArray.length; i++) strings.add (originArray[i]);
+    strings.add (" ");
+
+    // Add data source
+    // ---------------
+    if (info instanceof SatelliteDataInfo) {
+      SatelliteDataInfo satInfo = (SatelliteDataInfo) info;
+      strings.add ("Satellite:");
+      strings.add ("  " + 
+        MetadataServices.format (satInfo.getSatellite().toUpperCase(), ", "));
+      strings.add ("Sensor:");
+      strings.add ("  " + 
+        MetadataServices.format (satInfo.getSensor().toUpperCase(), ", "));
+    } // if
+    else {
+      strings.add ("Data source:");
+      strings.add ("  " + 
+        MetadataServices.format (info.getSource().toUpperCase(), ", "));
+    } // else
+
+    // Add single time info
+    // --------------------
+    if (info.isInstantaneous()) {
+      Date startDate = info.getStartDate();
+      strings.add ("Date:");
+      strings.add ("  " + DateFormatter.formatDate (startDate, DATE_FMT));
+      strings.add ("Time:");
+      strings.add ("  " + DateFormatter.formatDate (startDate, TIME_FMT));
+      strings.add ("  " + DateFormatter.formatDate (startDate, LOCAL_TIME_FMT, 
+        center));
+      strings.add ("Scene time:");
+      strings.add ("  " + info.getSceneTime (context.getUpperLeft(), 
+        context.getLowerRight()).toUpperCase());
+    } // if
+
+    // Add time range info
+    // -------------------
+    else {
+      Date startDate = info.getStartDate();
+      Date endDate = info.getEndDate();
+      String startDateString = DateFormatter.formatDate (startDate, DATE_FMT);
+      String endDateString = DateFormatter.formatDate (endDate, DATE_FMT);
+      String startTimeString = DateFormatter.formatDate (startDate, TIME_FMT);
+      String endTimeString = DateFormatter.formatDate (endDate, TIME_FMT);
+      if (startDateString.equals (endDateString)) {
+        strings.add ("Date:");
+        strings.add ("  " + startDateString);
+        strings.add ("Start time:");
+        strings.add ("  " + startTimeString);
+        strings.add ("End time:");
+        strings.add ("  " + endTimeString);
+      } // if
+      else {
+        strings.add ("Start date:");
+        strings.add ("  " + startDateString);
+        strings.add ("Start time:");
+        strings.add ("  " + startTimeString);
+        strings.add ("End date:");
+        strings.add ("  " + endDateString);
+        strings.add ("End time:");
+        strings.add ("  " + endTimeString);
+      } // else
+    } // else
+
+    // Add projection type
+    // -------------------
+    EarthTransform trans = info.getTransform ();
+    strings.add ("Projection type:");
+    strings.add ("  " + (trans == null ? "unknown" : 
+      trans.describe().toUpperCase()));
+
+    // Add mapped projection attributes
+    // --------------------------------
+    if (trans instanceof MapProjection) {
+      MapProjection map = (MapProjection) trans;
+      strings.add ("Map projection:");
+      if (map.getSystem() == GCTP.GEO) {
+        DecimalFormat format = new DecimalFormat ("0.####");
+        AffineTransform affine = map.getAffine();
+        double[] matrix = new double[6];
+        affine.getMatrix(matrix);
+        strings.add ("  " + format.format (matrix[2]) + " deg/pixel");
+      } // if
+      else {
+        DecimalFormat format = new DecimalFormat ("0.##");
+        double res = map.getPixelSize();
+        strings.add ("  " + format.format (res/1000) + " km/pixel");
+      } // else
+      String[] proj = map.getSystemName().toUpperCase().split(" ");
+      for (int i = 0; i < proj.length; i++) 
+        strings.add ("  " + proj[i]);
+    } // if
+
+    // Add geographic bounds
+    // ---------------------
+    int[] extremes = area.getExtremes();
+    strings.add ("Latitude bounds:");
+    String latBounds = 
+      EarthLocation.formatSingle (extremes[1], EarthLocation.D, 
+      EarthLocation.LAT) + " -> " +
+      EarthLocation.formatSingle (extremes[0], EarthLocation.D, 
+      EarthLocation.LAT);
+    strings.add ("  " + latBounds);
+
+    strings.add ("Longitude bounds:");
+    String lonBounds = 
+      EarthLocation.formatSingle (extremes[3], EarthLocation.D, 
+      EarthLocation.LON) + " -> " +
+      EarthLocation.formatSingle (extremes[2], EarthLocation.D, 
+      EarthLocation.LON);
+    strings.add ("  " + lonBounds);
+
+    // Create labels array
+    // -------------------
+    labels = new String[strings.size()];
+    strings.toArray (labels);
+
+  } // EarthPlotInfo constructor
+
+  ////////////////////////////////////////////////////////////
+
+  public void render (
+    Graphics2D g,
+    int x,
+    int y
+  ) {
+
+    // Initialize
+    // ----------
+    Dimension size = getSize(g);
+    g.setStroke (DEFAULT_STROKE);
+
+    // Draw background
+    // ---------------
+    if (back != null) {
+      g.setColor (back);
+      g.fillRect (x, y, size.width, size.height);
+      g.setColor (fore);
+      GraphicsServices.drawRect (g, new Rectangle (x, y, size.width, 
+        size.height));
+    } // if
+
+    // Render icon
+    // -----------
+    int pictureSize = size.width - SPACE_SIZE*4;
+    icon.setPreferredSize (new Dimension (pictureSize, pictureSize));
+    Rectangle iconBounds = icon.getBounds(g);
+    icon.setPosition (new Point (x + SPACE_SIZE*2 + pictureSize/2 -
+      iconBounds.width/2, y + SPACE_SIZE*2 + pictureSize/2 - 
+      iconBounds.height/2));
+    icon.render (g, fore, back);
+
+    // Render context
+    // --------------
+    context.setPreferredSize (new Dimension (pictureSize, pictureSize));
+    Rectangle contextBounds = context.getBounds(g);
+    Point contextPos = new Point (x + SPACE_SIZE*2 + 
+      pictureSize/2 - contextBounds.width/2, (y + size.height - 1) - 
+      SPACE_SIZE*2 - pictureSize/2 - contextBounds.height/2);
+    context.setPosition (contextPos);
+    Color highBack = null;
+    if (back != null) {
+      highBack = new Color (
+        (int) Math.min (back.getRed()*1.05, 255),
+        back.getGreen(),
+        back.getBlue());
+    } // if
+    context.render (g, fore, highBack);
+    g.setColor (fore);
+    GraphicsServices.drawRect (g, new Rectangle (contextPos.x, contextPos.y, 
+      contextBounds.width, contextBounds.height));
+
+    // Loop over labels
+    // ----------------
+    Point2D.Float start = new Point2D.Float(x + SPACE_SIZE*2, 
+      y + SPACE_SIZE*4 + pictureSize);
+    boolean origin = true;
+    FontRenderContext renderContext = g.getFontRenderContext();
+    for (int i = 0; i < labels.length; i++) {
+
+      // Create label
+      // ------------
+      TextLayout layout = new TextLayout (labels[i], font, renderContext);
+      start.y += layout.getAscent();
+      TextElement labelElement = new TextElement (labels[i], font,
+        start, new double[] {0, 0}, 0);
+
+      // Center origin
+      // -------------
+      if (labels[i] == " ") origin = false;
+      if (origin) {
+        labelElement.setBasePoint (new Point2D.Float (x + size.width/2.0f,
+          start.y));
+        labelElement.setAlignment (new double[] {0.5, 0}); 
+      } // if
+
+      // Render label and advance
+      // ------------------------
+      labelElement.render (g, fore, null);
+      start.y += layout.getDescent() + layout.getLeading();
+
+    } // for
+
+  } // render
+
+  ////////////////////////////////////////////////////////////
+
+  public Dimension getSize (
+    Graphics2D g
+  ) {
+
+    // Find labels dimensions 
+    // ----------------------
+    Point2D.Float start = new Point2D.Float();
+    FontRenderContext renderContext = g.getFontRenderContext();
+    float maxAdvance = 0;
+    for (int i = 0; i < labels.length; i++) {
+      TextLayout layout = new TextLayout (labels[i], font, renderContext);
+      maxAdvance = Math.max (layout.getAdvance(), maxAdvance);
+      start.y += layout.getAscent() + layout.getDescent() + 
+        layout.getLeading();
+    } // for
+    int textWidth = (int) Math.ceil (maxAdvance);
+    int textHeight = (int) Math.ceil (start.y);
+
+    // Calculate width
+    // ---------------
+    Dimension size = new Dimension();
+    size.width = SPACE_SIZE*4 + Math.max (textWidth, MIN_PICTURE_SIZE);
+
+    // Calculate height
+    // ----------------
+    int requiredHeight = textHeight + (size.width - SPACE_SIZE*4)*2 + 
+      SPACE_SIZE*8;
+    if (preferred != null)
+      size.height = Math.max (preferred.height, requiredHeight);
+    else
+      size.height = requiredHeight;
+
+    return (size);
+
+  } // getSize
+
+  ////////////////////////////////////////////////////////////
+
+} // EarthPlotInfo class
+
+////////////////////////////////////////////////////////////////////////

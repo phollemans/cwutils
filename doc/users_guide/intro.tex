@@ -1,0 +1,240 @@
+\chapter{Introduction}
+
+The main goal of the CoastWatch Utilities software is to aid data
+users in working with NOAA/NESDIS CoastWatch satellite data. 
+CoastWatch data is distributed as individual files in a scientific
+data format that is not recognized by standard image viewers, and the
+CoastWatch Utilities are useful for manipulating data and creating images
+from CoastWatch data for both recreational and scientific
+applications.  CoastWatch data files contain:
+\begin{enumerate}
+
+  \item Global file attributes that describe the date/time and
+  location of the earth data in the file, as well as any relevant data
+  processing details.
+
+  \item Earth data as a set of two-dimensional numerical arrays, each
+  with a unique name.  These {\em variables} hold the actual
+  scientific data and accompanying attributes, such as scaling factor
+  and units, that describe how to use the data values.
+
+\end{enumerate}
+The CoastWatch Utilities allow users to selectively access and extract
+this information in a number of ways.
+
+\section{A Brief History}
+
+The CoastWatch Utilities have been evolving since 1998.  The original
+software was capable of working with CoastWatch IMGMAP format data
+files, the standard data distribution format (limited to NOAA AVHRR
+data) for CoastWatch satellite data until 2003.  The current utilities
+are capable of reading CoastWatch IMGMAP, NOAA 1b AVHRR, and
+CoastWatch HDF, a new format based on the NCSA Hierarchical Data
+Format (HDF) that has been adopted by CoastWatch for distributing
+earth data from a host of different satellites and sensors.  Following
+is a sketch of the software evolution:
+\begin{itemize}
+
+  \item Version 1: 1997.  The first version created CoastWatch IMGMAP
+  files from TeraScan Data Format (TDF), a proprietary format from
+  SeaSpace Corporation.  It was never publicly released.
+
+  \item Version 2: 1998-2000.  The second version was released to the
+  CoastWatch data user community and worked with CoastWatch IMGMAP
+  (CWF) files only.  Users could convert CWF files to other formats,
+  create GIF images, perform land and cloud masking, create data
+  composites, and other related tasks.  
+
+  \item Version 3: 2001-present.  The third version was designed to have
+  a more flexible data handling capability, with support for both
+  CoastWatch IMGMAP and the new CoastWatch HDF format.  The CoastWatch
+  Data Analysis Tool (CDAT) was integrated into the package.
+  Additional capabilities were added for NOAA 1b AVHRR, level 2 swath
+  style data, automatic navigational correction, ESRI shapefiles, and
+  other improvements.
+
+\end{itemize}
+
+\section{Installation Notes}
+
+\subsection{System Requirements}
+
+\begin{description}
+
+  \item[Operating system] The CoastWatch Utilities are currently
+  available for Windows, Linux, Solaris, Mac OS X, and AIX only.
+
+  \item[Java version] As of version 3.2.2, the correct Java Runtime
+  Environment (JRE) is packaged with the Windows, Linux, Solaris,
+  and AIX versions of the CoastWatch Utilities.  There is no need
+  to install it separately -- it will be placed in a subdirectory
+  of the installation directory and will only be used by the
+  CoastWatch Utilities.
+
+  For Mac OS X a JRE version {\bf 1.5.0 or higher} is required on
+  the machine.  Generally an up-to-date version of Mac OS X has
+  the correct Java version.  To check the current Java version,
+  go to {\gui Applications} -$>$ {\gui Utilities} in the Finder and
+  start the Terminal.  Type \verb+java -version+, hit enter, and
+  look at the first line of output.  If the version does not
+  start with 1.5.0 or greater, run {\gui Software Update} from the
+  \macsym{apple} menu or visit \url{http://www.apple.com/java} to
+  download manually.
+
+  \item[Disk space] A minimum of 150 Mb is required for the installed
+  software. We recommended at least 300 Mb of space in total to
+  allow for downloading and manipulating satellite datasets. More
+  disk space may be required for larger datasets.
+
+  \item[Memory] A minimum of 128 Mb is required, while 256 Mb is
+  recommended. More memory may be required depending on the number of
+  concurrent processes running on the computer.
+
+\end{description}
+
+\subsection{Downloading}
+
+To download, visit the CoastWatch central web site: 
+\begin{quote}
+  \url{http://coastwatch.noaa.gov/cw\_cwfv3.html}
+\end{quote}
+and download the package appropriate for your operating system. To
+install, read one of the following sections depending on your
+platform.
+
+\subsection{Installing on Windows}
+
+If upgrading to a new version, there is no need to uninstall the
+previous version -- the new installation setup program will handle
+the details.  To install the new version, simply double-click the
+downloaded installation package. The setup program will install the
+software in a user-specified directory, and add entries to the Start
+Menu.  The User's Guide (this document) is also added to the Start
+Menu.
+
+If you use the command line tools you may want to add the installed
+executable directory to the path for easier command line execution.
+On Windows XP, go to the Windows {\gui Start Menu} and click {\gui
+Control Panel} -$>$ {\gui Performance and Maintenance} -$>$ {\gui
+System}, select the {\gui Advanced} tab and click the {\gui Environment
+Variables} button. Edit the entry for the {\gui Path} variable under
+{\gui System variables} and add the full path to the installed
+executable directory, for example {\tt C:$\backslash$Program
+Files$\backslash$CoastWatch Utilities$\backslash$bin}. Other Windows
+versions have a similar procedure for adding a path.
+
+\subsection{Installing on Mac OS X}
+
+The Mac OS X installation package is a disk image (DMG) file that
+contains support for both PowerPC and Intel processors.  
+Download the DMG file, double-click to mount it, and then
+double-click the installer program.  When upgrading, the new version
+of the utilities will automatically uninstall the old version.
+
+If you use the command line tools you may want to add the installed
+executable directory to your path for easier command line execution.
+In a Terminal session, add the following lines to the {\tt .profile}
+file:
+\begin{quote}
+  {\tt export PATH=\$\{PATH\}:"/Applications/CoastWatch Utilities/bin"}
+\end{quote}
+and then open a new Terminal window for the changes to take effect.
+
+\subsection{Installing on Unix}
+
+For the Linux RPM file, run the rpm command as root:
+\begin{quote}
+  {\file rpm -Uvh} FILENAME.RPM
+\end{quote}
+which will install or upgrade the software into {\tt /opt/cwf} and create
+links to the executables in {\tt /usr/local/bin}. For 
+the self-installing shell script, you can
+install as a normal user or as root by executing the shell script
+and following the instructions in the graphical setup wizard.
+For the tar archive file (non-graphical install),
+extract the archive as follows:
+\begin{quote}
+  {\file gunzip} FILENAME.TAR.GZ \\
+  {\file tar -xf} FILENAME.TAR
+\end{quote}
+You may also want to add the installed executable directory to
+your {\tt \$PATH} environment variable for easier command line
+execution, for example:
+\begin{quote}
+  {\tt setenv PATH \$\{PATH\}:/opt/cwf/bin}~(in {\tt .cshrc}) \\
+  {\tt export PATH=\$\{PATH\}:/opt/cwf/bin}~(in {\tt .bashrc})
+\end{quote}
+
+\section{Using the Software}
+
+The CoastWatch Utilities are made up of various individual tools.
+Graphical tools allow you to point and click, working with data
+interactively; the graphical tools have a built-in help system
+with brief details on each key feature.  To complement these,
+there are also command line tools that allow you to process data
+using a text-only command prompt or scripting language.  Call any
+command line tool with the \longoption{help} option to get a
+short synopsis of parameters.  See the manual pages of
+\autoref{manual} for a complete discussion on the command line
+parameters for both graphical and command line tools.
+
+Functionally, the CoastWatch Utilities are designed to meet the data
+processing and rendering needs of many different types of data users.
+The individual tools have been developed from both in-house
+requirements and data user suggestions.  The functionality of the
+tools may be divided into several categories based on data processing
+task:
+\begin{description}
+
+  \item[Information and Statistics] File contents, statistics
+  computations on variables (for example min, max, mean, standard
+  deviation), direct access to raw file and variable attributes.
+
+  \item[Data Processing] Data format conversions,
+  compositing, generic variable math, data sampling.
+
+  \item[Graphics and Visualization] Interactive
+  visualization/analysis, batch image rendering, ancillary graphics
+  creation such as data coverage maps, grids, coastlines, landmasks.
+    
+  \item[Registration and Navigation] Resampling of data from one
+  projection to another, interactive generation of region masters,
+  manual and automatic navigational correction, computation of solar
+  and earth location angles.
+
+  \item[Network] Data download and server status.
+
+\end{description}
+
+\section{Third Party Software}
+\label{third}
+
+There are a number of other software packages than can
+be used to read data from CoastWatch HDF data files.  They are {\em
+generic} in the sense that they can read the numerical and text data,
+but they cannot interpret the metadata conventions used by CoastWatch.
+They are well suited to advanced users who want to have more detail on
+HDF data file contents.  You should always refer to the CoastWatch
+HDF metadata specification of \autoref{metadata} when using third
+party software with CoastWatch HDF files.
+
+The HDF Group (THG), originally part of the National Center for
+Supercomputing Applications (NCSA), is the main source of information
+on the HDF format specification and software libraries.  You can
+download tools for working with HDF from the main web site:
+\begin{quote}
+  \url{http://www.hdfgroup.org}
+\end{quote} 
+Many of the tools are command line, but HDFView is a useful graphical
+tool.
+
+Other non-NCSA software has been HDF-enabled by linking against the
+NCSA HDF libraries.  Among those packages are IDL, Matlab, and
+OPeNDAP.  A more complete list of non-NCSA software may be found at:
+\begin{quote}
+  \url{http://www.hdfgroup.org/tools.html}
+\end{quote}
+
+% TODO: Need to add something here about where to get CoastWatch data.
+
+

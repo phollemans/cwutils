@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE palette SYSTEM "http://coastwatch.noaa.gov/xml/palette.dtd">
+<palette name="Chlora-anom" length="51">
+  <color r="132" g="0" b="124" />
+  <color r="132" g="0" b="124" />
+  <color r="124" g="0" b="131" />
+  <color r="117" g="0" b="138" />
+  <color r="110" g="0" b="145" />
+  <color r="102" g="0" b="153" />
+  <color r="95" g="0" b="160" />
+  <color r="88" g="0" b="167" />
+  <color r="80" g="0" b="174" />
+  <color r="73" g="0" b="182" />
+  <color r="66" g="0" b="189" />
+  <color r="58" g="0" b="196" />
+  <color r="51" g="0" b="204" />
+  <color r="44" g="0" b="211" />
+  <color r="36" g="0" b="218" />
+  <color r="29" g="0" b="225" />
+  <color r="22" g="0" b="233" />
+  <color r="14" g="0" b="240" />
+  <color r="7" g="0" b="247" />
+  <color r="0" g="0" b="255" />
+  <color r="0" g="14" b="255" />
+  <color r="0" g="28" b="255" />
+  <color r="0" g="42" b="255" />
+  <color r="0" g="56" b="255" />
+  <color r="0" g="70" b="255" />
+  <color r="0" g="85" b="255" />
+  <color r="0" g="99" b="255" />
+  <color r="0" g="113" b="255" />
+  <color r="0" g="127" b="255" />
+  <color r="0" g="141" b="255" />
+  <color r="0" g="155" b="255" />
+  <color r="0" g="170" b="255" />
+  <color r="0" g="184" b="255" />
+  <color r="0" g="198" b="255" />
+  <color r="0" g="212" b="255" />
+  <color r="0" g="226" b="255" />
+  <color r="0" g="240" b="255" />
+  <color r="0" g="255" b="255" />
+  <color r="0" g="255" b="231" />
+  <color r="0" g="255" b="208" />
+  <color r="0" g="255" b="185" />
+  <color r="0" g="255" b="162" />
+  <color r="0" g="255" b="139" />
+  <color r="0" g="255" b="115" />
+  <color r="0" g="255" b="92" />
+  <color r="0" g="255" b="69" />
+  <color r="0" g="255" b="46" />
+  <color r="0" g="255" b="23" />
+  <color r="0" g="255" b="0" />
+  <color r="0" g="255" b="0" />
+  <color r="255" g="255" b="16" />
+</palette>

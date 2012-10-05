@@ -1,0 +1,228 @@
+<html>
+
+<head>
+  <title>EDAC Help: Viewing data</title>
+  <link rel="stylesheet" type="text/css" href="helpstyle.css">
+</head>
+
+<body>
+
+<h1>EDAC Help: Viewing data</h1>
+
+<p>In this section:</p>
+<ul>
+  <li><a href="#intro">Introducing the View tab</a></li>
+  <li><a href="#components">Components of the View tab</a></li>
+</ul>
+
+<a name="intro"></a>
+<h2>Introducing the View tab</h2>
+
+<p>The View tab is the main data display mechanism for the data access
+client and acts as a visual data browser.  Users would normally search
+for data of interest using the Catalog tab, then switch to the View
+tab to view data of interest interactively.  For convenience, the data
+access client starts up with the View tab selected and displaying the
+most current data from the first dataset.  Users can modify the data
+view by using the tool bar buttons, the date/time selector, and by
+clicking and dragging on the data view itself.</p>
+
+<a name="components"></a>
+<h2>Components of the View tab</h2>
+
+<p>The following figure shows the main components of the client
+when the View tab is selected:</p>
+
+<p class="centered"><img src="edac_view.png"></p>
+
+<dl>
+  
+  <dt>Dataset selector</dt>
+
+  <dd>The name of the current dataset being displayed.  A dataset
+  consists of a number of files, each of which contains data for a
+  specific date and time.  When the user selects a new dataset, the
+  client updates the data view to display the new data.  The client
+  always finds the file whose date and time match as closely as
+  possible when switching from one dataset to the next.</dd>
+
+  <dt>Date/time selector</dt>
+
+  <dd>The starting date and time of the current file being displayed.
+  Datasets may have many or only a few files available, depending on
+  how often the data is collected and if the data is a temporal
+  composite or a single satellite pass.  Click the date/time selector
+  or use the Next and Previous buttons to select a new date/time for
+  the data view.</dd>
+
+  <dt>Tool bar</dt>
+
+  <dd>Various tools for manipulating the data view:
+
+  <table>
+
+    <tr>
+
+      <td valign="top"><img src="table.png"></td>
+
+      <td><span class="strong">Grid Overlay</span> - Toggles the
+      latitude/longitude grid with labels.</td>
+
+    </tr>
+
+    <tr>
+
+      <td valign="top"><img src="earth2.png"></td>
+
+      <td><span class="strong">Coast Overlay</span> - Toggles the
+      coast lines and land mask (based on GSHHS polygon data).</td>
+
+    </tr>
+
+    <tr>
+
+      <td valign="top"><img src="flag_red.png"></td>
+
+      <td><span class="strong">Political Overlay</span> - Toggles the
+      international and state borders (based on WDBII data).</td>
+
+    </tr>
+
+    <tr>
+
+      <td valign="top"><img src="zoom_in.png"></td>
+
+      <td><span class="strong">Zoom In x2</span> - Magnifies the data
+      view by two times.</td>
+
+    </tr>
+
+    <tr>
+
+      <td valign="top"><img src="zoom_out.png"></td>
+
+      <td><span class="strong">Zoom Out x2</span> - Shrinks the data
+      view by two times.</td>
+
+    </tr>
+
+    <tr>
+
+      <td valign="top"><img src="selection_view.png"></td>
+
+      <td><span class="strong">Zoom to Selected</span> - Magnifies the
+      data view on a certain area.  Click and drag the mouse over the
+      data view to select a zoom rectangle.</td>
+
+    </tr>
+
+    <tr>
+
+      <td valign="top"><img src="signpost.png"></td>
+
+      <td><span class="strong">Pan View Area</span> - Pans the data
+      view.  Click and drag on the data view to show nearby
+      areas.</td>
+
+    </tr>
+
+    <tr>
+
+      <td valign="top"><img src="earth_location.png"></td>
+
+      <td><span class="strong">Show Region</span> - Zooms the data
+      view to a region of interest by geographic region name.  Click
+      the tool bar button and select from the drop-down menu of
+      names.</td>
+
+    </tr>
+
+    <tr>
+
+      <td valign="top"><img src="undo.png"></td>
+
+      <td><span class="strong">Reset View</span> - Resets the data
+      view to show the full dataset region.</td>
+
+    </tr>
+
+    <tr>
+
+      <td valign="top"><img src="palette.png"></td>
+
+      <td><span class="strong">Change Palette</span> - Changes the
+      color scale palette.  Select from many different color palettes
+      and the data view changes accordingly.  When the dataset is
+      changed, the client saves the user's selected palette and
+      restores it when viewing the same dataset again.</td>
+
+    </tr>
+
+    <tr>
+
+      <td valign="top"><img src="thermometer.png"></td>
+
+      <td><span class="strong">Change Scale</span> - Changes the color
+      scale minimum and maximum data values.  Select the new color
+      scale range and press Enter or click Apply, and the data view
+      changes accordingly.  As with the palette, the color scale range
+      is saved and restored again when switching between
+      datasets.</td>
+
+    </tr>
+
+    <tr>
+
+      <td valign="top"><img src="folder_into.png"></td>
+
+      <td><span class="strong">Download Data</span> - Downloads the
+      data file for the current data view.  See <a
+      href="edac_access.html">Accessing data files</a> for details on
+      the data format.</td>
+
+    </tr>
+
+    <tr>
+
+      <td valign="top"><img src="folder_network.png"></td>
+
+      <td><span class="strong">Show OPeNDAP</span> - Shows the OPeNDAP
+      form for the current data view.  See <a
+      href="edac_access.html">Accessing data files</a> for details on
+      OPeNDAP.</td>
+
+    </tr>
+
+  </table></dd>
+
+  <dt>Data view</dt>
+
+  <dd>The color enhancement plot of the current dataset and file
+  date/time.  The color enhancement shows the data values
+  converted to color values using the color scale on the right.
+  The user can click and drag to manipulate the data view when
+  the Zoom or Pan tool bar buttons are selected.</dd>
+
+  <dt>Color scale</dt>
+
+  <dd>The color scale for the current dataset.  The color scale
+  may be used as a reference for the data view and displays the
+  current palette, data value tick marks, and the view variable
+  name and units.  The color scale can be changed by clicking the
+  Palette or Scale tool bar buttons.</dd>
+
+  <dt>Track bar</dt>
+
+  <dd>The mouse pointer tracking information.  When the mouse
+  pointer passes over the data view, the geographic latitude and
+  longitude at the pointer location is updated along with the
+  data view value.  Latitude and longitude are displayed in
+  decimal degrees.</dd>
+
+</dl>
+
+<p><a href="edac_overview.html">Back to overview</a></p>
+
+</body>
+
+</html>

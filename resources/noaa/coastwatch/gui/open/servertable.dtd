@@ -1,0 +1,17 @@
+<!-- 
+
+     FILE: servertable.dtd
+  PURPOSE: Defines the CoastWatch server table format in XML.
+   AUTHOR: Peter Hollemans
+     DATE: 2005/08/03
+  CHANGES: n/a
+
+  CoastWatch Software Library and Utilities
+  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+
+-->
+
+<!ELEMENT servertable (server*)>
+<!ELEMENT server EMPTY>
+<!ATTLIST server name CDATA #REQUIRED>
+<!ATTLIST server location CDATA #REQUIRED>

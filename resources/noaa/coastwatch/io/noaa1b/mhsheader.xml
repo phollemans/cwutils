@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+
+<binaryStream
+  xmlns="http://coastwatch.noaa.gov"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://coastwatch.noaa.gov http://coastwatch.noaa.gov/xml/binaryStream.xsd">
+
+  <!-- File ID section -->
+  <string name="creationSite" length="3">
+    <valueMap valueType="string">
+      <entry key="CMS" value="Centre de Meteorologie Spatiale, France"/>
+      <entry key="DSS" value="Dundee Satellite Receiving Station, UK"/>
+      <entry key="NSS" value="National Environmental Satellite, Data and Information Service, USA"/>
+      <entry key="UKM" value="United Kingdom Meteorological Office, UK"/>
+    </valueMap>
+  </string>
+  <skip length="1"/>
+  <ushort name="formatVersion"/>
+  <ushort name="formatVersionYear"/>
+  <ushort name="formatVersionDay"/>
+  <ushort name="headerRecords" absoluteOffset="14"/>
+  <string name="datasetName" absoluteOffset="22" length="42"/> 
+  <ushort name="spacecraft" absoluteOffset="72">
+    <valueMap valueType="string">
+      <entry key="7" value="NOAA-18"/>
+      <entry key="8" value="NOAA-19"/>
+    </valueMap>
+  </ushort>
+  <ushort name="instrument" absoluteOffset="74">
+    <valueMap valueType="string">
+      <entry key="0" value="MHS Protoflight Model"/>
+      <entry key="2" value="MHS Flight Model 2"/>
+    </valueMap>
+  </ushort>
+  <ushort name="dataType">
+    <valueMap valueType="string">
+    <entry key="12" value="MHS"/>
+    </valueMap>
+  </ushort>
+  <uint name="startDay1950" absoluteOffset="80"/>
+  <ushort name="startYear"/>
+  <ushort name="startDay"/>
+  <uint name="startTimeUTC"/>
+  <ushort name="endYear" absoluteOffset="96"/>
+  <ushort name="endDay"/>
+  <uint name="endTimeUTC"/>
+  <short name="scanOffset" absoluteOffset="108"/>
+
+  <!-- Dataset quality section --> 
+  <uint name="instrumentStatus" absoluteOffset="120"/>
+  <ushort name="dataRecords" absoluteOffset="132"/>
+  <ushort name="calibratedScanLines"/>
+  <ushort name="missingScanLines"/>
+  <ushort name="dataGaps"/>
+  <ushort name="dataSource" absoluteOffset="160">
+    <valueMap valueType="string">
+      <entry key="1" value="Fairbanks, AK"/>
+      <entry key="2" value="Wallops Island, VA"/>
+      <entry key="3" value="SOCC"/>
+      <entry key="4" value="Svalbard, Norway"/>
+      <entry key="5" value="Monterey, CA"/>
+    </valueMap>
+  </ushort>
+
+  <!-- Temperature-radiance conversion section -->
+  <int name="chH1CentralWave" scale="1e-6" absoluteOffset="416"/>
+  <int name="chH1Constant1" scale="1e-6"/>
+  <int name="chH1Constant2" scale="1e-6"/>
+  <int name="chH2CentralWave" scale="1e-6"/>
+  <int name="chH2Constant1" scale="1e-6"/>
+  <int name="chH2Constant2" scale="1e-6"/>
+  <int name="chH3CentralWave" scale="1e-6"/>
+  <int name="chH3Constant1" scale="1e-6"/>
+  <int name="chH3Constant2" scale="1e-6"/>
+  <int name="chH4CentralWave" scale="1e-6"/>
+  <int name="chH4Constant1" scale="1e-6"/>
+  <int name="chH4Constant2" scale="1e-6"/>
+  <int name="chH5CentralWave" scale="1e-6"/>
+  <int name="chH5Constant1" scale="1e-6"/>
+  <int name="chH5Constant2" scale="1e-6"/>
+
+  <!-- Navigation section -->
+  <string name="ellipsoidModel" absoluteOffset="492" length="8"/> 
+
+</binaryStream>

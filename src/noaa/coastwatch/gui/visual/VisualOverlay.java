@@ -1,0 +1,295 @@
+////////////////////////////////////////////////////////////////////////
+/*
+     FILE: VisualOverlay.java
+  PURPOSE: Defines a visual interface for an Earth data overlay.
+   AUTHOR: Peter Hollemans
+     DATE: 2004/03/01
+  CHANGES: 2004/10/19, PFH, modified to show only one chooser dialog
+           2005/04/06, PFH, added tool tip text to components
+           2006/06/29, PFH, modified for new createDialog() layout
+           2006/11/02, PFH, modified for validation of chooser
+           
+  CoastWatch Software Library and Utilities
+  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+
+*/
+////////////////////////////////////////////////////////////////////////
+
+// Package
+// -------
+package noaa.coastwatch.gui.visual;
+
+// Imports
+// -------
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import java.beans.*;
+import java.lang.reflect.*;
+import noaa.coastwatch.render.*;
+import noaa.coastwatch.gui.*;
+
+/**
+ * The <code>VisualOverlay</code> class represents an
+ * <code>EarthDataOverlay</code> object as a panel with modification
+ * components.
+ *
+ * @see noaa.coastwatch.render.EarthDataOverlay
+ */
+public class VisualOverlay 
+  extends AbstractVisualObject {
+
+  // Variables
+  // ---------
+
+  /** The panel holding the control components. */
+  private JPanel panel;
+
+  /** The overlay object. */
+  private EarthDataOverlay overlay;
+
+  /** The current chooser panel or null if none is showing. */
+  private OverlayPropertyChooser chooserPanel;
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Creates a new visual overlay object using the specified
+   * overlay. 
+   */
+  public VisualOverlay (
+    EarthDataOverlay overlay
+  ) {                     
+
+    // Create panel
+    // ------------
+    panel = new JPanel (new FlowLayout (FlowLayout.LEFT, 4, 0));
+
+    // Set overlay
+    // -----------
+    setOverlay (overlay);
+
+  } // VisualOverlay constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Adds a visual property component to the panel.  The new property
+   * component is created using the <code>VisualObjectFactory</code>,
+   * so it already automatically modifies the overlay itself.
+   * Optionally, another property change listener is added so that
+   * this visual overlay object itself fires property changes when one
+   * of the overlay properties is changed.
+   *
+   * @param property the overlay property to add a component for.
+   * @param needsListener the listener flag, true if a listener should
+   * be attached to the property component that simply fires a
+   * property change event from this visual overlay object.
+   */
+  private void addVisualPropertyComponent (
+    String property,
+    boolean needsListener
+  ) {
+
+    VisualObject visual = VisualObjectFactory.create (overlay, property);
+    if (needsListener) {
+      visual.addPropertyChangeListener (new PropertyChangeListener () {
+          public void propertyChange (PropertyChangeEvent event) {
+            firePropertyChange();
+          } // propertyChange
+        });
+    } // if
+    Component component = visual.getComponent();
+    if (component instanceof JComponent) {
+      ((JComponent) component).setToolTipText (
+        GenericOverlayPropertyChooser.getLabel (property));
+    } // if
+    panel.add (component);
+
+  } // addVisualPropertyComponent
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the panel used to represent the array. */
+  public Component getComponent () { return (panel); }
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the overlay value. */
+  public Object getValue () { return (overlay); }
+
+  ////////////////////////////////////////////////////////////
+  
+  /** Returns true as this visual object has a chooser. */
+  public boolean hasChooser () { return (true); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the active overlay from the currently displayed
+   * chooser.
+   *
+   * @return true if the operation was successful, or false if
+   * not.
+   */
+  private boolean setOverlayFromChooser () {
+
+    try { 
+      setOverlay (chooserPanel.getOverlay());
+      return (true);
+    } // try
+    catch (IllegalStateException e) {
+      String errorMessage = 
+        "An error occurred checking the input:\n" +
+        e.getMessage() + "\n" + 
+        "Please correct the problem and try again.";
+      JOptionPane.showMessageDialog (
+        SwingUtilities.getWindowAncestor (chooserPanel), errorMessage,
+        "Error", JOptionPane.ERROR_MESSAGE);
+      return (false);
+    } // catch
+
+  } // setOverlayFromChooser
+
+  ////////////////////////////////////////////////////////////
+
+  /** Shows the overlay property chooser. */
+  public void showChooser () {
+
+    // Check if we are already showing a chooser
+    // -----------------------------------------
+    if (chooserPanel != null) return;
+
+    // Create chooser panel
+    // --------------------
+    chooserPanel = OverlayPropertyChooserFactory.create (
+      (EarthDataOverlay) overlay.clone());
+
+    // Create auto-apply checkbox
+    // --------------------------
+    final JCheckBox autoApplyCheckBox = new JCheckBox ("Auto-apply");
+    autoApplyCheckBox.addActionListener (new ActionListener() {
+        public void actionPerformed (ActionEvent event) {
+          if (autoApplyCheckBox.isSelected()) {
+            if (!setOverlayFromChooser()) 
+              autoApplyCheckBox.setSelected (false);
+          } // if
+        } // actionPerformed
+      });
+    chooserPanel.addPropertyChangeListener (new PropertyChangeListener () {
+        public void propertyChange (PropertyChangeEvent event) {
+          String property = event.getPropertyName();
+          if (!property.equals (OverlayPropertyChooser.OVERLAY_PROPERTY)) 
+            return;
+          if (autoApplyCheckBox.isSelected()) setOverlayFromChooser();
+        } // propertyChange
+      });
+    
+    // Create dialog
+    // -------------
+    final JDialog[] dialog = new JDialog[1];
+    Action okAction = GUIServices.createAction ("OK", new Runnable() {
+        public void run () { 
+          if (setOverlayFromChooser()) dialog[0].dispose();
+        } // run
+      });
+    Action cancelAction = GUIServices.createAction ("Cancel", null);
+    dialog[0] = GUIServices.createDialog (
+      panel, "Select the overlay properties", false, chooserPanel,
+      new Component[] {autoApplyCheckBox, Box.createHorizontalGlue()}, 
+      new Action[] {okAction, cancelAction}, new boolean[] {false, true},
+      true);
+
+    // Set chooser flag on window closed
+    // ---------------------------------
+    dialog[0].addWindowListener (new WindowAdapter () {
+        public void windowClosed (WindowEvent e) { 
+          chooserPanel = null;
+        } // windowClosed
+      });
+
+    // Show dialog
+    // -----------
+    dialog[0].setVisible (true);
+
+  } // showChooser
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Refreshes the component display to show the contents of the
+   * current overlay.
+   */
+  public void refreshComponent () {
+
+    setOverlay (overlay);
+                                
+  } // refreshComponent
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Sets the overlay displayed in the panel.  A property change
+   * event is also fired. 
+   */
+  private void setOverlay (
+    EarthDataOverlay newOverlay
+  ) {
+
+    // Set overlay
+    // -----------
+    EarthDataOverlay oldOverlay = overlay;
+    overlay = newOverlay;
+
+    // Clear panel contents
+    // --------------------
+    panel.removeAll();
+
+    // Add property components
+    // -----------------------
+    addVisualPropertyComponent ("visible", true);
+    addVisualPropertyComponent ("name", false);
+    if (!(overlay instanceof MultilayerBitmaskOverlay))
+      addVisualPropertyComponent ("color", true);
+    if (VisualServices.hasProperty (overlay, "stroke"))
+      addVisualPropertyComponent ("stroke", true);
+    if (VisualServices.hasProperty (overlay, "fillColor"))
+      addVisualPropertyComponent ("fillColor", true);
+
+    // Perform layout if needed
+    // ------------------------
+    if (panel.isShowing()) { panel.revalidate(); }
+
+    // Fire property change event
+    // --------------------------
+    /** 
+     * We have to fire two property change events here because the new
+     * and old overlays may have the same object reference but contain
+     * different values.  If they have the same object reference, the
+     * property change event is not propagated to the listener by the
+     * Swing change support object.  Another way to do this would be
+     * to give overlays a more sophisticated equals() method.
+     */
+    firePropertyChange (oldOverlay, null);
+    firePropertyChange (null, newOverlay);
+
+  } // setOverlay
+
+  ////////////////////////////////////////////////////////////
+
+  /** Tests this class. */
+  public static void main (String argv[]) {
+  
+    JPanel panel = new JPanel();
+    panel.add (new VisualOverlay (new CoastOverlay (
+      Color.WHITE)).getComponent());
+    noaa.coastwatch.gui.TestContainer.showFrame (panel);
+
+  } // main
+
+  ////////////////////////////////////////////////////////////
+
+} // VisualOverlay class
+
+////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,284 @@
+////////////////////////////////////////////////////////////////////////
+/*
+     FILE: ToolServices.java
+  PURPOSE: A class to perform various static tool-related functions.
+   AUTHOR: Peter Hollemans
+     DATE: 2002/12/17
+  CHANGES: 2004/01/01, PFH
+           - added regular expression splitter
+           - added website constant
+           - added splash screen text
+           2005/01/31, PFH, added error instructions text
+           2005/04/18, PFH, added Locale.setDefault() call
+           2005/05/05, PFH, added short package description
+           2005/10/07, PFH, added OS and Java version to About message
+           2006/10/19, PFH, added support email address separate from author
+           2007/04/19, PFH, added version property reading
+           2007/05/17, PFH, modified about dialog text to use HTML
+
+  CoastWatch Software Library and Utilities
+  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+
+*/
+////////////////////////////////////////////////////////////////////////
+
+// Package
+// -------
+package noaa.coastwatch.tools;
+
+// Imports
+// -------
+import java.awt.*;
+import java.io.*;
+import java.util.*;
+import noaa.coastwatch.util.*;
+
+/**
+ * The tool services class defines various static methods relating
+ * to the CoastWatch tools.
+ */
+public class ToolServices {
+
+  // Constants
+  // ---------
+  /** The full package description. */
+  public static final String PACKAGE = 
+    "CoastWatch Software Library and Utilities";
+
+  /** The short package description. */
+  public static final String PACKAGE_SHORT = "cwf";
+
+  /** The author. */
+  public static final String AUTHOR = "Peter Hollemans";
+
+  /** The support email address. */
+  public static final String SUPPORT = "coastwatch.info@noaa.gov";
+
+  /** The software website. */
+  public static final String WEBSITE = "http://coastwatch.noaa.gov";
+
+  /** The software copyright. */
+  public static final String COPYRIGHT = 
+    "1998-2007 USDOC/NOAA/NESDIS CoastWatch";
+
+  /** The software copyright (short version). */
+  public static final String COPYRIGHT_SHORT = 
+    "1998-2006\nUSDOC/NOAA/NESDIS CoastWatch";
+
+  /** The tool parameter splitting expression. */
+  public static final String SPLIT_REGEX = "[,/]";
+
+  /** The standard error dialog instructions string. */
+  public static final String ERROR_INSTRUCTIONS = 
+    "If the message above is an error and not simply a warning, please copy " +
+    "the text and send an email to " + SUPPORT + ", along " +
+    "with a description of the actions that led to the error.  This " +
+    "valuable input will help to improve future versions of the software.";
+
+  /** The standard size of the help dialog. */
+  public static final Dimension HELP_DIALOG_SIZE = new Dimension (640, 480);
+
+  /** The space string for About style info. */
+  private static final String SPACE = " ";
+
+  // Variables
+  // ---------
+
+  /** The current tool command line. */
+  private static String commandLine;
+
+  /** The package version number. */
+  private static String version;
+
+  ////////////////////////////////////////////////////////////
+
+  /** Performs static tool settings. */
+  static {
+
+    /**
+     * For now, we set the locale to US.  This is useful because there
+     * are some places where we format and parse numbers in a
+     * locale-specific way, and others that we don't and this can
+     * cause problems, for example in parsing numbers with commas in
+     * them rather than decimals.  So really, this situation should be
+     * remedied by correct formatting and parsing, and by using
+     * locale-specific labels.  But that would be a lot of work, so
+     * for now we just use English/US conventions and hope that most
+     * scientists speak English and recognized English number formats.
+     */
+    Locale.setDefault (Locale.US);
+
+    // Read version number
+    // -------------------
+    InputStream stream = ClassLoader.getSystemResourceAsStream (
+      "version.properties");
+    if (stream != null) {
+      Properties props = new Properties();
+      try { 
+        props.load (stream); 
+        version = props.getProperty ("cwf.version");
+      } // try
+      catch (IOException e) { }
+      finally { 
+        try { stream.close(); }
+        catch (IOException e) { }
+      } // finally
+    } // if
+    if (version == null) 
+      throw new RuntimeException ("Cannot determine version number");
+
+  } // static
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets an about string appropriate for an about dialog box.
+   * 
+   * @param tool the tool or program name.
+   *
+   * @return the about string.
+   */
+  public static String getAbout (
+    String tool
+  ) {
+
+    String os = 
+      System.getProperty ("os.name") + " " + 
+      System.getProperty ("os.version") + " " + 
+      System.getProperty ("os.arch");
+    String jvm = System.getProperty ("java.version") + " on " + os;
+    String about = 
+      "<html>" +
+      "<table>" +
+      "<tr><td><b>Program:</b></td><td>" + SPACE + tool + "</td></tr>" +
+      "<tr><td><b>Package:</b></td><td>" + SPACE + PACKAGE + "</td></tr>" +
+      "<tr><td><b>Version:</b></td><td>" + SPACE + version + "</td></tr>" +
+      "<tr><td><b>Java version:</b></td><td>" + SPACE + jvm + "</td></tr>" +
+      "<tr><td><b>Website:</b></td><td>" + SPACE + WEBSITE + "</td></tr>" +
+      "<tr><td><b>Author:</b></td><td>" + SPACE + AUTHOR + "</td></tr>" +
+      "<tr><td><b>Support:</b></td><td>" + SPACE + SUPPORT + "</td></tr>" +
+      "<tr><td><b>Copyright:</b></td><td>" + SPACE + COPYRIGHT + "</td></tr>" +
+      "</table>" +
+      "</html>";
+
+    return (about);
+
+  } // getAbout
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets a string appropriate for a splash screen annotation.
+   * 
+   * @param tool the tool or program name.
+   *
+   * @return the splash screen string.
+   */
+  public static String getSplash (
+    String tool
+  ) {
+
+    String splash = 
+      "Version: " + version +  
+      "\nAuthor: " + AUTHOR + 
+      "\nCopyright:" + COPYRIGHT_SHORT + 
+      "\n\nLoading: " + tool + " ... ";
+
+    return (splash);
+
+  } // getSplash
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets a simple version string.
+   *
+   * @return the version string, for example "3.2.2".
+   */
+  public static String getVersion () { return (version); }
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets a tool version string.
+   *
+   * @param tool the tool or program name.
+   *
+   * @return the tool version string, for example "[cwf 3.2.2] cwrender".
+   */
+  public static String getToolVersion (
+    String tool
+  ) {
+
+    return ("[" + PACKAGE_SHORT + " " + version + "] " + tool);
+
+  } // getToolVersion
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets a Java runtime and OS version. */
+  public static String getJavaVersion () {
+
+    return (
+      "Java " + System.getProperty ("java.version") + " on " +
+      System.getProperty ("os.name") + " " + 
+      System.getProperty ("os.version") + " " + 
+      System.getProperty ("os.arch")
+    );
+
+  } // getJavaVersion
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets a full tool and Java runtime version string for
+   * printing on the command line.
+   *
+   * @param tool the tool or program name.
+   *
+   * @return the full version string.
+   */
+  public static String getFullVersion (
+    String tool
+  ) {
+
+    return (getToolVersion (tool) + "\n" + getJavaVersion());
+
+  } // getFullVersion
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the current tool command line.  This method should be called
+   * by all tools at the beginning of main() so that other classes may
+   * retrieve the current command line via getCommandLine().  This is
+   * especially important for tools that create new data files, so
+   * that writers can insert the command line into the data file
+   * history.
+   *
+   * @param command the command or program name.
+   * @param argv an array of command line arguments.
+   */
+  public static void setCommandLine (
+    String command,
+    String[] argv
+  ) {
+
+    commandLine = MetadataServices.getCommandLine (command, argv);
+
+  } // setCommandLine
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the current tool command line, or null if none has been set. */
+  public static String getCommandLine () { return (commandLine); }
+
+  ////////////////////////////////////////////////////////////
+
+  private ToolServices () { }
+
+  ////////////////////////////////////////////////////////////
+
+} // ToolServices class
+
+////////////////////////////////////////////////////////////////////////

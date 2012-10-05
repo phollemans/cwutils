@@ -1,0 +1,383 @@
+<!--
+
+     FILE: build.xml
+  PURPOSE: To define Ant build targets for building the CWF software.
+   AUTHOR: Peter Hollemans
+     DATE: 2004/03/16
+  CHANGES: 2004/08/31, PFH, updated for new install4j version 3.0.2
+           2004/09/14, PFH, added install targets
+           2004/11/24, PFH, added descriptions for "ant -p"
+           2005/03/28, PFH, added pre-release targets
+           2006/03/16, PFH, moved install4j path to properties file
+           2006/03/31, PFH, added handling of lib/stubs directory
+           2006/04/03, PFH, added test target
+           2006/05/04, PFH, added proguard tasks
+           2006/05/08, PFH, added plugin jar to compile classpath
+           2006/11/22, PFH, removed IRIX package from dist target (no 1.5 VM)
+           2010/02/14, PFH, added more comments, testtool target
+           2012/08/30, PFH, modified to remove Ant 1.8 warnings
+           2012/10/04, PFH, updated for new source directory structure
+
+  CoastWatch Software Library and Utilities
+  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
+
+-->
+
+<project name="CWF" default="classes">
+
+  <!-- Setup global properties -->
+  <!-- *********************** -->
+  <buildnumber/>
+  <property file="cwf.properties"/>
+
+  <!-- Define install task -->
+  <!-- ******************* -->
+  <!--
+  This is the support library for creating installation packages
+  for various operating systems.
+  -->
+  <taskdef 
+    name="install4j" 
+    classname="com.install4j.Install4JTask"
+    classpath="${install4j.dir}/bin/ant.jar"/>
+
+  <!-- Define Java compile classpath -->
+  <!-- ***************************** -->
+  <path id="cp">
+    <!-- The main libraries used by the code. --> 
+    <fileset dir="lib" includes="**/*.jar,**/*.zip"/>
+    <!-- For now, some Mac-specific stub routines. -->
+    <fileset dir="lib/stubs" includes="**/*.jar"/>
+    <!-- A plugin library for JavaScript (applet only). -->
+    <pathelement location="${java.home}/lib/plugin.jar"/>
+  </path>
+
+  <!-- Add to default excludes -->
+  <!-- *********************** -->
+  <defaultexcludes add="**/.xvpics,**/.xvpics/**"/>
+
+  <!-- Define main compile targets -->
+  <!-- *************************** -->
+  <target name="classes" description="Compiles main Java classes in src/">
+    <depend srcdir="src" destdir="classes"/>
+    <mkdir dir="classes"/>
+    <javac 
+      srcdir="src" 
+      destdir="classes" 
+      classpathref="cp" 
+      debug="on" 
+      deprecation="on"
+      includeantruntime="false"/>
+    <echo 
+      file="resources/version.properties" 
+      message="cwf.version=${version.full}${line.separator}"/>
+    <jar destfile="lib/cwf.jar">
+      <fileset dir="classes"/>
+      <fileset dir="resources"/>
+    </jar>
+  </target>
+
+  <target name="lint" description="Compiles main Java classes in src/ with lint checking">
+    <depend srcdir="src" destdir="classes"/>
+    <mkdir dir="classes"/>
+    <javac 
+      srcdir="src" 
+      destdir="classes" 
+      classpathref="cp" 
+      debug="on" 
+      deprecation="on"
+      includeantruntime="false">
+      <compilerarg value="-Xlint:unchecked"/>
+    </javac>
+    <echo 
+      file="resources/version.properties" 
+      message="cwf.version=${version.full}${line.separator}"/>
+    <jar destfile="lib/cwf.jar">
+      <fileset dir="classes"/>
+      <fileset dir="resources"/>
+    </jar>
+  </target>
+
+  <target name="native" description="Compiles native C code in native/">
+    <exec executable="${basedir}/native/makenative" dir="native"/>
+  </target>
+
+  <!-- Define source and API targets -->
+  <!-- ***************************** -->
+  <target name="source" description="Creates Java and C source code ZIP file">
+    <zip destfile="src.zip">
+      <zipfileset dir="src" prefix="src"/>
+      <zipfileset dir="native" prefix="native"/>
+    </zip>
+  </target>
+
+  <target name="javadoc" depends="classes" 
+    description="Creates Java API documentation and tool manual pages in doc/">
+    <delete dir="doc/api"/>
+    <javadoc 
+      sourcepath="src" 
+      destdir="doc/api" 
+      classpathref="cp"
+      overview="src/overview.html"
+      windowtitle="CoastWatch Utilities v${version}"
+      doctitle="CoastWatch Software Library and Utilities v${version} API Specification"
+      header="CoastWatch Utils v${version}"
+      footer="CoastWatch Utils v${version}">
+      <packageset dir="src"/>
+    </javadoc>
+    <delete dir="doc/tools"/>
+    <exec executable="${basedir}/doc/makedoc" dir="doc">
+      <arg line="${version}"/>
+    </exec>
+  </target>
+
+  <target name="api" description="Creates Java API ZIP file in doc/">
+    <zip destfile="doc/api.zip">
+      <zipfileset dir="doc/api" prefix="api"/>
+    </zip>
+  </target>
+
+  <target name="all" depends="classes,javadoc"/>
+
+  <!-- Define distribution targets -->
+  <!-- *************************** -->
+  <target name="dist_win32" depends="classes,javadoc,source,api" 
+    description="Creates Windows .exe package">
+    <install4j 
+      projectfile="cwf.install4j"
+      release="${version}"
+      buildids="10"
+      verbose="true"/>
+  </target>
+
+  <target name="dist_linux" depends="classes,javadoc,source,api"
+    description="Creates Linux .tar.gz, .sh, and .rpm package files">
+    <install4j 
+      projectfile="cwf.install4j"
+      release="${version}"
+      buildids="84,86,88"
+      verbose="true"/>
+  </target>
+
+  <target name="dist_linux_tar" depends="classes,javadoc,source,api"
+    description="Creates Linux .tar.gz file">
+    <install4j 
+      projectfile="cwf.install4j"
+      release="${version}"
+      buildids="88"
+      verbose="true"/>
+  </target>
+
+  <target name="dist_solaris" depends="classes,javadoc,source,api"
+    description="Creates Solaris .tar.gz and .sh package files">
+    <install4j 
+      projectfile="cwf.install4j"
+      release="${version}"
+      buildids="90,93"
+      verbose="true"/>
+  </target>
+
+  <target name="dist_macosx" depends="classes,javadoc,source,api"
+    description="Creates MacOS X .dmg and .tgz package files">
+    <install4j 
+      projectfile="cwf.install4j"
+      release="${version}"
+      buildids="172,235"
+      verbose="true"/>
+  </target>
+
+  <target name="dist_macosx_tgz" depends="classes,javadoc,source,api"
+    description="Creates MacOS X .tgz package file">
+    <install4j 
+      projectfile="cwf.install4j"
+      release="${version}"
+      buildids="235"
+      verbose="true"/>
+  </target>
+
+  <target name="dist_macosx_dmg" depends="classes,javadoc,source,api"
+    description="Creates MacOS X .dmg package file">
+    <install4j
+      projectfile="cwf.install4j"
+      release="${version}"
+      buildids="172"
+      verbose="true"/>
+  </target>
+
+  <target name="dist_irix" depends="classes,javadoc,source,api"
+    description="Creates IRIX .tar.gz and .sh package files">
+    <install4j 
+      projectfile="cwf.install4j"
+      release="${version}"
+      buildids="109,113"
+      verbose="true"/>
+  </target>
+
+  <target name="dist_aix" depends="classes,javadoc,source,api"
+    description="Creates AIX .tar.gz and .sh package files">
+    <install4j 
+      projectfile="cwf.install4j"
+      release="${version}"
+      buildids="101,105"
+      verbose="true"/>
+  </target>
+
+  <target 
+    name="dist" 
+    depends="dist_win32,dist_linux,dist_solaris,dist_macosx,dist_aix" 
+    description="Creates all distribution package files"/>
+
+  <!-- Define prerelease targets -->
+  <!-- ************************* -->
+  <target name="pre_linux" depends="dist_linux_tar"
+    description="Creates and copies a prerelease Linux package">
+    <move 
+      file="${dist.dir}/cwf_${version.file}_linux.tar.gz"
+      tofile="${pre.dir}/cwf_${version.file.full}_linux.tar.gz"/>
+  </target>
+  <target name="pre_win32" depends="dist_win32"
+    description="Creates and copies a prerelease Windows package">
+    <move 
+      file="${dist.dir}/cwf_${version.file}_win32.exe" 
+      tofile="${pre.dir}/cwf_${version.file.full}_win32.exe"/>
+  </target>
+  <target name="pre_macosx" depends="dist_macosx_dmg"
+    description="Creates and copies a prerelease Mac package">
+    <move
+      file="${dist.dir}/cwf_${version.file}_macosx.dmg"
+      tofile="${pre.dir}/cwf_${version.file.full}_macosx.dmg"/>
+  </target>
+  <target name="pre_macosx_tar" depends="dist_macosx_tgz"
+    description="Creates and copies a prerelease Mac package">
+    <move
+      file="${dist.dir}/cwf_${version.file}_macosx.tgz"
+      tofile="${pre.dir}/cwf_${version.file.full}_macosx.tgz"/>
+  </target>
+  <target name="pre" depends="pre_linux,pre_win32,pre_macosx,pre_macosx_tar"
+    description="Creates and copies prerelease Linux/Windows/Mac packages"/>
+
+  <!-- Define cleanup targets -->
+  <!-- ********************** -->
+  <target name="clean" 
+    description="Cleans up compiled Java classes, source ZIP, and documentation">
+    <delete file="lib/cwf.jar"/>
+    <delete file="src.zip"/>
+    <delete dir="classes"/>
+    <delete dir="doc/api"/>
+    <delete dir="doc/tools"/>
+    <delete file="doc/api.zip"/>
+  </target>
+
+  <target name="clean_dist"
+    description="Deletes all distribution packages">
+    <delete>
+      <fileset dir="${dist.dir}" includes="**/*"/>
+    </delete>
+  </target>
+
+  <target name="clean_install"
+    description="Deletes the installation directory ${install.dir}">
+    <delete dir="${install.dir}"/>
+  </target>
+
+  <!-- Define the developers package target -->
+  <!-- ************************************ -->
+  <target name="devel" depends="clean,clean_dist"
+    description="Creates a developer source package in ..">
+    <tar 
+      destfile="../cwf_${version.file.full}_devel.tar.gz" 
+      basedir=".."
+      includes="cwf-${version}/**"
+      compression="gzip"/>
+  </target>
+
+  <!-- Define installation targets (Linux only) -->
+  <!-- **************************************** -->
+  <target name="install" depends="clean_install,dist_linux_tar"
+    description="Installs the Linux .tar.gz package locally">
+    <!-- For some reason, the untar with compression task seems to be broken!
+    <untar dest="test_install" compression="gzip">
+      <fileset dir="dist">
+        <include name="**/cwf_*_linux.tar.gz"/>
+      </fileset>
+    </untar>
+    -->
+    <path id="tarfile">
+      <fileset dir="${dist.dir}">
+        <include name="**/cwf_*_linux.tar.gz"/>
+      </fileset>
+    </path>
+    <exec executable="tar" dir="${install.dir}">
+      <arg value="-zxf"/>
+      <arg pathref="tarfile"/>
+    </exec>
+
+    <!-- TODO: Need to move the cwf directory to final install directory. -->
+
+  </target>
+
+  <target name="install_jar" depends="classes"
+    description="Installs the Java JAR file locally (good for testing)">
+    <copy file="lib/cwf.jar" todir="${install.dir}/lib"/>
+  </target>
+
+  <!-- Define test targets -->
+  <!-- ******************* -->
+  <path id="testcp">
+    <fileset dir="lib" includes="**/*.jar,**/*.zip"/>
+    <pathelement location="data"/>
+    <pathelement location="extensions"/>
+    <pathelement location="${java.home}/lib/plugin.jar"/>
+  </path>
+
+  <target name="test" depends="classes"
+    description="Tests the Java class ${class} by calling its main() method with arguments ${args}">
+    <java 
+      classname="${class}" 
+      classpathref="testcp"
+      fork="true">
+      <env key="${ld.var}" value="${basedir}/lib/${os.libs}"/>
+      <jvmarg line="${vm.args}"/>
+      <arg line="${args}"/>
+    </java>
+  </target>
+
+  <target name="test_cdat" 
+    description="Tests CDAT by calling its main() method with no arguments">
+    <antcall target="test">
+      <param name="class" value="noaa.coastwatch.tools.cdat"/>
+      <param name="args" value=""/>
+    </antcall>
+  </target>
+
+  <target name="test_info" 
+    description="Tests the cwinfo tool by calling its main() method with arguments ${args}">
+    <antcall target="test">
+      <param name="class" value="noaa.coastwatch.tools.cwinfo"/>
+    </antcall>
+  </target>
+
+  <target name="test_tool" 
+    description="Tests a CoastWatch tool named ${tool} by calling its main() method with arguments ${args}">
+    <antcall target="test">
+      <param name="class" value="noaa.coastwatch.tools.${tool}"/>
+    </antcall>
+  </target>
+
+  <target name="test_suite"
+    description="Runs the CoastWatch test suite by calling cwtoolstest">
+    <antcall target="test">
+      <param name="class" value="noaa.coastwatch.tools.cwtoolstest"/>
+      <param name="args" value=""/>
+    </antcall>
+  </target>
+
+  <target name="test_con"
+    description="Tests the Java GUI class ${contain} using the noaa.coastwatch.gui.TestContainer class">
+    <antcall target="test">
+      <param name="class" value="noaa.coastwatch.gui.TestContainer"/>
+      <param name="args" value="${contain}"/>
+    </antcall>
+  </target>
+
+</project>

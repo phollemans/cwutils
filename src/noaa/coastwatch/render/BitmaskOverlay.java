@@ -1,0 +1,303 @@
+////////////////////////////////////////////////////////////////////////
+/*
+     FILE: BitmaskOverlay.java
+  PURPOSE: An overlay for bitmasked variable data.
+   AUTHOR: Peter Hollemans
+     DATE: 2002/09/23
+  CHANGES: 2002/10/21, PFH, optimized render
+           2002/11/29, PFH, added prepare, draw
+           2003/03/12, PFH, added inverse flag
+           2004/03/05, PFH, added getInverse(), getMask(), getGrid()
+           2004/03/12, PFH, updated to work with GUI display
+           2004/03/25, PFH, added public createColorModel() method
+           2004/03/26, PFH, modified to delay loading of grid variable
+           2004/04/04, PFH, added special serialization methods
+           2004/08/30, PFH, added special case for Java VMs that do
+             not support binary image with transparent color
+           2004/10/17, PFH
+           - added invalidate()
+           - changed to extend GridContainerOverlay
+           - modified to use EarthDataView.hasCompatibleCaches()
+           2006/01/13, PFH, added check for null color
+           2006/07/10, PFH, moved some functionality to MaskOverlay class
+           2007/11/05, PFH, modified getGridList() to return non-null
+
+  CoastWatch Software Library and Utilities
+  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+
+*/
+////////////////////////////////////////////////////////////////////////
+
+// Package
+// -------
+package noaa.coastwatch.render;
+
+// Imports
+// -------
+import java.awt.*;
+import java.awt.image.*;
+import java.util.*;
+import java.util.List;
+import java.io.*;
+import noaa.coastwatch.util.*;
+import noaa.coastwatch.io.*;
+
+/**
+ * A <code>BitmaskOverlay</code> annotates a data view using a
+ * data grid and an integer bit mask.  The mask is computed by
+ * logically anding the bit mask value with each integer-cast
+ * data value in the grid.  If the result is non-zero at a given
+ * location, the data is masked.  The bit mask is effectively a
+ * selection mechanism for byte or integer valued data that
+ * allows certain bits in the data values to act as overlay
+ * graphics planes.
+ */
+public class BitmaskOverlay 
+  extends MaskOverlay
+  implements GridContainerOverlay {
+
+  // Constants
+  // ---------
+
+  /** The serialization constant. */
+  static final long serialVersionUID = -1831067398269937724L;
+
+  // Variables
+  // ---------
+
+  /** The data grid to use for masking. */
+  private transient Grid grid;
+
+  /** The bit mask value. */
+  private int mask;
+
+  /** The reader to use for data. */
+  private transient EarthDataReader reader;
+
+  /** The list of available data variables from the reader. */
+  private transient List variableList;
+
+  /** The name of the grid variable. */
+  private String gridName;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the data source for grid data.  The reader and variable list
+   * must contain a data grid with the current grid name.
+   *
+   * @param reader the reader to use for data variables.
+   * @param variableList the list of allowed data variable names.
+   */
+  public void setDataSource (
+    EarthDataReader reader,
+    List variableList
+  ) {
+
+    this.reader = reader;
+    this.variableList = variableList;
+    setGridName (gridName);
+
+  } // setDataSource
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Sets the internal grid based on the grid name. This method may
+   * only be used if the overlay was constructed using a reader and
+   * grid name list.
+   */
+  private void setGrid () {
+
+    // Check for valid list
+    // --------------------
+    if (variableList == null)
+      throw new IllegalStateException ("Cannot set grid when list is null");
+
+    // Set grid variable
+    // -----------------
+    try { this.grid = (Grid) reader.getVariable (gridName); } 
+    catch (IOException e) { throw (new RuntimeException (e)); }
+
+  } // setGrid
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the bit mask value. */
+  public int getMask () { return (mask); }
+
+  ////////////////////////////////////////////////////////////
+
+  /** Sets the bit mask value. */
+  public void setMask (
+    int mask
+  ) { 
+
+    this.mask = mask;
+    invalidate();
+
+  } // setMask
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the reader used to fetch the data for this bitmask, or null
+   * if no reader was explicitly given to the constructor.
+   */
+  public EarthDataReader getReader () { return (reader); }
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the grid variable name. */
+  public String getGridName () { return (gridName); }
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the possible grid variable names, or null if no list was
+   * explicitly given to the constructor.
+   */
+  public List getGridNameValues () { 
+
+    return (variableList);
+
+  } // getGridNameValues
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Sets the grid variable based on the name.  This method may only
+   * be used if the overlay was constructed using a reader and grid
+   * name list.
+   */
+  public void setGridName (String name) { 
+
+    // Check for valid list
+    // --------------------
+    if (variableList == null) 
+      throw new IllegalStateException ("Cannot set grid name when list=null");
+
+    // Check for valid grid
+    // --------------------
+    if (!variableList.contains (name))
+      throw new IllegalArgumentException ("Cannot find variable " + name);
+
+    // Set internals
+    // -------------
+    gridName = name;
+    grid = null;
+    invalidate();
+
+  } // setGridName
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the active grid variable. */
+  public Grid getGrid () { 
+
+    if (grid == null) setGrid();
+    return (grid); 
+
+  } // getGrid
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Constructs a new bitmask overlay.  The layer number is
+   * initialized to 0.  If this constructor is used, then the
+   * {@link #setGridName} method performs no operation and {@link
+   * #getGridNameValues} returns null.
+   * 
+   * @param color the overlay color.
+   * @param grid the grid to use for data.
+   * @param mask the bit mask value.
+   */
+  public BitmaskOverlay (
+    Color color,
+    Grid grid,
+    int mask
+  ) { 
+
+    super (color);
+    this.grid = grid;
+    this.gridName = grid.getName();
+    this.mask = mask;
+
+  } // BitmaskOverlay constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Constructs a new bitmask overlay.  The layer number is
+   * initialized to 0.
+   * 
+   * @param color the overlay color.
+   * @param reader the reader to use for data variables.
+   * @param variableList the list of allowed data variable names.
+   * @param gridName the initial grid name from the list.
+   * @param mask the bit mask value.
+   */
+  public BitmaskOverlay (
+    Color color,
+    EarthDataReader reader,
+    List variableList,
+    String gridName,
+    int mask
+  ) { 
+
+    super (color);
+    this.reader = reader;
+    this.variableList = variableList;
+    this.mask = mask;
+    setGridName (gridName);
+
+  } // BitmaskOverlay constructor
+
+  ////////////////////////////////////////////////////////////
+
+  protected void prepareData () {
+
+    // Check for valid grid
+    // --------------------
+    if (grid == null) setGrid();
+
+  } // prepareData
+
+  ////////////////////////////////////////////////////////////
+
+  public boolean isMasked (
+    DataLocation loc,
+    boolean isNavigated
+  ) {
+
+    int value = (int) (isNavigated ? 
+      grid.getValue ((int) loc.get (Grid.ROWS), (int) loc.get (Grid.COLS)) : 
+      grid.getValue (loc)
+    );
+    return ((value & mask) != 0);
+
+  } // isMasked
+
+  ////////////////////////////////////////////////////////////
+
+  protected boolean isCompatible (
+    EarthDataView view
+  ) {
+
+    return (view.hasCompatibleCaches (grid));
+
+  } // isCompatible
+
+  ////////////////////////////////////////////////////////////
+
+  public List<Grid> getGridList () { 
+
+    return (Arrays.asList (new Grid[] {getGrid()})); 
+
+  } // getGridList
+
+  ////////////////////////////////////////////////////////////
+
+} // BitmaskOverlay class
+
+////////////////////////////////////////////////////////////////////////

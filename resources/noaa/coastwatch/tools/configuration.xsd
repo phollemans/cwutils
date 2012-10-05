@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+
+<!-- 
+
+     FILE: configuration.xsd
+  PURPOSE: Defines the CoastWatch Network Data Browser configuration schema.
+   AUTHOR: Peter Hollemans
+     DATE: 2006/05/19
+  CHANGES: n/a
+
+  CoastWatch Software Library and Utilities
+  Copyright 2006, USDOC/NOAA/NESDIS CoastWatch
+
+-->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://coastwatch.noaa.gov"
+  xmlns="http://coastwatch.noaa.gov"
+  elementFormDefault="qualified">
+
+<xs:element name="enhancement">
+  <xs:complexType>
+    <xs:attribute name="palette" type="xs:string" use="required"/>
+    <xs:attribute name="min" type="xs:decimal" use="required"/>
+    <xs:attribute name="max" type="xs:decimal" use="required"/>
+    <xs:attribute name="functionType" type="xs:string" use="required"/>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="overlay">
+  <xs:complexType>
+    <xs:attribute name="type" type="xs:string" use="required"/>
+    <xs:attribute name="lineColor" type="xs:string" use="required"/>
+    <xs:attribute name="fillColor" type="xs:string"/>
+    <xs:attribute name="data" type="xs:anyURI"/>
+    <xs:attribute name="visible" type="xs:boolean" default="false"/>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="subregion">
+  <xs:complexType>
+    <xs:attribute name="shortName" type="xs:string" use="required"/>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="centerLat" type="xs:decimal" use="required"/>
+    <xs:attribute name="centerLon" type="xs:decimal" use="required"/>
+    <xs:attribute name="radius" type="xs:decimal" use="required"/>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="dataset">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element ref="enhancement"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="varName" type="xs:string" use="required"/>
+    <xs:attribute name="catalog" type="xs:anyURI" use="required"/>
+    <xs:attribute name="subregions" type="xs:string" use="required"/>
+  </xs:complexType>
+</xs:element>
+
+<xs:element name="configuration">
+  <xs:complexType>
+    <xs:sequence>
+      <xs:element ref="dataset" maxOccurs="unbounded"/>
+      <xs:element ref="subregion" maxOccurs="unbounded"/>
+      <xs:element ref="overlay" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:element>
+
+</xs:schema>

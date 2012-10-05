@@ -1,0 +1,1400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<install4j version="5.1.3" transformSequenceNumber="4">
+  <directoryPresets config="./doc" />
+  <application name="The CoastWatch Utilities v${compiler:sys.version}" distributionSourceDir="" applicationId="1290-4459-1345-6363" mediaDir="../Current Packages" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.version}_${compiler:OS}" compression="6" lzmaCompression="true" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="cwf" publisher="USDOC/NOAA/NESDIS CoastWatch" publisherWeb="http://coastwatch.noaa.gov" version="3.2.3" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.5.0" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
+    <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
+      <principalLanguage id="en" customLocalizationFile="" />
+      <additionalLanguages />
+    </languages>
+    <searchSequence>
+      <registry />
+      <envVar name="JAVA_HOME" />
+      <envVar name="JDK_HOME" />
+    </searchSequence>
+    <variables>
+      <variable name="OS" value="" description="" category="" />
+      <variable name="VM_LAF_PARAM" value="" description="" category="" />
+      <variable name="CDAT_NAME" value="cdat" description="" category="" />
+      <variable name="CWMASTER_NAME" value="cwmaster" description="" category="" />
+      <variable name="CWSTATUS_NAME" value="cwstatus" description="" category="" />
+      <variable name="VM_FORCE_32BIT" value="" description="" category="" />
+    </variables>
+    <mergedProjects />
+    <codeSigning macEnabled="false" macPkcs12File="" windowsEnabled="false" windowsKeySource="pvkAndSpc" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="" />
+  </application>
+  <files keepModificationTimes="false" missingFilesStrategy="warn" globalExcludeSuffixes="" defaultOverwriteMode="4" defaultUninstallMode="0" launcherOverwriteMode="3" defaultFileMode="644" defaultDirMode="755">
+    <filesets />
+    <roots />
+    <mountPoints>
+      <mountPoint id="1" root="" location="" mode="755" />
+    </mountPoints>
+    <entries>
+      <dirEntry mountPoint="1" file="." overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="CoastWatch Utilities" excludeSuffixes="*~,.DS_Store,*#, .git*, .gitignore*, *.swp,.project,.classpath,*.xcodeproj" dirMode="755" overrideDirMode="true">
+        <exclude>
+          <entry location="build.number" fileType="regular" />
+          <entry location="build.xml" fileType="regular" />
+          <entry location="classes" fileType="regular" />
+          <entry location="cwf.install4j" fileType="regular" />
+          <entry location="cwf.properties" fileType="regular" />
+          <entry location="data/noaa/coastwatch/tools/test" fileType="regular" />
+          <entry location="doc/api" fileType="regular" />
+          <entry location="doc/makedoc" fileType="regular" />
+          <entry location="doc/tool_categories.txt" fileType="regular" />
+          <entry location="doc/users_guide" fileType="regular" />
+          <entry location="lib/stubs" fileType="regular" />
+          <entry location="native" fileType="regular" />
+          <entry location="resources" fileType="regular" />
+          <entry location="src" fileType="regular" />
+        </exclude>
+      </dirEntry>
+    </entries>
+    <components>
+      <component name="Core installation" id="117" customizedId="" displayDescription="false" hideHelpButton="false" selected="true" changeable="false" downloadable="false" hidden="false">
+        <description />
+        <include all="false">
+          <entry location="bin/${compiler:CDAT_NAME}" fileType="launcher" />
+          <entry location="bin/${compiler:CWMASTER_NAME}" fileType="launcher" />
+          <entry location="bin/${compiler:CWSTATUS_NAME}" fileType="launcher" />
+          <entry location="data" fileType="regular" />
+          <entry location="doc/cwf_ug_3_2_4.pdf" fileType="regular" />
+          <entry location="extensions" fileType="regular" />
+          <entry location="lib" fileType="regular" />
+        </include>
+        <dependencies />
+      </component>
+      <component name="Command line tools" id="198" customizedId="" displayDescription="false" hideHelpButton="false" selected="false" changeable="true" downloadable="false" hidden="false">
+        <description />
+        <include all="false">
+          <entry location="bin/cwangles" fileType="launcher" />
+          <entry location="bin/cwcomposite" fileType="launcher" />
+          <entry location="bin/cwcoverage" fileType="launcher" />
+          <entry location="bin/cwdownload" fileType="launcher" />
+          <entry location="bin/cwexport" fileType="launcher" />
+          <entry location="bin/cwgraphics" fileType="launcher" />
+          <entry location="bin/cwimport" fileType="launcher" />
+          <entry location="bin/cwinfo" fileType="launcher" />
+          <entry location="bin/cwmath" fileType="launcher" />
+          <entry location="bin/cwnavigate" fileType="launcher" />
+          <entry location="bin/cwregister" fileType="launcher" />
+          <entry location="bin/cwrender" fileType="launcher" />
+          <entry location="bin/cwsample" fileType="launcher" />
+          <entry location="bin/cwstats" fileType="launcher" />
+          <entry location="bin/cwautonav" fileType="launcher" />
+          <entry location="bin/hdatt" fileType="launcher" />
+        </include>
+        <dependencies />
+      </component>
+      <component name="Source code and API docs" id="118" customizedId="" displayDescription="false" hideHelpButton="false" selected="false" changeable="true" downloadable="false" hidden="false">
+        <description />
+        <include all="false">
+          <entry location="doc/api.zip" fileType="regular" />
+          <entry location="src.zip" fileType="regular" />
+        </include>
+        <dependencies />
+      </component>
+    </components>
+  </files>
+  <launchers>
+    <launcher name="cdat" id="7" customizedId="" external="false" excludeFromMenu="false" unixMode="755" menuName="CoastWatch Data Analysis Tool" icnsFile="./icons/cdat.icns" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="${compiler:CDAT_NAME}" type="1" iconSet="true" iconFile="./icons/cdat.ico" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="false" alwaysOnTop="true" width="320" height="200" bitmapFile="../resources/noaa/coastwatch/gui/cwf_splash.png" java6SplashScreen="false">
+        <text>
+          <statusLine x="135" y="120" text="This is the inital text line." font="Arial" fontSize="8" fontColor="255,255,255" fontWeight="500" />
+          <versionLine x="135" y="140" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="255,255,255" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cdat" vmParameters="-Xmx512m ${compiler:VM_LAF_PARAM}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles>
+        <file path="./icons/cdat_16.png" />
+        <file path="./icons/cdat_32.png" />
+      </iconImageFiles>
+    </launcher>
+    <launcher name="cwmaster" id="13" customizedId="" external="false" excludeFromMenu="false" unixMode="755" menuName="CoastWatch Master Tool" icnsFile="./icons/cwmaster.icns" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="${compiler:CWMASTER_NAME}" type="1" iconSet="true" iconFile="./icons/cwmaster.ico" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwmaster" vmParameters="${compiler:VM_LAF_PARAM}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles>
+        <file path="./icons/cwmaster_16.png" />
+        <file path="./icons/cwmaster_32.png" />
+      </iconImageFiles>
+    </launcher>
+    <launcher name="cwstatus" id="22" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="./icons/cwstatus.icns" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="${compiler:CWSTATUS_NAME}" type="1" iconSet="true" iconFile="./icons/cwstatus.ico" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwstatus" vmParameters="${compiler:VM_LAF_PARAM}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles>
+        <file path="./icons/cwstatus_16.png" />
+        <file path="./icons/cwstatus_32.png" />
+      </iconImageFiles>
+    </launcher>
+    <launcher name="cwangles" id="35" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwangles" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwangles" vmParameters="-Djava.awt.headless=true ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwcomposite" id="36" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwcomposite" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwcomposite" vmParameters="-Djava.awt.headless=true -Xmx256m ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwcoverage" id="52" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwcoverage" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwcoverage" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwdownload" id="55" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwdownload" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwdownload" vmParameters="-Djava.awt.headless=true ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwexport" id="59" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwexport" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwexport" vmParameters="-Djava.awt.headless=true ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwgraphics" id="61" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwgraphics" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwgraphics" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwimport" id="64" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwimport" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwimport" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwinfo" id="67" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwinfo" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwinfo" vmParameters="-Djava.awt.headless=true ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwmath" id="69" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwmath" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwmath" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwnavigate" id="71" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwnavigate" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwnavigate" vmParameters="-Djava.awt.headless=true ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwregister" id="73" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwregister" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwregister" vmParameters="-Djava.awt.headless=true -Xmx1024m ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwrender" id="75" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwrender" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwrender" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwsample" id="77" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwsample" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwsample" vmParameters="-Djava.awt.headless=true ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwstats" id="79" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwstats" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwstats" vmParameters="-Djava.awt.headless=true ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="cwautonav" id="147" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="cwautonav" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwautonav" vmParameters="-Djava.awt.headless=true ${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+    <launcher name="hdatt" id="159" customizedId="" external="false" excludeFromMenu="true" unixMode="755" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+      <executable name="hdatt" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="-1" height="-1" bitmapFile="" java6SplashScreen="false">
+        <text>
+          <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.hdatt" vmParameters="${compiler:VM_FORCE_32BIT}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/${compiler:OS}" />
+        </nativeLibraryDirectories>
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
+  </launchers>
+  <installerGui installerType="1" addOnAppId="" suggestPreviousLocations="true" autoUpdateDescriptorUrl="" useAutoUpdateBaseUrl="false" autoUpdateBaseUrl="">
+    <customCode />
+    <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+      <commentFiles />
+      <customAttributes />
+    </autoUpdate>
+    <applications>
+      <application name="" id="installer" customizedId="" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" enabled="true" commentSet="false" comment="" actionElevationType="none" fileset="" customIcnsFile="" customIcoFile="" macEntitlementsFile="" automaticLauncherIntegration="false" launchMode="startupFirstWindow" launchInNewProcess="false" launchSchedule="updateSchedule" allLaunchers="true">
+        <serializedBean>
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.applications.InstallerApplication">
+              <void property="allowConsole">
+                <boolean>false</boolean>
+              </void>
+              <void property="allowUnattended">
+                <boolean>false</boolean>
+              </void>
+              <void property="frameSizeClientArea">
+                <boolean>false</boolean>
+              </void>
+              <void property="resizable">
+                <boolean>false</boolean>
+              </void>
+              <void property="watermark">
+                <boolean>false</boolean>
+              </void>
+            </object>
+          </java>
+        </serializedBean>
+        <launcherIds />
+        <variables />
+        <startup>
+          <screen name="" id="220" customizedId="" beanClass="com.install4j.runtime.beans.screens.StartupScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.StartupScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+        </startup>
+        <screens>
+          <screen name="" id="221" customizedId="" beanClass="com.install4j.runtime.beans.screens.WelcomeScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.WelcomeScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="222" customizedId="" beanClass="com.install4j.runtime.beans.screens.LicenseScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.LicenseScreen">
+                  <void property="displayedTextFile">
+                    <void property="languageIdToExternalFile">
+                      <void method="put">
+                        <string>en</string>
+                        <object class="com.install4j.api.beans.ExternalFile">
+                          <string>./doc/license.txt</string>
+                        </object>
+                      </void>
+                    </void>
+                  </void>
+                  <void property="readAllRequired">
+                    <boolean>true</boolean>
+                  </void>
+                </object>
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="223" customizedId="" beanClass="com.install4j.runtime.beans.screens.InstallationDirectoryScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.InstallationDirectoryScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="224" customizedId="" beanClass="com.install4j.runtime.beans.screens.ComponentsScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.ComponentsScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="225" customizedId="" beanClass="com.install4j.runtime.beans.screens.StandardProgramGroupScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.StandardProgramGroupScreen">
+                  <void property="programGroupName">
+                    <string>${compiler:sys.fullName}</string>
+                  </void>
+                </object>
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="226" customizedId="" beanClass="com.install4j.runtime.beans.screens.FileAssociationsScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.FileAssociationsScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="227" customizedId="" beanClass="com.install4j.runtime.beans.screens.InstallationScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="true" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.InstallationScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions>
+              <action name="" id="228" customizedId="" beanClass="com.install4j.runtime.beans.actions.UninstallPreviousAction" enabled="true" commentSet="false" comment="" actionElevationType="none" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.UninstallPreviousAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="229" customizedId="" beanClass="com.install4j.runtime.beans.actions.InstallFilesAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="2" errorMessage="${i18n:FileCorrupted}">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.InstallFilesAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="230" customizedId="" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction">
+                      <void property="uninstallerMenuName">
+                        <string>${i18n:UninstallerMenuEntry(${compiler:sys.fullName})}</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="231" customizedId="" beanClass="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.RegisterAddRemoveAction">
+                      <void property="itemName">
+                        <string>${compiler:sys.fullName} ${compiler:sys.version}</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="232" customizedId="" beanClass="com.install4j.runtime.beans.actions.desktop.CreateFileAssociationAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.CreateFileAssociationAction">
+                      <void property="description">
+                        <string>CoastWatch HDF</string>
+                      </void>
+                      <void property="extension">
+                        <string>hdf</string>
+                      </void>
+                      <void property="launcherId">
+                        <string>7</string>
+                      </void>
+                      <void property="macIconFile">
+                        <object class="com.install4j.api.beans.ExternalFile">
+                          <string />
+                        </object>
+                      </void>
+                      <void property="windowsIconFile">
+                        <object class="com.install4j.api.beans.ExternalFile">
+                          <string />
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="" id="233" customizedId="" beanClass="com.install4j.runtime.beans.actions.desktop.CreateFileAssociationAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.desktop.CreateFileAssociationAction">
+                      <void property="description">
+                        <string>CoastWatch IMGMAP</string>
+                      </void>
+                      <void property="extension">
+                        <string>cwf</string>
+                      </void>
+                      <void property="launcherId">
+                        <string>7</string>
+                      </void>
+                      <void property="macIconFile">
+                        <object class="com.install4j.api.beans.ExternalFile">
+                          <string />
+                        </object>
+                      </void>
+                      <void property="windowsIconFile">
+                        <object class="com.install4j.api.beans.ExternalFile">
+                          <string />
+                        </object>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+            </actions>
+            <formComponents />
+          </screen>
+          <screen name="" id="234" customizedId="" beanClass="com.install4j.runtime.beans.screens.FinishedScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="true" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.FinishedScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+        </screens>
+      </application>
+      <application name="" id="uninstaller" customizedId="" beanClass="com.install4j.runtime.beans.applications.UninstallerApplication" enabled="true" commentSet="false" comment="" actionElevationType="none" fileset="" customIcnsFile="" customIcoFile="" macEntitlementsFile="" automaticLauncherIntegration="false" launchMode="startupFirstWindow" launchInNewProcess="false" launchSchedule="updateSchedule" allLaunchers="true">
+        <serializedBean>
+          <java class="java.beans.XMLDecoder">
+            <object class="com.install4j.runtime.beans.applications.UninstallerApplication">
+              <void property="allowConsole">
+                <boolean>false</boolean>
+              </void>
+              <void property="allowUnattended">
+                <boolean>false</boolean>
+              </void>
+              <void property="frameSizeClientArea">
+                <boolean>false</boolean>
+              </void>
+              <void property="resizable">
+                <boolean>false</boolean>
+              </void>
+              <void property="watermark">
+                <boolean>false</boolean>
+              </void>
+            </object>
+          </java>
+        </serializedBean>
+        <launcherIds />
+        <variables />
+        <startup>
+          <screen name="" id="236" customizedId="" beanClass="com.install4j.runtime.beans.screens.StartupScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.StartupScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+        </startup>
+        <screens>
+          <screen name="" id="237" customizedId="" beanClass="com.install4j.runtime.beans.screens.UninstallWelcomeScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallWelcomeScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="238" customizedId="" beanClass="com.install4j.runtime.beans.screens.UninstallationScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="false" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallationScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions>
+              <action name="" id="239" customizedId="" beanClass="com.install4j.runtime.beans.actions.UninstallFilesAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.UninstallFilesAction" />
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+            </actions>
+            <formComponents />
+          </screen>
+          <screen name="" id="240" customizedId="" beanClass="com.install4j.runtime.beans.screens.UninstallFailureScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="true" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallFailureScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+          <screen name="" id="241" customizedId="" beanClass="com.install4j.runtime.beans.screens.UninstallSuccessScreen" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" backButton="2" finishScreen="true" wizardIndexChangeType="unchanged" wizardIndexKey="">
+            <serializedBean>
+              <java class="java.beans.XMLDecoder">
+                <object class="com.install4j.runtime.beans.screens.UninstallSuccessScreen" />
+              </java>
+            </serializedBean>
+            <condition />
+            <validation />
+            <preActivation />
+            <postActivation />
+            <actions />
+            <formComponents />
+          </screen>
+        </screens>
+      </application>
+    </applications>
+  </installerGui>
+  <mediaSets>
+    <windows name="win32" id="10" customizedId="" mediaFileName="" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="windows-x86-1.6.0_35" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" verifyIntegrity="true">
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="lib/aix" fileType="regular" />
+        <entry location="lib/irix" fileType="regular" />
+        <entry location="lib/linux" fileType="regular" />
+        <entry location="lib/macosx" fileType="regular" />
+        <entry location="lib/solaris" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="OS" value="win32" description="" category="" />
+        <variable name="VM_LNF_PARAM" value="-Dswing.defaultlaf=com.sun.java.swing.plaf.windows.WindowsLookAndFeel" description="" category="" />
+        <variable name="VM_LAF_PARAM" value="-Dswing.defaultlaf=com.sun.java.swing.plaf.windows.WindowsLookAndFeel" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+      <excludedComponents />
+      <includedDownloadableComponents />
+    </windows>
+    <linuxRPM name="linux (rpm)" id="84" customizedId="" mediaFileName="" installDir="/opt/cwf" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="linux-x86-1.6.0_32" manualJREEntry="false" os="linux" arch="i386">
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="lib/win32" fileType="regular" />
+        <entry location="lib/solaris" fileType="regular" />
+        <entry location="lib/macosx" fileType="regular" />
+        <entry location="lib/aix" fileType="regular" />
+        <entry location="lib/irix" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="OS" value="linux" description="" category="" />
+        <variable name="VM_LAF_PARAM" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+      <preInstallScript mode="1" file="">
+        <content />
+      </preInstallScript>
+      <postInstallScript mode="1" file="">
+        <content />
+      </postInstallScript>
+      <preUninstallScript mode="1" file="">
+        <content />
+      </preUninstallScript>
+      <postUninstallScript mode="1" file="">
+        <content />
+      </postUninstallScript>
+    </linuxRPM>
+    <unixInstaller name="linux (sh)" id="86" customizedId="" mediaFileName="" installDir="cwf" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="linux-x86-1.6.0_32" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="">
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="lib/win32" fileType="regular" />
+        <entry location="lib/solaris" fileType="regular" />
+        <entry location="lib/macosx" fileType="regular" />
+        <entry location="lib/aix" fileType="regular" />
+        <entry location="lib/irix" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="OS" value="linux" description="" category="" />
+        <variable name="VM_LAF_PARAM" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+      <excludedComponents />
+      <includedDownloadableComponents />
+      <installerScript mode="1" file="">
+        <content />
+      </installerScript>
+    </unixInstaller>
+    <unixArchive name="linux (tar.gz)" id="88" customizedId="" mediaFileName="" installDir="cwf" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="linux-x86-1.6.0_32" manualJREEntry="false">
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="lib/win32" fileType="regular" />
+        <entry location="lib/solaris" fileType="regular" />
+        <entry location="lib/macosx" fileType="regular" />
+        <entry location="lib/aix" fileType="regular" />
+        <entry location="lib/irix" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="OS" value="linux" description="" category="" />
+        <variable name="VM_LAF_PARAM" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+    </unixArchive>
+    <unixInstaller name="solaris (sh)" id="90" customizedId="" mediaFileName="" installDir="cwf" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="solaris-sparc-1.5.0_09" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="">
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="lib/linux" fileType="regular" />
+        <entry location="lib/win32" fileType="regular" />
+        <entry location="lib/macosx" fileType="regular" />
+        <entry location="lib/aix" fileType="regular" />
+        <entry location="lib/irix" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="OS" value="solaris" description="" category="" />
+        <variable name="VM_LAF_PARAM" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+      <excludedComponents />
+      <includedDownloadableComponents />
+      <installerScript mode="1" file="">
+        <content />
+      </installerScript>
+    </unixInstaller>
+    <unixArchive name="solaris (tar.gz)" id="93" customizedId="" mediaFileName="" installDir="cwf" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="solaris-sparc-1.5.0_09" manualJREEntry="false">
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="lib/linux" fileType="regular" />
+        <entry location="lib/win32" fileType="regular" />
+        <entry location="lib/macosx" fileType="regular" />
+        <entry location="lib/aix" fileType="regular" />
+        <entry location="lib/irix" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="OS" value="solaris" description="" category="" />
+        <variable name="VM_LAF_PARAM" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+    </unixArchive>
+    <unixInstaller name="aix (sh)" id="101" customizedId="" mediaFileName="" installDir="cwf" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="aix-rs6000-1.5.0" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="">
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="lib/linux" fileType="regular" />
+        <entry location="lib/win32" fileType="regular" />
+        <entry location="lib/solaris" fileType="regular" />
+        <entry location="lib/macosx" fileType="regular" />
+        <entry location="lib/irix" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="OS" value="aix" description="" category="" />
+        <variable name="VM_LAF_PARAM" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+      <excludedComponents />
+      <includedDownloadableComponents />
+      <installerScript mode="1" file="">
+        <content />
+      </installerScript>
+    </unixInstaller>
+    <unixArchive name="aix (tar.gz)" id="105" customizedId="" mediaFileName="" installDir="cwf" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="aix-rs6000-1.5.0" manualJREEntry="false">
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="lib/linux" fileType="regular" />
+        <entry location="lib/win32" fileType="regular" />
+        <entry location="lib/solaris" fileType="regular" />
+        <entry location="lib/macosx" fileType="regular" />
+        <entry location="lib/irix" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="OS" value="aix" description="" category="" />
+        <variable name="VM_LAF_PARAM" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+    </unixArchive>
+    <unixInstaller name="irix (sh)" id="109" customizedId="" mediaFileName="" installDir="cwf" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="">
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="lib/linux" fileType="regular" />
+        <entry location="lib/win32" fileType="regular" />
+        <entry location="lib/solaris" fileType="regular" />
+        <entry location="lib/macosx" fileType="regular" />
+        <entry location="lib/aix" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="OS" value="irix" description="" category="" />
+        <variable name="VM_LAF_PARAM" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+      <excludedComponents />
+      <includedDownloadableComponents />
+      <installerScript mode="1" file="">
+        <content />
+      </installerScript>
+    </unixInstaller>
+    <unixArchive name="irix (tar.gz)" id="113" customizedId="" mediaFileName="" installDir="cwf" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="" manualJREEntry="false">
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="lib/linux" fileType="regular" />
+        <entry location="lib/win32" fileType="regular" />
+        <entry location="lib/solaris" fileType="regular" />
+        <entry location="lib/macosx" fileType="regular" />
+        <entry location="lib/aix" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="OS" value="irix" description="" category="" />
+        <variable name="VM_LAF_PARAM" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+    </unixArchive>
+    <macosFolder name="macosx (dmg)" id="172" customizedId="" mediaFileName="" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" appleJre="true" customInstallBaseDir="" contentFilesType="1" downloadURL="" signLaunchers="false">
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="lib/aix" fileType="regular" />
+        <entry location="lib/irix" fileType="regular" />
+        <entry location="lib/linux" fileType="regular" />
+        <entry location="lib/solaris" fileType="regular" />
+        <entry location="lib/win32" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="OS" value="macosx" description="" category="" />
+        <variable name="VM_LAF_PARAM" value="-Dapple.laf.useScreenMenuBar=true -Dapple.awt.brushMetalLook=true" description="" category="" />
+        <variable name="CDAT_NAME" value="CoastWatch Data Analysis Tool" description="" category="" />
+        <variable name="CWMASTER_NAME" value="CoastWatch Master Tool" description="" category="" />
+        <variable name="CWSTATUS_NAME" value="CoastWatch Status Tool" description="" category="" />
+        <variable name="VM_FORCE_32BIT" value="-d32" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+      <excludedComponents />
+      <includedDownloadableComponents />
+    </macosFolder>
+    <macosFolderArchive name="macosx (tgz)" id="235" customizedId="" mediaFileName="" installDir="cwf" overridePrincipalLanguage="true" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="" manualJREEntry="false" appleJre="true">
+      <excludedLaunchers />
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="lib/aix" fileType="regular" />
+        <entry location="lib/irix" fileType="regular" />
+        <entry location="lib/linux" fileType="regular" />
+        <entry location="lib/solaris" fileType="regular" />
+        <entry location="lib/win32" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="OS" value="macosx" description="" category="" />
+        <variable name="CDAT_NAME" value="CoastWatch Data Analysis Tool" description="" category="" />
+        <variable name="CWMASTER_NAME" value="CoastWatch Master Tool" description="" category="" />
+        <variable name="CWSTATUS_NAME" value="CoastWatch Status Tool" description="" category="" />
+        <variable name="VM_LAF_PARAM" value="-Dapple.laf.useScreenMenuBar=true -Dapple.awt.brushMetalLook=true" description="" category="" />
+        <variable name="VM_FORCE_32BIT" value="-d32" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+    </macosFolderArchive>
+  </mediaSets>
+  <buildIds buildAll="false">
+    <mediaSet refId="172" />
+    <mediaSet refId="235" />
+  </buildIds>
+  <buildOptions verbose="false" faster="false" disableSigning="false" debug="false" />
+</install4j>
+

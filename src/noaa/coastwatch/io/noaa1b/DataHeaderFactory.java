@@ -1,0 +1,164 @@
+////////////////////////////////////////////////////////////////////////
+/*
+     FILE: DataHeaderFactory.java
+  PURPOSE: Creates NOAA 1b data headers from byte data.
+   AUTHOR: Peter Hollemans
+     DATE: 2007/08/27
+  CHANGES: 2007/11/16, PFH, added AMSU-A headers
+           2007/11/22, PFH, added AMSU-B and MHS headers
+
+  CoastWatch Software Library and Utilities
+  Copyright 2007, USDOC/NOAA/NESDIS CoastWatch
+
+*/
+////////////////////////////////////////////////////////////////////////
+
+// Package
+// -------
+package noaa.coastwatch.io.noaa1b;
+
+// Imports
+// -------
+import java.io.*;
+import java.nio.*;
+import java.nio.channels.*;
+
+/**
+ * The <code>DataHeaderFactory</code> creates data header
+ * objects using the byte data at the beginning of a NOAA 1b file.
+ */
+public class DataHeaderFactory {
+
+  ////////////////////////////////////////////////////////////
+  
+  /** 
+   * Creates a new data header.
+   *
+   * @param channel the channel of byte data to read.
+   * @param isByteSwapped the byte swapped flag, true if the data
+   * is in little endian byte order.
+   *
+   * @return a data header object, or null of no header could be
+   * found that is appropriate for the data.
+   *
+   * @throws IOException if an error occurred reading the byte
+   * data.
+   */
+  public static DataHeader create (
+    ByteChannel channel,
+    boolean isByteSwapped
+  ) throws IOException {
+
+    // Read data
+    // ---------
+    ByteBuffer inputBuffer = ByteBuffer.allocate (22528);
+    if (isByteSwapped) inputBuffer.order (ByteOrder.LITTLE_ENDIAN);
+    channel.read (inputBuffer);
+    
+    // Try version 1 style header
+    // --------------------------
+    int craftCode = NOAA1bServices.getUByte (inputBuffer, 0);
+    boolean isValidCraft = (craftCode >= 1 && craftCode <= 8);
+    int typeCode = NOAA1bServices.getUByte (inputBuffer, 1) >>> 4;
+    boolean isValidType = (typeCode >= 1 && typeCode <= 9);
+    if (isValidCraft && isValidType) {
+      switch (typeCode) {
+
+      case 1: // LAC
+        throw new IOException ("NOAA 1b version 1 LAC not implemented");
+
+      case 2: // GAC
+        throw new IOException ("NOAA 1b version 1 GAC not implemented");
+
+      case 3: // HRPT
+        throw new IOException ("NOAA 1b version 1 HRPT not implemented");
+
+      case 4: // TIP
+        throw new IOException ("NOAA 1b version 1 TIP not implemented");
+
+      case 5: // HIRS
+        throw new IOException ("NOAA 1b version 1 HIRS not implemented");
+
+      case 6: // MSU
+        throw new IOException ("NOAA 1b version 1 MSU not implemented");
+
+      case 7: // SSU
+        throw new IOException ("NOAA 1b version 1 SSU not implemented");
+
+      case 8: // DCS
+        throw new IOException ("NOAA 1b version 1 DCS not implemented");
+
+      case 9: // SEM
+        throw new IOException ("NOAA 1b version 1 SEM not implemented");
+
+      } // switch
+    } // if
+
+    // Try version 2 style header
+    // --------------------------
+    craftCode = NOAA1bServices.getUShort (inputBuffer, 72);
+    isValidCraft = (
+      craftCode == 2 || 
+      craftCode == 4 || 
+      craftCode == 6 ||
+      craftCode == 7 ||
+      craftCode == 8 ||
+      craftCode == 11 ||
+      craftCode == 12
+    );
+    typeCode = NOAA1bServices.getUShort (inputBuffer, 76);
+    isValidType = (typeCode >= 1 && typeCode <= 13);
+    if (isValidCraft && isValidType) {
+      switch (typeCode) {
+
+      case 1: // LAC
+        throw new IOException ("NOAA 1b version 2+ LAC not implemented");
+
+      case 2: // GAC
+        throw new IOException ("NOAA 1b version 2+ GAC not implemented");
+
+      case 3: // HRPT
+        throw new IOException ("NOAA 1b version 2+ HRPT not implemented");
+
+      case 4: // TIP
+        throw new IOException ("NOAA 1b version 2+ TIP not implemented");
+
+      case 5: // HIRS
+        return (new HIRS4Header (inputBuffer));
+
+      case 6: // MSU
+        throw new IOException ("NOAA 1b version 2+ MSU not implemented");
+
+      case 7: // SSU
+        throw new IOException ("NOAA 1b version 2+ SSU not implemented");
+
+      case 8: // DCS
+        throw new IOException ("NOAA 1b version 2+ DCS not implemented");
+
+      case 9: // SEM
+        throw new IOException ("NOAA 1b version 2+ SEM not implemented");
+
+      case 10: // AMSU-A
+        return (new AMSUAHeader (inputBuffer));
+
+      case 11: // AMSU-B
+        return (new AMSUBHeader (inputBuffer));
+
+      case 12: // MHS
+        return (new MHSHeader (inputBuffer));
+
+      case 13: // FRAC
+        throw new IOException ("NOAA 1b version 2+ FRAC not implemented");
+
+      } // switch
+    } // if
+
+    throw new IOException ("Cannot determine data type");
+
+  } // create
+
+  ////////////////////////////////////////////////////////////
+
+} // DataHeaderFactory class
+
+////////////////////////////////////////////////////////////////////////

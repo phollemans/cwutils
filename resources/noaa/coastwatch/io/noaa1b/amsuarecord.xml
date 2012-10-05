@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+
+<binaryStream
+  xmlns="http://coastwatch.noaa.gov"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://coastwatch.noaa.gov http://coastwatch.noaa.gov/xml/binaryStream.xsd">
+
+  <!-- Scan line section -->
+  <ushort name="lineNumber"/>
+  <ushort name="year"/>
+  <ushort name="day"/>
+  <uint name="timeUTC" absoluteOffset="8"/>
+  <ushort name="majorFrameCount" absoluteOffset="14"/>
+
+  <!-- Quality section -->
+  <uint name="qualityIndicator" absoluteOffset="24">
+    <bitLabel name="qualityIndicator.doNotUseScan" position="31"/>
+    <bitLabel name="qualityIndicator.timeSequenceError" position="30"/>
+    <bitLabel name="qualityIndicator.dataGap" position="29"/>
+    <bitLabel name="qualityIndicator.insufficientData" position="28"/>
+    <bitLabel name="qualityIndicator.navigationUnavailable" position="27"/>
+    <bitLabel name="qualityIndicator.clockUpdated" position="26"/>
+    <bitLabel name="qualityIndicator.statusChanged" position="25"/>
+    <bitLabel name="qualityIndicator.syncError" position="3"/>
+    <bitLabel name="qualityIndicator.minorFrameError" position="2"/>
+    <bitLabel name="qualityIndicator.majorFrameError" position="1"/>
+    <bitLabel name="qualityIndicator.parityError" position="0"/>
+  </uint>
+  <ubyte name="calibrationProblem" absoluteOffset="30">
+    <bitLabel name="calibrationProblem.scanNotCalibrated" position="7"/>
+    <bitLabel name="calibrationProblem.proximityToDataGap" position="6"/>
+    <bitLabel name="calibrationProblem.prtQualityFailed" position="5"/>
+    <bitLabel name="calibrationProblem.prtMarginal" position="4"/>
+    <bitLabel name="calibrationProblem.uncalibratedChannels" position="3"/>
+    <bitLabel name="calibrationProblem.uncalibratedInstrumentMode" position="2"/>
+    <bitLabel name="calibrationProblem.antennaPositionErrorSpaceView" position="1"/>
+    <bitLabel name="calibrationProblem.antennaPositionErrorBlackbodyView" position="0"/>
+  </ubyte>
+  <ushortArray name="calibrationQualityFlags" dims="16" absoluteOffset="32"/>
+  
+  <!-- Calibration section -->
+  <int name="ch1SecondOrder" scale="1e-19" absoluteOffset="80"/>
+  <int name="ch1FirstOrder" scale="1e-13" />
+  <int name="ch1ZerothOrder" scale="1e-9" />
+  <int name="ch2SecondOrder" scale="1e-19"/>
+  <int name="ch2FirstOrder" scale="1e-13"/>
+  <int name="ch2ZerothOrder" scale="1e-9"/>
+  <int name="ch3SecondOrder" scale="1e-19"/>
+  <int name="ch3FirstOrder" scale="1e-13"/>
+  <int name="ch3ZerothOrder" scale="1e-9"/>
+  <int name="ch4SecondOrder" scale="1e-19"/>
+  <int name="ch4FirstOrder" scale="1e-13"/>
+  <int name="ch4ZerothOrder" scale="1e-9"/>
+  <int name="ch5SecondOrder" scale="1e-19"/>
+  <int name="ch5FirstOrder" scale="1e-13"/>
+  <int name="ch5ZerothOrder" scale="1e-9"/>
+  <int name="ch6SecondOrder" scale="1e-19"/>
+  <int name="ch6FirstOrder" scale="1e-13"/>
+  <int name="ch6ZerothOrder" scale="1e-9"/>
+  <int name="ch7SecondOrder" scale="1e-19"/>
+  <int name="ch7FirstOrder" scale="1e-13"/>
+  <int name="ch7ZerothOrder" scale="1e-9"/>
+  <int name="ch8SecondOrder" scale="1e-19"/>
+  <int name="ch8FirstOrder" scale="1e-13"/>
+  <int name="ch8ZerothOrder" scale="1e-9"/>
+  <int name="ch9SecondOrder" scale="1e-19"/>
+  <int name="ch9FirstOrder" scale="1e-13"/>
+  <int name="ch9ZerothOrder" scale="1e-9"/>
+  <int name="ch10SecondOrder" scale="1e-19"/>
+  <int name="ch10FirstOrder" scale="1e-13"/>
+  <int name="ch10ZerothOrder" scale="1e-9"/>
+  <int name="ch11SecondOrder" scale="1e-19"/>
+  <int name="ch11FirstOrder" scale="1e-13"/>
+  <int name="ch11ZerothOrder" scale="1e-9"/>
+  <int name="ch12SecondOrder" scale="1e-18"/>
+  <int name="ch12FirstOrder" scale="1e-13"/>
+  <int name="ch12ZerothOrder" scale="1e-9"/>
+  <int name="ch13SecondOrder" scale="1e-19"/>
+  <int name="ch13FirstOrder" scale="1e-13"/>
+  <int name="ch13ZerothOrder" scale="1e-9"/>
+  <int name="ch14SecondOrder" scale="1e-19"/>
+  <int name="ch14FirstOrder" scale="1e-13"/>
+  <int name="ch14ZerothOrder" scale="1e-9"/>
+  <int name="ch15SecondOrder" scale="1e-19"/>
+  <int name="ch15FirstOrder" scale="1e-13"/>
+  <int name="ch15ZerothOrder" scale="1e-9"/>
+
+  <!-- Navigation section -->
+  <uint name="navigationStatus" absoluteOffset="456"/>
+  <shortArray name="angles" dims="90" absoluteOffset="472"/>
+  <intArray name="earthLocations" dims="60" absoluteOffset="652"/>
+
+  <!-- AMSU-A sensor data -->
+  <ushortArray name="amsua1Data" dims="510" absoluteOffset="904"/>
+  <ushortArray name="amsua2Data" dims="120" absoluteOffset="2192"/>
+
+</binaryStream>

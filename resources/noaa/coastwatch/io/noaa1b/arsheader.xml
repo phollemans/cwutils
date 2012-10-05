@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<binaryStream
+  xmlns="http://coastwatch.noaa.gov"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://coastwatch.noaa.gov http://coastwatch.noaa.gov/xml/binaryStream.xsd">
+
+  <!-- Top section -->
+  <string name="processingSite" length="1" absoluteOffset="21">
+    <valueMap valueType="string">
+      <entry key="A" value="CLASS"/>
+      <entry key="B" value="NCDC/Suitland"/>
+      <entry key="C" value="NCDC/Asheville"/>
+    </valueMap>
+  </string>
+  <string name="processingSoftware" length="8"/>
+  <string name="datasetName" length="42"/>
+  
+  <!-- Dataset selection section -->
+  <string name="sensorDataWordSize" length="2" absoluteOffset="117"/>
+
+  <!-- Dataset summary section -->
+  <string name="firstLatitude" length="3" absoluteOffset="147"/>
+  <string name="lastLatitude" length="3"/>
+  <string name="firstLongitude" length="4"/>
+  <string name="lastLongitude" length="4"/>
+  <string name="dataFormat" length="20"/>
+  <string name="recordSize" length="6"/>
+  <string name="numRecords" length="6"/>
+
+</binaryStream>

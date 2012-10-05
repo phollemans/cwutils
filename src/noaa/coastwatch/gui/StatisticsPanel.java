@@ -1,0 +1,66 @@
+////////////////////////////////////////////////////////////////////////
+/*
+     FILE: StatisticsPanel.java
+  PURPOSE: Shows statistics data in an XY plot panel.
+   AUTHOR: Peter Hollemans
+     DATE: 2004/03/30
+  CHANGES: n/a
+
+  CoastWatch Software Library and Utilities
+  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+
+*/
+////////////////////////////////////////////////////////////////////////
+
+// Package
+// -------
+package noaa.coastwatch.gui;
+
+// Imports
+// -------
+import java.awt.*;
+import java.awt.geom.*;
+import javax.swing.*;
+import noaa.coastwatch.util.*;
+import noaa.coastwatch.render.*;
+
+/**
+ * The <code>StatisticsPanel</code> is an abstract class that holds a
+ * <code>Statistics</code> object and draws the axes and labels
+ * desired for a plot of the statistics.  It is up to the child class
+ * to draw the actual statistics data.
+ */
+public abstract class StatisticsPanel
+  extends XYPlotPanel {
+
+  // Variables
+  // ---------
+
+  /** The histogram statistics. */
+  private Statistics stats;
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Creates a new panel using the specified statistics data.
+   *
+   * @param stats the data statistics.
+   */
+  protected StatisticsPanel (
+    Statistics stats
+  ) {
+
+    this.stats = stats;
+
+  } // StatisticsPanel constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the current statistics. */
+  public Statistics getStatistics () { return (stats); }
+
+  ////////////////////////////////////////////////////////////
+
+} // StatisticsPanel class
+
+////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,205 @@
+\chapter{Common Tasks}
+\label{common}
+
+The first step in using the CoastWatch Utilities is to discover which
+tool to use for the task at hand.  To help with this search, this
+section categorizes the tools by the most common tasks that data users
+perform.  Use this section as a guide to the functionality
+of the tools, while referring to the manual pages of \autoref{manual}
+for complete details on each tool's behaviour and command line
+options.
+
+\section{Information and Statistics}
+
+The \hyperlink{cwinfo}{cwinfo} tool lists data file contents,
+including various global file attributes and the full set of
+earth data variables in the file.  This tool is mainly useful
+because its output is human readable, as opposed to a raw data
+dump from a generic HDF tool.  It also allows you to display
+latitude and longitude data for the data corners and center
+point.  The \longoption{verbose} option shows the process of
+identifying the file format, useful for file format debugging or
+when you suspect a file is corrupt.
+
+The \hyperlink{cwstats}{cwstats} tool calculates statistics for
+each earth data variable in the file: count, valid, minimum,
+maximum, mean, standard deviation.  This is good for assessing
+the data quality and checking to see that the data values fall
+into the expected range.  Use \longoption{sample}=0.01 to sample
+only 1\% of the data as this saves a large amount of I/O and
+computation time.  The {\em count} is the total number of data
+values (rows $\times$ columns), while the {\em valid} value is
+the number of data values that were not just fill values.
+CoastWatch satellite data does not always cover the full region
+of the file, since the satellite view may have clipped the edge
+of the region during overpass.  In these cases, fill values are
+written for the missing data and the fill values are skipping
+during statistics computations.  Fill values are also used to
+signify that data has been masked out for quality purposes (see
+the \hyperlink{cwmath}{cwmath} tool for an example of masking and
+\autoref{processing} for details on how masking can be used).
+
+The \hyperlink{hdatt}{hdatt} tool is only useful for CoastWatch HDF
+files\footnote{The hdatt tool works with any HDF 4 file using the
+SDS interface, but is primarily intended for CoastWatch HDF files,
+as opposed to CoastWatch IMGMAP or any other non-HDF file format
+supported by the utilities.}, and performs low-level reading and
+writing of HDF attribute data.  You can use it to change an attribute
+value without rewriting the file, or to append an attribute value
+to the file.  The hdatt manual page gives many good examples of
+when it may be required to modify or create attributes.
+
+\section{Data Processing}
+\label{processing}
+
+The \hyperlink{cwimport}{cwimport} tool converts data into CoastWatch
+HDF format.  Note that it is {\em not necessary} to convert all
+data into CoastWatch HDF before working with the data using the
+CoastWatch Utilities.  In many cases, you can perform the same
+operations on the data in its native format, especially when the
+operation only reads information and performs no file modification.
+This is due to the design of the CoastWatch Utilities, which contains
+a software layer (called the {\em Earth Data Reader} or {\em EDR}
+layer) separating the tools from the physical input file format.
+The \hyperlink{cwexport}{cwexport} tool complements cwimport -- it
+converts data into various simple text or binary formats.  The
+cwexport tool benefits from the EDR layer as well, and as such can
+export data from CoastWatch HDF, CoastWatch IMGMAP, NOAA 1b, and
+others.
+
+During satellite data processing, it is often necessary to compare data
+from the satellite sensor to data from in-situ measurements.  The
+\hyperlink{cwsample}{cwsample} tool performs this function by taking
+as input a geographic latitude/longitude point or set of points and
+printing out the data values found at those points in the file.
+
+Another common task in data processing is to combine data from one
+or more variables using a mathematical equation, or to combine data
+from multiple files in a data composite.  The \hyperlink{cwmath}{cwmath}
+tool takes a math expression of the form $y = f(a,b,c,...)$ where
+$a,b,c...$ are earth data variables in the file, and loops over
+each pixel in the file to compute $f$.  The
+\hyperlink{cwcomposite}{cwcomposite} tool combines data from one
+earth data variable across multiple files by computing the mean,
+median, minimum, maximum, or latest value.  You can use the cwmath
+and cwcomposite tools in tandem to create composite data for a given
+earth variable; for example to create a weekly composite of sea-surface
+temperature (SST), mask out all cloud contaminated SST from each
+file using the cwmath {\em mask} function, and follow by running
+cwcomposite on all the masked SST files to compute the mean or
+median.
+
+Certain data processing tasks are beyond the capabilities of the
+CoastWatch Utilities.  In such a case, the recommended procedure
+is to access and process data using either the Java Language API
+outlined in \autoref{api}, or the native C HDF libraries from NCSA
+(see \autoref{third}).  IDL and Matlab also have HDF access built-in.
+The advantage of using the Java API provided by the CoastWatch
+Utilities is that metadata and file I/O operations are already
+implemented and generally transparent to the programmer.
+
+\section{Graphics and Visualization}
+
+The main interactive tool for displaying CoastWatch data files is the
+CoastWatch Data Analysis Tool (CDAT).  The complexity of CDAT is such
+that it deserves its own section -- see \autoref{cdatchap} for a
+complete discussion of CDAT and its features.  CDAT is mainly useful
+for creating unique plots of CoastWatch data, performing data
+surveys, and drawing annotations on top of the data image.  In
+contrast, the command line tools discussed in this section are designed
+for the automated creation of plots and graphics from CoastWatch data
+from a scripting language such as Unix shell, Perl, or Windows batch
+files.
+
+The \hyperlink{cwrender}{cwrender} tool creates images from earth data
+variables, using either a palette or three channel composite mode.
+Many rendering options are available including coast line, land mask,
+grid line, topographic, and ESRI shapefile overlays, custom region
+enlargement, and units conversion.  Output formats supported include
+PNG, JPEG, GIF, GeoTIFF, and PDF.
+
+The \hyperlink{cwcoverage}{cwcoverage} tool creates
+graphics for documentation or web pages that show the physical area
+that a data file or group of files covers on the earth.  The output
+shows an orthographic map projection with the boundary of each data
+file traced onto the earth and labeled.  Along similar lines, the
+\hyperlink{cwgraphics}{cwgraphics} tool creates land, coast, and grid 
+graphics for the region covered by a data file.  The output of
+cwgraphics is inserted into the data file as an 8-bit data variable
+for later use by cwrender or alternatively to be exported via cwexport
+for use in custom rendering or masking routines.
+
+\section{Registration and Navigation}
+\label{registration}
+
+Earth data from two data files is said to be {\em in register} if
+every corresponding pair of pixels has the same earth location.  We
+use the term {\em registration} to refer to the process of resampling
+data to a {\em master} projection.  Data that has first been
+registered to a master can be intercompared or combined with
+other data registered to the same master.  Standard CoastWatch
+map-projected data files that have been registered to the same master
+projection can be intercompared or combined on a pixel by pixel basis.
+
+You can create your own master projections and CoastWatch map-projected
+data files using the \hyperlink{cwmaster}{cwmaster} and
+\hyperlink{cwregister}{cwregister} tools.  The cwmaster tool is an
+interactive tool for designing master map projections.  The tool
+enables you to create CoastWatch HDF masters that use one of the
+various map projections supported by the General Cartographic
+Transformation Package (GCTP)\footnote{See \autoref{metadata} for
+a discussion of CoastWatch HDF metadata which relies on GCTP for
+map projection parameters.}, such as Mercator, Polar Stereographic,
+Orthographic, and many others.  Once a master is created 
+you can used it in the cwregister tool to resample data to the new
+master projection.
+
+When earth image data is captured from a satellite and processed,
+there are cases in which inaccuracies in satellite position and
+attitude (roll, pitch, and yaw) cause coastlines to appear {\em
+shifted} with respect to the image data.  We say that such data
+requires a {\em navigation correction}.  Ideally the navigation
+correction should be applied to the satellite data while in the
+sensor projection before any registration to a map projection master.
+In reality data users often only have access to the final map-projected
+products.  However since these map-projected products generally
+cover a small geographic area, acceptable navigation corrections
+can often be achieved by applying an offset to the image data of a
+few pixels in the rows direction and a few pixels in the columns
+direction.  You can use the \hyperlink{cwnavigate}{cwnavigate} and
+\hyperlink{cwautonav}{cwautonav} tools to apply navigation corrections
+to CoastWatch data files.  The cwnavigate tool applies a manual
+correction, normally derived from your own observation of the data
+or from some preexisting database of corrections.  The cwautonav
+tool attempts to derive and apply a correction automatically from
+the image data in the file.
+
+A final tool related to registration/navigation is
+\hyperlink{cwangles}{cwangles} which computes explicit latitude,
+longitude, and solar angles based on metadata in the CoastWatch
+data file.  Some data users appreciate having latitude and longitude
+values at each pixel rather than simply GCTP map projection parameters
+or swath polynomial coefficients.  Such earth location data is
+useful when exporting CoastWatch data for use in other software
+packages.  Note that text output from the cwexport tool (see
+\autoref{processing}) can also include the latitude and longitude
+of each pixel without having to run cwangles.
+
+\section{Network}
+
+The \hyperlink{cwdownload}{cwdownload} tool has a command line only
+interface and is recommended for advanced data users only.  You can
+use the tool to retrieve recent data files from a CoastWatch data
+server, or to maintain an archive of certain data files of interest.
+For regular data file retrieval, the tool can be run via the Unix
+cron daemon or Windows Task Scheduler (located under System Tools
+in newer versions of Windows).  Currently, only AVHRR data is handled
+by cwdownload.  You should contact the CoastWatch Help Desk
+(coastwatch.info@noaa.gov) for access to a CoastWatch data server
+to use with cwdownload.
+
+The \hyperlink{cwstatus}{cwstatus} tool shows a graphical view of the
+status of a CoastWatch data server, and is intended for use by
+CoastWatch staff only.  The status tool displays the current list of
+satellite passes, their properties, and a graphical view of the pass
+footprint on the earth along with a preview image.

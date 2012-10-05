@@ -1,0 +1,63 @@
+<html>
+
+<head>
+  <title>CoastWatch Status Tool Help: Server activity</title>
+  <link rel="stylesheet" type="text/css" href="helpstyle.css">
+</head>
+
+<body>
+
+<h1>CoastWatch Status Tool Help: Server activity</h1>
+
+<p>The server status panel below allows you to monitor server
+activity:</p>
+
+<p class="centered"><img src="cwstatus_status.png"></p>
+
+<p>The following information is displayed:</p>
+
+<dl>
+
+  <dt>Host</dt>
+
+  <dd>Shows the server host name and last known status update
+  time.  The server is queried once every minute to determine the
+  current status, activity, files, and online data.</dd>
+
+  <dt>Activity</dt>
+
+  <dd>Indicates the server activity using several icons and an
+  activity message: <p class="quote"><img
+  src="cwstatus_icons.png"></p> The icons are colorized when the
+  corresponding activity is being performed.  The icons denote
+  (left to right) server idle, receiving data files, processing
+  data, and error.  The error icon indicates that the server
+  cannot be contacted for a status update.</dd>
+
+  <dt>Incoming</dt>
+
+  <dd>Shows a list of data files currently being received.  Data
+  files are retrieved by the server from a number of foreign
+  hosts and take time to be completely transferred.</dd>
+
+  <dt>Waiting</dt>
+
+  <dd>Shows a list of data files currently waiting to be
+  processed.  These data files have been recently transferred
+  from a foreign host but have not been through the data
+  processing cycle.</dd>
+
+</dl>
+
+<p>You can change the server being monitored using the <span
+class="gui">File|New server</span> menu item.  Once you enter the
+new server name or IP address and click <span
+class="gui">OK</span>, there may be a small delay while the
+program retrieves the status and online data from the new
+server.</p>
+
+<p><a href="cwstatus_index.html">Back to overview</a></p>
+
+</body>
+
+</html>

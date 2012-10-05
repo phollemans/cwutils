@@ -1,0 +1,9 @@
+#!/bin/sh
+
+if [ -z "$1" -o ! -f "$1" ] ; then
+  echo "Error accesing PNG file"
+  exit
+fi
+pngtopnm -mix $1 | pnmtopng > $1.new
+mv $1.new $1
+

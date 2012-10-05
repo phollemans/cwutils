@@ -1,0 +1,18 @@
+<!-- 
+
+     FILE: colorlookup.dtd
+  PURPOSE: Defines the CoastWatch color lookup format in XML.
+   AUTHOR: Peter Hollemans
+     DATE: 2004/05/17
+
+  CoastWatch Software Library and Utilities
+  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+
+-->
+
+<!ELEMENT colorlookup (color*)>
+<!ELEMENT color EMPTY>
+<!ATTLIST color name CDATA #REQUIRED>
+<!ATTLIST color r CDATA #REQUIRED>
+<!ATTLIST color g CDATA #REQUIRED>
+<!ATTLIST color b CDATA #REQUIRED>

@@ -1,0 +1,1413 @@
+\chapter{CoastWatch HDF Metadata Specification}
+\label{metadata}
+
+\section{Overview}
+
+CoastWatch HDF format may be used to store almost any scientific data
+that has an associated set of Earth locations, including satellite
+data and output from numerical models. The term {\em metadata} refers
+to information describing data.  HDF stores metadata as a set of
+attribute name and value pairs. For example, if a dataset is derived
+from a satellite called NOAA-16, it is useful to store the attribute
+name {\tt satellite} and value {\tt noaa-16} along with the data to
+denote its origin. Along these lines, the CoastWatch metadata
+standards have been written to help developers write software to read
+and write data and its associated metadata in a consistent
+fashion. This document describes the standard and can be used as a
+reference guide to the HDF attribute names and values in CoastWatch
+HDF files. A number of overall conventions are used for storing data:
+\begin{enumerate}
+
+  \item Multiple 2D data grids are stored in one HDF file using the
+  HDF Scientific Data Sets (SDS) model. A standard CoastWatch HDF file
+  contains data for one region only.
+
+  \item A standard set of global attributes is encoded with the data,
+  describing the date and time, Earth locations, data source or
+  satellite/ sensor, and so on from which the data originated.
+
+  \item A standard set of variable attributes is encoded with each
+  variable, describing the variable units, scaling factor, and so on
+  as well as any other important information.
+
+\end{enumerate}
+
+As the requirements for the CoastWatch HDF format evolve, new metadata
+specifications are added, thus new metadata {\em versions} support
+features that older versions do not. An effort is made with each new
+metadata version to maintain compatibility with older versions:
+\begin{description}
+
+  \item[Version 2.4] The original metadata version supported by the
+  CWF utilities version 2.3 and 2.4 and CDAT 0.6 and 0.7. CoastWatch
+  HDF was originally designed to store projection-mapped satellite
+  data only, and had a very limited set of metadata.
+
+  \item[Version 3.1] Support was added for multiple metadata versions,
+  unmapped swath data, per-variable navigation transforms, and the
+  interpretation of the {\tt et\_affine} attribute was changed.
+
+  \item[Version 3.2] Support was added for non-satellite derived data,
+  composite datasets from multiple time ranges, raster pixel types,
+  region codes and names, temporal extents, vector direction
+  variables, polygon outlines, and various other features.
+
+  \item[Version 3.3] Support was added for satellite sensor scan
+  projection type.
+
+  \item[Version 3.4] Units strings were standardized to use Unidata
+  UDUNITS style.  Vector direction variables now have a convention
+  attribute.
+
+\end{description}
+
+\section{Global Metadata}
+
+The following table lists the standard set of global attributes for
+CoastWatch HDF:
+
+\begin{tabular}{|l|l|p{7.5cm}|l|}
+
+  \hline
+
+  Attribute name & HDF type & Description & Since version \\ \hline
+
+  {\tt cwhdf\_version}$^{\dagger}$ & CHAR8 & The metadata version. The version
+  is written as a string attribute but should be interpreted as a
+  fractional number, for example 2.3 or 3.1. If absent, version 2.4 is
+  assumed. & 3.1 \\ \hline
+
+  {\tt satellite}$^{\ddagger}$ & CHAR8 & If data is from a satellite, the
+  satellite name, for example {\tt noaa-16}, {\tt goes-8}, {\tt
+  orbview-2}. & 2.4 \\ \hline
+
+  & CHAR8 & If the data is a composite, multiple values are
+  newline-separated. & 3.2 \\ \hline
+
+  {\tt sensor}$^{\ddagger}$ & CHAR8 & If data is from a satellite, the
+  satellite sensor name, for example {\tt avhrr}, {\tt seawifs}. & 2.4
+  \\ \hline
+
+  & CHAR8 & If the data is a composite, multiple values are
+  newline-separated. & 3.2 \\ \hline
+
+  {\tt data\_source}$^{\ddagger}$ & CHAR8 & If data is not from a
+  satellite, the data source, for example the instrument used to
+  collect the data or the model used to generate the data. If the data
+  is a composite, multiple values are newline-separated. & 3.2 \\
+  \hline
+
+  {\tt composite} & CHAR8 & The composite flag, {\tt true} if the data
+  is derived from multiple datasets, or {\tt false} if not. If true,
+  then the {\tt pass\_date}, {\tt start\_time}, and {\tt
+  temporal\_extent} attributes may contain arrays of values, and the
+  {\tt satellite}, {\tt sensor}, {\tt data\_source}, {\tt
+  orbit\_type}, {\tt pass\_type}, and {\tt origin} attributes may have
+  multiple newline-separated values. If absent, it is assumed that the
+  data is not a composite. & 3.2 \\ \hline
+
+\end{tabular}
+
+\begin{tabular}{|l|l|p{7.5cm}|l|}
+
+  \hline
+
+  Attribute name & HDF type & Description & Since version \\ \hline
+
+  {\tt pass\_date}$^{\dagger}$ & INT32 & The date of data recording in
+  days since January 1, 1970. & 2.4 \\ \hline
+
+  & INT32[~] & If the data is a composite, the dates of data recording
+  in days since January 1, 1970. Date and time data must be stored in
+  sorted order from least recent to most recent. & 3.2 \\ \hline
+
+  {\tt start\_time}$^{\dagger}$ & FLOAT64 & The start time of the data
+  recording in seconds since 00:00:00 UTC. & 2.4 \\ \hline
+
+  & FLOAT64[~] & If the data is a composite, the start times of data
+  recording in seconds since 00:00:00 UTC. & 3.2 \\ \hline
+
+  {\tt temporal\_extent} & FLOAT64[~] & The time duration in seconds
+  between the start of data recording and the end of data
+  recording. Multiple values may be present if the data is a
+  composite. If absent, it is assumed that each data recording is
+  instantaneous.  & 3.2 \\ \hline
+
+  {\tt pass\_type} & CHAR8 & The satellite pass temporal type: {\tt
+  day}, {\tt night}, {\tt day/night}. & 2.4 \\ \hline
+  
+  & CHAR8 & If the data is a composite, multiple values are
+  newline-separated. & 3.2 \\ \hline
+
+  {\tt orbit\_type} & CHAR8 & If the data is from an orbiting
+  satellite that crosses the equator in a northward or southward
+  direction, the orbit type as {\tt ascending} or {\tt descending}
+  respectively. If the data is a composite, multiple values are
+  newline-separated. & 3.2 \\ \hline
+
+  {\tt origin}$^{\dagger}$ & CHAR8 & The original data source as an
+  agency or organization name, for example {\tt USDOC/NOAA/NESDIS
+  CoastWatch}. & 2.4 \\ \hline
+
+  & CHAR8 & If the data is a composite, multiple values are
+  newline-separated. & 3.2 \\ \hline
+
+  {\tt history}$^{\dagger}$ & CHAR8 & A newline-separated list of
+  utilities and command line parameters used to create the file and
+  perform processing. & 2.4 \\ \hline
+
+\end{tabular} \\
+$^{\dagger}$This attribute is required. Other attributes are
+optional.\\
+$^{\ddagger}$Either {\tt satellite} and {\tt sensor}, or {\tt
+data\_source} are required, but not both.
+
+\section{Earth Location Metadata}
+
+In addition to the standard global attributes listed above, a number
+of Earth location attributes are also present. Prior to version 3.1,
+only mapped data was supported. For mapped data, all map projection
+calculations are performed using the
+\href{http://edcwww.cr.usgs.gov/pub/software/gctpc}{General
+Cartographic Transformation Package} (GCTP) from the USGS National
+Mapping Division. A number of global attributes are dedicated to
+storing GCTP related parameters. For documentation on the allowed
+values of GCTP parameters, see \autoref{gctp}.  The table below lists
+the standard set of global attributes for Earth location metadata:
+
+\begin{tabular}{|l|l|p{7.5cm}|l|}
+
+  \hline
+
+  Attribute name & HDF type & Description & Since version \\ \hline
+
+  {\tt projection\_type} $^{\dagger}$ & CHAR8 & The projection type: {\tt
+  mapped}, {\tt swath}, or {\tt sensor\_scan}. Mapped data is
+  formatted to a well-known map projection and accompanied by GCTP map
+  projection parameters. Swath data is data that is not in a standard
+  map projection, but is accompanied by Earth location data for each
+  pixel (see \autoref{swath} on swath data). Sensor scan data is similar
+  to swath in that it cannot be described by a set of map projection
+  parameters, but it can be described by a set of sensor-specific
+  parameters and does not require Earth locations to be stored for
+  each pixel. & 3.1 \\ \hline
+
+  {\tt projection}$^{\ddagger}$ & CHAR8 & For mapped data, a
+  descriptive projection name, for example {\tt mercator}, {\tt
+  geographic}, {\tt polar stereographic}. & 2.4 \\ \hline
+
+  {\tt gctp\_sys}$^{\ddagger}$ & INT32 & For mapped data, the GCTP
+  projection system code. & 2.4 \\ \hline
+
+  {\tt gctp\_zone}$^{\ddagger}$ & INT32 & For mapped data, the GCTP
+  zone for UTM projections. & 2.4 \\ \hline
+  
+  {\tt gctp\_parm}$^{\ddagger}$ & FLOAT64[~] & For mapped data, the
+  GCTP projection parameters (15). & 2.4 \\ \hline
+
+  {\tt gctp\_datum}$^{\ddagger}$ & INT32 & For mapped data, the GCTP
+  spheroid code. & 2.4 \\ \hline
+
+  {\tt et\_affine}$^{\ddagger}$ & FLOAT64[~] & For mapped data, the map
+  affine transform (6). & 2.4 \\ \hline
+
+  {\tt sensor\_code}$^{\ast}$ & INT32 & For sensor scan data, the
+  sensor code. The only code currently available is 0, which indicates
+  a geostationary satellite. & 3.3 \\ \hline
+
+  {\tt sensor\_parm}$^{\ast}$ & FLOAT64[~] & For sensor scan data, the
+  sensor parameters. For a geostationary satellite ({\tt
+  sensor\_code=0}):
+  \begin{enumerate}
+    \item Subpoint latitude in degrees (geocentric).
+    \item Subpoint longitude in degrees.
+    \item Distance of satellite from center of Earth in kilometers.
+    \item Scan step angle in row direction in radians.
+    \item Scan step angle in column direction in radians.
+  \end{enumerate}
+  & 3.3 \\ \hline 
+
+  {\tt rows}$^{\dagger}$ & INT32 & The number of rows of data. & 2.4
+  \\ \hline
+
+  {\tt cols}$^{\dagger}$ & INT32 & The number of columns of data. &
+  2.4 \\ \hline
+
+  {\tt polygon\_latitude} & FLOAT64[~] & Latitude components of the
+  bounding polygon with initial element repeated. & 3.2 \\ \hline 
+
+  {\tt polygon\_longitude} & FLOAT64[~] & Longitude components of the
+  bounding polygon with initial element repeated. & 3.2 \\ \hline
+
+\end{tabular}
+
+\begin{tabular}{|l|l|p{7.5cm}|l|}
+
+  \hline
+
+  Attribute name & HDF type & Description & Since version \\ \hline
+
+  {\tt raster\_type} & CHAR8 & One of {\tt RasterPixelIsArea} or {\tt
+  RasterPixelIsPoint} to capture the same distinction as the GeoTIFF
+  global attribute {\tt GTRasterTypeGeoKey}. If pixels represent point
+  data, then extra SDS variables {\tt latitude} and {\tt longitude} in
+  the dataset localize the point within the pixel area which otherwise
+  defaults to the pixel center. If absent, pixels are assumed to
+  represent area data. & 3.2 \\ \hline
+
+  {\tt region\_code} & CHAR8 & The data processing region code as a
+  short abbreviation. & 3.2 \\ \hline
+
+  {\tt region\_name} & CHAR8 & The data processing region name in
+  full. & 3.2 \\ \hline
+
+  {\tt station\_code} & CHAR8 & The data capture ground station as a
+  short abbreviation. & 3.2 \\ \hline
+
+  {\tt station\_name} & CHAR8 & The data capture ground station name
+  in full. & 3.2 \\ \hline
+
+\end{tabular} \\
+$^{\dagger}$This attribute is required. Other attributes are
+optional.\\
+$^{\ddagger}$Required for mapped data only.\\ 
+$^{\ast}$Required for sensor scan data only.
+
+\subsection{Version 2 Affine}
+
+The {\tt et\_affine} attribute is used by CoastWatch software to
+translate between map (x,y) coordinates in meters and image (row,col)
+coordinates. GCTP is used to translate between (lat,lon) in degrees
+and map (x,y) in meters. With this two-step process, the translation
+between image (row,col) and Earth location (lat,lon) is very flexible
+and can be expressed partly as a linear coordinate transform. The six
+affine transform parameters are used in a matrix equation as follows.
+Let $a..f$ be the {\tt et\_affine} attribute array values $0..5$,
+$(X,Y)$ be map coordinate easting and northing in meters, and $(R,C)$
+be 1-relative row and column image coordinates, then:
+\[
+  \left[ \begin{array}{c}
+           X \\
+           Y \\
+           1
+         \end{array}  
+  \right]
+  = 
+  \left[ \begin{array}{ccc}
+           a & b & e \\
+           c & d & f \\
+           0 & 0 & 1
+         \end{array}
+  \right]
+  \left[ \begin{array}{c}
+           C \\
+           R \\
+           1
+         \end{array}
+  \right]
+\]
+or alternatively:
+\begin{eqnarray*}
+  X & = & a C + b R + e \\
+  Y & = & c C + d R + f
+\end{eqnarray*}
+The inverse operation may be performed by inverting the affine transform: 
+\begin{eqnarray*}
+  \alpha & = & ad - bc \\
+   a' & = &  d / \alpha \\
+   b' & = & -b / \alpha \\
+   c' & = & -c / \alpha \\
+   d' & = &  a / \alpha \\
+   e' & = & -(a'e + b'f) \\
+   f' & = & -(c'e + d'f)
+\end{eqnarray*}
+\[
+  \left[ \begin{array}{c}
+           C \\
+           R \\
+           1
+         \end{array}  
+  \right]
+  = 
+  \left[ \begin{array}{ccc}
+           a' & b' & e' \\
+           c' & d' & f' \\
+           0 & 0 & 1
+         \end{array}
+  \right]
+  \left[ \begin{array}{c}
+           X \\
+           Y \\
+           1
+         \end{array}
+  \right]
+\]
+or alternatively:
+\begin{eqnarray*}
+  C & = & a' X + b' Y + e' \\
+  R & = & c' X + d' Y + f'
+\end{eqnarray*}
+
+\subsection{Version 3 Affine}
+
+The conventions of the {\tt et\_affine} attribute are slightly different
+in version 3 metadata. The affine transform is stored and used (in
+matrix form) as: 
+\[
+  \left[ \begin{array}{c}
+           X \\
+           Y \\
+           1
+         \end{array}  
+  \right]
+  = 
+  \left[ \begin{array}{ccc}
+           a & c & e \\
+           b & d & f \\
+           0 & 0 & 1
+         \end{array}
+  \right]
+  \left[ \begin{array}{c}
+           R \\
+           C \\
+           1
+         \end{array}
+  \right]
+\]
+or alternatively:
+\begin{eqnarray*}
+  X & = & a R + c C + e \\
+  Y & = & b R + d C + f
+\end{eqnarray*}
+where $(R,C)$ are 0-relative, {\bf not} 1-relative image coordinates.
+Deriving the inverse transform is similarly changed.
+
+\section{Variable Metadata}
+
+The following table shows the standard set of variable attributes for
+CoastWatch HDF. Some attribute groups are created by HDF SD
+convenience functions in order to make data more readable and usable
+by generic HDF viewing programs. A {\it $<$var$>$} in the {\em HDF
+Type} indicates that the attribute type is the same as the variable
+data type.
+
+\begin{tabular}{|l|l|p{7.5cm}|l|}
+
+  \hline 
+
+  Attribute name & HDF type & Description & Since version \\ \hline
+
+  {\tt long\_name}$^{\dagger}$ & CHAR8 & {\em Written
+  by SDsetdatastrs.} A descriptive variable name, for example {\tt
+  AVHRR channel 4}, {\tt sea surface temperature}. &2.4 \\ \hline
+
+  {\tt units}$^{\dagger}$ & CHAR8 & {\em Written by SDsetdatastrs.} A
+  descriptive units name in the conventions used by the
+  \href{http://my.unidata.ucar.edu/content/software/udunits/index.html}{Unidata
+  UDUNITS package} and its
+  \href{http://my.unidata.ucar.edu/content/software/udunits/udunits.txt}{supported
+  units} file. Many common units are acceptable (and various forms of
+  those units), for example {\tt kelvin}, {\tt celsius} and {\tt
+  fahrenheit} for temperature data, {\tt knots}, {\tt meters per
+  second} or {\tt m/s} for windspeed, {\tt mg per m\^{}-3} or {\tt
+  kg/m-3} for concentration, {\tt percent} or {\tt \%} for
+  reflectance, and {\tt degrees} or {\tt radians} for angles. & 2.4,
+  updated in 3.4 \\ \hline
+
+  {\tt format}$^{\dagger}$ & CHAR8 & {\em Written by SDsetdatastrs.} A
+  FORTRAN-77 style format string, for example {\tt F7.2}. & 2.4 \\
+  \hline
+
+  {\tt coordsys}$^{\dagger}$ & CHAR8 & {\em Written by SDsetdatastrs.}
+  A descriptive coordinate system name, the same as the global {\tt
+  projection} attribute. & 2.4 \\ \hline
+
+  {\tt \_FillValue} & {\it $<$var$>$} & {\em Written by
+  SDsetfillvalue.} The value used to fill in for missing or unwritten
+  data. & 2.4 \\ \hline
+
+  {\tt scale\_factor}$^{\ddagger}$ & FLOAT64 & {\em Written by
+  SDsetcal.} The calibration scale factor. & 2.4 \\ \hline
+
+  {\tt scale\_factor\_err}$^{\ddagger}$ & FLOAT64 & {\em Written by
+  SDsetcal.} The calibration scale error. & 2.4 \\ \hline
+
+  {\tt add\_offset}$^{\ddagger}$ & FLOAT64 & {\em Written by
+  SDsetcal.} The calibration offset. & 2.4 \\ \hline
+
+  {\tt add\_offset\_err}$^{\ddagger}$ & FLOAT64 & {\em Written by
+  SDsetcal.} The calibration offset error. & 2.4 \\ \hline
+
+  {\tt calibrated\_nt}$^{\ddagger}$ & INT32 & {\em Written by
+  SDsetcal.}  The HDF data type code for uncalibrated data. & 2.4 \\
+  \hline
+
+  {\tt C\_format}$^{\dagger}$ & CHAR8 & A C style format string, for
+  example {\tt \%7.2f}. & 2.4 \\ \hline
+
+  {\tt missing\_value} & {\it $<$var$>$} & The value used
+  to fill in for missing or unwritten data; same as {\tt
+  \_FillValue}. & 2.4 \\ \hline
+
+  {\tt fraction\_digits}$^{\dagger}$ & INT32 & The number of
+  significant digits after the decimal place for calibrated or
+  floating-point variable data. This is an alternative to the C or
+  FORTRAN notation for value formatting and is independent of the
+  programming language. & 3.1 \\ \hline
+
+  {\tt nav\_affine} & FLOAT64[~] & The navigation correction affine
+  transform. If absent, an identity transform is assumed. & 3.1 \\
+  \hline
+
+  {\tt direction\_variable} & CHAR8 & The name of the associated SDS
+  variable for vector direction. Any variable with this attribute is
+  assumed to be the magnitude component of a vector field, for which
+  the named variable is the direction component. The direction
+  component is encoded as degrees clockwise from north. & 3.2 \\
+  \hline
+
+\end{tabular}
+
+\begin{tabular}{|l|l|p{7.5cm}|l|}
+
+  \hline
+
+  Attribute name & HDF type & Description & Since version \\ \hline
+
+  {\tt direction\_convention} & CHAR8 & When this SDS variable is the
+  direction component of a vector, the convention for the direction is
+  either {\tt DirectionIsTo} or {\tt DirectionIsFrom} to indicate that
+  the direction indicates where to vectors are pointing to, or
+  pointing from. For example, wind direction is normally quoted as
+  where the wind is coming from, where as ocean currents are quoted as
+  where the current is moving towards. This attribute is only required
+  for direction component SDS variables (see the {\tt
+  direction\_variable} attribute). & 3.4 \\ \hline
+
+  {\tt quality\_flag} & CHAR8 & The name of the associated SDS
+  variable that contains quality flag information. & 3.2 \\ \hline
+
+  {\tt quality\_mask} & INT64 & The value to use as a mask in a
+  bitwise AND operation to isolate the quality bits in the SDS
+  variable named by the {\tt quality\_flag} attribute. & 3.2 \\ \hline
+
+  {\tt flag\_bits} & CHAR8 & The newline-separated list of flag
+  descriptions for each bit from least significant to most
+  significant. This is generally only required if this SDS variable
+  contains quality flag information for another SDS variable. Any
+  unused bits are denoted by {\tt Unused}. & 3.2 \\ \hline
+
+\end{tabular} \\
+$^{\dagger}$ This attribute is required. Other attributes are optional.\\ 
+$^{\ddagger}$ Required for calibrated data only. 
+
+\subsection{Calibration Values}
+
+The calibration attributes are used to read and write variable data as
+follows:
+\[
+\begin{array}{llll}
+  float & = & {\tt scale\_factor} (int - {\tt add\_offset}) &{\rm (on\;read)}\\
+  int & = & float / {\tt scale\_factor} + {\tt add\_offset} &{\rm (on\;write)}
+\end{array}
+\]
+where $float$ and $int$ are the floating-point and integer values
+respectively. See the HDF User's Guide for more details on data
+calibration. If no calibration data is found, the data is assumed to
+be already calibrated.
+
+\subsection{Navigation Correction}
+
+The navigation correction transform has 6 coefficients, similar to
+the global {\tt et\_affine} attribute, and is used (in matrix form)
+as:
+\[
+  \left[ \begin{array}{c}
+           R' \\
+           C' \\
+           1
+         \end{array}  
+  \right]
+  = 
+  \left[ \begin{array}{ccc}
+           a & c & e \\
+           b & d & f \\
+           0 & 0 & 1
+         \end{array}
+  \right]
+  \left[ \begin{array}{c}
+           R \\
+           C \\
+           1
+         \end{array}
+  \right]
+\]
+where$a..f$ are the {\tt nav\_affine} matrix coefficients in order and
+$(R',C')$ are the actual image coordinates at which the desired data
+value for $(R,C)$ may be found.
+
+\section{Swath Earth Location Encoding}
+\label{swath}
+
+There are currently two methods for specifying Earth location data for
+CoastWatch HDF swath files: 
+\begin{enumerate}
+
+  \item \textbf{Explicit encoding:} Two standard 2D HDF SDS variables
+  named {\tt latitude} and {\tt longitude} are written to the
+  file. Each variable must be accompanied with appropriate metadata as
+  outlined above. The latitude and longitude data must not have any
+  values set to the missing or fill value, or problems may occur in
+  performing Earth coordinate transformations.
+
+  \item \textbf{Polynomial encoding:} A number of 1D HDF SDS variables
+  named {\em swath\_struct}, {\em swath\_bounds}, {\em swath\_lat},
+  and {\em swath\_lon} are used to define data structures for use in a
+  polynomial approximation algorithm that supports an efficient and
+  accurate estimation of latitude and longitude values for the swath
+  data.
+
+\end{enumerate}
+The polynomial encoding option is described in this section. The
+polynomial approximation scheme is given, along with details on the
+required HDF variables.
+
+The easiest approach to swath Earth location encoding is to simply
+record latitude and longitude values for every data value in the
+swath. For a typical AVHRR swath size of 2048$\times$5000, this can
+add about 80 Mb of extra data to a file using 32-bit floating point
+values. To convert a data (row,col) coordinate to geographic (lat,lon)
+coordinate, an application simply reads the (lat,lon) data at the
+specified coordinate from the file. This method requires either a
+large amount of file I/O or a large amount of memory, depending on how
+much of the Earth location data is read at once. It also does not lend
+itself to an efficient reverse lookup algorithm for converting an
+arbitrary (lat,lon) back to (row,col).
+
+In order to support swath data in CoastWatch HDF files but avoid the
+overhead of storing the Earth locations, a polynomial approximation
+scheme is used. The approximation scheme also lends itself to an
+efficient reverse lookup algorithm. The approximation divides the data
+into a number of rectangular partitions of varying size in rows and
+columns but bounded physical size in kilometres. For a typical AVHRR
+swath whose resolution is lowest at the left and right edge of the
+image data, the rectangular partitioning may look something like
+\autoref{partition}.
+
+\begin{figure}
+  \begin{center}
+    \myfigure{partition}
+    \caption[A partitioning of AVHRR swath data]{
+      A partitioning of AVHRR swath data.  Each partition has a bounded
+      physical size in the lines and samples directions.
+    }
+    \label{partition}
+  \end{center}
+\end{figure}
+
+The approximation derives a set of bivariate polynomials on each
+partition for latitude and longitude estimation. To convert a
+(row,col) coordinate to (lat,lon), the partitions are first searched
+for the one containing the data coordinate. Using the polynomials for
+that partition, latitude and longitude are calculated for the data
+coordinate using the polynomial coefficients. By bounding the physical
+size of each partition, it is possible to bound the error in latitude
+and longitude estimation. For a typical AVHRR pass, it has been found
+that a 100 km maximum partition size yields a maximum error of
+approximately 50 m in Earth location.
+
+The polynomial approximation scheme used is as follows. For each
+partition, nine latitude and longitude values are sampled in a
+3$\times$3 grid pattern as shown in \autoref{grid}.  The (row,col)
+coordinates and (lat,lon) data values are used to derive two
+independent sets of 9 polynomial coefficients, one set for latitude
+and one set for longitude. These coefficients, denoted $a_0 .. a_8$
+and $b_0 .. b_8$ can be used to recover the latitude and longitude
+values using the formulae:
+\begin{eqnarray*}
+  lat(x,y) & = & a_0 + a_1 x + a_2 x^2 + 
+             a_3 y + a_4 x y + a_5 x^2 y + 
+             a_6 y^2 + a_7 x y^2 + a8 x^2 y^2 \\
+  lon(x,y) & = & b_0 + b_1 x + b_2 x^2 + 
+             b_3 y + b_4 x y + b_5 x^2 y + 
+             b_6 y^2 + b_7 x y^2 + b_8 x^2 y^2 \\
+\end{eqnarray*}
+where $x$ is the image row and $y$ is the image column. Note that the
+polynomial approximation also acts to interpolate (lat,lon)
+coordinates between integer data coordinates, since there are no
+requirements on $x$ and $y$ to be integers in the above equations. This is
+important for the accuracy of the reverse-lookup algorithm described
+later.
+
+\begin{figure}
+  \begin{center}
+    \myfigure{grid}
+    \caption[Sampling pattern for polynomial approximation]{
+      Sampling pattern for polynomial approximation.  Each $\bullet$
+      symbol is a sampling point for latitude and longitude.
+    }
+    \label{grid}
+  \end{center}
+\end{figure}
+
+Since each partition is associated with its own set of coefficients, a
+simple algorithm to search for the appropriate partition for a data
+(row,col) coordinate is to loop through all partitions, checking the
+row and column bounds on each partition until one containing the
+desired (row,col) coordinate is found. If there are $n$ partitions, then
+the loop will perform $O(n)$ (where $O()$ denotes an {\em order of}
+upper bound relationship) partition bound checks. In order to avoid
+this, a binary tree is used to arrange the partitions in a
+hierarchical structure. The set of partitions with polynomial
+coefficients form the leaves of the tree. The relationship between
+parent and child nodes is such that each child is a binary
+sub-partition of the parent. In this way, a search through $n$
+partitions is replaced by a search down the binary tree through
+$O(\log n)$ partitions until a leaf is encountered. For encoding
+purposes, a binary tree structure may be encoded uniquely using a
+preorder traversal of its nodes. A {\tt 0} is used to encode a left
+child, and a {\tt 1} for a right child (the root is not recorded
+because we assume that the preorder traversal starts at the
+root). \autoref{binary} shows the binary tree for the encoding {\tt
+000111}.  A more complex example in \autoref{binary_complex} show
+the binary tree for the encoding {\tt 000111001101}.
+
+\begin{figure}
+  \begin{center}
+    \myfigure{binary}
+    \caption[Binary tree encoding example]{
+      Binary tree encoding example.  The tree is encoded under a
+      preorder traversal by the binary string {\tt 000111}.
+    }
+    \label{binary}
+  \end{center}
+\end{figure}
+
+\begin{figure}
+  \begin{center}
+    \myfigure{binary_complex}
+    \caption[A more complex binary tree encoding example]{
+      A more complex binary tree encoding example.  The tree is
+      encoded under a preorder traversal by the binary string {\tt
+      000111001101}.
+    }
+    \label{binary_complex}
+  \end{center}
+\end{figure}
+
+For a complete encoding of the swath including the polynomial
+coefficients for each leaf partition, all partition boundaries, and
+the binary tree structure, the following HDF variables are used:
+
+\begin{tabular}{|l|l|p{7.5cm}|}
+
+  \hline 
+  
+  Variable name & HDF type & Description \\ \hline 
+
+  {\tt swath\_struct} & INT8 & A preorder encoding of the binary
+  tree. The encoding bits are zero-padded at the end to the nearest
+  byte. \\ \hline
+
+  {\tt swath\_bounds} & FLOAT64 & Upper-left and lower-right (row,col)
+  bounds for each partition. All partition bounds are recorded,
+  including all leaf and non-leaf partitions in the tree. \\ \hline
+
+  {\tt swath\_lat} & FLOAT64 & Latitude polynomial coefficients for
+  each leaf partition. There are 9 coefficients stored for each
+  partition. \\ \hline
+
+  {\tt swath\_lon} & FLOAT64 & Longitude polynomial coefficients for
+  each leaf partition. There are 9 coefficients stored for each
+  partition. \\ \hline
+
+\end{tabular}
+
+This encoding may be used to re-create the tree structure and populate
+the tree with partition bound and polynomial information. For a
+typical AVHRR pass which might require 80 Mb of data if all (lat,lon)
+coordinates were pre-computed, this encoding only requires about 500
+kb using a maximum partition size of 100 km.
+
+Finally, the reverse-lookup algorithm to convert (lat,lon) coordinates
+back to (row,col) is as follows.  Define the following symbols:
+\begin{quote}
+  Let $T$ be a tolerance distance in kilometers. \\
+  Let $\overrightarrow{C}_g^{in}$ be the input geographic (lat,lon) 
+    coordinate. \\ 
+  Let $\overrightarrow{C}_d^{out}$ be the output data (row,col) coordinate. \\
+  Let $D_{\overrightarrow{C}_g}(\overrightarrow{C}_d)$ be a function that
+    computes the physical distance in kilometers between geographic 
+    coordinate $\overrightarrow{C}_g$ and data coordinate 
+    $\overrightarrow{C}_d$. \\
+  Let $N_r$ and $N_c$ be the total number of rows and columns. \\
+  Let $\overrightarrow{\nabla}_d$ be the gradient operator in data 
+    coordinates, $\overrightarrow{\nabla}_d = (\frac{\partial}{\partial r}, 
+    \frac{\partial}{\partial c})$. \\
+\end{quote}
+Now, initialize $\overrightarrow{C}_d^{out}$ and iterate until the
+tolerance is satisfied:
+\begin{quote}
+  $\overrightarrow{C}_d^{out} = (N_r/2, N_c/2)$ \\
+  $d = D_{\overrightarrow{C}_g^{in}}(\overrightarrow{C}_d^{out})$ \\
+  while $d > T$ \{ \\
+    \hspace*{0.5cm} $\overrightarrow{u} = \overrightarrow{\nabla}_d
+      D_{\overrightarrow{C}_g}(\overrightarrow{C}_d)$ \\
+    \hspace*{0.5cm} $\hat{u} = \overrightarrow{u} / |\overrightarrow{u}|$ \\
+    \hspace*{0.5cm} $\overrightarrow{C}_d^{out} = \overrightarrow{C}_d^{out}
+      - d \hat{u}$ \\
+    \hspace*{0.5cm} $d = D_{\overrightarrow{C}_g^{in}}(\overrightarrow{C}_d^{out})$ \\
+  \} 
+\end{quote}
+This algorithm is particularly well suited to be used with a
+polynomial approximation scheme for (lat,lon) because it can provide
+sub-pixel accuracy in the (row,col) coordinate. For example as part of
+a data resampling algorithm, once a fractional data coordinate is
+obtained for a given (lat,lon), nearest neighbour or bilinear
+interpolation may then be used to provide a smooth data resampling.
+
+\section{GCTP Appendices}
+\label{gctp}
+\begin{verbatim}
+Function Description
+********************
+
+gctp - Initializes projection transformation parameters and performs
+transformations.
+
+SYNTAX
+
+  FUNCTION gctp (incoor, insys, inzone, inparm, inunit, indatum, ipr,
+  efile, jpr, pfile, outcoor, outsys, outzone, outparm, outunit,
+  outdatum, fn27, fn83, iflg)
+
+  double incoor[2];
+  long *insys;
+  long *inzone;
+  double inparm[15];
+  long *inunit;
+  long *indatum;
+  long *ipr;
+  char efile[];
+  long *jpr;
+  char pfile[];
+  double outcoor[2];
+  long *outsys;
+  long *outzone;
+  double outparm[15];
+  long *outunit;
+  long *outdatum;
+  char fn27[];
+  char fn83[];
+  long *iflg;
+
+PARAMETERS
+
+* incoor (input, double, length(2))
+
+  Array of two input coordinates (X-Y, Longitude-Latitude,
+  Northing-Easting, etc) to be translated. The nature of the
+  coordinates is defined by insys, inzone, and inunit. The east-west
+  dimension (X, Longitude, Easting) is first followed by the
+  north-south (Y, latitude, Northing).
+
+* insys (input, long)
+
+  Defines the input projection system. Valid codes are:
+  = 0: GEO (Geographic)
+  = 1: UTM (Universal Transverse Mercator)
+  = 2: SPCS (State Plane Coordinates)
+  = 3: ALBERS (Albers Conical Equal Area)
+  = 4: LAMCC (Lambert Conformal Conic)
+  = 5: MERCAT (Mercator)
+  = 6: PS (Polar Stereographic)
+  = 7: POLYC (Polyconic)
+  = 8: EQUIDC (Equidistant Conic)
+  = 9: TM (Transverse Mercator)
+  = 10: STEREO (Stereographic)
+  = 11: LAMAZ (Lambert Azimuthal Equal Area)
+  = 12: AZMEQD (Azimuthal Equidistant)
+  = 13: GNOMON (Gnomonic)
+  = 14: ORTHO (Orthographic)
+  = 15: GVNSP (General Vertical Near-Side Perspective)
+  = 16: SNSOID (Sinusoidal)
+  = 17: EQRECT (Equirectangular)
+  = 18: MILLER (Miller Cylindrical)
+  = 19: VGRINT (Van der Grinten)
+  = 20: HOM (Hotine Oblique Mercator--HOM)
+  = 21: ROBIN (Robinson)
+  = 22: SOM (Space Oblique Mercator--SOM)
+  = 23: ALASKA (Modified Stereographic Conformal--Alaska)
+  = 24: GOOD (Interrupted Goode Homolosine)
+  = 25: MOLL (Mollweide)
+  = 26: IMOLL (Interrupted Mollweide)
+  = 27: HAMMER (Hammer)
+  = 28: WAGIV (Wagner IV)
+  = 29: WAGVII (Wagner VII)
+  = 30: OBLEQA (Oblated Equal Area)
+
+* inzone (input, long)
+
+  Input zone for UTM and State Plane projection systems. The UTM
+  Coordinate System (insys = 1) and State Plane Coordinate System
+  (insys = 2) use zone codes instead of specific projection parameters
+  (See Appendix B--UTM and Appendix C--State Plane). For Southern
+  Hemisphere UTM, use a negative zone code. Inzone will be ignored for
+  all other projections.
+
+* inparm (input, double, length(15))
+
+  Array of fifteen projection parameters. These parameters are
+  required to define each map projection.  (See Appendix A)
+
+* inunit (input, long)
+
+  Unit code for input coordinates. Valid unit codes are:
+  = 0: radians
+  = 1: U.S. feet
+  = 2: meters
+  = 3: seconds of arc
+  = 4: degrees of arc
+  = 5: International feet
+  = 6: Table supplying the unit code, which is legislated
+       for the State zone selected
+
+* indatum (input, long)
+
+  Input spheroid code. This identifies the semi-major axis and
+  eccentricity that is to be used in the transformation process. If a
+  negative spheroid code is entered, inparm elements 1 and 2 are to be
+  used (See Appendix A). Supported spheroids include:
+  = 0: Clarke 1866 (default)
+  = 1: Clarke 1880
+  = 2: Bessel
+  = 3: International 1967
+  = 4: International 1909
+  = 5: WGS 72
+  = 6: Everest
+  = 7: WGS 66
+  = 8: GRS 1980
+  = 9: Airy
+  = 10: Modified Everest
+  = 11: Modified Airy
+  = 12: WGS 84
+  = 13: Southeast Asia
+  = 14: Australian National
+  = 15: Krassovsky
+  = 16: Hough
+  = 17: Mercury 1960
+  = 18: Modified Mercury 1968
+  = 19: Sphere of Radius 6370997 meters
+
+  Note: State Plane projection (insys = 2) only supports Clarke 1866
+  (indatum = 0) and GRS 1980 (indatum = 8) spheroids corresponding to
+  datums NAD27 and NAD83 respectively (See Appendix B).
+
+* ipr (input, long)
+
+  Error message print flag. If ipr is zero, error messages will be
+  printed to the terminal. If ipr is one, error messages will be
+  printed to efile. If ipr is two, error messages will be printed to
+  both the terminal and efile. If ipr is something else, error
+  messages will not be printed.
+
+* efile (input, character, length(*))
+
+  The file which will contain the output error messages. efile need
+  not be opened at this time.
+
+* jpr (input, long)
+
+  Projection parameter print flag. If jpr is zero, projection
+  parameters will be printed to the terminal. If jpr is one,
+  projection parameters will be printed to pfile. If jpr is two,
+  projection parameters will be printed to both the terminal and
+  pfile. If jpr is something else, the projection parameters will not
+  be printed. As specified by jpr, Projection parameters are printed
+  each time the input projection parameters (insys, inzone, inparm,
+  inunit, indatum, outsys, outzone, outparm, outunit, and outdatum)
+  change.
+
+* pfile (input, character, length(*))
+
+  The file which will contain the output projection parameter
+  messages. pfile need not be opened at this time.
+
+* outcoor (output, double, length(2))
+
+  Array of two transformed coordinates. See incoor for an explanation.
+
+* outsys (input, long)
+
+  Defines the output projection system. See insys.
+
+* outzone (input, long)
+
+  Output zone for UTM and State Plane projection systems. The UTM
+  Coordinate System (outsys = 1) and State Plane Coordinate System
+  (outsys = 2) use zone codes instead of specific projection
+  parameters (See Appendix B--UTM and Appendix C--State Plane). For
+  Southern Hemisphere UTM, use a negative zone code. Outzone will be
+  ignored for all other projections.
+
+* outparm (input, double, length(15))
+
+  Array of fifteen projection parameters. These parameters are
+  required to define each map projection.  (See Appendix A)
+
+* outunit (input, long)
+
+  Unit code for output coordinates. See inunit.
+
+* outdatum (input, long)
+
+  Output spheroid code. See indatum.
+
+* fn27 (input, character, length(*))
+
+  Name of the file which contains the NAD 1927 State Plane zone
+  parameters.
+
+* fn83 (input, character, length(*))
+
+  Name of the file which contains the NAD 1983 State Plane zone
+  parameters.
+
+* iflg (output, long)
+
+  Error flag after transformation. The error number returned will
+  correspond to the specific error.
+
+DESCRIPTION
+
+  This routine initializes the proper projection parameters when
+  initialization is required. The proper informational and error
+  message handling is initialized. Then, the incoor coordinates are
+  converted from the insys map projection to the outsys map projection
+  and are returned in outcoor.
+
+RETURN VALUE
+
+  gctp() has no return value.
+
+
+Projection Transformation Package Projection Parameters
+*******************************************************
+
+  -----------------------------------------------------------------------------
+                          |                    Array Element                  |
+   Code & Projection Id   |----------------------------------------------------
+                          |   1  |   2  |  3   |  4   |   5   |    6    |7 | 8|
+  -----------------------------------------------------------------------------
+   0 Geographic           |      |      |      |      |       |         |  |  |
+   1 U T M                |Lon/Z |Lat/Z |      |      |       |         |  |  |
+   2 State Plane          |      |      |      |      |       |         |  |  |
+   3 Albers Equal Area    |SMajor|SMinor|STDPR1|STDPR2|CentMer|OriginLat|FE|FN|
+   4 Lambert Conformal C  |SMajor|SMinor|STDPR1|STDPR2|CentMer|OriginLat|FE|FN|
+   5 Mercator             |SMajor|SMinor|      |      |CentMer|TrueScale|FE|FN|
+   6 Polar Stereographic  |SMajor|SMinor|      |      |LongPol|TrueScale|FE|FN|
+   7 Polyconic            |SMajor|SMinor|      |      |CentMer|OriginLat|FE|FN|
+   8 Equid. Conic A       |SMajor|SMinor|STDPAR|      |CentMer|OriginLat|FE|FN|
+     Equid. Conic B       |SMajor|SMinor|STDPR1|STDPR2|CentMer|OriginLat|FE|FN|
+   9 Transverse Mercator  |SMajor|SMinor|Factor|      |CentMer|OriginLat|FE|FN|
+  10 Stereographic        |Sphere|      |      |      |CentLon|CenterLat|FE|FN|
+  11 Lambert Azimuthal    |Sphere|      |      |      |CentLon|CenterLat|FE|FN|
+  12 Azimuthal            |Sphere|      |      |      |CentLon|CenterLat|FE|FN|
+  13 Gnomonic             |Sphere|      |      |      |CentLon|CenterLat|FE|FN|
+  14 Orthographic         |Sphere|      |      |      |CentLon|CenterLat|FE|FN|
+  15 Gen. Vert. Near Per  |Sphere|      |Height|      |CentLon|CenterLat|FE|FN|
+  16 Sinusoidal           |Sphere|      |      |      |CentMer|         |FE|FN|
+  17 Equirectangular      |Sphere|      |      |      |CentMer|TrueScale|FE|FN|
+  18 Miller Cylindrical   |Sphere|      |      |      |CentMer|         |FE|FN|
+  19 Van der Grinten      |Sphere|      |      |      |CentMer|OriginLat|FE|FN|
+  20 Hotin Oblique Merc A |SMajor|SMinor|Factor|      |       |OriginLat|FE|FN|
+     Hotin Oblique Merc B |SMajor|SMinor|Factor|AziAng|AzmthPt|OriginLat|FE|FN|
+  21 Robinson             |Sphere|      |      |      |CentMer|         |FE|FN|
+  22 Space Oblique Merc A |SMajor|SMinor|      |IncAng|AscLong|         |FE|FN|
+     Space Oblique Merc B |SMajor|SMinor|Satnum|Path  |       |         |FE|FN|
+  23 Alaska Conformal     |SMajor|SMinor|      |      |       |         |FE|FN|
+  24 Interrupted Goode    |Sphere|      |      |      |       |         |  |  |
+  25 Mollweide            |Sphere|      |      |      |CentMer|         |FE|FN|
+  26 Interrupt Mollweide  |Sphere|      |      |      |       |         |  |  |
+  27 Hammer               |Sphere|      |      |      |CentMer|         |FE|FN|
+  28 Wagner IV            |Sphere|      |      |      |CentMer|         |FE|FN|
+  29 Wagner VII           |Sphere|      |      |      |CentMer|         |FE|FN|
+  30 Oblated Equal Area   |Sphere|      |Shapem|Shapen|CentLon|CenterLat|FE|FN|
+  -----------------------------------------------------------------------------
+  
+  Array elements 9-15 Continued on page 2
+
+
+
+
+    Projection Transformation Package Projection Parameters elements 9-15
+    continued from page 1:
+
+         ----------------------------------------------------
+                                 |      Array Element       |
+         Code & Projection Id    |---------------------------
+                                 |  9  | 10 |  11 | 12 | 13 |
+	 ----------------------------------------------------
+          0 Geographic           |     |    |     |    |    |
+          1 U T M                |     |    |     |    |    |
+          2 State Plane          |     |    |     |    |    |
+          3 Albers Equal Area    |     |    |     |    |    |
+          4 Lambert Conformal C  |     |    |     |    |    |
+          5 Mercator             |     |    |     |    |    |
+          6 Polar Stereographic  |     |    |     |    |    |
+          7 Polyconic            |     |    |     |    |    |
+          8 Equid. Conic A       |zero |    |     |    |    |
+            Equid. Conic B       |one  |    |     |    |    |
+          9 Transverse Mercator  |     |    |     |    |    |
+         10 Stereographic        |     |    |     |    |    |
+         11 Lambert Azimuthal    |     |    |     |    |    |
+         12 Azimuthal            |     |    |     |    |    |
+         13 Gnomonic             |     |    |     |    |    |
+         14 Orthographic         |     |    |     |    |    |
+         15 Gen. Vert. Near Per  |     |    |     |    |    |
+         16 Sinusoidal           |     |    |     |    |    |
+         17 Equirectangular      |     |    |     |    |    |
+         18 Miller Cylindrical   |     |    |     |    |    |
+         19 Van der Grinten      |     |    |     |    |    |
+         20 Hotin Oblique Merc A |Long1|Lat1|Long2|Lat2|zero|
+            Hotin Oblique Merc B |     |    |     |    |one |
+         21 Robinson             |     |    |     |    |    |
+         22 Space Oblique Merc A |PSRev|LRat|PFlag|    |zero|
+            Space Oblique Merc B |     |    |     |    |one |
+         23 Alaska Conformal     |     |    |     |    |    |
+         24 Interrupted Goode    |     |    |     |    |    |
+         25 Mollweide            |     |    |     |    |    |
+         26 Interrupt Mollweide  |     |    |     |    |    |
+         27 Hammer               |     |    |     |    |    |
+         28 Wagner IV            |     |    |     |    |    |
+         29 Wagner VII           |     |    |     |    |    |
+         30 Oblated Equal Area   |Angle|    |     |    |    |
+         ----------------------------------------------------
+
+  where 
+
+      Lon/Z     Longitude of any point in the UTM zone or zero.  If zero,
+                a zone code must be specified.
+      Lat/Z     Latitude of any point in the UTM zone or zero.  If zero, a
+                zone code must be specified.
+      SMajor    Semi-major axis of ellipsoid.  If zero, Clarke 1866 in meters
+                is assumed.
+      SMinor    Eccentricity squared of the ellipsoid if less than zero,
+                if zero, a spherical form is assumed, or if greater than
+                zero, the semi-minor axis of ellipsoid.
+      Sphere    Radius of reference sphere.  If zero, 6370997 meters is used.
+      STDPAR    Latitude of the standard parallel
+      STDPR1    Latitude of the first standard parallel
+      STDPR2    Latitude of the second standard parallel
+      CentMer   Longitude of the central meridian
+      OriginLat Latitude of the projection origin
+      FE        False easting in the same units as the semi-major axis
+      FN        False northing in the same units as the semi-major axis
+      TrueScale Latitude of true scale
+      LongPol   Longitude down below pole of map
+      Factor    Scale factor at central meridian (Transverse Mercator) or
+                center of projection (Hotine Oblique Mercator)
+      CentLon   Longitude of center of projection
+      CenterLat Latitude of center of projection
+      Height    Height of perspective point
+      Long1     Longitude of first point on center line (Hotine Oblique
+                Mercator, format A)
+      Long2     Longitude of second point on center line (Hotine Oblique
+                Mercator, format A)
+      Lat1      Latitude of first point on center line (Hotine Oblique
+                Mercator, format A)
+      Lat2      Latitude of second point on center line (Hotine Oblique
+                Mercator, format A)
+      AziAng    Azimuth angle east of north of center line (Hotine Oblique
+                Mercator, format B)
+      AzmthPt   Longitude of point on central meridian where azimuth occurs
+                (Hotine Oblique Mercator, format B)
+      IncAng    Inclination of orbit at ascending node, counter-clockwise
+                from equator (SOM, format A)
+      AscLong   Longitude of ascending orbit at equator (SOM, format A)
+      PSRev     Period of satellite revolution in minutes (SOM, format A)
+      LRat      Landsat ratio to compensate for confusion at northern end
+                of orbit (SOM, format A -- use 0.5201613)
+      PFlag     End of path flag for Landsat:  0 = start of path,
+                1 = end of path (SOM, format A)
+      Satnum    Landsat Satellite Number (SOM, format B)
+      Path      Landsat Path Number (Use WRS-1 for Landsat 1, 2 and 3 and
+                WRS-2 for Landsat 4, 5 and 6.)  (SOM, format B)
+      Shapem    Oblated Equal Area oval shape parameter m
+      Shapen    Oblated Equal Area oval shape parameter n
+      Angle     Oblated Equal Area oval rotation angle
+
+                                   NOTES
+
+   Array elements 14 and 15 are set to zero
+   All array elements with blank fields are set to zero
+   All angles (latitudes, longitudes, azimuths, etc.) are entered in packed
+        degrees/ minutes/ seconds (DDDMMMSSS.SS) format
+
+
+
+
+   The following notes apply to the Space Oblique Mercator A projection.
+
+      A portion of Landsat rows 1 and 2 may also be seen as parts of rows
+   246 or 247.  To place these locations at rows 246 or 247, set the end of
+   path flag (parameter 11) to 1--end of path.  This flag defaults to zero.
+
+      When Landsat-1,2,3 orbits are being used, use the following values
+   for the specified parameters:
+
+      Parameter 4   099005031.2
+      Parameter 5   128.87 degrees - (360/251 * path number) in packed
+		    DMS format
+      Parameter 9   103.2669323
+      Parameter 10  0.5201613
+
+      When Landsat-4,5 orbits are being used, use the following values
+   for the specified parameters:
+
+      Parameter 4   098012000.0
+      Parameter 5   129.30 degrees - (360/233 * path number) in packed
+		    DMS format
+      Parameter 9   98.884119
+      Parameter 10  0.5201613
+
+
+UTM Zone Codes
+**************
+
+The Universal Transverse Mercator (UTM) Coordinate System uses zone codes 
+instead of specific projection parameters.  The table that follows lists 
+UTM zone codes as used by GCTPc Projection Transformation Package.
+
+
+    Zone    C.M.       Range      Zone         C.M.            Range
+    ----    ----       -----      ----         ----            -----  
+     01     177W     180W-174W     31          003E          000E-006E
+     02     171W     174W-168W     32          009E          006E-012E
+     03     165W     168W-162W     33          015E          012E-018E
+     04     159W     162W-156W     34          021E          018E-024E
+     05     153W     156W-150W     35          027E          024E-030E
+     06     147W     150W-144W     36          033E          030E-036E
+     07     141W     144W-138W     37          039E          036E-042E
+     08     135W     138W-132W     38          045E          042E-048E
+     09     129W     132W-126W     39          051E          048E-054E
+     10     123W     126W-120W     40          057E          054E-060E
+     11     117W     120W-114W     41          063E          060E-066E
+     12     111W     114W-108W     42          069E          066E-072E
+     13     105W     108W-102W     43          075E          072E-078E
+     14     099W     102W-096W     44          081E          078E-084E
+     15     093W     096W-090W     45          087E          084E-090E
+     16     087W     090W-084W     46          093E          090E-096E
+     17     081W     084W-078W     47          099E          096E-102E
+     18     075W     078W-072W     48          105E          102E-108E
+     19     069W     072W-066W     49          111E          108E-114E
+     20     063W     066W-060W     50          117E          114E-120E
+     21     057W     060W-054W     51          123E          120E-126E
+     22     051W     054W-048W     52          129E          126E-132E
+     23     045W     048W-042W     53          135E          132E-138E
+     24     039W     042W-036W     54          141E          138E-144E
+     25     033W     036W-030W     55          147E          144E-150E
+     26     027W     030W-024W     56          153E          150E-156E
+     27     021W     024W-018W     57          159E          156E-162E
+     28     015W     018W-012W     58          165E          162E-168E
+     29     009W     012W-006W     59          171E          168E-174E
+     30     003W     006W-000E     60          177E          174E-180W
+
+     Obtained from Software Documentation for GCTP General Cartographic
+     Transformation Package: National Mapping Program Technical Instructions,
+     U.S. Geological Survey, National Mapping Division, Oct 1990,
+
+     Note:  The following source contains UTM zones plotted on a world map:
+
+        Snyder, John P.  Map Projections--A Working Manual:  U.S.
+        Geological Survey Professional Paper 1395 (Supersedes USGS
+        Bulletin 1532), United States Government Printing Office,
+        Washington D.C. 1987. p. 42.
+
+
+
+
+State Plane Zone Codes
+**********************
+
+     State Plane Coordinate System uses zone codes instead of specific
+     projection parameters.  The table that follows lists State Plane
+     zone codes as used by the GCTPc Projection Transformation Package.
+
+     Jurisdiction               Zone      Zone
+     Zone name or number        Code      Code
+     -------------------        -----     -----
+      Alabama
+          East                  0101     0101
+          West                  0102     0102
+     Alaska
+          01 through 10         5001     5001
+              thru              5010     5010
+     Arizona
+          East                  0201     0201
+          Central               0202     0202
+          West                  0203     0203
+     Arkansas
+          North                 0301     0301
+          South                 0302     0302
+     California
+          01 through 07         0401     0401
+              thru              0407     0406
+     Colorado
+          North                 0501     0501
+          Central               0502     0502
+          South                 0503     0503
+     Connecticut                0600     0600
+     Delaware                   0700     0700
+     District of Columbia       1900     1900
+     Florida
+          East                  0901     0901
+          West                  0902     0902
+          North                 0903     0903
+     Georgia
+          East                  1001     1001
+          West                  1002     1002
+     Hawaii
+          01 through 05         5101     5101
+              thru              5105     5105
+     Idaho
+          East                  1101     1101
+          Central               1102     1102
+          West                  1103     1103
+     Illinois
+          East                  1201     1201
+          West                  1202     1202
+     Indiana
+          East                  1301     1301
+          West                  1302     1302
+     Iowa
+          North                 1401     1401
+          South                 1402     1402
+     Kansas
+          North                 1501     1501
+          South                 1502     1502
+     Kentucky
+          North                 1601     1601
+          South                 1602     1602
+     Louisiana
+          North                 1701     1701
+          South                 1702     1702
+          Offshore              1703     1703
+     Maine
+          East                  1801     1801
+          West                  1802     1802
+     Maryland                   1900     1900
+     Massachusetts
+          Mainland              2001     2001
+          Island                2002     2002
+     Michigan
+          East(TM)              2101     ----
+          Central(TM)           2102     ----
+          West(TM)              2103     ----
+          North(Lam)            2111     2111
+          Central(Lam)          2112     2112
+          South(Lam)            2113     2113
+     Minnesota
+          North                 2201     2201
+          Central               2202     2202
+          South                 2203     2203
+     Mississippi
+          East                  2301     2301
+          West                  2302     2302
+     Missouri
+          East                  2401     2401
+          Central               2402     2402
+          West                  2403     2403
+     Montana                    ----     2500
+          North                 2501     ----
+          Central               2502     ----
+          South                 2503     ----
+     Nebraska                   ----     2600
+          North                 2601     ----
+          South                 2602     ----
+     Nevada
+          East                  2701     2701
+          Central               2702     2702
+          West                  2703     2703
+     New Hampshire              2800     2800
+     New Jersey                 2900     2900
+     New Mexico
+          East                  3001     3001
+          Central               3002     3002
+          West                  3003     3003
+     New York
+          East                  3101     3101
+          Central               3102     3102
+          West                  3103     3103
+          Long Island           3104     3104
+     North Carolina             3200     3200
+     North Dakota
+          North                 3301     3301
+          South                 3302     3302
+     Ohio
+          North                 3401     3401
+          South                 3402     3402
+     Oklahoma
+          North                 3501     3501
+          South                 3502     3502
+     Oregon
+          North                 3601     3601
+          South                 3602     3602
+     Pennsylvania
+          North                 3701     3701
+          South                 3702     3702
+     Rhode Island               3800     3800
+     South Carolina             ----     3900
+          North                 3901     ----
+          South                 3902     ----
+     South Dakota
+          North                 4001     4001
+          South                 4002     4002
+     Tennessee                  4100     4100
+     Texas
+          North                 4201     4201
+          North Central         4202     4202
+          Central               4203     4203
+          South Central         4204     4204
+          South                 4205     4205
+     Utah
+          North                 4301     4301
+          Central               4302     4302
+          South                 4303     4303
+     Vermont                    4400     4400
+     Virginia
+          North                 4501     4501
+          South                 4502     4502
+     Washington
+          North                 4601     4601
+          South                 4602     4602
+     West Virginia
+          North                 4701     4701
+          South                 4702     4702
+     Wisconsin
+          North                 4801     4801
+          Central               4802     4802
+          South                 4803     4803
+     Wyoming
+          East                  4901     4901
+          East Central          4902     4902
+          West Central          4903     4903
+          West                  4904     4904
+     Puerto Rico                5201     5200
+     Virgin Islands             ----     5200
+          St. John, St. Thomas  5201     ----
+          St. Croix             5202     ----
+     American Samoa             5300     ----
+     Guam                       5400     ----
+
+     Obtained from Software Documentation for GCTP General Cartographic
+     Transformation Package: National Mapping Program Technical Instructions,
+     U.S. Geological Survey, National Mapping Division, Oct 1990,
+
+     Note:  Equations for State Plane zones are given in:
+
+        Clarie, Charles N, State Plane Coordinates by Automatic Data
+        Processing, U.S. Department of Commerce, Environmental Science
+        Services Administration, Coast and Geodetic Survey, United States
+        Government Printing Office, Publication 62-4, 1973.
+\end{verbatim}

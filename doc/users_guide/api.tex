@@ -1,0 +1,410 @@
+\chapter{Programmer's API}
+\label{api}
+
+\section{How to use the API}
+
+Developers may want to use some of the same code used by the
+CoastWatch Utilities to read and write data, render images, or
+perform some variation on the existing functionality.  Since the
+CoastWatch Utilities are written almost entirely in Java
+(conforming to the Java 5 language spec), the Java Application
+Programming Interface (API) documentation is available in the
+standard Javadoc-generated HTML web page format, included with the
+CoastWatch Utilities distribution package as the compressed
+{\file doc/api.zip} file in the installation directory.  Users of
+the graphical installers on Windows, Mac, and some Unix versions
+have to manually check off the ``Source code and API docs'' when
+the package is installed in order to get the API zip file (you
+also get the full source code {\file src.zip} file whose Java code
+files serve as examples of using the API).  Unzipping the API
+file creates a new directory with an {\file index.html} file to
+use as the starting point for all API documentation.  The Javadoc
+is fairly verbose and can be used as a reference for all Java
+classes in the software, along with this chapter which provides a
+high-level overview of the main classes.
+
+In order to effectively develop your own Java code that uses the
+CoastWatch API and link it to the CoastWatch libraries, you
+should be familiar with using the Java compiler, JAR files, how
+to navigate through Javadoc pages, and possibly be familiar with
+automated code compiling tools such as Ant.  There are a number
+of directories and files in the installation that are of use to
+developers:
+\begin{description}
+
+\item[{\file lib/}] -- Contains the main {\file cwf.jar} file of
+CoastWatch Utilities code, plus all JAR files required by the
+CoastWatch code.  The major dependencies are as follows:
+\begin{itemize}
+
+\item Alloy Look and Feel (used for Unix GUI only):\\
+{\file alloy.jar}
+
+\item GeoTools (shapefile support):\\
+{\file geoapi-1.1.0alpha.jar}\\
+{\file gt2-main-nojai.jar}\\
+{\file gt2-shapefile.jar}\\
+{\file JTS-1.4.jar}
+
+\item GIF encoding: \\
+{\file neuquant.jar} (neural net color quantization) \\
+{\file gifencoder.jar} (actual format encoder) \\
+{\file kd.jar} (KD-tree color quantization)
+
+\item PDF encoding: \\
+{\file itext-1.2.jar}
+
+\item XML parsing: \\
+{\file jaxen-full.jar} \\
+{\file saxpath.jar}
+
+\item C-style print formatting:\\
+{\file hb16.zip}
+
+\item Command line argument parsing:\\
+{\file jargs.jar}
+
+\item Java Advanced Imaging CODEC (mainly for GeoTIFF encoding):\\
+{\file jai\_codec.jar}
+
+\item Mathematical expression parsing:\\
+{\file jep-2.24.jar}
+
+\item Plotting symbols:\\
+{\file PlotPackage.jar}
+
+\item Java matrix manipulation:\\
+{\file Jama-1.0.1.jar}
+
+\item HDF native library stubs:\\
+{\file jhdf.jar}
+
+\item Unidata UDUNITS support:\\
+{\file udunits.jar}
+
+\item NetCDF Java support:\\
+{\file bzip2.jar}\\
+{\file commons-httpclient-2.0.1.jar}\\
+{\file commons-logging.jar}\\
+{\file dods-1.1.7.jar}\\
+{\file gnu-regexp-1.1.4.jar}\\
+{\file grib.jar}\\
+{\file jdom-b9.jar}\\
+{\file jpeg2000.jar}\\
+{\file netcdf-2.2.jar}\\
+{\file visad.jar}
+
+\item Terrenus HRPT interfaces for NOAA1b instrument data:\\
+{\file hrpt.jar}
+
+\end{itemize}
+
+\item[{\file lib/aix},{\file linux},{\file macosx},{\file solaris},{\file
+win32}/] -- Native libraries for various operating systems.  C
+language code has been compiled to native binary libraries and
+linked to Java via JNI in cases where no Java libraries existed.
+Native libraries include HDF 4 file I/O, CoastWatch IMGMAP (.cwf)
+file I/O, and GCTP map projection coordinate transformations.
+
+\end{description}
+
+To use the API, you {\em must} have the {\file cwf.jar} file in
+your Java class path to compile and run custom code, for example
+on Unix:
+\begin{verbatim}
+  javac -classpath ~/cwf/lib/cwf.jar MyCode.java
+  java -classpath  .:~/cwf/lib/cwf.jar MyCode
+\end{verbatim}
+Depending on what CoastWatch classes are used in the
+{\file MyCode.java} code, other JAR files as listed above may also
+need to be in the Java class path, and as well native library
+directories may need to be in the dynamic link path.  For example
+using a Unix bash shell under Mac OS X, this code fragment sets
+up the environment for compiling and running with the CoastWatch
+Utilities:
+\begin{verbatim}
+  cwfroot="/Applications/CoastWatch Utilities 3.2.2"
+  CLASSPATH="."
+  for fname in "$cwfroot"/lib/*.jar "$cwfroot"/lib/*.zip ; do 
+    CLASSPATH=${CLASSPATH}:"$fname"
+  done
+  export CLASSPATH
+  export DYLD_LIBRARY_PATH="$cwfroot"/lib/macosx
+\end{verbatim}
+If you prefer to use a GUI development environment such as
+Eclipse or JBuilder, then the GUI will have settings to store the
+class and native library paths for the current project.
+CoastWatch Utilities development is currently performed using Ant
+for the build/test cycle and ej-technologies install4j product
+(see \url{www.ej-technologies.com}) for building multi-platform
+installation packages and launching the various Java programs.
+
+The rest of this chapter is dedicated to describing the main
+packages available in the API as follows:
+\begin{description}
+
+\item[{\java noaa.coastwatch.io}] -- I/O classes for satellite and
+other geographic data formats.
+
+\item[{\java noaa.coastwatch.render}] -- Utility classes for
+transforming geographic data into images.
+
+\item[{\java noaa.coastwatch.gui}] -- Graphical classes for custom
+user interface components.
+
+\item[{\java noaa.coastwatch.util}] -- General utility classes for
+working with geographic data arrays and performing numerical
+operations.
+
+\item[{\java noaa.coastwatch.tools}] -- Main program classes for
+all GUI and command line tools.
+
+\end{description}
+
+\section{Data I/O}
+
+The {\java noaa.coastwatch.io} package contains a number of classes for
+performing I/O with satellite and geographic data formats.  The
+superclasses and static method classes for most of the functionality
+are as follows:
+\begin{description}
+
+\item[{\java EarthDataReader}]~\\ Reads various formats of
+geographic data.  The data reader classes read global information
+about the data file such as the date and time of the data, what
+sensor or model it came from, what organization
+gathered/processed the data, and how to transform data array
+coordinates into geographic locations on the earth.  The reader
+classes also report back on a list of n-dimensional ``variables''
+that hold numerical data.  The {\java CWFReader}, {\java HDFReader},
+{\java NOAA1bReader}, and {\java OpendapReader} are all examples of
+{\java EarthDataReader} classes.
+
+\item[{\java EarthDataWriter}]~\\ Writes various formats of
+geographic data.  Just as the data reader classes read global
+information and variables, the data writers construct from some
+global information and set of variables, and then write out the
+numerical data to a specific format.  The {\java BinaryWriter},
+{\java HDFWriter}, and {\java TextWriter} are all examples of {\java
+EarthDataWriter} classes.
+
+\item[{\java EarthImageWriter}]~\\ Writes various color image
+formats of geographic data.  Unlike the data writer classes, the
+{\java EarthImageWriter} (i) has no subclasses and (ii) only writes
+color pixel data to an output file rather than numerical data.
+Image formats include PNG, JPEG, GeoTIFF, GIF, and PDF.  The {\java
+EarthImageWriter} makes use of {\java GeoTIFFWriter}, {\java
+GIFWriter}, and {\java WorldFileWriter} to perform parts of its
+job.
+
+\item[{\java CachedGrid}]~\\ Reads 2D numerical data using a
+least-recently-used caching strategy.  Data format specific
+subclasses of {\java CachedGrid} form the basis of most of the
+high-performance I/O operation in the CoastWatch Utilities.  {\java
+CWFCachedGrid}, {\java HDFCachedGrid}, and {\java NOAA1bCachedGrid}
+are all subclasses.  The {\java OpendapGrid} class is not part of
+the {\java CachedGrid} hierarchy but performs some similar
+operations for OPeNDAP data sources.
+
+\item[{\java EarthDataReaderFactory}]~\\ Perhaps one of the most
+useful classes, the reader factory has one static method, {\java
+create()}, that takes a data file name, automatically identifies
+the file format, and returns an {\java EarthDataReader} object.
+The reader factory has a special property: it can be extended to
+read data formats that are not supported by the standard
+CoastWatch Utilities distribution.  To add your own data format
+support to CDAT and the CoastWatch Utilities command line tools,
+simply subclass {\java EarthDataReader}, place the compiled code
+into a JAR file in the {\file lib/} directory, and add the name
+of your subclass to the {\file extensions/reader.properties}
+file.  Most tools in the package use {\java
+EarthDataReaderFactory.create()} for data reading, so your custom
+data format will be easy to incorporate into most tool
+operations.  In case of problems with automatic file
+identification, use the \hyperlink{cwinfo}{cwinfo} tool with
+\shortoption{v} option to print verbose messages during the file
+identification process.
+
+\end{description}
+
+\section{Data rendering}
+
+The {\java noaa.coastwatch.render} package is the heart of all
+rendering operations: converting 2D numerical geographic data
+arrays to a color image (palettes, enhancement functions),
+drawing line, symbol, and text overlays, and drawing legends
+(logos, icons, text, color scales) The main classes are as
+follows:
+\begin{description}
+
+\item[{\java EarthDataView}]~\\ Renders 2D geographic data to a
+color image.  The data view classes take numerical data and
+convert it to colors using various schemes: {\java
+ColorEnhancement} uses a color palette and enhancement function
+where as {\java ColorComposite} uses three enhancement functions,
+one each for the red, green and blue components of the output
+color.
+
+\item[{\java EarthDataOverlay}]~\\ Renders line, mask, symbol,
+and text overlays for an {\java EarthDataView} object.  There are
+more than a dozen concrete overlay classes for all different
+purposes: {\java MaskOverlay}, {\java TextOverlay}, {\java
+CoastOverlay}, {\java TopographyOverlay}, {\java LatLonOverlay},
+and so on.  Each overlay class draws graphics to the view by
+implementing the {\java render()} method and in some cases uses
+only the data view properties and other cases uses supplementary
+data such as coastline segment data or topographic elevation
+data.
+
+\item[{\java Legend}]~\\ Renders legends for plots with
+information such as color scaling, date and time of the data,
+geographic location and projection.  The two classes of legends
+are {\java DataColorScale} and {\java EarthPlotInfo}, mainly to
+accompany the output from an {\java EarthDataView}.
+
+\item[{\java Feature}]~\\ Stores the geometry of some geographic
+feature, along with a set of attributes attached to the feature.
+The concrete feature classes are {\java PointFeature}, {\java
+LineFeature}, and {\java PolygonFeature} to handle those major
+feature types.
+
+\item[{\java FeatureSource}]~\\ Reads or creates a set of
+features from some geographic data source.  There are many
+concrete feature sources for various data including {\java
+BinnedGSHHSReader} for reading GSHHS coastline polygon data,
+{\java ContourGenerator} for generating contour line features
+from numerical data, and inner classes of {\java
+ESRIShapefileReader} for extracting features from ESRI shapefile
+format files.
+
+\item[{\java PointFeatureSymbol}]~\\ Draws symbol graphics, mainly
+for use with an {\java EarthDataView} in the context of a {\java
+PointFeatureOverlay}.  The {\java ArrowSymbol} and {\java
+WindBarbSymbol} are examples of concrete symbol classes for
+drawing vector wind and current fields.
+
+\item[{\java EnhancementFunction}]~\\ Specifies the functional
+form for mapping data values to a normalized range of $[0..1]$
+for use with a {\java Palette} in a {\java ColorEnhancement}.
+{\java LinearEnhancement}, {\java StepEnhancement}, and {\java
+LogEnhancement} are all types of functions.  The {\java
+EnhancementFunctionFactory} is useful for creating enhancement
+functions from a text specification and range.
+
+\item[{\java Palette}]~\\ Holds a set of colors for use in a
+{\java ColorEnhancement}.  The {\java PaletteFactory} is useful
+for obtaining one of many predefined palettes, mostly derived
+from IDL but also some special-purpose CoastWatch palettes.
+
+\end{description}
+
+\section{Graphical user interface components}
+
+The {\java noaa.coastwatch.gui} package is the largest and most
+complex package in the CoastWatch Utilities, and provides all the
+GUI components for the \hyperlink{cdatchap}{CoastWatch Data
+Analysis Tool}, \hyperlink{cwmaster}{CoastWatch Master Tool
+(cwmaster)}, and \hyperlink{cwstatus}{CoastWatch Status Tool
+(cwstatus)} using Java Swing for platform-dependent look and
+feel.  There are far too many classes to describe here, but the
+following are some of the more general and re-usable classes:
+\begin{description}
+
+\item[{\java HTMLPanel}]~\\ Displays an HTML web page and allows
+for hyperlinks and page navigation (forward, back, top, etc).
+The panel is the basis of the {\gui Help and Support} menus in
+the graphical tools.
+
+\item[{\java EarthDataViewController}]~\\ Displays the contents
+of a {\java noaa.coastwatch.io.EarthDataReader} object in a panel
+and provides various other control panels for users to control
+the data view.  The controller is the basis for each tab in CDAT.
+
+\item[{\java MapProjectionChooser}]~\\ Lets you choose the
+specifications of a GCTP-style map projection.  This panel is
+used in the CoastWatch Master Tool.
+
+\item[{\java EarthDataChooser}]~\\ A panel and dialog for
+choosing {\java noaa.coastwatch.io.EarthDataReader} objects using
+either network or local file access and showing a variable
+preview image.
+
+\item[{\java LightTable}]~\\ A general purpose drawing class that
+displays rubber band style graphics on top of another component
+for use in interactive drawing input.  This class is responsible
+for the rubber banding in CDAT during a zoom operation, or while
+drawing annotations and surveys.
+
+\item[{\java PaletteChooser}]~\\ Presents a list of {\java
+noaa.coastwatch.render.Palette} objects and lets you select one
+of them, showing a preview of the selected palette.
+
+\item[{\java FullScreenWindow}]~\\ Displays a component in a full
+screen window with a toolbar.  This class is used in CDAT for
+displaying the data view in full screen mode.
+
+\end{description}
+
+\section{General utility classes}
+
+The {\java noaa.coastwatch.util} package provides a number of
+general utility classes for working with geographic data:
+\begin{description}
+
+\item[{\java EarthLocation}]~\\ Holds a latitude and longitude
+value and allows for intelligently incrementing the values,
+formatting them to standard string representations, shifting
+datums, and computing the physical distance to other locations.
+
+\item[{\java DataLocation}]~\\ Holds an n-dimensional index for
+use in addressing a value in an {\java DataVariable}.
+
+\item[{\java EarthTransform}]~\\ Converts {\java DataLocation}
+objects to and from {\java EarthLocation} objects in order to tie
+data to a physical geographic space.  {\java MapProjection},
+{\java SwathProjection}, and {\java SensorScanProjection} are all
+examples of transforms.
+
+\item[{\java Function}]~\\ Maps a set of variables to a function
+value such that $y = f(x_1, x_2, x_3, ...)$.  {\java
+LagrangeInterpolator}, {\java BivariateEstimator}, and {\java
+noaa.coastwatch.render.EnhancementFunction} are examples of
+concrete {\java Function} classes.
+
+\item[{\java DataVariable}]~\\ Holds an n-dimensional array of
+data and allows for get/set of values, units conversion, value
+formatting, and statistics.  The variable has two concrete
+classes with specialized methods for their rank: {\java Line} for
+1D data, and {\java Grid} for 2D data.
+
+\item[{\java EarthDataInfo}]~\\ Holds information about a
+geographic dataset including the data source, the date and
+duration of data recording (possible more than one), and the
+{\java EarthTransform} object.
+
+\item[{\java LandMask}]~\\ Consults a land mask database to
+return true or false for the query: ``Is there land at location
+(lat,lon)?''.
+
+\item[{\java Statistics}]~\\ Computes statistics for a set of
+data values including the minimum, maximum, mean, standard
+deviation, median, and average deviation.  This class is used for
+all statistics computations in the CoastWatch Utilities.
+
+\item[{\java GridResampler}]~\\ Computes a resampling of 2D
+{\java Grid} data from one {\java EarthTransform} to another.
+There are two algorithms for resampling used by the concrete
+{\java InverseGridResampler} and {\java MixedGridResampler}
+classes.
+
+\end{description}
+
+\section{Main programs}
+
+The main program classes in the {\java noaa.coastwatch.tools}
+package include all the command line tools, graphical tools, and
+some supporting classes for preferences and user resources.  The
+main programs' source code are a reference for using the
+top-level API classes. See \autoref{manual} for the full manual
+pages for all main programs, and \autoref{common} for a
+category-based guide to using the programs.

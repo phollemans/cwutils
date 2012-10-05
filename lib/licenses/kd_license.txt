@@ -1,0 +1,7 @@
+No known license fo k-d tree implementation library.  Originally obtained
+from:
+
+http://www.cs.wlu.edu/~levy/kd/ReadMe
+
+Thanks go to Simon D. Levy (levy@cs.wlu.edu) for writing the code.
+

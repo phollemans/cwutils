@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Loop over each make file
+# ------------------------
+files=`find . -name Makefile -print`
+nativedir=`pwd`
+for fname in $files ; do
+  dir=`dirname $fname`  
+  echo -n "Making native code in $dir ... "
+  cd $nativedir/$dir
+  make distclean > /dev/null 2>&1
+  make install > /tmp/make.log 2>&1
+  if [ $? -ne 0 ] ; then
+    echo "FAILED"
+    cat /tmp/make.log
+    exit 2
+  else
+    echo "OK"
+  fi  
+  make clean > /dev/null 2>&1
+done
+
