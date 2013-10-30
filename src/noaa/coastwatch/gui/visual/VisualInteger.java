@@ -27,6 +27,9 @@ import java.lang.reflect.*;
 /**
  * The <code>VisualInteger</code> class represents an Integer as a
  * spinner.  When the spinner is modified, the Integer changes value.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class VisualInteger 
   extends AbstractVisualObject {

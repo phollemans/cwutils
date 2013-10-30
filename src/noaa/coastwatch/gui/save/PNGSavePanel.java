@@ -27,6 +27,9 @@ import noaa.coastwatch.util.*;
 /** 
  * The <code>PNGSavePanel</code> class allows the user to select save
  * options for PNG image files.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class PNGSavePanel
   extends ImageSavePanel {

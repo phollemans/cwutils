@@ -41,6 +41,9 @@ import noaa.coastwatch.util.*;
 /**
  * The Earth transform class translates between data coordinates and
  * geographic coordinates in latitude and longitude degrees.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public abstract class EarthTransform
   extends MetadataContainer

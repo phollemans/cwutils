@@ -56,7 +56,15 @@ import java.util.*;
  * using the native GCTP transformation library.  See the General
  * Cartographic Transformations Package ({@link GCTP}) class for
  * details on the projections constants and parameters.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
+ *
+ * @deprecated The native methods of GCTP are no longer supported.  Use
+ * the {@link noaa.coastwatch.util.trans.MapProjectionFactory} to create
+ * and work with map projections rather than this class.
  */
+@Deprecated
 public class GCTPProjection 
   extends MapProjection
   implements Cloneable {

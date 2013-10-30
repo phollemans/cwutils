@@ -38,6 +38,9 @@ import noaa.coastwatch.render.*;
  * GeoTIFF specification version 1.8.2 as obtained from the <a
  * href="http://www.remotesensing.org/geotiff/geotiff.html">RemoteSensing.Org</a>
  * website.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class GeoTIFFWriter {
 

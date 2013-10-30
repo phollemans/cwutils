@@ -42,6 +42,9 @@ import noaa.coastwatch.util.trans.*;
  * An Earth location represents a point using latitude and longitude
  * in degrees.  Unless otherwise specified, the latitude and longitude
  * are geodetic relative to the WGS84 datum.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class EarthLocation
   implements Cloneable {

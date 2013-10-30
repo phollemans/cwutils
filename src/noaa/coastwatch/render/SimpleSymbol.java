@@ -24,6 +24,9 @@ import jahuwaldt.plot.PlotSymbol;
 /**
  * A <code>SimpleSymbol</code> is a <code>PointFeatureSymbol</code>
  * that renders a <code>PlotSymbol</code> and optional text label.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class SimpleSymbol
   extends PointFeatureSymbol {

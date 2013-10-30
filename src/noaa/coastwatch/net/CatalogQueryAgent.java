@@ -26,6 +26,9 @@ import java.util.*;
  * A <code>CatalogQueryAgent</code> is an abstract class for
  * performing queries of earth data catalogs.  The catalog may be
  * queried using temporal and spatial criteria.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public abstract class CatalogQueryAgent {
 

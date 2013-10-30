@@ -23,6 +23,9 @@ import java.awt.*;
 /**
  * An image loading observer is capable of drawing small tiles of an
  * image as it is being loaded by an image loader.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public interface ImageLoaderObserver {
 

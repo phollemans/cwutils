@@ -271,6 +271,8 @@ import jargs.gnu.CmdLineParser.*;
  *
  * <!-- END MAN PAGE -->
  *
+ * @author Peter Hollemans
+ * @since 3.1.6
  */
 public class cwcoverage {
 

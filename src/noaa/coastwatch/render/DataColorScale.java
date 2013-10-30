@@ -40,6 +40,9 @@ import noaa.coastwatch.util.*;
  * colors from a color palette and tick marks at regular intervals for
  * the data values.  The data variable name and units are also printed
  * along side the scale.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class DataColorScale 
   extends Legend {
@@ -194,6 +197,12 @@ public class DataColorScale
       } // if
 
     } //for
+
+
+// FIXME: There is an issue somewhere in here that causes the annotation
+// to be rendered backwards and in the wrong position.  It only happens
+// on-screen on Max OS X (not on Windows, not testing on Linux yet).
+
 
     // Draw scale legend
     // -----------------

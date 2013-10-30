@@ -19,6 +19,9 @@ package noaa.coastwatch.gui.open;
 /**
  * The <code>StringFilter</code> interface specifies methods for
  * filtering an input string to an output string.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public interface StringFilter {
 

@@ -32,6 +32,9 @@ import noaa.coastwatch.util.*;
  * it is similar to swath in that the transformation of data
  * coordinates outside the data dimensions returns invalid Earth
  * locations.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class GeoVectorProjection 
   extends EarthTransform2D {

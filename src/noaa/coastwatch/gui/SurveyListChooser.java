@@ -61,6 +61,9 @@ import noaa.coastwatch.gui.visual.*;
  * object should perform some operation to obtain the survey input
  * information, and then pass it to the <code>addSurvey()</code>
  * method.<p>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class SurveyListChooser
   extends JPanel

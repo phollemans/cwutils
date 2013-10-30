@@ -25,6 +25,9 @@ import java.util.*;
  * some appripriate action in response.  Data transfer events are used
  * to signal the details of a data transfer, such as starting,
  * transfer progress, and ending.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.5
  */
 public interface DataTransferListener
   extends EventListener {

@@ -32,6 +32,9 @@ import noaa.coastwatch.io.*;
  * source used for bitmask data.  The {@link #setDataSource} method
  * should be called to set the bitmask data source prior to loading
  * any overlay groups that contain bitmask overlays.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class OverlayGroupManager {
 

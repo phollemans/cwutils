@@ -26,6 +26,9 @@ import noaa.coastwatch.render.*;
  * The renderable panel displays the output from a renderable object.
  *
  * @see noaa.coastwatch.render.Renderable
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public class RenderablePanel
   extends JPanel {

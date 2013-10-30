@@ -78,6 +78,9 @@ import noaa.coastwatch.util.trans.*;
  * with progress monitors.
  *
  * @see noaa.coastwatch.render.EarthDataView
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public class EarthDataViewPanel
   extends JPanel

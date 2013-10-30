@@ -58,6 +58,9 @@ import java.awt.*;
  * </pre>
  * In the example above, the tile count in both dimensions is 3, even
  * though some tiles are truncated due to the tile dimensions.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public class TilingScheme {
 

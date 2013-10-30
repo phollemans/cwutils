@@ -22,6 +22,9 @@ import java.awt.*;
 
 /**
  * The <code>CrossSymbol</code> class draws a cross for a point symbol.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.3
  */
 public class CrossSymbol
   extends PlotSymbol {

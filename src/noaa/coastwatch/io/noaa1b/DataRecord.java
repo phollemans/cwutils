@@ -25,6 +25,9 @@ import terrenus.instrument.*;
 /**
  * The <code>DataRecord</code> interface is for reading NOAA
  * 1b data records.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public interface DataRecord {
 

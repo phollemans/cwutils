@@ -42,6 +42,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   to the destination.</li>
  * 
  * </ol>
+ *
+ * @author Xiaoming Liu
+ * @since 3.3.0
  */
 public class ACSPOInverseGridResampler 
 	extends GridResampler{

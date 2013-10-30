@@ -7,9 +7,10 @@
   CHANGES: 2006/03/15, PFH, modified to use GUIServices.getIconButton()
            2006/11/01, PFH, modified layout of text field and buttons
            2006/12/24, PFH, limited visible array rows
+           2012/12/04, PFH, updated to use getSelectedValuesList()
            
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2012, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -35,6 +36,9 @@ import noaa.coastwatch.gui.*;
  * When the remove button is pressed, the highlighted items in the
  * list are removed.  The visual array supports arrays of primitive
  * types, and <code>String</code> objects.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class VisualArray 
   extends AbstractVisualObject {
@@ -243,7 +247,7 @@ public class VisualArray
 
     // Remove selected items
     // ---------------------
-    Object[] values = list.getSelectedValues();
+    Object[] values = list.getSelectedValuesList().toArray();
     DefaultListModel model = (DefaultListModel) list.getModel();
     for (int i = 0; i < values.length; i++)
       model.removeElement (values[i]);

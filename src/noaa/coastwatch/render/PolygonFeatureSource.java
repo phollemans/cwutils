@@ -38,6 +38,9 @@ import noaa.coastwatch.util.*;
  * well as lines.  Polygon features are maintained in a separate list,
  * so that line features and polygon features may be rendered
  * independently.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.4
  */
 public abstract class PolygonFeatureSource
   extends LineFeatureSource {

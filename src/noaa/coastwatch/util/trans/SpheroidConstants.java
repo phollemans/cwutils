@@ -20,6 +20,9 @@ package noaa.coastwatch.util.trans;
  * The <code>SpheroidConstants</code> class is an interface that
  * hold various Earth spheroid constants, including spheroid
  * index, names, and semi-major / semi-minor axes sizes.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public interface SpheroidConstants {
 

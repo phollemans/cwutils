@@ -24,6 +24,9 @@ package noaa.coastwatch.gui;
  * <code>stopRendering()</code> method.  Generally, delayed rendering
  * is only applicable if the component draws itself using a separate
  * rendering thread.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public interface DelayedRenderingComponent {
 

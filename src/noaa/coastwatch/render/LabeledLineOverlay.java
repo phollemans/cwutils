@@ -31,6 +31,9 @@ import noaa.coastwatch.util.trans.*;
  * an {@link EarthDataView}.  A labeled line is any line that has
  * a labeled value and some connected set of points to display
  * such as a line of latitude/longitude or a data contour line.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public abstract class LabeledLineOverlay 
   extends LineOverlay {

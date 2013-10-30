@@ -21,6 +21,9 @@ package noaa.coastwatch.util;
  * method to return the next data location.  This helps to save
  * allocating space for a new <code>DataLocation</code> object every
  * time the next location is needed.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public interface DataLocationIterator
   extends ResettableIterator {

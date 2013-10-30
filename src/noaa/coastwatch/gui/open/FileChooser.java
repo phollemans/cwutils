@@ -38,6 +38,9 @@ import noaa.coastwatch.gui.open.DirectoryLister.Entry;
  * current directory and file choice via property changes.  The file
  * property may have a null value if the user changes directories or
  * deselects the file.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class FileChooser
   extends JPanel {

@@ -29,6 +29,9 @@ import noaa.coastwatch.render.*;
  * of statistics as a histogram.  The x axis is labelled with a
  * user-specified label, and the y axes of the plot are labelled with
  * the normalized count.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class HistogramStatisticsPanel
   extends StatisticsPanel {

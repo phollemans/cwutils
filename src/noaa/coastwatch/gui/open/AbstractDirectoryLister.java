@@ -30,6 +30,9 @@ import java.util.*;
  *   <li>{@link DirectoryLister#getChild}</li>
  *   <li>{@link #buildEntryList}</li>
  * </ul>
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public abstract class AbstractDirectoryLister 
   implements DirectoryLister, Cloneable {

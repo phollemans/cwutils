@@ -146,6 +146,9 @@ import jargs.gnu.CmdLineParser.*;
  * </pre></p>
  *
  * <!-- END MAN PAGE -->
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public final class cdat
   extends JFrame {

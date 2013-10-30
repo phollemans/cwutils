@@ -28,6 +28,9 @@ import noaa.coastwatch.io.*;
  * The <code>GridContainerOverlay</code> interface marks overlays
  * that use one or more {@link Grid} objects to display their
  * graphics.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.8
  */
 public interface GridContainerOverlay {
 

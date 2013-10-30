@@ -25,6 +25,9 @@ import noaa.coastwatch.util.*;
 /**
  * The <code>AbstractFeatureSource</code> class supplies default
  * implementations for some <code>FeatureSource</code> methods.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public abstract class AbstractFeatureSource
   implements FeatureSource {

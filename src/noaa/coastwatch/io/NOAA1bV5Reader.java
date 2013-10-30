@@ -29,6 +29,9 @@ import noaa.coastwatch.io.NOAA1bReader.*;
  * MetOp data accidently also updated the version number.
  *
  * @see NOAA1bV4Reader
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class NOAA1bV5Reader
   extends NOAA1bV4Reader {

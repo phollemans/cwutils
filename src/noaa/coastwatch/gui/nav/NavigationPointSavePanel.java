@@ -37,6 +37,9 @@ import noaa.coastwatch.gui.*;
  * The <code>NavigationPointSavePanel</code> class allows the user to
  * choose a file name and parameters for saving a list of navigation
  * points.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class NavigationPointSavePanel 
   extends JPanel {

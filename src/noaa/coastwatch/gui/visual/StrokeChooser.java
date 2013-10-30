@@ -38,6 +38,9 @@ import noaa.coastwatch.gui.*;
  * used, and must have an integer line thicknesses and the dash
  * pattern given by an element of the <code>DASH_PATTERNS</code>
  * array.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class StrokeChooser
   extends JPanel {

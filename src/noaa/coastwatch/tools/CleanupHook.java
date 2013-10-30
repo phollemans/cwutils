@@ -28,6 +28,9 @@ import java.util.*;
  * registers itself to be run using the {@link
  * java.lang.Runtime#addShutdownHook} method.  Currently, the only
  * cleanup task is file deletion.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public class CleanupHook 
   implements Runnable {

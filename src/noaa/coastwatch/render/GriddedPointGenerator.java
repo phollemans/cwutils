@@ -30,6 +30,9 @@ import noaa.coastwatch.util.trans.*;
  * that area into point features whose Earth locations are derived
  * from the grids' Earth transform and whose attributes are the data
  * values at the grid point.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class GriddedPointGenerator
   extends PointFeatureSource {

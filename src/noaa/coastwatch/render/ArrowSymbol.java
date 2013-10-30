@@ -27,6 +27,9 @@ import noaa.coastwatch.util.trans.*;
 /**
  * A <code>ArrowSymbol</code> is a <code>PointFeatureSymbol</code>
  * that renders an arrow pointing in the direction of a vector quantity.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class ArrowSymbol
   extends DirectionSymbol {

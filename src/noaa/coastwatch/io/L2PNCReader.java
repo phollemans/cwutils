@@ -4,10 +4,10 @@
   PURPOSE: Reads L2P data through the NetCDF 4 interface.
    AUTHOR: X. Liu
      DATE: 2011/05/29
-  CHANGES: 
+  CHANGES: 2013/04/13, PFH, updated and corrected for latest L2P examples
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2011, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -33,6 +33,9 @@ import noaa.coastwatch.util.trans.*;
  * The <code>L2PNCReader</code> class reads Java NetCDF accessible
  * datasets and uses the L2P metadata conventions to parse
  * the attribute and variable data.
+ *
+ * @author Xiaoming Liu
+ * @since 3.3.0
  */
 public class L2PNCReader
   extends NCReader {
@@ -40,17 +43,8 @@ public class L2PNCReader
   // Constants
   // ---------
 
-  /** The data format description. */
-  private String DATA_FORMAT;
-  
   /** Swath polynomial size in kilometers. */
   public static final double SWATH_POLY_SIZE = 100.0;
-
-  /** Number of milliseconds in a day. */
-  private static final long MSEC_PER_DAY = (1000L * 3600L * 24L);
-  
-  /** Number of milliseconds in an hour. */
-  private static final long MSEC_PER_HOUR = (1000L * 3600L);
 
   /** The latitude variable name. */
   private static final String LAT_VAR = "lat";
@@ -58,72 +52,52 @@ public class L2PNCReader
   /** The longitude variable name. */
   private static final String LON_VAR = "lon";
 
-  /** The prototype variable name. */
-  private static final String PROTO_VAR = "lat";
+  /** ISO date format. */
+  private static final String ISO_DATE_FMT = "yyyyMMdd'T'HHmmss'Z'";
 
-  /** List of extra map projection metadata. */
-  private static final List MAP_METADATA = Arrays.asList (
-    new String[] {"region_code", "region_name"});
+  // Variables
+  // ---------
+  
+  /** The data format description. */
+  private String dataFormat;
 
   ////////////////////////////////////////////////////////////
 
   /** Gets the data format description. */
-  public String getDataFormat () { 
-
-    return (DATA_FORMAT + " version " + getMetaVersion());
-
-  } // getDataFormat
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Gets the metadata version for this dataset.
-   *
-   * @return the metadata version.  If no metadata attribute can be found,
-   * the metadata version is assumed to be 2.3.
-   */
-  public double getMetaVersion () {
-
-    // Get metadata attribute
-    // ----------------------
-    try {
-      String att = 
-        dataset.findGlobalAttribute ("cwhdf_version").getStringValue();
-      return (Double.parseDouble (att));
-    } // try
-    catch (Exception e) {
-      return (2.3);
-    } // catch
-
-  } // getMetaVersion
+  public String getDataFormat () { return (dataFormat); }
 
   ////////////////////////////////////////////////////////////
   
   /** Gets the Earth data info object. */
-  private EarthDataInfo getGlobalInfo () {
+  private EarthDataInfo getGlobalInfo() throws IOException {
+
+    // Check processing level
+    // ----------------------
+    String processing_level = (String) getAttribute ("processing_level");
+    if (!processing_level.equals ("L2P"))
+      throw new IOException ("Unsupported processing level: " + processing_level);
 
     // Get simple attributes
     // ---------------------
     String sat = (String) getAttribute ("platform");
-    String processor = (String) getAttribute ("title");
     String sensor = (String) getAttribute ("sensor");
     String origin = (String) getAttribute ("institution");
-    DATA_FORMAT = processor + " NC4";
-    String created = (String) getAttribute ("creation_date");
-    String history = "[" + processor + "] " + created;
+    String conventions = (String) getAttribute ("Conventions");
+    dataFormat = processing_level + " NetCDF 4 " + conventions;
+
+    String project = (String) getAttribute ("project");
+    String created = (String) getAttribute ("history");
+    String history = "[" + project + "] " + created;
 
     // Get time period list and transform
     // ----------------------------------
     List periodList = getPeriodList();
-    if (periodList == null)
-    	return null;
-    //periodList.add (new TimePeriod (new Date(100000), 20));
     EarthTransform transform = getTransform();
 
     // Create info object
     // ------------------
-    EarthDataInfo info = new SatelliteDataInfo (sat, sensor, periodList, transform, 
-        origin, history); // else
+    EarthDataInfo info = new SatelliteDataInfo (sat, sensor, periodList,
+      transform, origin, history);
 
     return (info);
 
@@ -132,49 +106,29 @@ public class L2PNCReader
   ////////////////////////////////////////////////////////////
 
   /** Gets the list of time periods. */
-  private List getPeriodList () {
+  private List getPeriodList () throws IOException {
 
     // Read data
     // ---------
-	String startDay = (String) getAttribute ("start_date");
-	String startTime = (String) getAttribute ("start_time");
-	String stopDay = (String) getAttribute ("start_date");
-	String stopTime = (String) getAttribute ("start_time");
-	
-	if(startDay == null || startTime ==null || stopDay == null || stopTime ==null)
-		return null;
-	
-	int startYear = Integer.parseInt(startDay.substring(0, 4));
-	int startMonth = Integer.parseInt(startDay.substring(5, 7));
-	int startDoM= Integer.parseInt(startDay.substring(8));
-	int stopYear = Integer.parseInt(stopDay.substring(0, 4));
-	int stopMonth = Integer.parseInt(stopDay.substring(5, 7));
-	int stopDoM= Integer.parseInt(stopDay.substring(8));
-	
-	int startHour = Integer.parseInt(startTime.substring(0, 2));
-	int startMin = Integer.parseInt(startTime.substring(3, 5));
-	int startSec = Integer.parseInt(startTime.substring(6, 8));
-	int stopHour = Integer.parseInt(stopTime.substring(0, 2));
-	int stopMin = Integer.parseInt(stopTime.substring(3, 5));
-	int stopSec = Integer.parseInt(stopTime.substring(6, 8));
-	
+    String startCoverage = (String) getAttribute ("time_coverage_start");
+    String endCoverage = (String) getAttribute ("time_coverage_end");
+    
     // Create date objects
     // -------------------
-    Calendar cal = new GregorianCalendar (startYear, startMonth-1, startDoM,
-    		startHour,startMin,startSec);
-    cal.setTimeZone (TimeZone.getTimeZone ("GMT"));
-    Date startDate = new Date (cal.getTimeInMillis());
+    Date startDate, endDate;
+    try {
+      startDate = DateFormatter.parseDate (startCoverage, ISO_DATE_FMT);
+      endDate = DateFormatter.parseDate (endCoverage, ISO_DATE_FMT);
+    } // try
+    catch (ParseException e) {
+      throw new UnsupportedEncodingException ("Cannot parse start/end dates");
+    } // catch
     
-    cal = new GregorianCalendar (stopYear, stopMonth-1, stopDoM,
-    		stopHour,stopMin,stopSec);
-    cal.setTimeZone (TimeZone.getTimeZone ("GMT"));
-    Date stopDate = new Date (cal.getTimeInMillis());
-
     // Create period list
     // ------------------
     List periodList = new ArrayList();
-    periodList.add (new TimePeriod (startDate,stopDate.getTime() - 
-    	      startDate.getTime()));
+    periodList.add (new TimePeriod (startDate, endDate.getTime() - 
+      startDate.getTime()));
 
     return (periodList); 
 	   
@@ -194,19 +148,20 @@ public class L2PNCReader
       int cols = lat.getDimensions()[Grid.COLS];
       int rows = lat.getDimensions()[Grid.ROWS];
       lon = getVariable (LON_VAR);
-      for(int i=0; i < cols; i++){ // no need to transfer all lon values???
-    	  for(int j=0; j < rows; j++){
-    		  DataLocation loc = new DataLocation(i,j);
-    		  double val = lon.getValue(loc);
-    		  if(val > 180) lon.setValue(loc, val-360.0);
-    	  }
-      }
+      DataLocation loc = new DataLocation (2);
+      for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++){
+          loc.set (Grid.ROWS, i);
+          loc.set (Grid.COLS, j);
+          double val = lon.getValue (loc);
+          if (val > 180) lon.setValue (loc, val-360.0);
+        } // for
+      } // for
       if (dataProjection) {
         trans = new DataProjection (lat, lon);
       } // if
       else {
-    	  trans = new L2PProjection (lat, lon, 1000,
-    			  new int[] {100,100});
+        trans = new L2PProjection (lat, lon, 1000, new int[] {100, 100});
       } // else
     } // try
     catch (Exception e) {
@@ -230,25 +185,14 @@ public class L2PNCReader
   /** Gets the list of variable names. */
   private String[] getVariableNames () {
 
-    // Get variable names
-    // ------------------
-    List variableList = dataset.getReferencedFile().getVariables();
-    List nameList = new ArrayList();
-    for (Iterator iter = variableList.iterator(); iter.hasNext(); ) {
-      Variable var = (Variable) iter.next();
-
-      // Check for coordinate variable
-      // -----------------------------
-      if (var.isCoordinateVariable()) continue;
-
-      // Check for correct dimensions
-      // ----------------------------
-      if (var.getRank() >= 2) {
-    	  nameList.add (var.getName());
-    	  
-      } // if
+    // Create list of 2D non-coordinate variables
+    // ------------------------------------------
+    List<String> nameList = new ArrayList<String>();
+    for (Variable var : dataset.getReferencedFile().getVariables()) {
+      if (var.getRank() >= 2 && !var.isCoordinateVariable())
+        nameList.add (var.getShortName());
     } // for
-
+    
     return ((String[]) nameList.toArray (new String[]{}));
 
   } // getVariableNames
@@ -272,7 +216,7 @@ public class L2PNCReader
     info = getGlobalInfo();
     if(info == null) throw new RuntimeException("no global info found");
 
-  } // CWNCReader constructor
+  } // L2PNCReader constructor
 
   ////////////////////////////////////////////////////////////
 
@@ -289,8 +233,7 @@ public class L2PNCReader
     // Get variable info
     // -----------------
     int varDims[] = var.getShape();
-    String name = var.getName();
-    int rank = var.getRank();
+    String name = var.getShortName();
     Class varClass = var.getDataType().getPrimitiveClassType();
     boolean isUnsigned = var.isUnsigned();
     
@@ -304,24 +247,14 @@ public class L2PNCReader
     if (longName == null) longName = "";
     String units = var.getUnitsString();
     if (units == null) units = "";
-    String formatStr = (String) getAttribute (var, "format");
-    if (formatStr == null) formatStr = "";
-
-    // Convert units
-    // -------------
     units = units.trim();
-    if (units.equals ("temp_deg_c")) units = "celsius";
-    else if (units.equals ("albedo*100%")) units = "percent";
-    else if (units.equals ("-")) units = "";
 
     // Get calibration
     // ---------------
-    double[] calInfo = new double[4];
-    int[] calType = new int[1];
     double[] scaling;
-    try {
-      Float scale = (Float)getAttribute (var, "scale_factor");
-      Float offset = (Float)getAttribute (var, "add_offset");
+    try { 
+      Number scale = (Number) getAttribute (var, "scale_factor");
+      Number offset = (Number) getAttribute (var, "add_offset");
       scaling = new double[] {scale.doubleValue(), offset.doubleValue()};
     } // try
     catch (Exception e) {
@@ -338,54 +271,10 @@ public class L2PNCReader
       missing = null;
     } // catch
 
-    // Convert missing value
-    // ---------------------
-    if (missing != null) {
-      Class missingClass;
-      try { 
-        missingClass = (Class) missing.getClass().getField (
-          "TYPE").get (missing);
-      } // try
-      catch (Exception e) {
-        throw new RuntimeException ("Cannot get missing value class");
-      } // catch
-      if (!missingClass.equals (varClass)) {
-        Number missingNumber = (Number) missing;
-        if (varClass.equals (Byte.TYPE))
-          missing = new Byte (missingNumber.byteValue());
-        else if (varClass.equals (Short.TYPE))
-          missing = new Short (missingNumber.shortValue());
-        else if (varClass.equals (Integer.TYPE))
-          missing = new Integer (missingNumber.intValue());
-        else if (varClass.equals (Float.TYPE))
-          missing = new Float (missingNumber.floatValue());
-        else if (varClass.equals (Double.TYPE))
-          missing = new Double (missingNumber.doubleValue());
-        else
-          throw new UnsupportedEncodingException("Unsupported variable class");
-      } // if
-    } // if
-
-    // Try getting fraction digits attribute
-    // -------------------------------------
+    // Try guessing digits from scaling factor
+    // ---------------------------------------
     int digits = -1;
-    try { 
-      digits = ((Integer) getAttribute (var, "fraction_digits")).intValue();
-    } // try
-    catch (Exception e) { }
-
-    // Try using format string
-    // -----------------------         
-    if (digits == -1 && !formatStr.equals ("")) {
-      int dot = formatStr.indexOf ('.');
-      digits = 0;
-      if (dot != -1 && dot != formatStr.length()-1)
-        digits = Character.digit (formatStr.charAt (dot+1), 10);
-    } // if
-
-    // Try guessing from scaling factor
-    // --------------------------------
-    if (digits == -1 && scaling != null) {
+    if (scaling != null) {
       double maxValue = 0;
       if (varClass.equals (Byte.TYPE)) 
         maxValue = Byte.MAX_VALUE*scaling[0];
@@ -400,8 +289,17 @@ public class L2PNCReader
       digits = DataVariable.getDecimals (Double.toString (maxValue));
     } // else if
 
-    // Set fractional digits
-    // ---------------------
+    // Try guessing digits from type
+    // -----------------------------
+    if (digits == -1) {
+      if (varClass.equals (Float.TYPE))
+        digits = 6;
+      else if (varClass.equals (Double.TYPE))
+        digits = 10;
+    } // if
+    
+    // Set format from digits
+    // ----------------------
     String decFormat = "0";
     for (int i = 0; i < digits; i++) {
       if (i == 0) decFormat += ".";
@@ -409,45 +307,38 @@ public class L2PNCReader
     } // for
     NumberFormat format = new DecimalFormat (decFormat);
 
-    // Try getting navigation transform
-    // --------------------------------
-    AffineTransform nav = null;
-    if (rank == 2) {
-      try { 
-        double[] matrix  = (double[]) getAttribute (var, "nav_affine");
-        nav = new AffineTransform (matrix);
-      } // try
-      catch (Exception e) { }
-    } // if
-
     // Create variable
     // ---------------
     DataVariable dataVar;
-    if (rank == 1) {
-      dataVar = new Line (name, longName, units, varDims[0], data, format,
-        scaling, missing);
-    } // if
-    else if (rank == 2) {
+    int rank = var.getRank();
+    if (rank == 2) {
       dataVar = new Grid (name, longName, units, varDims[0], varDims[1], 
         data, format, scaling, missing);
-      if (nav != null) ((Grid) dataVar).setNavigation (nav);
     } // else if 
     else if (rank == 3) {
-        dataVar = new Grid (name, longName, units, varDims[1], varDims[2], 
-          data, format, scaling, missing);
-        dataVar.setIsCFConvention(true);
-        if (nav != null) ((Grid) dataVar).setNavigation (nav);
-      } // else if
+      dataVar = new Grid (name, longName, units, varDims[1], varDims[2], 
+        data, format, scaling, missing);
+
+      /**
+       * TODO: We need to get rid of the CF convention setting within
+       * data variables.  There are various operations to do with units
+       * conversion and setting values that aren't set up to handle CF
+       * scaling.  It was introduced for reading CF convention files, but
+       * not fully implemented in data variables.  The fix is to
+       * either re-arrange the scaling factor and offset when reading CF 
+       * data and then pass in the re-arranged scaling to the data variable
+       * constructor, or set a flag in the data variable constructor that
+       * re-arranges the scaling itself.
+       */
+      dataVar.setIsCFConvention (true);
+
+    } // else if
     else {
       throw new UnsupportedEncodingException ("Unsupported rank = " + rank +
         " for " + name);
     } // else
     dataVar.setUnsigned (isUnsigned);
       
-    // Get attributes
-    // --------------
-    //getAttributes (dataVar.getMetadataMap(), false);
-
     // Return the new variable
     // -----------------------
     return (dataVar);
@@ -462,23 +353,35 @@ public class L2PNCReader
 
     // Get a variable preview
     // ----------------------
-    DataVariable dataVar = getPreview (index);
+    DataVariable varPreview = getPreview (index);
 
-    // Access variable
-    // ---------------
+    // Get NetCDF variable
+    // -------------------    
     Variable var = dataset.getReferencedFile().findVariable (variables[index]);
     if (var == null)
       throw new IOException ("Cannot access variable at index " + index);
 
-    // Read data
-    // ---------
-    Object data = var.read().getStorage();
+    // Create cached grid
+    // ------------------
+    DataVariable dataVar;
+    if (varPreview instanceof Grid) {
+      int rank = var.getRank();
+      int[] start = new int[rank];
+      Arrays.fill (start, -1);
+      if (rank == 3) start[0] = 0;
+      NCCachedGrid cachedGrid = new NCCachedGrid ((Grid) varPreview, this, start);
+      if (cachedGrid.getMaxTiles() < 2) cachedGrid.setMaxTiles (2);
+      dataVar = cachedGrid;
+    } // if
+    
+    // Fill preview with data
+    // ----------------------
+    else {
+      Object data = var.read().getStorage();
+      varPreview.setData (data);
+      dataVar = varPreview;
+    } // else
 
-    // Return variable
-    // ---------------
-    if(var.getRank() >= 2){
-    	dataVar.setData (data);
-    }
     return (dataVar);
 
   } // getActualVariable

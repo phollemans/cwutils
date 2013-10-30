@@ -25,6 +25,9 @@ import noaa.coastwatch.util.trans.*;
 /**
  * The <code>BoxSurvey</code> class holds survey information for a
  * rectangle of data values.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class BoxSurvey 
   extends EarthDataSurvey {

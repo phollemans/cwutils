@@ -32,6 +32,9 @@ import org.xml.sax.helpers.*;
  * valid data into the last row.  The table always holds one more row
  * than the actual number of server mappings so that users can use the
  * last row to add a new server.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class ServerTableModel
   extends AbstractTableModel {

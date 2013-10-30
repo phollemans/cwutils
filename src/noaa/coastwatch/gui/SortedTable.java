@@ -29,6 +29,9 @@ import javax.swing.plaf.basic.*;
  * The <code>SortedTable</code> class is a normal
  * <code>javax.swing.JTable</code> that can sort its rows when
  * the user clicks on a column in the table header.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class SortedTable
   extends JTable {

@@ -27,6 +27,9 @@ import noaa.coastwatch.gui.*;
 /** 
  * The <code>RenderOptionPanel</code> class allows the user to choose
  * from a set of image rendering options.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class RenderOptionPanel
   extends JPanel {

@@ -29,6 +29,9 @@ import noaa.coastwatch.io.*;
  * The <code>HDFGSHHSLineReader</code> extends
  * <code>BinnedGSHHSLineReader</code> to read data from an HDF binned
  * data file.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class HDFGSHHSLineReader
   extends BinnedGSHHSLineReader {

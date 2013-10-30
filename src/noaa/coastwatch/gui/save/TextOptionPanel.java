@@ -27,6 +27,9 @@ import noaa.coastwatch.gui.*;
 /** 
  * The <code>TextOptionPanel</code> class allows the user to choose
  * from a set of text options for data export.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class TextOptionPanel
   extends JPanel {

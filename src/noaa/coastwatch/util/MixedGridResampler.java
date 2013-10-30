@@ -43,6 +43,9 @@ import noaa.coastwatch.util.trans.*;
  *   grid transferred to the destination.</li>
  * 
  * </ol>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public class MixedGridResampler
   extends GridResampler {

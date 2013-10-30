@@ -28,6 +28,9 @@ import java.util.*;
  * is available to the user using a get method.  This is an
  * alternative to extending an existing <code>java.util.Map</code>
  * implementing class.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.8
  */
 public class MetadataContainer
   implements Cloneable {

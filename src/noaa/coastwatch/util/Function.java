@@ -22,6 +22,9 @@ package noaa.coastwatch.util;
  * output value.  The function may be thought of as <code>f(X)</code>
  * where <code>X = [x<sub>1</sub>, x<sub>2</sub>,
  * ... x<sub>n</sub>]</code>.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public abstract class Function 
   implements Encodable {

@@ -31,6 +31,9 @@ import javax.swing.event.*;
  * the wrapper so as to make it appear that the table is sorted
  * according to the values held in a specific column of the
  * table.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class SortedTableModel
   implements TableModel {

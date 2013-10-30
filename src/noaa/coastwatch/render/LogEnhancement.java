@@ -25,6 +25,9 @@ import noaa.coastwatch.util.*;
 /**
  * A log enhancement is an enhancement function formed by a logarithm
  * y = mlogx + b relationship.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class LogEnhancement
   extends EnhancementFunction {

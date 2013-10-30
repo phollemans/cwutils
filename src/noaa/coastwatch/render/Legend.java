@@ -24,6 +24,9 @@ import java.awt.*;
  * A legend is used to annotate data with descriptive elements.  A
  * legend may have a desired size, font, and color.  The actual size
  * of the legend may vary from the desired size.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public abstract class Legend {
 

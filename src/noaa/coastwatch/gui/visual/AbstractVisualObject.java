@@ -26,6 +26,9 @@ import javax.swing.event.*;
  * The <code>AbstractVisualObject</code> class implements property
  * change support, default chooser behaviour, and restrictions for
  * visual objects.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public abstract class AbstractVisualObject
   implements VisualObject {

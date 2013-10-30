@@ -43,6 +43,9 @@ import noaa.coastwatch.util.*;
  * The <code>LineFeature</code> class holds a list of Earth location
  * data.  Various methods are provided for converting from lines of
  * Earth location data to projected image data.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class LineFeature
   extends AbstractFeature {

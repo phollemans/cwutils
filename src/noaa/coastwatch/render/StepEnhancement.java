@@ -26,6 +26,9 @@ import noaa.coastwatch.util.*;
 /**
  * A step enhancement is an enhancement function formed by a number of
  * discrete steps.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class StepEnhancement
   extends LinearEnhancement {

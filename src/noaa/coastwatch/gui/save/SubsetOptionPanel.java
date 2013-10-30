@@ -28,6 +28,9 @@ import noaa.coastwatch.util.*;
 /** 
  * The <code>SubsetOptionPanel</code> class allows the user to choose
  * from a set of data export subset options.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class SubsetOptionPanel
   extends JPanel {

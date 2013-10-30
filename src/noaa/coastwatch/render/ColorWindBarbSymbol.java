@@ -28,6 +28,9 @@ import noaa.coastwatch.util.trans.*;
  * A <code>ColorWindBarbSymbol</code> is similar to a normal wind
  * barb but it has the additional feature that barbs are colored
  * according to a color enhancement scheme based on the wind speed.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class ColorWindBarbSymbol
   extends WindBarbSymbol

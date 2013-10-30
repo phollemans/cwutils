@@ -36,6 +36,9 @@ import noaa.coastwatch.gui.*;
  * components.
  *
  * @see noaa.coastwatch.render.EarthDataOverlay
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class VisualOverlay 
   extends AbstractVisualObject {

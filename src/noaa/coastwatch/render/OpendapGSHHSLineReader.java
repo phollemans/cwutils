@@ -29,6 +29,9 @@ import opendap.dap.*;
  * <code>BinnedGSHHSLineReader</code> to read data from an OPeNDAP-enabled
  * binned data file.  Some optimizations are made for network
  * connections.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class OpendapGSHHSLineReader
   extends BinnedGSHHSLineReader {

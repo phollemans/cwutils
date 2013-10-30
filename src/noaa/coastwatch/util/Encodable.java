@@ -26,6 +26,9 @@ package noaa.coastwatch.util;
  * the information used in the original object constructor.  To allow
  * for maximum flexibility, the encoding is specified using an object
  * whose structure must be fully documented by the implementing class.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public interface Encodable {
 

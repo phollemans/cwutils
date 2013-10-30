@@ -27,6 +27,9 @@ import noaa.coastwatch.util.*;
 /**
  * A histogram panel displays a histogram plot as a series of 
  * vertical columns.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.6
  */
 public class HistogramPanel
   extends JPanel {

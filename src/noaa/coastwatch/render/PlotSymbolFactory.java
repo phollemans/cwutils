@@ -23,6 +23,9 @@ import jahuwaldt.plot.PlotSymbol;
 /**
  * The <code>PlotSymbolFactory</code> class supplies plot symbols
  * for scatter plots and point feature plots.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.3
  */
 public class PlotSymbolFactory { 
 

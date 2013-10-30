@@ -25,6 +25,9 @@ import java.awt.geom.*;
  * implemented by graphical components that paint using an image.  The
  * image transform may be modified when painting using the
  * <code>setImageAffine()</code> method.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public interface TransformableImageComponent {
 

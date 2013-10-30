@@ -26,6 +26,9 @@ import java.io.*;
  * The <code>SerializedObjectManager</code> class can be used to save,
  * load, delete, and get a list of serialized objects.  The objects
  * are stored as GZIP compressed files in a user-specified directory.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class SerializedObjectManager {
 

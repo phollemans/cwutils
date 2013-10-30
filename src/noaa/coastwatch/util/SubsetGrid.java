@@ -32,6 +32,9 @@ import java.util.*;
  * the subset is the same as accessing location (100,100) in the
  * original grid.  All other properties of the original grid are the
  * same.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class SubsetGrid
   extends Grid {

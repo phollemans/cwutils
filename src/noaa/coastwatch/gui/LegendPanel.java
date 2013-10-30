@@ -26,6 +26,9 @@ import noaa.coastwatch.render.*;
  * The <code>LegendPanel</code> class displays a {@link
  * noaa.coastwatch.render.Legend} graphic in a panel.  The size of the
  * legend may be scaled depending on the panel size.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class LegendPanel 
   extends JPanel {

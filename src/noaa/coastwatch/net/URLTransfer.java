@@ -35,6 +35,9 @@ import noaa.coastwatch.io.*;
  * in which case the URL is opened using a
  * <code>PasswordAuthentication</code> object as the default
  * authenticator for the connection.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.5
  */
 public class URLTransfer
   extends DataTransfer {

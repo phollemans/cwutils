@@ -25,6 +25,9 @@ import terrenus.instrument.*;
 /**
  * The <code>MHSHeader</code> class reads NOAA 1b data MSU
  * header records.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.3
  */
 public class MHSHeader extends AbstractDataHeader {
 

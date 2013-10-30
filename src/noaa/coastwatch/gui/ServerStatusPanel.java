@@ -37,6 +37,9 @@ import noaa.coastwatch.net.*;
  * unprocessed, and processing files.  The status monitor may be used
  * in an operator mode in which case significant error conditions
  * are reported in the form of a message dialog box.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class ServerStatusPanel
   extends JPanel {

@@ -24,6 +24,9 @@ import jahuwaldt.plot.PlotSymbol;
  * A <code>PointFeatureSymbol</code> is a <code>PlotSymbol</code> that
  * may change its rendered appearance slightly depending on the
  * attributes of the feature that it currently holds.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public abstract class PointFeatureSymbol
   extends PlotSymbol {

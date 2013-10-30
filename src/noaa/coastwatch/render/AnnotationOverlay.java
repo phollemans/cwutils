@@ -36,6 +36,9 @@ import noaa.coastwatch.util.*;
  * coordinates and do not change when the view window location and
  * size changes.  With data referencing, the annotation follows the
  * data coordinates and changes with the view window and size.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class AnnotationOverlay 
   extends PolygonOverlay {

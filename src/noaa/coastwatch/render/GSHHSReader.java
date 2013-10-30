@@ -63,6 +63,9 @@ import noaa.coastwatch.util.*;
  * GSHHS polygons is read into memory and the selection method
  * performs no operation.<p>
  *
+ * @author Peter Hollemans
+ * @since 3.1.0
+ *
  * @deprecated This class has been replaced by {@link
  * BinnedGSHHSReader} which provides better overall performance.  This
  * class uses the full GSHHS binary data files as input, with a
@@ -73,6 +76,7 @@ import noaa.coastwatch.util.*;
  * polygons with a large number of points outside the area of
  * interest.<p>
  */
+@Deprecated
 public class GSHHSReader
   extends LineFeatureSource {
 

@@ -4,7 +4,8 @@
   PURPOSE: Reads streams of byte data described by an XML document.
    AUTHOR: Peter Hollemans
      DATE: 2007/09/01
-  CHANGES: 2007/011/22, PFH, updated to print array values in main()
+  CHANGES: 2007/11/22, PFH, updated to print array values in main()
+           2013/06/09, PFH, added example XML template
 
   CoastWatch Software Library and Utilities
   Copyright 2007, USDOC/NOAA/NESDIS CoastWatch
@@ -32,11 +33,136 @@ import org.xml.sax.*;
 
 /**
  * The <code>BinaryStreamReader</code> class reads streams of
- * binary data described by an XML template.
+ * binary data described by an XML template.  The following is an
+ * example binary stream template for a NOAA-1b AMSU header record:<p>
  *
  * <pre>
- *   Insert example XML template here.
+ *   <?xml version="1.0"?>
+ *
+ *   <binaryStream
+ *     xmlns="http://coastwatch.noaa.gov"
+ *     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ *     xsi:schemaLocation="http://coastwatch.noaa.gov http://coastwatch.noaa.gov/xml/binaryStream.xsd">
+ *
+ *     <!-- File ID section -->
+ *     <string name="creationSite" length="3">
+ *       <valueMap valueType="string">
+ *         <entry key="CMS" value="Centre de Meteorologie Spatiale, France"/>
+ *         <entry key="DSS" value="Dundee Satellite Receiving Station, UK"/>
+ *         <entry key="NSS" value="National Environmental Satellite, Data and Information Service, USA"/>
+ *         <entry key="UKM" value="United Kingdom Meteorological Office, UK"/>
+ *       </valueMap>
+ *     </string>
+ *     <skip length="1"/>
+ *     <ushort name="formatVersion"/>
+ *     <ushort name="formatVersionYear"/>
+ *     <ushort name="formatVersionDay"/>
+ *     <ushort name="headerRecords" absoluteOffset="14"/>
+ *     <string name="datasetName" absoluteOffset="22" length="42"/>
+ *     <ushort name="spacecraft" absoluteOffset="72">
+ *       <valueMap valueType="string">
+ *         <entry key="2" value="NOAA-16"/>
+ *         <entry key="4" value="NOAA-15"/>
+ *         <entry key="6" value="NOAA-17"/>
+ *         <entry key="7" value="NOAA-18"/>
+ *         <entry key="8" value="NOAA-19"/>
+ *       </valueMap>
+ *     </ushort>
+ *     <ubyte name="instrument" absoluteOffset="75">
+ *       <valueMap valueType="string">
+ *         <entry key="5" value="AMSU-A1 102 / AMSU-A2 103"/>
+ *         <entry key="9" value="AMSU-A1 103 / AMSU-A2 102"/>
+ *         <entry key="13" value="AMSU-A1 104 / AMSU-A2 104"/>
+ *         <entry key="17" value="AMSU-A1 105 / AMSU-A2 107"/>
+ *         <entry key="33" value="AMSU-A1 109 / AMSU-A2 105"/>
+ *       </valueMap>
+ *     </ubyte>
+ *     <ushort name="dataType">
+ *       <valueMap valueType="string">
+ *         <entry key="10" value="AMSU-A"/>
+ *       </valueMap>
+ *     </ushort>
+ *     <uint name="startDay1950" absoluteOffset="80"/>
+ *     <ushort name="startYear"/>
+ *     <ushort name="startDay"/>
+ *     <uint name="startTimeUTC"/>
+ *     <ushort name="endYear" absoluteOffset="96"/>
+ *     <ushort name="endDay"/>
+ *     <uint name="endTimeUTC"/>
+ *     <short name="scanOffset" absoluteOffset="108"/>
+ *
+ *     <!-- Dataset quality section -->
+ *     <uint name="instrumentStatusA2" absoluteOffset="120"/>
+ *     <uint name="instrumentStatusA1" absoluteOffset="132"/>
+ *     <ushort name="dataRecords" absoluteOffset="144"/>
+ *     <ushort name="calibratedScanLines"/>
+ *     <ushort name="missingScanLines"/>
+ *     <ushort name="dataGaps"/>
+ *     <ushort name="dataSource" absoluteOffset="170">
+ *       <valueMap valueType="string">
+ *         <entry key="1" value="Fairbanks, AK"/>
+ *         <entry key="2" value="Wallops Island, VA"/>
+ *         <entry key="3" value="SOCC"/>
+ *         <entry key="4" value="Svalbard, Norway"/>
+ *         <entry key="5" value="Monterey, CA"/>
+ *       </valueMap>
+ *     </ushort>
+ *   
+ *     <!-- Temperature-radiance conversion section -->
+ *     <int name="ch1CentralWave" scale="1e-6" absoluteOffset="688"/>
+ *     <int name="ch1Constant1" scale="1e-6"/>
+ *     <int name="ch1Constant2" scale="1e-6"/>
+ *     <int name="ch2CentralWave" scale="1e-6"/>
+ *     <int name="ch2Constant1" scale="1e-6"/>
+ *     <int name="ch2Constant2" scale="1e-6"/>
+ *     <int name="ch3CentralWave" scale="1e-6"/>
+ *     <int name="ch3Constant1" scale="1e-6"/>
+ *     <int name="ch3Constant2" scale="1e-6"/>
+ *     <int name="ch4CentralWave" scale="1e-6"/>
+ *     <int name="ch4Constant1" scale="1e-6"/>
+ *     <int name="ch4Constant2" scale="1e-6"/>
+ *     <int name="ch5CentralWave" scale="1e-6"/>
+ *     <int name="ch5Constant1" scale="1e-6"/>
+ *     <int name="ch5Constant2" scale="1e-6"/>
+ *     <int name="ch6CentralWave" scale="1e-6"/>
+ *     <int name="ch6Constant1" scale="1e-6"/>
+ *     <int name="ch6Constant2" scale="1e-6"/>
+ *     <int name="ch7CentralWave" scale="1e-6"/>
+ *     <int name="ch7Constant1" scale="1e-6"/>
+ *     <int name="ch7Constant2" scale="1e-6"/>
+ *     <int name="ch8CentralWave" scale="1e-6"/>
+ *     <int name="ch8Constant1" scale="1e-6"/>
+ *     <int name="ch8Constant2" scale="1e-6"/>
+ *     <int name="ch9CentralWave" scale="1e-6"/>
+ *     <int name="ch9Constant1" scale="1e-6"/>
+ *     <int name="ch9Constant2" scale="1e-6"/>
+ *     <int name="ch10CentralWave" scale="1e-6"/>
+ *     <int name="ch10Constant1" scale="1e-6"/>
+ *     <int name="ch10Constant2" scale="1e-6"/>
+ *     <int name="ch11CentralWave" scale="1e-6"/>
+ *     <int name="ch11Constant1" scale="1e-6"/>
+ *     <int name="ch11Constant2" scale="1e-6"/>
+ *     <int name="ch12CentralWave" scale="1e-6"/>
+ *     <int name="ch12Constant1" scale="1e-6"/>
+ *     <int name="ch12Constant2" scale="1e-6"/>
+ *     <int name="ch13CentralWave" scale="1e-6"/>
+ *     <int name="ch13Constant1" scale="1e-6"/>
+ *     <int name="ch13Constant2" scale="1e-6"/>
+ *     <int name="ch14CentralWave" scale="1e-6"/>
+ *     <int name="ch14Constant1" scale="1e-6"/>
+ *     <int name="ch14Constant2" scale="1e-6"/>
+ *     <int name="ch15CentralWave" scale="1e-6"/>
+ *     <int name="ch15Constant1" scale="1e-6"/>
+ *     <int name="ch15Constant2" scale="1e-6"/>
+ *     
+ *     <!-- Navigation section -->
+ *     <string name="ellipsoidModel" absoluteOffset="880" length="8"/> 
+ *   
+ *   </binaryStream>
  * </pre>
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class BinaryStreamReader {
 

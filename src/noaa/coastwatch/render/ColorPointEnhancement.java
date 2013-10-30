@@ -31,6 +31,9 @@ import noaa.coastwatch.util.trans.*;
  * @see ColorEnhanced
  * @see ColorEnhancement
  * @see PointFeatureOverlay
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class ColorPointEnhancement 
   extends SolidBackground {

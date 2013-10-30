@@ -42,6 +42,9 @@ import noaa.coastwatch.gui.*;
  * The data may be saved in the form of a rendered image in a PNG,
  * GIF, JPEG, GeoTIFF, of PDF file, or as exported data in a CoastWatch
  * HDF, binary raster, text, or ArcGIS binary grid file.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class EarthDataExporter 
   extends JPanel {

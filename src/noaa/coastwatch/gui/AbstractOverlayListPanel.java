@@ -67,6 +67,9 @@ import noaa.coastwatch.tools.*;
  * the currently selected <code>EarthDataOverlay</code> object, or
  * null if none is selected.  If multiple overlays are selected, no
  * event is fired.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public abstract class AbstractOverlayListPanel 
   extends JPanel {

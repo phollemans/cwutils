@@ -30,6 +30,9 @@ import noaa.coastwatch.util.*;
  * data as a stream of binary values.  The data may be scaled and/or
  * byte swapped prior to writing.  An optional dimension header may be
  * prepended to each variable.
+ *
+ * @author Mark Robinson
+ * @since 3.1.0
  */
 abstract public class BinaryWriter
   extends EarthDataWriter {

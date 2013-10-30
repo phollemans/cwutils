@@ -24,6 +24,9 @@ import noaa.coastwatch.util.*;
 /*
  * A <code>PointFeature</code> is a single geographic point with
  * attributes.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class PointFeature 
   extends AbstractFeature {

@@ -24,9 +24,11 @@
            2005/10/12, PFH, added check for NaN norm value in getByte()
            2006/11/10, PFH, added setAdjustingFunction()
            2012/08/14, PFH, added legend caching
+           2013/09/17, PFH, added clone() to correct the bug in CDAT when
+             saving images, the legend was being changed
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -58,6 +60,9 @@ import noaa.coastwatch.util.trans.*;
  * enhancement function are mapped to the missing color, by default
  * black.  Values falling above the [0..1] range are mapped to the
  * last palette color.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class ColorEnhancement 
   extends EarthDataView {
@@ -540,6 +545,17 @@ public class ColorEnhancement
     setFunction (settings.getFunction());
 
   } // restoreSettings
+
+  ////////////////////////////////////////////////////////////
+
+  /** Overrides the parent class to null out the cached legend. */
+  public Object clone () {
+
+    ColorEnhancement enhancement = (ColorEnhancement) super.clone();
+    enhancement.legend = null;
+    return (enhancement);
+
+  } // clone
 
   ////////////////////////////////////////////////////////////
 

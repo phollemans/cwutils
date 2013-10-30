@@ -36,6 +36,9 @@ import noaa.coastwatch.io.NOAA1bReader.*;
 /**
  * The NOAA1b cached grid class is a cached grid that understands how
  * to read variable data from NOAA1b files.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class NOAA1bCachedGrid
   extends CachedGrid {

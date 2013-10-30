@@ -25,6 +25,9 @@ import java.util.*;
  * locations using a constant step stride vector.  See {@link
  * noaa.coastwatch.util.DataLocation#increment(int[],int[])} for
  * details on how the locations are incremented with a stride.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class StrideLocationIterator
   implements DataLocationIterator {

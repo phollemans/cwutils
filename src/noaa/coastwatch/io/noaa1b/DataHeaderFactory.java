@@ -26,6 +26,9 @@ import java.nio.channels.*;
 /**
  * The <code>DataHeaderFactory</code> creates data header
  * objects using the byte data at the beginning of a NOAA 1b file.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class DataHeaderFactory {
 

@@ -31,6 +31,9 @@ import noaa.coastwatch.render.*;
 /**
  * A palette panel displays a color palette graphically as a stripe
  * of colour.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.6
  */
 public class PalettePanel
   extends JPanel {

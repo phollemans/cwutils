@@ -30,6 +30,9 @@ import com.braju.format.Format;
  * <code>JFileChooser</code> provides more extensive directory listing
  * services in a GUI format.  The directory name must be an existing
  * local path convertible into a <code>java.io.File</code> object.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class LocalDirectoryLister 
   extends AbstractDirectoryLister {

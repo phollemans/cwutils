@@ -26,6 +26,9 @@ import javax.swing.*;
  * panels.  The panel has a <code>write()</code> method so that it may
  * be used to save data.  Generally, a save panel is supposed to be
  * used as a mechanism for setting various options before saving.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public abstract class SavePanel
   extends JPanel {

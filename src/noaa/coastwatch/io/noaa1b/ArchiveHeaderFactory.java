@@ -25,6 +25,9 @@ import java.nio.channels.*;
 /**
  * The <code>ArchiveHeaderFactory</code> creates archive header
  * objects using the byte data at the beginning of a NOAA 1b file.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class ArchiveHeaderFactory {
 

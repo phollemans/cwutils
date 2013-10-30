@@ -13,9 +13,10 @@
            2006/03/15, PFH, modified to use GUIServices.getIconButton()
            2006/11/03, PFH, added units and list icons
            2006/11/08, PFH, added help button
+           2012/12/04, PFH, updated to use getSelectedValuesList()
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -41,6 +42,9 @@ import noaa.coastwatch.render.*;
  * The <code>PreferencesChooser</code> class is a panel that displays
  * a <code>Preferences</code> object and allows the preferences to be
  * manipulated.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class PreferencesChooser
   extends JPanel {
@@ -836,7 +840,7 @@ public class PreferencesChooser
   
         // Update remove button
         // --------------------
-        Object[] selectedValues = variableList.getSelectedValues();
+        Object[] selectedValues = variableList.getSelectedValuesList().toArray();
         removeButton.setEnabled (selectedValues.length != 0);
   
         // Update preferences
@@ -962,7 +966,7 @@ public class PreferencesChooser
   
       // Remove selected items
       // ---------------------
-      Object[] values = variableList.getSelectedValues();
+      Object[] values = variableList.getSelectedValuesList().toArray();
       for (int i = 0; i < values.length; i++) {
         String varName = (String) values[i];
         prefs.removeEnhancement (varName);

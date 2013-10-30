@@ -44,6 +44,9 @@ import noaa.coastwatch.gui.*;
  * A Earth plot information legend annotates an Earth data view with
  * information about the data source, date, time, projection, and
  * Earth location.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class EarthPlotInfo 
   extends Legend {

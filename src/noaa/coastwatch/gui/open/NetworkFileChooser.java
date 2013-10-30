@@ -49,6 +49,9 @@ import noaa.coastwatch.gui.*;
  * Once a connection is established, the user may choose a file in the
  * directory listing.  When a new file is chosen, this class fires a
  * property change with the full file location and name as the value.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class NetworkFileChooser
   extends JPanel {

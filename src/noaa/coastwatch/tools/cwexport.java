@@ -487,6 +487,8 @@ import jargs.gnu.CmdLineParser.*;
  *
  * <!-- END MAN PAGE -->
  *
+ * @author Mark Robinson
+ * @since 3.1.0
  */
 public class cwexport {
 

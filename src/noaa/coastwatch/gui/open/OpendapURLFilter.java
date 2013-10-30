@@ -21,6 +21,9 @@ package noaa.coastwatch.gui.open;
  * strings.  The filter rejects any URLs that are not considered to be
  * OPeNDAP-specific, and modifies OPeNDAP URLs that end with a
  * recognized OPeNDAP service extension.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class OpendapURLFilter implements StringFilter {
 

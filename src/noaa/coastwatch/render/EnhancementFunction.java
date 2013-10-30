@@ -42,6 +42,9 @@ import noaa.coastwatch.util.*;
  * Note that since this class implements <code>Cloneable</code>, all
  * concrete child classes must have a valid <code>clone()</code>
  * method.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public abstract class EnhancementFunction 
   extends Function 

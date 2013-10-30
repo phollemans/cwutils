@@ -33,6 +33,10 @@ import noaa.coastwatch.util.trans.*;
  * A text writer is an Earth data writer that writes variable data
  * as a series of lines in an ASCII text file.  An optional dimension
  * header may be prepended to each variable.
+ *
+ * @author Peter Hollemans
+ * @author Mark Robinson
+ * @since 3.1.0
  */
 public class TextWriter
   extends EarthDataWriter {

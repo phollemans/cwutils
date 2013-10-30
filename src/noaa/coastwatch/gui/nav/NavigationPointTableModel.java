@@ -28,6 +28,9 @@ import noaa.coastwatch.util.*;
  * from a list of {@link NavigationPoint} objects.  The comment
  * field of the navigation points is used to indicate the latest
  * status of navigation and should be set accordingly.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class NavigationPointTableModel
   extends AbstractTableModel {

@@ -30,6 +30,9 @@ import noaa.coastwatch.io.NOAA1bReader.*;
  * Version 4 also has support for the Metop series of satellites.
  *
  * @see NOAA1bV3Reader
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class NOAA1bV4Reader
   extends NOAA1bV3Reader {

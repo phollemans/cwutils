@@ -27,6 +27,9 @@ import noaa.coastwatch.util.*;
  * The Earth context panel displays an Earth context element.
  *
  * @see EarthContextElement
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class EarthContextPanel
   extends JPanel {

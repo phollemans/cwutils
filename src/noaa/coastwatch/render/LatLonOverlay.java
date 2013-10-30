@@ -46,6 +46,9 @@ import noaa.coastwatch.util.trans.*;
  * The <code>LatLonOverlay</code> class annotates an {@link
  * EarthDataView} view with latitude/longitude grid lines and
  * labels.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class LatLonOverlay 
   extends LabeledLineOverlay {

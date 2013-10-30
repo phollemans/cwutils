@@ -29,6 +29,9 @@ import javax.swing.*;
  * The <code>WrapLayout</code> class extends
  * <code>java.awt.FlowLayout</code> to correctly wrap components when
  * inside a scroll pane.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class WrapLayout 
   extends FlowLayout {

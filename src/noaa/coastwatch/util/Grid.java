@@ -47,6 +47,9 @@ import java.util.*;
  * calculated as <code>(r',c') = affine ((r,c))</code> where
  * <code>affine()</code> is the application of the affine transform to
  * the data coordinate.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class Grid
   extends DataVariable {

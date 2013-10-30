@@ -35,6 +35,9 @@ import noaa.coastwatch.util.TilingScheme.*;
 /**
  * The HDF cached grid class is a cached grid that understands how to
  * read variable data from HDF files.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class HDFCachedGrid
   extends CachedGrid {
@@ -49,6 +52,7 @@ public class HDFCachedGrid
 
   // Variables
   // ---------
+  
   /** HDF dataset. */
   private HDFSD dataset;
 

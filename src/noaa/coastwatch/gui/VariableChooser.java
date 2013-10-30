@@ -38,6 +38,9 @@ import noaa.coastwatch.util.*;
  * firing a <code>PropertyChangeEvent</code> whose property name is
  * <code>VariableChooser.VARIABLE_PROPERTY</code>, and new value
  * contains the variable name.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class VariableChooser
   extends JPanel {

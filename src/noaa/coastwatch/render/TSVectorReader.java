@@ -71,6 +71,9 @@ import noaa.coastwatch.util.*;
  * class and the GSHHS data files because the TeraScan data is
  * from the Digital Chart of the World (DCW) and the GSHHS data
  * is from the CIA World Data Bank II (WDBII).
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class TSVectorReader
   extends LineFeatureSource {

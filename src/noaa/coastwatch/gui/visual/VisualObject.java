@@ -27,6 +27,9 @@ import java.beans.*;
  * required for objects to have a visual onscreen representation.  The
  * onscreen version may be used to manipulate the properties of the
  * object.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public interface VisualObject
   extends ComponentProducer {

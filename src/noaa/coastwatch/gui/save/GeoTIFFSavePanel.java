@@ -28,6 +28,9 @@ import noaa.coastwatch.util.*;
 /** 
  * The <code>GeoTIFFSavePanel</code> class allows the user to select save
  * options for GeoTIFF image files.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class GeoTIFFSavePanel
   extends ImageSavePanel {

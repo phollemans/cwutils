@@ -50,6 +50,9 @@ import noaa.coastwatch.io.NOAA1bReader.*;
  * complete set of calibration parameters, and so on.
  *
  * @see NOAA1bV1Reader
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class NOAA1bV2Reader
   extends NOAA1bReader {

@@ -39,6 +39,9 @@ import noaa.coastwatch.gui.open.ServerTableModel.Entry;
  * after using the chooser, in case the user has edited the server
  * names or locations.  The current server list is available from
  * {@link #getServerList}.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class ServerChooser
   extends JPanel {

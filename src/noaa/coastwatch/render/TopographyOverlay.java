@@ -21,7 +21,7 @@
 // TODO: Something goes wrong when two topography overlays are
 // simultaneously being editted graphically, parts of one show up
 // in the other.  Possibly a cloning issue?  Difficult to
-// duplicate.reproduce
+// duplicate/reproduce.
 
 // TODO: Another problem, when contouring near 0 E, the rendering
 // routine goes into an infinite loop.
@@ -50,6 +50,9 @@ import noaa.coastwatch.io.*;
  *   http://www.ngdc.noaa.gov/mgg/global/global.html<br>
  *   http://sis.agr.gc.ca/cansis/nsdb/ecostrat/elevation.html
  * </blockquote>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class TopographyOverlay 
   extends LineOverlay {

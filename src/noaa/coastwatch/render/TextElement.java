@@ -34,6 +34,9 @@ import java.awt.image.*;
  * string value, position, orientation, alignment, and so on.  The
  * text is rendered in the annotation foreground color, and a drop
  * shadow in the background color.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class TextElement
   extends AnnotationElement { 

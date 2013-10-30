@@ -32,6 +32,9 @@ import java.awt.geom.*;
 /**
  * A data location represents a set of coordinates that uniquely
  * identify a data value position within some N-dimensional space.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class DataLocation
   implements Cloneable {

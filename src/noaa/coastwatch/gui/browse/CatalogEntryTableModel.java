@@ -29,6 +29,9 @@ import noaa.coastwatch.util.*;
  * The <code>CatalogEntryTableModel</code> holds a list of {@link
  * noaa.coastwatch.net.CatalogQueryAgent.Entry} objects as Swing
  * table data.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class CatalogEntryTableModel
   extends AbstractTableModel {

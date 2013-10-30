@@ -60,6 +60,9 @@ import Jama.*;
  *   Watkins, David S.  <i>Fundamentals of Matrix Computations</i>,
  *   John Wiley & Sons, Inc., 1991, pp 416-418.
  * </blockquote>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class BivariateEstimator 
   extends Function {

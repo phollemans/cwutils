@@ -46,6 +46,9 @@ import noaa.coastwatch.io.*;
  *     ...
  *   &lt;/colorlookup&gt;
  * </pre> 
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class ColorLookup {
 

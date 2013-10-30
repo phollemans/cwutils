@@ -49,6 +49,9 @@ import noaa.coastwatch.net.CatalogQueryAgent.Entry;
  * user simply selects a new entry from the list (by
  * single-clicking), the <code>CHANGED_PROPERTY</code> signals
  * that the entry was changed.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class EarthDataCatalogPanel
   extends JPanel {

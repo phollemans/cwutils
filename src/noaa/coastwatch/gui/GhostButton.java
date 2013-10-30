@@ -30,6 +30,9 @@ import javax.swing.border.*;
  * "ghostly" looking version of a standard button icon for use in
  * full screen mode toolbar menus.  The icon is modified so that
  * it appears in grayscale and inverted.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class GhostButton
   extends JButton {

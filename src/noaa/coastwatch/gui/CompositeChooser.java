@@ -46,6 +46,9 @@ import noaa.coastwatch.io.*;
  * boolean value.
  *
  * @see noaa.coastwatch.render.ColorComposite
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class CompositeChooser
   extends JPanel

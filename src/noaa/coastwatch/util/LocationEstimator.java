@@ -54,6 +54,9 @@ import noaa.coastwatch.util.trans.*;
  *
  * @see EarthTransform
  * @see EarthPartition
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public class LocationEstimator {
 

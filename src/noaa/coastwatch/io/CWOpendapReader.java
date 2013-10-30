@@ -33,6 +33,9 @@ import noaa.coastwatch.util.trans.*;
  * The <code>CWOpendapReader</code> class reads OPeNDAP
  * accessible datasets and uses the CoastWatch HDF metadata
  * conventions to parse the attribute and variable data.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class CWOpendapReader 
   extends OpendapReader {

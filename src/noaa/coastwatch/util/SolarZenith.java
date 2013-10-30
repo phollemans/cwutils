@@ -40,6 +40,9 @@ import noaa.coastwatch.util.trans.*;
  *        |  |/
  *   ======================
  * </pre>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class SolarZenith {
 

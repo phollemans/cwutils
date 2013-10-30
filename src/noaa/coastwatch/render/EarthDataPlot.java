@@ -52,6 +52,9 @@ import noaa.coastwatch.util.trans.*;
  *   |               border               |
  *   +------------------------------------+
  * </pre>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class EarthDataPlot
   implements Renderable {

@@ -28,6 +28,9 @@ import noaa.coastwatch.util.*;
  * A polygon overlay annotes a data view with vector-specified polygon
  * lines and shapes.  The polygon overlay adds the concept of a fill
  * color to the parent class.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public abstract class PolygonOverlay 
   extends LineOverlay {

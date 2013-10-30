@@ -48,6 +48,9 @@ import opendap.dap.*;
  *
  * Since only one region can be searched at once, only one
  * cover_?? key value will appear in the entry.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class OpendapQueryAgent 
   extends CatalogQueryAgent {

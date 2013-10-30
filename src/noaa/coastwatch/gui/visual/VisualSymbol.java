@@ -31,6 +31,9 @@ import noaa.coastwatch.render.*;
 /**
  * The <code>VisualSymbol</code> class represents a plot symbol
  * as a combo box with an icon of the symbol.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.3
  */
 public class VisualSymbol 
   extends AbstractVisualObject {

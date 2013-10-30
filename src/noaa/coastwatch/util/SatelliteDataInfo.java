@@ -40,6 +40,9 @@ import noaa.coastwatch.util.trans.*;
  * The <code>SatelliteDataInfo</code> class is a special
  * <code>EarthDataInfo</code> class for satellite data.  It adds extra
  * metadata for the data source satellite and sensor.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class SatelliteDataInfo
   extends EarthDataInfo {

@@ -32,6 +32,9 @@ import noaa.coastwatch.util.*;
 /** 
  * The <code>TextSavePanel</code> class allows the user to select save
  * options for text export files.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class TextSavePanel
   extends DataSavePanel {

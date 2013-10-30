@@ -31,6 +31,9 @@ import noaa.coastwatch.util.*;
  * mode, the extra method {@link #transformToPoint} may be used to
  * retrieve the Earth location of the point data, which may not be at
  * the center of the raster pixel area.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public abstract class EarthTransform2D
   extends EarthTransform {

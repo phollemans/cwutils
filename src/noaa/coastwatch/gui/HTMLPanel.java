@@ -35,6 +35,9 @@ import javax.swing.text.*;
 /**
  * The HTML panel displays an HTML document in a scrollable window 
  * and responds to hyperlink clicks.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public class HTMLPanel 
   extends JPanel {

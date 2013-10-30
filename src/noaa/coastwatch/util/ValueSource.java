@@ -20,6 +20,9 @@ package noaa.coastwatch.util;
  * The <code>ValueSource</code> interface may be implemented by
  * any class that provides data values for a set of {@link
  * DataLocation} objects.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public interface ValueSource {
 

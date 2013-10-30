@@ -25,6 +25,9 @@ import noaa.coastwatch.util.*;
  * The <code>MapProjection</code> class is the abstract parent of
  * all map projections that implement coordinate conversions for
  * the projection systems listed in {@link ProjectionConstants}.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public abstract class MapProjection 
   extends EarthTransform2D

@@ -33,6 +33,9 @@ import noaa.coastwatch.util.*;
  * zoom and pan.
  *
  * @see SatellitePassInfo 
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class SatellitePassPreviewPanel
   extends JPanel {

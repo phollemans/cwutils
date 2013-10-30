@@ -23,6 +23,9 @@ import java.util.*;
 /**
  * A data transfer adapter provides default implementations for a data
  * transfer listener.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.5
  */
 public class DataTransferAdapter
   implements DataTransferListener {

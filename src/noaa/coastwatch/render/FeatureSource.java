@@ -27,6 +27,9 @@ import noaa.coastwatch.util.*;
  * common the all feature sources; the methods allow for
  * selection of features based on a geographic area, iteration
  * over the matching features, and information on attributes.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public interface FeatureSource {
 

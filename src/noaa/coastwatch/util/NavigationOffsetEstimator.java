@@ -38,6 +38,9 @@ import noaa.coastwatch.util.trans.*;
  * histogram splitting method, and then the navigation error is
  * determined by "shifting" the image data around to find the maximum
  * correlation with a precomputed land mask.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public class NavigationOffsetEstimator {
 

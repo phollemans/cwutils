@@ -50,6 +50,9 @@ import noaa.coastwatch.render.*;
  * @see noaa.coastwatch.io.EarthDataReader
  * @see noaa.coastwatch.io.ReaderList
  * @see noaa.coastwatch.render.EarthDataView
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class EarthDataBrowsePanel
   extends JPanel {

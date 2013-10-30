@@ -27,6 +27,9 @@ import noaa.coastwatch.util.trans.*;
 /**
  * A <code>DirectionSymbol</code> is a <code>PointFeatureSymbol</code>
  * that renders a directional vector.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public abstract class DirectionSymbol
   extends PointFeatureSymbol {
@@ -229,6 +232,12 @@ public abstract class DirectionSymbol
     double angle = Double.parseDouble (argv[0]);
     double lat = Double.parseDouble (argv[1]);
     double lon = Double.parseDouble (argv[2]);
+    
+    
+
+    // FIXME: This will no longer work the same with the new OrthographicProjection
+    // class!
+    
     DirectionSymbol symbol = new DirectionSymbol (
       new OrthographicProjection (new EarthLocation (0, 0), new int[] {512,512},
       new EarthLocation (0, 0), new double[] {1, 1})) {

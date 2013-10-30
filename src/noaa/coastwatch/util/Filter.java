@@ -23,6 +23,9 @@ import java.util.*;
 /**
  * The filter interface provides a method for performing processing on
  * an array of data values.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public interface Filter {
 

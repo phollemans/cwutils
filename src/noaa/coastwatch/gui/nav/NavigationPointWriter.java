@@ -27,6 +27,9 @@ import noaa.coastwatch.util.trans.*;
 /**
  * The <code>NavigationPointWriter</code> class is an abstract class 
  * for writing out data from a list of navigation points.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public abstract class NavigationPointWriter {
 

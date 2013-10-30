@@ -30,6 +30,9 @@ import noaa.coastwatch.gui.*;
  * button with the name of the font.  When the button is
  * pressed, a <code>FontChooser</code> appears that allows the user
  * to select a new font.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class VisualFont 
   extends AbstractVisualObject {

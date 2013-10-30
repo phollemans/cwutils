@@ -20,6 +20,9 @@ package noaa.coastwatch.util.trans;
  * The <code>ProjectionConstants</code> class is an interface
  * that hold various map projection constants, including
  * projection indices and names.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public interface ProjectionConstants {
 

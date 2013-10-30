@@ -29,6 +29,9 @@ import noaa.coastwatch.render.*;
  * <code>Statistics</code> object and draws the axes and labels
  * desired for a plot of the statistics.  It is up to the child class
  * to draw the actual statistics data.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public abstract class StatisticsPanel
   extends XYPlotPanel {

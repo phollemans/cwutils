@@ -53,6 +53,9 @@ import jahuwaldt.plot.*;
  * <pre>
  *   http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf
  * </pre>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public class ESRIShapefileReader {
 

@@ -31,6 +31,9 @@ import java.awt.event.*;
  *   JFrame frame = new JFrame();
  *   frame.addWindowListener (new WindowMonitor());
  * </pre>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public class WindowMonitor
   extends WindowAdapter {

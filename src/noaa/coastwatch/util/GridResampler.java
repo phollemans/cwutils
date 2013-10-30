@@ -37,6 +37,9 @@ import noaa.coastwatch.util.trans.*;
  * simultaneously.  Note that all source grids must have the same
  * dimensions and navigation transform, and all destination grids
  * must have the same dimensions.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public abstract class GridResampler {
 

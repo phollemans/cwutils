@@ -25,6 +25,9 @@ import noaa.coastwatch.io.*;
 /**
  * The <code>ARSHeader</code> class reads Archive Retrieval System header
  * data from NOAA 1b data files.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class ARSHeader extends AbstractArchiveHeader {
 

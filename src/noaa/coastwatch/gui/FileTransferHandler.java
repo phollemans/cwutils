@@ -31,6 +31,9 @@ import javax.swing.*;
  * when drag and drop of file information occurs.  If the drag and
  * drop operation is not for file information, then no action is
  * performed.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class FileTransferHandler
   extends TransferHandler {

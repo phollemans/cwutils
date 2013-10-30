@@ -26,6 +26,9 @@ import javax.swing.*;
 /**
  * The <code>Swirl</code> class shows a swirling progress icon in a
  * panel.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class Swirl
   extends JPanel {

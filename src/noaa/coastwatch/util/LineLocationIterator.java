@@ -26,6 +26,9 @@ import java.awt.*;
  * noaa.coastwatch.util.LineIterator} for details on how the locations
  * are incremented along a line.  Currently, only 2D data locations
  * are supported.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class LineLocationIterator
   implements DataLocationIterator {

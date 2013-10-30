@@ -31,6 +31,9 @@ import javax.swing.*;
  * </pre>
  *
  * @see javax.swing.JFrame
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public class TestContainer {
 

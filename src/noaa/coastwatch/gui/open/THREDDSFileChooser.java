@@ -41,6 +41,9 @@ import noaa.coastwatch.util.*;
 /** 
  * The <code>THREDDSFileChooser</code> class allows the user to choose
  * a file from a THREDDS catalog. 
+ *
+ * @author Xiaoming Liu
+ * @since 3.3.0
  */
 public class THREDDSFileChooser
   extends JPanel {
@@ -84,11 +87,15 @@ public class THREDDSFileChooser
 
     // Create server chooser
     // ---------------------
-    String[] serverStrings = { "http://coastwatch.noaa.gov/thredds/catalog/chloraAquaMODISMaskedCWHDFCB05/catalog.xml", 
-    		                "http://coastwatch.noaa.gov/thredds/catalog/chloraAquaMODISMaskedCWHDFSE05/catalog.xml", 
-    		                "http://coastwatch.noaa.gov/thredds/catalog/chloraAquaMODISMaskedCWHDFNE05/catalog.xml", 
-    		                "http://coastwatch.noaa.gov/thredds/catalog/chloraAquaMODISMaskedCWHDFWC05/catalog.xml", 
-    		                "http://coastwatch.noaa.gov/thredds/catalog/chloraAquaMODISMaskedCWHDFGM05/catalog.xml" };
+    String[] serverStrings = {
+      "http://thredds.star1.nesdis.noaa.gov/thredds/socd/coastwatch/catalog_coastwatch.xml",
+      "http://coastwatch.noaa.gov/thredds/catalog/chloraAquaMODISMaskedCWHDFCB05/catalog.xml",
+      "http://coastwatch.noaa.gov/thredds/catalog/chloraAquaMODISMaskedCWHDFSE05/catalog.xml",
+      "http://coastwatch.noaa.gov/thredds/catalog/chloraAquaMODISMaskedCWHDFNE05/catalog.xml", 
+      "http://coastwatch.noaa.gov/thredds/catalog/chloraAquaMODISMaskedCWHDFWC05/catalog.xml", 
+      "http://coastwatch.noaa.gov/thredds/catalog/chloraAquaMODISMaskedCWHDFGM05/catalog.xml"
+    };
+
 
     serverBox = new JComboBox(serverStrings);
     serverBox.setSelectedIndex(4);
@@ -140,7 +147,11 @@ public class THREDDSFileChooser
                 }});//invokeLater
         		}//if
         		}//try
-        		catch(Exception e){}
+        		catch (Exception e){
+                        
+                        e.printStackTrace();
+                        
+                        }
         		}//run
         	};//thredd
       //} // if

@@ -23,6 +23,7 @@
            2005/07/03, PFH, added extra docs for implementing classes
            2006/11/03, PFH, added setUnitsMap() for default units
            2010/03/15, PFH, added getCoordinateSystems()
+           2012/12/04, PFH, added canUpdateNavigation()
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2010, USDOC/NOAA/NESDIS CoastWatch
@@ -67,6 +68,9 @@ import ucar.nc2.dataset.*;
  * as well as a constructor that sets the protected {@link #info} and
  * {@link #variables} variables and fills the {@link #rawMetadataMap}
  * map.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public abstract class EarthDataReader {
 
@@ -469,7 +473,8 @@ public abstract class EarthDataReader {
 
   /**
    * Updates the navigation transform for the specified list of
-   * variables (optional operation).
+   * variables (optional operation). Classes that override this method
+   * should also override {@link #canUpdateNavigation}.
    *
    * @param variableNames the list of variable names to update.
    * @param affine the navigation transform to apply.  If null, the
@@ -478,6 +483,8 @@ public abstract class EarthDataReader {
    * @throws IOException if an error occurred writing the file metadata.
    * @throws UnsupportedOperationException if the class does not
    * support navigation transform updates.
+   *
+   * @see #canUpdateNavigation
    */
   public void updateNavigation (
     List variableNames,
@@ -487,6 +494,23 @@ public abstract class EarthDataReader {
     throw new UnsupportedOperationException (getClass().getName());
 
   } // updateNavigation
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Determines the ability of the file format to have its navigation
+   * updated.  Classes that override {@link #updateNavigation} should
+   * also override this method.
+   *
+   * @return true if the navigation can be updated, or false if not.
+   *
+   * @see #updateNavigation
+   */
+  public boolean canUpdateNavigation () {
+
+    return (false);
+  
+  } // canUpdateNavigation
 
   ////////////////////////////////////////////////////////////
 

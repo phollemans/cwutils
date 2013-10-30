@@ -23,6 +23,9 @@ import java.io.*;
 /**
  * The simple parser class is a stream tokenizer with various methods
  * for simplifed parsing of text input streams.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class SimpleParser
   extends StreamTokenizer {

@@ -29,6 +29,9 @@ import noaa.coastwatch.util.trans.*;
 /**
  * The solid background class is an Earth data view that creates a
  * solid image of color to help view overlay graphics.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public class SolidBackground 
   extends EarthDataView {

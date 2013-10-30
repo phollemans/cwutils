@@ -36,6 +36,9 @@ import noaa.coastwatch.io.*;
  * an implementation of an <code>OverlayPropertyChooser</code> that
  * allows the user to edit the properties of a
  * <code>MultilayerBitmaskOverlay</code>.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class MultilayerBitmaskOverlayPropertyChooser 
   extends OverlayPropertyChooser {

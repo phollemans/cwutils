@@ -26,6 +26,9 @@ import javax.swing.*;
  * The <code>VisualBoolean</code> class represents a Boolean as a
  * checkbox button.  When the button is pressed, the Boolean changes
  * value.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class VisualBoolean 
   extends AbstractVisualObject {

@@ -5,10 +5,10 @@
            is overwritten to handle the VIIRS bow-tie deletion. 
    AUTHOR: X. Liu
      DATE: 2012/04/25
-  CHANGES: 
+  CHANGES: 2013/04/10, PFH, cleaned up and moved bowtie deletion detection
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -25,15 +25,20 @@ import noaa.coastwatch.util.trans.*;
 
 /**
  * The <code>ACSPOMixedGridResampler</code> class is a subclass of 
-   MixedGridResampler, but the perform method
-   is overwritten to handle the VIIRS bow-tie deletion.
-   
+ * MixedGridResampler, but the perform method is overwritten to handle
+ * the VIIRS bow-tie deletion.
+ *
+ * @author Xiaoming Liu
+ * @since 3.3.0
  */
 public class ACSPOMixedGridResampler
   extends MixedGridResampler {
 
-  //bow-tie deletion pattern
-  boolean[][] bowtie = null;
+  // Variables
+  // ---------
+
+  /** The bowtie array, true for locations removed by bowtie deletion. */
+  boolean[][] isBowtieDeleted = null;
 
   ////////////////////////////////////////////////////////////
 
@@ -55,17 +60,18 @@ public class ACSPOMixedGridResampler
   
     super (sourceTrans, destTrans, rectWidth, rectHeight);
     
-    //initialize bow-tie deletion pattern
-    bowtie = new boolean[16][3200];
-    for(int j=0; j<16; j++){
-    	for(int i=0; i<3200; i++){
-    		bowtie[j][i]=false;
-    		if((j==0 || j==15) && (i<1008 || i >= 2192))
-    			bowtie[j][i]=true;
-    		if((j==1 || j==14) && (i<640 || i >= 2560))
-    			bowtie[j][i]=true;
-    	}
-    }
+    // Set up bowtie deletion pattern
+    // ------------------------------
+    isBowtieDeleted = new boolean[16][3200];
+    for (int i = 0; i < 16; i++) {
+      for (int j = 0; j < 3200; j++) {
+        isBowtieDeleted[i][j] = false;
+        if ((i == 0 || i == 15) && (j < 1008 || j >= 2192))
+          isBowtieDeleted[i][j] = true;
+        else if ((i == 1 || i == 14) && (j < 640 || j >= 2560))
+          isBowtieDeleted[i][j] = true;
+      } // for
+    } // for
 
   } // ACSPOMixedGridResampler constructor
 
@@ -312,6 +318,11 @@ public class ACSPOMixedGridResampler
             int sourceCol = (int) Math.round (dSourceCol);
             if (sourceCol < colMin || sourceCol > colMax) continue;
 
+            // Check for bowtie deletion
+            // -------------------------
+            int sourceScanLine = sourceRow % 16;
+            if (isBowtieDeleted[sourceScanLine][sourceCol]) continue;
+
             // Compute and check rounding distance
             // -----------------------------------
             if (overwriteMode == OVERWRITE_IF_CLOSER) {
@@ -323,16 +334,13 @@ public class ACSPOMixedGridResampler
               roundDist[destRow][destCol] = d;
             } // if
 
-            // Copy pixel values for each grid. If it is bow-tie deletion, skip
+            // Copy pixel values for each grid
             // -------------------------------
-            int lineNumber = sourceRow % 16;
             for (int k = 0; k < grids; k++) {
               double val = sourceArray[k].getValue (sourceRow, sourceCol);
-              if(bowtie[lineNumber][sourceCol]==true) continue;
               destArray[k].setValue (destRow, destCol, val);
             } // for
-            if(bowtie[lineNumber][sourceCol]!=true)
-            	target[destRow][destCol] = true;
+            target[destRow][destCol] = true;
             
           } // for
         } // for

@@ -38,6 +38,9 @@ import noaa.coastwatch.gui.*;
  * behaviour works under the assumption that all components in the
  * list have the same height.  The user may set the number of visible
  * components using the <code>setVisibleRowCount()</code> method.<p>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class ComponentList
   extends JPanel 

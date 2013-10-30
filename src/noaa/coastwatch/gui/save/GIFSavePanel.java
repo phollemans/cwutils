@@ -28,6 +28,9 @@ import noaa.coastwatch.util.*;
 /** 
  * The <code>GIFSavePanel</code> class allows the user to select save
  * options for GIF image files.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class GIFSavePanel
   extends ImageSavePanel {

@@ -1,9 +1,0 @@
-The following symlinks had to be removed to make
-install4j work:
-
-libHDFReader.so -> libjhdf.so
-libHDFWriter.so -> libjhdf.so
-
-This is not a very good solution, but works for now.
-
-2004/05/15, PFH

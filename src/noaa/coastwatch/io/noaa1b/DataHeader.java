@@ -27,6 +27,9 @@ import terrenus.instrument.*;
 /**
  * The <code>DataHeader</code> interface is for reading NOAA
  * 1b data header records.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public interface DataHeader {
 

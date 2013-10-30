@@ -55,6 +55,9 @@ import noaa.coastwatch.net.CatalogQueryAgent.Entry;
  * configuration file.
  *
  * @see noaa.coastwatch.tools.edac.Configuration
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public final class edac
   extends JPanel {

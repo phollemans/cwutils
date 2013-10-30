@@ -30,6 +30,9 @@ import javax.swing.event.*;
  * The <code>VisualChoice</code> class represents a value choice as a
  * combo box.  When the combo box selection is modified, the value is
  * changed.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class VisualChoice 
   extends AbstractVisualObject {

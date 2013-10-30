@@ -31,6 +31,9 @@ import java.beans.*;
  * The operation mode property controls what drawing mode the
  * view should use, and uses mode constants from the {@link
  * LightTable} class.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public interface DataViewOverlayControl {
 

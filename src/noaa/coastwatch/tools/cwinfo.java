@@ -197,7 +197,9 @@ import ucar.nc2.constants.AxisType;
  * </pre> </p>
  *
  * <!-- END MAN PAGE -->
- *  
+ *
+ * @author Mark Robinson
+ * @since 3.1.0
  */
 public final class cwinfo {
 

@@ -34,6 +34,9 @@ import noaa.coastwatch.render.*;
  * The <code>ResourceManager</code> class stores and retrieves
  * user-specific resources related to configuration settings,
  * palettes, overlays, and so on.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class ResourceManager {
 

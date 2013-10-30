@@ -64,7 +64,7 @@
            2007/04/23, PFH, added version printing
            2008/07/08, PFH, added --size=full support
            2012/06/29, PFH, added --palettefile option
-           2012/08/11, PFH, added --pelettecolors, --function boolean,
+           2012/08/11, PFH, added --palettecolors, --function boolean,
              HSB-Cycle palette, watermark, and tickmark options
 
   CoastWatch Software Library and Utilities
@@ -962,7 +962,9 @@ import ucar.units.Unit;
  * filled correctly.</p>
  *
  * <!-- END MAN PAGE -->
- * 
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class cwrender {
 

@@ -26,6 +26,9 @@ import ucar.units.*;
  * simply a convenience factory that uses the <code>ucar.units</code>
  * package.  A number of aliases are also added to the parser to
  * handle legacy CoastWatch unit specifications.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class UnitFactory {
 

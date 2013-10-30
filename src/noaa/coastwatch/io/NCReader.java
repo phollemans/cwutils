@@ -6,10 +6,12 @@
      DATE: 2005/07/03
   CHANGES: 2006/11/03, PFH, changed getPreview(int) to getPreviewImpl(int)
            2010/03/15, PFH, added getCoordinateSystems() and 
-             getVariablesForSystem() 
+             getVariablesForSystem()
+           2013/02/10, PFH, added NCSD interface and methods
+           2013/06/21, PFH, updated to use Variable.getShortName()
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -31,10 +33,13 @@ import noaa.coastwatch.util.*;
  * The <code>NCReader</code> class is the base class for readers that
  * use the Java NetCDF API to read and parse metadata.  Supported file
  * formats include NetCDF 3/4, HDF5, and OPeNDAP network connections.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public abstract class NCReader 
   extends EarthDataReader
-  implements GridSubsetReader {
+  implements GridSubsetReader, NCSD {
 
   // Variables
   // ---------
@@ -50,6 +55,14 @@ public abstract class NCReader
 
   /** The network flag, true if this dataset is network-connected. */
   private boolean isNetwork;
+
+  ////////////////////////////////////////////////////////////
+
+  public NetcdfDataset getDataset () { return (dataset); }
+
+  ////////////////////////////////////////////////////////////
+
+  public String getFilename () { return (getSource()); }
 
   ////////////////////////////////////////////////////////////
   
@@ -350,7 +363,7 @@ public abstract class NCReader
       if (systems.size() != 0) {
         CoordinateSystem varSystem = systems.get (0);
         if (varSystem.equals (system))
-          varList.add (var.getName());
+          varList.add (var.getShortName());
       } // if
     } // for
 

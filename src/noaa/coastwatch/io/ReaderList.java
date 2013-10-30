@@ -29,14 +29,23 @@ import noaa.coastwatch.util.trans.*;
  * instances with the same earth transform and allow them to be
  * accessible with less I/O overhead than if they were each opened
  * separately.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public interface ReaderList {
+
+  ////////////////////////////////////////////////////////////
 
   /** Gets the earth transform for this list. */
   public EarthTransform getTransform();
 
+  ////////////////////////////////////////////////////////////
+
   /** Gets the number of readers in this list. */
   public int size();
+
+  ////////////////////////////////////////////////////////////
 
   /** 
    * Gets the starting date for the specified reader.
@@ -46,6 +55,8 @@ public interface ReaderList {
    * @return the starting date for the specified reader.
    */
   public Date getStartDate (int index);
+
+  ////////////////////////////////////////////////////////////
 
   /** 
    * Gets a variable from the specified reader.
@@ -60,6 +71,8 @@ public interface ReaderList {
   public DataVariable getVariable (int index, String varName) 
     throws IOException;
 
+  ////////////////////////////////////////////////////////////
+
   /**
    * Gets the specified earth data reader.  This method is probably
    * I/O intensive and should only be used when necessary.
@@ -72,6 +85,8 @@ public interface ReaderList {
    */
   public EarthDataReader getReader (int index) throws IOException;
 
+  ////////////////////////////////////////////////////////////
+
   /**
    * Get the index of the reader closest in start date to the
    * specified date.
@@ -81,6 +96,8 @@ public interface ReaderList {
    * @return the reader index or -1 if none are found.
    */
   public int getClosestIndex (Date date);
+
+  ////////////////////////////////////////////////////////////
 
 } // ReaderList interface
 

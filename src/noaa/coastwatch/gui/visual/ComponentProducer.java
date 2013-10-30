@@ -24,6 +24,9 @@ import java.awt.*;
 /**
  * The <code>ComponentProducer</code> interface defines the methods
  * required for objects that have associated components.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public interface ComponentProducer {
 

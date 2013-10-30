@@ -24,6 +24,9 @@ import java.io.*;
  * The <code>IconElementFactory</code> class creates
  * <code>IconElement</code> objects from either a user-specified file
  * or from built in images.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public class IconElementFactory { 
 

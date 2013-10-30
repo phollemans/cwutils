@@ -30,6 +30,9 @@ import javax.swing.event.*;
 /**
  * An image view panel displays a single image and allows zooming and
  * panning with the mouse.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class ImageViewPanel
   extends JPanel {

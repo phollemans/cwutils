@@ -25,6 +25,9 @@ import javax.swing.*;
 /**
  * The <code>StrokeSwatch</code> class is an icon that shows a
  * rectangle of a given line pattern.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class StrokeSwatch 
   implements Icon { 

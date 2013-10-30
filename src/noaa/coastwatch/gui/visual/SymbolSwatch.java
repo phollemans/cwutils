@@ -25,6 +25,9 @@ import jahuwaldt.plot.PlotSymbol;
 /**
  * The <code>SymbolSwatch</code> class is an icon that shows a
  * plot symbol.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.3
  */
 public class SymbolSwatch 
   implements Icon { 

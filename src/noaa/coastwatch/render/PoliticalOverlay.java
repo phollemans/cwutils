@@ -30,6 +30,9 @@ import noaa.coastwatch.util.*;
  * <code>EarthDataView</code> with political border lines.  Both
  * state borders and international borders may be selected but by
  * default, only international borders are rendered.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class PoliticalOverlay 
   extends LineOverlay {

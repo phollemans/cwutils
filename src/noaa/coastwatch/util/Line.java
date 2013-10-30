@@ -23,6 +23,9 @@ import java.text.*;
 /**
  * The 1D line class is a special form of data variable with
  * one dimension.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class Line
   extends DataVariable {

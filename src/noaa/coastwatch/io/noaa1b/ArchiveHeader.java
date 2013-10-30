@@ -24,6 +24,9 @@ import java.util.*;
 /**
  * The <code>ArchiveHeader</code> interface is for reading NOAA
  * 1b archive header data.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public interface ArchiveHeader {
 

@@ -29,6 +29,9 @@ import noaa.coastwatch.render.*;
  * statistics as an x-y line plot of the statistics values.  The x
  * axis is labelled with the data value count, and the y axis with the
  * user-specified label.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class LineStatisticsPanel
   extends StatisticsPanel {

@@ -44,6 +44,9 @@ import noaa.coastwatch.io.*;
  * The panel signals a change in the list of offsets or the
  * selected offset by firing an
  * <code>OVERLAY_LIST_PROPERTY</code> change event.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class NavigationAnalysisPanel
   extends JPanel

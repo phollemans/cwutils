@@ -15,9 +15,10 @@
            2006/10/19, PFH, added support email address separate from author
            2007/04/19, PFH, added version property reading
            2007/05/17, PFH, modified about dialog text to use HTML
+           2013/02/05, PFH, updated copyright date in About message
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -36,6 +37,9 @@ import noaa.coastwatch.util.*;
 /**
  * The tool services class defines various static methods relating
  * to the CoastWatch tools.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public class ToolServices {
 
@@ -59,11 +63,11 @@ public class ToolServices {
 
   /** The software copyright. */
   public static final String COPYRIGHT = 
-    "1998-2007 USDOC/NOAA/NESDIS CoastWatch";
+    "1998-2013 USDOC/NOAA/NESDIS CoastWatch";
 
   /** The software copyright (short version). */
   public static final String COPYRIGHT_SHORT = 
-    "1998-2006\nUSDOC/NOAA/NESDIS CoastWatch";
+    "1998-2013\nUSDOC/NOAA/NESDIS CoastWatch";
 
   /** The tool parameter splitting expression. */
   public static final String SPLIT_REGEX = "[,/]";

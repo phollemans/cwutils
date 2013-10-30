@@ -29,6 +29,9 @@ import noaa.coastwatch.io.*;
  * information in a list of {@link noaa.coastwatch.util.DataVariable}
  * objects.  It contains a number of columns including the variable
  * name and units.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class DataVariableTableModel
   extends AbstractTableModel {

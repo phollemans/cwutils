@@ -25,6 +25,9 @@ import noaa.coastwatch.util.*;
 /**
  * A byte writer is a binary writer that writes data as a stream of
  * 8-bit unsigned bytes.
+ *
+ * @author Mark Robinson
+ * @since 3.1.0
  */
 public class ByteWriter
   extends BinaryWriter {

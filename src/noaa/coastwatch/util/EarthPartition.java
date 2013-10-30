@@ -37,6 +37,9 @@ import noaa.coastwatch.util.trans.*;
  * dimension is measured in terms of the Earth transform
  * <code>distance()</code> metric.  After construction, child
  * partitions may be retrieved and manipulated.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class EarthPartition
   implements Encodable {

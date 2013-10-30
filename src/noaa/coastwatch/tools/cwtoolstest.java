@@ -37,6 +37,9 @@ import ucar.unidata.util.StringUtil;
 /**
  * The <code>cwtoolstest</code> program goes through every command 
  * line tool and tests the options.
+ *
+ * @author Melanie Wright
+ * @since 3.2.3
  */
 public class cwtoolstest {
 

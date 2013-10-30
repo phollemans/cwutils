@@ -51,6 +51,9 @@ import noaa.coastwatch.io.*;
  * selection mechanism for byte or integer valued data that
  * allows certain bits in the data values to act as overlay
  * graphics planes.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class BitmaskOverlay 
   extends MaskOverlay

@@ -30,6 +30,9 @@ import terrenus.instrument.RadiometerCalibrator.CalibrationType;
  * on the NOAA NN' series spacecrafts. 
  *
  * @see HIRS4
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class HIRS4Data
   implements RadiometerData {

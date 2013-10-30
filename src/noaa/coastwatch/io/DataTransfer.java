@@ -28,6 +28,9 @@ import java.util.*;
  * input and output streams.  Data is copied from the input stream to
  * the output stream until no more data is available.  The progress of
  * data copying may be monitored with a data transfer listener.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.5
  */
 public class DataTransfer
   implements Runnable {

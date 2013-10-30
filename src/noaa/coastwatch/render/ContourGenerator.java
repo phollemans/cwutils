@@ -44,6 +44,9 @@ import noaa.coastwatch.util.trans.*;
  * may be used, for example, to create bathymetry or topographic
  * contours from digital elevation model data, or to create contour
  * lines from data in any 2D dataset.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class ContourGenerator
   extends LineFeatureSource {

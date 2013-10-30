@@ -21,6 +21,9 @@ package noaa.coastwatch.render;
  * functions using a simple set of specifications.  This is useful
  * when receiving input from the user or a file, and the input must be
  * used to create a function.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public class EnhancementFunctionFactory {
 

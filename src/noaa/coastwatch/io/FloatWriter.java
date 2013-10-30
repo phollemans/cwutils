@@ -27,6 +27,9 @@ import noaa.coastwatch.util.*;
  * A float writer is a binary writer that writes data as a stream of
  * 32-bit IEEE floating point values.  The scaling and range methods
  * are not supported and perform no function for 32-bit float data.
+ *
+ * @author Mark Robinson
+ * @since 3.1.0
  */
 public class FloatWriter
   extends BinaryWriter {

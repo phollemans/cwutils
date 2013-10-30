@@ -98,7 +98,7 @@
 
 \end{itemize}
 
-\section*{Version 3.1.0, 2001/07/19}
+\section*{Version 3.1.0, 2002/07/19}
 
 \begin{itemize}
 
@@ -434,7 +434,7 @@
 
 \end{itemize}
 
-\section*{Version 3.1.9, 2004/04/07}
+\section*{Version 3.1.9, 2005/04/07}
 
 \subsection*{Updates}
 \begin{itemize}
@@ -912,23 +912,76 @@
 
 \end{itemize}
 
-\section*{Version 3.2.4, 2010/10/31}
+\section*{Version 3.3.0, 2013/10/22}
 
 \subsection*{\bigicon{box_software} Updates}
 
+\hspace{0.4cm} {\bf Graphical tools}
+
 \begin{itemize}
 
-  \item A
+  \item Added support for loading and saving of {\em profiles} in CDAT -- 
+  groups of enhancements and overlays.
 
-  \item B
+%%  \item Added clipboard support in CDAT for matching view scale parameters.
+
+\end{itemize}
+
+\hspace{0.4cm} {\bf File formats and I/O}
+
+\begin{itemize}
+
+  \item Updated file handling for Mac OS X 10.5+ operating system.
+
+  \item Removed read support for the CoastWatch IMGMAP file format.
+
+  \item Updated ACSPO HDF 4 reading for new VIIRS sensor and non-chunked 
+  compressed data files.
+
+  \item Added ability to read ACSPO NetCDF 4 data files.
+
+  \item Added NetCDF 3 with CF-1.4 metadata as an export data format in 
+  cwexport with (optional CW and DCS metadata).
+
+  \item Added read support in all tools for data files in NetCDF 4 with CF-1.4 
+  variable and CW metadata.
+
+  \item Updated to use the new Java HDF 2.9 interface with native 32- and 
+  64-bit HDF 4 and 5 libraries.
+  
+  \item Added read support in all tools for data files in NetCDF 4 with L2P
+  metadata.
+
+  \item Added support for memory caching when reading NetCDF 4 data files.
+
+\end{itemize}
+
+\hspace{0.4cm} {\bf Command line tools}
+
+\begin{itemize}
+
+  \item Added a print option to cwinfo for Common Data Model coordinate 
+  system information (if available).
+  
+  \item Added extra options to cwrender for: (i) rendering with custom color
+  palettes specified by a file or directly on the command line, (ii) adding
+  watermark text to the image, and (iii) manually specifying the data scale
+  tick marks.
+
+  \item Converted all GCTP coordinate transform code to Java to run on 64-bit
+  Java VMs for all tools.
 
 \end{itemize}
 
 \subsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
-  \item C
+  \item Fixed the error message ``no parent window'' when opening data files.
 
-  \item D
+  \item Fixed problem with reliably closing HDF 4 files.
+  
+  \item Corrected direction error in vector symbols (winds, currents, etc).
+
+  \item Fixed non-functional State Plane Coordinate System support.
 
 \end{itemize}

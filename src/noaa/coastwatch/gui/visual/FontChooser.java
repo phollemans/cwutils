@@ -32,6 +32,9 @@ import noaa.coastwatch.gui.*;
  * letter font.  When the user selects a font, a property change
  * event is fired whose property is given by
  * <code>FONT_PROPERTY</code>.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class FontChooser
   extends JPanel {

@@ -30,6 +30,9 @@ import noaa.coastwatch.io.*;
 /**
  * The <code>LineFeatureOverlay</code> class annotates a data view
  * with line features from a line feature source.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class LineFeatureOverlay 
   extends LineOverlay {

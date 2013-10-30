@@ -25,6 +25,9 @@ import noaa.coastwatch.util.trans.*;
 /**
  * The <code>LineSurvey</code> class holds survey information for a
  * line of data values from one point to another.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class LineSurvey 
   extends EarthDataSurvey {

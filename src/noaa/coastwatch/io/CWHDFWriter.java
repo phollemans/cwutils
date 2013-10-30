@@ -72,6 +72,9 @@ import noaa.coastwatch.render.*;
 /**
  * A CoastWatch HDF writer is an Earth data writer that writes
  * CoastWatch HDF format files using the HDF library class.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class CWHDFWriter 
   extends HDFWriter {

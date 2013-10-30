@@ -32,6 +32,9 @@ import java.util.*;
  * to select a file.  The chooser sets up various extra features in a
  * normal file chooser to filter for certain file types, and changes
  * the file name according to the selected file type.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class DynamicExtensionFileChooser
   extends JFileChooser {

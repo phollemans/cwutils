@@ -18,9 +18,15 @@
            - added flattening constants
            - changed "datum" to "spheroid"
            2006/05/26, PFH, removed spheroid and projection constants/methods
-
+           2012/10/13, PFH, deprecated native methods and library
+           2013/09/29, PFH
+           - change: added the isSupportedSpheroid() method
+           - issue: cwmaster was allowing unsupported spheroids for the 
+             state plane system, so using this new method provided more 
+             information about compatible spheroids
+           
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -42,6 +48,15 @@ import noaa.coastwatch.util.trans.*;
  * href="http://edcwww.cr.usgs.gov/pub/software/gctpc">GCTPC</a>
  * package documentation for full documentation on routine parameters
  * and usage.
+ * 
+ * The native methods of GCTP are no longer supported.  Use
+ * the {@link noaa.coastwatch.util.trans.MapProjectionFactory} to create
+ * and work with map projections.  The GCTP parameter related methods
+ * in this class are still useful for creating arrays of valid 
+ * parameters to pass to the map projection factory creation methods.
+ *
+ * @author Mark Robinson
+ * @since 3.1.0
  */
 public class GCTP 
   implements SpheroidConstants, ProjectionConstants {
@@ -105,7 +120,11 @@ public class GCTP
 
     // Load shared library
     // -------------------
-    System.loadLibrary ("GCTP");
+    /**
+     * We remove this call so that the code no longer requires the library
+     * and uses the pure Java classes.
+     */
+    //System.loadLibrary ("GCTP");
 
     // Create descriptive requirements table
     // -------------------------------------
@@ -336,6 +355,96 @@ public class GCTP
     ///////////////////////////////////////////////////////////
 
   } // Requirements class
+
+  ///////////////////////////////////////////////////////////////
+
+  /**
+   * Determines if the projection system supports the specified
+   * spheroid Earth model.  This is the preferred method now over
+   * {@link #supportsSpheroid} because it gives more specific
+   * information about spheroids supported.  This routine should be
+   * used prior to creating a map projection with the 
+   * {@link noaa.coastwatch.util.trans.MapProjectionFactory} methods,
+   * to make sure that no error with be thrown if an incompatible
+   * projection system and spheroid model are attempted.
+   *
+   * @param spheroid the spheroid to check for support.
+   * @param system the projection system to check for support.
+   *
+   * @return true if the projection system supports the specified spheroid,
+   * or false if not.
+   */
+  public static boolean isSupportedSpheroid (
+    int spheroid,
+    int system
+  ) {
+
+    // Check the parameters
+    // --------------------
+    if (spheroid < 0 || spheroid > MAX_SPHEROIDS-1)
+      throw new IllegalArgumentException();
+    if (system < 0 || system > MAX_PROJECTIONS-1)
+      throw new IllegalArgumentException();
+
+    // Look for compatibility
+    // ----------------------
+    boolean isSupported = false;
+    switch (system) {
+
+    /** 
+     * These systems support all spheroids.
+     */
+    case GEO:
+    case UTM: 
+    case ALBERS:
+    case LAMCC:
+    case MERCAT:
+    case PS:
+    case POLYC:
+    case EQUIDC:
+    case TM:
+    case HOM:
+    case SOM:
+    case ALASKA:
+      isSupported = true;
+      break;
+
+    /**
+     * The State Plane only supports CLARKE1866 and GRS1980.
+     */
+    case SPCS:
+      isSupported = (spheroid == CLARKE1866 || spheroid == GRS1980);
+      break;
+
+    /** 
+     * The rest of the systems only support SPHERE.
+     */
+    case STEREO:
+    case LAMAZ:
+    case AZMEQD:
+    case GNOMON:
+    case ORTHO:
+    case GVNSP:
+    case SNSOID:
+    case EQRECT:
+    case MILLER:
+    case VGRINT:
+    case ROBIN:
+    case GOOD:
+    case MOLL:
+    case IMOLL:
+    case HAMMER:
+    case WAGIV:
+    case WAGVII:
+    case OBEQA:
+      isSupported = (spheroid == SPHERE);
+      break;
+
+    } // switch
+
+    return (isSupported);
+
+  } // isSupportedSpheroid
 
   ///////////////////////////////////////////////////////////////
  
@@ -632,8 +741,13 @@ public class GCTP
    * @return the transformed output coordinates.  Coordinates are
    * either <code>[x, y]</code> in a projection coordinate system or
    * <code>[lon, lat]</code> for geographic coordinates.
+   *
+   * @deprecated The native methods of GCTP are no longer supported.  Use
+   * the {@link noaa.coastwatch.util.trans.MapProjectionFactory} to create 
+   * and work with map projections.
    */
-  public static native double[] gctp (
+  @Deprecated
+  public static double[] gctp (
     double input_coord[],
     int input_system,
     int input_zone,
@@ -651,7 +765,11 @@ public class GCTP
     int output_spheroid,
     String NAD1927_zonefile,
     String NAD1983_zonefile
-  ); // gctp
+  ) {
+  
+   throw new IllegalStateException();
+    
+  } // gctp
 
   ////////////////////////////////////////////////////////////
 
@@ -661,15 +779,24 @@ public class GCTP
    * projection parameters.<p>
    *
    * Refer to the {@link #gctp} routine output parameters for details.
+   *
+   * @deprecated The native methods of GCTP are no longer supported.  Use
+   * the {@link noaa.coastwatch.util.trans.MapProjectionFactory} to create 
+   * and work with map projections.
    */
-  public static native void init_forward (
+  @Deprecated
+  public static void init_forward (
     int output_system,
     int output_zone,
     double output_parameters[],
     int output_spheroid,
     String NAD1927_zonefile,
     String NAD1983_zonefile
-  ); // init_forward
+  ) {
+  
+   throw new IllegalStateException();
+    
+  } // init_forward
 
   ////////////////////////////////////////////////////////////
 
@@ -679,15 +806,24 @@ public class GCTP
    * projection parameters.<p>
    *
    * Refer to the {@link #gctp} routine input parameters for details.
+   *
+   * @deprecated The native methods of GCTP are no longer supported.  Use
+   * the {@link noaa.coastwatch.util.trans.MapProjectionFactory} to create 
+   * and work with map projections.
    */
-  public static native void init_inverse (
+  @Deprecated
+  public static void init_inverse (
     int input_system,
     int input_zone,
     double input_parameters[],
     int input_spheroid,
     String NAD1927_zonefile,
     String NAD1983_zonefile
-  ); // init_inverse
+  ) {
+  
+   throw new IllegalStateException();
+    
+  } // init_inverse
 
   ////////////////////////////////////////////////////////////
 
@@ -706,12 +842,21 @@ public class GCTP
    * is because some geographic coordinates have no valid map
    * coordinates.
    *
-   * @see #inverse 
+   * @see #inverse
+   *
+   * @deprecated The native methods of GCTP are no longer supported.  Use
+   * the {@link noaa.coastwatch.util.trans.MapProjectionFactory} to create 
+   * and work with map projections.
    */
-  public static native double[] forward (
+  @Deprecated
+  public static double[] forward (
     double[] pos,
     int output_system
-  ); // forward
+  ) {
+  
+   throw new IllegalStateException();
+    
+  } // forward
 
   ////////////////////////////////////////////////////////////
 
@@ -729,11 +874,20 @@ public class GCTP
    * @throws Exception if the inverse transform failed.
    *
    * @see #forward
+   *
+   * @deprecated The native methods of GCTP are no longer supported.  Use
+   * the {@link noaa.coastwatch.util.trans.MapProjectionFactory} to create 
+   * and work with map projections.
    */
-  public static native double[] inverse (
+  @Deprecated
+  public static double[] inverse (
     double[] pos,
     int input_system
-  ); // inverse
+  ) {
+  
+   throw new IllegalStateException();
+    
+  } // inverse
 
   ////////////////////////////////////////////////////////////
 
@@ -743,10 +897,19 @@ public class GCTP
    * @param angle the angle in radians.
    *
    * @return the packed angle in DDDMMMSSS.SS format.
+   *
+   * @deprecated The native methods of GCTP are no longer supported.  Use
+   * the {@link noaa.coastwatch.util.trans.MapProjectionFactory} to create 
+   * and work with map projections.
    */
-  private static native double pakr2dm (
+  @Deprecated
+  private static double pakr2dm (
     double angle
-  ); // pakr2dm
+  ) {
+  
+   throw new IllegalStateException();
+    
+  } // pakr2dm
 
   ////////////////////////////////////////////////////////////
 
@@ -785,6 +948,21 @@ public class GCTP
   ////////////////////////////////////////////////////////////
 
   private GCTP () { }
+
+  ////////////////////////////////////////////////////////////
+
+  /** Tests this class. */
+  public static void main (String[] argv) throws Exception {
+
+    for (int system = 0; system < MAX_PROJECTIONS ; system++) {
+      System.out.println (PROJECTION_NAMES[system]);
+      for (int spheroid = 0; spheroid < MAX_SPHEROIDS; spheroid++) {
+        if (GCTP.isSupportedSpheroid (spheroid, system))
+          System.out.println ("  " + SPHEROID_NAMES[spheroid]);
+      } // for
+    } // for
+
+  } // main
 
   ////////////////////////////////////////////////////////////
 

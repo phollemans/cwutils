@@ -31,6 +31,9 @@ import noaa.coastwatch.util.trans.*;
  *   Manual on the Global Data-Processing System, Edition 1992<br>
  *   http://www.wmo.ch/web/www/DPS/Manual/WMO485.pdf
  * </blockquote>
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class WindBarbSymbol
   extends DirectionSymbol {
@@ -318,6 +321,13 @@ public class WindBarbSymbol
     final int size = Integer.parseInt (argv[2]);
     PointFeature feature = new PointFeature (new EarthLocation (0, 0), 
       new Object[] {new Double (speed), new Double (dir)});
+
+
+
+    // FIXME: This will no longer work the same with the new OrthographicProjection
+    // class!
+    
+
     final WindBarbSymbol symbol = new WindBarbSymbol (0, 1, SPEED_KNOTS,
        new OrthographicProjection (new EarthLocation (0, 0), 
        new int[] {512,512}, new EarthLocation (0, 0), new double[] {1, 1}));

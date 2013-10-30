@@ -27,6 +27,9 @@ import noaa.coastwatch.util.*;
 /**
  * The <code>PointFeatureSource</code> class supplied and renders
  * <code>PointFeature</code> data with user-supplied plot symbols.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public abstract class PointFeatureSource 
   extends AbstractFeatureSource {

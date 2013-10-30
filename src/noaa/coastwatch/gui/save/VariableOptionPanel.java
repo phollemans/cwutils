@@ -6,9 +6,10 @@
      DATE: 2004/05/04
   CHANGES: 2006/11/09, PFH, added setVariables()
            2006/12/19, PFH, fixed bug in setVariables()
+           2012/12/04, PFH, updated to use getSelectedValuesList()
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2012, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -29,6 +30,9 @@ import noaa.coastwatch.gui.*;
 /** 
  * The <code>VariableOptionPanel</code> class allows the user to
  * choose a subset from a list of variables.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class VariableOptionPanel
   extends JPanel {
@@ -44,7 +48,7 @@ public class VariableOptionPanel
   /** Gets the list of selected variable names. */
   public List getVariables () { 
 
-    return (Arrays.asList (variableList.getSelectedValues())); 
+    return (variableList.getSelectedValuesList());
 
   } // getVariables
 

@@ -28,6 +28,9 @@ import noaa.coastwatch.util.trans.*;
  * A <code>ColorArrowSymbol</code> is similar to a normal arrow but it
  * has the additional feature that arrows are colored according to a
  * color enhancement scheme based on the vector magnitude.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class ColorArrowSymbol
   extends ArrowSymbol

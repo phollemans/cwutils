@@ -20,9 +20,11 @@
            2006/11/15, PFH, added NOAA 1b V5 reader to default list
            2007/09/20, PFH, added ACSPOHDFReader class
            2007/11/05, PFH, added NOAA1bFileReader for non-AVHRR data
+           2012/10/19, PFH, removed HDF5-specific reader list
+           2012/12/02, PFH, removed IMGMAP-based reading
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -36,14 +38,12 @@ package noaa.coastwatch.io;
 import java.io.*;
 import java.util.*;
 import java.lang.reflect.*;
-//import ncsa.hdf.hdf5lib.H5;
 
 /**
  * The Earth data reader factory class creates an appropriate
  * Earth data reader object based on a file name.  The default
  * list of readers is as follows:
  * <ul>
- *   <li> {@link noaa.coastwatch.io.CWFReader} </li>
  *   <li> {@link noaa.coastwatch.io.CWHDFReader} </li>
  *   <li> {@link noaa.coastwatch.io.TSHDFReader} </li>
  *   <li> {@link noaa.coastwatch.io.NOAA1bV1Reader} </li>
@@ -59,6 +59,9 @@ import java.lang.reflect.*;
  * Additional readers may be appended to the list using the
  * <code>addReader()</code> method, or by adding the class name
  * to the <code>reader.properties</code> resource file.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class EarthDataReaderFactory {
 
@@ -77,37 +80,40 @@ public class EarthDataReaderFactory {
   /** The list of available reader classes as strings. */
   private static List readerList;
   
-  /** The list of available reader classes as strings. */
-  private static List h5ReaderList;
-
   ////////////////////////////////////////////////////////////
 
   /** Sets up the initial set of readers. */
   static {
 
-    // Add standard readers
-    // --------------------
+    // Create reader list
+    // ------------------
     readerList = new ArrayList();
-    h5ReaderList = new ArrayList();
     String thisPackage = EarthDataReaderFactory.class.getPackage().getName();
-    readerList.add (thisPackage + ".CWFReader");
+
+    // Add HDF variants
+    // ----------------
     readerList.add (thisPackage + ".CWHDFReader");
     readerList.add (thisPackage + ".TSHDFReader");
+    readerList.add (thisPackage + ".ACSPOHDFReader");
+
+    // Add NOAA 1b variants
+    // --------------------
     readerList.add (thisPackage + ".NOAA1bV1Reader");
     readerList.add (thisPackage + ".NOAA1bV2Reader");
     readerList.add (thisPackage + ".NOAA1bV3Reader");
     readerList.add (thisPackage + ".NOAA1bV4Reader");
     readerList.add (thisPackage + ".NOAA1bV5Reader");
-    readerList.add (thisPackage + ".ACSPOHDFReader");
-    //readerList.add (thisPackage + ".ACSPONCReader");
     readerList.add (thisPackage + ".noaa1b.NOAA1bFileReader");
-    h5ReaderList.add (thisPackage + ".L2PNCReader");
-    h5ReaderList.add (thisPackage + ".ACSPONCReader");
-    h5ReaderList.add (thisPackage + ".CWNCReader");
-    h5ReaderList.add (thisPackage + ".CWNCCFReader");
-    h5ReaderList.add (thisPackage + ".GenericNCReader");
-    //readerList.add (thisPackage + ".VIIRSSDRReader");
-    
+
+    // Add NetCDF variants
+    // -------------------
+    readerList.add (thisPackage + ".L2PNCReader");
+    readerList.add (thisPackage + ".ACSPONCReader");
+    readerList.add (thisPackage + ".ACSPONCCFReader");
+    readerList.add (thisPackage + ".CWNCReader");
+    readerList.add (thisPackage + ".CWNCCFReader");
+    readerList.add (thisPackage + ".GenericNCReader");
+
     // Add extension readers
     // ---------------------
     InputStream stream = ClassLoader.getSystemResourceAsStream (
@@ -193,64 +199,11 @@ public class EarthDataReaderFactory {
         file);
     } // if
 
-
-// FIXME: This needs to be fixed so that the filename extensions
-// are not relied upon for files to be recognized correctly.  There
-// must be some other more reliable method!
-
-
-
     // Loop through each reader class
     // ------------------------------
     Class[] types = new Class[] {String.class};
     Object[] args = new Object[] {file};
     EarthDataReader reader = null;
-    try{
-    	//if(H5.H5Fis_hdf5(file.toString())){
-    	boolean isNCfile = file.endsWith(".nc4") || file.endsWith(".nc");
-      boolean isGribFile = file.endsWith(".grib") || file.endsWith(".grib2") || file.endsWith (".grb");
-    	//boolean isNCfile = file.endsWith(".nc4");
-    	if(isNCfile || isGribFile || isNetwork){
-
-
-//System.out.println ("Trying to open as a NetCDF file");
-
-
-    		for (Iterator iter = h5ReaderList.iterator(); iter.hasNext(); ) {
-  		      Class readerClass = Class.forName ((String) iter.next());
-  		      Constructor constructor = readerClass.getConstructor (types);
-  		      try{
-  		    	  reader = (EarthDataReader) constructor.newInstance (args);
-  		      }
-  		      catch(Exception e){
-  		    	  reader = null;
-  		      }
-  		      if (reader != null) break;
-    		} // for
-    	}
-    	else{
-
-
-//System.out.println ("Trying to open as a non-NetCDF file");
-
-
-    		for (Iterator iter = readerList.iterator(); iter.hasNext(); ) {
-    		    Class readerClass = Class.forName ((String) iter.next());
-    		    Constructor constructor = readerClass.getConstructor (types);
-    		    try{
-    		    	reader = (EarthDataReader) constructor.newInstance (args);
-    		    }
-    		    catch(Exception e){
-    		    	  reader = null;
-    		    }
-    		    if (reader != null) break;
-    		} // for
-    	}
-    }
-    catch(Exception e){
-    	e.printStackTrace();
-    }
-    /*
     for (Iterator iter = readerList.iterator(); iter.hasNext(); ) {
       try {
         Class readerClass = Class.forName ((String) iter.next());
@@ -265,7 +218,7 @@ public class EarthDataReaderFactory {
       } // catch
       if (reader != null) break;
     } // for
-    */
+    
     // Give up and throw an error 
     // --------------------------
     if (reader == null) 

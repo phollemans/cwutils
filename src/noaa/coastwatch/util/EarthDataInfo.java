@@ -39,6 +39,9 @@ import noaa.coastwatch.util.trans.*;
  * coordinates and geographic coordinates.  Other metadata may also be
  * attached using the inherited <code>TreeMap</code> functions and
  * Java <code>String</code> objects as keys.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.8
  */
 public class EarthDataInfo
   extends MetadataContainer {

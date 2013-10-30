@@ -54,6 +54,9 @@ import noaa.coastwatch.util.*;
  * estimating the latitude and longitude values in order to perform an
  * accurate reverse lookup (ie: computing the data location for a
  * given latitude and longitude).
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class SwathProjection
   extends EarthTransform2D

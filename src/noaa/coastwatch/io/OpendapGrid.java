@@ -29,8 +29,11 @@ import noaa.coastwatch.util.*;
  * that delivers data by listening for {@link
  * noaa.coastwatch.util.DataVariable#setAccessHint} calls and
  * only downloads the data which is specified within that call.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
-public class OpendapGrid 
+public class OpendapGrid
   extends Grid {
 
   // Variables

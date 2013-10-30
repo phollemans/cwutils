@@ -31,6 +31,9 @@ import noaa.coastwatch.util.*;
  * projection angles.
  *
  * @see SatellitePassInfo
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class SatellitePassCoveragePanel
   extends EarthContextPanel {

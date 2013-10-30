@@ -44,6 +44,9 @@ import noaa.coastwatch.render.*;
  * <code>PaletterChooser.PALETTE_PROPERTY</code>, and new value
  * contains a palette name from the predefined palettes supplied by
  * the {@link noaa.coastwatch.render.Palette} class.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.6
  */
 public class PaletteChooser
   extends JPanel

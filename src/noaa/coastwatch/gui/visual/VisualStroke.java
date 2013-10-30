@@ -30,6 +30,9 @@ import noaa.coastwatch.gui.*;
  * button with an icon of the stoke pattern.  When the button is
  * pressed, a <code>StrokeChooser</code> appears that allows the user
  * to select a new stroke.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class VisualStroke 
   extends AbstractVisualObject {

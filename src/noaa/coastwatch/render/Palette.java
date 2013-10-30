@@ -41,6 +41,9 @@ import noaa.coastwatch.io.*;
  * The <code>Palette</code> allows the user to associate a name and
  * index color model together as a palette and perform manipulations
  * on the palette colors.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class Palette { 
 

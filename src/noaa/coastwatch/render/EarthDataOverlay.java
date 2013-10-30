@@ -54,6 +54,9 @@ import java.io.*;
  * shallow copy of the object.  If child classes have any deep mutable
  * data structures such as lists, they should override the
  * <code>clone()</code> method.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public abstract class EarthDataOverlay
   implements Comparable, Cloneable, Serializable {

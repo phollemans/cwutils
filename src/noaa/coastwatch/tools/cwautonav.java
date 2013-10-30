@@ -11,9 +11,10 @@
            2005/05/18, PFH, modified box centers for reader datum
            2006/10/25, PFH, fixed problem with lat/lon separator characters
            2007/04/20, PFH, added version printing
+           2012/12/04, PFH, added call to canUpdateNavigation for reader
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -507,6 +508,9 @@ import jargs.gnu.CmdLineParser.*;
  * </p>
  *
  * <!-- END MAN PAGE -->
+ *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public final class cwautonav {
 
@@ -608,7 +612,7 @@ public final class cwautonav {
 
     // Check file format
     // ----------------- 
-    if (!(reader instanceof CWHDFReader) && !(reader instanceof CWFReader)) {
+    if (!reader.canUpdateNavigation()) {
       System.err.println (PROG + ": Unsupported file format for " + input);
       System.exit (2);
     } // if       

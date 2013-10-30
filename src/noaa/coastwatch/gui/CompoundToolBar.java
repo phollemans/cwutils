@@ -28,6 +28,9 @@ import javax.swing.*;
  * toolbars into one by "stealing" the buttons from the other toolbars
  * for itself.  Components are laid out left-to-right and separators
  * are placed between component groups.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class CompoundToolBar
   extends JToolBar {

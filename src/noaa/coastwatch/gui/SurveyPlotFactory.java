@@ -24,6 +24,9 @@ import noaa.coastwatch.util.*;
 /** 
  * The <code>SurveyPlotFactory</code> creates data plot panels that
  * are appropriate for a given survey.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class SurveyPlotFactory {
 

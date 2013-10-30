@@ -37,6 +37,9 @@ import noaa.coastwatch.util.trans.*;
  * float writer in order to write files compatible with Arc.  Only one
  * variable per grid file is allowed, and the variable must have two
  * dimensions and a map projection.
+ *
+ * @author Mark Robinson
+ * @since 3.1.0
  */
 public class ArcWriter
   extends FloatWriter {

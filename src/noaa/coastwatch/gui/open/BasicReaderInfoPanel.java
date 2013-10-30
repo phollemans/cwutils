@@ -34,6 +34,9 @@ import com.braju.format.Format;
  * information from a <code>EarthDataReader</code> in a graphical
  * panel.  A details checkbox may be used to display the raw metadata
  * from the reader.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class BasicReaderInfoPanel
   extends JPanel {

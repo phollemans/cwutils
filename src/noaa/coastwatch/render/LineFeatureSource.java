@@ -34,6 +34,9 @@ import noaa.coastwatch.util.*;
  * political boundaries, bathymetry, and so on.  A source must have
  * the capability to select data from the data source and supply it as
  * a list of {@link LineFeature} objects.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public abstract class LineFeatureSource 
   extends AbstractFeatureSource {

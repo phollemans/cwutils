@@ -26,6 +26,9 @@ import noaa.coastwatch.render.*;
  * a given overlay.
  *
  * @see noaa.coastwatch.render.EarthDataOverlay
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class OverlayPropertyChooserFactory {
 

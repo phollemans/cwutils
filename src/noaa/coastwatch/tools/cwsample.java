@@ -4,7 +4,7 @@
   PURPOSE: To perform sampling of Earth data at discrete Earth 
            locations.
    AUTHOR: Peter Hollemans
-     DATE: 2002/011/26
+     DATE: 2002/01/26
   CHANGES: 2004/01/23, PFH, modified to use SPLIT_REGEX and updated docs
            2004/03/18, PFH, changed to print NaN for missing values
            2004/03/23, PFH, modified to use ArrayList rather than Vector
@@ -237,6 +237,8 @@ import jargs.gnu.CmdLineParser.*;
  *
  * <!-- END MAN PAGE -->
  *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class cwsample {
 

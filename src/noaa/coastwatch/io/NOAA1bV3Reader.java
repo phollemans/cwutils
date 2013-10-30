@@ -34,6 +34,9 @@ import noaa.coastwatch.io.NOAA1bReader.*;
  * NOAA-N and NOAA-N' data.
  *
  * @see NOAA1bV2Reader
+ *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public class NOAA1bV3Reader
   extends NOAA1bV2Reader {

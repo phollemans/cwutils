@@ -29,6 +29,9 @@ import java.io.*;
 /**
  * An icon element is a picture element that is rendered from image
  * data.  Generally, icons should be small and easily rendered.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class IconElement
   extends PictureElement {

@@ -45,6 +45,9 @@ import noaa.coastwatch.io.*;
  * create a new serializable stroke class, which may be required if
  * there are other classes that use a stroke and need serialization.
  * For now, we keep it simple.<p>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public abstract class LineOverlay 
   extends EarthDataOverlay {

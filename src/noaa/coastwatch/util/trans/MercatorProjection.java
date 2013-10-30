@@ -3,11 +3,11 @@
      FILE: MercatorProjection.java
   PURPOSE: Handles Mercator map transformations.
    AUTHOR: Peter Hollemans
-     DATE: 2006/05/28
+     DATE: 2012/11/02
   CHANGES: n/a
 
   CoastWatch Software Library and Utilities
-  Copyright 2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2012, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -22,23 +22,76 @@ import java.awt.geom.*;
 import noaa.coastwatch.util.*;
 
 /**
- * The <code>MercatorProjection</code> class performs Mercator map
- * projection calculations.
+ * The <code>MercatorProjection</code> class performs 
+ * Mercator map projection calculations.
+ *
+ * @author Peter Hollemans
+ * @since 3.3.0
  */
 public class MercatorProjection 
-  extends GCTPStyleProjection {
+  extends GCTPCStyleProjection {
 
   // Variables
   // ---------
 
-  /** The latitude of the projection origin in radians. */
-  private double latOrigin;
+  private double e,es;              // eccentricity constants
+  private double false_easting;     // x offset in meters
+  private double false_northing;    // y offset in meters
+  private double lat_origin;        // center latitude
+  private double lon_center;        // Center longitude (projection center)
+  private double m1;                // small value m
+  private double r_major;           // major axis
+  private double r_minor;           // minor axis
 
-  /** The longitude of the projection center in radians. */
-  private double lonCenter;
+  ////////////////////////////////////////////////////////////
 
-  /** The mercator computation constant. */
-  private double m1;
+  /**
+   * Performs initialization of the projection constants.
+   *
+   * @param r_maj the major axis.
+   * @param r_min the minor axis.
+   * @param center_lon the center longitude.
+   * @param center_lat the center latitude.
+   * @param false_east the x offset in meters.
+   * @param false_north the y offset in meters.
+   *
+   * @return OK on success, or not OK on failure.   
+   */
+  private long projinit (
+    double r_maj,
+    double r_min,
+    double center_lon,
+    double center_lat,
+    double false_east,
+    double false_north
+  ) {
+
+    double temp;                    // temporary variable
+    
+    /*Place parameters in static storage for common use
+      -------------------------------------------------*/
+    r_major = r_maj;
+    r_minor = r_min;
+    lon_center = center_lon;
+    lat_origin = center_lat;
+    false_northing = false_north;
+    false_easting = false_east;
+    
+    temp = r_minor / r_major;
+    es = 1.0 - Math.pow (temp, 2);
+    e = Math.sqrt (es);
+    m1 = Math.cos (center_lat)/(Math.sqrt (1.0 - es*Math.sin (center_lat)*Math.sin (center_lat)));
+    
+    /*Report parameters to the user
+      -----------------------------*/
+    ptitle ("MERCATOR");
+    radius2 (r_major, r_minor);
+    cenlonmer (lon_center);
+    origin (lat_origin);
+    offsetp (false_easting, false_northing);
+    return (OK);
+
+  } // projinit
 
   ////////////////////////////////////////////////////////////
 
@@ -54,98 +107,95 @@ public class MercatorProjection
    * columns]</code>.
    * @param affine the affine transform for translating data
    * <code>[row, column]</code> to map <code>[x, y]</code>.
-   * @param latOrigin the latitude of true scale in radians.
-   * @param lonCenter the center longitude of the map in radians.
+   * @param center_lon the center longitude.
+   * @param center_lat the center latitude.
+   * @param falseEast the false easting value.
+   * @param falseNorth the false northing value.
    *
    * @throws NoninvertibleTransformException if the map
    * projection to data coordinate affine transform is not
    * invertible.
+   * @throws IllegalArgumentException if the paramaters have an inconsistency.
    */
   public MercatorProjection (
     double rMajor,
     double rMinor,
     int[] dimensions,
     AffineTransform affine,
-    double latOrigin,
-    double lonCenter
+    double center_lon,              // center longitude
+    double center_lat,              // center latitude
+    double falseEast,
+    double falseNorth
   ) throws NoninvertibleTransformException {
-
-    super (MERCAT, 0, rMajor, rMinor, dimensions, affine);
 
     // Initialize
     // ----------
-    this.latOrigin = latOrigin;
-    this.lonCenter = lonCenter;
-
-    // Precompute values
-    // -----------------
-    double sinLat = Math.sin (latOrigin);
-    double cosLat = Math.cos (latOrigin);
-    m1 = cosLat/Math.sqrt (1 - ec2*sinLat*sinLat);
+    super (MERCAT, 0, rMajor, rMinor, dimensions, affine);
+    setFalse (falseEast, falseNorth);
+    long result = projinit (rMajor, rMinor, center_lon, center_lat, 
+      falseEast, falseNorth);
+    if (result != OK) 
+      throw new IllegalArgumentException ("Projection parameter inconsistency detected");
 
   } // MercatorProjection constructor
 
   ////////////////////////////////////////////////////////////
 
-  public void mapTransformFor (
-    double[] lonLat,
-    double[] xy
+  protected long projfor (
+    double lat,
+    double lon,
+    double x[],
+    double y[]
   ) {
 
-    double lon = lonLat[0];
-    double lat = lonLat[1];
-    if (Math.abs (Math.abs (lat) - HALF_PI) <= EPSLN)
-      xy[0] = xy[1] = Double.NaN;
-    else {
-      double sinphi = Math.sin (lat);
-      double ts = tsfnz (ec, lat, sinphi);
-      xy[0] = falseEast +  rMajor*m1*adjust_lon (lon - lonCenter);
-      xy[1] = falseNorth - rMajor*m1*Math.log (ts);
-    } // else
+    double ts;                      // small t value
+    double sinphi;                  // sin value
+    
+    /*Forward equations
+      -----------------*/
+    if (Math.abs (Math.abs (lat) - HALF_PI)  <= EPSLN)
+       {
+       p_error ("Transformation cannot be computed at the poles","mer-forward");
+       return (53);
+       }
+    else
+       {
+       sinphi = Math.sin (lat);
+       ts = tsfnz (e, lat, sinphi);
+       x[0] = false_easting + r_major*m1*adjust_lon (lon - lon_center);
+       y[0] = false_northing - r_major*m1*Math.log (ts);
+       }
+    return (OK);
 
-  } // mapTransformFor
+  } // projfor
 
   ////////////////////////////////////////////////////////////
 
-  public void mapTransformInv (
-    double[] xy,
-    double[] lonLat
+  protected long projinv (
+    double x,
+    double y,
+    double lon[],
+    double lat[]
   ) {
 
-    double x = xy[0];
-    double y = xy[1];
-    x -= falseEast;
-    y -= falseNorth;
-    double ts = Math.exp (-y/(rMajor * m1));
-    double lat = phi2z (ec, ts);
-    if (Double.isNaN (lat)) {
-      lonLat[0] = lonLat[1] = Double.NaN;
-    } // if
-    else {
-      double lon = adjust_lon (lonCenter + x/(rMajor * m1));
-      lonLat[0] = lon;
-      lonLat[1] = lat;
-    } // else
+    double ts;                      // small t value
+    double sin_phii;                // sin value
+    long flag[];                    // error flag
+    
+    /*Inverse equations
+      -----------------*/
+    flag = new long[1];
+    x -= false_easting;
+    y -= false_northing;
+    ts = Math.exp (-y/(r_major*m1));
+    lat[0] = phi2z (e, ts, flag);
+    if (flag[0] != 0)
+       return (flag[0]);
+    lon[0] = adjust_lon (lon_center + x/(r_major*m1));
+    
+    return (OK);
 
-  } // mapTransformInv
-
-  ////////////////////////////////////////////////////////////
-
-  public double[] getParameters () {
-
-    double[] params = new double[15];
-    if (spheroid == -1) {
-      params[0] = rMajor;
-      params[1] = ec2;
-    } // if
-    params[4] = pack_angle (Math.toDegrees (lonCenter));
-    params[5] = pack_angle (Math.toDegrees (latOrigin));
-    params[6] = falseEast;
-    params[7] = falseNorth;
-
-    return (params);
-
-  } // getParameters
+  } // projinv
 
   ////////////////////////////////////////////////////////////
 

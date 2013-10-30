@@ -32,6 +32,9 @@ import noaa.coastwatch.util.*;
 /** 
  * The <code>CWHDFSavePanel</code> class allows the user to select save
  * options for CoastWatch HDF export files.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class CWHDFSavePanel
   extends DataSavePanel {

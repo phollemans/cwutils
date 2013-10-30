@@ -27,6 +27,9 @@ import java.util.*;
  * A <code>BinnedGSHHSReaderFactory</code> creates instances of
  * {@link BinnedGSHHSReader} and {@link BinnedGSHHSLineReader}
  * objects based on a resolution requirement.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class BinnedGSHHSReaderFactory {
 

@@ -27,14 +27,128 @@ of formats.<p>
 The basis of all satellite data input functionality in the CWF
 software library is the {@link noaa.coastwatch.io.EarthDataReader}
 class and subclasses.  The reader classes provide generic methods for
-reading metadata and data variables one at a time from CoastWatch
-IMGMAP files ({@link noaa.coastwatch.io.CWFReader}) and CoastWatch HDF
+reading metadata and data variables one at a time from CoastWatch HDF
 files ({@link noaa.coastwatch.io.CWHDFReader}).  Also supported are
 TeraScan HDF files ({@link noaa.coastwatch.io.TSHDFReader}) which have
 a similar format to CoastWatch HDF but with different Earth location
 metadata.  To open a new file of unknown format, the {@link
 noaa.coastwatch.io.EarthDataReaderFactory} attempts to guess the
-file format and provide a <code>EarthDataReader</code> object.<p>
+file format and provide an <code>EarthDataReader</code> object.<p>
+
+The reader classes can be grouped by format and capabilities as follows:
+
+<style type="text/css">
+table, th, td, tr {border: 1px solid black; border-collapse:collapse;}
+</style>
+
+<table>
+
+<tr style="background-color:rgb(198,133,11); color:white">
+<th>Class</th>
+<th>Metadata</th>
+<th>Earth Tranform</th>
+<th>Data Buffering</th>
+</tr>
+
+<tr style="background-color:rgb(222,227,234); font-weight:bold;">
+<td colspan="4">NetCDF 3/4 Format (NCReader subclasses)</td>
+</tr>
+
+<tr>
+<td>GenericNCReader</td>
+<td>CF-1.4</td>
+<td>Equally spaced lat/lon geographic projection; all variables must have the
+same CDM grid coordinates</td>
+<td>None</td>
+</tr>
+
+<tr>
+<td>ACSPONCReader</td>
+<td>ACSPO-specific</td>
+<td>Satellite swath with null lat/lon data detection</td>
+<td>None</td>
+</tr>
+
+<tr>
+<td>L2PNCReader</td>
+<td>CF-1.x</td>
+<td>Satellite swath</td>
+<td>None</td>
+</tr>
+
+<tr>
+<td>CWNCReader</td>
+<td>CoastWatch HDF 3.4</td>
+<td>Map projection only</td>
+<td>None</td>
+</tr>
+
+<tr>
+<td>CWNCCFReader</td>
+<td>CF-1.4 with CoastWatch extensions</td>
+<td>Map projection only</td>
+<td>None</td>
+</tr>
+
+<tr style="background-color:rgb(222,227,234); font-weight:bold;">
+<td colspan="4">HDF 4 Format (HDFReader subclasses)</td>
+</tr>
+
+<tr>
+<td>ACSPOHDFReader</td>
+<td>ACSPO-specific</td>
+<td>Satellite swath with null lat/lon data detection</td>
+<td>Per-variable tile caching</td>
+</tr>
+
+<tr>
+<td>CWHDFReader</td>
+<td>CoastWatch HDF 3.4</td>
+<td>Map projection (GCTP), satellite swath, ellipsoid perspective</td>
+<td>Per-variable tile caching</td>
+</tr>
+
+<tr>
+<td>TSHDFReader</td>
+<td>TDF</td>
+<td>Map projection (equirect, polar stereo, Mercator), satellite swath</td>
+<td>Per-variable tile caching</td>
+</tr>
+
+<tr style="background-color:rgb(222,227,234); font-weight:bold;">
+<td colspan="4">OPeNDAP (OpendapReader subclasses)</td>
+</tr>
+
+<tr>
+<td>CWOpendapReader</td>
+<td>CoastWatch HDF 3.4</td>
+<td>Map projection (GCTP)</td>
+<td>None</td>
+</tr>
+
+<tr style="background-color:rgb(222,227,234); font-weight:bold;">
+<td colspan="4">NOAA 1b AVHRR (NOAA1bReader subclasses)</td>
+</tr>
+
+<tr>
+<td>NOAA1bV1Reader, NOAA1bV2Reader, NOAA1bV3Reader, NOAA1bV4Reader, NOAA1bV5Reader</td>
+<td>NOAA 1b-specific</td>
+<td>Satellite swath (AVHRR LAC and GAC)</td>
+<td>Per-variable scan line caching</td>
+</tr>
+
+<tr style="background-color:rgb(222,227,234); font-weight:bold;">
+<td colspan="4">NOAA 1b Non-AVHRR</td>
+</tr>
+
+<tr>
+<td>NOAA1bFileReader</td>
+<td>NOAA 1b-specific</td>
+<td>Satellite swath (AMSU-A, AMSU-B, HIRS4, MHS)</td>
+<td>Per-variable scan line caching</td>
+</tr>
+
+</table>
 
 The writer classes, subclasses of {@link
 noaa.coastwatch.io.EarthDataWriter}, support the creation of many

@@ -27,6 +27,9 @@ import java.util.*;
  * be continuous.  The longitude filter detects a boundary crossing
  * and adjusts the longitude values.  Values which are less than 0 are
  * shifted positive 360 degrees.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class LongitudeFilter
   implements Filter {

@@ -25,6 +25,9 @@ import terrenus.instrument.*;
 /**
  * The <code>AMSUBHeader</code> class reads NOAA 1b data AMSU-B
  * header records.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.3
  */
 public class AMSUBHeader extends AbstractDataHeader {
 

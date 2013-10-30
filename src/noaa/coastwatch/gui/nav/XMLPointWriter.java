@@ -28,6 +28,9 @@ import noaa.coastwatch.util.*;
  * to an XML format file.  Each navigation point is written as an XML
  * <code>&lt;point&gt;</code> element with attributes and subelements
  * specifying the data.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class XMLPointWriter 
   extends NavigationPointWriter {

@@ -70,6 +70,8 @@ import noaa.coastwatch.tools.*;
  * variables explicitly, even though the CWHDF format supports
  * it.
  *
+ * @author Peter Hollemans
+ * @since 3.3.0
  */
 public class CFNCWriter
   extends EarthDataWriter {

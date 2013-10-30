@@ -29,6 +29,9 @@ import noaa.coastwatch.render.*;
  * implementation of an <code>OverlayPropertyChooser</code> that
  * allows the user to edit the properties of an
  * <code>ExpressionMaskOverlay</code>.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class ExpressionMaskOverlayPropertyChooser 
   extends GenericOverlayPropertyChooser {

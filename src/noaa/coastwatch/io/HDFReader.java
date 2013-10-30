@@ -26,9 +26,11 @@
            2005/09/12, PFH, modified to ignore coord variables in variable list
            2006/11/03, PFH, changed getPreview(int) to getPreviewImpl(int)
            2010/03/30, PFH, modified constructor to close file on failure
+           2012/12/02, PFH, replaced native method getChunkLengths
+           2013/03/07, PFH, added extra read for missing_data if _FillValue missing
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -51,6 +53,9 @@ import noaa.coastwatch.util.*;
  * An HDF reader is an Earth data reader that reads HDF format
  * files using the HDF library class.  The HDF reader class is
  * abstract -- subclasses handle specific metadata variants.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public abstract class HDFReader
   extends EarthDataReader
@@ -64,13 +69,6 @@ public abstract class HDFReader
 
   /** Flag to signify that the file is closed. */
   private boolean closed;
-
-  ////////////////////////////////////////////////////////////
-
-  /** Loads the shared library. */
-  static {
-    System.loadLibrary ("HDFReader");
-  } // static
 
   ////////////////////////////////////////////////////////////
 
@@ -671,7 +669,11 @@ public abstract class HDFReader
         fillValue[0] = null;
       } // catch
       Object missing = fillValue[0];
-
+      if (missing == null) {
+        try { missing = getAttribute (sdsid, "missing_value"); }
+        catch (Exception e) { }
+      } // if
+      
       // Convert missing value
       // ---------------------
       if (missing != null) {
@@ -852,9 +854,46 @@ public abstract class HDFReader
    * 
    * @throws HDFException if an HDF error occurred.
    */
-  public static native int[] getChunkLengths (
+  public static int[] getChunkLengths (
     int sdsid
-  ) throws HDFException;
+  ) throws HDFException {
+  
+    boolean success;
+
+    // Get chunk info
+    // --------------
+    HDFChunkInfo info = new HDFChunkInfo();
+    int[] flags = new int[1];
+    success = HDFLibrary.SDgetchunkinfo (sdsid, info, flags);
+    if (!success) throw new HDFException ("Failed to get chunk info at index = " + sdsid);
+
+    // Get rank
+    // --------
+    String[] varNameArray = new String[] {""};
+    int varDims[] = new int[HDFConstants.MAX_VAR_DIMS];
+    int varInfo[] = new int[3];
+    success = HDFLibrary.SDgetinfo (sdsid, varNameArray, varDims, varInfo);
+    if (!success) throw new HDFException ("Cannot get variable info at index = " + sdsid);
+    int rank = varInfo[0];
+
+    // Get lengths
+    // -----------
+    int[] lengths;
+    switch (flags[0]) {
+    case HDFConstants.HDF_NONE:
+      lengths = null;
+      break;
+    case HDFConstants.HDF_CHUNK:
+    case HDFConstants.HDF_CHUNK | HDFConstants.HDF_COMP:
+    case HDFConstants.HDF_CHUNK | HDFConstants.HDF_NBIT:
+      lengths = Arrays.copyOf (info.chunk_lengths, rank);
+      break;
+    default: throw new HDFException ("Unknown chunking scheme for variable at index = " + sdsid);
+    } // switch
+    
+    return (lengths);
+  
+  } // getChunkLengths
 
   ////////////////////////////////////////////////////////////
 

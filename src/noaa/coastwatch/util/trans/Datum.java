@@ -27,6 +27,9 @@ import noaa.coastwatch.util.*;
  * spheroid parameters, and WGS84-relative datum transformation
  * parameters.  The datum may be used to transform
  * <code>EarthLocation</code> objects to and from different datums.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class Datum 
   implements SpheroidConstants {

@@ -25,6 +25,9 @@ import noaa.coastwatch.io.*;
 /**
  * The <code>AbstractArchiveHeader</code> class reads header data
  * from NOAA 1b data files.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public abstract class AbstractArchiveHeader implements ArchiveHeader {
 

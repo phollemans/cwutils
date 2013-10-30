@@ -28,6 +28,9 @@ import noaa.coastwatch.util.*;
  * to an CSV format file.  Each navigation point is written as one
  * line with commas separating the columns.  The file is prefixed with a
  * column name header.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class CSVPointWriter
   extends NavigationPointWriter {

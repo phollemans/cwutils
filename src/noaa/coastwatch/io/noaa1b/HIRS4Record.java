@@ -27,6 +27,9 @@ import terrenus.instrument.*;
 /**
  * The <code>HIRS4Record</code> class reads NOAA
  * 1b HIRS/4 data records.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class HIRS4Record extends AbstractDataRecord {
 

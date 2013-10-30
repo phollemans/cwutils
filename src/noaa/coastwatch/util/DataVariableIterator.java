@@ -19,6 +19,9 @@ package noaa.coastwatch.util;
 /**
  * The <code>DataVariableIterator</code> class iterates over the
  * locations of a data variable and returns the data values found.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class DataVariableIterator
   implements DataIterator {

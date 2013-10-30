@@ -38,6 +38,9 @@ import edu.wlu.cs.levy.CG.*;
 /**
  * The <code>EarthImageWriter</code> has a single static method that writes
  * image data from an {@link EarthDataView} to one of various formats.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class EarthImageWriter {
 

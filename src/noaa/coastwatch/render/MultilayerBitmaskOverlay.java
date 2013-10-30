@@ -43,6 +43,9 @@ import noaa.coastwatch.io.*;
  * are also taken into account when rendering, but the inverse flag is
  * ignored.  It is assumed that each <code>BitmaskOverlay</code>
  * object uses the same data grid variable.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class MultilayerBitmaskOverlay 
   extends EarthDataOverlay

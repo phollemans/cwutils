@@ -29,6 +29,9 @@ import noaa.coastwatch.tools.*;
 /**
  * The <code>ReaderInfoPanel</code> class displays information from a 
  * <code>EarthDataReader</code> in a graphical panel.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class ReaderInfoPanel
   extends JPanel {

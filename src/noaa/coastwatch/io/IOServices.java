@@ -25,6 +25,9 @@ import java.util.regex.*;
 /**
  * The IO services class defines various static methods relating
  * to input/output services.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class IOServices {
 

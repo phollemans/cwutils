@@ -30,9 +30,10 @@
            2005/12/20, PFH, corrected label colors to match docs
            2006/05/26, PFH, modified to use SpheroidConstants
            2006/06/10, PFH, modified to use BinnedGSHHSReaderFactory
+           2012/12/07, PFH, modified to use MapProjectionFactory
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -75,6 +76,9 @@ import noaa.coastwatch.io.*;
  * of the same color.  The bounding boxes may optionally be annotated with 
  * text labels, which are centered on each box area and rendered in a
  * default 12 point font using the same color as the box edges.<p>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class EarthContextElement
   extends PictureElement {
@@ -408,8 +412,15 @@ public class EarthContextElement
     parameters[5] = GCTP.pack_angle (center.lat);
     MapProjection map;
     try {
-      map = new OrthographicProjection (center, 
-        dataDims, center, new double[] {res*1000, res*1000});
+      map = MapProjectionFactory.getInstance().create (
+        ProjectionConstants.ORTHO,
+        0,
+        parameters,
+        SpheroidConstants.SPHERE,
+        dataDims,
+        center,
+        new double[] {res*1000, res*1000}
+      );
     } catch (Exception e) { return (null); }
 
     // Create Earth image transform
@@ -492,8 +503,15 @@ public class EarthContextElement
     parameters[5] = GCTP.pack_angle (center.lat);
     MapProjection map;
     try {
-      map = new OrthographicProjection (center,
-        dataDims, center, new double[] {res*1000, res*1000});
+      map = MapProjectionFactory.getInstance().create (
+        ProjectionConstants.ORTHO,
+        0,
+        parameters,
+        SpheroidConstants.SPHERE,
+        dataDims,
+        center,
+        new double[] {res*1000, res*1000}
+      );
     } catch (Exception e) { return (null); }
 
     // Create Earth image transform

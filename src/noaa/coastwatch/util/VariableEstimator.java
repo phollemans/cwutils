@@ -37,6 +37,9 @@ import noaa.coastwatch.util.trans.*;
  * missing data values), a <code>Double.NaN</code> value is
  * returned by {@link #getValue} for any location in the affected
  * partition.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class VariableEstimator
   implements Encodable, ValueSource {

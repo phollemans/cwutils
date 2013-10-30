@@ -30,6 +30,9 @@ import noaa.coastwatch.net.*;
  * window is made visible for the first time so that no delay occurs.
  *
  * @see noaa.coastwatch.net.UpdateCheck
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class UpdateAgent
   extends WindowAdapter {

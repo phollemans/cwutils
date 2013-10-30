@@ -41,6 +41,9 @@ import noaa.coastwatch.gui.*;
  * by examining the get/set methods and derives the label names from a
  * list of known labels.  The title is derived from the overlay class
  * name.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class GenericOverlayPropertyChooser 
   extends OverlayPropertyChooser {

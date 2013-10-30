@@ -23,6 +23,9 @@ import terrenus.instrument.*;
 /**
  * The <code>HIRS4</code> is a radiometer for the NOAA High
  * Resolution Infrared Radiation Sounder
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class HIRS4 implements Radiometer {
 

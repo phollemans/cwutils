@@ -25,6 +25,9 @@ import java.util.*;
 /**
  * The <code>TBMHeader</code> class reads Terabit Memory header
  * data from NOAA 1b data files.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class TBMHeader extends AbstractArchiveHeader {
 

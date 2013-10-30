@@ -53,6 +53,9 @@ import noaa.coastwatch.util.*;
  * <code>EnhancementChooser.FUNCTION_PROPERTY</code>, and new value
  * contains an object of type {@link
  * noaa.coastwatch.render.EnhancementFunction}.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.6
  */
 public class EnhancementChooser
   extends JPanel

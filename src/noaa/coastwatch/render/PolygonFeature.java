@@ -35,6 +35,9 @@ import noaa.coastwatch.util.*;
  * rendering algorithm, but rather is a convenience for the user so
  * that polygons of different winding directions may be grouped
  * together but treated differently depending on their direction.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.4
  */
 public class PolygonFeature 
   extends LineFeature {

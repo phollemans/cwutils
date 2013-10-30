@@ -25,6 +25,9 @@ import java.util.*;
  * method to return the next double value.  This helps to save
  * allocating space for a new <code>Double</code> object every time
  * the next double value is needed.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public interface DoubleIterator
   extends Iterator {

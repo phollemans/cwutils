@@ -34,6 +34,9 @@ import javax.swing.tree.*;
 
 /**
  *  A JTree that displays an xml document.
+ *
+ * @author Xiaoming Liu
+ * @since 3.3.0
  */
 public class XMLTree extends JTree {
 

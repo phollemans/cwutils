@@ -27,7 +27,7 @@ import com.fmsware.gif.*;
 import no.geosoft.cc.io.*;
 
 /**
- * <p>The <code>GIFWriter</code> class writes non-interlaced GIF87a
+ * The <code>GIFWriter</code> class writes non-interlaced GIF87a
  * images from a rendered Java image.  If more than 256 colors are
  * found, an optimal 256 color map is generated prior to writing the
  * file.  The following web sites were used for neural network color
@@ -35,7 +35,10 @@ import no.geosoft.cc.io.*;
  * <ul>
  *   <li>http://www.fmsware.com</li>
  *   <li>http://geosoft.no</li>
- * </ul></p>
+ * </ul>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public class GIFWriter {
 

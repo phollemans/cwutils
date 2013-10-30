@@ -26,6 +26,9 @@ import java.awt.geom.*;
  * An annotation element handles the specific information for
  * annotation of data with one symbol or string.  Elements may be
  * grouped together to compose a data annotation overlay.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public abstract class AnnotationElement { 
 

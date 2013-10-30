@@ -31,6 +31,9 @@ import noaa.coastwatch.util.trans.*;
  * latitude and longitude bounds.  Subregions may be used with
  * {@link EarthDataView} objects to center the view on a
  * subregion of interest.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class Subregion {
 

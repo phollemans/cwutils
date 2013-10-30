@@ -58,6 +58,9 @@ import ucar.units.*;
  * missing data value.  Other metadata may also be attached using the
  * <code>TreeMap</code> functions, where it is expected that the key
  * be a Java <code>String</code> object.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public abstract class DataVariable
   extends MetadataContainer

@@ -28,6 +28,9 @@ import noaa.coastwatch.util.*;
  * pixels at each data location.  A <code>MaskOverlay</code>
  * would most often be used to mask certain parts of the data
  * view, such as land or cloud.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public abstract class MaskOverlay
   extends EarthDataOverlay

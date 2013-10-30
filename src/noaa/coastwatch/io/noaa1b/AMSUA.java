@@ -23,6 +23,9 @@ import terrenus.instrument.*;
 /**
  * The <code>AMSUA</code> is a radiometer for the NOAA Advanced
  * Microwave Sounding Unit-A.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.3
  */
 public class AMSUA implements Radiometer {
 

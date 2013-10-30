@@ -24,6 +24,9 @@ import java.util.*;
  * The <code>ResettableIterator</code> class adds an extra interface
  * method to <code>Iterator</code> to make it go back to the first
  * element again.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.6
  */
 public interface ResettableIterator
   extends Iterator {

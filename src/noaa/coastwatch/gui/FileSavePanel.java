@@ -29,6 +29,9 @@ import java.io.*;
  * similar to a file chooser, but the panel is much smaller and is
  * designed to be combined in a panel with other controls, such as
  * save options and formats.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class FileSavePanel 
   extends JPanel {

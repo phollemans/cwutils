@@ -22,6 +22,9 @@ import java.awt.*;
 
 /**
  * The <code>XSymbol</code> class draws an X for a point symbol.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.3
  */
 public class XSymbol
   extends PlotSymbol {

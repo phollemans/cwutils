@@ -29,6 +29,9 @@ import noaa.coastwatch.util.trans.*;
 /**
  * The Earth image transform class translates between 2D geographic
  * coordinates in latitude, longitude and image coordinates in x, y.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class EarthImageTransform {
 

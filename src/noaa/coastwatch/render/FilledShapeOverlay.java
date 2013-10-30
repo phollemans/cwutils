@@ -26,6 +26,9 @@ import java.util.List;
 /**
  * The <code>FilledShapeOverlay</code> class may be used to render a
  * list of generic filled shapes.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class FilledShapeOverlay 
   extends PolygonOverlay {

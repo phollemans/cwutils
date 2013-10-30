@@ -23,6 +23,9 @@ import java.util.*;
 /**
  * The <code>TimePeriod</code> class is a container for a date and 
  * length of time.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.8
  */
 public class TimePeriod implements Comparable {
 

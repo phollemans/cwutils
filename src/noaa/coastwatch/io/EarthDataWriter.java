@@ -39,6 +39,9 @@ import java.util.*;
  *   <li> flush current contents to destination </li>
  *   <li> close the destination when no longer needed </li>
  * </ul>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public abstract class EarthDataWriter {
 

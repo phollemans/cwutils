@@ -28,6 +28,9 @@ import com.lowagie.text.pdf.*;
 /**
  * The graphics services class defines various static methods relating
  * to the java.awt.Graphics2D class.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class GraphicsServices {
 

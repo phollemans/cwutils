@@ -27,6 +27,9 @@ import noaa.coastwatch.gui.*;
 /** 
  * The <code>BinaryOptionPanel</code> class allows the user to choose
  * from a set of data export binary options.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class BinaryOptionPanel
   extends JPanel {

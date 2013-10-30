@@ -25,6 +25,9 @@ import noaa.coastwatch.util.*;
  * EarthDataReader} can implement to indicate that it is capable of
  * reading grid data in a subset/subsampled form.  It contains only
  * one method: {@link #getGridSubset}.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public interface GridSubsetReader {
 

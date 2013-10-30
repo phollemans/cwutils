@@ -11,9 +11,13 @@
            - modified to force sphere for certain systems
            - modified to generate EarthLocation center in map datum
            2006/05/28, PFH, modified to use MapProjectionFactory
+           2013/09/30, PFH
+           - changes: modified various methods to dynamically change
+             spheroid list based on current projection systems
+           - issue: state plane was allowing invalid spheroids to be set
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -45,6 +49,9 @@ import noaa.coastwatch.util.trans.*;
  * @see noaa.coastwatch.util.GCTP
  * @see noaa.coastwatch.util.trans.MapProjection
  * @see noaa.coastwatch.util.trans.MapProjectionFactory
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public class MapProjectionChooser
   extends JPanel {
@@ -99,15 +106,19 @@ public class MapProjectionChooser
    * The last spheroid selected.  This is used when the projection
    * system is changed to one that does not support a generic
    * spheroid.  The spheroid is saved and then recalled again when a
-   * spheroid cabable projection system is selected.
+   * spheroid-capable projection system is selected.
    */
   private Integer lastSpheroid;
 
+  /** The mapping of spheroid names to code values. */
+  private static HashMap<String, Integer> spheroidCodeMap;
+
   ////////////////////////////////////////////////////////////
 
-  /** Creates the ignored set of parameters. */
   static {
 
+    // Build list of ignored GCTP parameter names
+    // ------------------------------------------
     ignoreSet = new HashSet();
     ignoreSet.add ("SMajor");
     ignoreSet.add ("SMinor");
@@ -115,6 +126,12 @@ public class MapProjectionChooser
     ignoreSet.add ("FE");
     ignoreSet.add ("FN");
 
+    // Build map of spheroid names to codes
+    // ------------------------------------
+    spheroidCodeMap = new HashMap<String, Integer>();
+    for (int spheroid = 0; spheroid < GCTP.MAX_SPHEROIDS; spheroid++)
+      spheroidCodeMap.put (GCTP.SPHEROID_NAMES[spheroid], spheroid);
+    
   } // static
 
   ////////////////////////////////////////////////////////////
@@ -203,23 +220,47 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the currently selected spheroid. */
-  public int getSpheroid () { return (spheroidCombo.getSelectedIndex()); }
+  /**
+   * Gets the currently selected spheroid.
+   *
+   * @return the index of the currently selected spheroid, or -1
+   * if no spheroid is selected.
+   */
+  public int getSpheroid () {
+    
+    int spheroid;
+    if (spheroidCombo.getItemCount() == 0) spheroid = -1;
+    else {
+      String item = (String) spheroidCombo.getSelectedItem();
+      spheroid = spheroidCodeMap.get (item);
+    } // else
+    
+    return (spheroid);
+    
+  } // getSpheroid
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the projection spheroid. */
+  /** 
+   * Sets the projection spheroid.
+   *
+   * @throws IllegalArgumentException if the spheroid code is out of range,
+   * or invalid for the current projection system.
+   */
   public void setSpheroid (
     int spheroid
-  ) { 
+  ) {
 
     // Check spheroid code
     // -------------------
-    if (spheroid < 0 || spheroid > GCTP.MAX_SPHEROIDS) return;
+    if (spheroid < 0 || spheroid > GCTP.MAX_SPHEROIDS-1)
+      throw new IllegalArgumentException();
+    if (!GCTP.isSupportedSpheroid (spheroid, getSystem()))
+      throw new IllegalArgumentException();
 
     // Set spheroid
     // ------------
-    spheroidCombo.setSelectedIndex (spheroid);
+    spheroidCombo.setSelectedItem (GCTP.SPHEROID_NAMES[spheroid]);
 
   } // setSpheroid
 
@@ -498,31 +539,55 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Handles a projection system change. */
-  private class SystemChanged extends AbstractAction {
+  /** 
+   * Updates the list of spheroids for the current projection system.
+   * Not all spheroids are supported by each projection.
+   */
+  private void updateSpheroidList () {
+  
+    int currentSpheroid = getSpheroid();
+  
+    // Populate the list from scratch
+    // ------------------------------
+    int system = getSystem();
+    spheroidCombo.removeAllItems();
+    for (int spheroid = 0; spheroid < GCTP.MAX_SPHEROIDS; spheroid++) {
+      if (GCTP.isSupportedSpheroid (spheroid, system))
+        spheroidCombo.addItem (GCTP.SPHEROID_NAMES[spheroid]);
+    } // for
 
-    public void actionPerformed (ActionEvent e) {
+    // Restore the last spheroid
+    // -------------------------
+    if (currentSpheroid != -1) {
 
-      // Update the system parameters displayed
-      // --------------------------------------
-      updateSystemParameters();
-
-      // Check if generic spheroid supported
-      // -----------------------------------
-      if (!GCTP.supportsSpheroid (getSystem())) {
-        if (lastSpheroid == null) 
-          lastSpheroid = new Integer (getSpheroid());
-        setSpheroid (GCTP.SPHERE);
-        spheroidCombo.setEnabled (false);
+      if (spheroidCombo.getItemCount() != GCTP.MAX_SPHEROIDS) {
+        if (lastSpheroid == null)
+          lastSpheroid = new Integer (currentSpheroid);
       } // if
-      else if (lastSpheroid != null) {
-        setSpheroid (lastSpheroid.intValue());
-        spheroidCombo.setEnabled (true);
-        lastSpheroid = null;
+      else {
+        if (lastSpheroid != null) {
+          setSpheroid (lastSpheroid.intValue());
+          lastSpheroid = null;
+        } // if
+        else {
+          setSpheroid (currentSpheroid);
+        } // else
       } // else
 
-    } // actionPerformed
+    } // if
 
+  } // updateSpheroidList
+
+  ////////////////////////////////////////////////////////////
+
+  /** Handles a projection system change. */
+  private class SystemChanged extends AbstractAction {
+    public void actionPerformed (ActionEvent e) {
+
+      updateSystemParameters();
+      updateSpheroidList();
+
+    } // actionPerformed
   } // SystemChanged class
 
   ////////////////////////////////////////////////////////////
@@ -556,7 +621,7 @@ public class MapProjectionChooser
     systemCombo.addActionListener (new SystemChanged());
     fixedPanel.add (systemCombo);
     fixedPanel.add (new JLabel ("Spheroid:"));
-    spheroidCombo = new JComboBox (GCTP.SPHEROID_NAMES);
+    spheroidCombo = new JComboBox();
     fixedPanel.add (spheroidCombo);
     fixedPanel.add (new JLabel ("Parameters:"));
     GUIServices.setConstraints (gc, 0, 0, 1, 1, GridBagConstraints.HORIZONTAL,

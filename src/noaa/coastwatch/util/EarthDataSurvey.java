@@ -28,6 +28,9 @@ import noaa.coastwatch.util.trans.*;
  * statistics, extents, and so on.  Child classes should implement an
  * appropriate constructor and a <code>getResults()</code> method for
  * the results formatting.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public abstract class EarthDataSurvey {
 

@@ -35,6 +35,9 @@ import noaa.coastwatch.render.*;
  * <code>OVERLAY_PROPERTY</code> constant.  Child classes must
  * implement the <code>getTitle()</code> method to return the
  * overlay property chooser title shown in the titled border.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public abstract class OverlayPropertyChooser
   extends JPanel {

@@ -35,6 +35,9 @@ import org.nfunk.jep.*;
  * true or non-zero, then the data is masked, otherwise the data is
  * left visible.  An <code>ExpressionMaskOverlay</code> is thus a more
  * general type of {@link BitmaskOverlay}.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class ExpressionMaskOverlay 
   extends MaskOverlay

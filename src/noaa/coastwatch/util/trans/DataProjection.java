@@ -32,6 +32,9 @@ import noaa.coastwatch.util.*;
  * longitude data.  The only possible operation is translation from
  * data coordinates to geographic coordinates -- the reverse is not
  * implemented.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class DataProjection 
   extends EarthTransform2D {

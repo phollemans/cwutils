@@ -25,6 +25,9 @@ import javax.swing.*;
 /**
  * The <code>ColorSwatch</code> class is an icon that shows a
  * rectangle of a given color.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class ColorSwatch 
   implements Icon { 

@@ -33,6 +33,9 @@ import noaa.coastwatch.util.*;
  * For a line survey, a line is drawn between the start and end
  * points.  For a box survey, a rectangle is drawn enclosing the
  * survey area.  For a polygon survey, the polygon itself is drawn.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class SurveyOverlay 
   extends LineOverlay {

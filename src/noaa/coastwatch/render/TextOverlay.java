@@ -27,6 +27,9 @@ import java.util.List;
 /**
  * The <code>TextOverlay</code> class may be used to render a list of
  * text annotation elements.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class TextOverlay 
   extends EarthDataOverlay {

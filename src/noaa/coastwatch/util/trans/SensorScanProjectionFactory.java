@@ -38,6 +38,8 @@ import java.util.*;
  *
  * </ul>
  *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public class SensorScanProjectionFactory {
 

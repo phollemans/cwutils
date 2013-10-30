@@ -26,6 +26,9 @@ import java.util.List;
 /**
  * The <code>ShapeOverlay</code> class may be used to render a list of
  * generic shapes.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class ShapeOverlay 
   extends LineOverlay {

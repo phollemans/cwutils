@@ -30,6 +30,9 @@ import java.beans.*;
  * selects a color, either from the simple grid or from the full Swing
  * color chooser, a property change event is fired whose property is
  * given by <code>COLOR_PROPERTY</code>.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class SimpleColorChooser
   extends JPanel {

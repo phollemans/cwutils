@@ -145,7 +145,9 @@ import jargs.gnu.CmdLineParser.*;
  * </p>
  *
  * <!-- END MAN PAGE -->
- *   
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public final class cwstatus
   extends JFrame {

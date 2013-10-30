@@ -35,6 +35,9 @@ import java.util.*;
  * that does not create any new objects or start any new threads, and
  * is thus safe to call frequently if needed, rather than calling
  * cancel() followed by start().
+ *
+ * @author Peter Hollemans
+ * @since 3.1.5
  */
 public class Timeout {
 

@@ -26,9 +26,10 @@
            2006/11/06, PFH, added help-related methods and variables
            2006/11/08, PFH, changed default position of OK button
            2011/05/16, XL, added the local clipboard
+           2013/02/22, PFH, updated to supply Aqua help button
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -58,6 +59,9 @@ import noaa.coastwatch.tools.*;
 /**
  * The GUI services class defines various static methods relating
  * to graphical user interfaces.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class GUIServices {
 
@@ -747,8 +751,15 @@ public class GUIServices {
 
     // Create button
     // -------------
-    JButton helpButton = new JButton ("Help");
-    if (!IS_AQUA) helpButton.setIcon (getIcon ("menu.support"));
+    JButton helpButton;
+    if (IS_AQUA) {
+      helpButton = new JButton();
+      helpButton.putClientProperty ("JButton.buttonType", "help");
+    } // if
+    else { 
+      helpButton = new JButton ("Help");
+      helpButton.setIcon (getIcon ("menu.support"));
+    } // else    
     helpButton.addActionListener (new ActionListener () {
         public void actionPerformed (ActionEvent event) {
           HTMLPanel helpPanel = new HTMLPanel (helpIndex, false);

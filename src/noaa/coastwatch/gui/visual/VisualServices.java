@@ -24,6 +24,9 @@ import java.util.*;
 /**
  * The <code>VisualServices</code> class contains static methods
  * that are used in conjunction with visual objects.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class VisualServices {
 

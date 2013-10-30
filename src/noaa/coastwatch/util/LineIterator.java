@@ -30,6 +30,9 @@ import java.util.*;
  * <blockquote>
  *   http://www.gamedev.net/reference/articles/article1275.asp
  * </blockquote>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class LineIterator
   implements ResettableIterator {

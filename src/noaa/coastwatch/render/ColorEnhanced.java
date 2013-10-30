@@ -25,6 +25,9 @@ import java.awt.*;
  * whose data are enhanced with a color palette and enhancement
  * function.  A missing color may also be set which represents data
  * that is outside the enhancement range or otherwise missing.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public interface ColorEnhanced {
 

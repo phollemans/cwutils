@@ -63,6 +63,9 @@ import java.util.*;
  *   <li> <code>data_url</code>
  *   <li> <code>preview_url</code>
  * </ul>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class ServerQuery {
 

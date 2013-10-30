@@ -23,6 +23,9 @@ import javax.swing.*;
  * The <code>TabComponent</code> interface is used to specify that
  * components used in tabs must supply various descriptive elements,
  * such as title, icon, and tool tip.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public interface TabComponent {
 

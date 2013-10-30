@@ -21,6 +21,9 @@ package noaa.coastwatch.util;
  * classes that need to iterate over a set of data values.  It
  * includes both the <code>ResettableIterator</code> interface and the
  * <code>DoubleIterator</code> interface.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public interface DataIterator
   extends ResettableIterator, DoubleIterator {

@@ -13,9 +13,11 @@
            2007/12/19, PFH, modified to discard reader ref after showDialog()
            2007/12/20, PFH, added popup message when file reading is delayed
            2011/02/22, XL, fixed the popup message bug of "no parent window"
+           2013/02/04, PFH, temporarily removed network file tabs
+           2013/09/05, PFH, removed cwf extension from file filters
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -49,6 +51,9 @@ import noaa.coastwatch.tools.*;
  * Data must be in a format recognizable by the {@link
  * noaa.coastwatch.io.EarthDataReaderFactory} class.  Property changes
  * are used to signal a change in reader or list of variables names.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class EarthDataChooser 
   extends JPanel {
@@ -133,7 +138,7 @@ public class EarthDataChooser
     // -------------------------
     fileChooser = GUIServices.getFileChooser();
     SimpleFileFilter filter = new SimpleFileFilter (
-      new String[] {"hdf", "cwf", "nc4", "nc"}, "CoastWatch data");
+      new String[] {"hdf", "nc4", "nc"}, "CoastWatch data");
     fileChooser.addChoosableFileFilter (filter);
     fileChooser.setDialogType (JFileChooser.OPEN_DIALOG);
     fileChooser.addPropertyChangeListener (new LocalFileListener());
@@ -142,10 +147,17 @@ public class EarthDataChooser
       fileChooser);
     
     // Create THREDDS file chooser
+    // ---------------------------
     threddsChooser = new THREDDSFileChooser(null);
     threddsChooser.addPropertyChangeListener (new THREDDSFileListener());
+
+
+
+/*
     tabbedPane.addTab ("THREDDS", GUIServices.getIcon ("open.network"),
-    		threddsChooser);
+      threddsChooser);
+*/
+
 
     // Create network file chooser
     // ---------------------------
@@ -154,8 +166,13 @@ public class EarthDataChooser
     networkChooser = new NetworkFileChooser (ResourceManager.getOpendapList(), 
       lister);
     networkChooser.addPropertyChangeListener (new NetworkFileListener());
+
+/*
     tabbedPane.addTab ("Network", GUIServices.getIcon ("open.network"),
       networkChooser);
+*/
+
+
 
     // Create information panel
     // ------------------------
@@ -433,6 +450,8 @@ public class EarthDataChooser
 
     } // propertyChange
   } // NetworkFileListener class
+
+  ////////////////////////////////////////////////////////////
   
   /** Responds to a change in the network file chooser. */
   private class THREDDSFileListener implements PropertyChangeListener {

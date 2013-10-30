@@ -60,6 +60,9 @@ import noaa.coastwatch.gui.visual.*;
  * @see MultilayerBitmaskOverlay
  * @see ExpressionMaskOverlay
  * @see ESRIShapefileReader
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class OverlayListChooser
   extends JPanel

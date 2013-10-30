@@ -35,6 +35,9 @@ import noaa.coastwatch.net.CatalogQueryAgent.Entry;
  * selected.  When a user activates an entry by double-clicking,
  * the <code>ENTRY_ACTIVATE_PROPERTY</code> is fired with the
  * newly activated entry.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class VisualEntryTable 
   extends JPanel {

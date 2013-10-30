@@ -43,6 +43,9 @@ import noaa.coastwatch.gui.*;
  * <code>create()</code> method, then call the <code>write()</code>
  * method.  Generally, the save panel is enclosed in a dialog with OK
  * and Cancel options.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public abstract class DataSavePanel
   extends SavePanel {

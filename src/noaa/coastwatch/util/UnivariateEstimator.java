@@ -32,6 +32,9 @@ import Jama.*;
  * calculated using the values, and the estimator will approximate
  * function values using the coefficients as <code>f(x) =
  * a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup>.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class UnivariateEstimator 
   extends Function {

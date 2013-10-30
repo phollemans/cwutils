@@ -24,6 +24,9 @@ import java.util.*;
 /**
  * The <code>NOAA1bServices</code> class performs various NOAA 1b
  * file related functions.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class NOAA1bServices {
   

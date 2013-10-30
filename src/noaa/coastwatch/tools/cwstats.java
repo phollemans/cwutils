@@ -176,7 +176,9 @@ import com.braju.format.Format;
  * </pre> </p>
  *
  * <!-- END MAN PAGE -->
- *    
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public final class cwstats {
 

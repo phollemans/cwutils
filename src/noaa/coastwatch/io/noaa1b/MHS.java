@@ -23,6 +23,9 @@ import terrenus.instrument.*;
 /**
  * The <code>MHS</code> is a radiometer for the NOAA Microwave Humidity
  * Sounder.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.3
  */
 public class MHS implements Radiometer {
 

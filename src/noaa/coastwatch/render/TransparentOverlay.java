@@ -25,6 +25,9 @@ package noaa.coastwatch.render;
  * devices.
  *
  * @see GraphicsServices#supportsAlpha
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public interface TransparentOverlay {
 

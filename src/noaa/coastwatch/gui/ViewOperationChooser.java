@@ -6,9 +6,10 @@
      DATE: 2004/02/19
   CHANGES: 2005/05/22, PFH, added 1:1 button
            2007/07/17, PFH, added fullscreen toolbar
-
+           2013/02/22, PFH, added special Aqua handling
+           
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -47,6 +48,9 @@ import java.util.List;
  * <code>getInstance()</code> so that a single chooser may be used
  * from multiple classes, even though it is only included in one
  * layout manager.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class ViewOperationChooser
   extends JToolBar {
@@ -146,6 +150,7 @@ public class ViewOperationChooser
       button.setText ("");
     } // else
     button.addActionListener (operationAction);
+    if (GUIServices.IS_AQUA) button.setBorderPainted (false);
 
     // Add button
     // ----------

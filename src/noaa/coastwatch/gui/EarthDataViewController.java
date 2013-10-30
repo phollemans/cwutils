@@ -63,6 +63,9 @@ import noaa.coastwatch.gui.nav.*;
  * @see AnnotationListChooser
  * @see CompositeChooser
  * @see NavigationChooser
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class EarthDataViewController {
 

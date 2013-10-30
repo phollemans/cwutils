@@ -37,6 +37,7 @@
            2005/10/04, PFH, modified to eliminate invalid SDnametoindex calls
            2006/05/28, PFH, modified to use MapProjectionFactory
            2006/10/02, PFH, modified to handle missing location values
+           2012/12/04, PFH, added canUpdateNavigation
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
@@ -63,6 +64,9 @@ import noaa.coastwatch.util.trans.*;
 /**
  * A CWHDF reader is an Earth data reader that reads CoastWatch
  * HDF format files using the HDF library class.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class CWHDFReader
   extends HDFReader {
@@ -502,6 +506,10 @@ public class CWHDFReader
     else return (null);
 
   } // getTransform
+
+  ////////////////////////////////////////////////////////////
+
+  public boolean canUpdateNavigation () { return (true); }
 
   ////////////////////////////////////////////////////////////
 

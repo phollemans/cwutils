@@ -24,6 +24,9 @@ import noaa.coastwatch.util.trans.*;
 /**
  * The <code>PointSurvey</code> class holds survey information for a
  * single data location.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class PointSurvey 
   extends EarthDataSurvey {

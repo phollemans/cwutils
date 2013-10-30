@@ -53,6 +53,9 @@ import java.io.*;
  * </pre>
  * The text area is also useful for setting specific fonts, for example
  * a fixed space font rather than the default proportional space font.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class PanelOutputStream
   extends OutputStream {

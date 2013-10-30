@@ -24,6 +24,9 @@ import java.util.*;
  * The <code>BinaryStreamReaderFactory</code> class handles
  * efficient storage and retrieval of stream readers for specific
  * classes.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class BinaryStreamReaderFactory {
 

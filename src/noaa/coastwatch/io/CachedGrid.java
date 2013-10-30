@@ -13,9 +13,10 @@
            2004/03/23, PFH, modified to use ArrayList rather than Vector
            2004/06/10, PFH, changed resetCache() to protected access
            2004/07/10, PFH, added setOptimizedCacheSize()
+           2013/02/12, PFH, added getMaxTiles()
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -52,6 +53,9 @@ import noaa.coastwatch.util.TilingScheme.*;
  * dirty flag for each tile.  If the tile has been written to, it is
  * kept in the cache until, upon removal, it is written to the data
  * stream.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public abstract class CachedGrid
   extends Grid {
@@ -179,6 +183,15 @@ public abstract class CachedGrid
     setMaxTiles (cacheSize / getTileSize (tiling.getTileDimensions(), this));
 
   } // setCacheSize
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the current maximum number of tiles allowed in the cache.
+   *
+   * @return the maximum tiles allowed.
+   */
+  public int getMaxTiles () { return (maxTiles); }
 
   ////////////////////////////////////////////////////////////
 

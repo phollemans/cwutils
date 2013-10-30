@@ -23,6 +23,9 @@ import java.awt.*;
 /**
  * The renderable interface sets the methods for classes that render
  * to images or graphics contexts.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public interface Renderable {
 

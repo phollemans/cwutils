@@ -14,10 +14,11 @@
            2005/03/15, PFH, reformatted documentation and usage note
            2006/07/13, PFH, updated for new overwrite behaviour
            2007/04/19, PFH, added version printing
-           2011/09/13, XL, modified to use ACSPOInverseGridResampler for ACSPO files.
+           2011/09/13, XL, modified to use ACSPOInverseGridResampler for ACSPO files
+           2013/03/06, PFH, modified to make ACSPO resampler usage a method subtype
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -218,7 +219,9 @@ import jargs.gnu.CmdLineParser.*;
  * </p>
  *
  * <!-- END MAN PAGE -->
- *  
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public final class cwregister {
 
@@ -299,6 +302,25 @@ public final class cwregister {
     String overwrite = (String) cmd.getOptionValue (overwriteOpt);
     if (overwrite == null) overwrite = "always";
 
+    // Detect method subtype
+    // ---------------------
+    /** 
+     * We do this primarily to support ACSPO resampling, which performs
+     * a slightly different algorithm.  In the case of inverse resampling,
+     * there is a greater tolerance for pixels at the edges of source 
+     * rectangles.  In the case of mixed resampling, the VIIRS bowtie overlap
+     * pixels are set to missing, and so are filled properly.  We currently 
+     * don't document the ACSPO method subtype, mainly because the 
+     * modifications for ACSPO data are a kludgy one-off aberration of nature 
+     * that no sane and regular user of cwregister should have to know about.
+     */
+    String[] methodArray = method.split ("-");
+    String methodSubtype = "";
+    if (methodArray.length == 2) {
+      method = methodArray[0];
+      methodSubtype = methodArray[1];
+    } // if
+
     try {
 
       // Get master Earth info
@@ -341,14 +363,12 @@ public final class cwregister {
       // ------------------------
       GridResampler resampler = null;
       if (method.equals ("inverse")) {
-    	if(reader instanceof ACSPOHDFReader || reader instanceof ACSPONCReader){
-    		resampler = new ACSPOInverseGridResampler (inputInfo.getTransform(), 
-    		          masterTrans, polysize);
-    	}
-    	else{
-    		resampler = new InverseGridResampler (inputInfo.getTransform(), 
-    				masterTrans, polysize);
-    	}
+    	if (methodSubtype.equals ("acspo"))
+          resampler = new ACSPOInverseGridResampler (inputInfo.getTransform(), 
+            masterTrans, polysize);
+    	else
+          resampler = new InverseGridResampler (inputInfo.getTransform(), 
+            masterTrans, polysize);
       } // if
 
       // Create mixed resampler
@@ -363,16 +383,12 @@ public final class cwregister {
         int rectWidth = Integer.parseInt (rectsizeArray[0]);
         int rectHeight = Integer.parseInt (rectsizeArray[1]);
         MixedGridResampler mixed = null;
-        SatelliteDataInfo dataInfo = (SatelliteDataInfo)reader.getInfo();
-        if(dataInfo.getSensor().equals("VIIRS") && 
-        		(reader instanceof ACSPOHDFReader || reader instanceof ACSPONCReader)){
-    		mixed = new ACSPOMixedGridResampler (inputInfo.getTransform(), 
-    		          masterTrans, rectWidth, rectHeight);
-    	}
-    	else{
-    		mixed = new MixedGridResampler (
-               inputInfo.getTransform(), masterTrans, rectWidth, rectHeight);
-        }
+        if (methodSubtype.equals ("acspo")) 
+          mixed = new ACSPOMixedGridResampler (inputInfo.getTransform(), 
+            masterTrans, rectWidth, rectHeight);
+    	else
+          mixed = new MixedGridResampler (inputInfo.getTransform(),
+            masterTrans, rectWidth, rectHeight);
         int overwriteMode = -1;
         if (overwrite.equals ("always")) 
           overwriteMode = MixedGridResampler.OVERWRITE_ALWAYS;

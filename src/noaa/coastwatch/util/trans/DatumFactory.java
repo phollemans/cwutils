@@ -26,6 +26,9 @@ import noaa.coastwatch.util.*;
  * The <code>DatumFactory</code> class creates geodetic
  * <code>Datum</code> objects corresponding to various spheroid
  * codes.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class DatumFactory
   implements SpheroidConstants {

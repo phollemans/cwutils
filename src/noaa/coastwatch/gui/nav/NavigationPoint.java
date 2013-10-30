@@ -23,6 +23,9 @@ import noaa.coastwatch.util.*;
 /**
  * The <code>NavigationPoint</code> class holds data for a single
  * navigation analysis point.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class NavigationPoint {
 

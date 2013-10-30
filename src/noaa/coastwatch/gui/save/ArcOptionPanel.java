@@ -27,6 +27,9 @@ import noaa.coastwatch.gui.*;
 /** 
  * The <code>ArcOptionPanel</code> class allows the user to choose
  * from a set of ArcGIS options for data export.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class ArcOptionPanel
   extends JPanel {

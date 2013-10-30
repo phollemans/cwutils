@@ -25,6 +25,9 @@ import java.io.*;
  * A <code>DirectoryLister</code> performs simple directory listing
  * services, providing the file names in a directory, their size, and
  * modification times.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public interface DirectoryLister extends Cloneable {
 

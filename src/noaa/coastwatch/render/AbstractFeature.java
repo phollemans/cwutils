@@ -24,6 +24,9 @@ import java.util.*;
  * An <code>AbstractFeature</code> can be extended by any concrete
  * <code>Feature</code> class.  It provides a default implementation
  * for the attribute interface and other methods.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public abstract class AbstractFeature 
   implements Feature {

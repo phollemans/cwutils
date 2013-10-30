@@ -66,6 +66,9 @@ import noaa.coastwatch.util.trans.*;
  * are available as needed to implement the interface of an Earth
  * data reader.  Where no access to the underlying data is supplied,
  * the raw data may be used.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public abstract class NOAA1bReader
   extends EarthDataReader {

@@ -47,9 +47,10 @@
              than BitmaskOverlay in render()
            2006/12/14, PFH, added getImageAffine()
            2006/12/18, PFH, added getUpsideDown()
+           2013/05/31, PFH, updated docs for getScale() and setCenterAndScale()
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -132,6 +133,9 @@ import noaa.coastwatch.util.trans.*;
  * these methods are only useful in a multithreaded application in
  * which the rendering is running in a separate thread from the
  * user-interface.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public abstract class EarthDataView
   implements Renderable, Cloneable {
@@ -622,8 +626,11 @@ public abstract class EarthDataView
   
   ////////////////////////////////////////////////////////////
 
-  /** Gets the scale of this view. */
-  public double getScale(){return this.scale;};
+  /** 
+   * Gets the scale of this view. This is the ratio of view image pixels
+   * to data pixels.
+   */
+  public double getScale() { return (this.scale); }
 
   ////////////////////////////////////////////////////////////
 
@@ -663,24 +670,30 @@ public abstract class EarthDataView
 
   } // setCenter
   
+  ////////////////////////////////////////////////////////////
+  
   /**
    * Set the center and scale of this view
    * 
-   * @param center
-   * @param scale
+   * @param center the new center data location.
+   * @param scale the new scaling factor for the view.
+   *
    * @throws NoninvertibleTransformException
+   *
+   * @see #getCenter
    */
   public void setCenterAndScale (
-		    DataLocation center, double scale
-	) throws NoninvertibleTransformException {
+    DataLocation center,
+    double scale
+  ) throws NoninvertibleTransformException {
 
-	  // Set center and reset
-	  // --------------------
-	  this.center = (DataLocation) center.clone();
-	  this.scale = scale;
-	  resetTransform();
+    // Set center and reset
+    // --------------------
+    this.center = (DataLocation) center.clone();
+    this.scale = scale;
+    resetTransform();
 
-  } // setCenter
+  } // setCenterAndScale
 
   ////////////////////////////////////////////////////////////
 
@@ -694,7 +707,7 @@ public abstract class EarthDataView
    */
   private void resetTransform () throws NoninvertibleTransformException {
 
-    ImageTransform imageTrans = new ImageTransform (imageDims, center, 
+    ImageTransform imageTrans = new ImageTransform (imageDims, center,
       new double[] {scale, scale});
     trans = new EarthImageTransform (trans.getEarthTransform(), imageTrans);
     area = null;

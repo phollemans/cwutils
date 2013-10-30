@@ -30,6 +30,9 @@ import noaa.coastwatch.tools.*;
  * The <code>UpdateCheck</code> class checks for updates of the
  * CoastWatch utilities software package online.  The check generates
  * a message if an update is available.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class UpdateCheck {
   

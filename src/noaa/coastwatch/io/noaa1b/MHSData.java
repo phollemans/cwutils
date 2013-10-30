@@ -30,6 +30,9 @@ import terrenus.instrument.RadiometerCalibrator.CalibrationType;
  * instrument on the NOAA KLMNN' series spacecrafts.
  *
  * @see MHS
+ *
+ * @author Peter Hollemans
+ * @since 3.2.3
  */
 public class MHSData
   implements RadiometerData {

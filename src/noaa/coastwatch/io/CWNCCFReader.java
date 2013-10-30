@@ -2,18 +2,12 @@
 /*
      FILE: CWNCCFReader.java
   PURPOSE: Reads CoastWatch-style data through the NetCDF interface.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/07/04
-  CHANGES: 2006/02/16, PFH, moved coordinate variable check to constructor
-           2006/05/28, PFH, modified to use MapProjectionFactory
-           2006/06/14, PFH, modified to ignore grids with odd sizes
-           2006/11/03, PFH, changed getPreview(int) to getPreviewImpl(int)
-           2010/02/14, PFH, modified to use new Java netCDF 4.1 library
-           2012/06/27, XL,  modified from CWNCReader to CWNCCFReader to CoastWatch NetCDF 4
-                            format with CF conventions
-
+   AUTHOR: X. Liu
+     DATE: 2012/06/27
+  CHANGES: 2013/06/21, PFH, updated to use Variable.getShortName()
+  
   CoastWatch Software Library and Utilities
-  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -39,6 +33,9 @@ import noaa.coastwatch.util.trans.*;
  * The <code>CWNCCFReader</code> class reads Java NetCDF accessible
  * datasets and uses the CoastWatch HDF metadata conventions to parse
  * the attribute and variable data.
+ *
+ * @author Xiaoming Liu
+ * @since 3.3.0
  */
 public class CWNCCFReader 
   extends NCReader {
@@ -259,8 +256,8 @@ public class CWNCCFReader
 
 	      // Check for correct dimensions
 	      // ----------------------------
-	      if (var.getRank() >= 2 && !var.getName().equals("time_bounds")) {
-	    	  nameList.add (var.getName());
+	      if (var.getRank() >= 2 && !var.getShortName().equals("time_bounds")) {
+	    	  nameList.add (var.getShortName());
 	    	  
 	      } // if
 	    } // for
@@ -304,7 +301,7 @@ public class CWNCCFReader
     // Get variable info
     // -----------------
     int varDims[] = var.getShape();
-    String name = var.getName();
+    String name = var.getShortName();
     int rank = var.getRank();
     Class varClass = var.getDataType().getPrimitiveClassType();
     boolean isUnsigned = var.isUnsigned();

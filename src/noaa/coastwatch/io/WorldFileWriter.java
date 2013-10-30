@@ -47,6 +47,9 @@ import noaa.coastwatch.render.*;
  *   <li><a href="http://support.esri.com/index.cfm?fa=knowledgebase.techarticles.articleShow&d=17489">FAQ:  What is the format of the world file used for georeferencing images?</a></li>
  *   <li><a href="http://support.esri.com/index.cfm?fa=knowledgebase.techArticles.articleShow&d=23082">Object:  [O-Image] Supported image formats for ArcIMS 4.0, 4.0.1 and 9.0</a></li>
  * </ul>
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class WorldFileWriter {
 

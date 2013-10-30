@@ -111,6 +111,9 @@ import noaa.coastwatch.io.*;
  *   54 StepSeq25
  *   55 HSB-Cycle
  * </pre> 
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class PaletteFactory { 
 

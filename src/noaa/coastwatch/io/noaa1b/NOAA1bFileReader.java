@@ -35,6 +35,9 @@ import noaa.coastwatch.util.TilingScheme.*;
  * The <code>NOAA1bFileReader</code> class extends {@link
  * EarthDataReader} to handle NOAA 1b weather satellite data
  * files from a number of NOAA satellite sensors.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class NOAA1bFileReader extends EarthDataReader {
 

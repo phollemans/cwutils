@@ -536,7 +536,9 @@ import org.nfunk.jep.*;
  * </p>
  *
  * <!-- END MAN PAGE -->
- *  
+ *
+ * @author Peter Hollemans
+ * @since 3.1.4
  */
 public final class cwmath {
 

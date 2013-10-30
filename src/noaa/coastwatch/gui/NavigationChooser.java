@@ -6,9 +6,10 @@
      DATE: 2004/06/07
   CHANGES: 2006/03/15, PFH, modified to use GUIServices.getIconToggle() and
              JToolBar for the navigation mode buttons
+           2012/12/04, PFH, updated to use getSelectedValuesList()
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2012, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -51,6 +52,9 @@ import noaa.coastwatch.io.*;
  * apply.  If the affine transform to apply is null, then the
  * navigation transform for the user-specified list of variables
  * should be reset.<p>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class NavigationChooser
   extends JPanel
@@ -149,7 +153,7 @@ public class NavigationChooser
   /** Gets the list of selected variable names. */
   public List getVariables () { 
 
-    return (Arrays.asList (variableList.getSelectedValues())); 
+    return (variableList.getSelectedValuesList());
 
   } // getVariables
 

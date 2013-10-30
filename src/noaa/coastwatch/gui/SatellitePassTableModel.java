@@ -33,6 +33,9 @@ import noaa.coastwatch.net.*;
 /**
  * The satellite pass table model contains satellite pass data as
  * a Swing table model.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class SatellitePassTableModel
   extends AbstractTableModel {

@@ -60,6 +60,9 @@ import noaa.coastwatch.io.*;
  * The default reader factory for coastline data is a standard {@link
  * BinnedGSHHSReaderFactory} unless the {@link #setReaderFactory} method
  * is called.<p>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class CoastOverlay 
   extends PolygonOverlay {
@@ -183,7 +186,7 @@ public class CoastOverlay
     EarthArea viewArea = view.getArea();
     double res = view.getResolution();
     /**
-     * We do this next line because the un-serialized coast overlay
+     * We do this next line because the de-serialized coast overlay
      * will have a null reader factory.
      */
     if (readerFactory == null)

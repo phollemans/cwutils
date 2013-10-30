@@ -27,8 +27,11 @@ import noaa.coastwatch.util.*;
 /** 
  * The <code>OpendapReader</code> class is the base class for readers that
  * use the OPeNDAP API to read data and metadata.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
-public abstract class OpendapReader 
+public abstract class OpendapReader
   extends EarthDataReader {
 
   // Variables

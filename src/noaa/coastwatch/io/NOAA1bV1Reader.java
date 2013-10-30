@@ -57,6 +57,9 @@ import noaa.coastwatch.io.NOAA1bReader.*;
  * version 2 format datasets.
  *
  * @see NOAA1bV2Reader
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class NOAA1bV1Reader
   extends NOAA1bReader {

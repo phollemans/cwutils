@@ -28,6 +28,9 @@ import java.util.*;
  * The statistics class is a container for various data variable
  * statistics such as minimum, maximum, mean, standard deviation,
  * histogram counts, and so on.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.6
  */
 public class Statistics {
 

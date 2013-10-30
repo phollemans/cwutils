@@ -41,6 +41,9 @@ import javax.swing.event.*;
  * of this method if needed.
  *
  * @see FullScreenToolBar
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class FullScreenWindow {
 

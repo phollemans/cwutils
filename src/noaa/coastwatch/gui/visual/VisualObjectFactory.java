@@ -27,6 +27,9 @@ import noaa.coastwatch.render.*;
 /**
  * The <code>VisualObjectFactory</code> class contains static methods
  * that create new visual objects based on an object and a property name.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class VisualObjectFactory {
 

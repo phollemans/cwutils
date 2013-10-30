@@ -45,6 +45,9 @@ import noaa.coastwatch.util.*;
  * surface and draws rubber-band lines according to one of
  * various drawing modes.  It then reports the results of the
  * drawing operation via a change event.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public class LightTable 
   extends JLayeredPane {

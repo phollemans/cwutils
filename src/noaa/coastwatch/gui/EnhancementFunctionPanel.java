@@ -27,6 +27,9 @@ import noaa.coastwatch.render.*;
 /**
  * An enhancement function panel displays an enhancement function
  * graphically as a line plot.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.6
  */
 public class EnhancementFunctionPanel
   extends JPanel {

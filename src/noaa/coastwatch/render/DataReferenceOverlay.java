@@ -27,6 +27,9 @@ import noaa.coastwatch.util.trans.*;
 /**
  * The <code>DataReferenceOverlay</code> class annotates an {@link
  * EarthDataView} object with row/column grid lines and labels.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class DataReferenceOverlay 
   extends LabeledLineOverlay {

@@ -49,6 +49,9 @@ import noaa.coastwatch.io.*;
  *   http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html<br>
  *   http://gmt.soest.hawaii.edu
  * </blockquote><p>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
  */
 public abstract class BinnedGSHHSReader
   extends PolygonFeatureSource {

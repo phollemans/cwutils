@@ -30,6 +30,9 @@ import noaa.coastwatch.net.*;
 /**
  * A satellite pass info object holds information about one pass
  * of a satellite over the Earth.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class SatellitePassInfo
   extends SatelliteDataInfo {

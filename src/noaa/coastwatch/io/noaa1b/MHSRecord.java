@@ -25,6 +25,9 @@ import terrenus.instrument.*;
 /**
  * The <code>MHSRecord</code> class reads NOAA 1b MHS data
  * records.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.3
  */
 public class MHSRecord extends AbstractDataRecord {
 

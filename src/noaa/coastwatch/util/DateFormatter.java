@@ -4,10 +4,10 @@
   PURPOSE: A class to format dates.
    AUTHOR: Peter Hollemans
      DATE: 2004/07/02
-  CHANGES: n/a
+  CHANGES: 2013/01/31, PFH, added parseDate method
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2012, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -25,6 +25,9 @@ import java.text.*;
  * The <code>DateFormatter</code> class contains a number of static
  * methods to format dates easily based on timezone and Earth
  * location.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.8
  */
 public class DateFormatter {
 
@@ -118,6 +121,27 @@ public class DateFormatter {
     return (formatDate (date, format, zone));
 
   } // formatDate
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Creates a date from the specified string and format.
+   *
+   * @param input the input string to parse.
+   * @param format a format string in the style of the Java
+   * <code>SimpleDateFormat</code> class.
+   *
+   * @return a date object or null if the input string cannot be parsed.
+   */ 
+  public static Date parseDate (
+    String input,
+    String format
+  ) throws ParseException {
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat (format);
+    return (dateFormat.parse (input));
+
+  } // parseDate
 
   ////////////////////////////////////////////////////////////
 

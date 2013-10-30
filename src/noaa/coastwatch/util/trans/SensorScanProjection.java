@@ -20,6 +20,9 @@ package noaa.coastwatch.util.trans;
  * The <code>SensorScanProjection</code> is used to provide Earth
  * transform calculations for various types of satellite sensors that
  * cannot be represented by one of the standard map projections.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public abstract class SensorScanProjection 
   extends EarthTransform2D {

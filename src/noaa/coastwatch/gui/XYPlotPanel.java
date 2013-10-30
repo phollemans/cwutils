@@ -28,6 +28,9 @@ import noaa.coastwatch.render.*;
  * The <code>XYPlotPanel</code> is an abstract class that draws axes
  * and labels for an x-y plot.  It is up to the child class to draw
  * the actual x-y data.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public abstract class XYPlotPanel
   extends JPanel {

@@ -26,6 +26,9 @@ import noaa.coastwatch.util.trans.*;
 /**
  * The <code>PolygonSurvey</code> class holds survey information for a
  * polygon of data values.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class PolygonSurvey
   extends BoxSurvey {

@@ -41,6 +41,9 @@ import noaa.coastwatch.util.trans.*;
  * grid square (10, 20) covers the area between 10N to 11N and 20E to
  * 21E.  All Earth locations must have a latitude range of [-90..90]
  * and longitude range of [-180..180).
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class EarthArea
   implements Cloneable {

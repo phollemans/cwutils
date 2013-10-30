@@ -36,6 +36,9 @@ import noaa.coastwatch.render.*;
  * Buttons may be simple buttons or toggle buttons.  Buttons may be
  * safely added to the toolbar without losing them in their original
  * layout since buttons are only used for their icons and text.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class FullScreenToolBar 
   extends JPanel {

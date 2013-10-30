@@ -30,6 +30,9 @@ import noaa.coastwatch.tools.*;
  * The <code>EarthDataViewFactory</code> uses an {@link
  * EarthDataReader} and variable name to create an {@link
  * EarthDataView} for displaying a view of the variable data.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class EarthDataViewFactory {
 

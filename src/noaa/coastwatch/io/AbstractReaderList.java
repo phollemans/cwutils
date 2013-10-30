@@ -23,6 +23,9 @@ import java.util.*;
 /**
  * The <code>AbstractReaderList</code> class implements some of the
  * more universal methods for a <code>ReaderList</code>.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public abstract class AbstractReaderList 
   implements ReaderList {

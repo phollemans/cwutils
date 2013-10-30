@@ -26,6 +26,9 @@ import noaa.coastwatch.io.*;
 /**
  * The <code>AbstractDataHeader</code> class reads NOAA 1b data
  * header records.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public abstract class AbstractDataHeader implements DataHeader {
 

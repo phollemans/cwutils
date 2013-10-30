@@ -23,6 +23,9 @@ import terrenus.instrument.*;
 /**
  * The <code>AMSUB</code> is a radiometer for the NOAA Advanced
  * Microwave Sounding Unit-B.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.3
  */
 public class AMSUB implements Radiometer {
 

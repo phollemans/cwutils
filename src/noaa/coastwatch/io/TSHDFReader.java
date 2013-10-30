@@ -92,6 +92,9 @@ import noaa.coastwatch.util.trans.*;
  * This mechanism allows tools like cwimport to import attributes from
  * TeraScan-produced datasets and preserve the user-defined attributes
  * that are of value to the user.</p>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public class TSHDFReader
   extends HDFReader {

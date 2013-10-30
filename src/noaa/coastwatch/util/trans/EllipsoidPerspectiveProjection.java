@@ -32,6 +32,9 @@ import noaa.coastwatch.util.*;
  * angles.  It is assumed that the satellite is pointed at the center
  * of the Earth.  A WGS 84 Earth model is used to perform ellipsoid
  * intersection and geodetic latitude calculations.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public class EllipsoidPerspectiveProjection
   extends SensorScanProjection {

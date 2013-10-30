@@ -25,6 +25,9 @@ import noaa.coastwatch.io.*;
 /**
  * The <code>AbstractDataRecord</code> class reads NOAA 1b data
  * records.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public abstract class AbstractDataRecord implements DataRecord {
 

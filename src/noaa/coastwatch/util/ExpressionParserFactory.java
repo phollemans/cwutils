@@ -28,6 +28,9 @@ import org.nfunk.jep.function.*;
  * additional functions added.  See the {@link
  * noaa.coastwatch.tools.cwmath} documentation for details on the
  * added functions.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class ExpressionParserFactory {
 

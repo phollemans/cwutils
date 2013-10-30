@@ -27,6 +27,9 @@ import javax.swing.table.*;
 /**
  * The <code>NavigationPointTable</code> class is a table that
  * displays navigation point data.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class NavigationPointTable
   extends JTable {

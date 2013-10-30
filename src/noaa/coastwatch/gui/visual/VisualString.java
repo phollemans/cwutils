@@ -26,6 +26,9 @@ import javax.swing.event.*;
 /**
  * The <code>VisualString</code> class represents a string as a text
  * field.  When the text field is modified, the string changes value.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class VisualString 
   extends AbstractVisualObject {

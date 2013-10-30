@@ -60,6 +60,9 @@ import noaa.coastwatch.gui.nav.*;
  * </ol>
  *
  * @see noaa.coastwatch.gui.EarthDataViewController
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class EarthDataAnalysisPanel
   extends JPanel

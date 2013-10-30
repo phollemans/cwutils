@@ -46,6 +46,9 @@ import noaa.coastwatch.util.trans.*;
  * as either the red, green, or blue component of a 24-bit color
  * value.  This is repeated for each pixel to form the overall
  * composite image.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class ColorComposite 
   extends EarthDataView {

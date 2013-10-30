@@ -25,6 +25,9 @@ import noaa.coastwatch.util.*;
 /**
  * A short writer is a binary writer that writes data as a stream of
  * 16-bit signed integers.
+ *
+ * @author Mark Robinson
+ * @since 3.1.0
  */
 public class ShortWriter
   extends BinaryWriter {

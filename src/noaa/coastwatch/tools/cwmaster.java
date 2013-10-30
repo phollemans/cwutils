@@ -162,7 +162,10 @@ import jargs.gnu.CmdLineParser.*;
  * </pre> </p>
  *
  * <!-- END MAN PAGE -->
- *   */
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
+ */
 public final class cwmaster
   extends JFrame {
 

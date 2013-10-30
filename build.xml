@@ -17,9 +17,11 @@
            2010/02/14, PFH, added more comments, testtool target
            2012/08/30, PFH, modified to remove Ant 1.8 warnings
            2012/10/04, PFH, updated for new source directory structure
+           2012/12/11, PFH, updated for MacOS X 64-bit, removed native code
+           2013/02/04, PFH, simplified
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 -->
 
@@ -27,11 +29,16 @@
 
   <!-- Setup global properties -->
   <!-- *********************** -->
+
   <buildnumber/>
   <property file="cwf.properties"/>
+  <tstamp>
+    <format property="current.time" pattern="yyyyMMdd_HHmmss"/>
+  </tstamp>
 
   <!-- Define install task -->
   <!-- ******************* -->
+
   <!--
   This is the support library for creating installation packages
   for various operating systems.
@@ -43,6 +50,7 @@
 
   <!-- Define Java compile classpath -->
   <!-- ***************************** -->
+  
   <path id="cp">
     <!-- The main libraries used by the code. --> 
     <fileset dir="lib" includes="**/*.jar,**/*.zip"/>
@@ -54,10 +62,12 @@
 
   <!-- Add to default excludes -->
   <!-- *********************** -->
+  
   <defaultexcludes add="**/.xvpics,**/.xvpics/**"/>
 
   <!-- Define main compile targets -->
   <!-- *************************** -->
+  
   <target name="classes" description="Compiles main Java classes in src/">
     <depend srcdir="src" destdir="classes"/>
     <mkdir dir="classes"/>
@@ -68,9 +78,9 @@
       debug="on" 
       deprecation="on"
       includeantruntime="false"/>
-    <echo 
+    <echo
       file="resources/version.properties" 
-      message="cwf.version=${version.full}${line.separator}"/>
+      message="cwf.version=${version.full} ${current.time}${line.separator}"/>
     <jar destfile="lib/cwf.jar">
       <fileset dir="classes"/>
       <fileset dir="resources"/>
@@ -89,30 +99,26 @@
       includeantruntime="false">
       <compilerarg value="-Xlint:unchecked"/>
     </javac>
-    <echo 
+    <echo
       file="resources/version.properties" 
-      message="cwf.version=${version.full}${line.separator}"/>
+      message="cwf.version=${version.full} ${current.time}${line.separator}"/>
     <jar destfile="lib/cwf.jar">
       <fileset dir="classes"/>
       <fileset dir="resources"/>
     </jar>
   </target>
 
-  <target name="native" description="Compiles native C code in native/">
-    <exec executable="${basedir}/native/makenative" dir="native"/>
-  </target>
-
   <!-- Define source and API targets -->
   <!-- ***************************** -->
+  
   <target name="source" description="Creates Java and C source code ZIP file">
     <zip destfile="src.zip">
       <zipfileset dir="src" prefix="src"/>
-      <zipfileset dir="native" prefix="native"/>
     </zip>
   </target>
 
-  <target name="javadoc" depends="classes" 
-    description="Creates Java API documentation and tool manual pages in doc/">
+  <target name="doc" depends="classes" 
+    description="Creates Java API documentation, tool manual pages, and user's guide in doc/">
     <delete dir="doc/api"/>
     <javadoc 
       sourcepath="src" 
@@ -137,128 +143,78 @@
     </zip>
   </target>
 
-  <target name="all" depends="classes,javadoc"/>
+  <target
+    name="all"
+    description="Combines classes, doc, source, and api targets"
+    depends="classes,doc,source,api"/>
 
-  <!-- Define distribution targets -->
-  <!-- *************************** -->
-  <target name="dist_win32" depends="classes,javadoc,source,api" 
-    description="Creates Windows .exe package">
+  <!-- Define package targets -->
+  <!-- ********************** -->
+
+  <target name="pkg_windows" depends="all"
+    description="Creates Windows packages">
     <install4j 
       projectfile="cwf.install4j"
       release="${version}"
-      buildids="10"
-      verbose="true"/>
+      buildids="10,278"
+      verbose="true">
+      <variable name="buildNumber" value="${build.number}"/>
+    </install4j>
   </target>
 
-  <target name="dist_linux" depends="classes,javadoc,source,api"
-    description="Creates Linux .tar.gz, .sh, and .rpm package files">
+  <target name="pkg_linux" depends="all"
+    description="Creates Linux packages">
     <install4j 
       projectfile="cwf.install4j"
       release="${version}"
-      buildids="84,86,88"
-      verbose="true"/>
+      buildids="88,288"
+      verbose="true">
+      <variable name="buildNumber" value="${build.number}"/>
+    </install4j>
   </target>
 
-  <target name="dist_linux_tar" depends="classes,javadoc,source,api"
-    description="Creates Linux .tar.gz file">
+  <target name="pkg_solaris" depends="all"
+    description="Creates Solaris packages">
     <install4j 
       projectfile="cwf.install4j"
       release="${version}"
-      buildids="88"
-      verbose="true"/>
+      buildids="93,292"
+      verbose="true">
+      <variable name="buildNumber" value="${build.number}"/>
+    </install4j>
   </target>
 
-  <target name="dist_solaris" depends="classes,javadoc,source,api"
-    description="Creates Solaris .tar.gz and .sh package files">
+  <target name="pkg_macosx" depends="all"
+    description="Creates Mac OS X packages">
     <install4j 
       projectfile="cwf.install4j"
       release="${version}"
-      buildids="90,93"
-      verbose="true"/>
+      buildids="276,528"
+      verbose="true">
+      <variable name="buildNumber" value="${build.number}"/>
+    </install4j>
   </target>
 
-  <target name="dist_macosx" depends="classes,javadoc,source,api"
-    description="Creates MacOS X .dmg and .tgz package files">
+  <target name="pkg_macosx_test" depends="all"
+    description="Creates Mac OS X test package">
     <install4j 
       projectfile="cwf.install4j"
       release="${version}"
-      buildids="172,235"
-      verbose="true"/>
-  </target>
-
-  <target name="dist_macosx_tgz" depends="classes,javadoc,source,api"
-    description="Creates MacOS X .tgz package file">
-    <install4j 
-      projectfile="cwf.install4j"
-      release="${version}"
-      buildids="235"
-      verbose="true"/>
-  </target>
-
-  <target name="dist_macosx_dmg" depends="classes,javadoc,source,api"
-    description="Creates MacOS X .dmg package file">
-    <install4j
-      projectfile="cwf.install4j"
-      release="${version}"
-      buildids="172"
-      verbose="true"/>
-  </target>
-
-  <target name="dist_irix" depends="classes,javadoc,source,api"
-    description="Creates IRIX .tar.gz and .sh package files">
-    <install4j 
-      projectfile="cwf.install4j"
-      release="${version}"
-      buildids="109,113"
-      verbose="true"/>
-  </target>
-
-  <target name="dist_aix" depends="classes,javadoc,source,api"
-    description="Creates AIX .tar.gz and .sh package files">
-    <install4j 
-      projectfile="cwf.install4j"
-      release="${version}"
-      buildids="101,105"
-      verbose="true"/>
+      buildids="528"
+      verbose="true">
+      <variable name="buildNumber" value="${build.number}"/>
+    </install4j>
   </target>
 
   <target 
-    name="dist" 
-    depends="dist_win32,dist_linux,dist_solaris,dist_macosx,dist_aix" 
-    description="Creates all distribution package files"/>
-
-  <!-- Define prerelease targets -->
-  <!-- ************************* -->
-  <target name="pre_linux" depends="dist_linux_tar"
-    description="Creates and copies a prerelease Linux package">
-    <move 
-      file="${dist.dir}/cwf_${version.file}_linux.tar.gz"
-      tofile="${pre.dir}/cwf_${version.file.full}_linux.tar.gz"/>
-  </target>
-  <target name="pre_win32" depends="dist_win32"
-    description="Creates and copies a prerelease Windows package">
-    <move 
-      file="${dist.dir}/cwf_${version.file}_win32.exe" 
-      tofile="${pre.dir}/cwf_${version.file.full}_win32.exe"/>
-  </target>
-  <target name="pre_macosx" depends="dist_macosx_dmg"
-    description="Creates and copies a prerelease Mac package">
-    <move
-      file="${dist.dir}/cwf_${version.file}_macosx.dmg"
-      tofile="${pre.dir}/cwf_${version.file.full}_macosx.dmg"/>
-  </target>
-  <target name="pre_macosx_tar" depends="dist_macosx_tgz"
-    description="Creates and copies a prerelease Mac package">
-    <move
-      file="${dist.dir}/cwf_${version.file}_macosx.tgz"
-      tofile="${pre.dir}/cwf_${version.file.full}_macosx.tgz"/>
-  </target>
-  <target name="pre" depends="pre_linux,pre_win32,pre_macosx,pre_macosx_tar"
-    description="Creates and copies prerelease Linux/Windows/Mac packages"/>
+    name="packages"
+    depends="pkg_windows,pkg_linux,pkg_solaris,pkg_macosx" 
+    description="Creates all package files"/>
 
   <!-- Define cleanup targets -->
   <!-- ********************** -->
-  <target name="clean" 
+
+  <target name="clean"
     description="Cleans up compiled Java classes, source ZIP, and documentation">
     <delete file="lib/cwf.jar"/>
     <delete file="src.zip"/>
@@ -268,61 +224,21 @@
     <delete file="doc/api.zip"/>
   </target>
 
-  <target name="clean_dist"
-    description="Deletes all distribution packages">
+  <target name="clean_packages"
+    description="Deletes all packages">
     <delete>
-      <fileset dir="${dist.dir}" includes="**/*"/>
+      <fileset dir="${pkg.dir}" includes="**/*"/>
     </delete>
-  </target>
-
-  <target name="clean_install"
-    description="Deletes the installation directory ${install.dir}">
-    <delete dir="${install.dir}"/>
-  </target>
-
-  <!-- Define the developers package target -->
-  <!-- ************************************ -->
-  <target name="devel" depends="clean,clean_dist"
-    description="Creates a developer source package in ..">
-    <tar 
-      destfile="../cwf_${version.file.full}_devel.tar.gz" 
-      basedir=".."
-      includes="cwf-${version}/**"
-      compression="gzip"/>
-  </target>
-
-  <!-- Define installation targets (Linux only) -->
-  <!-- **************************************** -->
-  <target name="install" depends="clean_install,dist_linux_tar"
-    description="Installs the Linux .tar.gz package locally">
-    <!-- For some reason, the untar with compression task seems to be broken!
-    <untar dest="test_install" compression="gzip">
-      <fileset dir="dist">
-        <include name="**/cwf_*_linux.tar.gz"/>
-      </fileset>
-    </untar>
-    -->
-    <path id="tarfile">
-      <fileset dir="${dist.dir}">
-        <include name="**/cwf_*_linux.tar.gz"/>
-      </fileset>
-    </path>
-    <exec executable="tar" dir="${install.dir}">
-      <arg value="-zxf"/>
-      <arg pathref="tarfile"/>
-    </exec>
-
-    <!-- TODO: Need to move the cwf directory to final install directory. -->
-
-  </target>
-
-  <target name="install_jar" depends="classes"
-    description="Installs the Java JAR file locally (good for testing)">
-    <copy file="lib/cwf.jar" todir="${install.dir}/lib"/>
   </target>
 
   <!-- Define test targets -->
   <!-- ******************* -->
+  
+  <target name="test_jar" depends="classes"
+    description="Copies the CWF jar file into the install directory for direct in-situ testing">
+    <copy file="lib/cwf.jar" todir="${install.dir}/lib"/>
+  </target>
+  
   <path id="testcp">
     <fileset dir="lib" includes="**/*.jar,**/*.zip"/>
     <pathelement location="data"/>
@@ -338,7 +254,7 @@
       fork="true">
       <env key="${ld.var}" value="${basedir}/lib/${os.libs}"/>
       <jvmarg line="${vm.args}"/>
-      <arg line="${args}"/>
+      <arg value="${args}"/>
     </java>
   </target>
 

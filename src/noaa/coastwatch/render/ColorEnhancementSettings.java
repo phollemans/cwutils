@@ -23,6 +23,9 @@ package noaa.coastwatch.render;
  * a color enhancement.
  *
  * @see noaa.coastwatch.render.ColorEnhancement
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class ColorEnhancementSettings 
   implements Cloneable {

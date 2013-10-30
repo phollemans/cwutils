@@ -41,6 +41,9 @@ import noaa.coastwatch.util.trans.*;
  *   to the destination.</li>
  * 
  * </ol>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public class InverseGridResampler 
   extends GridResampler {

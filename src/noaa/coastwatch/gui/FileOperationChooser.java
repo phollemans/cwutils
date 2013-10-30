@@ -5,9 +5,10 @@
    AUTHOR: Peter Hollemans
      DATE: 2004/05/10
   CHANGES: 2006/10/19, PFH, changed save as to export
-
+           2013/02/22, PFH, added special Aqua handling
+           
   CoastWatch Software Library and Utilities
-  Copyright 1998-2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -37,6 +38,9 @@ import java.beans.*;
  * <code>getInstance()</code> so that a single chooser may be used
  * from multiple classes, even though it is only included in one
  * layout manager.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class FileOperationChooser
   extends JToolBar {
@@ -120,6 +124,7 @@ public class FileOperationChooser
       button.setText ("");
     } // else
     button.addActionListener (operationAction);
+    if (GUIServices.IS_AQUA) button.setBorderPainted (false);
 
     // Add button
     // ----------

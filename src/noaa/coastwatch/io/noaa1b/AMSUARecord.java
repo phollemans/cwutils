@@ -25,6 +25,9 @@ import terrenus.instrument.*;
 /**
  * The <code>AMSUARecord</code> class reads NOAA 1b AMSU-A data
  * records.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.3
  */
 public class AMSUARecord extends AbstractDataRecord {
 

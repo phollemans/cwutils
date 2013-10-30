@@ -35,6 +35,9 @@ package noaa.coastwatch.util;
  *   L<sub>i</sub>(x) = PRODUCT(j=1..n,j!=i) { (x-x<sub>j</sub>) / 
  *   (x<sub>i</sub> - x<sub>j</sub>) }
  * </blockquote>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class LagrangeInterpolator
   extends Function {

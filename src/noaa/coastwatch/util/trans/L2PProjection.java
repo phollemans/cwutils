@@ -25,6 +25,9 @@ import noaa.coastwatch.util.*;
  * The <code>L2PProjection</code> class implements Earth transform
  * calculations for satellite swath (also called sensor scan) 2D
  * projections for L2P data. See also <code>SwathProjection</code>.
+ *
+ * @author Xiaoming Liu
+ * @since 3.3.0
  */
 public class L2PProjection
   extends EarthTransform2D{

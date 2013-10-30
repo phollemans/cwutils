@@ -11,9 +11,9 @@
            - updated to use new HDF geolocation and prototype variables
            2010/03/30, PFH, modified constructor to close file on failure
            2010/11/01, XL, modified getVariable method to read non-chunked
-           compressed files
+             compressed files
            2010/12/02, XL, modified getGlobalInfo method to read satellite
-           name info for ACSPO VIIRS files
+             name info for ACSPO VIIRS files
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2010, USDOC/NOAA/NESDIS CoastWatch
@@ -42,9 +42,12 @@ import noaa.coastwatch.util.TilingScheme.Tile;
 import noaa.coastwatch.util.TilingScheme.TilePosition;
 
 /**
- * <p>A <code>ACSPOHDFReader</code> reads HDF format data output
+ * A <code>ACSPOHDFReader</code> reads HDF format data output
  * from the NOAA/NESDIS AVHRR Clear-Sky Processor for Oceans
- * (ACSPO) system.</p>
+ * (ACSPO) system.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class ACSPOHDFReader
   extends HDFReader {
@@ -169,7 +172,7 @@ public class ACSPOHDFReader
 
     // Get simple attributes
     // ---------------------
-	String processor = (String) getAttribute (sdid, "PROCESSOR");
+    String processor = (String) getAttribute (sdid, "PROCESSOR");
     String sat = null;
     String sensor = null;
     
@@ -185,8 +188,9 @@ public class ACSPOHDFReader
     	else if (satCode.equals ("M2")) sat = "METOPA";
     } // try
     catch (Exception e) {
-    		sat = (String) getAttribute (sdid, "SATELLITE");
+      sat = (String) getAttribute (sdid, "SATELLITE");
     } // catch
+
     try {
     	sensor = (String) getAttribute (sdid, "INSTRUMENT_DATA");
     }

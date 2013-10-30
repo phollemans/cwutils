@@ -27,6 +27,9 @@ import javax.swing.table.*;
  * The satellite pass table is a Swing table that holds satellite pass
  * information for a server.  The table includes a column-based
  * sorting mechanism activated by clicking on the column header.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class SatellitePassTable
   extends JTable {

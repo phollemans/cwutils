@@ -29,6 +29,9 @@ import noaa.coastwatch.render.*;
 /**
  * The <code>Preferences</code> class handles preferences set by the
  * user for CoastWatch tool operations.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class Preferences
   implements Cloneable { 

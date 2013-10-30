@@ -29,6 +29,9 @@ import noaa.coastwatch.gui.open.DirectoryLister.Entry;
  * The <code>FileTableModel</code> uses a list of {@link
  * DirectoryLister.Entry} objects to present a view of a directory and
  * its subdirectories and files.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class FileTableModel 
   extends AbstractTableModel {

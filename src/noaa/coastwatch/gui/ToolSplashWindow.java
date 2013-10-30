@@ -28,6 +28,9 @@ import javax.swing.*;
  * text messages are displayed on top of the splash graphic to give
  * details such as the software package name, website, version, and so
  * on.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class ToolSplashWindow 
   extends JWindow {

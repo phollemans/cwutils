@@ -37,6 +37,9 @@ import noaa.coastwatch.net.*;
  * as they listen through the {@link
  * noaa.coastwatch.util.DataVariable#setAccessHint} method so that only the
  * data that is required is downloaded from the OPeNDAP server.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class OpendapReaderList
   extends AbstractReaderList {

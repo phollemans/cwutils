@@ -31,6 +31,9 @@ import noaa.coastwatch.render.*;
  * The <code>OverlayGroupSavePanel</code> shows a list of overlays
  * that are to be saved as a group, and allows the user to choose the
  * group name or use an existing name.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class OverlayGroupSavePanel 
   extends JPanel {

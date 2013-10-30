@@ -11,9 +11,13 @@
            2007/03/29, PFH, augmented to read multiple grid sets
            2008/02/16, PFH, modified to use new Java netCDF 2.2.22 library
            2010/02/14, PFH, modified to use new Java netCDF 4.1 library
+           2013/01/06, PFH, added extra comments for class
+           2013/05/24, PFH
+            - updated to use GridCoordSystem.getCalendarDateRange()
+            - modified latitude axis reading to handle south first reading
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -35,6 +39,7 @@ import ucar.nc2.dataset.*;
 import ucar.nc2.ft.*;
 import ucar.nc2.dt.*;
 import ucar.nc2.units.*;
+import ucar.nc2.time.*;
 import ucar.ma2.*;
 import noaa.coastwatch.util.*;
 import noaa.coastwatch.util.EarthLocation;
@@ -47,7 +52,14 @@ import noaa.coastwatch.util.trans.*;
  * provides.  If a data variable is found that has two geographic
  * axes but also time and/or level axes, the variable data is
  * expanded to a series of 2D variables by extending the variable
- * name for each non-geographic axis.
+ * name for each non-geographic axis.  Datasets must:
+ * <ul>
+ *   <li> have the same Earth transform for all grids,
+ *   <li> use a geographic map projection with equally spaced lat/lon intervals.
+ * </ul>
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class GenericNCReader 
   extends NCReader {
@@ -123,10 +135,10 @@ public class GenericNCReader
     Set<Date> dateSet = new TreeSet<Date>();
     for (VariableGroup group : groupList) {
       GridCoordSystem coordSystem = group.gridset.getGeoCoordSystem();
-      DateRange dateRange = coordSystem.getDateRange();
+      CalendarDateRange dateRange = coordSystem.getCalendarDateRange();
       if (dateRange != null) {
-        dateSet.add (dateRange.getStart().getDate());
-        dateSet.add (dateRange.getEnd().getDate());
+        dateSet.add (new Date (dateRange.getStart().getMillis()));
+        dateSet.add (new Date (dateRange.getEnd().getMillis()));
       } // if
     } // for
     if (dateSet.size() == 0) dateSet.add (new Date(0));
@@ -224,15 +236,20 @@ public class GenericNCReader
     // Create map projection
     // ---------------------
     CoordinateAxis1D latAxis = (CoordinateAxis1D) coordSystem.getYHorizAxis();
+    double[] latValues = latAxis.getCoordValues();
     CoordinateAxis1D lonAxis = (CoordinateAxis1D) coordSystem.getXHorizAxis();
-    int[] dims = new int[] {
-      latAxis.getDimension(0).getLength(),
-      lonAxis.getDimension(0).getLength()
+    double[] lonValues = lonAxis.getCoordValues();
+    int[] dims = new int[] {latValues.length, lonValues.length};
+    double[] pixelDims = new double[] {
+      (latValues[0] - latValues[latValues.length-1]) / (latValues.length-1),
+      (lonValues[lonValues.length-1] - lonValues[0]) / (lonValues.length-1)
     };
+    /*
     double[] pixelDims = new double[] {
       (latAxis.getMaxValue() - latAxis.getMinValue())/(dims[0]-1),
       (lonAxis.getMaxValue() - lonAxis.getMinValue())/(dims[1]-1)
     };
+    */
     /*
     double[] pixelDims = new double[] {
       latAxis.getIncrement(),

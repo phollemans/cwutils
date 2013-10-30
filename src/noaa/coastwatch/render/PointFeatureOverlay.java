@@ -28,6 +28,9 @@ import noaa.coastwatch.io.*;
 /**
  * The <code>PointFeatureOverlay</code> class annotes a data view with
  * symbols using data from from a {@link PointFeatureSource}.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class PointFeatureOverlay 
   extends PolygonOverlay {

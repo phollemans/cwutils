@@ -11,9 +11,10 @@
            2005/04/23, PFH, added ToolServices.setCommandLine()
            2005/09/19, PFH, added extra verbose output
            2007/04/19, PFH, added version printing
+           2012/12/04, PFH, added call to canUpdateNavigation for reader
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2002-2012, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -220,7 +221,10 @@ import jargs.gnu.CmdLineParser.*;
  * </p>
  *
  * <!-- END MAN PAGE -->
- *   */
+ *
+ * @author Peter Hollemans
+ * @since 3.1.2
+ */
 public final class cwnavigate {
 
   // Constants
@@ -303,7 +307,7 @@ public final class cwnavigate {
 
       // Check file format
       // ----------------- 
-      if (!(reader instanceof CWHDFReader) && !(reader instanceof CWFReader)) {
+    if (!reader.canUpdateNavigation()) {
         System.err.println (PROG + ": Unsupported file format for " + input);
         System.exit (2);
       } // if       

@@ -26,6 +26,9 @@ import noaa.coastwatch.net.*;
  * stalled transfers.  When a stall period has expired and no new
  * transfer progress has been made, the stall monitor calls a
  * user-specified method.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.6
  */
 public class StallMonitor
   extends DataTransferAdapter {

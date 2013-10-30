@@ -21,6 +21,7 @@
            2004/09/27, PFH, moved toArray() to MetadataServices
            2004/09/28, PFH, changed closed flag to protected
            2005/02/08, PFH, added attribute length check
+           2012/12/02, PFH, replaced native method setChunkCompress
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
@@ -46,6 +47,9 @@ import noaa.coastwatch.util.*;
  * An HDF writer is an Earth data writer that writes HDF format
  * files using the HDF library class.  The HDF writer class is
  * abstract -- subclasses handle specific metadata variants.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.0
  */
 public abstract class HDFWriter
   extends EarthDataWriter 
@@ -72,13 +76,6 @@ public abstract class HDFWriter
 
   /** Flag to signify that the file is closed. */
   protected boolean closed;
-
-  ////////////////////////////////////////////////////////////
-
-  /** Loads the shared library. */
-  static {
-    System.loadLibrary ("HDFWriter");
-  } // static
 
   ////////////////////////////////////////////////////////////
 
@@ -658,11 +655,44 @@ public abstract class HDFWriter
    * 
    * @throws HDFException if an HDF error occurred.
    */
-  public static native void setChunkCompress (
+  public static void setChunkCompress (
     int sdsid,
     boolean compressed,
     int[] chunk_lengths
-  ) throws HDFException;
+  ) throws HDFException {
+      
+    // Set up compression
+    //  -----------------
+    HDFDeflateCompInfo compInfo = null;
+    if (compressed) {
+      compInfo = new HDFDeflateCompInfo();
+      compInfo.level = 6;
+      if (chunk_lengths == null) {
+        boolean success = HDFLibrary.SDsetcompress (sdsid, HDFConstants.COMP_CODE_DEFLATE, compInfo);
+        if (!success) throw new HDFException ("SDsetcompress call failed");
+      } // if
+    } // if
+    
+    // Set up chunking
+    // ---------------
+    if (chunk_lengths != null) {
+      int flags;
+      HDFChunkInfo chunkInfo;
+      if (!compressed) {
+        flags = HDFConstants.HDF_CHUNK;
+        chunkInfo = new HDFChunkInfo (chunk_lengths);
+      } // if
+      else {
+        flags = HDFConstants.HDF_CHUNK | HDFConstants.HDF_COMP;
+        chunkInfo = new HDFChunkInfo (chunk_lengths, HDFConstants.COMP_CODE_DEFLATE, compInfo);
+      } // if
+      boolean success = false;
+      try  { success = HDFLibrary.SDsetchunk (sdsid, chunkInfo, flags); }
+      catch (Throwable e) { }
+      if (!success) throw new HDFException ("SDsetchunk call failed");
+    } // if
+
+  } // setChunkCompress
 
   ////////////////////////////////////////////////////////////
 

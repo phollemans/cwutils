@@ -37,6 +37,9 @@ import com.braju.format.Format;
  * normal web page.  The HTML content of the directory listing is
  * parsed to extract the file and directory names.  A custom filter
  * may be set to filter the directory entries returned by the lister.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class HTTPDirectoryLister 
   extends AbstractDirectoryLister {

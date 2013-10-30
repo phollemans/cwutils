@@ -9,9 +9,10 @@
            2006/06/14, PFH, modified to ignore grids with odd sizes
            2006/11/03, PFH, changed getPreview(int) to getPreviewImpl(int)
            2010/02/14, PFH, modified to use new Java netCDF 4.1 library
-
+           2013/06/21, PFH, updated to use Variable.getShortName()
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -37,6 +38,9 @@ import noaa.coastwatch.util.trans.*;
  * The <code>CWNCReader</code> class reads Java NetCDF accessible
  * datasets and uses the CoastWatch HDF metadata conventions to parse
  * the attribute and variable data.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class CWNCReader 
   extends NCReader {
@@ -254,7 +258,7 @@ public class CWNCReader
 
       // Add name to list
       // ----------------
-      nameList.add (var.getName());
+      nameList.add (var.getShortName());
 
     } // for
 
@@ -296,7 +300,7 @@ public class CWNCReader
     // Get variable info
     // -----------------
     int varDims[] = var.getShape();
-    String name = var.getName();
+    String name = var.getShortName();
     int rank = var.getRank();
     Class varClass = var.getDataType().getPrimitiveClassType();
     boolean isUnsigned = var.isUnsigned();

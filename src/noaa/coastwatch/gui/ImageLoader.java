@@ -27,6 +27,9 @@ import javax.swing.*;
  * The image loader class is used to render an image asychronously
  * from an image producer.  Each loader is coupled with an observer
  * object that displays the image data as it is being loaded.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.3
  */
 public class ImageLoader
   implements ImageConsumer {

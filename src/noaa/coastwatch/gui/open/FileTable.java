@@ -28,6 +28,9 @@ import noaa.coastwatch.gui.*;
 /**
  * The <code>FileTable</code> uses a {@link FileTableModel} object to
  * display a directory listing.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.0
  */
 public class FileTable
   extends JTable {

@@ -26,6 +26,9 @@ import noaa.coastwatch.util.*;
 /**
  * A linear enhancement is an enhancement function formed by a linear
  * y = mx + b relationship.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public class LinearEnhancement
   extends EnhancementFunction {

@@ -25,6 +25,9 @@ import java.awt.geom.*;
  * A picture element is an annotation element the renders graphics and
  * shapes.  The element specifies various picture properties such as
  * the position and size.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.1
  */
 public abstract class PictureElement
   extends AnnotationElement { 

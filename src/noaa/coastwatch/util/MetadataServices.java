@@ -26,6 +26,9 @@ import java.lang.reflect.*;
 /**
  * The <code>MetadataServices</code> class defines various static
  * methods relating to metadata manipulation.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.8
  */
 public class MetadataServices {
 

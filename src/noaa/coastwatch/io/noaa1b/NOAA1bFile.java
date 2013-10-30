@@ -28,6 +28,9 @@ import terrenus.instrument.*;
  * 1b weather satellite data files.  The intention is to have a
  * uniform way of reading any NOAA 1b file format from any sensor
  * among the AVHRR and TOVS packages.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.2
  */
 public class NOAA1bFile {
 

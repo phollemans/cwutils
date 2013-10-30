@@ -36,6 +36,9 @@ import noaa.coastwatch.gui.*;
  * with an icon of the color.  When the button is pressed, a
  * <code>JColorChooser</code> appears that allows the user to select
  * a color.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class VisualColor 
   extends AbstractVisualObject {

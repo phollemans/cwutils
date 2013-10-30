@@ -68,6 +68,9 @@ import noaa.coastwatch.gui.visual.*;
  * The user object should perform some operation to obtain the
  * annotation input information, and then pass it to the
  * <code>addAnnotation()</code> method. <p>
+ *
+ * @author Peter Hollemans
+ * @since 3.1.7
  */
 public class AnnotationListChooser
   extends JPanel

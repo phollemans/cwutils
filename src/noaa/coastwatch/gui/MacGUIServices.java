@@ -26,6 +26,9 @@ import com.apple.eawt.*;
 /**
  * The <code>MacGUIServices</code> class defines various static
  * methods relating to the Mac graphical user interfaces.
+ *
+ * @author Peter Hollemans
+ * @since 3.2.1
  */
 public class MacGUIServices {
 

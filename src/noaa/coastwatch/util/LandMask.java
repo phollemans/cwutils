@@ -25,6 +25,9 @@ import noaa.coastwatch.util.trans.*;
 /**
  * The <code>LandMask</code> class may be used to retrieve a true or
  * false value for the presence of land at a certain Earth location.
+ *
+ * @author Peter Hollemans
+ * @since 3.1.9
  */
 public class LandMask {
 
