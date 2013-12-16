@@ -14,9 +14,15 @@
              compressed files
            2010/12/02, XL, modified getGlobalInfo method to read satellite
              name info for ACSPO VIIRS files
+           2013/11/18, PFH
+           - changes: updated getGlobalInfo() for Metop-B satellite and to
+             properly read SATELLITE, L1B, INSTRUMENT_DATA, SENSOR attributes
+             in succession to get satellite and sensor
+           - issue: reading AVHRR Metop-B files shows satellite "Unknown" and
+             sensor "FRAC"
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -170,35 +176,50 @@ public class ACSPOHDFReader
   protected EarthDataInfo getGlobalInfo () throws HDFException, 
     IOException, ClassNotFoundException {
 
-    // Get simple attributes
-    // ---------------------
-    String processor = (String) getAttribute (sdid, "PROCESSOR");
+    // Get satellite name
+    // ------------------
     String sat = null;
-    String sensor = null;
-    
-    try { 
-    	String l1bFile = (String) getAttribute (sdid, "L1B");
-    	String satCode = l1bFile.split ("\\.")[2];
-    	sat = "Unknown";
-    	if (satCode.equals ("NK")) sat = "NOAA15";
-    	else if (satCode.equals ("NL")) sat = "NOAA16";
-    	else if (satCode.equals ("NM")) sat = "NOAA17";
-    	else if (satCode.equals ("NN")) sat = "NOAA18";
-    	else if (satCode.equals ("NP")) sat = "NOAA19";
-    	else if (satCode.equals ("M2")) sat = "METOPA";
-    } // try
-    catch (Exception e) {
-      sat = (String) getAttribute (sdid, "SATELLITE");
-    } // catch
-
     try {
-    	sensor = (String) getAttribute (sdid, "INSTRUMENT_DATA");
-    }
-    catch (Exception e) {
-    	sensor = "AVHRR";
-    }
+      sat = (String) getAttribute (sdid, "SATELLITE");
+    } // try
+    catch (Exception e) {}
+    if (sat == null) {
+      try {
+        String l1bFile = (String) getAttribute (sdid, "L1B");
+        String satCode = l1bFile.split ("\\.")[2];
+        if (satCode.equals ("NK")) sat = "NOAA15";
+        else if (satCode.equals ("NL")) sat = "NOAA16";
+        else if (satCode.equals ("NM")) sat = "NOAA17";
+        else if (satCode.equals ("NN")) sat = "NOAA18";
+        else if (satCode.equals ("NP")) sat = "NOAA19";
+        else if (satCode.equals ("M2")) sat = "METOPA";
+        else if (satCode.equals ("M1")) sat = "METOPB";
+      } // try
+      catch (Exception e) {}
+    } // if
+    if (sat == null) sat = "Unknown";
+
+    // Get sensor
+    // ----------
+    String sensor = null;
+    try {
+      sensor = (String) getAttribute (sdid, "SENSOR");
+    } // try
+    catch (Exception e) {}
+    if (sensor == null) {
+      try {
+        sensor = (String) getAttribute (sdid, "INSTRUMENT_DATA");
+      } // try
+      catch (Exception e) {}
+    } // if
+    if (sensor == null)
+      sensor = "AVHRR";
+
+    // Get other simple attributes
+    // ---------------------------
     String origin = "NOAA/NESDIS";
-    dataFormat = processor + " HDF";
+    String processor = (String) getAttribute (sdid, "PROCESSOR");
+    dataFormat = processor + " HDF 4";
     String created = (String) getAttribute (sdid, "CREATED");
     String history = "[" + processor + "] " + created;
 
