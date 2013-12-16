@@ -66,9 +66,10 @@
            2012/06/29, PFH, added --palettefile option
            2012/08/11, PFH, added --palettecolors, --function boolean,
              HSB-Cycle palette, watermark, and tickmark options
+           2013/11/07, PFH, added more detailed output for range normalization
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -1733,30 +1734,38 @@ public class cwrender {
       // Normalize view color enhancement
       // --------------------------------
       if (view instanceof ColorEnhancement && range == null) {
+        ColorEnhancement colorEnhance = (ColorEnhancement) view;
         if (verbose)
           System.out.println (PROG + ": Normalizing color enhancement");
-        ((ColorEnhancement) view).normalize (STDEV_UNITS);
+        colorEnhance.normalize (STDEV_UNITS);
+        if (verbose) {
+          double[] funcRange = colorEnhance.getFunction().getRange();
+          System.out.println (PROG + ": Normalized range = [" + funcRange[0] +
+            ", " + funcRange[1] + "]");
+        } // if
       } // if
 
       // Normalize view color composite
       // ------------------------------
       else if (view instanceof ColorComposite) {
-        if (redrange == null) {
-          if (verbose) 
-            System.out.println (PROG + ": Normalizing red enhancement");
-          ((ColorComposite) view).normalize (ColorComposite.RED, STDEV_UNITS);
-        } // if
-        if (greenrange == null) {
-          if (verbose) 
-            System.out.println (PROG + ": Normalizing green enhancement");
-          ((ColorComposite) view).normalize (ColorComposite.GREEN, 
-            STDEV_UNITS);
-        } // if
-        if (bluerange == null) {
-          if (verbose) 
-            System.out.println (PROG + ": Normalizing blue enhancement");
-          ((ColorComposite) view).normalize (ColorComposite.BLUE, STDEV_UNITS);
-        } // if
+        ColorComposite colorComp = (ColorComposite) view;
+        int[] components = new int[] {ColorComposite.RED, ColorComposite.GREEN,
+          ColorComposite.BLUE};
+        String[] compNames = new String[] {"red", "green", "blue"};
+        String[] compRangeVars = new String[] {redrange, greenrange, bluerange};
+        for (int i = 0; i < 3; i++) {
+          if (compRangeVars[i] == null) {
+            if (verbose)
+              System.out.println (PROG + ": Normalizing " + compNames[i] + " component");
+            colorComp.normalize (components[i], STDEV_UNITS);
+            if (verbose) {
+              EnhancementFunction func = colorComp.getFunctions()[components[i]];
+              double[] funcRange = func.getRange();
+              System.out.println (PROG + ": Normalized range = [" + funcRange[0] +
+                ", " + funcRange[1] + "]");
+            } // if
+          } // if
+        } // for
       } // else if
 
       // Set verbose mode
