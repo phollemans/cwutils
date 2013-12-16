@@ -4,7 +4,8 @@
   PURPOSE: Reads ACSPO data encoded in NetCDF with CF metadata.
    AUTHOR: Peter Hollemans
      DATE: 2013/01/25
-  CHANGES: 2013/05/13, PFH, fixed date parsing
+  CHANGES: 2013/02/12, PFH, added support for cached grids to getActualVariable
+           2013/05/13, PFH, fixed date parsing
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
