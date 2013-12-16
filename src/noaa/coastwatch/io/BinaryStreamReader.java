@@ -6,9 +6,11 @@
      DATE: 2007/09/01
   CHANGES: 2007/11/22, PFH, updated to print array values in main()
            2013/06/09, PFH, added example XML template
+           2013/12/16, PFH, updated main() to handle byte swapped input
+             and print an error when a value cannot be read correctly
 
   CoastWatch Software Library and Utilities
-  Copyright 2007, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2007-2013, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -1084,26 +1086,36 @@ public class BinaryStreamReader {
     FileChannel inputChannel = new RandomAccessFile (file, "r").getChannel();
     ByteBuffer inputBuffer = inputChannel.map (FileChannel.MapMode.READ_ONLY,
       0, inputChannel.size());
+    if (argv.length == 3 && argv[2].equals ("swap"))
+      inputBuffer.order (ByteOrder.LITTLE_ENDIAN);
 
     // Retrieve values
     // ---------------
     Set<String> names = new TreeSet<String> (reader.getNames());
     System.out.println ("Binary stream data values:");
     for (String name : names) {
-      Object value = reader.getValue (name, inputBuffer);
-      int offset = reader.getOffset (name);
-      String valueString;
-      if (value.getClass().isArray()) {
-        valueString = "[";
-        int length = Array.getLength (value);
-        for (int i = 0; i < length; i++) 
-          valueString += Array.get (value, i) + (i < length-1 ? "," : "]");
+      Object value = null;
+      try {
+        value = reader.getValue (name, inputBuffer);
+      } // try
+      catch (Exception e) {
+        e.printStackTrace();
+      } // catch
+      if (value != null) {
+        int offset = reader.getOffset (name);
+        String valueString;
+        if (value.getClass().isArray()) {
+          valueString = "[";
+          int length = Array.getLength (value);
+          for (int i = 0; i < length; i++)
+            valueString += Array.get (value, i) + (i < length-1 ? "," : "]");
+        } // if
+        else {
+          valueString = value.toString();
+        } // else
+        System.out.println ("  " + name + " = " + valueString + " (type=" +
+          value.getClass().getName() + ", offset=" + offset + ")");
       } // if
-      else {
-        valueString = value.toString();
-      } // else
-      System.out.println ("  " + name + " = " + valueString + " (type=" + 
-        value.getClass().getName() + ", offset=" + offset + ")");
     } // for
 
   } // main
