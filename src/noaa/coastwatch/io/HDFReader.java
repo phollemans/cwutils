@@ -28,6 +28,9 @@
            2010/03/30, PFH, modified constructor to close file on failure
            2012/12/02, PFH, replaced native method getChunkLengths
            2013/03/07, PFH, added extra read for missing_data if _FillValue missing
+           2013/12/27, PFH
+           - changes: added call to Hishdf before opening
+           - issue: SDstart was failing on NetCDF 3 files in xdr_NC_array
 
   CoastWatch Software Library and Utilities
   Copyright 2004-2013, USDOC/NOAA/NESDIS CoastWatch
@@ -139,9 +142,15 @@ public abstract class HDFReader
 
     try {
 
+      closed = true;
+
+      // Test the file
+      // -------------
+      boolean isHDF = HDFLibrary.Hishdf (file);
+      if (!isHDF) throw new IOException ("File is not HDF (Hishdf failed)");
+
       // Open the file
       // -------------
-      closed = true;
       sdid = HDFLibrary.SDstart (file, HDFConstants.DFACC_READ);
       closed = false;
 
