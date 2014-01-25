@@ -22,9 +22,14 @@
            2004/09/28, PFH, changed closed flag to protected
            2005/02/08, PFH, added attribute length check
            2012/12/02, PFH, replaced native method setChunkCompress
-
+           2014/01/23, PFH
+           - changes: created MAX_VAR_DIMS size copy of chunk lengths before
+             passing to HDF library
+           - issue: getting seg fault issues on calling HDFLibrary.SDsetchunk
+             with chunk length arrays of rank matching the actual data array
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -660,7 +665,7 @@ public abstract class HDFWriter
     boolean compressed,
     int[] chunk_lengths
   ) throws HDFException {
-      
+
     // Set up compression
     //  -----------------
     HDFDeflateCompInfo compInfo = null;
@@ -677,14 +682,21 @@ public abstract class HDFWriter
     // ---------------
     if (chunk_lengths != null) {
       int flags;
+      /**
+       * We convert to the HDF library friendly version of chunk lengths here,
+       * since the library expects to see a full array up to MAX_VAR_DIMS in
+       * size, and can segfault in the native code when copying values if we
+       * don't provide the expected length.
+       */
+      int[] libChunkLengths = Arrays.copyOf (chunk_lengths, HDFConstants.MAX_VAR_DIMS);
       HDFChunkInfo chunkInfo;
       if (!compressed) {
         flags = HDFConstants.HDF_CHUNK;
-        chunkInfo = new HDFChunkInfo (chunk_lengths);
+        chunkInfo = new HDFChunkInfo (libChunkLengths);
       } // if
       else {
         flags = HDFConstants.HDF_CHUNK | HDFConstants.HDF_COMP;
-        chunkInfo = new HDFChunkInfo (chunk_lengths, HDFConstants.COMP_CODE_DEFLATE, compInfo);
+        chunkInfo = new HDFChunkInfo (libChunkLengths, HDFConstants.COMP_CODE_DEFLATE, compInfo);
       } // if
       boolean success = false;
       try  { success = HDFLibrary.SDsetchunk (sdsid, chunkInfo, flags); }
