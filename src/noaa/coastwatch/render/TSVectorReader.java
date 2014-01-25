@@ -41,7 +41,7 @@ import noaa.coastwatch.util.*;
  * <pre>
  *   square = (lower-lat + 90) * 360 + left-lon + 180
  * </pre>
- * where -90 <= lat < 90 and -180 <= lon < 180.  The index is a
+ * where -90 &lt;= lat &lt; 90 and -180 &lt;= lon &lt; 180.  The index is a
  * 180x360 long integer array, indexed by square number. The index
  * entry for a given square is the offset to the first vector in the
  * heap for that square. The offset to the first vector in the heap

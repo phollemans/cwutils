@@ -34,8 +34,8 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The navigation tool adds navigation corrections to 2D variables
- * in an Earth data file.<p>
+ * <p>The navigation tool adds navigation corrections to 2D variables
+ * in an Earth data file.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -65,30 +65,30 @@ import jargs.gnu.CmdLineParser.*;
  * </p>
  *
  * <h2>Description</h2>
- * <p>
- * The navigation tool adds navigation corrections to 2D variables
+ *
+ * <p>The navigation tool adds navigation corrections to 2D variables
  * in an Earth data file by setting navigation transform
  * parameters.  The most basic navigation transform consists of
  * additive translation in the row and column data coordinates.  As an
  * example of translation, the following diagram shows coastlines in
  * the Earth image data as a '.' (period) symbol and coastlines
  * derived from a GIS database as a '*' (star).  Translation has been
- * used to correct the position of the image data:
+ * used to correct the position of the image data:</p>
  * <pre>
  *        ***                              ***
  *      ... ***         *****                ***         *****
  *        ... ***     **...                    ***     **
- *          ... *   .**          ---->           *    **
+ *          ... *   .**          ----&gt;           *    **
  *            . *  **                            *  **
  *            . ****        row trans = 1        ****
  *            ....          col trans = -2
- * </pre></p>
+ * </pre>
  *
  * <p>A more generic navigation transform consists of a translation
  * combined with a rotation or shear.  To represent generic
  * navigation transforms, an affine transform matrix is used to
  * convert "desired" data coordinates to "actual" data coordinates as
- * follows:
+ * follows:</p>
  * <pre>
  *   |row'|   |a  c  e|  |row|
  *   |    |   |       |  |   |
@@ -96,7 +96,7 @@ import jargs.gnu.CmdLineParser.*;
  *   |    |   |       |  |   |   
  *   | 1  |   |0  0  1|  | 1 | 
  * </pre>
- * where [a..f] are the affine transform matrix coefficients and
+ * <p>where [a..f] are the affine transform matrix coefficients and
  * (row',col') is the actual data coordinates at which the desired
  * data value for (row,col) may be found.</p>
  *
@@ -105,10 +105,10 @@ import jargs.gnu.CmdLineParser.*;
  * it using matrix multiplication to create a combined transform.  As
  * an example, suppose that T1 is the initial navigation transform.
  * The application of an additional transform T2 results in a new
- * transform that is equivalent to:
+ * transform that is equivalent to:</p>
  * <pre>
  *   T2 (T1 (row, col))
- * </pre></p>
+ * </pre>
  *
  * <p>A navigation transform can be applied to a subset of 2D
  * variables, or all variables in the file.  Note that satellite
@@ -180,27 +180,26 @@ import jargs.gnu.CmdLineParser.*;
  *   quietly. </dd>
  *
  *   <dt>--version</dt>
- *
  *   <dd>Prints the software version.</dd>
  *
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input file name. </li>
  *   <li> Unsupported input file format. </li>
  *   <li> Unsupported navigation correction. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
- * <p> 
- * The following example shows the navigation correction of a NOAA-15 
- * CoastWatch HDF data file from the Gulf of Mexico:
+ *
+ * <p>The following example shows the navigation correction of a NOAA-15
+ * CoastWatch HDF data file from the Gulf of Mexico:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwnavigate --trans -3/3 -v 
- *     --match '(avhrr.*|cloud|sst)' 2002_328_1326_n15_ml.hdf
+ *   phollema$ cwnavigate --trans -3/3 -v --match '(avhrr.*|cloud|sst)' 
+ *     2002_328_1326_n15_ml.hdf
  *
  *   cwnavigate: Reading input 2002_328_1326_n15_ml.hdf
  *   cwnavigate: Applying navigation correction to avhrr_ch1
@@ -209,16 +208,14 @@ import jargs.gnu.CmdLineParser.*;
  *   cwnavigate: Applying navigation correction to cloud
  *   cwnavigate: Applying navigation correction to sst
  * </pre>
- * Another example below shows the navigation correction of a NOAA-15 
- * CoastWatch IMGMAP data file from the US east coast:
+ * <p>Another example below shows the navigation correction of a NOAA-15
+ * CoastWatch IMGMAP data file from the US east coast:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwnavigate --trans -2/1 -v 
- *     2002_326_1330_n15_er_c2.cwf
+ *   phollema$ cwnavigate --trans -2/1 -v 2002_326_1330_n15_er_c2.cwf
  *
  *   cwnavigate: Reading input 2002_326_1330_n15_er_c2.cwf
  *   cwnavigate: Applying navigation correction
  * </pre>
- * </p>
  *
  * <!-- END MAN PAGE -->
  *

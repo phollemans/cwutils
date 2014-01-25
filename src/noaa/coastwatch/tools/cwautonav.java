@@ -73,7 +73,7 @@ import jargs.gnu.CmdLineParser.*;
  * <h2>Description</h2>
  * <p>The autonavigation tool automatically determines a navigation
  * correction based on Earth image data.  The algorithm is as
- * follows:
+ * follows:</p>
  * <ul>
  *
  *   <li><b>Step 1</b> - The user supplies a number of boxes of
@@ -95,10 +95,10 @@ import jargs.gnu.CmdLineParser.*;
  *   input file.  All user-specified variables in the input file
  *   are then corrected with the mean offset.</li>
  * 
- * </ul></p>
+ * </ul>
  *
  * <p>Note that because of the autonavigation algorithm design, there
- * are a number of <b>limitations</b>:
+ * are a number of <b>limitations</b>:</p>
  * <ul>
  * 
  *   <li><b>Coastline features</b> - The algorithm relies partly on
@@ -127,7 +127,6 @@ import jargs.gnu.CmdLineParser.*;
  *   rotation or scale correction.</li>
  *
  * </ul>
- * </p>
  *
  * <p>Note that satellite channel data or channel-derived variables
  * should be corrected with navigation but GIS-derived variables such
@@ -248,12 +247,12 @@ import jargs.gnu.CmdLineParser.*;
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input file name. </li>
  *   <li> Unsupported input file format. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
  * <p>The following example shows an automatic correction of an East
@@ -261,10 +260,11 @@ import jargs.gnu.CmdLineParser.*;
  * total of 3 navigation boxes are specified in a text file, and the
  * size of each box set to 60 by 60 pixels.  The output shows that 2
  * of the 3 boxes were successful and a final navigation correction
- * of (rows, cols) = (-3, 1) was applied to the file.
+ * of (rows, cols) = (-3, 1) was applied to the file.</p>
  * <pre>
- *   phollema@damdog<~/cwatch/satdata/level3> cwautonav -v --width 60 
- *     --height 60 navbox.txt avhrr_ch2 2004_064_1601_n17_er_c2.cwf
+ *   phollema$ cwautonav -v --width 60 --height 60 navbox.txt 
+ *     avhrr_ch2 2004_064_1601_n17_er_c2.cwf
+ *
  *   cwautonav: Reading input 2004_064_1601_n17_er_c2.cwf
  *   cwautonav: Testing box at 37.0503 N, 76.2111 W
  *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
@@ -286,7 +286,7 @@ import jargs.gnu.CmdLineParser.*;
  *   cwautonav: Mean offset = (-3, 1)
  *   cwautonav: Applying navigation correction
  * </pre>
- * The next example below shows the import and automatic correction of
+ * <p>The next example below shows the import and automatic correction of
  * multiple CWF files from the Gulf of Mexico.  The AVHRR channel 1,
  * channel 2, SST, and cloud mask variables are first imported to an
  * HDF file.  The automatic correction then runs using only data from
@@ -294,11 +294,11 @@ import jargs.gnu.CmdLineParser.*;
  * during the day.  The final correction is applied to all variables
  * in the input file.  This combination of import and autonavigation
  * is a convenient way of correcting a set of older CWF data files all
- * at once, using just data from AVHRR channel 2.
+ * at once, using just data from AVHRR channel 2.</p>
  * <pre>
- *   phollema@damdog<~/cwatch/satdata/level3> cwimport -v 
- *     --match '(avhrr.*|sst|cloud)' 2004_313_1921_n16_mr*.cwf 
+ *   phollema$ cwimport -v --match '(avhrr.*|sst|cloud)' 2004_313_1921_n16_mr*.cwf
  *     2004_313_1921_n16_mr.hdf
+ *
  *   cwimport: Reading input 2004_313_1921_n16_mr_c1.cwf
  *   cwimport: Creating output 2004_313_1921_n16_mr.hdf
  *   cwimport: Converting file [1/4], 2004_313_1921_n16_mr_c1.cwf
@@ -310,8 +310,8 @@ import jargs.gnu.CmdLineParser.*;
  *   cwimport: Converting file [4/4], 2004_313_1921_n16_mr_d7.cwf
  *   cwimport: Writing sst
  *
- *   phollema@damdog<~/cwatch/satdata/level3> cwautonav -v --width 60 
- *     --height 60 navbox2.txt avhrr_ch2 2004_313_1921_n16_mr.hdf
+ *   phollema$ cwautonav -v --width 60 --height 60 navbox2.txt avhrr_ch2 2004_313_1921_n16_mr.hdf
+ *
  *   cwautonav: Reading input 2004_313_1921_n16_mr.hdf
  *   cwautonav: Testing box at 26.7734 N, 82.1731 W
  *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
@@ -347,15 +347,15 @@ import jargs.gnu.CmdLineParser.*;
  *   cwautonav: Mean offset = (-2.25, 0.5)
  *   cwautonav: Applying navigation correction
  * </pre>
- * Another example below shows the correction of a Hawaii AVHRR HDF
+ * <p>Another example below shows the correction of a Hawaii AVHRR HDF
  * file using many 15 by 15 pixel navigation boxes distributed
  * throughout the islands.  AVHRR channel 2 data is used to compute
  * the optimal offset, and the final correction is applied only to
- * AVHRR sensor bands and derived variables.
+ * AVHRR sensor bands and derived variables.</p>
  * <pre>
- *   phollema@damdog<~/cwatch/satdata/level3> cwautonav -v 
- *     --match '(avhrr.*|sst|cloud)' --width 15 --height 15 
+ *   phollema$ cwautonav -v --match '(avhrr.*|sst|cloud)' --width 15 --height 15
  *     navbox3.txt avhrr_ch2 2005_042_0051_n16_hr.hdf
+ *
  *   cwautonav: Reading input 2005_042_0051_n16_hr.hdf
  *   cwautonav: Testing box at 21.7885 N, 160.2259 W
  *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
@@ -505,7 +505,6 @@ import jargs.gnu.CmdLineParser.*;
  *   cwautonav: Mean offset = (-2, -0.25)
  *   cwautonav: Applying navigation correction
  * </pre>
- * </p>
  *
  * <!-- END MAN PAGE -->
  *

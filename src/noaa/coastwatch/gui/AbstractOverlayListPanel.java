@@ -186,7 +186,9 @@ public abstract class AbstractOverlayListPanel
 
   /** 
    * Gets a custom panel to be placed between the add overlay button
-   * panel and the overlay list.  By default this method returns null.
+   * panel and the overlay list.
+   *
+   * @return the custom panel or null for none (the default).
    */
   protected JPanel getCustomPanel () { return (null); }
 
@@ -203,7 +205,11 @@ public abstract class AbstractOverlayListPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the preferred number of visible overlay list rows. */
+  /** 
+   * Sets the preferred number of visible overlay list rows. 
+   * 
+   * @param rows the number of visible rows.
+   */
   public void setVisibleRowCount (
     int rows
   ) {
@@ -741,6 +747,8 @@ public abstract class AbstractOverlayListPanel
    * assigned, since we assume that the layers are set correctly.
    * Overlays are displayed in the order that the layer values
    * dictate.
+   *
+   * @param overlays the initial set of overlays.
    */
   protected void addOverlays (
     List overlays
@@ -783,6 +791,8 @@ public abstract class AbstractOverlayListPanel
    * number of the overlay is set to be larger than any existing layer
    * number in the list.  The new overlay is set to be selected in the
    * list.
+   *
+   * @param overlay the overlay to add.
    */
   protected void addOverlay (
     EarthDataOverlay overlay
@@ -826,8 +836,9 @@ public abstract class AbstractOverlayListPanel
    * contain buttons of all one size with tool text and action
    * listeners attached.  In order to add an overlay when clicked, the
    * button listener should invoke the <code>addOverlay()</code>
-   * method.  If the list is null, no button panel is created for the
-   * overlay list.
+   * method.
+   *
+   * @return the list of add buttons, or null to not create a button panel.
    */
   protected abstract List getAddButtons();
 
@@ -835,7 +846,9 @@ public abstract class AbstractOverlayListPanel
 
   /**
    * Gets the title that will be used to annotate the button and list
-   * panels.  If the string is null, no titles are used.
+   * panels.
+   *
+   * @return the title string, or null if no titles should be used.
    */
   protected abstract String getTitle();
 
@@ -843,7 +856,8 @@ public abstract class AbstractOverlayListPanel
 
   /**
    * Gets the title that will be used to annotate the button panel.
-   * If the string is null, no titles are used for the buttons.
+   *
+   * @return the title string, or null if no titles should be used.
    */
   protected String getButtonTitle() { 
 
@@ -856,8 +870,9 @@ public abstract class AbstractOverlayListPanel
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the title that will be used to annotate the list panel.  If
-   * the string is null, no titles are used in the panel.
+   * Gets the title that will be used to annotate the list panel.
+   *
+   * @return the title string, or null if no titles should be used.
    */
   protected String getListTitle() {
 
@@ -870,8 +885,9 @@ public abstract class AbstractOverlayListPanel
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the title that will be used to annotate the groups panel.  If
-   * the string is null, no titles are used in the panel.
+   * Gets the title that will be used to annotate the groups panel.
+   *
+   * @return the title string, or null if no titles should be used.
    */
   protected String getGroupTitle() {
 
@@ -911,19 +927,27 @@ public abstract class AbstractOverlayListPanel
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the list of overlays
+   * Gets the list of overlays.
+   *
+   * @return the list of overlays.
    */
   public List getOverlayList(){
-	  List overlays = new ArrayList();
-	  int count = overlayList.getElements();
-      for (int i = 0; i < count; i++)
-        overlays.add (getOverlay (i));
-      return overlays;
-  }
+
+    List overlays = new ArrayList();
+    int count = overlayList.getElements();
+    for (int i = 0; i < count; i++)
+      overlays.add (getOverlay (i));
+    return (overlays);
+    
+  } // getOverlayList
   
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class. 
+   *
+   * @param argv the array of arguments (ignored).
+   */
   public static void main (String[] argv) {
 
     // Create panel

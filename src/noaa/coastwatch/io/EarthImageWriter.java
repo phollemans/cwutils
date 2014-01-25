@@ -86,7 +86,7 @@ public class EarthImageWriter {
    * used and only for image formats, not PDF.
    * @param tiffComp the TIFF compression type: 'none', 'deflate', or 'pack'.
    * @param imageColors the number of image colors to use or 0 to
-   * not restrict the image colors.  If >0, an indexed color
+   * not restrict the image colors.  If &gt; 0, an indexed color
    * model will be used for TIFF, PNG, GIF, and PDF output and
    * antialiasing of lines turned off.
    *
@@ -480,7 +480,7 @@ public class EarthImageWriter {
    *
    * @param image the image to quantize.
    * @param colorModel the index color model to quantize the
-   * image with size <= 256 colors.
+   * image with size &lt;= 256 colors.
    *
    * @return the output quantized image.
    */

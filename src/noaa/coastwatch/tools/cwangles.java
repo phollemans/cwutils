@@ -35,8 +35,8 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The angles tool computes Earth location and solar angles for an
- * Earth data file.<p>
+ * <p>The angles tool computes Earth location and solar angles for an
+ * Earth data file.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -137,21 +137,20 @@ import jargs.gnu.CmdLineParser.*;
  *
  * <h2>Exit status</h2>
  *
- * <p>0 on success, > 0 on failure.  Possible causes of errors:
+ * <p>0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input file name. </li>
  *   <li> No angle computations specified. </li>
- * </ul></p>
+ * </ul>
  *
  * <h2>Examples</h2>
  *
  * <p>
  * The following shows the computation of latitude and longitude data
- * for a CoastWatch HDF product file:
+ * for a CoastWatch HDF product file:</p>
  * <pre> 
- *   phollema@localhost:<~/cwatch/satdata/angles_test> cwangles 
- *     --float --location 2002_361_1049_n16_ax.hdf
+ *   phollema$ cwangles --float --location 2002_361_1049_n16_ax.hdf
  *
  *   cwangles: Reading input 2002_361_1049_n16_ax.hdf
  *   cwangles: Creating latitude variable
@@ -169,11 +168,10 @@ import jargs.gnu.CmdLineParser.*;
  *   cwangles: Computing row 900
  *   cwangles: Computing row 1000
  * </pre>
- * Another example below shows the computation of solar zenith angle,
- * stored as the cosine and scaled to integer data by 0.0001:
+ * <p>Another example below shows the computation of solar zenith angle,
+ * stored as the cosine and scaled to integer data by 0.0001:</p>
  * <pre> 
- *   phollema@localhost:<~/cwatch/satdata/angles_test> cwangles -v 
- *     --sunzenith --units cos --scale 0.0001/0 test_angles.hdf 
+ *   phollema$ cwangles -v --sunzenith --units cos --scale 0.0001/0 test_angles.hdf
  *
  *   cwangles: Reading input test_angles.hdf
  *   cwangles: Creating sun_zenith variable
@@ -192,7 +190,6 @@ import jargs.gnu.CmdLineParser.*;
  *   cwangles: Computing row 1100
  *   cwangles: Computing row 1200
  * </pre>
- * </p>
  *
  * <!-- END MAN PAGE -->
  *

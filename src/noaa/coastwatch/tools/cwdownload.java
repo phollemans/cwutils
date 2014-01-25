@@ -53,8 +53,8 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The download tool facilitates the downloading of specific data
- * files from a CoastWatch data server.<p>
+ * <p>The download tool facilitates the downloading of specific data
+ * files from a CoastWatch data server.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -218,30 +218,30 @@ import jargs.gnu.CmdLineParser.*;
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Cannot contact data server. </li>
  *   <li> Invalid or write-protected download directory. </li>
  *   <li> Error transferring data file. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
  * <p> The following shows a download command that retrieves
  * any NOAA-16 daytime data files for the East Coast north and south
  * regions captured at Wallops Island to the ~/cwatch/satdata directory from
- * the fictitious server <code>foobar.noaa.gov</code>:
+ * the fictitious server <code>frobozz.noaa.gov</code>:</p>
  * <pre>
- *   phollema@localhost:<~> cwdownload --satellite noaa-16 --scenetime day 
- *     --region '(er|sr)' --station wi --dir ~/cwatch/satdata foobar.noaa.gov
+ *   phollema$ cwdownload --satellite noaa-16 --scenetime day 
+ *     --region '(er|sr)' --station wi --dir ~/cwatch/satdata frobozz.noaa.gov
  *
- *   cwdownload: Contacting foobar.noaa.gov
+ *   cwdownload: Contacting frobozz.noaa.gov
  *   cwdownload: Retrieving 2002_197_1719_n16_er.hdf
  *   cwdownload: Retrieving 2002_197_1719_n16_sr.hdf
  *   cwdownload: Retrieving 2002_197_1900_n16_er.hdf
  *   cwdownload: Retrieving 2002_197_1900_n16_sr.hdf
  *   cwdownload: Transferred 31715 kb in 4 files
- * </pre> </p>
+ * </pre>
  *
  * <!-- END MAN PAGE -->
  *

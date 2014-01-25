@@ -81,7 +81,7 @@ import javax.swing.filechooser.*;
  * <pre>
  *     JFileChooser chooser = new JFileChooser();
  *     SimpleFileFilter filter = new SimpleFileFilter(
- *                   new String{"gif", "jpg"}, "JPEG & GIF Images")
+ *                   new String{"gif", "jpg"}, "JPEG &amp; GIF Images")
  *     chooser.addChoosableFileFilter(filter);
  *     chooser.showOpenDialog(this);
  * </pre>

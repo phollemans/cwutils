@@ -113,7 +113,7 @@ public class BoxSurvey
    * @param trans the survey variable Earth transform.
    * @param start the box starting location.
    * @param end the box ending location.  The ending location must
-   * have coordinates >= the starting location.
+   * have coordinates &gt;= the starting location.
    */
   public BoxSurvey (
     DataVariable variable,

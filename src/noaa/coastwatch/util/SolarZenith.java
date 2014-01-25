@@ -32,7 +32,7 @@ import noaa.coastwatch.util.trans.*;
  *           |       /|\ 
  *           |      _  
  *           |  sz  /|
- *           |<-_  /
+ *           |--_  /
  *           |   \/
  *           |   /
  *           |  /

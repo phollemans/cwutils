@@ -165,7 +165,7 @@ public class ArcWriter
    * number of lines as follows:
    * <pre>
    *   nrows (number of data rows)
-   *   ncols (number of data columns>
+   *   ncols (number of data columns)
    *   xllcorner (lower left corner x coordinate in map coordinates)
    *   yllcorner (lower left corner y coordinate in map coordinates)
    *   cellsize (size of each grid cell in map coordinates)

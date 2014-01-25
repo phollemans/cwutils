@@ -47,7 +47,7 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The status utility shows the status of a CoastWatch data server.<p>
+ * <p>The status utility shows the status of a CoastWatch data server.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -130,19 +130,18 @@ import jargs.gnu.CmdLineParser.*;
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
  * <p> 
  * The following command shows the startup of the status monitor
- * for the fictitious server <code>foobar.noaa.gov</code>:
+ * for the fictitious server <code>frobozz.noaa.gov</code>:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwstatus foobar.noaa.gov
+ *   phollema$ cwstatus frobozz.noaa.gov
  * </pre>
- * </p>
  *
  * <!-- END MAN PAGE -->
  *

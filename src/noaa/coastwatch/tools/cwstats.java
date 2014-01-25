@@ -42,8 +42,8 @@ import jargs.gnu.CmdLineParser.*;
 import com.braju.format.Format;
 
 /**
- * The statistics utility calculates a number of statistics for each
- * variable in an Earth data file.<p>
+ * <p>The statistics utility calculates a number of statistics for each
+ * variable in an Earth data file.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -71,7 +71,7 @@ import com.braju.format.Format;
  *
  * <h2>Description</h2>
  * <p> The statistics utility calculates a number of
- * statistics for each variable in an Earth data file:
+ * statistics for each variable in an Earth data file:</p>
  * <ul>
  *   <li> Count - the count of total data values sampled. </li>
  *   <li> Valid - the number of valid (not missing) data
@@ -82,7 +82,7 @@ import com.braju.format.Format;
  *   <li> Stdev - the standard deviation from the mean. </li>
  *   <li> Median - the median data value. </li>
  * </ul> 
- * To speed up the statitics calculations, a subset of the data values
+ * <p>To speed up the statitics calculations, a subset of the data values
  * in each variable may be specified using either the <b>--stride</b>
  * or <b>--sample</b> options, and the <b>--limit</b> option.  The
  * <b>--match</b> option may also be used to limit the statistics
@@ -95,7 +95,7 @@ import com.braju.format.Format;
  * <dl>
  *
  *   <dt>input</dt>
- *   <dd>The input data file name.</dt>
+ *   <dd>The input data file name.</dd>
  *
  * </dl>
  *
@@ -147,19 +147,19 @@ import com.braju.format.Format;
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input file name. </li>
  *   <li> Unsupported input file format. </li>
  *   <li> Error reading input data values. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
  * <p> The following shows a statistics calculation on a
- * CoastWatch HDF file from the Great Lakes:
+ * CoastWatch HDF file from the Great Lakes:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwstats 2002_197_1719_n16_gr.hdf
+ *   phollema$ cwstats 2002_197_1719_n16_gr.hdf
  *
  *   Variable       Count     Valid     Min       Max       Mean       Stdev     
  *   avhrr_ch1      1048576   483728    3.49      74.36     13.059646  11.371605 
@@ -173,7 +173,7 @@ import com.braju.format.Format;
  *   sun_zenith     1048576   483728    0.87      0.95      0.907019   0.022209  
  *   rel_azimuth    1048576   483728    -0.58     -0.33     -0.465731  0.058149  
  *   graphics       1048576   1048576   0         14        6.84576    2.931459  
- * </pre> </p>
+ * </pre>
  *
  * <!-- END MAN PAGE -->
  *

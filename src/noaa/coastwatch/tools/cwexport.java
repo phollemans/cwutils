@@ -37,8 +37,8 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The export tool translates Earth data into external file
- * formats.<p>
+ * <p>The export tool translates Earth data into external file
+ * formats.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -95,17 +95,17 @@ import jargs.gnu.CmdLineParser.*;
  * The export tool translates Earth data into external formats as
  * described below.  In all cases, 2D data sets are exported in row
  * major order starting from row 0.  For example, if the Earth
- * data values form the 2D array:
+ * data values form the 2D array:</p>
  * <pre>
  *    0  1  2  3
  *    4  5  6  7
  *    8  9 10 11
  *   12 13 14 15
  * </pre>
- * then values are output in the order:
+ * <p>then values are output in the order:</p>
  * <pre>
  *   0 1 2 3 4 5 6 7 ...
- * </pre></p>
+ * </pre>
  *
  * <p>
  * In the general case, multiple variables may be exported to the same
@@ -120,17 +120,17 @@ import jargs.gnu.CmdLineParser.*;
  * point values.  For 8- and 16-bit output, data values may be scaled
  * to integers using a minimum and maximum or by using a scaling
  * factor and offset.  For minimum/maximum scaling, integer data is
- * calculated from data values using the equation:
+ * calculated from data values using the equation:</p>
  * <pre>
  *   integer = type_min + type_range*((value - min) / (max - min))
  * </pre>
- * where <code>type_min</code> is 0 for 8-bit and -32768 for 16-bit, and
+ * <p>where <code>type_min</code> is 0 for 8-bit and -32768 for 16-bit, and
  * <code>type_range</code> is 255 for 8-bit and 65535 for 16-bit. For 
- * scaling factor and offset, the following equation is used:
+ * scaling factor and offset, the following equation is used:</p>
  * <pre>
  *   integer = value/factor + offset
  * </pre>
- * In both cases, the results are rounded to the nearest integer and
+ * <p>In both cases, the results are rounded to the nearest integer and
  * out of range values are assigned the missing value.</p>
  *
  * <h3>ASCII text:</h3>
@@ -330,56 +330,54 @@ import jargs.gnu.CmdLineParser.*;
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input or output file names. </li>
  *   <li> Invalid variable name. </li>
  *   <li> Unrecognized format, size, or byte order. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
  * <p> The following shows the export of AVHRR channel 1 data
  * from a CoastWatch HDF file with the default 32-bit IEEE floating
- * point value format, host byte order, no header, in verbose mode:
+ * point value format, host byte order, no header, in verbose mode:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwexport --verbose 
- *     --match 'avhrr_ch1' 2002_216_1853_n16_gr.hdf 2002_216_1853_n16_gr.ch1
+ *   phollema$ cwexport --verbose --match 'avhrr_ch1' 2002_216_1853_n16_gr.hdf 
+ *     2002_216_1853_n16_gr.ch1
  *
  *   cwexport: writing 'avhrr_ch1'
  * </pre>
- * The example below shows the export of AVHRR channels 1, 2, and
+ * <p>The example below shows the export of AVHRR channels 1, 2, and
  * 4 to the same output file from a CoastWatch HDF file using 8-bit
  * unsigned byte format, no header, in verbose mode.  Range scaling is
  * used to scale all values between -30 and 30 prior to conversion to
  * byte values in the range 0 to 255.  Note that some values may fall
  * outside the range and be clipped, especially albedo values which
  * can range up to 100.  The clipped values are assigned the default
- * missing value, which for byte data is 0.
+ * missing value, which for byte data is 0.</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwexport --verbose 
- *     --match 'avhrr_ch[124]' --size byte --range -30/30 
+ *   phollema$ cwexport --verbose --match 'avhrr_ch[124]' --size byte --range -30/30
  *     2002_216_1853_n16_gr.hdf 2002_216_1853_n16_gr.ch124
  *
  *   cwexport: writing 'avhrr_ch1'
  *   cwexport: writing 'avhrr_ch2'
  *   cwexport: writing 'avhrr_ch4'
  * </pre>
- * The example shows the export of AVHRR channel 4 data to an
+ * <p>The example shows the export of AVHRR channel 4 data to an
  * ASCII text file from a CoastWatch IMGMAP file in verbose mode.  The
  * geographic coordinates are printed in the order longitude,
  * latitude, and delimited with a comma character.  Any missing values
  * are denoted with the value -999.  A one line dimension header is
- * prepended to the dataset.
+ * prepended to the dataset.</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwexport --verbose 
- *     --match 'avhrr_ch4' --format text --reverse --delimit ',' 
+ *   phollema$ cwexport --verbose --match 'avhrr_ch4' --format text --reverse --delimit ','
  *     --missing -999 --header 2002_214_2057_n16_wv_c4.cwf 
  *     2002_214_2057_n16_wv_c4.txt
  *
  *   cwexport: writing 'avhrr_ch4'
  * </pre>
- * The first few lines of the resulting text file are as follows:
+ * <p>The first few lines of the resulting text file are as follows:</p>
  * <pre>
  *   2,512,512
  *   -127.777901,51.212974,13
@@ -392,18 +390,17 @@ import jargs.gnu.CmdLineParser.*;
  *   -127.708655,51.212974,7.45
  *   -127.698763,51.212974,7.45
  * </pre>
- * The example below shows the export of AVHRR channel 2 data to
+ * <p>The example below shows the export of AVHRR channel 2 data to
  * an ArcGIS binary grid file from a CoastWatch IMGMAP file, verbose
  * mode on.  The binary grid data is written to a '.flt' file and the
- * header data to a '.hdr' file.
+ * header data to a '.hdr' file.</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwexport --verbose 
- *     --format arc --match 'avhrr_ch2' --header 
+ *   phollema$ cwexport --verbose --format arc --match 'avhrr_ch2' --header
  *     2002_214_2057_n16_wv_c2.cwf 2002_214_2057_n16_wv_c2.flt
  *
  *   cwexport: writing 'avhrr_ch2'
  * </pre>
- * The header file contents are as follows:
+ * <p>The header file contents are as follows:</p>
  * <pre>
  *   nrows 512
  *   ncols 512
@@ -413,17 +410,17 @@ import jargs.gnu.CmdLineParser.*;
  *   nodata_value 1.4E-45
  *   byteorder MSBFIRST
  * </pre>
- * A final example shows the export of SST and cloud data to a
- * NetCDF dataset:
+ * <p>A final example shows the export of SST and cloud data to a
+ * NetCDF dataset:</p>
  * <pre>
- *   phollema@Bean<cwf-3.2.4> cwexport -v --match '(sst|cloud)' 
- *     2010_040_1636_m02_wj.hdf 2010_040_1636_m02_wj.nc"
+ *   phollema$ cwexport -v --match '(sst|cloud)' 2010_040_1636_m02_wj.hdf 
+ *     2010_040_1636_m02_wj.nc"
  *
  *   cwexport: Creating output 2010_040_1636_m02_wj.nc
  *   cwexport: Writing cloud
  *   cwexport: Writing sst
  * </pre>
- * A dump of the file contents:
+ * <p>A plain text dump of the file contents:</p>
  * <pre>
  *   netcdf 2010_040_1636_m02_wj {
  *   dimensions:
@@ -483,7 +480,6 @@ import jargs.gnu.CmdLineParser.*;
  *     :history = "[2010-03-13 09:46:43 IST cwf-3.2.4-pre-build169 phollema] cwexport -v --match (sst|cloud) 2010_040_1636_m02_wj.hdf 2010_040_1636_m02_wj.nc" ;
  *   }
  * </pre>
- * </p>
  *
  * <!-- END MAN PAGE -->
  *

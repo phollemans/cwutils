@@ -65,7 +65,7 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The analysis utility allows user to view, survey, and save datasets.<p>
+ * <p>The analysis tool allows user to view, survey, and save datasets.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -130,20 +130,19 @@ import jargs.gnu.CmdLineParser.*;
  *
  * <h2>Exit status</h2>
  *
- * <p>0 on success, > 0 on failure.  Possible causes of errors:
+ * <p>0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input file name. </li>
- * </ul></p>
+ * </ul>
  *
  * <h2>Examples</h2>
  *
  * <p>The following shows the use of CDAT to view 
- * data from a CoastWatch IMGMAP file:
+ * data from a CoastWatch IMGMAP file:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata/2002_319_2144_n16_wl> cdat 
- *     2002_319_2144_n16_wl_c2.cwf
- * </pre></p>
+ *   phollema$ cdat 2002_319_2144_n16_wl_c2.cwf
+ * </pre>
  *
  * <!-- END MAN PAGE -->
  *

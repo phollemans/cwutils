@@ -39,7 +39,7 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The import tool translates Earth data into CoastWatch HDF format.<p> 
+ * <p>The import tool translates Earth data into CoastWatch HDF format.</p> 
  *
  * <!-- START MAN PAGE -->
  *
@@ -129,20 +129,19 @@ import jargs.gnu.CmdLineParser.*;
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input or output file names. </li>
  *   <li> Unsupported input file format. </li>
  *   <li> Input file dates or Earth transforms do not match. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
  * <p> The following shows the import of several .cwf files
- * to CoastWatch HDF with verbose mode on:
+ * to CoastWatch HDF with verbose mode on:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwimport --verbose
- *     2002_214_2057_n16_wv_*.cwf 2002_214_2057_n16_wv.hdf
+ *   phollema$ cwimport --verbose 2002_214_2057_n16_wv_*.cwf 2002_214_2057_n16_wv.hdf
  *
  *   cwimport: Reading file [1/2], 2002_214_2057_n16_wv_c2.cwf
  *   cwimport: Writing avhrr_ch2
@@ -151,7 +150,7 @@ import jargs.gnu.CmdLineParser.*;
  *   cwimport: Writing avhrr_ch4
  *   cwimport: Writing graphics
  *   cwimport: Variable 'graphics' already exists, skipping
- * </pre> </p>
+ * </pre>
  *
  * <!-- END MAN PAGE -->
  *

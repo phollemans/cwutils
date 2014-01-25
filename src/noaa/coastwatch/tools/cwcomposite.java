@@ -37,7 +37,7 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The composite tool combines a time series of Earth data.<p>
+ * <p>The composite tool combines a time series of Earth data.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -174,7 +174,7 @@ import jargs.gnu.CmdLineParser.*;
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input or output file names. </li>
@@ -182,14 +182,13 @@ import jargs.gnu.CmdLineParser.*;
  *   <li> Input file Earth transforms do not match. </li>
  *   <li> No matching variables found. </li>
  *   <li> Unsupported composite method. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
  * <p> The following shows the combination of several Earth
- * datasets into one using the 'latest' composite method:
+ * datasets into one using the 'latest' composite method:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata/hdf> cwcomposite -v
- *     --method latest 2003_097_1428_n17_wi_na.hdf
+ *   phollema$ cwcomposite -v --method latest 2003_097_1428_n17_wi_na.hdf
  *     2003_097_1607_n17_wi_na.hdf 2003_097_1751_n17_mo_na.hdf
  *     2003_097_1931_n17_mo_na.hdf 2003_097_n17_na.hdf
  *
@@ -204,7 +203,7 @@ import jargs.gnu.CmdLineParser.*;
  *  cwcomposite: Writing avhrr_ch1
  *  cwcomposite: Writing avhrr_ch2
  *  cwcomposite: Writing avhrr_ch4
- * </pre> </p>
+ * </pre>
  *
  * <!-- END MAN PAGE -->
  *

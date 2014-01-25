@@ -62,7 +62,7 @@ public class LogEnhancement
   /** 
    * Checks the log enhancement range.
    *
-   * @throws ArithmeticException if one of the range values is <= 0.
+   * @throws ArithmeticException if one of the range values is &lt;= 0.
    */
   private void checkRange (double[] range) {
 

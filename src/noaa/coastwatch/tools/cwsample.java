@@ -37,8 +37,8 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The sampling tool extracts data values at specified Earth 
- * locations.<p>
+ * <p>The sampling tool extracts data values at specified Earth
+ * locations.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -144,7 +144,7 @@ import jargs.gnu.CmdLineParser.*;
  *   no pattern matching is performed and all variables are sampled
  *   unless the <b>--variable</b> option is used.  Note that either
  *   <b>--variable</b> or <b>--match</b> may be specified, but not
- *   both.</dd></dd>
+ *   both.</dd>
  *
  *   <dt> -M, --missing=VALUE </dt>
  *   <dd> The output value for missing or out of range data.  The
@@ -179,17 +179,17 @@ import jargs.gnu.CmdLineParser.*;
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input or output file names. </li>
  *   <li> Invalid sample coordinates file format. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
  * <p> In the example below, a sample points file named
  * <code>sample_locs.txt</code> was set up to follow the 93 W
- * longitude line at regular 0.2 degree intervals as follows:
+ * longitude line at regular 0.2 degree intervals as follows:</p>
  * <pre>
  *   28 -93
  *   28.2 -93
@@ -203,11 +203,10 @@ import jargs.gnu.CmdLineParser.*;
  *   29.8 -93
  *   30 -93
  * </pre>
- * and a Gulf of Mexico data file sampled for SST and cloud data along
- * this line with output to the terminal screen:
+ * <p>and a Gulf of Mexico data file sampled for SST and cloud data along
+ * this line with output to the terminal screen:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwsample --header 
- *     --match '(sst|cloud)' --samples sample_locs.txt 
+ *   phollema$ cwsample --header --match '(sst|cloud)' --samples sample_locs.txt
  *     2002_325_1546_n17_mr.hdf -
  *
  *   latitude longitude sst cloud
@@ -223,17 +222,15 @@ import jargs.gnu.CmdLineParser.*;
  *   29.8 -93 17.57 6
  *   30 -93 17.48 22
  * </pre>
- * Another example shows the sampling of one SST value as in the case
+ * <p>Another example shows the sampling of one SST value as in the case
  * of comparison with a single buoy measurement with output to the
- * terminal screen:
+ * terminal screen:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwsample --header 
- *     --match sst --sample 28.8/-93 2002_325_1546_n17_mr.hdf -
+ *   phollema$ cwsample --header --match sst --sample 28.8/-93 2002_325_1546_n17_mr.hdf -
  *
  *   latitude longitude sst
  *   28.8 -93 22.72
  * </pre>
- * </p>
  *
  * <!-- END MAN PAGE -->
  *

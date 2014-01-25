@@ -61,18 +61,18 @@ import noaa.coastwatch.util.trans.*;
  * information on TeraScan and current versions.</p>
  *
  * <p>Currently only a subset of TeraScan datasets are supported.  In
- * particular:
+ * particular:</p>
  * <ul>
  *
  *   <li> Sensor scan data with pre-computed double precision latitude
- *   and longitude variables in degrees. </li>
+ *   and longitude variables in degrees.</li>
  *
  *   <li> Mapped projection data in 'mercator', 'emercator',
  *   'polarstereo', and 'rectangular' projections.  The spheroid used
  *   is detected automatically from the TeraScan spheroid
- *   parameters. </li>
+ *   parameters.</li>
  *
- * </ul></p>
+ * </ul>
  *
  * <p>When a TeraScan HDF dataset is accessed, only attributes that
  * are required by the reader class are actually read -- for example

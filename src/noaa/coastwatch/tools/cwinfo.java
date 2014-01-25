@@ -61,8 +61,8 @@ import ucar.nc2.units.DateUnit;
 import ucar.nc2.constants.AxisType;
 
 /**
- * The information utility dumps earth data information in a
- * display-friendly format.<p>
+ * <p>The information utility dumps earth data information in a
+ * display-friendly format.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -100,7 +100,7 @@ import ucar.nc2.constants.AxisType;
  * y coordinate dimensions respectively, and mc=(nc-1)/2, mr=(nr-1)/2
  * be the midpoint coordinates.  Note that indexing is zero-based and
  * coordinates refer to the pixel center.  Then the following
- * information is computed:
+ * information is computed:</p>
  * <ul>
  *   <li>Pixel width at (mc,mr)</li>
  *   <li>Pixel height at (mc,mr)</li>
@@ -111,7 +111,7 @@ import ucar.nc2.constants.AxisType;
  *   <li>Upper-right lat/lon at (mc-1,0)</li>
  *   <li>Lower-left lat/lon at (0,mr-1)</li>
  *   <li>Lower-right lat/lon at (mc-1,mr-1)</li>
- * </ul></p>
+ * </ul>
  *
  * <p>When the <b>--coord</b> option is used, Common Data Model
  * coordinate systems are printed if available.  Generally this
@@ -125,7 +125,7 @@ import ucar.nc2.constants.AxisType;
  * <dl>
  *
  *   <dt>input</dt>
- *   <dd>The input data file name.</dt>
+ *   <dd>The input data file name.</dd>
  *
  * </dl>
  *
@@ -159,18 +159,18 @@ import ucar.nc2.constants.AxisType;
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input file name. </li>
  *   <li> Unsupported input file format. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
  * <p> The following shows an information dump of a
- * CoastWatch HDF file from the West Coast:
+ * CoastWatch HDF file from the West Coast:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwinfo 2002_197_1100_n16_wn.hdf
+ *   phollema$ cwinfo 2002_197_1100_n16_wn.hdf
  *
  *   Contents of file 2002_197_1100_n16_wn.hdf
  *   
@@ -194,7 +194,7 @@ import ucar.nc2.constants.AxisType;
  *     cloud          byte    1024x1024   -              -         -         
  *     sat_zenith     short   1024x1024   -              0.0001    0         
  *     graphics       byte    1024x1024   -              -         -         
- * </pre> </p>
+ * </pre>
  *
  * <!-- END MAN PAGE -->
  *

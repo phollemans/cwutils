@@ -38,7 +38,7 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The coverage tool creates an Earth data coverage map.<p>
+ * <p>The coverage tool creates an Earth data coverage map.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -246,28 +246,27 @@ import jargs.gnu.CmdLineParser.*;
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Unrecognized color name. </li>
  *   <li> Invalid map center or station location. </li>
  *   <li> Mismatch between label and file or station count. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
 
  * <p> As an example, the following command shows the creation of a
  * coverage plot of the ER and SR CoastWatch regions covering the US
- * East coast:
+ * East coast:</p>
  * <pre>
- *   phollema@damdog<~/cwatch/satdata/hdf> cwcoverage -v --labels ER/SR 
- *     2004_155_1147_n15_er.hdf 2004_155_1147_n15_sr.hdf east_coast.png
+ *   phollema$ cwcoverage -v --labels ER/SR 2004_155_1147_n15_er.hdf 
+ *     2004_155_1147_n15_sr.hdf east_coast.png
  * 
  *   cwcoverage: Reading input 2004_155_1147_n15_er.hdf
  *   cwcoverage: Reading input 2004_155_1147_n15_sr.hdf
  *   cwcoverage: Writing east_coast.png
  * </pre>
- * </p>
  *
  * <!-- END MAN PAGE -->
  *

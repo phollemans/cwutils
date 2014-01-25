@@ -30,7 +30,7 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The attribute tool reads and writes HDF file attributes.<p>
+ * <p>The attribute tool reads and writes HDF file attributes.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -62,7 +62,7 @@ import jargs.gnu.CmdLineParser.*;
  *
  * <p>The attribute tool reads or writes HDF file attributes using the
  * HDF Scientific Data Sets (SDS) interface.  The two modes work as
- * follows:
+ * follows:</p>
  * <dl>
  *
  *   <dt>Read mode</dt>
@@ -85,7 +85,7 @@ import jargs.gnu.CmdLineParser.*;
  *   the global attribute set (the default), or to specific variables
  *   in the data file using the <b>--variable</b> option.</dd>
  *
- * </dl></p>
+ * </dl>
  *
  * <p><b>Note:</b> The attribute tool is currently limited to reading
  * and writing only the signed HDF data types.  In read mode, unsigned
@@ -123,6 +123,7 @@ import jargs.gnu.CmdLineParser.*;
  *   <dd> The attribute data type (write mode only).  The valid types and
  *   their HDF equivalents are as follows:
  *   <table>
+ *     <caption></caption>
  *     <tr>
  *       <th>Type name</th>
  *       <th>HDF type</th>
@@ -170,7 +171,7 @@ import jargs.gnu.CmdLineParser.*;
  *
  * <h2>Exit status</h2>
  *
- * <p>0 on success, > 0 on failure.  Possible causes of errors:
+ * <p>0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input or output file names. </li>
@@ -183,9 +184,10 @@ import jargs.gnu.CmdLineParser.*;
  * <h2>Examples</h2>
  *
  * <p>As an example of read mode, the following command reads and prints
- * all the global attribute data from a CoastWatch HDF file:
+ * all the global attribute data from a CoastWatch HDF file:</p>
  * <pre>
- *   phollema@damdog<~/cwatch/satdata/level3> hdatt 2005_095_1522_n17_er.hdf
+ *   phollema$ hdatt 2005_095_1522_n17_er.hdf
+ *
  *   satellite = noaa-17
  *   sensor = avhrr
  *   origin = USDOC/NOAA/NESDIS CoastWatch
@@ -213,43 +215,40 @@ import jargs.gnu.CmdLineParser.*;
  *     -79.09000515710031 -79.09000515710031 -79.09000515710031 -79.09000515710031
  *   history = cwimport product.tshdf product.hdf
  * </pre>
- * To dump only a single attribute:
+ * <p>To dump only a single attribute:</p>
  * <pre>
- *   phollema@damdog<~/cwatch/satdata/level3> hdatt --name satellite 
- *     2005_095_1522_n17_er.hdf
+ *   phollema$ hdatt --name satellite 2005_095_1522_n17_er.hdf
+ *
  *   noaa-17
  * </pre>
- * or a single attribute from a specific variable:
+ * <p>or a single attribute from a specific variable:</p>
  * <pre>
- *   phollema@damdog<~/cwatch/satdata/level3> hdatt --name units 
- *     --variable avhrr_ch3a 2005_095_1522_n17_er.hdf
+ *   phollema$ hdatt --name units --variable avhrr_ch3a 2005_095_1522_n17_er.hdf
+ *
  *   albedo*100%
- * </pre></p>
+ * </pre>
  * 
  * <p>As an example of write mode, suppose that we wanted to save the
- * date when the file was originally downloaded from the server:
+ * date when the file was originally downloaded from the server:</p>
  * <pre>
- *   phollema@damdog<~/cwatch/satdata/level3> hdatt --name download_date 
- *     --value "Mon Apr 11 18:20:15 PDT 2005" 2005_095_1522_n17_er.hdf
- * </pre>
- * Now suppose we wanted to assign an integer quality value of 65% to the file
- * based on some test that was performed on the file data:
- * <pre>
- *   phollema@damdog<~/cwatch/satdata/level3> hdatt --name quality_value 
- *     --value 65 --type int 2005_095_1522_n17_er.hdf 
- * </pre>
- * Finally, suppose that we wanted to change the units and scaling
- * factor / offset of a variable, originally in degrees Celsius and
- * scaled by 0.01, to degrees Fahrenheit:
- * <pre>
- *   phollema@damdog<~/cwatch/satdata/level3> hdatt --name units 
- *     --value "deg F" --variable sst 2005_095_1522_n17_er.hdf
- *   phollema@damdog<~/cwatch/satdata/level3> hdatt --name scale_factor 
- *     --value 0.018 --type double --variable sst 2005_095_1522_n17_er.hdf
- *   phollema@damdog<~/cwatch/satdata/level3> hdatt --name add_offset 
- *     --value -1777.777777 --type double --variable sst 
+ *   phollema$ hdatt --name download_date --value "Mon Apr 11 18:20:15 PDT 2005" 
  *     2005_095_1522_n17_er.hdf
- * </pre></p>
+ * </pre>
+ * <p>Now suppose we wanted to assign an integer quality value of 65% to the file
+ * based on some test that was performed on the file data:</p>
+ * <pre>
+ *   phollema$ hdatt --name quality_value --value 65 --type int 2005_095_1522_n17_er.hdf
+ * </pre>
+ * <p>Finally, suppose that we wanted to change the units and scaling
+ * factor / offset of a variable, originally in degrees Celsius and
+ * scaled by 0.01, to degrees Fahrenheit:</p>
+ * <pre>
+ *   phollema$ hdatt --name units --value "deg F" --variable sst 2005_095_1522_n17_er.hdf
+ *   phollema$ hdatt --name scale_factor --value 0.018 --type double --variable sst 
+ *     2005_095_1522_n17_er.hdf
+ *   phollema$ hdatt --name add_offset --value -1777.777777 --type double --variable sst 
+ *     2005_095_1522_n17_er.hdf
+ * </pre>
  *
  * <!-- END MAN PAGE -->
  *

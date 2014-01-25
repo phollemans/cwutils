@@ -31,7 +31,7 @@ import Jama.*;
  * <code>a<sub>0</sub>, a<sub>1</sub>, a<sub>2</sub></code> are
  * calculated using the values, and the estimator will approximate
  * function values using the coefficients as <code>f(x) =
- * a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup>.
+ * a<sub>0</sub> + a<sub>1</sub>x + a<sub>2</sub>x<sup>2</sup></code>.
  *
  * @author Peter Hollemans
  * @since 3.1.0

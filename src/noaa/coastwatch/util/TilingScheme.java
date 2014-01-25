@@ -33,7 +33,7 @@ import java.awt.*;
  *              
  *              tile column
  *               dimension            tile position coordinates
- *              <---------->        /
+ *              &lt;---------&gt;         /
  *                                 /
  *            ^ +---------*-------/-*---+    ^
  *            | |         *      /  *   |    | 
@@ -49,10 +49,10 @@ import java.awt.*;
  *              |         *         *   |    |
  *              *************************    |
  *              |         *         *   |    |
- * truncated -->|  [2,0]  *  [2,1]  * [2,2]  |
+ * truncated --&gt;|  [2,0]  *  [2,1]  * [2,2]  |
  *   tile       +---------*---------*---+    v
  *
- *              <------------------------>
+ *              &lt;-----------------------&gt;
  *                    global column
  *                      dimension  
  * </pre>

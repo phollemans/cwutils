@@ -37,7 +37,7 @@ import Jama.*;
  * Suppose that the desired polynomial degree is 2 so that the
  * polynomial is a quadratic.  Then a series of 9 coefficients
  * <blockquote>
- *   <code>[a<sub>0</sub>, a<sub>1</sub>, ... a<sub>8</sub>]<code>
+ *   <code>[a<sub>0</sub>, a<sub>1</sub>, ... a<sub>8</sub>]</code>
  * </blockquote>
  * are calculated using the values, and the estimator will approximate
  * function values using the coefficients as:
@@ -58,7 +58,7 @@ import Jama.*;
  * detailed in:
  * <blockquote>
  *   Watkins, David S.  <i>Fundamentals of Matrix Computations</i>,
- *   John Wiley & Sons, Inc., 1991, pp 416-418.
+ *   John Wiley &amp; Sons, Inc., 1991, pp 416-418.
  * </blockquote>
  *
  * @author Peter Hollemans

@@ -96,7 +96,7 @@ import jargs.gnu.CmdLineParser.*;
 import ucar.units.Unit;
 
 /**
- * The render tool performs Earth data visualization.<p>
+ * <p>The render tool performs Earth data visualization.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -136,7 +136,6 @@ import ucar.units.Unit;
  * -s, --size=PIXELS | full <br>
  * -T, --tiffcomp=TYPE <br>
  * -W, --worldfile=FILE
- *
  * </p>
  *
  * <h3>Plot overlay options:</h3>
@@ -213,21 +212,20 @@ import ucar.units.Unit;
  * 
  * <p>Colors may also be specified using explicit hexadecimal
  * notation for red/green/blue color components and optional
- * alpha component as follows:
- *
+ * alpha component as follows:</p>
  * <pre>
  *   0xAARRGGBB
  *     ^ ^ ^ ^          
  *     | | | ----- Blue              \
- *     | | ------- Green             |---- Range: 00 -> ff
+ *     | | ------- Green             |---- Range: 00 -&gt; ff
  *     | --------- Red               |
  *     ----------- Alpha (optional)  /
  * </pre>
  *
- * Note that the prepended '0x' denotes a hexadecimal constant,
+ * <p>Note that the prepended '0x' denotes a hexadecimal constant,
  * and must be used even though it is not part of the color
  * component values.  As an example, the simple color names above
- * may be specified as hexadecimal values:
+ * may be specified as hexadecimal values:</p>
  *
  * <pre>
  *   0xff0000    red
@@ -237,7 +235,6 @@ import ucar.units.Unit;
  *   0x00ff00    green
  *   0x80ff0000  red, 50% transparent
  * </pre>
- * </p>
  *
  * <h3>Rendering order</h3>
  * 
@@ -248,7 +245,7 @@ import ucar.units.Unit;
  * coastline overlay.  Knowing the order in which the data and
  * overlays are rendered may answer some questions if the data
  * view doesn't look the way the user expects.  The data view is
- * rendered in the following order:
+ * rendered in the following order:</p>
  *
  * <ol>
  * 
@@ -309,11 +306,9 @@ import ucar.units.Unit;
  *   vector plots.</dd>
  *
  *   <dt>input</dt>
- *
- *   <dd>The input data file name.</dt>
+ *   <dd>The input data file name.</dd>
  *
  *   <dt>output</dt>
- *
  *   <dd>The output image file name.  Unless the <b>--format</b>
  *   option is used, the file extension indicates the desired output
  *   format: '.png', '.jpg', '.tif', or '.pdf'.</dd>
@@ -325,7 +320,7 @@ import ucar.units.Unit;
  * <dl>
  *
  *   <dt>-h, --help</dt>
- *
+
  *   <dd>Prints a brief help message.</dd>
  *
  *   <dt>-v, --verbose</dt>
@@ -414,7 +409,7 @@ import ucar.units.Unit;
  *
  *   <dt>-i, --indexed</dt>
  *
- *   <dd>Short for <b>--imagecolors 256</b></d>.  See the
+ *   <dd>Short for <b>--imagecolors 256</b>.  See the
  *   <b>--imagecolors</b> option below.</dd>
  *
  *   <dt>-I, --imagecolors=NUMBER</dt>
@@ -446,7 +441,7 @@ import ucar.units.Unit;
  *   center position is specified in terms of Earth location latitude
  *   and longitude in the range [-90..90] and [-180..180] and the
  *   magnification factor as a fractional number (0..1] where factors
- *   > 1 magnify and factors < 1 shrink.  By default, the data view
+ *   &gt; 1 magnify and factors &lt; 1 shrink.  By default, the data view
  *   shows the entire data field with an optimal magnification factor
  *   to fit the desired view size (see <b>--size</b>).</dd>
  *
@@ -797,8 +792,8 @@ import ucar.units.Unit;
  *   <dt>--ticklabels=LABEL1[/LABEL2[/LABEL3/...]]</dt>
  *
  *   <dd>The numeric tick mark labels to use for the data color scale.  By
- *   default the tick mark labels are generated automatically.  For example
- *   --ticklabels=1.0/1.1/1.2/1.3/1.4/1.5 would put tick marks and labels 
+ *   default the tick mark labels are generated automatically.  For example:<br>
+ *   --ticklabels=1.0/1.1/1.2/1.3/1.4/1.5<br>would put tick marks and labels 
  *   at evenly spaced locations on the color scale from 1.0 to 1.5.</dd>
  *
  *   <dt>-U, --units=UNITS</dt>
@@ -864,7 +859,7 @@ import ucar.units.Unit;
  *
  * <h2>Exit status</h2>
  *
- * <p>0 on success, > 0 on failure.  Possible causes of errors:
+ * <p>0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input or output file names. </li>
@@ -873,7 +868,7 @@ import ucar.units.Unit;
  *   <li> Unrecognized color name. </li>
  *   <li> Invalid palette name. </li>
  *   <li> Invalid magnification center. </li>
- * </ul></p>
+ * </ul>
  *
  * <h2>Examples</h2>
  *
@@ -882,11 +877,10 @@ import ucar.units.Unit;
  * CoastWatch HDF file to a PNG image, with coast and grid lines in
  * red and the default linear black to white palette.  We allow the
  * routine to calculate data statistics on channel 2 for an optimal
- * enhancement range:
+ * enhancement range:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwrender --verbose 
- *     --enhance avhrr_ch2 --coast red --grid red 2002_288_1435_n17_er.hdf 
- *     2002_288_1435_n17_er_ch2.png
+ *   phollema$ cwrender --verbose --enhance avhrr_ch2 --coast red --grid red 
+ *     2002_288_1435_n17_er.hdf 2002_288_1435_n17_er_ch2.png
  *
  *   cwrender: Reading input 2002_288_1435_n17_er.hdf
  *   cwrender: Normalizing color enhancement
@@ -895,15 +889,14 @@ import ucar.units.Unit;
  *   EarthDataView: Rendering overlay noaa.coastwatch.render.LatLonOverlay
  *   cwrender: Writing output 2002_288_1435_n17_er_ch2.png
  * </pre>
- * For a color composite of the same file, the following command shows
+ * <p>For a color composite of the same file, the following command shows
  * the rendering of AVHRR channels 1, 2, and 4 to a PNG image.  Again,
  * we allow the routine to calculate statistics for optimal
  * enhancement ranges.  Note that the final enhancement function is
  * reversed in order to map warm AVHRR channel 4 values to dark and
- * cold values to bright:
+ * cold values to bright:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwrender --verbose 
- *     --composite avhrr_ch1/avhrr_ch2/avhrr_ch4 
+ *   phollema$ cwrender --verbose --composite avhrr_ch1/avhrr_ch2/avhrr_ch4
  *     --bluefunction reverse-linear --coast black --grid gray 
  *     2002_288_1435_n17_er.hdf 2002_288_1435_n17_er_ch124.png
  *
@@ -916,14 +909,13 @@ import ucar.units.Unit;
  *   EarthDataView: Rendering overlay noaa.coastwatch.render.LatLonOverlay
  *   cwrender: Writing output 2002_288_1435_n17_er_ch124.png
  * </pre>
- * A further example below shows the rendering of AVHRR derived
+ * <p>A further example below shows the rendering of AVHRR derived
  * sea-surface-temperature data from the same file with a cloud mask
  * applied.  The color enhancement uses a blue to red color palette
- * and an explicit range from 5 to 20 degrees Celsius:
+ * and an explicit range from 5 to 20 degrees Celsius:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwrender --verbose 
- *     --enhance sst --coast white --grid white --palette HSL256
- *     --range 5/20 --cloud gray 2002_288_1435_n17_er.hdf 
+ *   phollema$ cwrender --verbose --enhance sst --coast white --grid white 
+ *     --palette HSL256 --range 5/20 --cloud gray 2002_288_1435_n17_er.hdf
  *     2002_288_1435_n17_er_sst.png
  *
  *   cwrender: Reading input 2002_288_1435_n17_er.hdf
@@ -933,13 +925,12 @@ import ucar.units.Unit;
  *   EarthDataView: Rendering overlay noaa.coastwatch.render.LatLonOverlay
  *   cwrender: Writing output 2002_288_1435_n17_er_sst.png
  * </pre>
- * An example usage of the <b>--magnify</b> option is shown below to
+ * <p>An example usage of the <b>--magnify</b> option is shown below to
  * create a plot of cloud masked sea-surface-temperature data off Nova
- * Scotia:
+ * Scotia:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata> cwrender --verbose 
- *     --enhance sst --coast white --grid white --palette HSL256 
- *     --range 5/20 --cloud gray --magnify 43/-66/1 
+ *   phollema$ cwrender --verbose --enhance sst --coast white --grid white 
+ *     --palette HSL256 --range 5/20 --cloud gray --magnify 43/-66/1
  *     2002_288_1435_n17_er.hdf 2002_288_1435_n17_er_sst_mag.png
  *
  *   cwrender: Reading input 2002_288_1435_n17_er.hdf
@@ -949,7 +940,6 @@ import ucar.units.Unit;
  *   EarthDataView: Rendering overlay noaa.coastwatch.render.LatLonOverlay
  *   cwrender: Writing output 2002_288_1435_n17_er_sst_mag.png
  * </pre>
- * </p>
  *
  * <h2>Known Bugs</h2>
  *

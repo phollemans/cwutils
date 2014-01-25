@@ -77,7 +77,7 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The master utility creates map projection master datasets.<p>
+ * <p>The master utility creates map projection master datasets.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -139,27 +139,25 @@ import jargs.gnu.CmdLineParser.*;
  *   shows the version, author, and web site information.</dd>
  *
  *   <dt>--version</dt>
- *
  *   <dd>Prints the software version.</dd>
  *
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input file name. </li>
  *   <li> Unsupported input file format. </li>
  *   <li> Input file does not contain a map projection. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
  * <p> The following shows the use of cwmaster to load master
- * parameters from a CoastWatch IMGMAP file:
+ * parameters from a CoastWatch IMGMAP file:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata/2002_319_2144_n16_wl> cwmaster 
- *     2002_319_2144_n16_wl_c2.cwf
- * </pre> </p>
+ *   phollema$ cwmaster 2002_319_2144_n16_wl_c2.cwf
+ * </pre>
  *
  * <!-- END MAN PAGE -->
  *

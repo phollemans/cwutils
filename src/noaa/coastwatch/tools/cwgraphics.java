@@ -37,7 +37,7 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The graphics tool creates Earth data annotation graphics.<p>
+ * <p>The graphics tool creates Earth data annotation graphics.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -77,12 +77,12 @@ import jargs.gnu.CmdLineParser.*;
  * where a bit value of 0 is interpreted as 'off' and a bit value of 1
  * as 'on'.  In this way, 8 separate binary bitmasks may be encoded
  * into one byte value.  For example a pixel with graphics planes 2,
- * 3, and 4 on is encoded as:
+ * 3, and 4 on is encoded as:</p>
  * <pre>
  *    Binary value  = 00001110
  *    Decimal value = 14
  * </pre>
- * Following the standard convention for graphics planes in CoastWatch
+ * <p>Following the standard convention for graphics planes in CoastWatch
  * product files, the default behaviour places latitude/longitude grid
  * graphics in plane 2, coast line graphics in plane 3, and land mask
  * graphics in plane 4.  Coast lines are derived from GSHHS coast line
@@ -97,8 +97,7 @@ import jargs.gnu.CmdLineParser.*;
  * graphics for rendered Earth data images.  The graphics byte
  * data may be exported using the cwexport tool for use in other
  * software packages, or may be used in the cwrender tool with the
- * <b>--bitmask</b> option.
- * </p>
+ * <b>--bitmask</b> option.</p>
  *
  * <h2>Parameters</h2>
  *
@@ -156,39 +155,40 @@ import jargs.gnu.CmdLineParser.*;
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input or output file names. </li>
  *   <li> Unsupported input file format. </li>
  *   <li> Output variable already exists in input file. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
  * <p> The following shows the creation of a standard set of graphics
  * planes using cwgraphics.  The file being acted upon is a CoastWatch
- * HDF file created using the graphical cwmaster tool:
+ * HDF file created using the graphical cwmaster tool:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata/hdf> cwgraphics -v bc_coast.hdf
+ *   phollema$ cwgraphics -v bc_coast.hdf
+ 
  *   cwgraphics: Reading input bc_coast.hdf
  *   cwgraphics: Creating graphics variable
  *   cwgraphics: Rendering overlay at plane 2
  *   cwgraphics: Rendering overlay at plane 3
  *   cwgraphics: Rendering overlay at plane 4
  * </pre>
- * Another example below shows the alteration of the default options.
+ * <p>Another example below shows the alteration of the default options.
  * Only coast line and political line graphics are rendered to plane
- * 1, and the output variable is named 'geography':
+ * 1, and the output variable is named 'geography':</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata/hdf> cwgraphics -v --land 0 
- *     --grid 0 --coast 1 --political 1 --variable geography bc_coast.hdf
+ *   phollema$ cwgraphics -v --land 0 --grid 0 --coast 1 --political 1 
+ *     --variable geography bc_coast.hdf
+ *
  *   cwgraphics: Reading input bc_coast.hdf
  *   cwgraphics: Creating geography variable
  *   cwgraphics: Rendering overlay at plane 1
  *   cwgraphics: Rendering overlay at plane 1
  *   cwgraphics: Rendering overlay at plane 1
  * </pre>
- * </p>
  *
  * <!-- END MAN PAGE -->
  *

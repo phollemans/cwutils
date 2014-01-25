@@ -48,7 +48,7 @@ import jargs.gnu.CmdLineParser.*;
 import org.nfunk.jep.*;
 
 /**
- * The math tool combines Earth data using a mathematical expression.<p>
+ * <p>The math tool combines Earth data using a mathematical expression.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -81,18 +81,19 @@ import org.nfunk.jep.*;
  *
  * <h2>Description</h2>
  * <p> The math tool combines Earth data using a mathematical
- * expression.  The expression takes the form:
+ * expression.  The expression takes the form:</p>
  * <pre>
  *   variable = formula
  * </pre>
- * where the variable is the output variable to create and the formula
+ * <p>where the variable is the output variable to create and the formula
  * is a mathematical combination of input variables.  The formula may
  * contain a number of standard operators, for example addition and
  * subtraction, as well as functions such as sine and cosine and
  * numerical and symbolic constants.  The supported operators and
  * functions are as follows:</p>
  *
- * <p><table>
+ * <table>
+ *   <caption></caption>
  *
  *   <tr>
  *     <th>Operator</th>
@@ -159,9 +160,10 @@ import org.nfunk.jep.*;
  *     <td>||</td>
  *   </tr>
  *
- * </table></p>
+ * </table>
  *
- * <p><table>
+ * <table>
+ *   <caption></caption>
  *
  *   <tr> 
  *     <th>Function</th>
@@ -305,9 +307,10 @@ import org.nfunk.jep.*;
  *     <td>not (x)</td>
  *   </tr>
  *
- * </table></p>
+ * </table>
  *
- * <p><table>
+ * <table>
+ *   <caption></caption>
  *
  *   <tr> 
  *     <th>Constant</th>
@@ -329,7 +332,7 @@ import org.nfunk.jep.*;
  *     <td>NaN</td>
  *   </tr>
  *
- * </table></p>
+ * </table>
  *
  * <p>Note that boolean expressions are evaluated to be either 1 or 0
  * (true or false respectively).  
@@ -432,13 +435,12 @@ import org.nfunk.jep.*;
  *   quietly. </dd>
  *
  *   <dt>--version</dt>
- *
  *   <dd>Prints the software version.</dd>
  *
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input or output file names. </li>
@@ -448,15 +450,14 @@ import org.nfunk.jep.*;
  *   <li> Invalid scale or size specified. </li>
  *   <li> Unsupported variable rank detected. </li>
  *   <li> Invalid expression variable name. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
  * <p> The following shows the correction of AVHRR channel 2
  * data for solar zenith angle.  The output variable is named
- * 'avhrr_ch2_corr' and is written to the input file:
+ * 'avhrr_ch2_corr' and is written to the input file:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata/hdf> cwmath -v --units 
- *     "percent" --longname "AVHRR channel 2 corrected" 
+ *   phollema$ cwmath -v --units "percent" --longname "AVHRR channel 2 corrected"
  *     --expr "avhrr_ch2_corr = avhrr_ch2/cos(sun_zenith*pi/180)" 
  *     2003_104_1513_n17_er.hdf
  *
@@ -468,11 +469,10 @@ import org.nfunk.jep.*;
  *   cwmath: Computing row 300
  *   ...
  * </pre>
- * Another example below shows the computation of Normalized
- * Difference Vegetation Index (NDVI):
+ * <p>Another example below shows the computation of Normalized
+ * Difference Vegetation Index (NDVI):</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata/hdf> cwmath -v --longname 
- *     "Normalized Difference Vegetation Index" 
+ *   phollema$ cwmath -v --longname "Normalized Difference Vegetation Index"
  *     --expr "ndvi = (avhrr_ch2 - avhrr_ch1)/(avhrr_ch2 + avhrr_ch1)" 
  *     2003_104_1513_n17_er.hdf
  *
@@ -484,16 +484,16 @@ import org.nfunk.jep.*;
  *   cwmath: Computing row 300
  *   ...
  * </pre>
- * In order to demonstrate the use of the 'mask' function, the example
+ * <p>In order to demonstrate the use of the 'mask' function, the example
  * below shows the masking of the 'sst' variable using the 'cloud'
  * variable.  Note that a hexadecimal value is used to determine which
  * values from the cloud mask are used in the masking procedure.
  * Since the cloud data is represented by 8-bit bytes, the hexadecimal
  * mask value need only specify two hexadecimal digits.  In this case,
  * the value '0x6f' represents bits 1, 2, 3, 4, 6, and 7 (for all
- * cloud mask bits, the value would be '0xff'):
+ * cloud mask bits, the value would be '0xff'):</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata/hdf> cwmath -v --template sst
+ *   phollema$ cwmath -v --template sst 
  *     --expr 'sst_masked = mask (sst, cloud, hex ("0x6f"))'
  *     2003_104_1513_n17_er.hdf
  *
@@ -505,11 +505,11 @@ import org.nfunk.jep.*;
  *   cwmath: Computing row 300
  *   ...
  * </pre>
- * A final example below shows how the tool may be used to compute
+ * <p>A final example below shows how the tool may be used to compute
  * complex formulas using a Unix Bourne shell script.  The example
  * computes the theoretical AVHRR channel 3b albedo at night for
  * NOAA-17 using actual channel 3b temperatures and channel 3b
- * emission temperatures estimated from channel 4 and 5:
+ * emission temperatures estimated from channel 4 and 5:</p>
  * <pre>
  *   #!/bin/sh
  *   
@@ -533,7 +533,6 @@ import org.nfunk.jep.*;
  *   cwmath -v --longname "AVHRR channel 3 albedo" --units "percent" \
  *     --expr "avhrr_ch3_albedo=$alb3" $input
  * </pre>
- * </p>
  *
  * <!-- END MAN PAGE -->
  *

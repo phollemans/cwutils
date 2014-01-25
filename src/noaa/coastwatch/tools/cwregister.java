@@ -38,8 +38,8 @@ import jargs.gnu.*;
 import jargs.gnu.CmdLineParser.*;
 
 /**
- * The registration tool resamples gridded Earth data to a master
- * projection.<p>
+ * <p>The registration tool resamples gridded Earth data to a master
+ * projection.</p>
  * <!-- START MAN PAGE -->
  *
  * <h2>Name</h2>
@@ -174,26 +174,24 @@ import jargs.gnu.CmdLineParser.*;
  *   quietly.</dd>
  *
  *   <dt>--version</dt>
- *
  *   <dd>Prints the software version.</dd>
  *
  * </dl>
  *
  * <h2>Exit status</h2>
- * <p> 0 on success, > 0 on failure.  Possible causes of errors:
+ * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
  *   <li> Invalid command line option. </li>
  *   <li> Invalid master, input or output file names. </li>
  *   <li> Unsupported master or input file format. </li>
- * </ul> </p>
+ * </ul>
  *
  * <h2>Examples</h2>
  * <p>
  * The following shows the registration of NOAA-17 AVHRR channel 2
- * swath data to a southern California master:
+ * swath data to a southern California master:</p>
  * <pre>
- *   phollema@localhost:<~/cwatch/satdata/2002_318_1826_n17_mo> cwregister 
- *     -v --match avhrr_ch2 ws_master.hdf 2002_318_1826_n17_mo.hdf 
+ *   phollema$ cwregister -v --match avhrr_ch2 ws_master.hdf 2002_318_1826_n17_mo.hdf
  *     2002_318_1826_n17_ws.hdf
  *
  *   cwregister: Reading master ws_master.hdf
@@ -216,7 +214,6 @@ import jargs.gnu.CmdLineParser.*;
  *   GridResampler: Computing row 1000
  *   cwregister: Closing files
  * </pre>
- * </p>
  *
  * <!-- END MAN PAGE -->
  *

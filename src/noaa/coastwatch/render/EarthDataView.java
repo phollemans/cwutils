@@ -470,7 +470,7 @@ public abstract class EarthDataView
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a set of caches to speed image->data transforms.  The
+   * Creates a set of caches to speed image-to-data transforms.  The
    * navigation transform of the specified grid is taken into
    * account in the cache.  Note that this is only useful when the
    * navigation is either the identity or a translation.
