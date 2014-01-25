@@ -852,7 +852,7 @@ public class GCTP
   public static double[] forward (
     double[] pos,
     int output_system
-  ) {
+  ) throws Exception {
   
    throw new IllegalStateException();
     
@@ -883,7 +883,7 @@ public class GCTP
   public static double[] inverse (
     double[] pos,
     int input_system
-  ) {
+  ) throws Exception {
   
    throw new IllegalStateException();
     
