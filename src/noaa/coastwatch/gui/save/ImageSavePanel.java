@@ -111,7 +111,7 @@ public abstract class ImageSavePanel
    * @param tiffComp the TIFF compression algorithm: 'none',
    * 'deflate', or 'pack'.
    * @param colors the number of image colors for an indexed color
-   * image, <= 256 or 0 for no color limit.
+   * image, &lt;= 256 or 0 for no color limit.
    * @param format the output file format: 'png', 'gif', 'jpg', 'tif', or
    * 'pdf'.
    * @param file the file to write.
