@@ -55,7 +55,7 @@ public abstract class SavePanel
    *
    * @throws Exception if the panel contents have an error.
    */
-  public void check () { }
+  public void check () throws Exception { }
 
   ////////////////////////////////////////////////////////////
 
