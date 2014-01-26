@@ -9,7 +9,7 @@ html2latex=/usr/local/bin/html2latex
 # ---------------------------
 version=$1
 if [ -z "$version" ] ; then
-  echo "No version specified! eg: makedoc 3.2.4"
+  echo "Usage: makedoc version"
   exit 1
 fi
 
@@ -123,7 +123,8 @@ rm -rf tools
 echo "Making user's guide ... \c"
 cd users_guide
 guide_version=`echo $version | sed -e 's/\./_/g'`
-guide_name="cwf_ug_${guide_version}"
+guide_name="cwf_users_guide"
+guide_name_with_verson="cwf_ug_${guide_version}"
 $pdflatex --interaction batchmode ${guide_name}.tex > /dev/null 2>&1
 if [ $? -ne 0 ] ; then
   echo "FAILED1"
@@ -134,7 +135,7 @@ else
   else
     $pdflatex --interaction batchmode ${guide_name}.tex > /dev/null 2>&1
     $pdflatex --interaction batchmode ${guide_name}.tex > /dev/null 2>&1
-    cp ${guide_name}.pdf ..
+    cp ${guide_name}.pdf ../${guide_name_with_verson}.pdf
     echo "OK"
   fi 
 fi
