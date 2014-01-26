@@ -6,9 +6,14 @@
      DATE: 2013/01/25
   CHANGES: 2013/02/12, PFH, added support for cached grids to getActualVariable
            2013/05/13, PFH, fixed date parsing
+           2014/01/25, PFH
+           - changes: added more strict check for ACSPO-specific attributes
+           - issue: Lucas Moxey reported that recognizing some types of CF
+             data was failing, and it was because this reader was being used
+             rather than the generic NetCDF reader
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -71,6 +76,18 @@ public class ACSPONCCFReader
   
   /** Gets the Earth data info object. */
   private EarthDataInfo getGlobalInfo () throws IOException {
+
+    // Check that we have ACSPO data
+    // -----------------------------
+    String summary = (String) getAttribute ("summary");
+    boolean isSummaryOK = (summary != null && summary.indexOf ("ACSPO") != -1);
+    String title = (String) getAttribute ("title");
+    boolean isTitleOK = (title != null && title.indexOf ("ACSPO") != -1);
+    String inst = (String) getAttribute ("institution");
+    boolean isInstOK = (inst != null && inst.indexOf ("NDE") != -1);
+    if (!isSummaryOK && !isTitleOK && !isInstOK) {
+      throw new IOException ("Cannot verify file is ACSPO data");
+    } // if
 
     // Get simple attributes
     // ---------------------
@@ -135,7 +152,7 @@ public class ACSPONCCFReader
 
   /** Gets the Earth transform information. */
   private EarthTransform getTransform () {
-	   
+
     // Create swath
     // ------------
     EarthTransform trans = null;
