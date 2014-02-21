@@ -20,9 +20,10 @@
            2012/12/11, PFH, updated for MacOS X 64-bit, removed native code
            2013/02/04, PFH, simplified
            2013/11/06, PFH, added target/source args for javac tasks
-
+           2014/02/21, PFH, added upload target and extra cleanup for docs
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 -->
 
@@ -215,17 +216,38 @@
     depends="pkg_windows,pkg_linux,pkg_solaris,pkg_macosx" 
     description="Creates all package files"/>
 
+  <target name="upload"
+    description="Uploads packages to the Terrenus server">
+    <input message="Password: " addproperty="password">
+      <handler type="secure"/>
+    </input>
+    <scp todir="terrenus:${password}@terrenus.ca:web/download" verbose="true" sftp="true">
+      <fileset dir="${pkg.dir}"/>
+    </scp>
+    <sshexec
+      host="terrenus.ca"
+      username="terrenus"
+      password="${password}"
+      command="cd web/download ; md5sum -c md5sums"/>
+  </target>
+
   <!-- Define cleanup targets -->
   <!-- ********************** -->
 
   <target name="clean"
     description="Cleans up compiled Java classes, source ZIP, and documentation">
-    <delete file="lib/cwf.jar"/>
-    <delete file="src.zip"/>
     <delete dir="classes"/>
     <delete dir="doc/api"/>
-    <delete dir="doc/tools"/>
-    <delete file="doc/api.zip"/>
+    <delete verbose="true" quiet="true" includeemptydirs="true">
+      <fileset file="lib/cwf.jar"/>
+      <fileset file="src.zip"/>
+      <fileset dir="doc/tools"/>
+      <fileset dir="doc">
+        <include name="api.zip"/>
+        <include name="cwf_ug_*.pdf"/>
+      </fileset>
+      <fileset dir="doc/users_guide" excludes="*.tex,*.bib,figures/*,icons/*"/>
+    </delete>
   </target>
 
   <target name="clean_packages"
@@ -258,7 +280,7 @@
       fork="true">
       <env key="${ld.var}" value="${basedir}/lib/${os.libs}"/>
       <jvmarg line="${vm.args}"/>
-      <arg value="${args}"/>
+      <arg line="${args}"/>
     </java>
   </target>
 
