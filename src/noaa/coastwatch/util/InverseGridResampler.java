@@ -5,10 +5,16 @@
            to another.
    AUTHOR: Peter Hollemans
      DATE: 2005/01/26
-  CHANGES: n/a
+  CHANGES: 2014/02/12, PFH
+           - Changes: Modified perform() method to minimize dynamic memory
+             allocation.
+           - Issue: The nested for loops in perform() were allocating a number
+             of objects for every iteration.  We suspect the loop would run 
+             more efficiently without the overhead of creating new objects
+             every time through.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -41,6 +47,8 @@ import noaa.coastwatch.util.trans.*;
  *   to the destination.</li>
  * 
  * </ol>
+ *
+ * WARNING: This class is not thread-safe.
  *
  * @author Peter Hollemans
  * @since 3.1.9
@@ -111,16 +119,11 @@ public class InverseGridResampler
     LocationEstimator estimator = new LocationEstimator (destTrans,
       destDims, sourceTrans, sourceDims, sourceNav, polySize);
 
-    // TODO: This loop needs to be made more efficient.  One way would
-    // be to eliminate the dynamic memory allocation performed when
-    // creating and transforming each new DataLocation.  That would
-    // require changes here, and in LocationEstimator, and possibly
-    // EarthTransform by adding transform() methods that take two
-    // arguments -- a source and destination for the transformed
-    // point.
-
     // Loop over each destination location
     // -----------------------------------
+    DataLocation destLoc = new DataLocation (2);
+    DataLocation sourceLoc = new DataLocation (2);
+    EarthLocation earthLoc = new EarthLocation();
     for (int i = 0; i < destDims[Grid.ROWS]; i++) {
       if (verbose && i%100 == 0)
         System.out.println (this.getClass() + ": Working on output row " + i);
@@ -128,21 +131,24 @@ public class InverseGridResampler
 
         // Get source location
         // -------------------
-        DataLocation destLoc = new DataLocation (i, j);
-        boolean destValid = destTrans.transform(destLoc).isValid();
-        DataLocation sourceLoc = (destValid ? 
-          estimator.getLocation (destLoc) : null);
-        boolean sourceValid = (sourceLoc != null && 
-          sourceLoc.isValid() && sourceLoc.isContained (sourceDims));
+        destLoc.set (Grid.ROWS, i);
+        destLoc.set (Grid.COLS, j);
+        destTrans.transform (destLoc, earthLoc);
+        boolean isDestValid = earthLoc.isValid();
+        boolean isSourceValid = false;
+        if (isDestValid) {
+          estimator.getLocation (destLoc, sourceLoc);
+          isSourceValid = (sourceLoc.isValid() && sourceLoc.isContained (sourceDims));
+        } // if
 
         // Copy data value
         // ---------------
-        if (sourceValid) {
+        if (isSourceValid) {
  
           // Get nearest neighbour source coordinate
           // ---------------------------------------
-          int sourceRow = (int) Math.round (sourceLoc.get(Grid.ROWS));
-          int sourceCol = (int) Math.round (sourceLoc.get(Grid.COLS));
+          int sourceRow = (int) Math.round (sourceLoc.get (Grid.ROWS));
+          int sourceCol = (int) Math.round (sourceLoc.get (Grid.COLS));
                  
           // Loop over each grid
           // -------------------

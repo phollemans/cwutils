@@ -24,6 +24,9 @@ package noaa.coastwatch.util;
 import java.awt.geom.AffineTransform;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+// TODO: Should we improve the speed of this routine as well, using less
+// dynamic memory calls?  See InverseGridResampler.java
+
 /**
  * The <code>ACSPOInverseGridResampler</code> class performs generic data
  * resampling between 2D Earth transforms using an inverse location

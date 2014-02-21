@@ -10,9 +10,13 @@
            - added documentation
            - modified to be more strict with partially covered partitions
            2006/10/02, PFH, updated for new EarthPartition constructor
-
+           2014/02/11, PFH
+           - Changes: Added new getLocation method and temporary variables.
+           - Issue: We needed to better manage dynamic memory allocation in
+             InverseGridResampler.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -51,6 +55,8 @@ import noaa.coastwatch.util.trans.*;
  * target transform are queried by performing the data location
  * transform explicitly.  In fast mode, partitions with insufficient
  * coverage return an invalid data location for any query point.
+ *
+ * WARNING: This class is not thread-safe.
  *
  * @see EarthTransform
  * @see EarthPartition
@@ -96,6 +102,12 @@ public class LocationEstimator {
 
   /** The location query mode. */
   private int queryMode;
+
+  /** Temporary Earth location for calculations. */
+  private EarthLocation tempEarthLoc;
+
+  /** Temporary coordinate array for calculations. */
+  private double[] tempRefCoords;
 
   ////////////////////////////////////////////////////////////
 
@@ -382,6 +394,8 @@ public class LocationEstimator {
     this.targetNav = (targetNav != null ? (AffineTransform) targetNav.clone() :
       null);
     this.queryMode = ACCURATE;
+    this.tempEarthLoc = new EarthLocation();
+    this.tempRefCoords = new double[2];
 
     // Create partition
     // ----------------
@@ -403,6 +417,67 @@ public class LocationEstimator {
   /** 
    * Gets the target location for the specified reference location.
    * 
+   * @param refLoc the reference location. 
+   * @param targetLoc the target location or null.  If null, an object
+   * is created and returned.  If non-null, the object is simply
+   * modified.
+   *
+   * @return the target location.  The target location may be invalid
+   * if an error occurred in calculation or if the specified reference
+   * location has no valid target location.
+   */
+  public DataLocation getLocation (
+    DataLocation refLoc,
+    DataLocation targetLoc
+  ) {
+
+    // Create target location if needed
+    // --------------------------------
+    if (targetLoc == null) targetLoc = new DataLocation (2);
+    targetLoc.markInvalid();
+
+    // Get child partition
+    // -------------------
+    EarthPartition part = partition.findPartition (refLoc);
+    if (part != null) {
+
+      // Get partition data
+      // ------------------
+      PartitionData data = (PartitionData) part.getData();
+
+      // Handle invalid partition
+      // ------------------------
+      if (!data.valid) {
+
+        // Perform explicit location transform
+        // -----------------------------------
+        if (data.coverage && queryMode != FAST) {
+          refTrans.transform (refLoc, tempEarthLoc);
+          targetTrans.transform (tempEarthLoc, targetLoc);
+          if (targetNav != null) targetLoc.transformInPlace (targetNav);
+        } // if
+
+      } // if
+
+      // Perform estimated location transform
+      // ------------------------------------
+      else {
+        refLoc.getCoords (tempRefCoords);
+        targetLoc.set (Grid.ROWS, data.rowEst.evaluate (tempRefCoords));
+        targetLoc.set (Grid.COLS, data.colEst.evaluate (tempRefCoords));
+      } // else
+
+    } // if
+
+    return (targetLoc);
+
+  } // getLocation
+  
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the target location for the specified reference location.
+   * 
    * @param refLoc the reference location.   
    *
    * @return the target location.  The target location may be invalid
@@ -413,46 +488,8 @@ public class LocationEstimator {
     DataLocation refLoc
   ) {
 
-    // Get child partition
-    // -------------------
-    EarthPartition part = partition.findPartition (refLoc);
-    if (part == null) {
-      return (new DataLocation (Double.NaN, Double.NaN));
-    } // if
-
-    // Get partition data
-    // ------------------
-    PartitionData data = (PartitionData) part.getData();
-
-    // Handle invalid partition
-    // ------------------------
-    if (!data.valid) {
-
-      // No valid location
-      // -----------------
-      if (!data.coverage || queryMode == FAST)
-        return (new DataLocation (Double.NaN, Double.NaN));
-
-      // Perform explicit location transform
-      // -----------------------------------
-      DataLocation targetLoc = targetTrans.transform (refTrans.transform (
-        refLoc));   
-      if (targetNav != null) targetLoc = targetLoc.transform (targetNav);
-      return (targetLoc);
-
-    } // if
-
-    // Perform estimated location transform
-    // ------------------------------------
-    else {
-      double[] refCoords = refLoc.getCoords();
-      DataLocation targetLoc = new DataLocation (
-        data.rowEst.evaluate(refCoords),
-        data.colEst.evaluate(refCoords)
-      );
-      return (targetLoc);
-    } // else
-
+    return (getLocation (refLoc, null));
+    
   } // getLocation
 
   ////////////////////////////////////////////////////////////

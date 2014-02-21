@@ -14,9 +14,14 @@
            2004/01/10, PFH, added setCoords(int[])
            2004/03/27, PFH, added setCoords(DataLocation)
            2004/03/28, PFH, added format() method
-
+           2014/02/11, PFH
+           - Changes: Added markInvalid, transformInPlace, and 
+             getCoords (double[]).
+           - Issue: To help in implementing changes in LocationEstimator and
+             reduce memory allocations needed in InverseGridResampler.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -241,11 +246,34 @@ public class DataLocation
   /**
    * Gets the data location coordinates as an array.
    *
+   * @param coordsCopy the array of coordinates to fill, or null to create a
+   * new array.
+   *
+   * @return the array of coordinate values, one per dimension.
+   */
+  public double[] getCoords (double[] coordsCopy) {
+
+    if (coordsCopy == null)
+      coordsCopy = (double[]) coords.clone();
+    else {
+      for (int i = 0; i < coords.length; i++)
+        coordsCopy[i] = coords[i];
+    } // else
+    
+    return (coordsCopy);
+
+  } // getCoords
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the data location coordinates as an array.
+   *
    * @return the array of coordinate values, one per dimension.
    */
   public double[] getCoords () {
 
-    return ((double[]) coords.clone());
+    return (getCoords (null));
 
   } // getCoords
 
@@ -485,6 +513,24 @@ public class DataLocation
   ////////////////////////////////////////////////////////////
 
   /**
+   * Transforms this data location in place using an affine transform.  This
+   * operation can only be applied to a 2D location.
+   *
+   * @param affine the affine transform to use.
+   */
+  public void transformInPlace (
+    AffineTransform affine
+  ) {
+
+    if (coords.length == 2) {
+      affine.transform (coords, 0, coords, 0, 1);
+    } // if
+
+  } // transformInPlace
+
+////////////////////////////////////////////////////////////
+
+  /**
    * Transforms this data location using an affine transform.  This
    * operation can only be applied to a 2D location.
    *
@@ -594,7 +640,15 @@ public class DataLocation
 
   ////////////////////////////////////////////////////////////
 
-  /** Checks if this data location is valid. */
+  /** 
+   * Checks if this data location is valid. 
+   *
+   * @return true if the location is valid or false if not.  An invalid 
+   * data location is normally used as a flag for a computation that has
+   * failed.
+   *
+   * @see #markInvalid
+   */
   public boolean isValid () {
 
     for (int i = 0; i < coords.length; i++)
@@ -605,7 +659,15 @@ public class DataLocation
 
   ////////////////////////////////////////////////////////////
 
-  /** Checks if this data location is invalid. */
+  /** 
+   * Checks if this data location is invalid.
+   *
+   * @return true if the location is invalid or false if not.  An invalid
+   * data location is normally used as a flag for a computation that has
+   * failed.
+   *
+   * @see #markInvalid
+   */
   public boolean isInvalid () {
 
     for (int i = 0; i < coords.length; i++)
@@ -613,6 +675,23 @@ public class DataLocation
     return (false);
 
   } // isInvalid
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Marks this location as invalid.  Subsequent calls to check
+   * for validity will reflect the new state.
+   *
+   * @see #isValid
+   * @see #isInvalid
+   */
+  public void markInvalid () {
+  
+    for (int i = 0; i < coords.length; i++)
+      this.coords[i] = Double.NaN;
+    isHashed = false;
+    
+  } // markInvalid
 
   ////////////////////////////////////////////////////////////
 
