@@ -5,9 +5,15 @@
    AUTHOR: X. Liu
      DATE: 2011/05/29
   CHANGES: 2013/04/13, PFH, updated and corrected for latest L2P examples
+           2014/04/09, PFH
+           - Changes: Removed use of setIsCFConventions in DataVariable.
+           - Issue: The use of the method was never fully implemented in 
+             DataVariable so rather than continuing its use, we decided
+             to remove it and re-arrange the scaling and offset for CF
+             conventions before passing into the Grid constructor.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -256,6 +262,15 @@ public class L2PNCReader
       Number scale = (Number) getAttribute (var, "scale_factor");
       Number offset = (Number) getAttribute (var, "add_offset");
       scaling = new double[] {scale.doubleValue(), offset.doubleValue()};
+      /**
+       * We re-arrange the CF scaling conventions here into HDF:
+       *
+       *   y = a'x + b'      (CF)
+       *   y = (x - b)*a     (HDF)
+       *   => a = a'
+       *      b = -b'/a'
+       */
+      scaling[1] = -scaling[1]/scaling[0];
     } // try
     catch (Exception e) {
       scaling = null;
@@ -318,20 +333,6 @@ public class L2PNCReader
     else if (rank == 3) {
       dataVar = new Grid (name, longName, units, varDims[1], varDims[2], 
         data, format, scaling, missing);
-
-      /**
-       * TODO: We need to get rid of the CF convention setting within
-       * data variables.  There are various operations to do with units
-       * conversion and setting values that aren't set up to handle CF
-       * scaling.  It was introduced for reading CF convention files, but
-       * not fully implemented in data variables.  The fix is to
-       * either re-arrange the scaling factor and offset when reading CF 
-       * data and then pass in the re-arranged scaling to the data variable
-       * constructor, or set a flag in the data variable constructor that
-       * re-arranges the scaling itself.
-       */
-      dataVar.setIsCFConvention (true);
-
     } // else if
     else {
       throw new UnsupportedEncodingException ("Unsupported rank = " + rank +

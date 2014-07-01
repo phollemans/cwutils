@@ -5,9 +5,16 @@
    AUTHOR: Peter Hollemans
      DATE: 2013/02/06
   CHANGES: 2013/04/15, PFH, extended to handle rank>2 datasets
+           2014/04/15, PFH
+           - Changes: Added new constructor with NetCDF variable name
+             and private NetCDF variable name string.
+           - Issue: We needed to be able to use a grid as a prototype
+             with a NetCDF variable name that doesn't match the variable
+             accessed in the file.  So, we store the name of the variable
+             to access separately, possibly distinct from the grid name.
 
   CoastWatch Software Library and Utilities
-  Copyright 2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2013-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -74,6 +81,9 @@ public class NCCachedGrid
   /** The rank of the NetCDF variable to read from. */
   private int varRank;
   
+  /** The name of the NetCDF variable to read data from. */
+  private String ncVarName;
+  
   ////////////////////////////////////////////////////////////
 
   /**
@@ -96,8 +106,10 @@ public class NCCachedGrid
    * properties.  Unchunked NetCDF variables will be given the default
    * tile size, otherwise the tile size is determined from the file.
    *
-   * @param grid the grid to use for attributes.
+   * @param grid the grid to use for attributes.  In this constructor, the
+   * grid name is not used as the NetCDF variable name.
    * @param reader the NetCDF reader data source.
+   * @param ncVarName the NetCDF variable name to read data from.
    * @param start the starting coordinates to read data from.  This array
    * should have the same rank as the NetCDF variable, and have values
    * filled in for all dimensions _except_ row and column, which should have
@@ -108,10 +120,13 @@ public class NCCachedGrid
    * to select the first time and level index.
    *
    * @throws IOException if a problem occurred accessing the NetCDF file.
+   * 
+   * @see #NCCachedGrid(Grid,NCReader,int[])
    */
   public NCCachedGrid (
     Grid grid, 
     NCReader reader,
+    String ncVarName,
     int[] start
   ) throws IOException {
 
@@ -119,6 +134,7 @@ public class NCCachedGrid
     // ------------------    
     super (grid, READ_ONLY);
     this.dataset = reader.getDataset();
+    this.ncVarName = ncVarName;
     varClass = grid.getDataClass();
     setUnsigned (grid.getUnsigned());
 
@@ -146,7 +162,7 @@ public class NCCachedGrid
 
       // Check rank
       // ----------
-      Dataset hdfDataset = (Dataset) hdfFile.get (grid.getName());
+      Dataset hdfDataset = (Dataset) hdfFile.get (ncVarName);
       hdfDataset.getMetadata();
       varRank = hdfDataset.getRank();
       if (varRank != start.length)
@@ -185,10 +201,52 @@ public class NCCachedGrid
 
     // Check compressed tile size
     // --------------------------
+    
+
+
+
+    // TODO: Why don't we adjust the cache size in the next line to accomodate
+    // 8 tiles?  That seems like the obvious answer here.  Did we try that
+    // and get thrashing?  See the TODO note in the readTile method for more.
+
+
+    
+    
+    
     if (isCompressed && isChunked) {
       if (getMaxTiles() == 1 || Arrays.equals (tiling.getTileDimensions(), getDimensions()))
-        throw new IOException ("Compressed data chunk size too large in variable " + getName());      
+        throw new IOException ("Compressed data chunk size too large in variable " + ncVarName);
     } // if
+
+  } // NCCachedGrid constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Constructs a new read-only NetCDF cached grid with the specified
+   * properties.  Unchunked NetCDF variables will be given the default
+   * tile size, otherwise the tile size is determined from the file.
+   *
+   * @param grid the grid to use for attributes.
+   * @param reader the NetCDF reader data source.
+   * @param start the starting coordinates to read data from.  This array
+   * should have the same rank as the NetCDF variable, and have values
+   * filled in for all dimensions _except_ row and column, which should have
+   * -1 as the value.  The row and column dimensions are assumed to be
+   * adjacent to each other and row to be the first dimension, and then 
+   * column to be the second dimension.  For example if the dimensions are
+   * [time, level, row, column], then the start array could be [0, 0, -1, -1]
+   * to select the first time and level index.
+   *
+   * @throws IOException if a problem occurred accessing the NetCDF file.
+   */
+  public NCCachedGrid (
+    Grid grid, 
+    NCReader reader,
+    int[] start
+  ) throws IOException {
+
+    this (grid, reader, grid.getName(), start);
 
   } // NCCachedGrid constructor
 
@@ -240,9 +298,9 @@ public class NCCachedGrid
 
     // Access variable
     // ---------------
-    Variable var = dataset.getReferencedFile().findVariable (getName());
+    Variable var = dataset.getReferencedFile().findVariable (ncVarName);
     if (var == null)
-      throw new IOException ("Cannot access variable " + getName());
+      throw new IOException ("Cannot access variable " + ncVarName);
 
     // Set read start
     // --------------
@@ -290,9 +348,9 @@ public class NCCachedGrid
      * used lately are released, to make way for variables whose chunks are
      * active.  We assume that variables are not getting "cleaned up"
      * because of the usage pattern, but that's not been verified.
-     *
-     * System.out.println ("name = " + getName() + ", section = " + section);
      */
+
+    System.out.println ("name = " + ncVarName + ", section = " + section);
 
 
 

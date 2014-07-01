@@ -77,7 +77,7 @@ public abstract class CachedGrid
   // Variables
   // ---------
   /** The cache of tile data. */
-  private Map cache;
+  private Map<TilePosition, Tile> cache;
 
   /** The last tile retrieved from the cache. */
   private Tile lastTile;
@@ -138,8 +138,8 @@ public abstract class CachedGrid
 
     // Create new cache
     // ----------------
-    cache = new LinkedHashMap (maxTiles+1, .75f, true) {
-      public boolean removeEldestEntry (Map.Entry eldest) {
+    cache = new LinkedHashMap<TilePosition, Tile> (maxTiles+1, .75f, true) {
+      public boolean removeEldestEntry (Map.Entry<TilePosition, Tile> eldest) {
  
         // Do not remove tile
         // ------------------
@@ -148,7 +148,7 @@ public abstract class CachedGrid
         // Remove tile but check for dirty
         // -------------------------------
         else {
-          Tile tile = (Tile) eldest.getValue();
+          Tile tile = eldest.getValue();
           if (tile.getDirty()) { 
             try { writeTile (tile); }
             catch (IOException e) {
@@ -373,9 +373,11 @@ public abstract class CachedGrid
 
     // Loop ever each tile
     // -------------------
-    Iterator iter =  cache.values().iterator();
-    while (iter.hasNext()) {
-      Tile tile = (Tile) iter.next();
+//    Iterator iter =  cache.values().iterator();
+
+    for (Tile tile : cache.values()) {
+//    while (iter.hasNext()) {
+//      Tile tile = (Tile) iter.next();
       if (tile.getDirty()) 
         writeTile (tile);      
     } // while
@@ -422,6 +424,16 @@ public abstract class CachedGrid
     // Get tile from cache
     // -------------------
     else {
+
+      // TODO: This is not a very good thing to do -- we are
+      // creating a tiny object for every call to this method
+      // and then most likely deleting it again, unless it get used in
+      // tile creation, and then we're cloning it for the Tile itself,
+      // and putting it into the cache as a key.  At least we're checking
+      // above if the last accessed tile contains it so that sequential
+      // access is likely to not create/destroy many TilePosition
+      // objects.  Is there some way that we can avoid this?  Flyweight?
+      
       TilePosition pos = tiling.createTilePosition (row, col);
       if (!cache.containsKey (pos)) cacheMiss (pos);
       tile = (Tile) cache.get (pos);

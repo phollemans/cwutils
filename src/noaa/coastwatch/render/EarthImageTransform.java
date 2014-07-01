@@ -8,9 +8,13 @@
            2002/10/10, PFH, changed transform to return Point2D
            2002/12/12, PFH, added getResolution, isDiscontinuous
            2003/05/26, PFH, changed discontinuous jump factor threshold to 10
+           2014/03/25, PFH
+           - Changes: Depreacted constructor.
+           - Issue: The constructor for ImageTransform changed, so this 
+             constructor had to follow suit.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2002, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -82,7 +86,11 @@ public class EarthImageTransform {
    *
    * @throws NoninvertibleTransformException if the image to data
    * transform is not invertible.
+   *
+   * @deprecated As of 3.3.1, replaced by 
+   * {@link #EarthImageTransform(Dimension,EarthLocation,double,EarthTransform)}.
    */
+  @Deprecated
   public EarthImageTransform (
     Dimension imageDims,
     EarthLocation center,
@@ -90,9 +98,38 @@ public class EarthImageTransform {
     EarthTransform earthTrans
   ) throws NoninvertibleTransformException {
 
+/*
     this.earthTrans = earthTrans;
     this.imageTrans = new ImageTransform (imageDims, 
       earthTrans.transform (center), scales);
+*/
+
+  } // EarthImageTransform constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Constructs a new Earth image transform from the specified image
+   * dimensions and geographic center.
+   *
+   * @param imageDims the image dimensions.
+   * @param center the center Earth location.
+   * @param scale the image to data scaling factor.
+   * @param earthTrans the Earth transform.
+   *
+   * @throws NoninvertibleTransformException if the image to data
+   * transform is not invertible.
+   */
+  public EarthImageTransform (
+    Dimension imageDims,
+    EarthLocation center,
+    double scale,
+    EarthTransform earthTrans
+  ) throws NoninvertibleTransformException {
+
+    this.earthTrans = earthTrans;
+    this.imageTrans = new ImageTransform (imageDims, 
+      earthTrans.transform (center), scale);
 
   } // EarthImageTransform constructor
 

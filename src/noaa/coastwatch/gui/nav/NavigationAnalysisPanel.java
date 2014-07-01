@@ -5,9 +5,13 @@
    AUTHOR: Peter Hollemans
      DATE: 2006/12/11
   CHANGES: 2007/07/30, PFH, changed DrawingProxy to LightTable
+           2014/03/31, PFH
+           - Changes: Updated to use new SolidBackground constructor
+           - Issue: The constructor for SolidBackground was throwing a
+             NullPointerException on construction.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -316,9 +320,7 @@ public class NavigationAnalysisPanel
     gc.insets = new Insets (2, 0, 2, 0);
     topPanel.add (boxSlider, gc);
 
-    try { 
-      nullView = new SolidBackground (null, new int[] {1, 1}, Color.BLACK);
-    } // try
+    try { nullView = new SolidBackground (Color.BLACK); }
     catch (Exception e) {
       e.printStackTrace();
     } // catch

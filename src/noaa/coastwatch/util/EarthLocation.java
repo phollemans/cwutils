@@ -19,9 +19,14 @@
            2005/05/16, PFH, added datum handling
            2005/05/18, PFH, modified clone() to call super.clone()
            2006/05/26, PFH, modified to use SpheroidConstants
-
+           2014/03/20, PFH
+           - Changes: Added the markInvalid method and test code
+           - Issue: We needed a way to mark Earth locations as invalid in
+             one call, with no need to know about how invalid locations are
+             actually implemented.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -46,6 +51,7 @@ import noaa.coastwatch.util.trans.*;
  * @author Peter Hollemans
  * @since 3.1.1
  */
+@noaa.coastwatch.test.Testable
 public class EarthLocation
   implements Cloneable {
 
@@ -548,14 +554,43 @@ public class EarthLocation
 
   ////////////////////////////////////////////////////////////
 
-  /** Checks if this Earth location is valid. */
+  /** 
+   * Checks if this Earth location is valid.
+   *
+   * @return true if the location is valid or false if not.  An invalid 
+   * Earth location is normally used as a flag for a computation that has
+   * failed.
+   *
+   * @see #markInvalid
+   */
   public boolean isValid () {
 
-    if (Double.isNaN (lat)) return (false);
-    if (Double.isNaN (lon)) return (false);
-    return (true);    
+    boolean locIsValid = true;
+    if (Double.isNaN (lat))
+      locIsValid = false;
+    else if (Double.isNaN (lon))
+      locIsValid = false;
+
+    return (locIsValid);
 
   } // isValid
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Marks this location as invalid.  Subsequent calls to check
+   * for validity will reflect the new state.
+   *
+   * @see #isValid
+   *
+   * @since 3.3.1
+   */
+  public void markInvalid () {
+  
+    this.lat = Double.NaN;
+    this.lon = Double.NaN;
+    
+  } // markInvalid
 
   ////////////////////////////////////////////////////////////
 
@@ -620,6 +655,46 @@ public class EarthLocation
     return (this.lat == loc.lat && this.lon == loc.lon);
 
   } // equals
+
+  ////////////////////////////////////////////////////////////
+
+  /** Tests this class. */
+  public static void main (String[] argv) throws Exception {
+
+    System.out.print ("Testing constructors ... ");
+
+    EarthLocation loc = new EarthLocation();
+    assert (loc.lat == 0);
+    assert (loc.lon == 0);
+    Datum wgsDatum = DatumFactory.create (SpheroidConstants.WGS84);
+    assert (loc.getDatum() == wgsDatum);
+    
+    loc = new EarthLocation (10, 20);
+    assert (loc.lat == 10);
+    assert (loc.lon == 20);
+    assert (loc.getDatum() == wgsDatum);
+    
+    Datum grsDatum = DatumFactory.create (SpheroidConstants.GRS1980);
+    loc = new EarthLocation (grsDatum);
+    assert (loc.lat == 0);
+    assert (loc.lon == 0);
+    assert (loc.getDatum() == grsDatum);
+  
+    loc = new EarthLocation (10, 20, grsDatum);
+    assert (loc.lat == 10);
+    assert (loc.lon == 20);
+    assert (loc.getDatum() == grsDatum);
+    
+    System.out.println ("OK");
+
+    System.out.print ("Testing markInvalid, isValid ... ");
+    loc = new EarthLocation (0, 0);
+    assert (loc.isValid());
+    loc.markInvalid();
+    assert (!loc.isValid());
+    System.out.println ("OK");
+
+  } // main
 
   ////////////////////////////////////////////////////////////
 

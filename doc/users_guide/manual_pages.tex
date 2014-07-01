@@ -38,22 +38,21 @@
 \subsection*{\underline{Exit status}}
 
 
- 0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+ 0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input file name. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
- The following shows the use of CDAT to view data from a CoastWatch IMGMAP file: \begin{verbatim}
+ The following shows the use of CDAT to view data from a CoastWatch IMGMAP file:
+\begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata/2002_319_2144_n16_wl> cdat 
-     2002_319_2144_n16_wl_c2.cwf
+   phollema$ cdat 2002_319_2144_n16_wl_c2.cwf
  
 \end{verbatim}
-
 
 \newpage
 \section{cwangles} \hypertarget{cwangles}{}
@@ -112,20 +111,20 @@
 \subsection*{\underline{Exit status}}
 
 
- 0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+ 0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input file name. 
 \item  No angle computations specified. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  The following shows the computation of latitude and longitude data for a CoastWatch HDF product file: \begin{verbatim}
+  The following shows the computation of latitude and longitude data for a CoastWatch HDF product file:
+\begin{verbatim}
  
-   phollema@localhost:<~/cwatch/satdata/angles_test> cwangles 
-     --float --location 2002_361_1049_n16_ax.hdf
+   phollema$ cwangles --float --location 2002_361_1049_n16_ax.hdf
 
    cwangles: Reading input 2002_361_1049_n16_ax.hdf
    cwangles: Creating latitude variable
@@ -144,10 +143,12 @@
    cwangles: Computing row 1000
  
 \end{verbatim}
- Another example below shows the computation of solar zenith angle, stored as the cosine and scaled to integer data by 0.0001: \begin{verbatim}
+
+
+ Another example below shows the computation of solar zenith angle, stored as the cosine and scaled to integer data by 0.0001:
+\begin{verbatim}
  
-   phollema@localhost:<~/cwatch/satdata/angles_test> cwangles -v 
-     --sunzenith --units cos --scale 0.0001/0 test_angles.hdf 
+   phollema$ cwangles -v --sunzenith --units cos --scale 0.0001/0 test_angles.hdf
 
    cwangles: Reading input test_angles.hdf
    cwangles: Creating sun_zenith variable
@@ -167,7 +168,6 @@
    cwangles: Computing row 1200
  
 \end{verbatim}
-
 
 \newpage
 \section{cwautonav} \hypertarget{cwautonav}{}
@@ -198,7 +198,8 @@
 \subsection*{\underline{Description}}
 
 
- The autonavigation tool automatically determines a navigation correction based on Earth image data. The algorithm is as follows: \begin{itemize}
+ The autonavigation tool automatically determines a navigation correction based on Earth image data. The algorithm is as follows:
+\begin{itemize}
 \item \textbf{Step 1}
  - The user supplies a number of boxes of coastal data to use for navigation. The boxes are specified by the latitude and longitude of each box center in a text file separate from the Earth data file. The box dimensions are controlled by command line options.
 \item \textbf{Step 2}
@@ -209,9 +210,9 @@
 \end{itemize}
 
 
-
  Note that because of the autonavigation algorithm design, there are a number of \textbf{limitations}
-: \begin{itemize}
+:
+\begin{itemize}
 \item \textbf{Coastline features}
  - The algorithm relies partly on the user being able to specify navigation boxes containing ``wiggly'' coastline features such as peninsulas and bays. A flat coastline can cause the algorithm to generate inaccurate offset estimates.
 \item \textbf{Distinct classes}
@@ -222,7 +223,6 @@
  - An offset correction cannot model the actual navigation correction if the data requires a rotation or scale correction.
 
 \end{itemize}
-
 
 
  Note that satellite channel data or channel-derived variables should be corrected with navigation but GIS-derived variables such as coastline and lat/lon grid graphics should not be corrected. Applying a navigation correction simply establishes a mapping between desired and actual data coordinates -{-} it does not change the gridded data values themselves. Once a data file has been autonavigated successfully, other CoastWatch tools in this package will take the correction into account when reading the data.
@@ -258,20 +258,22 @@
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input file name. 
 \item  Unsupported input file format. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
- The following example shows an automatic correction of an East Coast CWF (IMGMAP format) file containing AVHHR channel 2 data. A total of 3 navigation boxes are specified in a text file, and the size of each box set to 60 by 60 pixels. The output shows that 2 of the 3 boxes were successful and a final navigation correction of (rows, cols) = (-3, 1) was applied to the file. \begin{verbatim}
+ The following example shows an automatic correction of an East Coast CWF (IMGMAP format) file containing AVHHR channel 2 data. A total of 3 navigation boxes are specified in a text file, and the size of each box set to 60 by 60 pixels. The output shows that 2 of the 3 boxes were successful and a final navigation correction of (rows, cols) = (-3, 1) was applied to the file.
+\begin{verbatim}
 
-   phollema@damdog<~/cwatch/satdata/level3> cwautonav -v --width 60 
-     --height 60 navbox.txt avhrr_ch2 2004_064_1601_n17_er_c2.cwf
+   phollema$ cwautonav -v --width 60 --height 60 navbox.txt 
+     avhrr_ch2 2004_064_1601_n17_er_c2.cwf
+
    cwautonav: Reading input 2004_064_1601_n17_er_c2.cwf
    cwautonav: Testing box at 37.0503 N, 76.2111 W
    class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
@@ -294,11 +296,14 @@
    cwautonav: Applying navigation correction
  
 \end{verbatim}
- The next example below shows the import and automatic correction of multiple CWF files from the Gulf of Mexico. The AVHRR channel 1, channel 2, SST, and cloud mask variables are first imported to an HDF file. The automatic correction then runs using only data from AVHRR channel 2 which provides high contrast between land and water during the day. The final correction is applied to all variables in the input file. This combination of import and autonavigation is a convenient way of correcting a set of older CWF data files all at once, using just data from AVHRR channel 2. \begin{verbatim}
 
-   phollema@damdog<~/cwatch/satdata/level3> cwimport -v 
-     --match '(avhrr.*|sst|cloud)' 2004_313_1921_n16_mr*.cwf 
+
+ The next example below shows the import and automatic correction of multiple CWF files from the Gulf of Mexico. The AVHRR channel 1, channel 2, SST, and cloud mask variables are first imported to an HDF file. The automatic correction then runs using only data from AVHRR channel 2 which provides high contrast between land and water during the day. The final correction is applied to all variables in the input file. This combination of import and autonavigation is a convenient way of correcting a set of older CWF data files all at once, using just data from AVHRR channel 2.
+\begin{verbatim}
+
+   phollema$ cwimport -v --match '(avhrr.*|sst|cloud)' 2004_313_1921_n16_mr*.cwf
      2004_313_1921_n16_mr.hdf
+
    cwimport: Reading input 2004_313_1921_n16_mr_c1.cwf
    cwimport: Creating output 2004_313_1921_n16_mr.hdf
    cwimport: Converting file [1/4], 2004_313_1921_n16_mr_c1.cwf
@@ -310,8 +315,8 @@
    cwimport: Converting file [4/4], 2004_313_1921_n16_mr_d7.cwf
    cwimport: Writing sst
 
-   phollema@damdog<~/cwatch/satdata/level3> cwautonav -v --width 60 
-     --height 60 navbox2.txt avhrr_ch2 2004_313_1921_n16_mr.hdf
+   phollema$ cwautonav -v --width 60 --height 60 navbox2.txt avhrr_ch2 2004_313_1921_n16_mr.hdf
+
    cwautonav: Reading input 2004_313_1921_n16_mr.hdf
    cwautonav: Testing box at 26.7734 N, 82.1731 W
    class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
@@ -348,11 +353,14 @@
    cwautonav: Applying navigation correction
  
 \end{verbatim}
- Another example below shows the correction of a Hawaii AVHRR HDF file using many 15 by 15 pixel navigation boxes distributed throughout the islands. AVHRR channel 2 data is used to compute the optimal offset, and the final correction is applied only to AVHRR sensor bands and derived variables. \begin{verbatim}
 
-   phollema@damdog<~/cwatch/satdata/level3> cwautonav -v 
-     --match '(avhrr.*|sst|cloud)' --width 15 --height 15 
+
+ Another example below shows the correction of a Hawaii AVHRR HDF file using many 15 by 15 pixel navigation boxes distributed throughout the islands. AVHRR channel 2 data is used to compute the optimal offset, and the final correction is applied only to AVHRR sensor bands and derived variables.
+\begin{verbatim}
+
+   phollema$ cwautonav -v --match '(avhrr.*|sst|cloud)' --width 15 --height 15
      navbox3.txt avhrr_ch2 2005_042_0051_n16_hr.hdf
+
    cwautonav: Reading input 2005_042_0051_n16_hr.hdf
    cwautonav: Testing box at 21.7885 N, 160.2259 W
    class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
@@ -504,7 +512,6 @@
  
 \end{verbatim}
 
-
 \newpage
 \section{cwcomposite} \hypertarget{cwcomposite}{}
 \subsection*{\underline{Name}}
@@ -557,7 +564,8 @@
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input or output file names. 
 \item  Unsupported input file format. 
@@ -566,14 +574,13 @@
 \item  Unsupported composite method. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  The following shows the combination of several Earth datasets into one using the 'latest' composite method: \begin{verbatim}
+  The following shows the combination of several Earth datasets into one using the 'latest' composite method:
+\begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata/hdf> cwcomposite -v
-     --method latest 2003_097_1428_n17_wi_na.hdf
+   phollema$ cwcomposite -v --method latest 2003_097_1428_n17_wi_na.hdf
      2003_097_1607_n17_wi_na.hdf 2003_097_1751_n17_mo_na.hdf
      2003_097_1931_n17_mo_na.hdf 2003_097_n17_na.hdf
 
@@ -590,7 +597,6 @@
   cwcomposite: Writing avhrr_ch4
  
 \end{verbatim}
-
 
 \newpage
 \section{cwcoverage} \hypertarget{cwcoverage}{}
@@ -701,28 +707,28 @@
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Unrecognized color name. 
 \item  Invalid map center or station location. 
 \item  Mismatch between label and file or station count. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  As an example, the following command shows the creation of a coverage plot of the ER and SR CoastWatch regions covering the US East coast: \begin{verbatim}
+  As an example, the following command shows the creation of a coverage plot of the ER and SR CoastWatch regions covering the US East coast:
+\begin{verbatim}
 
-   phollema@damdog<~/cwatch/satdata/hdf> cwcoverage -v --labels ER/SR 
-     2004_155_1147_n15_er.hdf 2004_155_1147_n15_sr.hdf east_coast.png
+   phollema$ cwcoverage -v --labels ER/SR 2004_155_1147_n15_er.hdf 
+     2004_155_1147_n15_sr.hdf east_coast.png
  
    cwcoverage: Reading input 2004_155_1147_n15_er.hdf
    cwcoverage: Reading input 2004_155_1147_n15_sr.hdf
    cwcoverage: Writing east_coast.png
  
 \end{verbatim}
-
 
 \newpage
 \section{cwdownload} \hypertarget{cwdownload}{}
@@ -797,23 +803,24 @@
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Cannot contact data server. 
 \item  Invalid or write-protected download directory. 
 \item  Error transferring data file. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  The following shows a download command that retrieves any NOAA-16 daytime data files for the East Coast north and south regions captured at Wallops Island to the ~/cwatch/satdata directory from the fictitious server foobar.noaa.gov: \begin{verbatim}
+  The following shows a download command that retrieves any NOAA-16 daytime data files for the East Coast north and south regions captured at Wallops Island to the ~/cwatch/satdata directory from the fictitious server frobozz.noaa.gov:
+\begin{verbatim}
 
-   phollema@localhost:<~> cwdownload --satellite noaa-16 --scenetime day 
-     --region '(er|sr)' --station wi --dir ~/cwatch/satdata foobar.noaa.gov
+   phollema$ cwdownload --satellite noaa-16 --scenetime day 
+     --region '(er|sr)' --station wi --dir ~/cwatch/satdata frobozz.noaa.gov
 
-   cwdownload: Contacting foobar.noaa.gov
+   cwdownload: Contacting frobozz.noaa.gov
    cwdownload: Retrieving 2002_197_1719_n16_er.hdf
    cwdownload: Retrieving 2002_197_1719_n16_sr.hdf
    cwdownload: Retrieving 2002_197_1900_n16_er.hdf
@@ -821,7 +828,6 @@
    cwdownload: Transferred 31715 kb in 4 files
  
 \end{verbatim}
-
 
 \newpage
 \section{cwexport} \hypertarget{cwexport}{}
@@ -869,7 +875,8 @@
 \subsection*{\underline{Description}}
 
 
-  The export tool translates Earth data into external formats as described below. In all cases, 2D data sets are exported in row major order starting from row 0. For example, if the Earth data values form the 2D array: \begin{verbatim}
+  The export tool translates Earth data into external formats as described below. In all cases, 2D data sets are exported in row major order starting from row 0. For example, if the Earth data values form the 2D array:
+\begin{verbatim}
 
     0  1  2  3
     4  5  6  7
@@ -877,12 +884,14 @@
    12 13 14 15
  
 \end{verbatim}
- then values are output in the order: \begin{verbatim}
+
+
+ then values are output in the order:
+\begin{verbatim}
 
    0 1 2 3 4 5 6 7 ...
  
 \end{verbatim}
-
 
 
   In the general case, multiple variables may be exported to the same data file. The use of the \textbf{-{-}match}
@@ -890,16 +899,22 @@
 \subsubsection*{Binary raster:}
 
 
-  The output is a stream of binary data values -- either 8-bit unsigned bytes, 16-bit signed integers, or 32-bit IEEE floating point values. For 8- and 16-bit output, data values may be scaled to integers using a minimum and maximum or by using a scaling factor and offset. For minimum/maximum scaling, integer data is calculated from data values using the equation: \begin{verbatim}
+  The output is a stream of binary data values -{-} either 8-bit unsigned bytes, 16-bit signed integers, or 32-bit IEEE floating point values. For 8- and 16-bit output, data values may be scaled to integers using a minimum and maximum or by using a scaling factor and offset. For minimum/maximum scaling, integer data is calculated from data values using the equation:
+\begin{verbatim}
 
    integer = type_min + type_range*((value - min) / (max - min))
  
 \end{verbatim}
- where type\_min is 0 for 8-bit and -32768 for 16-bit, and type\_range is 255 for 8-bit and 65535 for 16-bit. For scaling factor and offset, the following equation is used: \begin{verbatim}
+
+
+ where type\_min is 0 for 8-bit and -32768 for 16-bit, and type\_range is 255 for 8-bit and 65535 for 16-bit. For scaling factor and offset, the following equation is used:
+\begin{verbatim}
 
    integer = value/factor + offset
  
 \end{verbatim}
+
+
  In both cases, the results are rounded to the nearest integer and out of range values are assigned the missing value.
 \subsubsection*{ASCII text:}
 
@@ -972,29 +987,32 @@
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input or output file names. 
 \item  Invalid variable name. 
 \item  Unrecognized format, size, or byte order. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  The following shows the export of AVHRR channel 1 data from a CoastWatch HDF file with the default 32-bit IEEE floating point value format, host byte order, no header, in verbose mode: \begin{verbatim}
+  The following shows the export of AVHRR channel 1 data from a CoastWatch HDF file with the default 32-bit IEEE floating point value format, host byte order, no header, in verbose mode:
+\begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwexport --verbose 
-     --match 'avhrr_ch1' 2002_216_1853_n16_gr.hdf 2002_216_1853_n16_gr.ch1
+   phollema$ cwexport --verbose --match 'avhrr_ch1' 2002_216_1853_n16_gr.hdf 
+     2002_216_1853_n16_gr.ch1
 
    cwexport: writing 'avhrr_ch1'
  
 \end{verbatim}
- The example below shows the export of AVHRR channels 1, 2, and 4 to the same output file from a CoastWatch HDF file using 8-bit unsigned byte format, no header, in verbose mode. Range scaling is used to scale all values between -30 and 30 prior to conversion to byte values in the range 0 to 255. Note that some values may fall outside the range and be clipped, especially albedo values which can range up to 100. The clipped values are assigned the default missing value, which for byte data is 0. \begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwexport --verbose 
-     --match 'avhrr_ch[124]' --size byte --range -30/30 
+
+ The example below shows the export of AVHRR channels 1, 2, and 4 to the same output file from a CoastWatch HDF file using 8-bit unsigned byte format, no header, in verbose mode. Range scaling is used to scale all values between -30 and 30 prior to conversion to byte values in the range 0 to 255. Note that some values may fall outside the range and be clipped, especially albedo values which can range up to 100. The clipped values are assigned the default missing value, which for byte data is 0.
+\begin{verbatim}
+
+   phollema$ cwexport --verbose --match 'avhrr_ch[124]' --size byte --range -30/30
      2002_216_1853_n16_gr.hdf 2002_216_1853_n16_gr.ch124
 
    cwexport: writing 'avhrr_ch1'
@@ -1002,17 +1020,22 @@
    cwexport: writing 'avhrr_ch4'
  
 \end{verbatim}
- The example shows the export of AVHRR channel 4 data to an ASCII text file from a CoastWatch IMGMAP file in verbose mode. The geographic coordinates are printed in the order longitude, latitude, and delimited with a comma character. Any missing values are denoted with the value -999. A one line dimension header is prepended to the dataset. \begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwexport --verbose 
-     --match 'avhrr_ch4' --format text --reverse --delimit ',' 
+
+ The example shows the export of AVHRR channel 4 data to an ASCII text file from a CoastWatch IMGMAP file in verbose mode. The geographic coordinates are printed in the order longitude, latitude, and delimited with a comma character. Any missing values are denoted with the value -999. A one line dimension header is prepended to the dataset.
+\begin{verbatim}
+
+   phollema$ cwexport --verbose --match 'avhrr_ch4' --format text --reverse --delimit ','
      --missing -999 --header 2002_214_2057_n16_wv_c4.cwf 
      2002_214_2057_n16_wv_c4.txt
 
    cwexport: writing 'avhrr_ch4'
  
 \end{verbatim}
- The first few lines of the resulting text file are as follows: \begin{verbatim}
+
+
+ The first few lines of the resulting text file are as follows:
+\begin{verbatim}
 
    2,512,512
    -127.777901,51.212974,13
@@ -1026,16 +1049,21 @@
    -127.698763,51.212974,7.45
  
 \end{verbatim}
- The example below shows the export of AVHRR channel 2 data to an ArcGIS binary grid file from a CoastWatch IMGMAP file, verbose mode on. The binary grid data is written to a '.flt' file and the header data to a '.hdr' file. \begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwexport --verbose 
-     --format arc --match 'avhrr_ch2' --header 
+
+ The example below shows the export of AVHRR channel 2 data to an ArcGIS binary grid file from a CoastWatch IMGMAP file, verbose mode on. The binary grid data is written to a '.flt' file and the header data to a '.hdr' file.
+\begin{verbatim}
+
+   phollema$ cwexport --verbose --format arc --match 'avhrr_ch2' --header
      2002_214_2057_n16_wv_c2.cwf 2002_214_2057_n16_wv_c2.flt
 
    cwexport: writing 'avhrr_ch2'
  
 \end{verbatim}
- The header file contents are as follows: \begin{verbatim}
+
+
+ The header file contents are as follows:
+\begin{verbatim}
 
    nrows 512
    ncols 512
@@ -1046,17 +1074,23 @@
    byteorder MSBFIRST
  
 \end{verbatim}
- A final example shows the export of SST and cloud data to a NetCDF dataset: \begin{verbatim}
 
-   phollema@Bean cwexport -v --match '(sst|cloud)' 
-     2010_040_1636_m02_wj.hdf 2010_040_1636_m02_wj.nc"
+
+ A final example shows the export of SST and cloud data to a NetCDF dataset:
+\begin{verbatim}
+
+   phollema$ cwexport -v --match '(sst|cloud)' 2010_040_1636_m02_wj.hdf 
+     2010_040_1636_m02_wj.nc"
 
    cwexport: Creating output 2010_040_1636_m02_wj.nc
    cwexport: Writing cloud
    cwexport: Writing sst
  
 \end{verbatim}
- A dump of the file contents: \begin{verbatim}
+
+
+ A plain text dump of the file contents:
+\begin{verbatim}
 
    netcdf 2010_040_1636_m02_wj {
    dimensions:
@@ -1118,7 +1152,6 @@
  
 \end{verbatim}
 
-
 \newpage
 \section{cwgraphics} \hypertarget{cwgraphics}{}
 \subsection*{\underline{Name}}
@@ -1145,17 +1178,20 @@
 \subsection*{\underline{Description}}
 
 
-  The graphics tool creates Earth data annotation graphics in the form of a byte-valued variable. Each output byte in the new variable contains 8 bits, one for each of 8 possible graphics planes numbered 1 to 8 from the least significant bit to the most significant bit. The graphics planes are independent of one another and encode a bitmask for graphical data annotation, where a bit value of 0 is interpreted as 'off' and a bit value of 1 as 'on'. In this way, 8 separate binary bitmasks may be encoded into one byte value. For example a pixel with graphics planes 2, 3, and 4 on is encoded as: \begin{verbatim}
+  The graphics tool creates Earth data annotation graphics in the form of a byte-valued variable. Each output byte in the new variable contains 8 bits, one for each of 8 possible graphics planes numbered 1 to 8 from the least significant bit to the most significant bit. The graphics planes are independent of one another and encode a bitmask for graphical data annotation, where a bit value of 0 is interpreted as 'off' and a bit value of 1 as 'on'. In this way, 8 separate binary bitmasks may be encoded into one byte value. For example a pixel with graphics planes 2, 3, and 4 on is encoded as:
+\begin{verbatim}
 
     Binary value  = 00001110
     Decimal value = 14
  
 \end{verbatim}
+
+
  Following the standard convention for graphics planes in CoastWatch product files, the default behaviour places latitude/longitude grid graphics in plane 2, coast line graphics in plane 3, and land mask graphics in plane 4. Coast lines are derived from GSHHS coast line data, and land polygons are filled GSHHS polygons (see \url{http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html}). The default output variable name is 'graphics'. These defaults may be changed using command line options to alter the planes used for each type of annotation, to exclude or add some types of annotation, and to change the output variable name.
 
 
  Once the graphics planes are created, they may be used as overlay graphics for rendered Earth data images. The graphics byte data may be exported using the cwexport tool for use in other software packages, or may be used in the cwrender tool with the \textbf{-{-}bitmask}
- option. 
+ option.
 \subsection*{\underline{Parameters}}
 \subsubsection*{Main parameters:}
 \begin{description}
@@ -1178,20 +1214,22 @@
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input or output file names. 
 \item  Unsupported input file format. 
 \item  Output variable already exists in input file. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  The following shows the creation of a standard set of graphics planes using cwgraphics. The file being acted upon is a CoastWatch HDF file created using the graphical cwmaster tool: \begin{verbatim}
+  The following shows the creation of a standard set of graphics planes using cwgraphics. The file being acted upon is a CoastWatch HDF file created using the graphical cwmaster tool:
+\begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata/hdf> cwgraphics -v bc_coast.hdf
+   phollema$ cwgraphics -v bc_coast.hdf
+ 
    cwgraphics: Reading input bc_coast.hdf
    cwgraphics: Creating graphics variable
    cwgraphics: Rendering overlay at plane 2
@@ -1199,10 +1237,14 @@
    cwgraphics: Rendering overlay at plane 4
  
 \end{verbatim}
- Another example below shows the alteration of the default options. Only coast line and political line graphics are rendered to plane 1, and the output variable is named 'geography': \begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata/hdf> cwgraphics -v --land 0 
-     --grid 0 --coast 1 --political 1 --variable geography bc_coast.hdf
+
+ Another example below shows the alteration of the default options. Only coast line and political line graphics are rendered to plane 1, and the output variable is named 'geography':
+\begin{verbatim}
+
+   phollema$ cwgraphics -v --land 0 --grid 0 --coast 1 --political 1 
+     --variable geography bc_coast.hdf
+
    cwgraphics: Reading input bc_coast.hdf
    cwgraphics: Creating geography variable
    cwgraphics: Rendering overlay at plane 1
@@ -1210,7 +1252,6 @@
    cwgraphics: Rendering overlay at plane 1
  
 \end{verbatim}
-
 
 \newpage
 \section{cwimport} \hypertarget{cwimport}{}
@@ -1254,21 +1295,21 @@
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input or output file names. 
 \item  Unsupported input file format. 
 \item  Input file dates or Earth transforms do not match. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  The following shows the import of several .cwf files to CoastWatch HDF with verbose mode on: \begin{verbatim}
+  The following shows the import of several .cwf files to CoastWatch HDF with verbose mode on:
+\begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwimport --verbose
-     2002_214_2057_n16_wv_*.cwf 2002_214_2057_n16_wv.hdf
+   phollema$ cwimport --verbose 2002_214_2057_n16_wv_*.cwf 2002_214_2057_n16_wv.hdf
 
    cwimport: Reading file [1/2], 2002_214_2057_n16_wv_c2.cwf
    cwimport: Writing avhrr_ch2
@@ -1279,7 +1320,6 @@
    cwimport: Variable 'graphics' already exists, skipping
  
 \end{verbatim}
-
 
 \newpage
 \section{cwinfo} \hypertarget{cwinfo}{}
@@ -1307,7 +1347,8 @@
 
 
  When the \textbf{-{-}transform}
- option is used, various additional earth transform information is printed. Let nc and nr be the x and y coordinate dimensions respectively, and mc=(nc-1)/2, mr=(nr-1)/2 be the midpoint coordinates. Note that indexing is zero-based and coordinates refer to the pixel center. Then the following information is computed: \begin{itemize}
+ option is used, various additional earth transform information is printed. Let nc and nr be the x and y coordinate dimensions respectively, and mc=(nc-1)/2, mr=(nr-1)/2 be the midpoint coordinates. Note that indexing is zero-based and coordinates refer to the pixel center. Then the following information is computed:
+\begin{itemize}
 \item Pixel width at (mc,mr)
 \item Pixel height at (mc,mr)
 \item Total width from (0,mr) to (nc-1,mr)
@@ -1321,13 +1362,12 @@
 \end{itemize}
 
 
-
  When the \textbf{-{-}coord}
  option is used, Common Data Model coordinate systems are printed if available. Generally this style of coordinate system information is only available for files read by the NetCDF Java library.
 \subsection*{\underline{Parameters}}
 \subsubsection*{Main parameters:}
 \begin{description}
-\item[input]The input data file name. 
+\item[input]The input data file name.
 
 \end{description}
 \subsubsection*{Options:}
@@ -1342,19 +1382,20 @@
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input file name. 
 \item  Unsupported input file format. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  The following shows an information dump of a CoastWatch HDF file from the West Coast: \begin{verbatim}
+  The following shows an information dump of a CoastWatch HDF file from the West Coast:
+\begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwinfo 2002_197_1100_n16_wn.hdf
+   phollema$ cwinfo 2002_197_1100_n16_wn.hdf
 
    Contents of file 2002_197_1100_n16_wn.hdf
    
@@ -1380,7 +1421,6 @@
      graphics       byte    1024x1024   -              -         -         
  
 \end{verbatim}
-
 
 \newpage
 \section{cwmaster} \hypertarget{cwmaster}{}
@@ -1421,24 +1461,23 @@
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input file name. 
 \item  Unsupported input file format. 
 \item  Input file does not contain a map projection. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  The following shows the use of cwmaster to load master parameters from a CoastWatch IMGMAP file: \begin{verbatim}
+  The following shows the use of cwmaster to load master parameters from a CoastWatch IMGMAP file:
+\begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata/2002_319_2144_n16_wl> cwmaster 
-     2002_319_2144_n16_wl_c2.cwf
+   phollema$ cwmaster 2002_319_2144_n16_wl_c2.cwf
  
 \end{verbatim}
-
 
 \newpage
 \section{cwmath} \hypertarget{cwmath}{}
@@ -1467,18 +1506,21 @@
 \subsection*{\underline{Description}}
 
 
-  The math tool combines Earth data using a mathematical expression. The expression takes the form: \begin{verbatim}
+  The math tool combines Earth data using a mathematical expression. The expression takes the form:
+\begin{verbatim}
 
    variable = formula
  
 \end{verbatim}
+
+
  where the variable is the output variable to create and the formula is a mathematical combination of input variables. The formula may contain a number of standard operators, for example addition and subtraction, as well as functions such as sine and cosine and numerical and symbolic constants. The supported operators and functions are as follows:
 
 
- 
-
 \begin{tabular}{|c|c|}
 \hline 
+ & \\
+ \hline 
 Operator &Symbol \\
  \hline 
 Power &\^{} \\
@@ -1510,11 +1552,10 @@ Boolean Or &$|$$|$ \\
 
 
 
-
- 
-
 \begin{tabular}{|c|c|}
 \hline 
+ & \\
+ \hline 
 Function &Calling sequence \\
  \hline 
 Sine &sin (x) \\
@@ -1578,11 +1619,10 @@ Bitwise Not &not (x) \\
 
 
 
-
- 
-
 \begin{tabular}{|c|c|}
 \hline 
+ & \\
+ \hline 
 Constant &Value \\
  \hline 
 e &2.7182818... \\
@@ -1593,7 +1633,6 @@ nan (Not-a-Number) &NaN \\
  \hline 
 
 \end{tabular}
-
 
 
 
@@ -1630,7 +1669,8 @@ nan (Not-a-Number) &NaN \\
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input or output file names. 
 \item  Unsupported input file format. 
@@ -1641,14 +1681,13 @@ nan (Not-a-Number) &NaN \\
 \item  Invalid expression variable name. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  The following shows the correction of AVHRR channel 2 data for solar zenith angle. The output variable is named 'avhrr\_ch2\_corr' and is written to the input file: \begin{verbatim}
+  The following shows the correction of AVHRR channel 2 data for solar zenith angle. The output variable is named 'avhrr\_ch2\_corr' and is written to the input file:
+\begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata/hdf> cwmath -v --units 
-     "percent" --longname "AVHRR channel 2 corrected" 
+   phollema$ cwmath -v --units "percent" --longname "AVHRR channel 2 corrected"
      --expr "avhrr_ch2_corr = avhrr_ch2/cos(sun_zenith*pi/180)" 
      2003_104_1513_n17_er.hdf
 
@@ -1661,10 +1700,12 @@ nan (Not-a-Number) &NaN \\
    ...
  
 \end{verbatim}
- Another example below shows the computation of Normalized Difference Vegetation Index (NDVI): \begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata/hdf> cwmath -v --longname 
-     "Normalized Difference Vegetation Index" 
+
+ Another example below shows the computation of Normalized Difference Vegetation Index (NDVI):
+\begin{verbatim}
+
+   phollema$ cwmath -v --longname "Normalized Difference Vegetation Index"
      --expr "ndvi = (avhrr_ch2 - avhrr_ch1)/(avhrr_ch2 + avhrr_ch1)" 
      2003_104_1513_n17_er.hdf
 
@@ -1677,9 +1718,12 @@ nan (Not-a-Number) &NaN \\
    ...
  
 \end{verbatim}
- In order to demonstrate the use of the 'mask' function, the example below shows the masking of the 'sst' variable using the 'cloud' variable. Note that a hexadecimal value is used to determine which values from the cloud mask are used in the masking procedure. Since the cloud data is represented by 8-bit bytes, the hexadecimal mask value need only specify two hexadecimal digits. In this case, the value '0x6f' represents bits 1, 2, 3, 4, 6, and 7 (for all cloud mask bits, the value would be '0xff'): \begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata/hdf> cwmath -v --template sst
+
+ In order to demonstrate the use of the 'mask' function, the example below shows the masking of the 'sst' variable using the 'cloud' variable. Note that a hexadecimal value is used to determine which values from the cloud mask are used in the masking procedure. Since the cloud data is represented by 8-bit bytes, the hexadecimal mask value need only specify two hexadecimal digits. In this case, the value '0x6f' represents bits 1, 2, 3, 4, 6, and 7 (for all cloud mask bits, the value would be '0xff'):
+\begin{verbatim}
+
+   phollema$ cwmath -v --template sst 
      --expr 'sst_masked = mask (sst, cloud, hex ("0x6f"))'
      2003_104_1513_n17_er.hdf
 
@@ -1692,7 +1736,10 @@ nan (Not-a-Number) &NaN \\
    ...
  
 \end{verbatim}
- A final example below shows how the tool may be used to compute complex formulas using a Unix Bourne shell script. The example computes the theoretical AVHRR channel 3b albedo at night for NOAA-17 using actual channel 3b temperatures and channel 3b emission temperatures estimated from channel 4 and 5: \begin{verbatim}
+
+
+ A final example below shows how the tool may be used to compute complex formulas using a Unix Bourne shell script. The example computes the theoretical AVHRR channel 3b albedo at night for NOAA-17 using actual channel 3b temperatures and channel 3b emission temperatures estimated from channel 4 and 5:
+\begin{verbatim}
 
    #!/bin/sh
    
@@ -1717,7 +1764,6 @@ nan (Not-a-Number) &NaN \\
      --expr "avhrr_ch3_albedo=$alb3" $input
  
 \end{verbatim}
-
 
 \newpage
 \section{cwnavigate} \hypertarget{cwnavigate}{}
@@ -1744,7 +1790,8 @@ nan (Not-a-Number) &NaN \\
 \subsection*{\underline{Description}}
 
 
-  The navigation tool adds navigation corrections to 2D variables in an Earth data file by setting navigation transform parameters. The most basic navigation transform consists of additive translation in the row and column data coordinates. As an example of translation, the following diagram shows coastlines in the Earth image data as a '.' (period) symbol and coastlines derived from a GIS database as a '*' (star). Translation has been used to correct the position of the image data: \begin{verbatim}
+ The navigation tool adds navigation corrections to 2D variables in an Earth data file by setting navigation transform parameters. The most basic navigation transform consists of additive translation in the row and column data coordinates. As an example of translation, the following diagram shows coastlines in the Earth image data as a '.' (period) symbol and coastlines derived from a GIS database as a '*' (star). Translation has been used to correct the position of the image data:
+\begin{verbatim}
 
         ***                              ***
       ... ***         *****                ***         *****
@@ -1757,8 +1804,8 @@ nan (Not-a-Number) &NaN \\
 \end{verbatim}
 
 
-
- A more generic navigation transform consists of a translation combined with a rotation or shear. To represent generic navigation transforms, an affine transform matrix is used to convert ``desired'' data coordinates to ``actual'' data coordinates as follows: \begin{verbatim}
+ A more generic navigation transform consists of a translation combined with a rotation or shear. To represent generic navigation transforms, an affine transform matrix is used to convert ``desired'' data coordinates to ``actual'' data coordinates as follows:
+\begin{verbatim}
 
    |row'|   |a  c  e|  |row|
    |    |   |       |  |   |
@@ -1767,15 +1814,17 @@ nan (Not-a-Number) &NaN \\
    | 1  |   |0  0  1|  | 1 | 
  
 \end{verbatim}
+
+
  where [a..f] are the affine transform matrix coefficients and (row',col') is the actual data coordinates at which the desired data value for (row,col) may be found.
 
 
- To apply a navigation transform to a 2D variable, the existing navigation transform is read and the new transform is applied to it using matrix multiplication to create a combined transform. As an example, suppose that T1 is the initial navigation transform. The application of an additional transform T2 results in a new transform that is equivalent to: \begin{verbatim}
+ To apply a navigation transform to a 2D variable, the existing navigation transform is read and the new transform is applied to it using matrix multiplication to create a combined transform. As an example, suppose that T1 is the initial navigation transform. The application of an additional transform T2 results in a new transform that is equivalent to:
+\begin{verbatim}
 
    T2 (T1 (row, col))
  
 \end{verbatim}
-
 
 
  A navigation transform can be applied to a subset of 2D variables, or all variables in the file. Note that satellite channel data or channel-derived variables should be corrected with navigation but GIS-derived variables such as coastline and lat/lon grid graphics should not be corrected. Setting the navigation transform simply establishes a mapping between desired and actual data coordinates -{-} it does not change the gridded data values themselves. Once a navigation transform has been set, other CoastWatch tools in this package will take the transform into account when reading the data. 
@@ -1801,21 +1850,22 @@ nan (Not-a-Number) &NaN \\
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input file name. 
 \item  Unsupported input file format. 
 \item  Unsupported navigation correction. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  The following example shows the navigation correction of a NOAA-15 CoastWatch HDF data file from the Gulf of Mexico: \begin{verbatim}
+ The following example shows the navigation correction of a NOAA-15 CoastWatch HDF data file from the Gulf of Mexico:
+\begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwnavigate --trans -3/3 -v 
-     --match '(avhrr.*|cloud|sst)' 2002_328_1326_n15_ml.hdf
+   phollema$ cwnavigate --trans -3/3 -v --match '(avhrr.*|cloud|sst)' 
+     2002_328_1326_n15_ml.hdf
 
    cwnavigate: Reading input 2002_328_1326_n15_ml.hdf
    cwnavigate: Applying navigation correction to avhrr_ch1
@@ -1825,16 +1875,17 @@ nan (Not-a-Number) &NaN \\
    cwnavigate: Applying navigation correction to sst
  
 \end{verbatim}
- Another example below shows the navigation correction of a NOAA-15 CoastWatch IMGMAP data file from the US east coast: \begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwnavigate --trans -2/1 -v 
-     2002_326_1330_n15_er_c2.cwf
+
+ Another example below shows the navigation correction of a NOAA-15 CoastWatch IMGMAP data file from the US east coast:
+\begin{verbatim}
+
+   phollema$ cwnavigate --trans -2/1 -v 2002_326_1330_n15_er_c2.cwf
 
    cwnavigate: Reading input 2002_326_1330_n15_er_c2.cwf
    cwnavigate: Applying navigation correction
  
 \end{verbatim}
-
 
 \newpage
 \section{cwregister} \hypertarget{cwregister}{}
@@ -1890,20 +1941,20 @@ nan (Not-a-Number) &NaN \\
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid master, input or output file names. 
 \item  Unsupported master or input file format. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  The following shows the registration of NOAA-17 AVHRR channel 2 swath data to a southern California master: \begin{verbatim}
+  The following shows the registration of NOAA-17 AVHRR channel 2 swath data to a southern California master:
+\begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata/2002_318_1826_n17_mo> cwregister 
-     -v --match avhrr_ch2 ws_master.hdf 2002_318_1826_n17_mo.hdf 
+   phollema$ cwregister -v --match avhrr_ch2 ws_master.hdf 2002_318_1826_n17_mo.hdf
      2002_318_1826_n17_ws.hdf
 
    cwregister: Reading master ws_master.hdf
@@ -1927,7 +1978,6 @@ nan (Not-a-Number) &NaN \\
    cwregister: Closing files
  
 \end{verbatim}
-
 
 \newpage
 \section{cwrender} \hypertarget{cwrender}{}
@@ -2011,7 +2061,8 @@ nan (Not-a-Number) &NaN \\
  Overlay colors may be specified using simple color names such as 'red', 'gray', 'cyan', 'blue', and 'green'. Overlays may be made to appear slightly transparent (allowing the color behind to show through) by following the color name with a colon ':' and a transparency value in percent, for example 'red:50' would make the overlay red with a 50\% transparency. Transparency values range from 0 (completely opaque) to 100 (completely transparent).
 
 
- Colors may also be specified using explicit hexadecimal notation for red/green/blue color components and optional alpha component as follows: \begin{verbatim}
+ Colors may also be specified using explicit hexadecimal notation for red/green/blue color components and optional alpha component as follows:
+\begin{verbatim}
 
    0xAARRGGBB
      ^ ^ ^ ^          
@@ -2021,7 +2072,10 @@ nan (Not-a-Number) &NaN \\
      ----------- Alpha (optional)  /
  
 \end{verbatim}
- Note that the prepended '0x' denotes a hexadecimal constant, and must be used even though it is not part of the color component values. As an example, the simple color names above may be specified as hexadecimal values: \begin{verbatim}
+
+
+ Note that the prepended '0x' denotes a hexadecimal constant, and must be used even though it is not part of the color component values. As an example, the simple color names above may be specified as hexadecimal values:
+\begin{verbatim}
 
    0xff0000    red
    0x555555    gray
@@ -2031,11 +2085,11 @@ nan (Not-a-Number) &NaN \\
    0x80ff0000  red, 50% transparent
  
 \end{verbatim}
-
 \subsubsection*{Rendering order}
 
 
- The data view itself (not including the legends) is rendered in such a way that overlays may overlap each other. For example, latitude/longitude grid lines may fall on top of land polygons because the grid overlay is rendered after the coastline overlay. Knowing the order in which the data and overlays are rendered may answer some questions if the data view doesn't look the way the user expects. The data view is rendered in the following order: \begin{enumerate}
+ The data view itself (not including the legends) is rendered in such a way that overlays may overlap each other. For example, latitude/longitude grid lines may fall on top of land polygons because the grid overlay is rendered after the coastline overlay. Knowing the order in which the data and overlays are rendered may answer some questions if the data view doesn't look the way the user expects. The data view is rendered in the following order:
+\begin{enumerate}
 \item Before any overlay or data, the data view is filled with a background color (normally white) for vector plots or a missing color (normally black) for color enhancement or color composite plots.
 \item Color vectors or image pixels are rendered to the data view. The background or missing color will show though where no vectors or pixels were rendered.
 \item Data overlays are rendered to the view in the following order (see the description of each option below): \begin{itemize}
@@ -2068,7 +2122,6 @@ nan (Not-a-Number) &NaN \\
 
 
 \end{enumerate}
-
 \subsection*{\underline{Parameters}}
 \subsubsection*{Main parameters:}
 \begin{description}
@@ -2078,7 +2131,7 @@ nan (Not-a-Number) &NaN \\
  must be specified, but not both. If one variable name is specified, the plot shows color-enhanced image data. If two variable names are specified, the plot shows color-enhanced vectors whose direction is derived using the two variables as vector components. See the \textbf{-{-}enhancevector}
  and \textbf{-{-}background}
  options for settings that are specific to vector plots.
-\item[input]The input data file name. 
+\item[input]The input data file name.
 \item[output]The output image file name. Unless the \textbf{-{-}format}
  option is used, the file extension indicates the desired output format: '.png', '.jpg', '.tif', or '.pdf'.
 
@@ -2236,7 +2289,9 @@ nan (Not-a-Number) &NaN \\
 \item[-{-}palettefile=FILE]The file of color palette XML data for converting data values to colors. The format of the XML file is described in the User's Guide. By default, the 'BW-Linear' palette is used.
 \item[-{-}palettecolors=COLOR1[/COLOR2[/COLOR3...{]}]]The palette colors for converting data values to colors. Up to 256 colors may be specified by name or hexadecimal value (see above). By default, the 'BW-Linear' palette is used.
 \item[-r, -{-}range=MIN/MAX]The color enhancement range. Data values are mapped to colors using the minimum and maximum values and an enhancement function. By default, the enhancement range is derived from the data value mean and standard deviation to form an optimal enhancement window of 1.5 standard deviation units around the mean.
-\item[-{-}ticklabels=LABEL1[/LABEL2[/LABEL3/...{]}]]The numeric tick mark labels to use for the data color scale. By default the tick mark labels are generated automatically. For example -{-}ticklabels=1.0/1.1/1.2/1.3/1.4/1.5 would put tick marks and labels at evenly spaced locations on the color scale from 1.0 to 1.5.
+\item[-{-}ticklabels=LABEL1[/LABEL2[/LABEL3/...{]}]]The numeric tick mark labels to use for the data color scale. By default the tick mark labels are generated automatically. For example:\\ 
+ -{-}ticklabels=1.0/1.1/1.2/1.3/1.4/1.5\\ 
+would put tick marks and labels at evenly spaced locations on the color scale from 1.0 to 1.5.
 \item[-U, -{-}units=UNITS]The range and color scale units for the enhancement variable(s). By default, the user must specify the values for the \textbf{-{-}range}
  option in the standard units indicated in the data. If the user prefers a different set of units to be used, they may be specified here. Many common units are accepted (and various forms of those units), for example 'kelvin', 'celsius' and 'fahrenheit' for temperature data, 'knots', 'meters per second' or 'm/s' for windspeed, and 'mg per m\^{}-3' or 'kg/m-3' for concentration. For other possible unit names, see the conventions used by the Unidata UDUNITS package and its supported units file.
 
@@ -2259,7 +2314,8 @@ nan (Not-a-Number) &NaN \\
 \subsection*{\underline{Exit status}}
 
 
- 0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+ 0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input or output file names. 
 \item  Invalid variable name. 
@@ -2269,15 +2325,14 @@ nan (Not-a-Number) &NaN \\
 \item  Invalid magnification center. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
- As an example of color enhancement, the following command shows the rendering of AVHRR channel 2 data from a CoastWatch HDF file to a PNG image, with coast and grid lines in red and the default linear black to white palette. We allow the routine to calculate data statistics on channel 2 for an optimal enhancement range: \begin{verbatim}
+ As an example of color enhancement, the following command shows the rendering of AVHRR channel 2 data from a CoastWatch HDF file to a PNG image, with coast and grid lines in red and the default linear black to white palette. We allow the routine to calculate data statistics on channel 2 for an optimal enhancement range:
+\begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwrender --verbose 
-     --enhance avhrr_ch2 --coast red --grid red 2002_288_1435_n17_er.hdf 
-     2002_288_1435_n17_er_ch2.png
+   phollema$ cwrender --verbose --enhance avhrr_ch2 --coast red --grid red 
+     2002_288_1435_n17_er.hdf 2002_288_1435_n17_er_ch2.png
 
    cwrender: Reading input 2002_288_1435_n17_er.hdf
    cwrender: Normalizing color enhancement
@@ -2287,10 +2342,12 @@ nan (Not-a-Number) &NaN \\
    cwrender: Writing output 2002_288_1435_n17_er_ch2.png
  
 \end{verbatim}
- For a color composite of the same file, the following command shows the rendering of AVHRR channels 1, 2, and 4 to a PNG image. Again, we allow the routine to calculate statistics for optimal enhancement ranges. Note that the final enhancement function is reversed in order to map warm AVHRR channel 4 values to dark and cold values to bright: \begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwrender --verbose 
-     --composite avhrr_ch1/avhrr_ch2/avhrr_ch4 
+
+ For a color composite of the same file, the following command shows the rendering of AVHRR channels 1, 2, and 4 to a PNG image. Again, we allow the routine to calculate statistics for optimal enhancement ranges. Note that the final enhancement function is reversed in order to map warm AVHRR channel 4 values to dark and cold values to bright:
+\begin{verbatim}
+
+   phollema$ cwrender --verbose --composite avhrr_ch1/avhrr_ch2/avhrr_ch4
      --bluefunction reverse-linear --coast black --grid gray 
      2002_288_1435_n17_er.hdf 2002_288_1435_n17_er_ch124.png
 
@@ -2304,11 +2361,13 @@ nan (Not-a-Number) &NaN \\
    cwrender: Writing output 2002_288_1435_n17_er_ch124.png
  
 \end{verbatim}
- A further example below shows the rendering of AVHRR derived sea-surface-temperature data from the same file with a cloud mask applied. The color enhancement uses a blue to red color palette and an explicit range from 5 to 20 degrees Celsius: \begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwrender --verbose 
-     --enhance sst --coast white --grid white --palette HSL256
-     --range 5/20 --cloud gray 2002_288_1435_n17_er.hdf 
+
+ A further example below shows the rendering of AVHRR derived sea-surface-temperature data from the same file with a cloud mask applied. The color enhancement uses a blue to red color palette and an explicit range from 5 to 20 degrees Celsius:
+\begin{verbatim}
+
+   phollema$ cwrender --verbose --enhance sst --coast white --grid white 
+     --palette HSL256 --range 5/20 --cloud gray 2002_288_1435_n17_er.hdf
      2002_288_1435_n17_er_sst.png
 
    cwrender: Reading input 2002_288_1435_n17_er.hdf
@@ -2319,12 +2378,14 @@ nan (Not-a-Number) &NaN \\
    cwrender: Writing output 2002_288_1435_n17_er_sst.png
  
 \end{verbatim}
- An example usage of the \textbf{-{-}magnify}
- option is shown below to create a plot of cloud masked sea-surface-temperature data off Nova Scotia: \begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwrender --verbose 
-     --enhance sst --coast white --grid white --palette HSL256 
-     --range 5/20 --cloud gray --magnify 43/-66/1 
+
+ An example usage of the \textbf{-{-}magnify}
+ option is shown below to create a plot of cloud masked sea-surface-temperature data off Nova Scotia:
+\begin{verbatim}
+
+   phollema$ cwrender --verbose --enhance sst --coast white --grid white 
+     --palette HSL256 --range 5/20 --cloud gray --magnify 43/-66/1
      2002_288_1435_n17_er.hdf 2002_288_1435_n17_er_sst_mag.png
 
    cwrender: Reading input 2002_288_1435_n17_er.hdf
@@ -2335,7 +2396,6 @@ nan (Not-a-Number) &NaN \\
    cwrender: Writing output 2002_288_1435_n17_er_sst_mag.png
  
 \end{verbatim}
-
 \subsection*{\underline{Known Bugs}}
 
 
@@ -2413,17 +2473,18 @@ nan (Not-a-Number) &NaN \\
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input or output file names. 
 \item  Invalid sample coordinates file format. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  In the example below, a sample points file named sample\_locs.txt was set up to follow the 93 W longitude line at regular 0.2 degree intervals as follows: \begin{verbatim}
+  In the example below, a sample points file named sample\_locs.txt was set up to follow the 93 W longitude line at regular 0.2 degree intervals as follows:
+\begin{verbatim}
 
    28 -93
    28.2 -93
@@ -2438,10 +2499,12 @@ nan (Not-a-Number) &NaN \\
    30 -93
  
 \end{verbatim}
- and a Gulf of Mexico data file sampled for SST and cloud data along this line with output to the terminal screen: \begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwsample --header 
-     --match '(sst|cloud)' --samples sample_locs.txt 
+
+ and a Gulf of Mexico data file sampled for SST and cloud data along this line with output to the terminal screen:
+\begin{verbatim}
+
+   phollema$ cwsample --header --match '(sst|cloud)' --samples sample_locs.txt
      2002_325_1546_n17_mr.hdf -
 
    latitude longitude sst cloud
@@ -2458,16 +2521,17 @@ nan (Not-a-Number) &NaN \\
    30 -93 17.48 22
  
 \end{verbatim}
- Another example shows the sampling of one SST value as in the case of comparison with a single buoy measurement with output to the terminal screen: \begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwsample --header 
-     --match sst --sample 28.8/-93 2002_325_1546_n17_mr.hdf -
+
+ Another example shows the sampling of one SST value as in the case of comparison with a single buoy measurement with output to the terminal screen:
+\begin{verbatim}
+
+   phollema$ cwsample --header --match sst --sample 28.8/-93 2002_325_1546_n17_mr.hdf -
 
    latitude longitude sst
    28.8 -93 22.72
  
 \end{verbatim}
-
 
 \newpage
 \section{cwstats} \hypertarget{cwstats}{}
@@ -2493,7 +2557,8 @@ nan (Not-a-Number) &NaN \\
 \subsection*{\underline{Description}}
 
 
-  The statistics utility calculates a number of statistics for each variable in an Earth data file: \begin{itemize}
+  The statistics utility calculates a number of statistics for each variable in an Earth data file:
+\begin{itemize}
 \item  Count - the count of total data values sampled. 
 \item  Valid - the number of valid (not missing) data values. 
 \item  Min - the minimum data value. 
@@ -2503,6 +2568,8 @@ nan (Not-a-Number) &NaN \\
 \item  Median - the median data value. 
 
 \end{itemize}
+
+
  To speed up the statitics calculations, a subset of the data values in each variable may be specified using either the \textbf{-{-}stride}
  or \textbf{-{-}sample}
  options, and the \textbf{-{-}limit}
@@ -2511,7 +2578,7 @@ nan (Not-a-Number) &NaN \\
 \subsection*{\underline{Parameters}}
 \subsubsection*{Main parameters:}
 \begin{description}
-\item[input]The input data file name. 
+\item[input]The input data file name.
 
 \end{description}
 \subsubsection*{Options:}
@@ -2532,20 +2599,21 @@ nan (Not-a-Number) &NaN \\
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input file name. 
 \item  Unsupported input file format. 
 \item  Error reading input data values. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  The following shows a statistics calculation on a CoastWatch HDF file from the Great Lakes: \begin{verbatim}
+  The following shows a statistics calculation on a CoastWatch HDF file from the Great Lakes:
+\begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwstats 2002_197_1719_n16_gr.hdf
+   phollema$ cwstats 2002_197_1719_n16_gr.hdf
 
    Variable       Count     Valid     Min       Max       Mean       Stdev     
    avhrr_ch1      1048576   483728    3.49      74.36     13.059646  11.371605 
@@ -2561,7 +2629,6 @@ nan (Not-a-Number) &NaN \\
    graphics       1048576   1048576   0         14        6.84576    2.931459  
  
 \end{verbatim}
-
 
 \newpage
 \section{cwstatus} \hypertarget{cwstatus}{}
@@ -2607,20 +2674,20 @@ nan (Not-a-Number) &NaN \\
 \subsection*{\underline{Exit status}}
 
 
-  0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+  0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
-  The following command shows the startup of the status monitor for the fictitious server foobar.noaa.gov: \begin{verbatim}
+  The following command shows the startup of the status monitor for the fictitious server frobozz.noaa.gov:
+\begin{verbatim}
 
-   phollema@localhost:<~/cwatch/satdata> cwstatus foobar.noaa.gov
+   phollema$ cwstatus frobozz.noaa.gov
  
 \end{verbatim}
-
 
 \newpage
 \section{hdatt} \hypertarget{hdatt}{}
@@ -2646,7 +2713,8 @@ nan (Not-a-Number) &NaN \\
 \subsection*{\underline{Description}}
 
 
- The attribute tool reads or writes HDF file attributes using the HDF Scientific Data Sets (SDS) interface. The two modes work as follows: \begin{description}
+ The attribute tool reads or writes HDF file attributes using the HDF Scientific Data Sets (SDS) interface. The two modes work as follows:
+\begin{description}
 \item[Read mode]In read mode, the tool can read from either the global attribute set (the default), or the attribute set specific to a variable (when then \textbf{-{-}variable}
  option is specified). It can read either all attribute values in the set (the default), or just a single attribute value (when the \textbf{-{-}name}
  option is specified).
@@ -2656,7 +2724,6 @@ nan (Not-a-Number) &NaN \\
  option.
 
 \end{description}
-
 
 
  \textbf{Note:}
@@ -2676,6 +2743,8 @@ nan (Not-a-Number) &NaN \\
 
 \begin{tabular}{|c|c|}
 \hline 
+ & \\
+ \hline 
 Type name &HDF type \\
  \hline 
 string &DFNT\_CHAR8 \\
@@ -2703,7 +2772,8 @@ double &DFNT\_FLOAT64 \\
 \subsection*{\underline{Exit status}}
 
 
- 0 on success, $>$ 0 on failure. Possible causes of errors: \begin{itemize}
+ 0 on success, $>$ 0 on failure. Possible causes of errors:
+\begin{itemize}
 \item  Invalid command line option. 
 \item  Invalid input or output file names. 
 \item  Invalid variable name. 
@@ -2712,13 +2782,14 @@ double &DFNT\_FLOAT64 \\
 \item  Value does not convert to the specified attribute data type. 
 
 \end{itemize}
-
 \subsection*{\underline{Examples}}
 
 
- As an example of read mode, the following command reads and prints all the global attribute data from a CoastWatch HDF file: \begin{verbatim}
+ As an example of read mode, the following command reads and prints all the global attribute data from a CoastWatch HDF file:
+\begin{verbatim}
 
-   phollema@damdog<~/cwatch/satdata/level3> hdatt 2005_095_1522_n17_er.hdf
+   phollema$ hdatt 2005_095_1522_n17_er.hdf
+
    satellite = noaa-17
    sensor = avhrr
    origin = USDOC/NOAA/NESDIS CoastWatch
@@ -2747,46 +2818,54 @@ double &DFNT\_FLOAT64 \\
    history = cwimport product.tshdf product.hdf
  
 \end{verbatim}
- To dump only a single attribute: \begin{verbatim}
 
-   phollema@damdog<~/cwatch/satdata/level3> hdatt --name satellite 
-     2005_095_1522_n17_er.hdf
+
+ To dump only a single attribute:
+\begin{verbatim}
+
+   phollema$ hdatt --name satellite 2005_095_1522_n17_er.hdf
+
    noaa-17
  
 \end{verbatim}
- or a single attribute from a specific variable: \begin{verbatim}
 
-   phollema@damdog<~/cwatch/satdata/level3> hdatt --name units 
-     --variable avhrr_ch3a 2005_095_1522_n17_er.hdf
+
+ or a single attribute from a specific variable:
+\begin{verbatim}
+
+   phollema$ hdatt --name units --variable avhrr_ch3a 2005_095_1522_n17_er.hdf
+
    albedo*100%
  
 \end{verbatim}
 
 
+ As an example of write mode, suppose that we wanted to save the date when the file was originally downloaded from the server:
+\begin{verbatim}
 
- As an example of write mode, suppose that we wanted to save the date when the file was originally downloaded from the server: \begin{verbatim}
-
-   phollema@damdog<~/cwatch/satdata/level3> hdatt --name download_date 
-     --value "Mon Apr 11 18:20:15 PDT 2005" 2005_095_1522_n17_er.hdf
- 
-\end{verbatim}
- Now suppose we wanted to assign an integer quality value of 65\% to the file based on some test that was performed on the file data: \begin{verbatim}
-
-   phollema@damdog<~/cwatch/satdata/level3> hdatt --name quality_value 
-     --value 65 --type int 2005_095_1522_n17_er.hdf 
- 
-\end{verbatim}
- Finally, suppose that we wanted to change the units and scaling factor / offset of a variable, originally in degrees Celsius and scaled by 0.01, to degrees Fahrenheit: \begin{verbatim}
-
-   phollema@damdog<~/cwatch/satdata/level3> hdatt --name units 
-     --value "deg F" --variable sst 2005_095_1522_n17_er.hdf
-   phollema@damdog<~/cwatch/satdata/level3> hdatt --name scale_factor 
-     --value 0.018 --type double --variable sst 2005_095_1522_n17_er.hdf
-   phollema@damdog<~/cwatch/satdata/level3> hdatt --name add_offset 
-     --value -1777.777777 --type double --variable sst 
+   phollema$ hdatt --name download_date --value "Mon Apr 11 18:20:15 PDT 2005" 
      2005_095_1522_n17_er.hdf
  
 \end{verbatim}
 
+
+ Now suppose we wanted to assign an integer quality value of 65\% to the file based on some test that was performed on the file data:
+\begin{verbatim}
+
+   phollema$ hdatt --name quality_value --value 65 --type int 2005_095_1522_n17_er.hdf
+ 
+\end{verbatim}
+
+
+ Finally, suppose that we wanted to change the units and scaling factor / offset of a variable, originally in degrees Celsius and scaled by 0.01, to degrees Fahrenheit:
+\begin{verbatim}
+
+   phollema$ hdatt --name units --value "deg F" --variable sst 2005_095_1522_n17_er.hdf
+   phollema$ hdatt --name scale_factor --value 0.018 --type double --variable sst 
+     2005_095_1522_n17_er.hdf
+   phollema$ hdatt --name add_offset --value -1777.777777 --type double --variable sst 
+     2005_095_1522_n17_er.hdf
+ 
+\end{verbatim}
 
 \newpage

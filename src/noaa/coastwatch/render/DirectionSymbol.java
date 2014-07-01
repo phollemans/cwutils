@@ -151,6 +151,17 @@ public abstract class DirectionSymbol
     EarthLocation earthLoc
   ) {
 
+
+// TODO: Will this angle conversion still work for transforms that need to
+// be oriented for display?  For example, if a transform needs a non-identity
+// orientation transform produced by OrientationTransformFactory, then what
+// will happen to the angle here?  It's strange that the north and east
+// vector computation seems to *assume* a static x and y direction WRT the data
+// row and column directions.  Maybe this never worked for swath projections
+// which need to be rotated for north to be up ...
+
+
+
     // Get north and east vectors
     // --------------------------     
     DataLocation baseLoc = trans.transform (earthLoc.translate (-0.01, 0));

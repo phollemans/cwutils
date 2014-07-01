@@ -6,9 +6,16 @@
      DATE: 2002/12/01
   CHANGES: 2003/04/19, PFH, added rendering progress mode
            2005/05/30, PFH, added set/get background methods
+           2014/03/25, PFH
+           - Changes: Added a new constructor that only needs a color.
+           - Issue: Changes in EarthDataView made it so that routines that
+             called the constructor with null as the transform threw a
+             NullPointerException.  So we created a new constructor
+             and a default transform to use in these cases when the transform
+             is not important.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -42,7 +49,38 @@ public class SolidBackground
   /** The background color. */
   private Color color;
 
+  /** The transform to use when null is passed in the constructor. */
+  private static EarthTransform defaultTransform;
+
   ////////////////////////////////////////////////////////////
+
+  static {
+
+    /**
+     * Here we create a geographic transform with 1 deg/pixel covering the
+     * entire Earth, centered at 0N, 0E.  It will likely never be used by
+     * the drawing code (because routines using the color-only constructor
+     * were never adding any overlays), but you never know, maybe some day.
+     */
+    try {
+      defaultTransform = MapProjectionFactory.getInstance().create (
+        GCTP.GEO,
+        0,
+        new double[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+        GCTP.WGS84,
+        new int[] {180, 360},
+        new EarthLocation (0, 0),
+        new double[] {1, 1}
+      );
+    } // try
+    catch (NoninvertibleTransformException e) {
+      throw new ExceptionInInitializerError (e);
+    } // catch
+  
+  } // static
+
+  ////////////////////////////////////////////////////////////
+
 
   /** Sets the background color. */
   public void setBackground (
@@ -84,6 +122,27 @@ public class SolidBackground
 
   /** Gets the background color. */
   public Color getBackground () { return (color); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Constructs a new solid background with the specified color.  The
+   * transform is set to an internal default transform.
+   * 
+   * @param color the background color.
+   *
+   * @throws NoninvertibleTransformException if the resulting image 
+   * transform is not invertible.
+   *
+   * @since 3.3.1
+   */
+  public SolidBackground (
+    Color color
+  ) throws NoninvertibleTransformException {
+
+    this (defaultTransform, defaultTransform.getDimensions(), color);
+
+  } // SolidBackground constructor
 
   ////////////////////////////////////////////////////////////
 

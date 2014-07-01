@@ -21,6 +21,7 @@
            2013/02/04, PFH, simplified
            2013/11/06, PFH, added target/source args for javac tasks
            2014/02/21, PFH, added upload target and extra cleanup for docs
+           2014/03/23, PFH, added test_unit target
  
   CoastWatch Software Library and Utilities
   Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
@@ -137,7 +138,7 @@
       <packageset dir="src"/>
     </javadoc>
     <delete dir="doc/tools"/>
-    <exec executable="${basedir}/doc/makedoc" dir="doc">
+    <exec executable="${basedir}/scripts/make_docs.sh" dir="doc">
       <arg line="${version}"/>
     </exec>
   </target>
@@ -178,6 +179,17 @@
     </install4j>
   </target>
 
+  <target name="pkg_winlin" depends="all"
+    description="Creates Windows and Linux packages">
+    <install4j 
+      projectfile="cwf.install4j"
+      release="${version}"
+      buildids="10,278,88,288"
+      verbose="true">
+      <variable name="buildNumber" value="${build.number}"/>
+    </install4j>
+  </target>
+
   <target name="pkg_solaris" depends="all"
     description="Creates Solaris packages">
     <install4j 
@@ -211,10 +223,16 @@
     </install4j>
   </target>
 
-  <target 
-    name="packages"
-    depends="pkg_windows,pkg_linux,pkg_solaris,pkg_macosx" 
-    description="Creates all package files"/>
+  <target name="packages" depends="all"
+    description="Creates all package files">
+    <install4j 
+      projectfile="cwf.install4j"
+      release="${version}"
+      buildids="10,278,88,288,93,292,276,528"
+      verbose="true">
+      <variable name="buildNumber" value="${build.number}"/>
+    </install4j>
+  </target>
 
   <target name="upload"
     description="Uploads packages to the Terrenus server">
@@ -279,7 +297,7 @@
       classpathref="testcp"
       fork="true">
       <env key="${ld.var}" value="${basedir}/lib/${os.libs}"/>
-      <jvmarg line="${vm.args}"/>
+      <jvmarg line="${vm.args} -enableassertions:noaa.coastwatch..."/>
       <arg line="${args}"/>
     </java>
   </target>
@@ -319,6 +337,14 @@
     <antcall target="test">
       <param name="class" value="noaa.coastwatch.gui.TestContainer"/>
       <param name="args" value="${contain}"/>
+    </antcall>
+  </target>
+
+  <target name="test_unit"
+    description="Runs the CoastWatch unit tests by running noaa.coastwatch.test.TestableTester">
+    <antcall target="test">
+      <param name="class" value="noaa.coastwatch.test.TestableTester"/>
+      <param name="args" value=""/>
     </antcall>
   </target>
 

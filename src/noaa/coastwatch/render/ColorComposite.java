@@ -17,9 +17,12 @@
            2004/05/28, PFH, added handling for stopRendering flag
            2004/06/09, PFH, modified setGrids() to invalidate row/col caches
            2004/10/17, PFH, modified to use invalidate()
+           2014/03/25, PFH
+           - Changes: Changed to use getBounds() from getCorners()
+           - Issue: API was unclear.
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -302,7 +305,7 @@ public class ColorComposite
     // Calculate statistics
     // --------------------
     Grid grid = grids[component];
-    DataLocation[] corners = getCorners();
+    DataLocation[] corners = getBounds();
     Statistics stats = grid.getStatistics (corners[0],
       corners[1], 0.01);
 

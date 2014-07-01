@@ -26,9 +26,12 @@
            2012/08/14, PFH, added legend caching
            2013/09/17, PFH, added clone() to correct the bug in CDAT when
              saving images, the legend was being changed
+           2014/03/25, PFH
+           - Changes: Changed to use getBounds() from getCorners()
+           - Issue: API was unclear.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -500,7 +503,7 @@ public class ColorEnhancement
 
     // Calculate statistics
     // --------------------
-    DataLocation[] corners = getCorners();
+    DataLocation[] corners = getBounds();
     Statistics stats = grid.getStatistics (corners[0],
       corners[1], 0.01);
 

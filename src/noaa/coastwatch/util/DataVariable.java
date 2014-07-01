@@ -33,9 +33,17 @@
            2005/06/03, PFH, added convertUnits() method
            2006/05/25, PFH, added setAccessHint() method
            2007/06/20, PFH, added various set methods
+           2014/04/09, PFH
+           - Changes: Removed method setIsCFConvention
+           - Issue: There are various operations to do with units
+             conversion and setting values that aren't set up to handle CF
+             scaling.  It was introduced for reading CF convention files, but
+             not fully implemented.  The fix is to re-arrange the scaling factor
+             and offset when reading CF data and then pass in the re-arranged
+             scaling to the data variable constructor.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -119,9 +127,6 @@ public abstract class DataVariable
   /** The lookup table. */
   protected double[] lookup;
   
-  /** The isCFConvention. */
-  protected boolean isCFConvention;
-
   ////////////////////////////////////////////////////////////
 
   /** Gets the short variable name. */
@@ -132,11 +137,6 @@ public abstract class DataVariable
   /** Sets the short variable name. */
   public void setName (String name) { this.name = name; }
   
-  ////////////////////////////////////////////////////////////
-
-  /** Sets the isGHRSST. */
-  public void setIsCFConvention (boolean isghrsst) { this.isCFConvention = isghrsst; }
-
   ////////////////////////////////////////////////////////////
 
   /** Gets the descriptive variable name. */
@@ -386,7 +386,6 @@ public abstract class DataVariable
     this.format = (NumberFormat) format.clone ();
     this.scaling = (scaling == null ? null : (double[]) scaling.clone ());
     this.missing = missing;
-    this.isCFConvention = false;
 
   } // DataVariable constructor
 
@@ -495,12 +494,8 @@ public abstract class DataVariable
       val = ((Number) ob).doubleValue();
     if (lookup != null)
       val = lookup[(int) val];
-    else if (scaling != null){
-      if(!isCFConvention)
-    	  val = (val - scaling[1])*scaling[0];
-      else
-    	  val = val * scaling[0] + scaling[1];
-    }
+    else if (scaling != null)
+      val = (val - scaling[1])*scaling[0];
   
     return (val);
 

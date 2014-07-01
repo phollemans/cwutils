@@ -31,9 +31,11 @@
            2006/05/26, PFH, modified to use SpheroidConstants
            2006/06/10, PFH, modified to use BinnedGSHHSReaderFactory
            2012/12/07, PFH, modified to use MapProjectionFactory
+           2014/03/25, PFH
+           - Changes: Updated to use new EarthImageTransform constructor
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -425,10 +427,8 @@ public class EarthContextElement
 
     // Create Earth image transform
     // ----------------------------
-    try {
-      return (new EarthImageTransform (imageDims, center, 
-        new double[] {1,1}, map));
-    } catch (Exception e) { return (null); }
+    try { return (new EarthImageTransform (imageDims, center, 1, map)); }
+    catch (Exception e) { return (null); }
 
   } // getContextProjection
 
@@ -516,10 +516,8 @@ public class EarthContextElement
 
     // Create Earth image transform
     // ----------------------------
-    try {
-      return (new EarthImageTransform (imageDims, center, 
-        new double[] {1,1}, map));
-    } catch (Exception e) { return (null); }
+    try { return (new EarthImageTransform (imageDims, center, 1, map)); }
+    catch (Exception e) { return (null); }
 
   } // getContextProjection
 

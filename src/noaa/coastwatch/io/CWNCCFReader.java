@@ -5,9 +5,15 @@
    AUTHOR: X. Liu
      DATE: 2012/06/27
   CHANGES: 2013/06/21, PFH, updated to use Variable.getShortName()
+           2014/04/09, PFH
+           - Changes: Removed use of setIsCFConventions in DataVariable.
+           - Issue: The use of the method was never fully implemented in 
+             DataVariable so rather than continuing its use, we decided
+             to remove it and re-arrange the scaling and offset for CF
+             conventions before passing into the Grid constructor.
   
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -328,16 +334,23 @@ public class CWNCCFReader
 
     // Get calibration
     // ---------------
-    double[] calInfo = new double[4];
-    int[] calType = new int[1];
     double[] scaling;
     try {
       Double scale = (Double) getAttribute (var, "scale_factor");
       Double offset = (Double) getAttribute (var, "add_offset");
       scaling = new double[] {scale.doubleValue(), offset.doubleValue()};
+      /** 
+       * We re-arrange the CF scaling conventions here into HDF:
+       *
+       *   y = a'x + b'      (CF)
+       *   y = (x - b)*a     (HDF)
+       *   => a = a'
+       *      b = -b'/a'
+       */
+      scaling[1] = -scaling[1]/scaling[0];
     } // try
     catch (Exception e) {
-      scaling = new double[]{1.0,0.0};
+      scaling = new double[] {1.0, 0.0};
     } // catch
 
     // Get missing value
@@ -427,7 +440,7 @@ public class CWNCCFReader
     AffineTransform nav = null;
     if (rank == 2) {
       try { 
-        double[] matrix  = (double[]) getAttribute (var, "nav_affine");
+        double[] matrix  = (double[]) getAttribute (var, "cw:nav_affine");
         nav = new AffineTransform (matrix);
       } // try
       catch (Exception e) { }
@@ -448,7 +461,6 @@ public class CWNCCFReader
     else if (rank == 4) {
         dataVar = new Grid (name, longName, units, varDims[2], varDims[3], 
           data, format, scaling, missing);
-        dataVar.setIsCFConvention(true);
         if (nav != null) ((Grid) dataVar).setNavigation (nav);
       } // else if
     else {

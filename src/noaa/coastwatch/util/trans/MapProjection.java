@@ -4,10 +4,15 @@
   PURPOSE: To perform common 2D map projection calculations.
    AUTHOR: Peter Hollemans
      DATE: 2006/05/26
-  CHANGES: n/a
+  CHANGES: 2014/03/25, PFH
+           - Changes: Added isOrientable() override to return false.
+           - Issue: By default EarthTransform objects are orientable for
+             display, but some map projections shouldn't be oriented, so
+             by default we return false here and let individual projections
+             decide.
 
   CoastWatch Software Library and Utilities
-  Copyright 2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2006-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -72,6 +77,10 @@ public abstract class MapProjection
    * transform(EarthLocation).
    */
   protected boolean positiveLon;
+
+  ////////////////////////////////////////////////////////////
+
+  public boolean isOrientable () { return (false); }
 
   ////////////////////////////////////////////////////////////
 

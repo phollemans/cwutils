@@ -1,5 +1,9 @@
 #!/bin/sh
 
+##
+## NOTE: This script must be run from the doc/ directory.
+##
+
 awk=/usr/local/bin/gawk
 pdflatex=/usr/texbin/pdflatex
 bibtex=/usr/texbin/bibtex
@@ -9,7 +13,7 @@ html2latex=/usr/local/bin/html2latex
 # ---------------------------
 version=$1
 if [ -z "$version" ] ; then
-  echo "Usage: makedoc version"
+  echo "Usage: make_docs.sh version"
   exit 1
 fi
 

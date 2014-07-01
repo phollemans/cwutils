@@ -36,7 +36,7 @@
       <mountPoint id="1" root="" location="" mode="755" />
     </mountPoints>
     <entries>
-      <dirEntry mountPoint="1" file="." overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="CoastWatch Utilities" excludeSuffixes="*~,.DS_Store,*#, .git*, .gitignore*, *.swp,.project,.classpath,*.xcodeproj" dirMode="755" overrideDirMode="true">
+      <dirEntry mountPoint="1" file="." overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="CoastWatch Utilities" excludeSuffixes="*~,.DS_Store,*#, .git*, .gitignore*, *.swp,.project,.classpath,*.xcodeproj,*.numbers" dirMode="755" overrideDirMode="true">
         <exclude>
           <entry location="build.number" fileType="regular" />
           <entry location="build.xml" fileType="regular" />
@@ -45,12 +45,11 @@
           <entry location="cwf.properties" fileType="regular" />
           <entry location="data/noaa/coastwatch/tools/test" fileType="regular" />
           <entry location="doc/api" fileType="regular" />
-          <entry location="doc/makedoc" fileType="regular" />
           <entry location="doc/tool_categories.txt" fileType="regular" />
           <entry location="doc/users_guide" fileType="regular" />
           <entry location="lib/stubs" fileType="regular" />
-          <entry location="native" fileType="regular" />
           <entry location="resources" fileType="regular" />
+          <entry location="scripts" fileType="regular" />
           <entry location="src" fileType="regular" />
         </exclude>
       </dirEntry>
@@ -63,7 +62,7 @@
           <entry location="bin/${compiler:cwmasterName}" fileType="launcher" />
           <entry location="bin/${compiler:cwstatusName}" fileType="launcher" />
           <entry location="data" fileType="regular" />
-          <entry location="doc/cwf_ug_3_3_0.pdf" fileType="regular" />
+          <entry location="doc/cwf_ug_3_3_1.pdf" fileType="regular" />
           <entry location="doc/license.txt" fileType="regular" />
           <entry location="extensions" fileType="regular" />
           <entry location="lib" fileType="regular" />

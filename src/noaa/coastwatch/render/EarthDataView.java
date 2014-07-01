@@ -48,9 +48,19 @@
            2006/12/14, PFH, added getImageAffine()
            2006/12/18, PFH, added getUpsideDown()
            2013/05/31, PFH, updated docs for getScale() and setCenterAndScale()
+           2014/02/25, PFH
+           - Changes: Updated to use orientation affine transform rather than
+             upside-down flag for orienting the view correctly.
+           - Issue: There were cases where a simple rotation of 180 deg wasn't
+             correct to orient the view and the best generic orientation was
+             expressed as an affine rather than using a negative scaling factor.
+           2014/04/02. PFH
+           - Changes: Corrected all documentation on scale factor.
+           - Issue: The meaning of scale factor was described inverse to its
+             implementation.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -137,6 +147,7 @@ import noaa.coastwatch.util.trans.*;
  * @author Peter Hollemans
  * @since 3.1.0
  */
+@noaa.coastwatch.test.Testable
 public abstract class EarthDataView
   implements Renderable, Cloneable {
 
@@ -159,11 +170,11 @@ public abstract class EarthDataView
   private DataLocation center;
 
   /** 
-   * The view scaling factor.  This is the ratio of view image pixels
-   * to data pixels.  A scale of 1 means that one pixel on the screen
-   * is one pixel in the data.  A scale of two means two pixels on the
-   * screen is one pixel in the data -- ie: that the data is
-   * magnified.  Often, the scale will be < 1 so that the entire data
+   * The view scaling factor.  This is the ratio of data pixels
+   * to view image pixels.  A scale of 1 means that one pixel on the screen
+   * is one pixel in the data.  A scale of two means one pixel on the
+   * screen is two pixels in the data -- ie: that the data is
+   * zoomed out.  Often, the scale will be > 1 so that the entire data
    * grid fits in the view image which may be an onscreen image.
    */
   private double scale;
@@ -207,17 +218,7 @@ public abstract class EarthDataView
    */
   protected BufferedImage image;
 
-  /** 
-   * A flag to indicate that the image transform should be flipped.
-   * When the Earth transform is a swath, it may be desirable to show
-   * the north end of the swath at the top of the view and the south
-   * end of the swath at the bottom.  When in upside down mode, the
-   * image transform scaling factors are both negative in order to
-   * rotate the view 180 degrees.
-   */
-  private boolean upsideDown;
-
-  /** 
+  /**
    * The full data dimensions.  These are the dimensions of the full
    * data grid being viewed.  The data dimensions are required to set
    * up a default image transform when a view is first created, and to
@@ -298,14 +299,47 @@ public abstract class EarthDataView
    */
   private AffineTransform cacheNavigation;
 
+  /**
+   * The orientation affine that orients the image for display.  This
+   * is used in such cases as when the image wouldn't normally show north
+   * at the top of the screen.  This may be an identity transform if
+   * no orientation should be performed.
+   */
+  private AffineTransform orientationAffine;
+
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the upside-down flag, true if the view is being
-   * corrected from its normal orientation so that north is in
-   * the up direction, or false if not.
+   * Gets the upside-down flag.
+   *
+   * @return true if the view is being corrected from its normal 
+   * orientation so that north is in the up direction, or false if not.
+   *
+   * @deprecated As of 3.3.1, use {@link #getOrientationAffine}.
    */
-  public boolean getUpsideDown () { return (upsideDown); }
+  @Deprecated
+  public boolean getUpsideDown () {
+  
+    return (orientationAffine.getType() != AffineTransform.TYPE_IDENTITY);
+    
+  } // getUpsideDown
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the view orientation affine.  The orientation affine transforms
+   * data coordinates for display, rotating or flipping as needed so that
+   * the north direction is at the top of the screen.
+   *
+   * @return the orientation affine (possibly the identity).
+   *
+   * @since 3.3.1
+   */
+  public AffineTransform getOrientationAffine () {
+  
+    return ((AffineTransform) orientationAffine.clone());
+    
+  } // getOrientationAffine
 
   ////////////////////////////////////////////////////////////
 
@@ -600,8 +634,29 @@ public abstract class EarthDataView
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data corners of this view as [upperLeft, lowerRight]. */
+  /** 
+   * Gets the data corners of this view as [upperLeft, lowerRight]. 
+   *
+   * @deprecated As of 3.3.1, use {@link #getBounds}.
+   */
+  @Deprecated
   public DataLocation[] getCorners() {
+
+    return (getBounds());
+
+  } // getCorners
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the bounds of this view.
+   *
+   * @return the array of data location bounds as [minimum(row,col), 
+   * maximum(row,col)].
+   *
+   * @since 3.3.1
+   */
+  public DataLocation[] getBounds() {
 
     // Get corner locations
     // --------------------
@@ -609,15 +664,21 @@ public abstract class EarthDataView
       new Point());
     DataLocation lowerRight = trans.getImageTransform().transform (
       new Point (imageDims.width-1, imageDims.height-1));
-    if (upsideDown) {
-      DataLocation tmp = upperLeft;
-      upperLeft = lowerRight;
-      lowerRight = tmp;
-    } // if
 
-    return (new DataLocation[] {upperLeft, lowerRight});
+    // Compute mimimum and maximum locations
+    // -------------------------------------
+    DataLocation minLoc = new DataLocation (
+      Math.min (upperLeft.get (Grid.ROWS), lowerRight.get (Grid.ROWS)),
+      Math.min (upperLeft.get (Grid.COLS), lowerRight.get (Grid.COLS))
+    );
+    DataLocation maxLoc = new DataLocation (
+      Math.max (upperLeft.get (Grid.ROWS), lowerRight.get (Grid.ROWS)),
+      Math.max (upperLeft.get (Grid.COLS), lowerRight.get (Grid.COLS))
+    );
+    
+    return (new DataLocation[] {minLoc, maxLoc});
 
-  } // getCorners
+  } // getBounds
 
   ////////////////////////////////////////////////////////////
 
@@ -627,8 +688,9 @@ public abstract class EarthDataView
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the scale of this view. This is the ratio of view image pixels
-   * to data pixels.
+   * Gets the scale of this view.
+   *
+   * @return the ratio of data pixels to view image pixels.
    */
   public double getScale() { return (this.scale); }
 
@@ -640,7 +702,13 @@ public abstract class EarthDataView
     // Create area if null
     // -------------------
     if (area == null) {
-      DataLocation[] corners = getCorners();
+    
+    
+      // TODO: Could this be where the issue is when showing views that
+      // contain the date line?  The grid and coastlines get cut off.
+      
+    
+      DataLocation[] corners = getBounds();
       area = new EarthArea (trans.getEarthTransform(), corners[0], corners[1]);
     } // if
 
@@ -676,7 +744,8 @@ public abstract class EarthDataView
    * Set the center and scale of this view
    * 
    * @param center the new center data location.
-   * @param scale the new scaling factor for the view.
+   * @param scale the new scaling factor for the view (desired ratio of
+   * data pixels to image pixels).
    *
    * @throws NoninvertibleTransformException
    *
@@ -707,8 +776,9 @@ public abstract class EarthDataView
    */
   private void resetTransform () throws NoninvertibleTransformException {
 
-    ImageTransform imageTrans = new ImageTransform (imageDims, center,
-      new double[] {scale, scale});
+    ImageTransform imageTrans = new ImageTransform (imageDims,
+      new Dimension (dataDims[Grid.COLS], dataDims[Grid.ROWS]), center,
+      scale, orientationAffine);
     trans = new EarthImageTransform (trans.getEarthTransform(), imageTrans);
     area = null;
     invalidate();
@@ -736,7 +806,7 @@ public abstract class EarthDataView
     this.overlays = (LinkedList) view.overlays.clone();
     this.area = (view.area != null ? (EarthArea) view.area.clone() : null);
     this.image = null;
-    this.upsideDown = view.upsideDown;
+    this.orientationAffine = (AffineTransform) view.orientationAffine.clone();
     this.dataDims = (int[]) view.dataDims.clone();
     this.rowCache = (view.rowCache != null ? (int[]) view.rowCache.clone() : 
       null);
@@ -980,8 +1050,7 @@ public abstract class EarthDataView
     // --------------------------
     center = new DataLocation ((dataDims[Grid.ROWS]-1) / 2.0,
       (dataDims[Grid.COLS]-1) / 2.0);
-    if (upsideDown) scale = -1;
-    else scale = 1;
+    scale = 1;
 
     // Initialize transform
     // --------------------
@@ -1032,11 +1101,10 @@ public abstract class EarthDataView
   /** 
    * Constructs a new Earth data view using the specified parameters.
    * The view dimensions are initialized to the data dimensions, and
-   * the image:data scale factor to 1.  If the Earth transform is a
-   * swath projection, a check is performed for a north-to-south
-   * traversing swath and the view is flipped upside-down if one is
-   * found.  The verbose mode and progress mode flags are initially set
-   * to false.
+   * the ratio of data to image pixel count to 1.  A check is performed on the
+   * transform to determine if it should be oriented differently for
+   * display, and flipped or rotated if so.  The verbose mode and 
+   * progress mode flags are initially set to false.
    *
    * @param dataDims the data dimensions as [rows, columns].
    * @param earthTrans the Earth transform.
@@ -1049,13 +1117,23 @@ public abstract class EarthDataView
     EarthTransform earthTrans
   ) throws NoninvertibleTransformException {
 
-    // Check for upside-down data
-    // --------------------------
-    if (earthTrans instanceof SwathProjection)
-      upsideDown = !((SwathProjection) earthTrans).getNorthIsUp();
-    else 
-      upsideDown = false;
-
+    // Get orientation affine
+    // ----------------------
+    /**
+     * Here we determine the correct orientation for display.  If the 
+     * orientation affine returned is a flip, we use it to orient the 
+     * display.  Otherwise we honour the orientation hint from the transform.
+     * If it cannot be determined, we use an identity transform.
+     */
+    EarthTransform2D trans2D = earthTrans.get2DVersion();
+    AffineTransform affine = OrientationAffineFactory.create (trans2D);
+    if (affine != null) {
+      if (affine.getType() == AffineTransform.TYPE_FLIP || trans2D.isOrientable())
+        orientationAffine = affine;
+    } // if
+    if (orientationAffine == null)
+      orientationAffine = new AffineTransform();
+    
     // Set data dimensions and reset
     // -----------------------------
     this.dataDims = (int[]) dataDims.clone();
@@ -1340,6 +1418,7 @@ public abstract class EarthDataView
    *
    * @see #getSubregion
    */
+  @Deprecated
   public void showSubregion (
     Subregion subregion
   ) {
@@ -1381,6 +1460,7 @@ public abstract class EarthDataView
    *
    * @see #showSubregion
    */
+  @Deprecated
   public Subregion getSubregion () {
 
     // Get center earth location
@@ -1391,7 +1471,7 @@ public abstract class EarthDataView
 
     // Get diameter
     // ------------
-    DataLocation[] corners = getCorners();
+    DataLocation[] corners = getBounds();
     DataLocation top = new DataLocation (
       corners[0].get (Grid.ROWS),
       center.get (Grid.COLS)
@@ -1416,6 +1496,59 @@ public abstract class EarthDataView
     return (new Subregion (centerEarth, diameter/2));
 
   } // getSubregion
+
+  ////////////////////////////////////////////////////////////
+
+  /** Tests this class. */
+  public static void main (String[] argv) throws Exception {
+
+    System.out.print ("Testing constructor ... ");
+
+    int rows = 3;
+    int cols = 4;
+    EarthTransform trans = MapProjectionFactory.getInstance().create (
+      GCTP.GEO,
+      0,
+      new double[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+      GCTP.WGS84,
+      new int[] {rows, cols},
+      new EarthLocation (0, 0),
+      new double[] {1, 1}
+    );
+    EarthDataView view = new EarthDataView (trans.getDimensions(), trans) {
+      protected void prepare (Graphics2D g) { }
+    };
+    assert (view.getOrientationAffine().getType() == AffineTransform.TYPE_IDENTITY);
+    EarthImageTransform eiTrans = view.getTransform();
+    double epsilon = 1e-5;
+
+    Point2D upperLeft = eiTrans.transform (new EarthLocation (rows/2.0, -cols/2.0));
+    assert (Math.abs (upperLeft.getX()) < epsilon);
+    assert (Math.abs (upperLeft.getY()) < epsilon);
+    Point2D lowerRight = eiTrans.transform (new EarthLocation (-rows/2.0, cols/2.0));
+    assert (Math.abs (lowerRight.getX() - cols) < epsilon);
+    assert (Math.abs (lowerRight.getY() - rows) < epsilon);
+  
+    System.out.println ("OK");
+  
+    System.out.print ("Testing getBounds ... ");
+    DataLocation[] bounds = view.getBounds();
+    assert (Math.abs (bounds[0].get (Grid.ROWS) - (-0.5)) < epsilon);
+    assert (Math.abs (bounds[0].get (Grid.COLS) - (-0.5)) < epsilon);
+    assert (Math.abs (bounds[1].get (Grid.ROWS) - (rows-1-0.5)) < epsilon);
+    assert (Math.abs (bounds[1].get (Grid.COLS) - (cols-1-0.5)) < epsilon);
+    System.out.println ("OK");
+
+    System.out.print ("Testing resize ... ");
+    view.resize (new Dimension (cols*10, rows*10));
+    bounds = view.getBounds();
+    assert (Math.abs (bounds[0].get (Grid.ROWS) - (-0.5)) < epsilon);
+    assert (Math.abs (bounds[0].get (Grid.COLS) - (-0.5)) < epsilon);
+    assert (Math.abs (bounds[1].get (Grid.ROWS) - (rows-1+0.4)) < epsilon);
+    assert (Math.abs (bounds[1].get (Grid.COLS) - (cols-1+0.4)) < epsilon);
+    System.out.println ("OK");
+  
+  } // main
 
   ////////////////////////////////////////////////////////////
 

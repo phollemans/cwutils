@@ -15,9 +15,27 @@
            2013/05/24, PFH
             - updated to use GridCoordSystem.getCalendarDateRange()
             - modified latitude axis reading to handle south first reading
+           2014/04/06, PFH
+           - Changes: Updated to access the underlying NetCDF variable 
+             rather than the enhanced VariableDS, and to use the NCCachedGrid.
+             This means we have to do the metadata parsing ourselves for 
+             missing value and scaling/offset since there do not appear
+             to be any methods in VariableDS to access that info.
+           - Issue: We were running out of heap space with large datasets
+             (3600x7200) with float datatype, ~100 Mb per variable.  We need
+             to reduce this data footprint on the heap, and also use caching.
+             Accessing the underlying variable gave us access to the scaled
+             data (ie: short rather than float) and combined with caching
+             should control the heap usage.
+           2014/04/09, PFH
+           - Changes: Removed use of setIsCFConventions in DataVariable.
+           - Issue: The use of the method was never fully implemented in 
+             DataVariable so rather than continuing its use, we decided
+             to remove it and re-arrange the scaling and offset for CF
+             conventions before passing into the Grid constructor.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -54,8 +72,9 @@ import noaa.coastwatch.util.trans.*;
  * expanded to a series of 2D variables by extending the variable
  * name for each non-geographic axis.  Datasets must:
  * <ul>
- *   <li> have the same Earth transform for all grids,
- *   <li> use a geographic map projection with equally spaced lat/lon intervals.
+ *   <li>have the same Earth transform for all grids,</li>
+ *   <li>use a geographic map projection with equally spaced lat/lon
+ *   intervals.</li>
  * </ul>
  *
  * @author Peter Hollemans
@@ -66,9 +85,6 @@ public class GenericNCReader
 
   // Constants
   // ---------
-
-  /** The data format description. */
-  private static final String DATA_FORMAT = "Java NetCDF/CDM";
 
   /** The array section start specifier. */
   private static final String START = "__";
@@ -99,10 +115,10 @@ public class GenericNCReader
    */
   private static class VariableGroup {
 
-    /** The grid set to access. */
+    /** The grid set to access in the file. */
     public GridDataset.Gridset gridset;
     
-    /** The number of extra dimensions. */
+    /** The number of extra dimensions, beyond geographical x/y dimensions. */
     public int extraDims;
     
     /** The variable dimensions for each grid. */
@@ -121,7 +137,8 @@ public class GenericNCReader
   /** Gets the data format description. */
   public String getDataFormat () { 
 
-    return (DATA_FORMAT);
+    return ("Java-NetCDF interface (" + dataset.getFileTypeId() + " " +
+      dataset.getConventionUsed() + ")");
 
   } // getDataFormat
 
@@ -212,26 +229,10 @@ public class GenericNCReader
     // Get coordinate system
     // ---------------------
     GridCoordSystem coordSystem = gridset.getGeoCoordSystem();
-
-    /*
-    int coordRank = coordSystem.getRankDomain();
-    if (coordRank != 2) {
-      throw new UnsupportedEncodingException (
-        "Unsupported coordinate system, rank = " + coordRank);
-    } // if
-    */
-
     if (!coordSystem.isLatLon()) {
       throw new UnsupportedEncodingException (
         "Unsupported coordinate system, not lat/lon");
     } // if
-
-    /*
-    if (!coordSystem.isRegularSpatial()) {
-      throw new UnsupportedEncodingException (
-        "Coordinate system lat/lon axes are not regular");
-    } // if
-    */
 
     // Create map projection
     // ---------------------
@@ -244,18 +245,6 @@ public class GenericNCReader
       (latValues[0] - latValues[latValues.length-1]) / (latValues.length-1),
       (lonValues[lonValues.length-1] - lonValues[0]) / (lonValues.length-1)
     };
-    /*
-    double[] pixelDims = new double[] {
-      (latAxis.getMaxValue() - latAxis.getMinValue())/(dims[0]-1),
-      (lonAxis.getMaxValue() - lonAxis.getMinValue())/(dims[1]-1)
-    };
-    */
-    /*
-    double[] pixelDims = new double[] {
-      latAxis.getIncrement(),
-      lonAxis.getIncrement()
-    };
-    */
     EarthLocation center = new EarthLocation (
       (latAxis.getMinValue() + latAxis.getMaxValue())/2,
       (lonAxis.getMinValue() + lonAxis.getMaxValue())/2
@@ -276,15 +265,21 @@ public class GenericNCReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the list of variable names. */
-  private String[] getVariableNames () throws IOException {
+  /** 
+   * Gets the list of variable names.
+   *
+   * @return the list of variable names, expanded so that all non-geographic
+   * axis values are available. For example, an SST
+   * field at time index 0 could be named sst__T0_x_x.
+   */
+  private String[] getVariableNames() throws IOException {
 
     // Create list of all names
     // ------------------------
     groupMap = new HashMap<String,VariableGroup>();
     List<String> nameList = new ArrayList<String>();
     for (VariableGroup group : groupList) {
-      String[] nameArray = getVariableNames (group);
+      String[] nameArray = getVariableNamesInGroup (group);
       for (String name : nameArray) {
         nameList.add (name);
         groupMap.put (name, group);
@@ -297,8 +292,18 @@ public class GenericNCReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the list of variable names for the specified group. */
-  private String[] getVariableNames (VariableGroup group) throws IOException {
+  /** 
+   * Gets the list of variable names for a group.
+   * 
+   * @param group the varible group to get the names.
+   *
+   * @return the list of variable names in the group, expanded so that 
+   * all non-geographic axis values are available.  For example, an SST
+   * field at time index 0 could be named sst__T0_x_x.
+   */
+  private String[] getVariableNamesInGroup (
+    VariableGroup group
+  ) throws IOException {
 
     // Create name list
     // ----------------
@@ -334,7 +339,7 @@ public class GenericNCReader
         group.extraDims++;
       } // if
       else
-        group.expandDims[i] = 0;
+        group.expandDims[i] = -1;
     } // for
 
     if (hasNonSpatial) {
@@ -351,7 +356,7 @@ public class GenericNCReader
         StringBuffer extension = new StringBuffer();
         for (int i = 0; i < rank; i++) {
           if (i != 0) extension.append (DELIMIT);
-          extension.append (group.expandDims[i] == 0 ? EXPAND : 
+          extension.append (group.expandDims[i] == -1 ? EXPAND :
             axisPrefix[i] + expandCount[i]);
         } // for
         varExtensions.add (extension.toString());
@@ -387,7 +392,7 @@ public class GenericNCReader
       group.varDims = new int[newRank];
       int index = 0;
       for (int i = 0; i < rank; i++) {
-        if (group.expandDims[i] == 0) 
+        if (group.expandDims[i] == -1)
           group.varDims[index++] = axes[i].getShape()[0];
       } // for
 
@@ -395,7 +400,7 @@ public class GenericNCReader
 
     return (variableNameArray);
 
-  } // getVariableNames
+  } // getVariableNamesInGroup
 
   ////////////////////////////////////////////////////////////
 
@@ -440,16 +445,73 @@ public class GenericNCReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the variable name minus any array section. */
-  private String getVariableName (String name) {
+  /** 
+   * Gets the base variable name without any expanded axes values.
+   *
+   * @param name the variable name in expanded form, for example sst__T0_x_x, 
+   * which would be sst with a time axis, index 0, and lat/lon axes.
+   *
+   * @return the root variable name before any "__" delimiter.
+   */
+  private String getBaseVariableName (String name) {
 
     return (name.replaceFirst ("^(.*)" + START + ".*" + END + "$", "$1"));
     
-  } // getVariableName
+  } // getBaseVariableName
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the array section from a variable name or null if none exists. */
+  /**
+   * Gets the start index array for the expanded name.
+   *
+   * @param name the expanded variable name, for example sst__T0_x_x, which
+   * would be sst with a time axis, index 0, and lat/lon axes.
+   *
+   * @return start the starting coordinates to read data from for the expanded
+   * name, the same rank as the NetCDF variable, with values
+   * filled in for all dimensions _except_ row and column, which have
+   * -1 as the value, or null if the expanded variable name contains no
+   * array information.
+   */
+  private int[] getStartIndexArray (String name) {
+  
+    int[] start = null;
+  
+    // Get section text
+    // ----------------
+    String section = name.replaceFirst ("^.*" + START + "(.*)" + END + "$", 
+      "$1");
+    
+    // Expand text to start specification
+    // ----------------------------------
+    if (!section.equals (name)) {
+      VariableGroup group = groupMap.get (name);
+      start = Arrays.copyOf (group.expandDims, group.expandDims.length);
+      String[] sectionArray = section.split (DELIMIT);
+      if (sectionArray.length != start.length)
+        throw new RuntimeException ("Mismatch in array lengths");
+      for (int i = 0; i < sectionArray.length; i++) {
+        if (!sectionArray[i].equals (EXPAND))
+          start[i] = Integer.parseInt (sectionArray[i].replaceAll ("[^0-9]", ""));
+      } // for
+    } // if
+
+    return (start);
+
+  } // getStartIndexArray
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the array section from a variable name or no array section is
+   * appended to the variable name.
+   *
+   * @param name the expanded variable name, for example sst__T0_x_x, which
+   * would be sst with a time axis, index 0, and lat/lon axes.
+   *
+   * @return the array section resulting from the expanded variable name,
+   * for example "0:0,0:,0:" for the above example.
+   */
   private String getArraySection (String name) {
 
     // Get section text
@@ -491,7 +553,8 @@ public class GenericNCReader
 
     // Access variable
     // ---------------
-    Variable var = dataset.findVariable (getVariableName (variables[index]));
+    String baseName = getBaseVariableName (variables[index]);
+    Variable var = dataset.getReferencedFile().findVariable (baseName);
     if (var == null)
       throw new IOException ("Cannot access variable at index " + index);
     VariableGroup group = groupMap.get (variables[index]);
@@ -504,15 +567,71 @@ public class GenericNCReader
       String name = variables[index];
       int rank = var.getRank() - group.extraDims;
       Class varClass = var.getDataType().getPrimitiveClassType();
-      boolean isUnsigned;
-      if (varClass.equals (Double.TYPE) || varClass.equals (Float.TYPE))
-        isUnsigned = false;
-      else
-        isUnsigned = var.isUnsigned();
-    
+      boolean isUnsigned = var.isUnsigned();
+
       // Create fake data array
       // ----------------------
       Object data = Array.newInstance (varClass, 1);
+
+      // Get calibration
+      // ---------------
+      double[] scaling;
+      try {
+        Number scale = (Number) getAttribute (var, "scale_factor");
+        Number offset = (Number) getAttribute (var, "add_offset");
+        scaling = new double[] {scale.doubleValue(), offset.doubleValue()};
+        /**
+         * We re-arrange the CF scaling conventions here into HDF:
+         *
+         *   y = a'x + b'      (CF)
+         *   y = (x - b)*a     (HDF)
+         *   => a = a'
+         *      b = -b'/a'
+         */
+        scaling[1] = -scaling[1]/scaling[0];
+      } // try
+      catch (Exception e) {
+        scaling = null;
+      } // catch
+
+      // Get missing value
+      // -----------------
+      Object missing;
+      try {
+        missing = getAttribute (var, "_FillValue");
+        if (missing == null) missing = getAttribute (var, "missing_value");
+      } // try
+      catch (Exception e) {
+        missing = null;
+      } // catch
+
+      // Convert missing value
+      // ---------------------
+      if (missing != null) {
+        Class missingClass;
+        try { 
+          missingClass = (Class) missing.getClass().getField (
+            "TYPE").get (missing);
+        } // try
+        catch (Exception e) {
+          throw new RuntimeException ("Cannot get missing value class");
+        } // catch
+        if (!missingClass.equals (varClass)) {
+          Number missingNumber = (Number) missing;
+          if (varClass.equals (Byte.TYPE))
+            missing = new Byte (missingNumber.byteValue());
+          else if (varClass.equals (Short.TYPE))
+            missing = new Short (missingNumber.shortValue());
+          else if (varClass.equals (Integer.TYPE))
+            missing = new Integer (missingNumber.intValue());
+          else if (varClass.equals (Float.TYPE))
+            missing = new Float (missingNumber.floatValue());
+          else if (varClass.equals (Double.TYPE))
+            missing = new Double (missingNumber.doubleValue());
+          else
+            throw new UnsupportedEncodingException ("Unsupported variable class");
+        } // if
+      } // if
 
       // Get data strings
       // ----------------
@@ -529,12 +648,6 @@ public class GenericNCReader
 
       // Try using format string
       // -----------------------         
-
-      // TODO: The problem here is that if there are no format
-      // strings or hints for what the accuracy of the data is,
-      // the format reverts to integer.  Probably the type should
-      // be used to determine the format.
-
       int digits = -1;
       if (!formatStr.equals ("")) {
         int dot = formatStr.indexOf ('.');
@@ -542,6 +655,23 @@ public class GenericNCReader
         if (dot != -1 && dot != formatStr.length()-1)
           digits = Character.digit (formatStr.charAt (dot+1), 10);
       } // if
+
+      // Try guessing from scaling factor
+      // --------------------------------
+      if (digits == -1 && scaling != null) {
+        double maxValue = 0;
+        if (varClass.equals (Byte.TYPE)) 
+          maxValue = Byte.MAX_VALUE*scaling[0];
+        else if (varClass.equals (Short.TYPE)) 
+          maxValue = Short.MAX_VALUE*scaling[0];
+        else if (varClass.equals (Integer.TYPE)) 
+          maxValue = Integer.MAX_VALUE*scaling[0];
+        else if (varClass.equals (Float.TYPE)) 
+          maxValue = Float.MAX_VALUE*scaling[0];
+        else if (varClass.equals (Double.TYPE)) 
+          maxValue = Double.MAX_VALUE*scaling[0];
+        digits = DataVariable.getDecimals (Double.toString (maxValue));
+      } // else if
 
       // Set fractional digits
       // ---------------------
@@ -557,11 +687,11 @@ public class GenericNCReader
       DataVariable dataVar;
       if (rank == 1) {
         dataVar = new Line (name, longName, units, varDims[0], data, format,
-          null, null);
+          scaling, missing);
       } // if
       else if (rank == 2) {
         dataVar = new Grid (name, longName, units, varDims[0], varDims[1], 
-          data, format, null, null);
+          data, format, scaling, missing);
       } // else if 
       else {
         throw new UnsupportedEncodingException ("Unsupported rank = " + rank +
@@ -590,32 +720,44 @@ public class GenericNCReader
     // Get a variable preview
     // ----------------------
     DataVariable dataVar = getPreview (index);
-
+    
     // Access variable
     // ---------------
-    Variable var = dataset.findVariable (getVariableName (variables[index]));
+    String baseName = getBaseVariableName (variables[index]);
+    Variable var = dataset.getReferencedFile().findVariable (baseName);
     if (var == null)
       throw new IOException ("Cannot access variable at index " + index);
     VariableGroup group = groupMap.get (variables[index]);
 
-    // Read data
-    // ---------
-    Object data;
-    if (group.extraDims == 0) 
-      data = var.read().getStorage();
+    // Create cached grid
+    // ------------------
+    if (dataVar instanceof Grid) {
+      int[] start = getStartIndexArray (variables[index]);
+      NCCachedGrid cachedGrid = new NCCachedGrid ((Grid) dataVar, this, baseName, start);
+      if (cachedGrid.getMaxTiles() < 2) cachedGrid.setMaxTiles (2);
+      dataVar = cachedGrid;
+    } // if
+
+    // Read full data
+    // --------------
     else {
-      try {
-        String section = getArraySection (variables[index]);
-        data = var.read (section).getStorage();
-      } // try
-      catch (InvalidRangeException e) {
-        throw new IOException ("Invalid array section in data read");
-      } // catch
+      Object data;
+      if (group.extraDims == 0)
+        data = var.read().getStorage();
+      else {
+        try {
+          String section = getArraySection (variables[index]);
+          data = var.read (section).getStorage();
+        } // try
+        catch (InvalidRangeException e) {
+          throw new IOException ("Invalid array section in data read");
+        } // catch
+      } // else
+      dataVar.setData (data);
     } // else
 
     // Return variable
     // ---------------
-    dataVar.setData (data);
     return (dataVar);
 
   } // getActualVariable
@@ -631,7 +773,7 @@ public class GenericNCReader
 
     // Check for mangled name
     // ----------------------
-    String actualVarName = getVariableName (varName);
+    String actualVarName = getBaseVariableName (varName);
     if (actualVarName.equals (varName))
       return (super.getGridSubset (varName, start, stride, length));
 
@@ -659,7 +801,7 @@ public class GenericNCReader
     int spatialIndex = 0;
     String[] sectionArray = section.split (",");
     for (int i = 0; i < sectionArray.length; i++) {
-      if (group.expandDims[i] == 0) {
+      if (group.expandDims[i] == -1) {
         sectionBuf.append (start[spatialIndex] + ":");
         sectionBuf.append (end[spatialIndex] + ":");
         sectionBuf.append (stride[spatialIndex] + "");

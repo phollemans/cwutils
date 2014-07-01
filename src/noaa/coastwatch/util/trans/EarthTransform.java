@@ -23,9 +23,14 @@
            - reworked getResolution() to be independent of dimension
            2006/05/26, PFH, modified to implement SpheroidConstants
            2006/05/28, PFH, moved getSpheroid() methods from GCTP class
+           2014/03/25, PFH
+           - Changes: Added get2DVersion()
+           - Issue: In some cases, we want to use 2D data locations and the code
+            assumes the transform is 2D.  But this is confusing, so we've added
+            the method to avoid having to cast to EarthTransform2D in user code.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -61,6 +66,18 @@ public abstract class EarthTransform
 
   /** Data location dimensions. */
   protected int[] dims;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets a version of this transform that can be used with 2D data
+   * locations.
+   *
+   * @since 3.3.1
+   *
+   * @return the 2D version of this transform.
+   */
+  public abstract EarthTransform2D get2DVersion ();
 
   ////////////////////////////////////////////////////////////
 

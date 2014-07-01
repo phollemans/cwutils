@@ -15,9 +15,13 @@
            2011/02/22, XL, fixed the popup message bug of "no parent window"
            2013/02/04, PFH, temporarily removed network file tabs
            2013/09/05, PFH, removed cwf extension from file filters
+           2014/03/31, PFH
+           - Changes: Updated to use new SolidBackground constructor
+           - Issue: The constructor for SolidBackground was throwing a
+             NullPointerException on construction.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -213,10 +217,7 @@ public class EarthDataChooser
     // Create null Earth view
     // ----------------------
     if (nullView == null) {
-      try { 
-        nullView = new SolidBackground (null, new int[] {1, 1}, 
-          Color.BLACK);
-      } // try
+      try { nullView = new SolidBackground (Color.BLACK); }
       catch (Exception e) {
         e.printStackTrace();
       } // catch

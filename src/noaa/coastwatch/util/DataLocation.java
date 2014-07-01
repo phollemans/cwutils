@@ -250,6 +250,8 @@ public class DataLocation
    * new array.
    *
    * @return the array of coordinate values, one per dimension.
+   *
+   * @since 3.3.1
    */
   public double[] getCoords (double[] coordsCopy) {
 
@@ -517,6 +519,8 @@ public class DataLocation
    * operation can only be applied to a 2D location.
    *
    * @param affine the affine transform to use.
+   *
+   * @since 3.3.1
    */
   public void transformInPlace (
     AffineTransform affine
@@ -684,6 +688,8 @@ public class DataLocation
    *
    * @see #isValid
    * @see #isInvalid
+   *
+   * @since 3.3.1
    */
   public void markInvalid () {
   

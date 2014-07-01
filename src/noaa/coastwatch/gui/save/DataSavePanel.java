@@ -10,9 +10,12 @@
            2006/11/09, PFH
            - changed write() to write(File)
            - added setVariables(List)
+           2014/03/25, PFH
+           - Changes: Changed to use getBounds() from getCorners()
+           - Issue: API was unclear.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -342,7 +345,7 @@ public abstract class DataSavePanel
 
     // Get truncated corners
     // ---------------------
-    DataLocation[] corners = view.getCorners();
+    DataLocation[] corners = view.getBounds();
     getTruncated (corners, upperLeft, dimensions);
 
     // Get bounds

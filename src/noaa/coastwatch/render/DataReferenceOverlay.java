@@ -5,10 +5,12 @@
            data view.
    AUTHOR: Peter Hollemans
      DATE: 2006/12/22
-  CHANGES: n/a
+  CHANGES: 2014/03/25, PFH
+           - Changes: Changed to use view.getBounds() from view.getCorners()
+           - Issue: API was unclear.
 
   CoastWatch Software Library and Utilities
-  Copyright 2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2006-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -251,7 +253,7 @@ public class DataReferenceOverlay
  
     // Compute row and column lines
     // ----------------------------
-    DataLocation[] corners = view.getCorners();
+    DataLocation[] corners = view.getBounds();
     double[] rows, cols;
     if (!manualLines) {
       int inc = getIncrementValue (corners);
