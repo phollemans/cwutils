@@ -25,7 +25,7 @@ import java.lang.annotation.*;
 /**
  * The Testable annotation can be used by any class that has a main
  * method that should be called to test the class methods.  The main
- * method should throw an error if the class fails testing.
+ * method should throw an error if the class fails testing. 
  *
  * @author Peter Hollemans
  * @since 3.3.1
