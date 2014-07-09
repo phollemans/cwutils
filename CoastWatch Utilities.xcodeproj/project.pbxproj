@@ -904,7 +904,6 @@
 		E96D8C57161661420009B833 /* Statistics.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = Statistics.java; sourceTree = "<group>"; };
 		E96D8C58161661420009B833 /* StrideLocationIterator.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = StrideLocationIterator.java; sourceTree = "<group>"; };
 		E96D8C59161661420009B833 /* SubsetGrid.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = SubsetGrid.java; sourceTree = "<group>"; };
-		E96D8C5A161661420009B833 /* TilingScheme.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TilingScheme.java; sourceTree = "<group>"; };
 		E96D8C5B161661420009B833 /* TimePeriod.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TimePeriod.java; sourceTree = "<group>"; };
 		E96D8C5D161661420009B833 /* DataProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DataProjection.java; sourceTree = "<group>"; };
 		E96D8C5E161661420009B833 /* Datum.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = Datum.java; sourceTree = "<group>"; };
@@ -934,6 +933,7 @@
 		E9721ED818B89BAD0073918D /* OrientationAffineFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = OrientationAffineFactory.java; sourceTree = "<group>"; };
 		E9875CC6161E652F00C423BB /* license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = license.txt; sourceTree = "<group>"; };
 		E9875CC7161E652F00C423BB /* tool_categories.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tool_categories.txt; sourceTree = "<group>"; };
+		E9A914421963860A00ABC12D /* GridAccessManager.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GridAccessManager.java; sourceTree = "<group>"; };
 		E9B50A141652F29C00D997D5 /* GeographicProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GeographicProjection.java; sourceTree = "<group>"; };
 		E9DD13B6184D6E1200139E22 /* areadirblock.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = areadirblock.xml; path = mcidas/areadirblock.xml; sourceTree = "<group>"; };
 		E9EA43041643B3BF006AD294 /* AlbersConicalEqualAreaProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = AlbersConicalEqualAreaProjection.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
@@ -966,6 +966,12 @@
 		E9EA43211649F228006AD294 /* InterruptedMollweideProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = InterruptedMollweideProjection.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9EA4323164A16EE006AD294 /* nad27sp */ = {isa = PBXFileReference; lastKnownFileType = file; path = nad27sp; sourceTree = "<group>"; };
 		E9EA4324164A16EE006AD294 /* nad83sp */ = {isa = PBXFileReference; lastKnownFileType = file; path = nad83sp; sourceTree = "<group>"; };
+		E9F1F3F519638010005494E6 /* TilingScheme.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TilingScheme.java; path = io/tile/TilingScheme.java; sourceTree = "<group>"; };
+		E9F1F3F619638108005494E6 /* TileSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileSource.java; path = io/tile/TileSource.java; sourceTree = "<group>"; };
+		E9F1F3F719638124005494E6 /* TileSink.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileSink.java; path = io/tile/TileSink.java; sourceTree = "<group>"; };
+		E9F1F3F819638144005494E6 /* TileDeliveryOperation.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileDeliveryOperation.java; path = io/tile/TileDeliveryOperation.java; sourceTree = "<group>"; };
+		E9F1F3FA1963817A005494E6 /* TileCache.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileCache.java; path = io/tile/TileCache.java; sourceTree = "<group>"; };
+		E9F1F3FD19638205005494E6 /* TileCacheManager.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileCacheManager.java; path = io/tile/TileCacheManager.java; sourceTree = "<group>"; };
 		E9F3ED8916C3398400E05633 /* NCCachedGrid.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = NCCachedGrid.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9F3ED8C16C89DDB00E05633 /* NCSD.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = NCSD.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 /* End PBXFileReference section */
@@ -2042,6 +2048,7 @@
 				E96D8BA8161661420009B833 /* SimpleParser.java */,
 				E96D8BA9161661420009B833 /* StallMonitor.java */,
 				E96D8BAA161661420009B833 /* TextWriter.java */,
+				E9F1F3F419637F2C005494E6 /* tile */,
 				E96D8BAB161661420009B833 /* TSHDFReader.java */,
 				E96D8BAC161661420009B833 /* WorldFileWriter.java */,
 			);
@@ -2253,6 +2260,7 @@
 				E96D8C3F161661420009B833 /* Function.java */,
 				E96D8C40161661420009B833 /* GCTP.java */,
 				E96D8C41161661420009B833 /* Grid.java */,
+				E9A914421963860A00ABC12D /* GridAccessManager.java */,
 				E96D8C42161661420009B833 /* GridResampler.java */,
 				E96D8C43161661420009B833 /* InverseGridResampler.java */,
 				E96D8C44161661420009B833 /* LagrangeInterpolator.java */,
@@ -2277,7 +2285,6 @@
 				E96D8C57161661420009B833 /* Statistics.java */,
 				E96D8C58161661420009B833 /* StrideLocationIterator.java */,
 				E96D8C59161661420009B833 /* SubsetGrid.java */,
-				E96D8C5A161661420009B833 /* TilingScheme.java */,
 				E96D8C5B161661420009B833 /* TimePeriod.java */,
 				E96D8C5C161661420009B833 /* trans */,
 				E96D8C71161661420009B833 /* UnitFactory.java */,
@@ -2362,6 +2369,20 @@
 			path = trans;
 			sourceTree = "<group>";
 		};
+		E9F1F3F419637F2C005494E6 /* tile */ = {
+			isa = PBXGroup;
+			children = (
+				E9F1F3F519638010005494E6 /* TilingScheme.java */,
+				E9F1F3F619638108005494E6 /* TileSource.java */,
+				E9F1F3F719638124005494E6 /* TileSink.java */,
+				E9F1F3F819638144005494E6 /* TileDeliveryOperation.java */,
+				E9F1F3FA1963817A005494E6 /* TileCache.java */,
+				E9F1F3FD19638205005494E6 /* TileCacheManager.java */,
+			);
+			name = tile;
+			path = ..;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
@@ -2371,7 +2392,8 @@
 			buildConfigurationList = E954908C161660FE00BFA76C /* Build configuration list for PBXLegacyTarget "CoastWatch Utilities" */;
 			buildPhases = (
 			);
-			buildToolPath = /usr/bin/ant;
+			buildToolPath = /opt/local/bin/ant;
+			buildWorkingDirectory = "";
 			dependencies = (
 			);
 			name = "CoastWatch Utilities";
@@ -2384,7 +2406,7 @@
 			buildConfigurationList = E96D8C78161662640009B833 /* Build configuration list for PBXLegacyTarget "Install" */;
 			buildPhases = (
 			);
-			buildToolPath = /usr/bin/ant;
+			buildToolPath = /opt/local/bin/ant;
 			buildWorkingDirectory = "";
 			dependencies = (
 			);
@@ -2398,7 +2420,7 @@
 			buildConfigurationList = E9875CC4161E236D00C423BB /* Build configuration list for PBXLegacyTarget "Prerelease Linux" */;
 			buildPhases = (
 			);
-			buildToolPath = /usr/bin/ant;
+			buildToolPath = /opt/local/bin/ant;
 			buildWorkingDirectory = "";
 			dependencies = (
 			);

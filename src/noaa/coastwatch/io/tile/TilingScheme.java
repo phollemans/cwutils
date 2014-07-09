@@ -6,16 +6,20 @@
      DATE: 2002/11/06
   CHANGES: 2002/12/04, PFH, added Cloneable interface to TilePosition
            2004/10/20, PFH, modified TilePosition.contains() for better speed
+           2014/07/01, PFH
+           - Changes: Moved Java class to new package and added extra methods
+             and unit testing code.
+           - Issue: Creating new package for tile-related I/O operations.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2002, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
 
 // Package
 // -------
-package noaa.coastwatch.util;
+package noaa.coastwatch.io.tile;
 
 // Imports
 // -------
@@ -62,15 +66,16 @@ import java.awt.*;
  * @author Peter Hollemans
  * @since 3.1.2
  */
+@noaa.coastwatch.test.Testable
 public class TilingScheme {
 
   // Constants
   // ---------
   /** Index of rows dimension. */
-  public final static int ROWS = Grid.ROWS;
+  public final static int ROWS = 0;
 
   /** Index of columns dimension. */
-  public final static int COLS = Grid.COLS;
+  public final static int COLS = 1;
 
   // Variables
   // ---------
@@ -133,24 +138,15 @@ public class TilingScheme {
    * @param pos the tile position.
    *
    * @return the tile dimensions at the specified position.
+   *
+   * @deprecated As of 3.3.1, use {@link TilePosition#getTileDimensions}.
    */
+   @Deprecated
   public int[] getTileDimensions (
     TilePosition pos
   ) {
 
-    // Get tile coords and dimensions
-    // ------------------------------
-    int[] coords = pos.getCoords();
-    int[] thisDims = (int[]) tileDims.clone();
-
-    // Check for last tile
-    // -------------------
-    if ((coords[ROWS]+1) * tileDims[ROWS] > dims[ROWS])
-      thisDims[ROWS] = dims[ROWS]%tileDims[ROWS];
-    if ((coords[COLS]+1) * tileDims[COLS] > dims[COLS])
-      thisDims[COLS] = dims[COLS]%tileDims[COLS];
-
-    return (thisDims);
+    return (pos.getDimensions());
 
   } // getTileDimensions
 
@@ -166,12 +162,22 @@ public class TilingScheme {
    *
    * @param row the data row coordinate.
    * @param col the data column coordinate.
+   *
+   * @throws IndexOutOfBoundsException if the coordinates do not reference
+   * a valid tile in the tiling scheme.
    */
   public TilePosition createTilePosition (
     int row,
     int col
   ) {
 
+    // Check coordinates
+    // -----------------
+      if (row < 0 || row >= dims[ROWS])
+        throw new IndexOutOfBoundsException ("Row index out of bounds: " + row);
+      else if (col < 0 || col >= dims[COLS])
+        throw new IndexOutOfBoundsException ("Column index out of bounds: " + col);
+    
     return (new TilePosition (row/tileDims[ROWS], col/tileDims[COLS]));
 
   } // createTilePosition
@@ -215,11 +221,21 @@ public class TilingScheme {
      * 
      * @param row the tile row coordinate.
      * @param col the tile column coordinate.
+     *
+     * @throws IndexOutOfBoundsException if the coordinates do not reference 
+     * a valid tile in the tiling scheme.
      */
     public TilePosition (
       int row,
       int col
     ) {
+
+      // Check coordinates
+      // -----------------
+      if (row < 0 || row >= tileCounts[ROWS])
+        throw new IndexOutOfBoundsException ("Row index out of bounds: " + row);
+      else if (col < 0 || col >= tileCounts[COLS])
+        throw new IndexOutOfBoundsException ("Column index out of bounds: " + col);
 
       // Initialize coordinates
       // ----------------------
@@ -231,8 +247,9 @@ public class TilingScheme {
       start[ROWS] = row*tileDims[ROWS];
       start[COLS] = col*tileDims[COLS];
       end = new int[2];
-      end[ROWS] = start[ROWS] + tileDims[ROWS] - 1;
-      end[COLS] = start[COLS] + tileDims[COLS] - 1;
+      int[] thisTileDims = getDimensions();
+      end[ROWS] = start[ROWS] + thisTileDims[ROWS] - 1;
+      end[COLS] = start[COLS] + thisTileDims[COLS] - 1;
 
     } // TilePosition constructor
 
@@ -243,8 +260,27 @@ public class TilingScheme {
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the dimensions of the tile at this position. */
-    public int[] getDimensions () { return (getTileDimensions (this)); }
+    /** 
+     * Gets the dimensions of the tile at this position.
+     *
+     * @return the dimensions of the tile at this position as [rows, columns].
+     */
+    public int[] getDimensions () {
+
+      // Get tile coords and dimensions
+      // ------------------------------
+      int[] thisDims = (int[]) tileDims.clone();
+
+      // Check for last tile
+      // -------------------
+      if ((coords[ROWS]+1) * tileDims[ROWS] > dims[ROWS])
+        thisDims[ROWS] = dims[ROWS]%tileDims[ROWS];
+      if ((coords[COLS]+1) * tileDims[COLS] > dims[COLS])
+        thisDims[COLS] = dims[COLS]%tileDims[COLS];
+
+      return (thisDims);
+
+    } // getDimensions
 
     ////////////////////////////////////////////////////////
 
@@ -308,6 +344,15 @@ public class TilingScheme {
       return (new TilePosition (coords[ROWS], coords[COLS]));
 
     } // clone
+
+    ////////////////////////////////////////////////////////
+
+    /**
+     * Gets the tiling scheme for this position.
+     *
+     * @return the tiling scheme associated with this position.
+     */
+    public TilingScheme getScheme () { return (TilingScheme.this); }
 
     ////////////////////////////////////////////////////////
 
@@ -487,7 +532,145 @@ public class TilingScheme {
 
     ////////////////////////////////////////////////////////
 
+    /**
+     * Gets the tiling scheme for this tile.
+     *
+     * @return the tiling scheme associated with this tile.
+     */
+    public TilingScheme getScheme () { return (TilingScheme.this); }
+
+    ////////////////////////////////////////////////////////
+
   } // Tile class
+
+  ////////////////////////////////////////////////////////////
+
+  /** Tests this class. */
+  public static void main (String[] argv) throws Exception {
+
+    System.out.print ("Testing TilingScheme ... ");
+
+    int[] globalDims = new int[] {100, 200};
+    int[] tileDims = new int[] {40, 40};
+    TilingScheme scheme = new TilingScheme (globalDims, tileDims);
+    
+    int[] testGlobalDims = scheme.getDimensions();
+    assert (testGlobalDims != globalDims);
+    assert (Arrays.equals (testGlobalDims, globalDims));
+    
+    int[] testTileDims = scheme.getTileDimensions();
+    assert (testTileDims != tileDims);
+    assert (Arrays.equals (testTileDims, tileDims));
+
+    int[] tileCounts = scheme.getTileCounts();
+    assert (tileCounts[ROWS] == 3);
+    assert (tileCounts[COLS] == 5);
+
+    TilePosition pos = scheme.createTilePosition (85, 30);
+    int[] posCoords = pos.getCoords();
+    assert (posCoords[ROWS] == 2);
+    assert (posCoords[COLS] == 0);
+
+    boolean isException0 = false;
+    try { scheme.createTilePosition (100, 0); }
+    catch (IndexOutOfBoundsException e) { isException0 = true; }
+    assert (isException0);
+
+    System.out.println ("OK");
+
+    System.out.print ("Testing TilePosition ... ");
+
+    TilePosition pos1 = scheme.new TilePosition (1, 2);
+    int[] pos1Coords = pos1.getCoords();
+    assert (pos1Coords[ROWS] == 1);
+    assert (pos1Coords[COLS] == 2);
+    
+    int[] testTileDims2 = scheme.new TilePosition (0, 0).getDimensions();
+    assert (testTileDims2[ROWS] == 40);
+    assert (testTileDims2[COLS] == 40);
+
+    int[] testTileDims3 = scheme.new TilePosition (2, 0).getDimensions();
+    assert (testTileDims3[ROWS] == 20);
+    assert (testTileDims3[COLS] == 40);
+
+    int[] testTileDims4 = scheme.new TilePosition (0, 4).getDimensions();
+    assert (testTileDims4[ROWS] == 40);
+    assert (testTileDims4[COLS] == 40);
+
+    TilePosition pos2 = scheme.new TilePosition (1, 2);
+    TilePosition pos3 = scheme.new TilePosition (2, 2);
+    assert (pos1.hashCode() == pos2.hashCode());
+    assert (pos1.hashCode() != pos3.hashCode());
+    
+    assert (pos.contains (82, 5));
+    assert (!pos.contains (79, 5));
+    
+    assert (pos1.equals (pos2));
+    assert (!pos1.equals (pos3));
+    TilePosition pos4 = (TilePosition) pos2.clone();
+    assert (pos4.equals (pos2));
+    
+    assert (pos1.getScheme() == scheme);
+
+    boolean isException = false;
+    try { scheme.new TilePosition (0, 5); }
+    catch (IndexOutOfBoundsException e) { isException = true; }
+    assert (isException);
+
+    System.out.println ("OK");
+    
+    System.out.print ("Testing Tile ... ");
+    
+    Object data = new Integer (38);
+    Tile tile = scheme.new Tile (pos, data);
+    assert (tile.getData().equals (data));
+    tile.setData (null);
+    assert (tile.getData() == null);
+    assert (Arrays.equals (tile.getDimensions(), pos.getDimensions()));
+    assert (tile.getPosition().equals (pos));
+    assert (!tile.getDirty());
+    tile.setDirty (true);
+    assert (tile.getDirty());
+    tile.setDirty (false);
+    assert (!tile.getDirty());
+    
+    /*
+     *     0    1    2    3    4
+     *   +----+----+----+----+----+  \
+     * 0 |    |    |    |    |    |  |  40
+     *   |    |    |    |    |    |  |
+     *   +----+----+----+----+----+  X
+     * 1 |    |    |    |    |    |  |  40
+     *   |    |    |    |    |    |  |
+     *   +----+----+----+----+----+  X
+     * 2 |    |    |    |    |    |  |  20
+     *   |    |    |    |    |    |  /
+     *
+     *   \----X----X----X----X----/
+     *     40   40   40   40   40
+     *
+     *  (85, 30) --> tile (2, 0)
+     *  In coords of tile (2, 0), (85, 30) - (80, 0) = (5, 30)
+     *  Index of (5, 30) = 5*40 + 30 = 230
+     *
+     *  Rectangle of tile (2, 0) = (x, y, width, height) = (0, 80, 40, 20)
+     */
+    assert (tile.getIndex (85, 30) == 230);
+    
+    Rectangle rect = tile.getRectangle();
+    assert (rect.x == 0);
+    assert (rect.y == 80);
+    assert (rect.width == 40);
+    assert (rect.height == 20);
+
+    assert (tile.hasPosition (pos));
+    assert (!tile.hasPosition (pos1));
+    
+    assert (tile.getScheme() == scheme);
+    
+    System.out.println ("OK");
+  
+  } // main
 
   ////////////////////////////////////////////////////////////
 
