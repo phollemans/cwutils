@@ -141,7 +141,7 @@ public class TilingScheme {
    *
    * @deprecated As of 3.3.1, use {@link TilePosition#getTileDimensions}.
    */
-   @Deprecated
+  @Deprecated
   public int[] getTileDimensions (
     TilePosition pos
   ) {
@@ -207,7 +207,7 @@ public class TilingScheme {
 
     ////////////////////////////////////////////////////////
 
-    /** Converts this tile position to a string. */
+    @Override
     public String toString () {
 
       return ("TilePosition[" + coords[ROWS] + "," + coords[COLS] + "]");
@@ -284,7 +284,7 @@ public class TilingScheme {
 
     ////////////////////////////////////////////////////////
 
-    /** Creates a hash code based on the tile position coordinates. */
+    @Override
     public int hashCode () {
 
       return (coords[ROWS]*tileCounts[COLS] + coords[COLS]);
@@ -316,7 +316,7 @@ public class TilingScheme {
 
     ////////////////////////////////////////////////////////
 
-    /** Checks for equality of tile position coordinates. */
+    @Override
     public boolean equals (
       Object o
     ) {
@@ -339,6 +339,7 @@ public class TilingScheme {
 
     ////////////////////////////////////////////////////////
 
+    @Override
     public Object clone () {
 
       return (new TilePosition (coords[ROWS], coords[COLS]));
@@ -424,7 +425,7 @@ public class TilingScheme {
 
     ////////////////////////////////////////////////////////
 
-    /** Converts this tile to a string. */
+    @Override
     public String toString () {
 
       String str = "Tile[";
@@ -548,6 +549,22 @@ public class TilingScheme {
   /** Tests this class. */
   public static void main (String[] argv) throws Exception {
 
+    /*
+     *     0    1    2    3    4
+     *   +----+----+----+----+----+  \
+     * 0 |    |    |    |    |    |  |  40
+     *   |    |    |    |    |    |  |
+     *   +----+----+----+----+----+  X
+     * 1 |    |    |    |    |    |  |  40
+     *   |    |    |    |    |    |  |
+     *   +----+----+----+----+----+  X
+     * 2 |    |    |    |    |    |  |  20
+     *   |    |    |    |    |    |  /
+     *
+     *   \----X----X----X----X----/
+     *     40   40   40   40   40
+     */
+    
     System.out.print ("Testing TilingScheme ... ");
 
     int[] globalDims = new int[] {100, 200};
@@ -604,7 +621,7 @@ public class TilingScheme {
     
     assert (pos.contains (82, 5));
     assert (!pos.contains (79, 5));
-    
+
     assert (pos1.equals (pos2));
     assert (!pos1.equals (pos3));
     TilePosition pos4 = (TilePosition) pos2.clone();

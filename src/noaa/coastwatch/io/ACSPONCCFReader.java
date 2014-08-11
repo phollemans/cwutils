@@ -7,10 +7,24 @@
   CHANGES: 2013/02/12, PFH, added support for cached grids to getActualVariable
            2013/05/13, PFH, fixed date parsing
            2014/01/25, PFH
-           - changes: added more strict check for ACSPO-specific attributes
-           - issue: Lucas Moxey reported that recognizing some types of CF
+           - Changes: added more strict check for ACSPO-specific attributes
+           - Issue: Lucas Moxey reported that recognizing some types of CF
              data was failing, and it was because this reader was being used
-             rather than the generic NetCDF reader
+             rather than the generic NetCDF reader.
+           2014/08/08, PFH
+           - Changes: Updated to use the TileCachedGrid and NCTileSource classes
+             in getActualVariable().  Also fixed missing value for unsigned byte
+             data variables.
+           - Issue: The NCCachedGrid class uses a per-variable cache of limited
+             flexibility, and we needed to be able to handle larger chunk sizes
+             than it allowed for with tracking of total cache size across variables.
+             The TileCachedGrid makes this possible.  We were getting chunk size
+             too large messages when reading certain files.  Also, the missing value for
+             byte data should only be applied to signed byte types, not unsigned
+             according to Yury Kihai via email July 8, 2014.  We were seeing 
+             issues with nighttime data where the cloud bitmask data for SST 
+             was showing clear in situations where it should have been masked,
+             because the value was being ignored as missing data.
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
@@ -34,6 +48,7 @@ import ucar.nc2.dataset.*;
 import ucar.ma2.*;
 import noaa.coastwatch.util.*;
 import noaa.coastwatch.util.trans.*;
+import noaa.coastwatch.io.tile.*;
 
 /** 
  * The <code>ACSPONCCFReader</code> class reads Java NetCDF accessible
@@ -257,8 +272,12 @@ public class ACSPONCCFReader
     Object missing;
     NumberFormat format;
     if (varClass.equals (Byte.TYPE)) {
-      String missingStr = (String) getAttribute ("missing_value_int1");
-      missing = new Byte ((byte) (Short.valueOf (missingStr) & 0xff));
+      if (isUnsigned)
+        missing = null;
+      else {
+        String missingStr = (String) getAttribute ("missing_value_int1");
+        missing = new Byte ((byte) (Short.valueOf (missingStr) & 0xff));
+      } // else
       format = new DecimalFormat ("0");
     } // if
     else if (varClass.equals (Float.TYPE)) {
@@ -297,8 +316,10 @@ public class ACSPONCCFReader
     // ------------------
     DataVariable dataVar;
     if (varPreview instanceof Grid) {
-      NCCachedGrid cachedGrid = new NCCachedGrid ((Grid) varPreview, this);
-      if (cachedGrid.getMaxTiles() < 2) cachedGrid.setMaxTiles (2);
+      Grid grid = (Grid) varPreview;
+      NCTileSource source = new NCTileSource (dataset.getReferencedFile(),
+        grid.getName(), Grid.ROWS, Grid.COLS, new int[] {0, 0});
+      TileCachedGrid cachedGrid = new TileCachedGrid (grid, source);
       dataVar = cachedGrid;
     } // if
     

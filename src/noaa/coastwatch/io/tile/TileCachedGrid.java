@@ -1,0 +1,339 @@
+////////////////////////////////////////////////////////////////////////
+/*
+     FILE: TileCachedGrid.java
+   AUTHOR: Peter Hollemans
+     DATE: 2014/08/01
+  CHANGES: n/a
+
+  CoastWatch Software Library and Utilities
+  Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
+
+*/
+////////////////////////////////////////////////////////////////////////
+
+// Package
+// -------
+package noaa.coastwatch.io.tile;
+
+// Imports
+// -------
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.List;
+import java.awt.*;
+import java.io.*;
+import noaa.coastwatch.util.*;
+import noaa.coastwatch.io.tile.TilingScheme.*;
+
+/**
+ * The <code>TileCachedGrid</code> class is a <code>Grid</code> whose data 
+ * is supplied from a {@link TileSource} and cached via the 
+ * {@link TileCacheManager}.
+ *
+ * @author Peter Hollemans
+ * @since 3.3.1
+ */
+@noaa.coastwatch.test.Testable
+public class TileCachedGrid
+  extends Grid {
+
+  // Variables
+  // ---------
+
+  /** The source to use for data. */
+  private TileSource source;
+
+  /** The last tile retrieved from the cache. */
+  private Tile lastTile;
+
+  /** The class for the elements in the data array for this variable. */
+  private Class dataClass;
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public Class getDataClass() { return (dataClass); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Constructs a new grid from the specified tile source.
+   *
+   * @param source the tile source to use for tiles.
+   */
+  public TileCachedGrid (
+    Grid grid,
+    TileSource source
+  ) {
+    
+    // Initialize
+    // ----------
+    super (grid);
+    this.source = source;
+    this.dataClass = grid.getDataClass();
+    /**
+     * We have to do this next line because we've overridden the getDataClass()
+     * method, and it's used in the constructor for DataVariable to detect
+     * the type of the array, so that an unsigned version of a type can
+     * be assigned.  But the data class doesn't get assigned until after the
+     * super constructor so we have to re-run the unsigned type setting here.
+     * This may be an indicator that the class structure should be improved, for
+     * example we could have a factory method create different classes for 
+     * signed versus unsigned so that we don't need to have such complex logic
+     * when getting data values in all cases, which would speed up value
+     * conversion. (TODO)
+     */
+    this.setUnsigned (grid.getUnsigned());
+
+  } // TileCachedGrid constructor
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public void setValue (
+    int index,
+    double val
+  ) {
+
+    throw new UnsupportedOperationException ("setValue() not supported");
+
+  } // setValue
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public double getValue (
+    int index
+  ) {
+
+    return (getValue (index/dims[COLS], index%dims[COLS]));
+
+  } // getValue
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public double getValue (
+    int row,
+    int col
+  ) {
+
+    // Check bounds
+    // ------------
+    if (row < 0 || row > dims[ROWS]-1 || col < 0 || col > dims[COLS]-1)
+      return (Double.NaN);
+
+    // Get tile
+    // --------
+    Tile tile;
+    if (lastTile != null && lastTile.contains (row, col))
+      tile = lastTile;
+    else {
+      TilePosition pos = source.getScheme().createTilePosition (row, col);
+      try { tile = TileCacheManager.getInstance().getTile (source, pos); }
+      catch (IOException e) {
+        throw new RuntimeException ("Error getting tile: " + e.getMessage());
+      } // catch
+      lastTile = tile;
+    } // else
+
+    return (getValue (tile.getIndex (row, col), tile.getData()));
+
+  } // getValue
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public Object getData () { return (getData (new int[] {0, 0}, dims)); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public Object getData (
+    int[] start,
+    int[] count
+  ) {
+
+    // Check subset
+    // ------------
+    if (!checkSubset (start, count))
+      throw new IndexOutOfBoundsException ("Invalid subset: " +
+      "start=" + Arrays.toString (start) +
+      ", " +
+      "count=" + Arrays.toString (count));
+
+    // Find required tiles
+    // -------------------
+    TilingScheme scheme = source.getScheme();
+    int[] minCoords = scheme.createTilePosition(start[ROWS],
+      start[COLS]).getCoords();
+    int[] maxCoords = scheme.createTilePosition(start[ROWS]+count[ROWS]-1,
+      start[COLS]+count[COLS]-1).getCoords();
+    List<TilePosition> tilePositionList = new ArrayList<TilePosition>();
+    for (int i = minCoords[ROWS]; i <= maxCoords[ROWS]; i++)
+      for (int j = minCoords[COLS]; j <= maxCoords[COLS]; j++)
+        tilePositionList.add (scheme.new TilePosition (i, j));
+
+    // Create subset array
+    // -------------------
+    Object subsetData = Array.newInstance (dataClass, count[ROWS]*count[COLS]);
+    Rectangle subsetRect = new Rectangle (start[COLS], start[ROWS], 
+      count[COLS], count[ROWS]);
+
+    // Loop over each tile
+    // -------------------
+    for (TilePosition pos : tilePositionList) {
+
+      // Get tile data
+      // -------------
+      Tile tile;
+      try { tile = TileCacheManager.getInstance().getTile (source, pos); }
+      catch (IOException e) {
+        throw new RuntimeException ("Error getting tile: " + e.getMessage());
+      } // catch
+      int[] thisTileDims = tile.getDimensions();
+      Object tileData = tile.getData();
+
+      // Get tile intersection
+      // ---------------------
+      Rectangle tileRect = tile.getRectangle();
+      Rectangle intersect = subsetRect.intersection (tileRect);
+
+      // Map tile data into subset data
+      // ------------------------------
+      for (int i = 0; i < intersect.height; i++) {
+        System.arraycopy (
+          tileData, (intersect.y-tileRect.y+i)*thisTileDims[COLS] + 
+          (intersect.x-tileRect.x),
+          subsetData, (intersect.y-subsetRect.y+i)*count[COLS] +
+          (intersect.x-subsetRect.x), intersect.width);
+      } // for
+
+    } // while
+ 
+    return (subsetData);
+
+  } // getData
+
+  ////////////////////////////////////////////////////////////
+
+  /** Tests this class. */
+  public static void main (String[] argv) throws Exception {
+
+    /*
+     *     0    1    2
+     *   +-----+-----+---  \
+     * 0 |     |     |     |  15
+     *   |     |     |     |
+     *   +-----+-----+---  X
+     * 1 |     |     |     |  15
+     *   |     |     |     |
+     *   +-----+-----+---  X
+     * 2 |     |     |     |  5
+     *   |     |     |     /
+     *
+     *   \-----X-----X--/
+     *     15   15   5
+     */
+     
+    int[] globalDims = new int[] {40, 40};
+    int[] tileDims = new int[] {15, 15};
+    final TilingScheme scheme = new TilingScheme (globalDims, tileDims);
+
+    final boolean[] throwError = new boolean[] {false};
+    TileSource source = new TileSource () {
+      public Tile readTile (
+        TilePosition pos
+      ) throws IOException {
+        Tile tile = null;
+        if (throwError[0]) { throw new IOException ("Tile read failed"); }
+        else {
+          int[] tileDims = pos.getDimensions();
+          int count = tileDims[0] * tileDims[1];
+          byte[] data = new byte[count];
+          Arrays.fill (data, (byte) pos.hashCode());
+          tile = scheme.new Tile (pos, data);
+        } // else
+        return (tile);
+      } // readtile
+      public Class getDataClass() { return (Byte.TYPE); }
+      public TilingScheme getScheme() { return (scheme); }
+    };
+
+    Grid grid = new Grid (
+      "test",
+      "test data",
+      "meters",
+      40,
+      40,
+      new byte[1],
+      new java.text.DecimalFormat ("000"),
+      null,
+      null);
+    grid.setUnsigned (true);
+
+    System.out.print ("Testing constructor, getDataClass() ... ");
+    TileCachedGrid cachedGrid = new TileCachedGrid (grid, source);
+    assert (cachedGrid.getDataClass() == Byte.TYPE);
+    assert (cachedGrid.getUnsigned());
+    System.out.println ("OK");
+    
+    System.out.print ("Testing getValue() ... ");
+    throwError[0] = true;
+    try {
+      cachedGrid.getValue (0, 0);
+      assert (false);
+    } // try
+    catch (RuntimeException e) { }
+    throwError[0] = false;
+    assert (cachedGrid.getValue (0, 0) == 0);
+    assert (cachedGrid.getValue (0, 15) == 1);
+    assert (cachedGrid.getValue (0, 30) == 2);
+    assert (cachedGrid.getValue (15, 0) == 3);
+    assert (cachedGrid.getValue (15, 15) == 4);
+    assert (cachedGrid.getValue (15, 30) == 5);
+    assert (cachedGrid.getValue (30, 0) == 6);
+    assert (cachedGrid.getValue (30, 15) == 7);
+    assert (cachedGrid.getValue (30, 30) == 8);
+    assert (Double.isNaN (cachedGrid.getValue (0, 40)));
+    assert (Double.isNaN (cachedGrid.getValue (-1, -1)));
+    System.out.println ("OK");
+    
+    System.out.print ("Testing setValue() ... ");
+    try {
+      cachedGrid.setValue (0, 0, 0);
+      assert (false);
+    } // try
+    catch (UnsupportedOperationException e) { }
+    System.out.println ("OK");
+
+    System.out.print ("Testing getData() ... ");
+    byte[] data;
+    try {
+      cachedGrid.getData (new int[] {-1, 0}, new int[] {40, 40});
+      assert (false);
+    } // try
+    catch (IndexOutOfBoundsException e) { }
+    try {
+      cachedGrid.getData (new int[] {1, 0}, new int[] {40, 40});
+      assert (false);
+    } // try
+    catch (IndexOutOfBoundsException e) { }
+    data = (byte[]) cachedGrid.getData();
+    for (int i = 0; i < 40; i++) {
+      for (int j = 0; j < 40; j++) {
+        int tileRow = i/15;
+        int tileCol = j/15;
+        assert (data[i*40 + j] == tileRow*3 + tileCol);
+      } // for
+    } // for
+    System.out.println ("OK");
+
+  } // main
+
+  ////////////////////////////////////////////////////////////
+
+
+} // TileCachedGrid class
+
+////////////////////////////////////////////////////////////////////////

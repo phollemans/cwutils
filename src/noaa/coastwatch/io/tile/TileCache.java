@@ -18,7 +18,6 @@ package noaa.coastwatch.io.tile;
 // Imports
 // -------
 import java.util.*;
-import org.javatuples.*;
 import noaa.coastwatch.io.tile.TilingScheme.*;
 
 /**
@@ -29,7 +28,8 @@ import noaa.coastwatch.io.tile.TilingScheme.*;
  * @author Peter Hollemans
  * @since 3.3.1
  */
-public interface TileCache extends Map<Pair<TileSource, TilePosition>, Tile> {
+public interface TileCache
+  extends Map<TileCacheKey, Tile> {
 
   ////////////////////////////////////////////////////////////
 

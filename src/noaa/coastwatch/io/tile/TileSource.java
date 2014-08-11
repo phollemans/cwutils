@@ -41,19 +41,14 @@ public interface TileSource {
    * @return the tile at the specified position.
    *
    * @throws IOException if an error occurred reading the tile data.
+   * @throws IllegalArgumentException if the position tiling scheme does not
+   * match this source.
+   *
+   * @see #getScheme
    */
   public Tile readTile (
     TilePosition pos
   ) throws IOException;
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Gets the data element class for tiles produced from this source.
-   *
-   * @return the Java class of the data array elements.
-   */
-  public Class getDataClass();
 
   ////////////////////////////////////////////////////////////
 

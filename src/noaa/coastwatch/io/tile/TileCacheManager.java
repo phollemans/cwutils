@@ -19,7 +19,6 @@ package noaa.coastwatch.io.tile;
 // -------
 import java.util.*;
 import java.io.*;
-import org.javatuples.*;
 import noaa.coastwatch.io.tile.TilingScheme.*;
 
 /**
@@ -32,43 +31,62 @@ import noaa.coastwatch.io.tile.TilingScheme.*;
 @noaa.coastwatch.test.Testable
 public class TileCacheManager {
 
+  // Constants
+  // ---------
+  
+  /** The default tile maximum cache size property (specified in Mb). */
+  public static final String DEFAULT_MAX_CACHE_SIZE_PROP = "cw.cache.size";
+
   // Variables
   // ---------
   
   /** The singleton instance of the manager. */
   private static TileCacheManager instance;
-  
+
+  /** The maximum cache size in bytes. */
+  private static int maxCacheSize;
+
   /** The cache used by this manager. */
   private TileCache cache;
 
   ////////////////////////////////////////////////////////////
 
   static {
-  
-    // from environment variables:
-    // set default cache class
-    // set default cache size
-    // set error stream
-  
-  
+
+    maxCacheSize = Integer.parseInt (System.getProperty (DEFAULT_MAX_CACHE_SIZE_PROP, "128"))*1024*1024;
+
   } // static
   
   ////////////////////////////////////////////////////////////
+  
+  /**
+   * Gets the cache managed by this instance.
+   *
+   * @return the managed tile cache.
+   */
+  TileCache getCache() { return (cache); }
+
+  ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the singleton instance of this class.
+   * Gets the singleton instance of this class using the default cache tile
+   * class.
    *
    * @return the singleton instance.
    */
   public static TileCacheManager getInstance () {
   
     if (instance == null) {
-      TileCache cache = null; // do something else here
-      // set cache size
+    
+    // TODO: Can we have some way of having a different tile cache by
+    // default?
+    
+      TileCache cache = new LRUTileCache();
+      cache.setCacheSizeLimit (maxCacheSize);
       instance = new TileCacheManager (cache);
     } // if
-
-   return (instance);
+    
+    return (instance);
   
   } // getInstance
   
@@ -108,7 +126,7 @@ public class TileCacheManager {
     TilePosition pos
   ) throws IOException {
 
-    Pair<TileSource, TilePosition> key = Pair.with (source, pos);
+    TileCacheKey key = new TileCacheKey (source, pos);
     Tile tile = cache.get (key);
     if (tile == null) {
       tile = source.readTile (pos);
@@ -132,7 +150,8 @@ public class TileCacheManager {
    * becoming available.  If some tiles are available immediately with no
    * delay, <code>Observer.update (Observable, Object)</code> is called with
    * a null value for the <code>Observable</code>, and the tile for the 
-   * <code>Object</code>.  For the remaining tiles that are only available
+   * <code>Object</code> for each tile (synchronously, before this method 
+   * exits).  For the remaining tiles that are only available
    * after a delay, <code>Observer.update (Observable, Object)</code> is called
    * with the {@link TileDeliveryOperation} as the Observable and the tile
    * for the <code>Object</code>.
@@ -161,7 +180,7 @@ public class TileCacheManager {
     // -------------------------------------------
     List<TilePosition> uncachedPositions = new ArrayList<TilePosition>();
     for (TilePosition pos : positions) {
-      Pair<TileSource, TilePosition> key = Pair.with (source, pos);
+      TileCacheKey key = new TileCacheKey (source, pos);
       Tile tile = cache.get (key);
       if (tile != null)
         observer.update (null, tile);
@@ -172,20 +191,21 @@ public class TileCacheManager {
     // Request remaining tiles
     // -----------------------
     TileDeliveryOperation op = new TileDeliveryOperation (source, uncachedPositions);
+    final Observer requestObserver = observer;
     op.addObserver (new Observer() {
       public void update (Observable o, Object arg) {
+        TileDeliveryOperation op = (TileDeliveryOperation) o;
         Tile tile = (Tile) arg;
-        if (arg == null) {
+        if (tile == null) {
           // print error??
         } // if
         else {
-          TileDeliveryOperation op = (TileDeliveryOperation) o;
-          Pair<TileSource, TilePosition> key = Pair.with (op.getSource(), tile.getPosition());
+          TileCacheKey key = new TileCacheKey (op.getSource(), tile.getPosition());
           cache.put (key, tile);
         } // else
+        requestObserver.update (op, tile);
       } // update
     });
-    op.addObserver (observer);
     op.start();
   
   } // requestTiles
@@ -201,10 +221,12 @@ public class TileCacheManager {
     TileSource source
   ) {
 
-    for (Pair<TileSource, TilePosition> key : cache.keySet()) {
-      if (key.getValue0() == source) cache.remove (key);
+    List<TileCacheKey> keysToRemove = new ArrayList<TileCacheKey>();
+    for (TileCacheKey key : cache.keySet()) {
+      if (key.getSource() == source) keysToRemove.add (key);
     } // for
-  
+    for (TileCacheKey key : keysToRemove) cache.remove (key);
+
   } // removeTilesForSource
 
   ////////////////////////////////////////////////////////////
@@ -212,12 +234,105 @@ public class TileCacheManager {
   /** Tests this class. */
   public static void main (String[] argv) throws Exception {
 
-    System.out.print ("Testing method ... ");
+    System.out.print ("Testing getInstance, getCache ... ");
+    TileCacheManager manager = TileCacheManager.getInstance();
+    assert (manager != null);
+    assert (manager.getCache() != null);
+    System.out.println ("OK");
 
+    /*
+     *     0    1    2    3    4
+     *   +----+----+----+----+----+  \
+     * 0 |    |    |    |    |    |  |  40
+     *   |    |    |    |    |    |  |
+     *   +----+----+----+----+----+  X
+     * 1 |    |    |    |    |    |  |  40
+     *   |    |    |    |    |    |  |
+     *   +----+----+----+----+----+  X
+     * 2 |    |    |    |    |    |  |  20
+     *   |    |    |    |    |    |  /
+     *
+     *   \----X----X----X----X----/
+     *     40   40   40   40   40
+     */
+     
+    final int[] globalDims = new int[] {100, 200};
+    int[] tileDims = new int[] {40, 40};
+    final TilingScheme scheme = new TilingScheme (globalDims, tileDims);
 
-    assert (true);
+    TileSource source = new TileSource () {
+      public Tile readTile (
+        TilePosition pos
+      ) throws IOException {
+        int[] tileDims = pos.getDimensions();
+        int count = tileDims[0] * tileDims[1];
+        byte[] data = new byte[count];
+        Arrays.fill (data, (byte) pos.hashCode());
+        Tile tile = scheme.new Tile (pos, data);
+        return (tile);
+      } // readtile
+      public Class getDataClass() { return (Byte.TYPE); }
+      public TilingScheme getScheme() { return (scheme); }
+    };
+    final TilePosition pos = scheme.new TilePosition (2, 3);
 
-    
+    System.out.print ("Testing getTile ... ");
+    Tile tile = manager.getTile (source, pos);
+    assert (tile.getPosition().equals (pos));
+    final TileCache cache = manager.getCache();
+    assert (cache.containsKey (new TileCacheKey (source, pos)));
+    assert (cache.containsValue (tile));
+    System.out.println ("OK");
+
+    System.out.print ("Testing requestTiles ... ");
+    int[] start = new int[] {0, 0};
+    int[] length = globalDims;
+    final int[] tilesObserved = new int[] {0};
+    final TileDeliveryOperation[] deliveryOp = new TileDeliveryOperation[] {null};
+    final boolean[] isCovered = new boolean[globalDims[0]*globalDims[1]];
+    manager.requestTiles (source, start, length, new Observer() {
+      public void update (Observable o, Object arg) {
+        TileDeliveryOperation op = (TileDeliveryOperation) o;
+        Tile tile = (Tile) arg;
+        assert (tile != null);
+        if (op == null) {
+          assert (tile.getPosition().equals (pos));
+        } // if
+        else {
+          deliveryOp[0] = op;
+          assert (!tile.getPosition().equals (pos));
+          assert (cache.containsKey (new TileCacheKey (op.getSource(), pos)));
+          assert (cache.containsValue (tile));
+        } // else
+        tilesObserved[0]++;
+        java.awt.Rectangle tileRect = tile.getRectangle();
+        int isCoveredCountBefore = 0;
+        for (boolean val : isCovered) if (val) isCoveredCountBefore++;
+        int[] dims = tile.getScheme().getDimensions();
+        for (int row = 0; row < tileRect.height; row++) {
+          for (int col = 0; col < tileRect.width; col++) {
+            isCovered[(row + tileRect.y)*globalDims[1] + (col + tileRect.x)] = true;
+          } // for
+        } // for
+        int isCoveredCountAfter = 0;
+        for (boolean val : isCovered) if (val) isCoveredCountAfter++;
+        assert ((isCoveredCountAfter - isCoveredCountBefore) == tileRect.width*tileRect.height);
+      } // update
+    });
+    while (deliveryOp[0] == null) Thread.currentThread().sleep (1000);
+    deliveryOp[0].waitUntilFinished();
+    int[] tileCounts = scheme.getTileCounts();
+    int tileCount = tileCounts[0]*tileCounts[1];
+    assert (tilesObserved[0] == tileCount);
+    for (boolean val : isCovered) assert (val);
+    System.out.println ("OK");
+
+    System.out.print ("Testing removeTilesForSource ... ");
+    assert (cache.size() == tileCount);
+    assert (cache.getCacheSize() == globalDims[0]*globalDims[1]);
+    manager.removeTilesForSource (source);
+    assert (cache.size() == 0);
+    assert (cache.getCacheSize() == 0);
     System.out.println ("OK");
   
   } // main

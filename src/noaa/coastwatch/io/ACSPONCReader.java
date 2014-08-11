@@ -7,9 +7,23 @@
   CHANGES: 2013/02/05, PFH, updated to handle latest v2.2 metadata
            2013/02/12, PFH, added support for cached grids to getActualVariable
            2013/05/13, PFH, fixed date parsing
-
+           2014/08/08, PFH
+           - Changes: Updated to use the TileCachedGrid and NCTileSource classes
+             in getActualVariable().  Also fixed missing value for unsigned byte
+             data variables.
+           - Issue: The NCCachedGrid class uses a per-variable cache of limited
+             flexibility, and we needed to be able to handle larger chunk sizes
+             than it allowed for with tracking of total cache size across variables.
+             The TileCachedGrid makes this possible.  We were getting chunk size
+             too large messages when reading certain files.  Also, the missing value for
+             byte data should only be applied to signed byte types, not unsigned
+             according to Yury Kihai via email July 8, 2014.  We were seeing 
+             issues with nighttime data where the cloud bitmask data for SST 
+             was showing clear in situations where it should have been masked,
+             because the value was being ignored as missing data.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -30,6 +44,7 @@ import ucar.nc2.dataset.*;
 import ucar.ma2.*;
 import noaa.coastwatch.util.*;
 import noaa.coastwatch.util.trans.*;
+import noaa.coastwatch.io.tile.*;
 
 /** 
  * The <code>ACSPONCReader</code> class reads Java NetCDF accessible
@@ -37,6 +52,7 @@ import noaa.coastwatch.util.trans.*;
  * the attribute and variable data.
  *
  * @author Xiaoming Liu
+ * @author Peter Hollemans
  * @since 3.3.0
  */
 public class ACSPONCReader
@@ -242,7 +258,10 @@ public class ACSPONCReader
     Object missing;
     NumberFormat format;
     if (varClass.equals (Byte.TYPE)) {
-      missing = getAttribute ("MISSING_VALUE_INT1");
+      if (isUnsigned)
+        missing = null;
+      else
+        missing = getAttribute ("MISSING_VALUE_INT1");
       format = new DecimalFormat ("0");
     } // if
     else if (varClass.equals (Short.TYPE)) {
@@ -289,12 +308,14 @@ public class ACSPONCReader
     // ----------------------
     DataVariable varPreview = getPreview (index);
 
-    // Create cached grid
-    // ------------------
+    // Create tile cached grid
+    // -----------------------
     DataVariable dataVar;
     if (varPreview instanceof Grid) {
-      NCCachedGrid cachedGrid = new NCCachedGrid ((Grid) varPreview, this);
-      if (cachedGrid.getMaxTiles() < 2) cachedGrid.setMaxTiles (2);
+      Grid grid = (Grid) varPreview;
+      NCTileSource source = new NCTileSource (dataset.getReferencedFile(),
+        grid.getName(), Grid.ROWS, Grid.COLS, new int[] {0, 0});
+      TileCachedGrid cachedGrid = new TileCachedGrid (grid, source);
       dataVar = cachedGrid;
     } // if
     
