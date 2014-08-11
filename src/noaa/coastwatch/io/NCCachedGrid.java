@@ -88,7 +88,7 @@ public class NCCachedGrid
 
   /**
    * Gets the data class.  This method overrides the parent because
-   * the data class for an HDF cached grid is not available from the
+   * the data class for an NC cached grid is not available from the
    * data array when needed in some cases.
    *
    * @return the Java class of the data array.
@@ -350,7 +350,7 @@ public class NCCachedGrid
      * because of the usage pattern, but that's not been verified.
      */
 
-    System.out.println ("name = " + ncVarName + ", section = " + section);
+    //System.out.println ("name = " + ncVarName + ", section = " + section);
 
 
 
