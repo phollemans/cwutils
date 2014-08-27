@@ -24,9 +24,13 @@
            2006/11/03, PFH, added setUnitsMap() for default units
            2010/03/15, PFH, added getCoordinateSystems()
            2012/12/04, PFH, added canUpdateNavigation()
+           2014/08/26, PFH
+           - Changes: Cleaned up implementation of finalize() to call
+             super no matter what happens.
+           - Issue: The original finalize wasn't written correctly.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -437,10 +441,11 @@ public abstract class EarthDataReader {
   /**
    * Closes the resources associated with the data source.
    */
-  protected void finalize () {
+  @Override
+  protected void finalize () throws Throwable {
 
     try { close(); }
-    catch (Exception e) { } 
+    finally { super.finalize(); }
 
   } // finalize
 

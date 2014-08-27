@@ -41,7 +41,13 @@
              not fully implemented.  The fix is to re-arrange the scaling factor
              and offset when reading CF data and then pass in the re-arranged
              scaling to the data variable constructor.
-
+           2014/08/26, PFH
+           - Changes: Added dispose() method.
+           - Issue: We added a dispose() method at the DataVariable level to
+             better handle disposing of resources, rather than relying on 
+             finalize() which is inherently unsafe because there is no guarantee
+             that it will ever be called by the VM.
+ 
   CoastWatch Software Library and Utilities
   Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
@@ -1035,6 +1041,15 @@ public abstract class DataVariable
 
   /** Gets a string representation of this variable. */
   public String toString () { return (name); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Disposes of any resources used by this variable prior to being
+   * finalized.  This method does nothing at this level, but may be
+   * overridden in the subclass to release resources.
+   */
+  public void dispose () { }
 
   ////////////////////////////////////////////////////////////
 

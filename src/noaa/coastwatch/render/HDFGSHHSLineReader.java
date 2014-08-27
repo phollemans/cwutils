@@ -4,10 +4,13 @@
   PURPOSE: To provide GSHHS line data from HDF data files.
    AUTHOR: Peter Hollemans
      DATE: 2006/06/26
-  CHANGES: n/a
-
+  CHANGES: 2014/08/26, PFH
+           - Changes: Cleaned up implementation of finalize() to call
+             super no matter what happens.
+           - Issue: The original finalize wasn't written correctly.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -186,14 +189,20 @@ public class HDFGSHHSLineReader
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void finalize () throws Throwable {
 
-    HDFLibrary.SDendaccess (segmentLevelID);
-    HDFLibrary.SDendaccess (segmentPointsID);
-    HDFLibrary.SDendaccess (dxID);
-    HDFLibrary.SDendaccess (dyID);
-    HDFLibrary.SDend (sdID);
-
+    try {
+      HDFLibrary.SDendaccess (segmentLevelID);
+      HDFLibrary.SDendaccess (segmentPointsID);
+      HDFLibrary.SDendaccess (dxID);
+      HDFLibrary.SDendaccess (dyID);
+      HDFLibrary.SDend (sdID);
+    } // try
+    finally {
+      super.finalize();
+    } // finally
+    
   } // finalize
 
   ////////////////////////////////////////////////////////////

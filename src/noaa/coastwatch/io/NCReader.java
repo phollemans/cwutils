@@ -9,9 +9,15 @@
              getVariablesForSystem()
            2013/02/10, PFH, added NCSD interface and methods
            2013/06/21, PFH, updated to use Variable.getShortName()
+           2014/08/26, PFH
+           - Changes: Updated to call dispose() on data variables when closing.
+           - Issue: We added a dispose() method at the DataVariable level to
+             better handle disposing of resources, rather than relying on 
+             finalize() which is inherently unsafe because there is no guarantee
+             that it will ever be called by the VM.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -48,10 +54,10 @@ public abstract class NCReader
   protected NetcdfDataset dataset;
 
   /** The cache of network datasets. */
-  private static Map datasetCache = new HashMap();
+  private static Map<String, NetcdfDataset> datasetCache = new HashMap<String, NetcdfDataset>();
 
   /** The cache of variables. */
-  private Map variableCache = new HashMap();
+  private Map<String, DataVariable> variableCache = new HashMap<String, DataVariable>();
 
   /** The network flag, true if this dataset is network-connected. */
   private boolean isNetwork;
@@ -83,7 +89,7 @@ public abstract class NCReader
     // --------------------
     isNetwork = name.startsWith ("http://");
     if (isNetwork) {
-      dataset = (NetcdfDataset) datasetCache.get (name);
+      dataset = datasetCache.get (name);
       if (dataset == null) {
         dataset = NetcdfDataset.openDataset (name);
         datasetCache.put (name, dataset);
@@ -270,7 +276,7 @@ public abstract class NCReader
 
     // Get cached variable
     // -------------------
-    DataVariable dataVar = (DataVariable) variableCache.get (variables[index]);
+    DataVariable dataVar = variableCache.get (variables[index]);
 
     // Insert into cache if not found
     // ------------------------------
@@ -288,13 +294,13 @@ public abstract class NCReader
   /** Closes the reader. */
   public void close () throws IOException {
 
-    // Don't close network datasets (they're cached)
-    // ---------------------------------------------
-    if (isNetwork) return;
-
-    // But do close local datasets
-    // ---------------------------
-    dataset.close();
+    // Close local datasets
+    // --------------------
+    if (!isNetwork) {
+      dataset.close();
+      for (DataVariable dataVar : variableCache.values())
+        dataVar.dispose();
+    } // if
 
   } // close
 

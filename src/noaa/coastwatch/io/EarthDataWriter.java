@@ -10,9 +10,13 @@
            2004/03/23, PFH, modified to use ArrayList rather than Vector
            2004/05/06, PFH, added tracking of flush progress
            2004/09/09, PFH, renamed SatelliteDataWriter to EarthDataWriter
+           2014/08/26, PFH
+           - Changes: Cleaned up implementation of finalize() to call
+             super no matter what happens.
+           - Issue: The original finalize wasn't written correctly.
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -196,10 +200,11 @@ public abstract class EarthDataWriter {
   /**
    * Closes the resources associated with the data destination.
    */
-  protected void finalize () {
+  @Override
+  protected void finalize () throws Throwable {
 
-    try { close (); }
-    catch (Exception e) { }
+    try { close(); }
+    finally { super.finalize(); }
 
   } // finalize
 

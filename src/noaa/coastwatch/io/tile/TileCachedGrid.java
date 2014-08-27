@@ -3,7 +3,14 @@
      FILE: TileCachedGrid.java
    AUTHOR: Peter Hollemans
      DATE: 2014/08/01
-  CHANGES: n/a
+  CHANGES: 2014/08/26, PFH
+           - Changes: Implemented dispose() method.
+           - Issue: We added a dispose() method at the DataVariable level to
+             better handle disposing of resources, rather than relying on 
+             finalize() which is inherently unsafe because there is no guarantee
+             that it will ever be called by the VM.  In this case we needed
+             to remove tiles from the cache for this grid, when the tiles are 
+             known to no longer be needed.
 
   CoastWatch Software Library and Utilities
   Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
@@ -53,6 +60,16 @@ public class TileCachedGrid
 
   @Override
   public Class getDataClass() { return (dataClass); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public void dispose () {
+  
+    TileCacheManager.getInstance().removeTilesForSource (source);
+    super.dispose();
+  
+  } // dispose
 
   ////////////////////////////////////////////////////////////
 
@@ -327,6 +344,12 @@ public class TileCachedGrid
         assert (data[i*40 + j] == tileRow*3 + tileCol);
       } // for
     } // for
+    System.out.println ("OK");
+    
+    System.out.print ("Testing dispose() ... ");
+    assert (TileCacheManager.getInstance().getCache().getCacheSize() != 0);
+    cachedGrid.dispose();
+    assert (TileCacheManager.getInstance().getCache().getCacheSize() == 0);
     System.out.println ("OK");
 
   } // main
