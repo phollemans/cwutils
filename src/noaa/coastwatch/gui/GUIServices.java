@@ -27,9 +27,15 @@
            2006/11/08, PFH, changed default position of OK button
            2011/05/16, XL, added the local clipboard
            2013/02/22, PFH, updated to supply Aqua help button
+           2014/08/11, PFH
+           - Changes: Added getPlatformDefaultDirectory() method.
+           - Issue: Different platforms use different locations to
+             open the initial directory for a file chooser.  We wanted
+             to have a consistent way to deliver this directory to
+             user code opening new file choosers.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -133,9 +139,23 @@ public class GUIServices {
 
     // Get current directory
     // ---------------------
+    userDir = getPlatformDefaultDirectory();
+
+  } // static
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the platform default directory for opening new files.
+   *
+   * @return the platform default directory or null if not available.
+   */
+  public static File getPlatformDefaultDirectory () {
+  
+    File dir = null;
     try {
       String dirProperty = (IS_MAC || IS_WIN ? "user.home" : "user.dir");
-      userDir = new File (dirProperty);
+      dir = new File (dirProperty);
     } // try
     catch (SecurityException e) {
       /*
@@ -147,8 +167,10 @@ public class GUIServices {
        * the userDir as null.
        */
     } // catch
+  
+    return (dir);
 
-  } // static
+  } // getPlatformDefaultDirectory
 
   ////////////////////////////////////////////////////////////
 

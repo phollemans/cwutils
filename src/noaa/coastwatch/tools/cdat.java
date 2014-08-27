@@ -32,9 +32,14 @@
            2007/12/21, PFH, slightly increased frame size
            2011/05/16, XL, added menu items to save and load profiles of color 
                            enhancement information and overlays
+           2014/08/11, PFH
+           - Changes: Added command line parameter for window geometry.  Cleaned
+             up profile load/save code.
+           - Issue: We had a user feature request to be able to set the window 
+             geometry.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-20011, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -122,6 +127,10 @@ import jargs.gnu.CmdLineParser.*;
  *   <dd>Shows the splash window on startup.  The splash window
  *   shows the version, author, and web site information.</dd>
  *
+ *   <dt>-g, --geometry=WxH</dt>
+ *   <dd>The window geometry width and height in pixels.  The
+ *   default is 900x700.</dd>
+ *
  *   <dt>--version</dt>
  *
  *   <dd>Prints the software version.</dd>
@@ -182,8 +191,10 @@ public final class cdat
   /** The Tools/Preferences menu command. */
   private static final String PREFS_COMMAND = "Preferences";
   
-  /** The save/load profiles menu command. */
+  /** The Tools/Profile/Save Profile menu command. **/
   private static final String SAVE_PROFILE_COMMAND = "Save Profile";
+
+  /** The Tools/Profile/Load Profile menu command. **/
   private static final String LOAD_PROFILE_COMMAND = "Load Profile";
 
   /** The Tools/Navigation Analysis menu command. */
@@ -206,8 +217,8 @@ public final class cdat
   /** The help index file. */
   private static final String HELP_INDEX = "cdat_index.html";
 
-  /** The application window size. */
-  private static final Dimension FRAME_SIZE = new Dimension (900, 700);
+  /** The default application window size. */
+  private static final String DEFAULT_FRAME_SIZE = "900x700";
 
   // Variables
   // ---------
@@ -236,15 +247,16 @@ public final class cdat
   /** The full screen item. */
   private JMenuItem fullScreenItem;
   
-  /** The menu item for save profiles. */
+  /** The save profile item. */
   private JMenuItem saveProfileItem;
   
-  /** The menu item for load profiles. */
+  /** The load profile item. */
   private JMenuItem loadProfileItem;
 
   /** The handler for file drop operations. */
   private FileTransferHandler dropHandler;
   
+  /** The file chooser for profile load/save. */
   private JFileChooser profileChooser;
 
   /** The help index URL. */
@@ -311,7 +323,7 @@ public final class cdat
       fileMenu.addSeparator();
       menuItem = new JMenuItem (QUIT_COMMAND);
       menuItem.setMnemonic (KeyEvent.VK_Q);
-      menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_Q,keymask));
+      menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_Q, keymask));
       menuItem.addActionListener (fileListener); 
       fileMenu.add (menuItem);
     } // if
@@ -323,21 +335,27 @@ public final class cdat
     menuBar.add (toolsMenu);
 
     ToolsMenuListener toolsListener = new ToolsMenuListener();
-    menuItem = new JMenuItem (PREFS_COMMAND, 
-      GUIServices.getIcon ("menu.prefs"));
+    menuItem = new JMenuItem (PREFS_COMMAND, GUIServices.getIcon ("menu.prefs"));
     menuItem.setMnemonic (KeyEvent.VK_P);
-    menuItem.addActionListener (toolsListener); 
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_COMMA, keymask));
+    menuItem.addActionListener (toolsListener);
     toolsMenu.add (menuItem);
     
     JMenu submenu = new JMenu ("Profile");
-    menuItem = saveProfileItem = new JMenuItem (SAVE_PROFILE_COMMAND);
-    menuItem.addActionListener (toolsListener); 
-    submenu.add (menuItem);
-    menuItem = loadProfileItem = new JMenuItem (LOAD_PROFILE_COMMAND);
-    menuItem.addActionListener (toolsListener); 
-    submenu.add (menuItem);
-    
+    menuItem.setMnemonic (KeyEvent.VK_R);
     toolsMenu.add (submenu);
+
+    menuItem = saveProfileItem = new JMenuItem (SAVE_PROFILE_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_S);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_S, keymask));
+    menuItem.addActionListener (toolsListener);
+    submenu.add (menuItem);
+
+    menuItem = loadProfileItem = new JMenuItem (LOAD_PROFILE_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_L);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_L, keymask));
+    menuItem.addActionListener (toolsListener);
+    submenu.add (menuItem);
 
     menuItem = fileInfoItem = new JMenuItem (INFO_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_I);
@@ -388,6 +406,14 @@ public final class cdat
     // Create view chooser
     // -------------------
     viewChooser = ViewOperationChooser.getInstance(); 
+
+    // Create profile chooser
+    // ----------------------
+    String currentDir = System.getProperty ("user.home");
+    profileChooser = new JFileChooser (GUIServices.getPlatformDefaultDirectory());
+    SimpleFileFilter filter = new SimpleFileFilter (
+      new String[] {"profile"}, "CDAT profile");
+    profileChooser.setFileFilter (filter);
 
     // Create tool bar
     // ---------------
@@ -488,47 +514,40 @@ public final class cdat
         ((EarthDataAnalysisPanel) 
           tabbedPane.getSelectedComponent()).showFullScreen();
       } // else if
-      // -------------------------------
+
+      // Save profile
+      // ------------
       else if (command.equals (SAVE_PROFILE_COMMAND)) {
-    	if(profileChooser == null){
-    		String currentDir = System.getProperty("user.home");
-    		profileChooser = new JFileChooser(currentDir);
-    		SimpleFileFilter filter = new SimpleFileFilter (
-    			      new String[] {"profile"}, "CDAT Profile");
-    		profileChooser.setFileFilter(filter);
-    	}
-    	int returnVal = profileChooser.showSaveDialog(cdat.this);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-        	File saveFile = profileChooser.getSelectedFile();
-        	try{
-        		((EarthDataAnalysisPanel) 
-    				tabbedPane.getSelectedComponent()).saveProfile(saveFile);
-        	}
-        	catch(Exception e){
-        		e.printStackTrace();
-        	}
-        }
+    	int returnVal = profileChooser.showSaveDialog (cdat.this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+          File saveFile = profileChooser.getSelectedFile();
+          try {
+            ((EarthDataAnalysisPanel)
+              tabbedPane.getSelectedComponent()).saveProfile (saveFile);
+          } // try
+          catch (IOException e) {
+            e.printStackTrace();
+          } // catch
+        } // if
       } // else if
-      // -------------------------------
+
+      // Load profile
+      // ------------
       else if (command.equals (LOAD_PROFILE_COMMAND)) {
-    	if(profileChooser == null){
-      		String currentDir = System.getProperty("user.home");
-      		profileChooser = new JFileChooser(currentDir);
-      		SimpleFileFilter filter = new SimpleFileFilter (
-  			      new String[] {"profile"}, "CDAT Profile");
-      		profileChooser.setFileFilter(filter);
-      	}
-      	int returnVal = profileChooser.showOpenDialog(cdat.this);
-        if(returnVal == JFileChooser.APPROVE_OPTION) {
-          	File loadFile = profileChooser.getSelectedFile();
-          	try{
-          		((EarthDataAnalysisPanel) 
-      				tabbedPane.getSelectedComponent()).loadProfile(loadFile);
-          	}
-          	catch(Exception e){
-          		e.printStackTrace();
-          	}
-        }
+    	int returnVal = profileChooser.showOpenDialog (cdat.this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+          File loadFile = profileChooser.getSelectedFile();
+          try {
+            ((EarthDataAnalysisPanel)
+              tabbedPane.getSelectedComponent()).loadProfile (loadFile);
+          } // try
+          catch (IOException e) {
+            e.printStackTrace();
+          } // catch
+          catch (ClassNotFoundException e) {
+            e.printStackTrace();
+          } // catch
+        } // if
       } // else if
 
     } // actionPerformed
@@ -721,7 +740,9 @@ public final class cdat
     CmdLineParser cmd = new CmdLineParser ();
     Option helpOpt = cmd.addBooleanOption ('h', "help");
     Option splashOpt = cmd.addBooleanOption ('s', "splash");
+    Option geometryOpt = cmd.addStringOption ('g', "geometry");
     Option versionOpt = cmd.addBooleanOption ("version");
+    Option memoryOpt = cmd.addBooleanOption ("memory");
     try { cmd.parse (argv); }
     catch (OptionException e) {
       System.err.println (PROG + ": " + e.getMessage());
@@ -757,6 +778,27 @@ public final class cdat
     // Set defaults
     // ------------
     final boolean splash = (cmd.getOptionValue (splashOpt) != null);
+    String geometry = (String) cmd.getOptionValue (geometryOpt);
+    if (geometry == null) geometry = DEFAULT_FRAME_SIZE;
+
+    // Get frame dimensions
+    // --------------------
+    String[] geometryArray = geometry.split ("x");
+    if (geometryArray.length != 2) {
+      System.err.println (PROG + ": Invalid geometry '" + geometry + "'");
+      System.exit (2);
+    } // if
+    int width = 0;
+    int height = 0;
+    try {
+      width = Integer.parseInt (geometryArray[0]);
+      height = Integer.parseInt (geometryArray[1]);
+    } // try
+    catch (NumberFormatException e) {
+      System.err.println (PROG + ": Error parsing geometry: " + e.getMessage());
+      System.exit (2);
+    } // catch
+    final Dimension frameSize = new Dimension (width, height);
 
     // Create and show splash screen
     // -----------------------------
@@ -780,7 +822,7 @@ public final class cdat
         frame.addWindowListener (new WindowMonitor());
         frame.addWindowListener (new UpdateAgent (PROG));
         frame.pack();
-        frame.setSize (FRAME_SIZE);
+        frame.setSize (frameSize);
         GUIServices.createErrorDialog (frame, "Error", 
           ToolServices.ERROR_INSTRUCTIONS);
         if (splash) ToolSplashWindow.hideSplash();
@@ -835,6 +877,13 @@ public final class cdat
       } // run
     });
 
+    // Start memory monitoring (hidden option)
+    // ---------------------------------------
+    Boolean memory = (Boolean) cmd.getOptionValue (memoryOpt);
+    if (memory != null && memory.booleanValue()) {
+      ToolServices.startMemoryMonitor();
+    } // if
+
   } // main
 
   ////////////////////////////////////////////////////////////
@@ -855,6 +904,7 @@ public final class cdat
 "Options:\n" +
 "  -h, --help                 Show this help message.\n" +
 "  -s, --splash               Show the splash screen.\n" +
+"  -g, --geometry=WxH         Set width and height of the window.\n" +
 "  --version                  Show version information.\n"
     );
 

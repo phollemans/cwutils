@@ -16,9 +16,14 @@
            2007/04/19, PFH, added version property reading
            2007/05/17, PFH, modified about dialog text to use HTML
            2013/02/05, PFH, updated copyright date in About message
+           2014/08/26, PFH
+           - Changes: Added startMemoryMonitor() method.
+           - Issue: We would like a way to monitor the memory usage of the tools
+             while they're running to check for issues such as the VM memory
+             running out, without having to resort to a profiling tool.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -276,6 +281,31 @@ public class ToolServices {
 
   /** Gets the current tool command line, or null if none has been set. */
   public static String getCommandLine () { return (commandLine); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Starts a memory monitor task that repeatedly outputs the status
+   * of memory usage to standard output until the VM exits.
+   */
+  public static void startMemoryMonitor () {
+
+    Timer timer = new Timer();
+    TimerTask task = new TimerTask() {
+      public void run() {
+        Runtime runtime = Runtime.getRuntime();
+        long bytesPerMegabyte = 1024*1024;
+        System.out.println ("Free memory:  " + runtime.freeMemory() / bytesPerMegabyte + " Mb");
+        System.out.println ("Total memory: " + runtime.totalMemory() / bytesPerMegabyte + " Mb");
+        long usedMemory = runtime.totalMemory() - runtime.freeMemory();
+        System.out.println ("Used memory:  " + usedMemory / bytesPerMegabyte + " Mb");
+        System.out.println ("Max memory:   " + runtime.maxMemory() / bytesPerMegabyte + " Mb");
+        System.out.println ("--------------");
+      } // run
+    };
+    timer.schedule (task, 0, 5000);
+  
+  } // startMemoryMonitor
 
   ////////////////////////////////////////////////////////////
 
