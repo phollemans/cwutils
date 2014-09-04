@@ -29,7 +29,7 @@ import terrenus.instrument.RadiometerCalibrator.CalibrationType;
 import noaa.coastwatch.io.*;
 import noaa.coastwatch.util.*;
 import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.util.TilingScheme.*;
+import noaa.coastwatch.io.tile.TilingScheme.*;
 
 /**
  * The <code>NOAA1bFileReader</code> class extends {@link

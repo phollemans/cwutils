@@ -47,6 +47,8 @@ import java.lang.reflect.*;
 import java.awt.geom.*;
 import ncsa.hdf.hdflib.*;
 import noaa.coastwatch.util.*;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.*;
 
 /**
  * An HDF writer is an Earth data writer that writes HDF format

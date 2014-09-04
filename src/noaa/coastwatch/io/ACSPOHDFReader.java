@@ -43,9 +43,9 @@ import java.awt.geom.*;
 import ncsa.hdf.hdflib.*;
 import noaa.coastwatch.util.*;
 import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.util.TilingScheme;
-import noaa.coastwatch.util.TilingScheme.Tile;
-import noaa.coastwatch.util.TilingScheme.TilePosition;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.Tile;
+import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
 
 /**
  * A <code>ACSPOHDFReader</code> reads HDF format data output

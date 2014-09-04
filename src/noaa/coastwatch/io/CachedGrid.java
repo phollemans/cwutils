@@ -34,7 +34,8 @@ import java.io.*;
 import java.awt.*;
 import java.lang.reflect.*;
 import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.TilingScheme.*;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.*;
 
 /**
  * The cached grid class is a grid that uses caching to reduce the

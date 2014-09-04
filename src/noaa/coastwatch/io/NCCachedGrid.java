@@ -28,7 +28,7 @@ package noaa.coastwatch.io;
 import java.io.*;
 import java.util.*;
 import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.TilingScheme.*;
+import noaa.coastwatch.io.tile.TilingScheme.*;
 import ucar.nc2.*;
 import ucar.nc2.dataset.*;
 import ucar.ma2.*;

@@ -30,7 +30,7 @@ import java.io.*;
 import java.lang.reflect.*;
 import noaa.coastwatch.util.*;
 import ncsa.hdf.hdflib.*;
-import noaa.coastwatch.util.TilingScheme.*;
+import noaa.coastwatch.io.tile.TilingScheme.*;
 
 /**
  * The HDF cached grid class is a cached grid that understands how to
