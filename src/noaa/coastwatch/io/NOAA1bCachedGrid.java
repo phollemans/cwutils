@@ -30,7 +30,7 @@ import java.io.*;
 import java.util.*;
 import java.lang.reflect.*;
 import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.TilingScheme.*;
+import noaa.coastwatch.io.tile.TilingScheme.*;
 import noaa.coastwatch.io.NOAA1bReader.*;
 
 /**
