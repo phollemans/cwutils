@@ -103,7 +103,7 @@ public class ImageTransform {
    * transform is not invertible.
    *
    * @deprecated As of 3.3.1, replaced by
-   * {@link #ImageTransform(Dimension,Dimension,DataLocation,double)} or
+   * {@link #ImageTransform(Dimension,DataLocation,double)} or
    * {@link #ImageTransform(Dimension,Dimension,DataLocation,double,AffineTransform)}.
    */
   @Deprecated
@@ -209,7 +209,6 @@ public class ImageTransform {
     double scale,
     AffineTransform orientationAffine
   ) throws NoninvertibleTransformException {
-
 
     // Check orientation affine
     // ------------------------

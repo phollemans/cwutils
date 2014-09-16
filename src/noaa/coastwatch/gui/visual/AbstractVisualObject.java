@@ -128,7 +128,7 @@ public abstract class AbstractVisualObject
 
   /** 
    * Refreshes the component display to show the contents of the
-   * current overlay.  This method does nothing unless overridden in
+   * current object.  This method does nothing unless overridden in
    * the child class.
    */
   public void refreshComponent () { }
