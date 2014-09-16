@@ -45,9 +45,15 @@
            2007/09/18, PFH
            - changed to use GUIServices.getFileChooser()
            - added calls to rescanCurrentDirectory() 
+           2014/09/15, PFH
+           - Changes: Removed splash screen options and replaced splash
+             functionality with JRE builtin capability.
+           - Issues: In some cases we were getting a slow startup, so we want
+             to make sure the user knows there is something happening.
+
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -99,7 +105,6 @@ import jargs.gnu.CmdLineParser.*;
  *
  * <p>
  * -h, --help <br>
- * -s, --splash <br>
  * --version <br>
  * </p>
  *
@@ -133,10 +138,6 @@ import jargs.gnu.CmdLineParser.*;
  *
  *   <dt>-h, --help</dt>
  *   <dd>Prints a brief help message.</dd>
- *
- *   <dt>-s, --splash</dt>
- *   <dd>Shows the splash window on startup.  The splash window
- *   shows the version, author, and web site information.</dd>
  *
  *   <dt>--version</dt>
  *   <dd>Prints the software version.</dd>
@@ -1065,13 +1066,13 @@ public final class cwmaster
    */
   public static void main (String argv[]) {
 
+    SplashScreenManager.updateSplash (LONG_NAME);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
     // ------------------
     CmdLineParser cmd = new CmdLineParser ();
     Option helpOpt = cmd.addBooleanOption ('h', "help");
-    Option splashOpt = cmd.addBooleanOption ('s', "splash");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -1105,10 +1106,6 @@ public final class cwmaster
     } // if
     String input = (remain.length == 0 ? null : remain[0]);
 
-    // Set defaults
-    // ------------
-    final boolean splash = (cmd.getOptionValue (splashOpt) != null);
-
     // Read master
     // -----------
     final MapProjection[] projArray = new MapProjection[1];
@@ -1123,23 +1120,6 @@ public final class cwmaster
       } // catch
     } // if
 
-    // Create and show splash screen
-    // -----------------------------
-    if (splash) {
-      try {
-        SwingUtilities.invokeAndWait (new Runnable() {
-          public void run() { 
-            ToolSplashWindow.showSplash ("\n" + LONG_NAME);
-          } // run
-        });
-      } // try
-      catch (Exception e) {
-        e.printStackTrace();
-        System.exit (2);
-      } // catch
-      ToolSplashWindow.pauseSplash();
-    } // if
-
     // Create and show frame
     // ---------------------
     SwingUtilities.invokeLater (new Runnable() {
@@ -1151,7 +1131,6 @@ public final class cwmaster
         GUIServices.createErrorDialog (frame, "Error", 
           ToolServices.ERROR_INSTRUCTIONS);
         frame.setVisible (true);
-        if (splash) ToolSplashWindow.hideSplash();
       } // run
     });
 
@@ -1174,7 +1153,6 @@ public final class cwmaster
 "\n" +
 "Options:\n" +
 "  -h, --help                 Show this help message.\n" +
-"  -s, --splash               Show splash screen.\n" +
 "  --version                  Show version information.\n"
     );
   } // usage

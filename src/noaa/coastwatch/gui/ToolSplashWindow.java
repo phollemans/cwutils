@@ -31,7 +31,10 @@ import javax.swing.*;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ *
+ * @deprecated As of 3.3.1, use {@link SplashScreenManager}.
  */
+@Deprecated
 public class ToolSplashWindow 
   extends JWindow {
 

@@ -61,6 +61,8 @@ import java.io.*;
 import java.net.*;
 import java.text.*;
 import noaa.coastwatch.tools.*;
+import java.util.prefs.*;
+import java.util.prefs.Preferences;
 
 /**
  * The GUI services class defines various static methods relating
@@ -98,6 +100,10 @@ public class GUIServices {
 
   /** The insets to use for icon-only button margins. */
   public static final Insets ICON_INSETS = new Insets (2, 2, 2, 2);
+  
+  /** The window size keys for storing/recalling window sizes. */
+  public static final String WINDOW_WIDTH_KEY = "window.width";
+  public static final String WINDOW_HEIGHT_KEY = "window.height";
 
   // Variables
   // ---------
@@ -123,7 +129,7 @@ public class GUIServices {
   /** The hlpe index URL to use for help panels. */
   private static URL helpIndex;
   
-  /** The local clipboard */
+  /** The local clipboard. */
   private static Clipboard clipboard;
 
   ////////////////////////////////////////////////////////////
@@ -135,7 +141,7 @@ public class GUIServices {
     // ---------------------
     iconProperties = getPropertiesFromResource (ICON_PROPERTIES_FILE);
     helpProperties = getPropertiesFromResource (HELP_PROPERTIES_FILE);
-    clipboard = new Clipboard("CDAT Clipboard");
+    clipboard = new Clipboard ("CDAT Clipboard");
 
     // Get current directory
     // ---------------------
@@ -924,13 +930,68 @@ public class GUIServices {
 
   ////////////////////////////////////////////////////////////
   
-  /** get the local clipboard */
-  public static Clipboard getCDATClipboard(){
-	  return clipboard;
-  }
+  /** Get the local clipboard. */
+  public static Clipboard getCDATClipboard() {
+
+    return clipboard;
+
+  } // getCDATClipBoard
 
   ////////////////////////////////////////////////////////////
   
+  /**
+   * Stores the specified window size for the target class.  Storing a window
+   * size is useful for maintaining a window size across application 
+   * invokations.
+   *
+   * @param windowSize the window size to store.
+   * @param targetClass the class to associate with the window size.
+   *
+   * @see #recallWindowSizeForClass
+   * @since 3.3.1
+   */
+  public static void storeWindowSizeForClass (
+    Dimension windowSize,
+    Class targetClass
+  ) {
+
+    Preferences prefs = Preferences.userNodeForPackage (targetClass);
+    prefs.putInt (WINDOW_WIDTH_KEY, windowSize.width);
+    prefs.putInt (WINDOW_HEIGHT_KEY, windowSize.height);
+    
+  } // storeWindowSizeForClass
+
+  ////////////////////////////////////////////////////////////
+  
+  /**
+   * Recalls the specified window size for the target class.  Recalling a window
+   * size is useful for maintaining a window size across application 
+   * invokations.
+   *
+   * @param targetClass the class to associate with the window size.
+   *
+   * @return the windows size or null if one was not found for the target class.
+   *
+   * @see #storeWindowSizeForClass
+   * @since 3.3.1
+   */
+  public static Dimension recallWindowSizeForClass (
+    Class targetClass
+  ) {
+
+    Preferences prefs = Preferences.userNodeForPackage (targetClass);
+    int width = prefs.getInt (WINDOW_WIDTH_KEY, -1);
+    int height = prefs.getInt (WINDOW_HEIGHT_KEY, -1);
+    Dimension windowSize = null;
+    if (width != -1 && height != -1)
+      windowSize = new Dimension (width, height);
+
+    return (windowSize);
+    
+  } // recallWindowSizeForClass
+
+  ////////////////////////////////////////////////////////////
+
   private GUIServices () { }
 
   ////////////////////////////////////////////////////////////

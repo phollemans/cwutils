@@ -37,6 +37,11 @@
              up profile load/save code.
            - Issue: We had a user feature request to be able to set the window 
              geometry.
+           2014/09/15, PFH
+           - Changes: Removed splash screen options and replaced splash
+             functionality with JRE builtin capability.
+           - Issues: In some cases we were getting a slow startup, so we want
+             to make sure the user knows there is something happening.
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
@@ -93,7 +98,6 @@ import jargs.gnu.CmdLineParser.*;
  *
  * <p>
  * -h, --help <br>
- * -s, --splash <br>
  * --version <br>
  * </p>
  *
@@ -123,13 +127,9 @@ import jargs.gnu.CmdLineParser.*;
  *   <dt>-h, --help</dt>
  *   <dd>Prints a brief help message.</dd>
  *
- *   <dt>-s, --splash</dt>
- *   <dd>Shows the splash window on startup.  The splash window
- *   shows the version, author, and web site information.</dd>
- *
  *   <dt>-g, --geometry=WxH</dt>
  *   <dd>The window geometry width and height in pixels.  The
- *   default is 900x700.</dd>
+ *   default is 960x720.</dd>
  *
  *   <dt>--version</dt>
  *
@@ -188,6 +188,23 @@ public final class cdat
   /** The File/Quit menu command. */
   private static final String QUIT_COMMAND = "Quit";
 
+  /** The View/Size small command. */
+  private static final String VIEW_SIZE_SMALL_COMMAND = "Small (960x720)";
+
+  /** The View/Size medium command. */
+  private static final String VIEW_SIZE_MEDIUM_COMMAND = "Medium (1200x900)";
+
+  /** The View/Size large command. */
+  private static final String VIEW_SIZE_LARGE_COMMAND = "Large (1440x1080)";
+
+  /** The View/Size custom command. */
+  private static final String VIEW_SIZE_CUSTOM_COMMAND = "Custom";
+
+  /** The View/Full Screen Mode menu command. */
+  private static final String FULL_SCREEN_COMMAND = "Full Screen " + 
+    (!FullScreenWindow.isFullScreenSupported() ? "Emulation " : "") +
+    "Mode";
+
   /** The Tools/Preferences menu command. */
   private static final String PREFS_COMMAND = "Preferences";
   
@@ -199,11 +216,6 @@ public final class cdat
 
   /** The Tools/Navigation Analysis menu command. */
   private static final String NAV_ANALYSIS_COMMAND = "Navigation Analysis";
-
-  /** The Tools/Full Screen Mode menu command. */
-  private static final String FULL_SCREEN_COMMAND = "Full Screen " + 
-    (!FullScreenWindow.isFullScreenSupported() ? "Emulation " : "") +
-    "Mode";
 
   /** The Tools/File Information menu command. */
   private static final String INFO_COMMAND = "File Information";
@@ -218,7 +230,7 @@ public final class cdat
   private static final String HELP_INDEX = "cdat_index.html";
 
   /** The default application window size. */
-  private static final String DEFAULT_FRAME_SIZE = "900x700";
+  private static final Dimension DEFAULT_FRAME_SIZE = new Dimension (960, 720);
 
   // Variables
   // ---------
@@ -328,6 +340,47 @@ public final class cdat
       fileMenu.add (menuItem);
     } // if
 
+    // Create view menu
+    // ----------------
+    JMenu viewMenu = new JMenu ("View");
+    viewMenu.setMnemonic (KeyEvent.VK_V);
+    menuBar.add (viewMenu);
+
+    ViewMenuListener viewListener = new ViewMenuListener();
+    JMenu submenu = new JMenu ("Window size");
+    submenu.setMnemonic (KeyEvent.VK_S);
+    viewMenu.add (submenu);
+
+    menuItem = new JMenuItem (VIEW_SIZE_SMALL_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_1);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_1, keymask));
+    menuItem.addActionListener (viewListener);
+    submenu.add (menuItem);
+
+    menuItem = new JMenuItem (VIEW_SIZE_MEDIUM_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_2);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_2, keymask));
+    menuItem.addActionListener (viewListener);
+    submenu.add (menuItem);
+
+    menuItem = new JMenuItem (VIEW_SIZE_LARGE_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_3);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_3, keymask));
+    menuItem.addActionListener (viewListener);
+    submenu.add (menuItem);
+
+    menuItem = new JMenuItem (VIEW_SIZE_CUSTOM_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_4);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_4, keymask));
+    menuItem.addActionListener (viewListener);
+    submenu.add (menuItem);
+
+    menuItem = fullScreenItem = new JMenuItem (FULL_SCREEN_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_F);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_F, keymask));
+    menuItem.addActionListener (viewListener);
+    viewMenu.add (menuItem);
+
     // Create tools menu
     // -----------------
     JMenu toolsMenu = new JMenu ("Tools");
@@ -341,8 +394,8 @@ public final class cdat
     menuItem.addActionListener (toolsListener);
     toolsMenu.add (menuItem);
     
-    JMenu submenu = new JMenu ("Profile");
-    menuItem.setMnemonic (KeyEvent.VK_R);
+    submenu = new JMenu ("Profile");
+    submenu.setMnemonic (KeyEvent.VK_R);
     toolsMenu.add (submenu);
 
     menuItem = saveProfileItem = new JMenuItem (SAVE_PROFILE_COMMAND);
@@ -366,12 +419,6 @@ public final class cdat
     menuItem = navAnalysisItem = new JMenuItem (NAV_ANALYSIS_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_N);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_N, keymask));
-    menuItem.addActionListener (toolsListener); 
-    toolsMenu.add (menuItem);
-
-    menuItem = fullScreenItem = new JMenuItem (FULL_SCREEN_COMMAND);
-    menuItem.setMnemonic (KeyEvent.VK_F);
-    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_F, keymask));
     menuItem.addActionListener (toolsListener); 
     toolsMenu.add (menuItem);
 
@@ -464,6 +511,52 @@ public final class cdat
 
   ////////////////////////////////////////////////////////////
 
+  /** Handles view menu commands. */
+  private class ViewMenuListener implements ActionListener {
+    public void actionPerformed (ActionEvent event) {
+
+      String command = event.getActionCommand();
+
+      // Change view size to small/medium/large
+      // --------------------------------------
+      if (
+        command.equals (VIEW_SIZE_SMALL_COMMAND) ||
+        command.equals (VIEW_SIZE_MEDIUM_COMMAND) ||
+        command.equals (VIEW_SIZE_LARGE_COMMAND)
+      ) {
+        String sizeString = command.replaceFirst ("^.*\\(([0-9]+x[0-9]+)\\).*$", "$1");
+        String[] sizeArray = sizeString.split ("x");
+        try {
+          int width = Integer.parseInt (sizeArray[0]);
+          int height = Integer.parseInt (sizeArray[1]);
+          Dimension frameSize = new Dimension (width, height);
+          cdat.this.setSize (frameSize);
+        } // try
+        catch (NumberFormatException e) {}
+      } // if
+      
+      // Change view size to custom
+      // --------------------------
+      else if (command.equals (VIEW_SIZE_CUSTOM_COMMAND)) {
+
+
+        // TODO: Fill in here with visual object choosers??
+
+
+      } // else if
+
+      // Show view full screen
+      // ---------------------
+      else if (command.equals (FULL_SCREEN_COMMAND)) {
+        ((EarthDataAnalysisPanel) 
+          tabbedPane.getSelectedComponent()).showFullScreen();
+      } // else if
+
+    } // actionPerformed
+  } // ViewMenuListener class
+
+  ////////////////////////////////////////////////////////////
+
   /** Handles tools menu commands. */
   private class ToolsMenuListener implements ActionListener {
     public void actionPerformed (ActionEvent event) {
@@ -506,13 +599,6 @@ public final class cdat
       else if (command.equals (NAV_ANALYSIS_COMMAND)) {
         ((EarthDataAnalysisPanel) 
           tabbedPane.getSelectedComponent()).showNavAnalysisDialog();
-      } // else if
-
-      // Show navigation analysis dialog
-      // -------------------------------
-      else if (command.equals (FULL_SCREEN_COMMAND)) {
-        ((EarthDataAnalysisPanel) 
-          tabbedPane.getSelectedComponent()).showFullScreen();
       } // else if
 
       // Save profile
@@ -726,6 +812,16 @@ public final class cdat
 
   ////////////////////////////////////////////////////////////
 
+  /** Handles window resizes and saves the new window size. */
+  private static class WindowResizeListener extends ComponentAdapter {
+    public void componentResized (ComponentEvent event) {
+      Dimension windowSize = event.getComponent().getSize();
+      GUIServices.storeWindowSizeForClass (windowSize, cdat.class);
+    } // componentResized
+  } // WindowResizeListener class
+
+  ////////////////////////////////////////////////////////////
+
   /**
    * Performs the main function.
    *
@@ -733,13 +829,13 @@ public final class cdat
    */
   public static void main (String argv[]) {
 
+    SplashScreenManager.updateSplash (LONG_NAME);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
     // ------------------
     CmdLineParser cmd = new CmdLineParser ();
     Option helpOpt = cmd.addBooleanOption ('h', "help");
-    Option splashOpt = cmd.addBooleanOption ('s', "splash");
     Option geometryOpt = cmd.addStringOption ('g', "geometry");
     Option versionOpt = cmd.addBooleanOption ("version");
     Option memoryOpt = cmd.addBooleanOption ("memory");
@@ -777,39 +873,30 @@ public final class cdat
 
     // Set defaults
     // ------------
-    final boolean splash = (cmd.getOptionValue (splashOpt) != null);
     String geometry = (String) cmd.getOptionValue (geometryOpt);
-    if (geometry == null) geometry = DEFAULT_FRAME_SIZE;
+    Dimension lastFrameSize = GUIServices.recallWindowSizeForClass (cdat.class);
+    if (lastFrameSize == null) lastFrameSize = DEFAULT_FRAME_SIZE;
 
-    // Get frame dimensions
-    // --------------------
-    String[] geometryArray = geometry.split ("x");
-    if (geometryArray.length != 2) {
-      System.err.println (PROG + ": Invalid geometry '" + geometry + "'");
-      System.exit (2);
-    } // if
-    int width = 0;
-    int height = 0;
-    try {
-      width = Integer.parseInt (geometryArray[0]);
-      height = Integer.parseInt (geometryArray[1]);
-    } // try
-    catch (NumberFormatException e) {
-      System.err.println (PROG + ": Error parsing geometry: " + e.getMessage());
-      System.exit (2);
-    } // catch
-    final Dimension frameSize = new Dimension (width, height);
-
-    // Create and show splash screen
+    // Parse user-specified geometry
     // -----------------------------
-    if (splash) {
-      GUIServices.invokeAndWait (new Runnable() {
-        public void run() { 
-          ToolSplashWindow.showSplash ("\n" + LONG_NAME);
-        } // run
-      });
-      ToolSplashWindow.pauseSplash();
+    Dimension userFrameSize = null;
+    if (geometry != null) {
+      String[] geometryArray = geometry.split ("x");
+      if (geometryArray.length != 2) {
+        System.err.println (PROG + ": Invalid geometry '" + geometry + "'");
+        System.exit (2);
+      } // if
+      try {
+        int width = Integer.parseInt (geometryArray[0]);
+        int height = Integer.parseInt (geometryArray[1]);
+        userFrameSize = new Dimension (width, height);
+      } // try
+      catch (NumberFormatException e) {
+        System.err.println (PROG + ": Error parsing geometry: " + e.getMessage());
+        System.exit (2);
+      } // catch
     } // if
+    final Dimension frameSize = (userFrameSize != null ? userFrameSize : lastFrameSize);
 
     // Create and show frame
     // ---------------------
@@ -819,13 +906,13 @@ public final class cdat
         // Create main frame
         // -----------------
         final JFrame frame = new cdat();
+        frame.addComponentListener (new WindowResizeListener());
         frame.addWindowListener (new WindowMonitor());
         frame.addWindowListener (new UpdateAgent (PROG));
         frame.pack();
         frame.setSize (frameSize);
-        GUIServices.createErrorDialog (frame, "Error", 
+        GUIServices.createErrorDialog (frame, "Error",
           ToolServices.ERROR_INSTRUCTIONS);
-        if (splash) ToolSplashWindow.hideSplash();
 
         // Check resources
         // ---------------
@@ -903,7 +990,6 @@ public final class cdat
 "\n" +
 "Options:\n" +
 "  -h, --help                 Show this help message.\n" +
-"  -s, --splash               Show the splash screen.\n" +
 "  -g, --geometry=WxH         Set width and height of the window.\n" +
 "  --version                  Show version information.\n"
     );

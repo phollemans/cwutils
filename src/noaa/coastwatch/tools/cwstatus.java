@@ -22,9 +22,14 @@
            2006/06/23, PFH, changed --nosplash to --splash command line option
            2006/11/04, PFH, changed to use LONG_NAME for GUI components
            2007/04/23, PFH, added version printing
+           2014/09/15, PFH
+           - Changes: Removed splash screen options and replaced splash
+             functionality with JRE builtin capability.
+           - Issues: In some cases we were getting a slow startup, so we want
+             to make sure the user knows there is something happening.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -69,7 +74,6 @@ import jargs.gnu.CmdLineParser.*;
  * <p>
  * -c, --script=PATH <br>
  * -h, --help <br>
- * -s, --splash <br>
  * -o, --operator <br>
  * --version <br>
  * </p>
@@ -112,10 +116,6 @@ import jargs.gnu.CmdLineParser.*;
  *
  *   <dt> -h, --help </dt>
  *   <dd> Prints a brief help message. </dd>
- *
- *   <dt>-s, --splash</dt>
- *   <dd>Shows the splash window on startup.  The splash window
- *   shows the version, author, and web site information.</dd>
  *
  *   <dt> -o, --operator </dt>
  *   <dd> Specifies that operator messages should be displayed.  By
@@ -513,6 +513,7 @@ public final class cwstatus
    */
   public static void main (String argv[]) {
 
+    SplashScreenManager.updateSplash (LONG_NAME);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -521,7 +522,6 @@ public final class cwstatus
     Option helpOpt = cmd.addBooleanOption ('h', "help");
     Option scriptOpt = cmd.addStringOption ('c', "script");
     Option operatorOpt = cmd.addBooleanOption ('o', "operator");
-    Option splashOpt = cmd.addBooleanOption ('s', "splash");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -559,24 +559,6 @@ public final class cwstatus
     // ------------
     final String script = (String) cmd.getOptionValue (scriptOpt);
     final boolean operator = (cmd.getOptionValue (operatorOpt) != null);    
-    final boolean splash = (cmd.getOptionValue (splashOpt) != null);
-
-    // Create and show splash screen
-    // -----------------------------
-    if (splash) {
-      try {
-        SwingUtilities.invokeAndWait (new Runnable() {
-          public void run() { 
-            ToolSplashWindow.showSplash ("\n" + LONG_NAME);
-          } // run
-        });
-      } // try
-      catch (Exception e) {
-        e.printStackTrace();
-        System.exit (2);
-      } // catch
-      ToolSplashWindow.pauseSplash();
-    } // if
 
     // Create frame
     // ------------
@@ -589,7 +571,6 @@ public final class cwstatus
         GUIServices.createErrorDialog (frame, "Error", 
           ToolServices.ERROR_INSTRUCTIONS);
         frame.setVisible (true);
-        if (splash) ToolSplashWindow.hideSplash();
       } // run
     });
 
@@ -614,7 +595,6 @@ public final class cwstatus
 "Options:\n" +
 "  -c, --script=PATH          Set host query script path (advanced users).\n" +
 "  -h, --help                 Show this help message.\n" +
-"  -s, --splash               Show splash screen.\n" +
 "  -o, --operator             Show operator error messages.\n" +
 "  --version                  Show version information.\n"
     );
