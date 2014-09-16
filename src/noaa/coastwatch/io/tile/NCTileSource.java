@@ -3,7 +3,17 @@
      FILE: NCTileSource.java
    AUTHOR: Peter Hollemans
      DATE: 2014/07/30
-  CHANGES: n/a
+  CHANGES: 2014/09/09, PFH
+           - Changes: Updated to use FileFormat.createInstance (String, int).
+           - Issue: A user reported an issue on opening read-only files:
+ 
+             "ncsa.hdf.hdf5lib.exceptions.HDF5Exception: Cannot write file, 
+             try open as read-only"
+ 
+             This was because we were using getInstance (String) followed by 
+             open(), rather than createInstance.  getInstance defaults to
+             read/write access, where as createInstance allows read-only
+             to be specified.
 
   CoastWatch Software Library and Utilities
   Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
@@ -67,7 +77,7 @@ public class NCTileSource
    * Constructs a new NetCDF tile source to access the specified dataset
    * and variable.
    *
-   * @param dataset the NetCDF file to access.
+   * @param file the NetCDF file to access.
    * @param varName the NetCDF variable name to read.
    * @param rowIndex the dimension index to use as the row dimension of the 2D slice.
    * @param colIndex the dimension index to use as the column dimension of the 2D slice.
@@ -127,7 +137,7 @@ public class NCTileSource
 
         // Open as HDF 5
         // -------------
-        FileFormat hdfFile = FileFormat.getInstance (location);
+        FileFormat hdfFile = h5Format.createInstance (location, FileFormat.READ);
         hdfFile.open();
 
         // Get chunk dimensions
