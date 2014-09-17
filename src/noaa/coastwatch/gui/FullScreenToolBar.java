@@ -106,6 +106,8 @@ public class FullScreenToolBar
   /** 
    * Gets the alpha composite value currently set for painting
    * the toolbar. 
+   *
+   * @return the alpha value in the range [0..1].
    */
   public float getAlpha () { return (alpha); }
 

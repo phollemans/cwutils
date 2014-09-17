@@ -76,7 +76,11 @@ public class FileSavePanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current save file. */
+  /** 
+   * Gets the current save file.
+   *
+   * @return the currently displayed save file.
+   */
   public File getSaveFile () {
 
     return (new File (saveFile.getParentFile(), saveField.getText()));

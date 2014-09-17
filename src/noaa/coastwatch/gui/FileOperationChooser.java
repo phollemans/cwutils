@@ -81,7 +81,10 @@ public class FileOperationChooser
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Sets the closable flag, true if the close button should enabled.
+   * Sets the closable flag.
+   *
+   * @param flag the closable flag, true if the close button should be enabled 
+   * or false if not.
    */
   public void setClosable (
     boolean flag
@@ -94,7 +97,10 @@ public class FileOperationChooser
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Sets the savable flag, true if the save as button should enabled.
+   * Sets the savable flag.
+   *
+   * @param flag the savable flag, true if the save as button should be enabled 
+   * or false if not.
    */
   public void setSavable (
     boolean flag
@@ -196,7 +202,9 @@ public class FileOperationChooser
 
   /** 
    * Creates a static instance of this class using the default
-   * constructor. 
+   * constructor.
+   *
+   * @return the static instance of this class.
    */
   public static FileOperationChooser getInstance () {
 
@@ -212,7 +220,7 @@ public class FileOperationChooser
    *
    * @param argv the array of command line parameters.
    */
-  public static void main (String[] argc) {
+  public static void main (String[] argv) {
 
     FileOperationChooser chooser = FileOperationChooser.getInstance();
     chooser.addPropertyChangeListener (

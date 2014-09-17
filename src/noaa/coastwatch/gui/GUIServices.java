@@ -219,7 +219,18 @@ public class GUIServices {
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the values in a <code>GridBagConstraints</code> object. **/
+  /** 
+   * Sets the values in a <code>GridBagConstraints</code> object.
+   *
+   * @param c the contraints object.
+   * @param gridx the grid x position.
+   * @param gridy the grid y position.
+   * @param gridwidth the number of grid cells wide.
+   * @param gridheight the number of grid cells high.
+   * @param fill the fill mode.
+   * @param weightx the weight in the x direction.
+   * @param weighty the weight in the y direction.
+   */
   public static void setConstraints (
     GridBagConstraints c,
     int gridx,
@@ -385,6 +396,8 @@ public class GUIServices {
    * null for all actions to hide the dialog.  
    * @param doDispose the dispose flag, true to dispose rather than
    * hide when a button is clicked.
+   *
+   * @return the dialog created.
    */
   public static JDialog createDialog (
     Component parent, 
@@ -655,6 +668,8 @@ public class GUIServices {
    * @param name the action name.
    * @param runnable the runnable to invoke when the action is
    * performed, or null for no operation.
+   *
+   * @return the action created.
    */
   public static Action createAction (
     String name,
@@ -680,6 +695,8 @@ public class GUIServices {
    * @param parent the parent component.
    * @param title the dialog title.
    * @param message the message to display.
+   *
+   * @return the dialog created.
    */
   public static JDialog createMessageDialog (
     Component parent,
@@ -930,10 +947,14 @@ public class GUIServices {
 
   ////////////////////////////////////////////////////////////
   
-  /** Get the local clipboard. */
+  /** 
+   * Gets the local clipboard.
+   *
+   * @return the clipboard.
+   */
   public static Clipboard getCDATClipboard() {
 
-    return clipboard;
+    return (clipboard);
 
   } // getCDATClipBoard
 

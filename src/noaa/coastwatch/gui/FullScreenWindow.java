@@ -314,7 +314,12 @@ public class FullScreenWindow {
 
   ////////////////////////////////////////////////////////////
 
-  /** Determines if this window is currently displayed full screen. */
+  /** 
+   * Determines if this window is currently displayed full screen.
+   *
+   * @return the fullscreen mode flag, true if displayed fullscreen or false 
+   * if not.
+   */
   public boolean isFullScreen () {
 
     Window window = device.getFullScreenWindow();
