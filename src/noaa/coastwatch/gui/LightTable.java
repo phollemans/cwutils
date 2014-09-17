@@ -1014,7 +1014,11 @@ public class LightTable
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String[] argv) {
 
     // Create drawing area

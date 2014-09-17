@@ -93,7 +93,11 @@ public class VisualInteger
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String argv[]) {
   
     JPanel panel = new JPanel();

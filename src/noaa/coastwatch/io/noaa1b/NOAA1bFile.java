@@ -254,7 +254,11 @@ public class NOAA1bFile {
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String[] argv) throws Exception {
 
     NOAA1bFile file = new NOAA1bFile (argv[0]);

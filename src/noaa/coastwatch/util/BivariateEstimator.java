@@ -236,7 +236,11 @@ public class BivariateEstimator
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String[] argv) {
 
     BivariateEstimator est = new BivariateEstimator (

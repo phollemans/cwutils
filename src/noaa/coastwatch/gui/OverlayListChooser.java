@@ -164,12 +164,12 @@ public class OverlayListChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the overlay list chooser tooltip. */
+  @Override
   public String getToolTip () { return (OVERLAY_LIST_TOOLTIP); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the overlay list chooser title. */
+  @Override
   public String getTitle () { return (null); }
   
   ////////////////////////////////////////////////////////////
@@ -193,12 +193,8 @@ public class OverlayListChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the overlay list tab icon. */
-  public Icon getIcon () {
-
-    return (GUIServices.getIcon ("overlay.tab"));
-
-  } // getIcon
+  @Override
+  public Icon getIcon () { return (GUIServices.getIcon ("overlay.tab")); }
 
   ////////////////////////////////////////////////////////////
 

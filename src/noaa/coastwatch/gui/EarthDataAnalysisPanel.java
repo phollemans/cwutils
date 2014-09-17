@@ -143,12 +143,20 @@ public class EarthDataAnalysisPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the reader used by this panel. */
+  /** 
+   * Gets the reader used by this panel.
+   * 
+   * @return the reader object.
+   */
   public EarthDataReader getReader () { return (reader); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth data view from the view panel. */
+  /** 
+   * Gets the Earth data view from the view panel.
+   *
+   * @return the data view.
+   */
   public EarthDataView getView () { return (viewPanel.getView()); }
 
   ////////////////////////////////////////////////////////////
@@ -258,87 +266,109 @@ public class EarthDataAnalysisPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the panel tab icon. */
+  @Override
   public Icon getIcon () { return (TAB_ICON); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the panel tooltip. */
+  @Override
   public String getToolTip () { return (null); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the panel title. */
-  public String getTitle () { 
-
-    return (new File (reader.getSource()).getName()); 
-
-  } // getTitle
-  
+  @Override
+  public String getTitle () { return (new File (reader.getSource()).getName()); }
   
   ////////////////////////////////////////////////////////////
 
-  /** Load profiles of overlays and enhancement functions. */
-  public void loadProfile(File file)
-  	throws IOException, ClassNotFoundException{
-	  FileInputStream fileInput = new FileInputStream (file);
-	  GZIPInputStream zipInput = new GZIPInputStream (fileInput);
-	  ObjectInputStream objectInput = new ObjectInputStream (zipInput);
+  /** 
+   * Loads a set of overlays and enhancement functions.
+   *
+   * @param file the file to load overlays and enhancements from.
+   *
+   * @throws IOException if there was an error reading from the specified file.
+   * @throws ClassNotFoundException if the classes in the file are unknown
+   * to the JVM.
+   */
+  public void loadProfile (
+    File file
+  ) throws IOException, ClassNotFoundException {
+    
+    // Open file
+    // ---------
+    FileInputStream fileInput = new FileInputStream (file);
+    GZIPInputStream zipInput = new GZIPInputStream (fileInput);
+    ObjectInputStream objectInput = new ObjectInputStream (zipInput);
 
-	  // Read object
-	  // -----------
-	  try {
-	      //Object paletteObject = objectInput.readObject();
-	      List overlayObject = (List) objectInput.readObject();
-	      String palette = (String) objectInput.readObject();
-	      EnhancementFunction function = (EnhancementFunction) objectInput.readObject();
-	      OverlayListChooser overlayChooser = controller.getOverlayChooser();
-		  overlayChooser.addOverlays(overlayObject);
-		  EnhancementChooser enhancementChooser = controller.getEnhancementChooser();
-		  enhancementChooser.setFunction(function);
-		  PaletteChooser paletteChooser = controller.getPaletteChooser();
-		  paletteChooser.setPalette(palette);
-	  } // try
-	  finally {
-	      objectInput.close();
-	      zipInput.close();
-	      fileInput.close();
-	  } // finally
-  }
+    // Read objects
+    // ------------
+    try {
+      List overlayObject = (List) objectInput.readObject();
+      String palette = (String) objectInput.readObject();
+      EnhancementFunction function = (EnhancementFunction) objectInput.readObject();
+      OverlayListChooser overlayChooser = controller.getOverlayChooser();
+      overlayChooser.addOverlays(overlayObject);
+      EnhancementChooser enhancementChooser = controller.getEnhancementChooser();
+      enhancementChooser.setFunction (function);
+      PaletteChooser paletteChooser = controller.getPaletteChooser();
+      paletteChooser.setPalette (palette);
+    } // try
+    finally {
+      objectInput.close();
+      zipInput.close();
+      fileInput.close();
+    } // finally
+
+  } // loadProfile
   
   ////////////////////////////////////////////////////////////
 
-  /** Save profiles of overlays and enhancement functions. */
-  public void saveProfile(File file)
-  throws IOException{
-	  FileOutputStream fileOutput = new FileOutputStream (file);
-	  GZIPOutputStream zipOutput = new GZIPOutputStream (fileOutput);
-	  ObjectOutputStream objectOutput = new ObjectOutputStream (zipOutput);
+  /** 
+   * Saves a set of overlays and enhancement functions. 
+   *
+   * @param file the file to create.
+   *
+   * @throws IOException if there was an error writing to the specified file.
+   */
+  public void saveProfile (
+    File file
+  ) throws IOException {
 
-	    // Write object
-	    // ------------
-	  try {
-		  OverlayListChooser overlayChooser = controller.getOverlayChooser();
-		  Object overlayObject = overlayChooser.getOverlays();
-		  PaletteChooser paletteChooser = controller.getPaletteChooser();
-		  String paletteObject = paletteChooser.getPalette().getName();
-		  EnhancementChooser enhancementChooser = controller.getEnhancementChooser();
-		  EnhancementFunction function = enhancementChooser.getFunction();
-	      objectOutput.writeObject (overlayObject);
-	      objectOutput.writeObject (paletteObject);
-	      objectOutput.writeObject (function);
-	      objectOutput.flush();
-	  } // try
-	  finally {
-	      objectOutput.close();
-	      zipOutput.close();
-	      fileOutput.close();
-	  } // finally
-  }
+    // Create file
+    // -----------
+    FileOutputStream fileOutput = new FileOutputStream (file);
+    GZIPOutputStream zipOutput = new GZIPOutputStream (fileOutput);
+    ObjectOutputStream objectOutput = new ObjectOutputStream (zipOutput);
+
+    // Write objects
+    // -------------
+    try {
+      OverlayListChooser overlayChooser = controller.getOverlayChooser();
+      Object overlayObject = overlayChooser.getOverlays();
+      PaletteChooser paletteChooser = controller.getPaletteChooser();
+      String paletteObject = paletteChooser.getPalette().getName();
+      EnhancementChooser enhancementChooser = controller.getEnhancementChooser();
+      EnhancementFunction function = enhancementChooser.getFunction();
+      objectOutput.writeObject (overlayObject);
+      objectOutput.writeObject (paletteObject);
+      objectOutput.writeObject (function);
+      objectOutput.flush();
+    } // try
+    finally {
+      objectOutput.close();
+      zipOutput.close();
+      fileOutput.close();
+    } // finally
+
+  } // saveProfile
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String[] argv) {
 
     // Get reader

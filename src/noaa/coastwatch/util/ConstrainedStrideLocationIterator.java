@@ -156,7 +156,11 @@ public class ConstrainedStrideLocationIterator
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String[] argv) {
 
     Point2D.Float start = new Point2D.Float (Float.parseFloat (argv[0]), 

@@ -89,8 +89,12 @@ public class CompositeChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the currently selected red component variable name. */
-  public String getRedComponent () { 
+  /** 
+   * Gets the currently selected green component variable name.
+   *
+   * @return the red variable name.
+   */
+  public String getRedComponent () {
 
     return ((String) redCombo.getSelectedItem()); 
 
@@ -98,7 +102,11 @@ public class CompositeChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the currently selected green component variable name. */
+  /** 
+   * Gets the currently selected green component variable name.
+   *
+   * @return the green variable name.
+   */
   public String getGreenComponent () { 
 
     return ((String) greenCombo.getSelectedItem()); 
@@ -107,8 +115,12 @@ public class CompositeChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the currently selected blue component variable name. */
-  public String getBlueComponent () { 
+  /** 
+   * Gets the currently selected blue component variable name.
+   *
+   * @return the blue variable name.
+   */
+  public String getBlueComponent () {
 
     return ((String) blueCombo.getSelectedItem()); 
 
@@ -117,8 +129,10 @@ public class CompositeChooser
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the composite mode flag, true if color composite mode is on
-   * and false if not.
+   * Gets the composite mode flag.
+   *
+   * @return the mode flag, true if color composite mode is on
+   * or false if not.
    */
   public boolean getCompositeMode () { return (modeCheck.isSelected()); }
 
@@ -223,26 +237,26 @@ public class CompositeChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the composite chooser tab icon. */
-  public Icon getIcon () {
-
-    return (GUIServices.getIcon ("composite.tab"));
-
-  } // getIcon
+  @Override
+  public Icon getIcon () { return (GUIServices.getIcon ("composite.tab")); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the composite chooser tooltip. */
+  @Override
   public String getToolTip () { return (COMPOSITE_TOOLTIP); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the composite chooser title. */
+  @Override
   public String getTitle () { return (null); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String[] argv) {
 
     List gridList = null;

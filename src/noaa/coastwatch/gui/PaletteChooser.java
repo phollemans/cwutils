@@ -175,21 +175,16 @@ public class PaletteChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the palette chooser tab icon. */
-  public Icon getIcon () {
-
-    return (GUIServices.getIcon ("palette.tab"));
-
-  } // getIcon
+  @Override public Icon getIcon () { return (GUIServices.getIcon ("palette.tab")); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the palette chooser tooltip. */
+  @Override
   public String getToolTip () { return (PALETTE_TOOLTIP); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the palette chooser title. */
+  @Override
   public String getTitle () { return (null); }
 
   ////////////////////////////////////////////////////////////

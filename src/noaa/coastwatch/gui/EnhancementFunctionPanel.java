@@ -60,6 +60,8 @@ public class EnhancementFunctionPanel
   /** 
    * Creates a new enhancement function panel with the specified
    * initial function.
+   *
+   * @param func the initial function.
    */
   public EnhancementFunctionPanel (
     EnhancementFunction func
@@ -72,6 +74,7 @@ public class EnhancementFunctionPanel
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void paintComponent (
     Graphics g
   ) {
@@ -109,7 +112,11 @@ public class EnhancementFunctionPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the current enhancement function. */
+  /** 
+   * Sets the current enhancement function.
+   *
+   * @param func the function to use.
+   */
   public void setFunction (EnhancementFunction func) {
 
     this.func = (EnhancementFunction) func.clone();

@@ -228,7 +228,11 @@ public class SortedTable
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String[] argv) {
 
     TableModel dataModel = new AbstractTableModel () {

@@ -119,7 +119,11 @@ public class LineLocationIterator
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String[] argv) {
 
     DataLocation start = new DataLocation (Double.parseDouble (argv[0]), 

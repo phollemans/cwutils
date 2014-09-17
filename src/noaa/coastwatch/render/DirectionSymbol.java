@@ -237,7 +237,11 @@ public abstract class DirectionSymbol
 
   ////////////////////////////////////////////////////////////
 
-  /** Test this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String[] argv) throws Exception {
 
     double angle = Double.parseDouble (argv[0]);

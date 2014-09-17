@@ -207,7 +207,11 @@ public class FileOperationChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String[] argc) {
 
     FileOperationChooser chooser = FileOperationChooser.getInstance();

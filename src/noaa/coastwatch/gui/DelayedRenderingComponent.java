@@ -33,7 +33,9 @@ public interface DelayedRenderingComponent {
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Returns true if the component is in a rendering state, or false
+   * Gets the rendering state.
+   * 
+   * @return true if the component is in a rendering state, or false
    * if not.
    */
   public boolean isRendering ();

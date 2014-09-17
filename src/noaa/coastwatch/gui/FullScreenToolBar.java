@@ -479,7 +479,11 @@ public class FullScreenToolBar
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String argv[]) {
 
     // Create toolbar

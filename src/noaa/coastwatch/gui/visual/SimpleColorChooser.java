@@ -578,7 +578,11 @@ public class SimpleColorChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String argv[]) {
   
     int width = Integer.parseInt (argv[0]);

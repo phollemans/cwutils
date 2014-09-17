@@ -833,7 +833,11 @@ public class EarthDataChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String[] argv) throws Exception {
 
     final File file = (argv.length > 0 ? new File (argv[0]) : null);

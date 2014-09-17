@@ -73,8 +73,12 @@ public class CompoundToolBar
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
-  public static void main (String[] argc) {
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
+  public static void main (String[] argv) {
 
     FileOperationChooser fileChooser = FileOperationChooser.getInstance();
     ViewOperationChooser viewChooser = ViewOperationChooser.getInstance();

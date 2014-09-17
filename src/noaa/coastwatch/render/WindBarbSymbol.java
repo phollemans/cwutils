@@ -313,7 +313,11 @@ public class WindBarbSymbol
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String[] argv) throws Exception {
 
     double speed = Double.parseDouble (argv[0]);

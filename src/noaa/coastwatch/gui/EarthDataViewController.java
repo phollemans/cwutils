@@ -179,7 +179,11 @@ public class EarthDataViewController {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the navigation analysis panel for this controller. */
+  /** 
+   * Gets the navigation analysis panel for this controller.
+   *
+   * @return the analysis panel.
+   */
   public NavigationAnalysisPanel getNavAnalysisPanel () {
 
     return (navAnalysisPanel);
@@ -190,6 +194,8 @@ public class EarthDataViewController {
 
   /** 
    * Gets a list of tab component panels created by this controller.
+   *
+   * @return the component panels.
    */
   public List getTabComponentPanels () {
 
@@ -207,22 +213,38 @@ public class EarthDataViewController {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the variable chooser created by this controller. */
+  /** 
+   * Gets the variable chooser created by this controller.
+   *
+   * @return the variable chooser.
+   */
   public VariableChooser getVariableChooser () { return (variableChooser); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the view panel created by this controller. */
+  /** 
+   * Gets the view panel created by this controller.
+   *
+   * @return the view panel.
+   */
   public EarthDataViewPanel getViewPanel () { return (viewPanel); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the light table created by this controller. */
+  /** 
+   * Gets the light table created by this controller.
+   *
+   * @return the light table.
+   */
   public LightTable getLightTable () { return (lightTable); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the legend panel created by this controller. */
+  /** 
+   * Gets the legend panel created by this controller.
+   *
+   * @return the legend panel.
+   */
   public LegendPanel getLegendPanel () { return (legendPanel); }
 
   ////////////////////////////////////////////////////////////
@@ -880,24 +902,30 @@ public class EarthDataViewController {
   
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current OverlayListChooser. */
-  public OverlayListChooser getOverlayChooser() {
-	  return overlayChooser;
-  }
+  /** 
+   * Gets the overlay list chooser created by this controller.
+   *
+   * @return the overlay list chooser.
+   */
+  public OverlayListChooser getOverlayChooser() { return (overlayChooser); }
   
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current PaletteChooser. */
-  public PaletteChooser getPaletteChooser() {
-	  return paletteChooser;
-  }
+  /** 
+   * Gets the palette chooser created by this controller.
+   *
+   * @return the palette chooser.
+   */
+  public PaletteChooser getPaletteChooser() { return (paletteChooser); }
   
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current EnhancementChooser. */
-  public EnhancementChooser getEnhancementChooser() {
-	  return enhancementChooser;
-  }
+  /** 
+   * Gets the enhancement chooser created by this controller.
+   *
+   * @return the enhancement chooser.
+   */
+  public EnhancementChooser getEnhancementChooser() { return (enhancementChooser); }
 
   ////////////////////////////////////////////////////////////
 

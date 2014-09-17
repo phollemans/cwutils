@@ -124,7 +124,11 @@ public class AnnotationListChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the last annotation command executed. */
+  /** 
+   * Gets the last annotation command executed.
+   *
+   * @return the last annotation added, or null if no annotation has been added.
+   */
   public String getAnnotationCommand () { return (annotationCommand); }
 
   ////////////////////////////////////////////////////////////
@@ -132,6 +136,8 @@ public class AnnotationListChooser
   /** 
    * Adds the specified listener for receiving annotation input action
    * commands.
+   *
+   * @param listener the listener to add.
    */
   public void addAnnotationActionListener (
     ActionListener listener

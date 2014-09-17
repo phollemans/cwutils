@@ -358,6 +358,8 @@ public class EnhancementChooser
   /** 
    * Creates a new enhancement chooser panel with the specified
    * function.
+   *
+   * @param func the function to initialize the panel.
    */
   public EnhancementChooser (
     EnhancementFunction func
@@ -555,7 +557,11 @@ public class EnhancementChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the allowed slider range. */
+  /**
+   * Gets the allowed slider range.
+   * 
+   * @return the slider range as [min, max].
+   */
   public double[] getRange () { 
 
     return ((double[]) allowedRange.clone());
@@ -605,6 +611,8 @@ public class EnhancementChooser
 
   /** 
    * Gets the current enhancement function.
+   *
+   * @return the function.
    */
   public EnhancementFunction getFunction () {
 
@@ -761,21 +769,17 @@ public class EnhancementChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the enhancement chooser tab icon. */
-  public Icon getIcon () {
-
-    return (GUIServices.getIcon ("enhancement.tab"));
-
-  } // getIcon
+  @Override
+  public Icon getIcon () { return (GUIServices.getIcon ("enhancement.tab")); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the enhancement chooser tooltip. */
+  @Override
   public String getToolTip () { return (ENHANCEMENT_TOOLTIP); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the enhancement chooser title. */
+  @Override
   public String getTitle () { return (null); }
 
   ////////////////////////////////////////////////////////////

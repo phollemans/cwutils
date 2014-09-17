@@ -686,7 +686,11 @@ public class NOAA1bFileReader extends EarthDataReader {
 
   ////////////////////////////////////////////////////////////
   
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String argv[]) throws Exception {
 
     NOAA1bFileReader reader = new NOAA1bFileReader (argv[0], false);

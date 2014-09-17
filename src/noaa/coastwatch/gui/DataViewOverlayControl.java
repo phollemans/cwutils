@@ -90,7 +90,9 @@ public interface DataViewOverlayControl {
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Returns true if the control is in an active state, or false
+   * Gets the control activity state.
+   *
+   * @return true if the control is in an active state, or false
    * if not.  An active control is a control that is ready to
    * perform an operation using {@link #performOperation}.
    */
@@ -99,7 +101,9 @@ public interface DataViewOverlayControl {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the current operation mode as a mode from the {@link
+   * Gets the current operation mode.
+   *
+   * @return the current operation mode as a mode from the {@link
    * LightTable} class.
    */
   public int getOperationMode ();

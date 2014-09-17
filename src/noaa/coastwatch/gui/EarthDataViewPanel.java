@@ -223,12 +223,20 @@ public class EarthDataViewPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth data view. */
+  /** 
+   * Gets the Earth data view.
+   *
+   * @return the data view.
+   */
   public EarthDataView getView () { return (view); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the Earth data view. */
+  /** 
+   * Sets the Earth data view.
+   *
+   * @param view the new data view.
+   */
   public void setView (EarthDataView view) { 
 
     stopRendering();
@@ -523,6 +531,7 @@ public class EarthDataViewPanel
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void paintComponent (
     Graphics g
   ) {
@@ -559,12 +568,20 @@ public class EarthDataViewPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the default cursor. */
+  /** 
+   * Gets the default cursor.
+   *
+   * @return the default cursor.
+   */
   public Cursor getDefaultCursor () { return (defaultCursor); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the default cursor. */
+  /**
+   * Sets the default cursor.
+   *
+   * @param cursor the new default cursor to use.
+   */
   public void setDefaultCursor (Cursor cursor) { 
 
     defaultCursor = cursor; 
@@ -616,6 +633,7 @@ public class EarthDataViewPanel
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void setBounds (Rectangle r) {
 
     wasResized = (!r.equals (getBounds()));
@@ -751,6 +769,8 @@ public class EarthDataViewPanel
   /**
    * Gets the affine transform that translates view panel coordinates
    * to data location coordinates.
+   *
+   * @return the affine transform.
    */
   public AffineTransform getAffine () {
 

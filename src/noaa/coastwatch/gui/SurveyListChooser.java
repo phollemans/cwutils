@@ -185,22 +185,18 @@ public class SurveyListChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the survey list chooser tooltip. */
+  @Override
   public String getToolTip () { return (SURVEY_LIST_TOOLTIP); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the survey list chooser title. */
+  @Override
   public String getTitle () { return (null); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the survey list tab icon. */
-  public Icon getIcon () {
-
-    return (GUIServices.getIcon ("survey.tab"));
-
-  } // getIcon
+  @Override
+  public Icon getIcon () { return (GUIServices.getIcon ("survey.tab")); }
 
   ////////////////////////////////////////////////////////////
 

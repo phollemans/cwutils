@@ -293,7 +293,11 @@ public class FontChooser
 
   ////////////////////////////////////////////////////////////
   
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String argv[]) {
   
     JPanel panel = new FontChooser (Font.decode (argv[0]));

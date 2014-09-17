@@ -162,7 +162,11 @@ public class XMLPointWriter
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
   public static void main (String[] argv) throws Exception {
 
     // Get reader
