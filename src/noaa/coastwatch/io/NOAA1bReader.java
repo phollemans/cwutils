@@ -31,9 +31,24 @@
            - added extra code in close() to combat memory leaks
            2007/12/15, PFH, added scan line caching
            2007/12/20, PFH, corrected problem with start/count in getScanLine() 
+           2014/11/05, PFH
+           Changes:
+           - Added new getPeriodList() method to replace getDate().
+           - Made changes in constructor to support time period list.
+           Issues:
+           - The cwinfo tool was reporting just the start of the data, not
+             the full time span.  This can be misleading since it's not clear
+             to the user if the date reported is the start date or end date.
+             So we added full time period reporting to avoid confusion.
+           - Something that we also learned here is that some subsets of NOAA
+             1b datasets created by the CLASS archive do not have a data header
+             start/end that matches the actual subset start/end indicated by
+             the scan lines.  The scan line time period is much smaller,
+             possibly because CLASS doesn't alter the header sufficiently when
+             creating the subset.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -613,14 +628,14 @@ public abstract class NOAA1bReader
     String origin = "USDOC/NOAA/NESDIS";
     String history = (String) header.getAttribute (DataHeader.DATASET_NAME);
 
-    // Get date and transform
-    // ----------------------
-    Date date = getDate();
+    // Get time period and transform
+    // -----------------------------
+    List<TimePeriod> periodList = getPeriodList();
     EarthTransform transform = getTransform();
 
     // Return info object
     // ------------------
-    return (new SatelliteDataInfo (sat, sensor, date, transform,
+    return (new SatelliteDataInfo (sat, sensor, periodList, transform,
       origin, history));
 
   } // getGlobalInfo
@@ -632,7 +647,10 @@ public abstract class NOAA1bReader
    * file are converted into the equivalent <code>Date</code>.
    *
    * @return a new date based on the NOAA1b file data.
+   *
+   * @deprecated As of 3.3.1, use {@link #getPeriodList}.
    */
+  @Deprecated
   private Date getDate () {
 
     // Read the date and time
@@ -652,6 +670,54 @@ public abstract class NOAA1bReader
     return (new Date (cal.getTimeInMillis() + millisecond));
 
   } // getDate
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Reads the date and time period list.  The date and time metadata in the NOAA1b
+   * file are converted into the equivalent <code>TimePeriod</code> list.
+   *
+   * @return a new time period list based on the NOAA1b file data.
+   *
+   * @since 3.3.1
+   */
+  private List<TimePeriod> getPeriodList () {
+
+    // Read start date and time
+    // ------------------------
+    int startYear = ((Integer) header.getAttribute (
+      DataHeader.START_YEAR)).intValue();
+    int startDay = ((Integer) header.getAttribute (
+      DataHeader.START_DAY)).intValue();
+    long startMillisecond = ((Long) header.getAttribute (
+      DataHeader.START_MILLISECOND)).longValue();
+
+    Calendar cal = new GregorianCalendar (startYear, 0, 0, 0, 0, 0);
+    cal.set (Calendar.DAY_OF_YEAR, startDay);
+    cal.setTimeZone (TimeZone.getTimeZone ("GMT+0"));
+    Date startDate = new Date (cal.getTimeInMillis() + startMillisecond);
+
+    // Read end date and time
+    // ----------------------
+    int endYear = ((Integer) header.getAttribute (
+      DataHeader.END_YEAR)).intValue();
+    int endDay = ((Integer) header.getAttribute (
+      DataHeader.END_DAY)).intValue();
+    long endMillisecond = ((Long) header.getAttribute (
+      DataHeader.END_MILLISECOND)).longValue();
+
+    cal = new GregorianCalendar (endYear, 0, 0, 0, 0, 0);
+    cal.set (Calendar.DAY_OF_YEAR, endDay);
+    cal.setTimeZone (TimeZone.getTimeZone ("GMT+0"));
+    Date endDate = new Date (cal.getTimeInMillis() + endMillisecond);
+
+    // Create period list
+    // ------------------
+    List<TimePeriod> periodList = new ArrayList<TimePeriod>();
+    periodList.add (new TimePeriod (startDate, endDate.getTime() - startDate.getTime()));
+    return (periodList);
+
+  } // getPeriodList
 
   ////////////////////////////////////////////////////////////
 
@@ -1637,6 +1703,15 @@ public abstract class NOAA1bReader
 
     /** The dataset starting time in milliseconds attribute (Long). */
     public static final int START_MILLISECOND = 4;
+
+    /** The dataset ending year attribute (Integer). */
+    public static final int END_YEAR = 8;
+
+    /** The dataset ending Julian day attribute: [1..366] (Integer). */
+    public static final int END_DAY = 9;
+
+    /** The dataset ending time in milliseconds attribute (Long). */
+    public static final int END_MILLISECOND = 10;
 
     /** The number of data records attribute (Integer). */
     public static final int DATA_RECORDS = 5;

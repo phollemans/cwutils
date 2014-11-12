@@ -16,9 +16,17 @@
            2006/12/30, PFH, added isNavigationUsable() for constructor use
            2007/07/03, PFH, added check for NOAA-15 "verion 1" format problem
            2007/12/15, PFH, added scan line caching
+           2014/11/05, PFH
+           Changes:
+           - Added start/end time attribute reading to support parent class
+             getTimePeriod().
+           Issues:
+           - We wanted to support start/end time reading in the parent class
+             to avoid confusion in time reporting.  See the notes in
+             NOAA1bReader for more details.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -1140,6 +1148,9 @@ public class NOAA1bV2Reader
       case START_YEAR: return (new Integer (getUShort (data, 84)));
       case START_DAY: return (new Integer (getUShort (data, 86)));
       case START_MILLISECOND: return (new Long (getUInt (data, 88)));
+      case END_YEAR: return (new Integer (getUShort (data, 96)));
+      case END_DAY: return (new Integer (getUShort (data, 98)));
+      case END_MILLISECOND: return (new Long (getUInt (data, 100)));
       case DATA_RECORDS: return (new Integer (getUShort (data, 128)));
       case DATA_GAPS: return (new Integer (getUShort (data, 134)));
       case DATASET_NAME: return (new String (getBytes (data, 22, 42)).trim());

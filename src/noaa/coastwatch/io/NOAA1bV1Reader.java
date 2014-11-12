@@ -17,9 +17,17 @@
            2006/12/30, PFH, added isNavigationUsable() for constructor use
            2007/06/27, PFH, corrected scanline quality indicator bitmask
            2007/12/15, PFH, added scan line caching
-
+           2014/11/05, PFH
+           Changes:
+           - Added start/end time attribute reading to support parent class
+             getTimePeriod().
+           Issues:
+           - We wanted to support start/end time reading to the parent class
+             to avoid confusion in time reporting.  See the notes in
+             NOAA1bReader for more details.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -1010,12 +1018,19 @@ public class NOAA1bV1Reader
         default: return (new String ("unknown"));
         } // switch
       case START_YEAR:
-        int year = getUByte (data, 2) >>> 1;
-        if (year > 70) year = 1900 + year;
-        else year = 2000 + year;
-        return (new Integer (year));
+        int startYear = getUByte (data, 2) >>> 1;
+        if (startYear > 70) startYear = 1900 + startYear;
+        else startYear = 2000 + startYear;
+        return (new Integer (startYear));
       case START_DAY: return (new Integer (getUShort (data, 2) & 0x01ff));
       case START_MILLISECOND: return (new Long (getUInt (data, 4)));
+      case END_YEAR:
+        int endYear = getUByte (data, 10) >>> 1;
+        if (endYear > 70) endYear = 1900 + endYear;
+        else endYear = 2000 + endYear;
+        return (new Integer (endYear));
+      case END_DAY: return (new Integer (getUShort (data, 10) & 0x01ff));
+      case END_MILLISECOND: return (new Long (getUInt (data, 12)));
       case DATA_RECORDS: return (new Integer (getUShort (data, 8)));
       case DATA_GAPS: return (new Integer (getUShort (data, 24)));
       case DATASET_NAME: 
