@@ -32,9 +32,18 @@
            2005/05/18, PFH, changed "datum" to "spheroid"
            2007/04/19, PFH, added version printing
            2010/03/15, PFH, added coordinate system printing
-
+           2014/11/11, PFH
+           - Changes: Added printing of reading module used to recognize file
+             format.  Also added better handling of long variable names.
+           - Issues: We used to have to rely on the -v options to print verbose
+             messages to find out which reading module eventually matched the
+             file format.  Now the reader identification is printed explicitly.
+             Also, long variable names were preventing the output from lining
+             up in columns and being readable.  So we buffer the variable names
+             and then print in a reliable columns.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -628,6 +637,7 @@ public final class cwinfo {
     valueMap.put ("Origin",
       MetadataServices.format (info.getOrigin(), ", "));
     valueMap.put ("Format", reader.getDataFormat());
+    valueMap.put ("Reader ident", reader.getClass().getName());
 
     // Print attribute and value lists
     // -------------------------------
@@ -694,43 +704,44 @@ public final class cwinfo {
     int vars = reader.getVariables();
     if (vars == 0)
       return;
-
-    // Print header
-    // ------------
-    stream.format ("Variable information:\n");
-    stream.format ("  %-14s %-7s %-11s %-14s %-9s %-9s\n",
-      "Variable", "Type", "Dimensions", "Units", "Scale", "Offset");
-
-    // Loop over each variable
-    // -----------------------
+    
+    // Get variable info
+    // -----------------
+    int maxNameLength = 14;
+    int maxUnitsLength = 14;
+    List<String[]> varInfoList = new ArrayList<String[]>();
     for (int i = 0; i < vars; i++) {
 
       // Get preview
       // -----------
       DataVariable var = null;
-      try {
-        var = reader.getPreview (i);
-      } // try
+      try { var = reader.getPreview (i); }
       catch (Exception e) {
-
-
         e.printStackTrace();
-
-
         continue;
       } // catch
-
+      
+      // Create new info array
+      // ---------------------
+      String[] infoArray = new String[6];
+      int index = 0;
+      infoArray[index++] = var.getName();
+      infoArray[index++] = getType (var);
+      varInfoList.add (infoArray);
+      
       // Get dimensions
       // --------------
       int[] dims = var.getDimensions();
       String dimValues = "";
       for (int dim = 0; dim < dims.length; dim++)
         dimValues += dims[dim] + (dim < dims.length-1 ? "x" : "");
+      infoArray[index++] = dimValues;
 
       // Get units
       // ---------
       String units = var.getUnits ();
       if (units.equals ("")) units = "-";
+      infoArray[index++] = units;
 
       // Get scale, offset
       // -----------------
@@ -745,12 +756,26 @@ public final class cwinfo {
         scale = fmt.format (scaling[0]);
         offset = fmt.format (scaling[1]);
       } // else
+      infoArray[index++] = scale;
+      infoArray[index++] = offset;
 
-      // Print variable info
-      // -------------------
-      stream.format ("  %-14s %-7s %-11s %-14s %-9s %-9s\n",
-        var.getName(), getType (var), dimValues, units, scale, offset);
+      // Save maximum lengths
+      // --------------------
+      int nameLength = var.getName().length();
+      if (nameLength > maxNameLength) maxNameLength = nameLength;
+      int unitsLength = units.length();
+      if (unitsLength > maxUnitsLength) maxUnitsLength = unitsLength;
 
+    } // for
+
+    // Print variable info
+    // -------------------
+    stream.format ("Variable information:\n");
+    String varFormatLine = "  %-" + maxNameLength + "s %-7s %-11s %-" + maxUnitsLength + "s %-9s %-9s\n";
+    stream.format (varFormatLine, "Variable", "Type", "Dimensions", "Units", "Scale", "Offset");
+    for (String[] infoArray : varInfoList) {
+      stream.format (varFormatLine, infoArray[0], infoArray[1], infoArray[2],
+        infoArray[3], infoArray[4], infoArray[5]);
     } // for
     stream.println();
 
