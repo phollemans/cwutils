@@ -14,9 +14,14 @@
            2007/07/27, PFH, changed DrawingProxy to LightTable
            2007/07/30, PFH, changed BOX_MODE to BOX_ZOOM_MODE
            2007/11/05, PFH, fixed null object in updateNavigation()
+           2014/11/11, PFH
+           - Changes: Added call to variableChooser.dispose().
+           - Issue: Memory was being held onto even after the dispose method
+             was called, and we found that it was largely through the 
+             VariableChooser instance.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -505,6 +510,16 @@ public class EarthDataViewController {
 
     ViewOperationChooser.getInstance().removePropertyChangeListener (
       ViewOperationChooser.OPERATION_PROPERTY, operationListener);
+    variableChooser.dispose();
+
+    // TODO: We found here that when all CDAT windows were closed, the variable
+    // chooser was leaking memory (a lot of it).  When we fixed that, it turns
+    // out that there are other GUI components leaking a small amount of memory,
+    // for example the OverlayListChooser via its listeners.  For now we'll
+    // leave it because the impact on overall memory is small, but it should be
+    // improved in the future with a strategy for removing listeners
+    // that hold onto references for objects that should be getting garbage
+    // collected.
 
   } // dispose
 

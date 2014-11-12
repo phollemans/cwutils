@@ -11,7 +11,11 @@
              that it will ever be called by the VM.  In this case we needed
              to remove tiles from the cache for this grid, when the tiles are 
              known to no longer be needed.
-
+          2014/11/11, PFH
+          - Changes: Changed to use weak references for last tile.
+          - Issue: Holding onto strong references for the last tile was causing
+            problems with memory management.
+ 
   CoastWatch Software Library and Utilities
   Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
 
@@ -29,6 +33,7 @@ import java.util.*;
 import java.util.List;
 import java.awt.*;
 import java.io.*;
+import java.lang.ref.*;
 import noaa.coastwatch.util.*;
 import noaa.coastwatch.io.tile.TilingScheme.*;
 
@@ -50,8 +55,8 @@ public class TileCachedGrid
   /** The source to use for data. */
   private TileSource source;
 
-  /** The last tile retrieved from the cache. */
-  private Tile lastTile;
+  /** A weak reference to the last tile retrieved from the cache. */
+  private WeakReference<Tile> lastTileRef;
 
   /** The class for the elements in the data array for this variable. */
   private Class dataClass;
@@ -140,6 +145,11 @@ public class TileCachedGrid
     if (row < 0 || row > dims[ROWS]-1 || col < 0 || col > dims[COLS]-1)
       return (Double.NaN);
 
+    // Get last tile
+    // -------------
+    Tile lastTile = null;
+    if (lastTileRef != null) lastTile = lastTileRef.get();
+
     // Get tile
     // --------
     Tile tile;
@@ -151,7 +161,7 @@ public class TileCachedGrid
       catch (IOException e) {
         throw new RuntimeException ("Error getting tile: " + e.getMessage());
       } // catch
-      lastTile = tile;
+      lastTileRef = new WeakReference<Tile> (tile);
     } // else
 
     return (getValue (tile.getIndex (row, col), tile.getData()));

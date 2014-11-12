@@ -4,10 +4,15 @@
   PURPOSE: Selects a variable from a data reader.
    AUTHOR: Peter Hollemans
      DATE: 2004/02/17
-  CHANGES: n/a
+  CHANGES: 2014/11/11, PFH
+           - Changes: Added dispose() method.
+           - Issue: We had problems with garbage collecting all the memory when
+             a data analysis panel was closed, and it turned out that releasing
+             panels here and removing action listeners from the combo solved
+             most of the memory problems.
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -102,6 +107,27 @@ public class VariableChooser
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * Disposes of any resources used by this chooser. 
+   * 
+   * @since 3.3.1
+   */
+  public void dispose () {
+
+    /**
+     * We do the following because it was found that retaining references
+     * in this class were transitively holding references to the other
+     * panels and data caches that were associated with this class.
+     */
+    removeAll();
+    for (ActionListener listener : combo.getActionListeners())
+      combo.removeActionListener (listener);
+    combo = null;
+
+  } // dispose
+  
+  ////////////////////////////////////////////////////////////
+  
   /** 
    * Tests this class.
    *

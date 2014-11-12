@@ -1019,7 +1019,7 @@ public abstract class DataVariable
    * This method performs no action in the abstract class, but
    * may be used by subclasses that wish to setup internal
    * structures prior to some sort of intensive data access.  For
-   * example, if data rendering data is to occur, it might be
+   * example, if data rendering is to occur, it might be
    * useful to read in only the data that will be rendered and
    * make it availalble.
    * 
@@ -1048,6 +1048,8 @@ public abstract class DataVariable
    * Disposes of any resources used by this variable prior to being
    * finalized.  This method does nothing at this level, but may be
    * overridden in the subclass to release resources.
+   *
+   * @since 3.3.1
    */
   public void dispose () { }
 

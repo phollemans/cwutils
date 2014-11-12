@@ -278,6 +278,15 @@ public abstract class NCReader
     // -------------------
     DataVariable dataVar = variableCache.get (variables[index]);
 
+    // TODO: There may be a better way to manage data variables from NetCDF
+    // files.  As it is, we hold onto a strong reference here in a hash map,
+    // so that when the file is closed, we can call dispose() on each data
+    // variable.  That's because the rest of the code base doesn't take
+    // ownership of a variable after calling getVariable(), and so variables
+    // aren't ever disposed of.  It turns out that we needed to do this here
+    // so that variables that cache some of their data can un-cache their data
+    // when the file is closed in order to free up memory.
+
     // Insert into cache if not found
     // ------------------------------
     if (dataVar == null) {
