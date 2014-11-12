@@ -34,9 +34,15 @@
            - added setBounds() override
            - tentatively disabled componentResized() listener
            - added extra checks for resize in paintComponent()
-
+           2014/11/11, PFH
+           - Changes: Removed text field sizes in track bar.
+           - Issue: In implementing the ability to set the window size
+             programmatically, the track bar was preventing the interface from
+             being set to a smaller size.  This is because the trackbar
+             preferred size was much larger than necessary. 
+           
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -856,7 +862,7 @@ public class EarthDataViewPanel
             this.add (new JLabel (i == 0 ? "Lat:" : "Lon:"));
           else 
             this.add (new JLabel (i == 0 ? "Latitude:" : "Longitude:"));
-          textFields[i+LAT_FIELD] = new JTextField (15);
+          textFields[i+LAT_FIELD] = new JTextField();
           textFields[i+LAT_FIELD].setEditable (false);
           this.add (Box.createHorizontalStrut (5));
           this.add (textFields[i+LAT_FIELD]);
@@ -872,7 +878,7 @@ public class EarthDataViewPanel
             this.add (new JLabel (i == 0 ? "Row:" : "Col:"));
           else 
             this.add (new JLabel (i == 0 ? "Row:" : "Column:"));
-          textFields[i+ROW_FIELD] = new JTextField (6);
+          textFields[i+ROW_FIELD] = new JTextField();
           textFields[i+ROW_FIELD].setEditable (false);
           this.add (Box.createHorizontalStrut (5));
           this.add (textFields[i+ROW_FIELD]);
@@ -887,7 +893,7 @@ public class EarthDataViewPanel
           this.add (new JLabel ("Val:"));
         else
           this.add (new JLabel ("Value:"));
-        textFields[VALUE_FIELD] = new JTextField (15);
+        textFields[VALUE_FIELD] = new JTextField();
         textFields[VALUE_FIELD].setEditable (false);
         this.add (Box.createHorizontalStrut (5));
         this.add (textFields[VALUE_FIELD]);

@@ -13,10 +13,15 @@
            2007/08/09, PFH, added width to control tabs for overlay selection
            2007/12/21, PFH, added with to control tabs for enhance buttons
            2011/05/13, XL,  added methods to load and save profiles of overlays 
-           					and enhancement functions
-
+             and enhancement functions
+           2014/11/11, PFH
+           - Changes: Added ability to get/set view panel size.
+           - Issue: We wanted to be able to let the user set the view panel size
+             independently of the enclosing panels, so that data exports could
+             be a consistent size.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -34,6 +39,12 @@ import java.util.*;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+
+
+import java.awt.event.*;
+
+
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -106,6 +117,24 @@ public class EarthDataAnalysisPanel
 
   /** The full screen window for this panel or null if not yet created. */
   private FullScreenWindow fsWindow;
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the current view panel size.
+   *
+   * @return the view panel size.
+   */
+  public Dimension getViewPanelSize() { return (viewPanel.getSize()); }
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Sets the current view panel size.
+   *
+   * @param panelSize the new view panel size.
+   */
+  public void setViewPanelSize (Dimension panelSize) { viewPanel.setSize (panelSize); }
 
   ////////////////////////////////////////////////////////////
 
@@ -197,6 +226,21 @@ public class EarthDataAnalysisPanel
     // Create center panel with variable chooser and view
     // --------------------------------------------------
     JPanel centerPanel = new JPanel (new BorderLayout());
+    
+    
+    
+/*
+    centerPanel.addComponentListener (new ComponentAdapter() {
+      public void componentResized (ComponentEvent event) {
+        System.out.println ("centerPanel: \n" +
+          "  size = " + event.getComponent().getSize() + "\n" +
+          "  pref = " + event.getComponent().getPreferredSize());
+      } // componentResized
+    });
+*/
+    
+    
+    
     VariableChooser chooser = controller.getVariableChooser();
     centerPanel.add (chooser, BorderLayout.NORTH);
     viewPanel = controller.getViewPanel();
@@ -205,10 +249,50 @@ public class EarthDataAnalysisPanel
       VIEW_PANEL_SIZE));
     lightTable.setBackground (VIEW_BACK);
 
+
+
+
+/*
+    viewPanel.addComponentListener (new ComponentAdapter() {
+      public void componentResized (ComponentEvent event) {
+        System.out.println ("viewPanel: \n" +
+          "  size = " + event.getComponent().getSize() + "\n" +
+          "  pref = " + event.getComponent().getPreferredSize());
+      } // componentResized
+    });
+    lightTable.addComponentListener (new ComponentAdapter() {
+      public void componentResized (ComponentEvent event) {
+        System.out.println ("lightTable: \n" +
+          "  size = " + event.getComponent().getSize() + "\n" +
+          "  pref = " + event.getComponent().getPreferredSize());
+      } // componentResized
+    });
+*/
+
+
+
     JPanel viewPanelContainer = new JPanel (new BorderLayout());
     viewPanelContainer.setBorder (new BevelBorder (BevelBorder.LOWERED));
     viewPanelContainer.add (lightTable, BorderLayout.CENTER);
     centerPanel.add (viewPanelContainer, BorderLayout.CENTER);
+
+
+
+
+
+/*
+    viewPanelContainer.addComponentListener (new ComponentAdapter() {
+      public void componentResized (ComponentEvent event) {
+        System.out.println ("viewPanelContainer: \n" +
+          "  size = " + event.getComponent().getSize() + "\n" +
+          "  pref = " + event.getComponent().getPreferredSize());
+      } // componentResized
+    });
+*/
+
+
+
+
 
     LegendPanel legendPanel = controller.getLegendPanel();
     legendPanel.setPreferredSize (new Dimension (90, 0));
@@ -246,11 +330,31 @@ public class EarthDataAnalysisPanel
     trackBar.setBorder (new BevelBorder (BevelBorder.RAISED));
     this.add (trackBar, BorderLayout.SOUTH);
 
+
+
+
+
+/*
+    trackBar.addComponentListener (new ComponentAdapter() {
+      public void componentResized (ComponentEvent event) {
+        System.out.println ("trackBar: \n" +
+          "  size = " + event.getComponent().getSize() + "\n" +
+          "  pref = " + event.getComponent().getPreferredSize());
+      } // componentResized
+    });
+*/
+
+
+
+
+
+
+
   } // EarthDataAnalysisPanel constructor
 
   ////////////////////////////////////////////////////////////
 
-  /** Disposes of any resources used by this controller. */
+  /** Disposes of any resources used by this panel. */
   public void dispose () {
 
     try { reader.close(); }

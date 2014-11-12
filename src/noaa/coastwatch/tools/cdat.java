@@ -42,6 +42,15 @@
              functionality with JRE builtin capability.
            - Issues: In some cases we were getting a slow startup, so we want
              to make sure the user knows there is something happening.
+           2014/09/17, PFH
+           - Changes: Added menu options to set window geometry, and store/recall
+             of previous session window geometry.
+           - Issues: A user requested the functionality.
+           2014/11/11, PFH
+           - Changes: Refined menu options to set window geometry, and added
+             potnetial code for setting view panel size (remains commented).
+             Also improved the menu enable/disable functionality.
+           - Issue: A user requested the functionality.
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
@@ -60,6 +69,7 @@ import java.net.*;
 import java.beans.*;
 import java.util.*;
 import java.util.List;
+import java.text.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -188,17 +198,29 @@ public final class cdat
   /** The File/Quit menu command. */
   private static final String QUIT_COMMAND = "Quit";
 
-  /** The View/Size small command. */
-  private static final String VIEW_SIZE_SMALL_COMMAND = "Small (960x720)";
+  /** The View/Window Size small command. */
+  private static final String WINDOW_SIZE_SMALL_COMMAND = "Small (960x720)";
 
-  /** The View/Size medium command. */
-  private static final String VIEW_SIZE_MEDIUM_COMMAND = "Medium (1200x900)";
+  /** The View/Window Size medium command. */
+  private static final String WINDOW_SIZE_MEDIUM_COMMAND = "Medium (1200x900)";
 
-  /** The View/Size large command. */
-  private static final String VIEW_SIZE_LARGE_COMMAND = "Large (1440x1080)";
+  /** The View/Window Size large command. */
+  private static final String WINDOW_SIZE_LARGE_COMMAND = "Large (1440x1080)";
 
-  /** The View/Size custom command. */
-  private static final String VIEW_SIZE_CUSTOM_COMMAND = "Custom";
+  /** The View/Data Size custom command. */
+  private static final String WINDOW_SIZE_CUSTOM_COMMAND = "Custom Window Size";
+
+  /** The View/Data Size small command. */
+  private static final String DATA_SIZE_SMALL_COMMAND = "Small (512x512)";
+
+  /** The View/Data Size medium command. */
+  private static final String DATA_SIZE_MEDIUM_COMMAND = "Medium (768x768)";
+
+  /** The View/Data Size large command. */
+  private static final String DATA_SIZE_LARGE_COMMAND = "Large (1024x1024)";
+
+  /** The View/Data Size custom command. */
+  private static final String DATA_SIZE_CUSTOM_COMMAND = "Custom Data Size";
 
   /** The View/Full Screen Mode menu command. */
   private static final String FULL_SCREEN_COMMAND = "Full Screen " + 
@@ -244,26 +266,8 @@ public final class cdat
   /** The tabbed pane used to hold analysis panels. */
   private JTabbedPane tabbedPane;
 
-  /** The close menu item. */
-  private JMenuItem closeItem;
-
-  /** The save as menu item. */
-  private JMenuItem exportItem;
-
-  /** The file information item. */
-  private JMenuItem fileInfoItem;
-
-  /** The navigation analysis item. */
-  private JMenuItem navAnalysisItem;
-
-  /** The full screen item. */
-  private JMenuItem fullScreenItem;
-  
-  /** The save profile item. */
-  private JMenuItem saveProfileItem;
-  
-  /** The load profile item. */
-  private JMenuItem loadProfileItem;
+  /** The list of menu items that need to be enabled/disabled when all tabs are closed. */
+  private List<JMenuItem> menuItemDisableList = new ArrayList<JMenuItem>();
 
   /** The handler for file drop operations. */
   private FileTransferHandler dropHandler;
@@ -321,7 +325,7 @@ public final class cdat
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_W, keymask));
     menuItem.addActionListener (fileListener); 
     fileMenu.add (menuItem);
-    closeItem = menuItem;
+    menuItemDisableList.add (menuItem);
 
     menuItem = new JMenuItem (EXPORT_COMMAND, 
       GUIServices.getIcon ("menu.export"));
@@ -329,7 +333,7 @@ public final class cdat
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_E, keymask));
     menuItem.addActionListener (fileListener); 
     fileMenu.add (menuItem);
-    exportItem = menuItem;
+    menuItemDisableList.add (menuItem);
 
     if (!GUIServices.IS_AQUA) {
       fileMenu.addSeparator();
@@ -351,35 +355,77 @@ public final class cdat
     submenu.setMnemonic (KeyEvent.VK_S);
     viewMenu.add (submenu);
 
-    menuItem = new JMenuItem (VIEW_SIZE_SMALL_COMMAND);
-    menuItem.setMnemonic (KeyEvent.VK_1);
+    menuItem = new JMenuItem (WINDOW_SIZE_SMALL_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_S);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_1, keymask));
     menuItem.addActionListener (viewListener);
     submenu.add (menuItem);
 
-    menuItem = new JMenuItem (VIEW_SIZE_MEDIUM_COMMAND);
-    menuItem.setMnemonic (KeyEvent.VK_2);
+    menuItem = new JMenuItem (WINDOW_SIZE_MEDIUM_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_M);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_2, keymask));
     menuItem.addActionListener (viewListener);
     submenu.add (menuItem);
 
-    menuItem = new JMenuItem (VIEW_SIZE_LARGE_COMMAND);
-    menuItem.setMnemonic (KeyEvent.VK_3);
+    menuItem = new JMenuItem (WINDOW_SIZE_LARGE_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_L);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_3, keymask));
     menuItem.addActionListener (viewListener);
     submenu.add (menuItem);
 
-    menuItem = new JMenuItem (VIEW_SIZE_CUSTOM_COMMAND);
-    menuItem.setMnemonic (KeyEvent.VK_4);
+    menuItem = new JMenuItem (WINDOW_SIZE_CUSTOM_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_C);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_4, keymask));
     menuItem.addActionListener (viewListener);
     submenu.add (menuItem);
 
-    menuItem = fullScreenItem = new JMenuItem (FULL_SCREEN_COMMAND);
+/**
+ * TODO: This functionality doesn't work yet.  We leave it here for now in
+ * case it's needed in the future.  For now, it may be sufficient for just
+ * the window size changes to be implemented.
+ 
+    submenu = new JMenu ("Data size");
+    submenu.setMnemonic (KeyEvent.VK_S);
+    viewMenu.add (submenu);
+
+    menuItem = new JMenuItem (DATA_SIZE_SMALL_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_S);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_1, keymask | InputEvent.SHIFT_DOWN_MASK));
+    menuItem.addActionListener (viewListener);
+    submenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
+
+    menuItem = new JMenuItem (DATA_SIZE_MEDIUM_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_M);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_2, keymask | InputEvent.SHIFT_DOWN_MASK));
+    menuItem.addActionListener (viewListener);
+    submenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
+
+    menuItem = new JMenuItem (DATA_SIZE_LARGE_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_L);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_3, keymask | InputEvent.SHIFT_DOWN_MASK));
+    menuItem.addActionListener (viewListener);
+    submenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
+
+    menuItem = new JMenuItem (DATA_SIZE_CUSTOM_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_C);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_4, keymask | InputEvent.SHIFT_DOWN_MASK));
+    menuItem.addActionListener (viewListener);
+    submenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
+
+
+*/
+
+
+    menuItem = new JMenuItem (FULL_SCREEN_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_F);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_F, keymask));
     menuItem.addActionListener (viewListener);
     viewMenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
 
     // Create tools menu
     // -----------------
@@ -398,29 +444,33 @@ public final class cdat
     submenu.setMnemonic (KeyEvent.VK_R);
     toolsMenu.add (submenu);
 
-    menuItem = saveProfileItem = new JMenuItem (SAVE_PROFILE_COMMAND);
+    menuItem = new JMenuItem (SAVE_PROFILE_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_S);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_S, keymask));
     menuItem.addActionListener (toolsListener);
     submenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
 
-    menuItem = loadProfileItem = new JMenuItem (LOAD_PROFILE_COMMAND);
+    menuItem = new JMenuItem (LOAD_PROFILE_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_L);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_L, keymask));
     menuItem.addActionListener (toolsListener);
     submenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
 
-    menuItem = fileInfoItem = new JMenuItem (INFO_COMMAND);
+    menuItem = new JMenuItem (INFO_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_I);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_I, keymask));
     menuItem.addActionListener (toolsListener); 
     toolsMenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
 
-    menuItem = navAnalysisItem = new JMenuItem (NAV_ANALYSIS_COMMAND);
+    menuItem = new JMenuItem (NAV_ANALYSIS_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_N);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_N, keymask));
     menuItem.addActionListener (toolsListener); 
     toolsMenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
 
     // Create help menu
     // ----------------
@@ -511,18 +561,40 @@ public final class cdat
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * Gets a specific analysis panel.
+   *
+   * @param index the analysis panel index.
+   */
+  private EarthDataAnalysisPanel getAnalysisPanelAt (int index) {
+  
+    return ((EarthDataAnalysisPanel) tabbedPane.getComponentAt (index));
+    
+  } // getAnalysisPanelAt
+    
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the active analysis panel. */
+  private EarthDataAnalysisPanel getAnalysisPanel() {
+  
+    return ((EarthDataAnalysisPanel) tabbedPane.getSelectedComponent());
+    
+  } // getAnalysisPanel
+    
+  ////////////////////////////////////////////////////////////
+
   /** Handles view menu commands. */
   private class ViewMenuListener implements ActionListener {
     public void actionPerformed (ActionEvent event) {
 
       String command = event.getActionCommand();
 
-      // Change view size to small/medium/large
-      // --------------------------------------
+      // Change window size to small/medium/large
+      // ----------------------------------------
       if (
-        command.equals (VIEW_SIZE_SMALL_COMMAND) ||
-        command.equals (VIEW_SIZE_MEDIUM_COMMAND) ||
-        command.equals (VIEW_SIZE_LARGE_COMMAND)
+        command.equals (WINDOW_SIZE_SMALL_COMMAND) ||
+        command.equals (WINDOW_SIZE_MEDIUM_COMMAND) ||
+        command.equals (WINDOW_SIZE_LARGE_COMMAND)
       ) {
         String sizeString = command.replaceFirst ("^.*\\(([0-9]+x[0-9]+)\\).*$", "$1");
         String[] sizeArray = sizeString.split ("x");
@@ -537,19 +609,98 @@ public final class cdat
       
       // Change view size to custom
       // --------------------------
-      else if (command.equals (VIEW_SIZE_CUSTOM_COMMAND)) {
+      else if (command.equals (WINDOW_SIZE_CUSTOM_COMMAND)) {
 
+        JPanel dimPanel = new JPanel();
+        dimPanel.setLayout (new GridBagLayout());
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.anchor = GridBagConstraints.WEST;
 
-        // TODO: Fill in here with visual object choosers??
+        Dimension size = cdat.this.getSize();
+        NumberFormat format = NumberFormat.getIntegerInstance();
+        format.setGroupingUsed (false);
 
+        GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
+        gc.insets = new Insets (2, 0, 2, 10);
+        dimPanel.add (new JLabel ("Width:"), gc);
+        gc.insets = new Insets (2, 0, 2, 0);
+        GUIServices.setConstraints (gc, 1, 1, 1, 1, GridBagConstraints.NONE, 1, 0);
+        final JFormattedTextField widthField = new JFormattedTextField (format);
+        widthField.setValue (size.width);
+        widthField.setEditable (true);
+        widthField.setColumns (8);
+        dimPanel.add (widthField, gc);
+        
+        GUIServices.setConstraints (gc, 0, 2, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
+        gc.insets = new Insets (2, 0, 2, 10);
+        dimPanel.add (new JLabel ("Height:"), gc);
+        gc.insets = new Insets (2, 0, 2, 0);
+        GUIServices.setConstraints (gc, 1, 2, 1, 1, GridBagConstraints.NONE, 1, 0);
+        final JFormattedTextField heightField = new JFormattedTextField (format);
+        heightField.setValue (size.height);
+        heightField.setEditable (true);
+        heightField.setColumns (8);
+        dimPanel.add (heightField, gc);
+
+        Action okAction = GUIServices.createAction ("OK", new Runnable() {
+          public void run () {
+            Dimension newSize = new Dimension();
+            newSize.width = Integer.parseInt (widthField.getText());
+            newSize.height = Integer.parseInt (heightField.getText());
+            cdat.this.setSize (newSize);
+          } // run
+        });
+        Action cancelAction = GUIServices.createAction ("Cancel", null);
+        JDialog dialog = GUIServices.createDialog (
+          cdat.this, "Set window size", true, dimPanel,
+          null, new Action[] {okAction, cancelAction}, null, true);
+
+        dialog.setVisible (true);
 
       } // else if
+
+      // Change data size to small/medium/large
+      // --------------------------------------
+
+/*
+
+      else if (
+        command.equals (DATA_SIZE_SMALL_COMMAND) ||
+        command.equals (DATA_SIZE_MEDIUM_COMMAND) ||
+        command.equals (DATA_SIZE_LARGE_COMMAND)
+      ) {
+        String sizeString = command.replaceFirst ("^.*\\(([0-9]+x[0-9]+)\\).*$", "$1");
+        String[] sizeArray = sizeString.split ("x");
+        try {
+          int width = Integer.parseInt (sizeArray[0]);
+          int height = Integer.parseInt (sizeArray[1]);
+          Dimension panelSize = new Dimension (width, height);
+
+
+          // FIXME: This doesn't quite work!
+          
+          System.out.println ("setting panelSize = " + panelSize);
+          
+          getAnalysisPanel().setViewPanelSize (panelSize);
+          cdat.this.pack();
+
+
+        } // try
+        catch (NumberFormatException e) {}
+      } // if
+
+
+*/
+
+
+
+
+
 
       // Show view full screen
       // ---------------------
       else if (command.equals (FULL_SCREEN_COMMAND)) {
-        ((EarthDataAnalysisPanel) 
-          tabbedPane.getSelectedComponent()).showFullScreen();
+        getAnalysisPanel().showFullScreen();
       } // else if
 
     } // actionPerformed
@@ -588,8 +739,7 @@ public final class cdat
       // Show info dialog
       // ----------------
       else if (command.equals (INFO_COMMAND)) {
-        EarthDataReader reader = ((EarthDataAnalysisPanel) 
-          tabbedPane.getSelectedComponent()).getReader();
+        EarthDataReader reader = getAnalysisPanel().getReader();
         ReaderInfoPanel infoPanel = new ReaderInfoPanel (reader);
         infoPanel.showDialog (cdat.this, "File Information");
       } // else if
@@ -597,8 +747,7 @@ public final class cdat
       // Show navigation analysis dialog
       // -------------------------------
       else if (command.equals (NAV_ANALYSIS_COMMAND)) {
-        ((EarthDataAnalysisPanel) 
-          tabbedPane.getSelectedComponent()).showNavAnalysisDialog();
+        getAnalysisPanel().showNavAnalysisDialog();
       } // else if
 
       // Save profile
@@ -608,8 +757,7 @@ public final class cdat
         if (returnVal == JFileChooser.APPROVE_OPTION) {
           File saveFile = profileChooser.getSelectedFile();
           try {
-            ((EarthDataAnalysisPanel)
-              tabbedPane.getSelectedComponent()).saveProfile (saveFile);
+            getAnalysisPanel().saveProfile (saveFile);
           } // try
           catch (IOException e) {
             e.printStackTrace();
@@ -624,8 +772,7 @@ public final class cdat
         if (returnVal == JFileChooser.APPROVE_OPTION) {
           File loadFile = profileChooser.getSelectedFile();
           try {
-            ((EarthDataAnalysisPanel)
-              tabbedPane.getSelectedComponent()).loadProfile (loadFile);
+            getAnalysisPanel().loadProfile (loadFile);
           } // try
           catch (IOException e) {
             e.printStackTrace();
@@ -683,19 +830,12 @@ public final class cdat
 
     // Update menu items
     // -----------------
-    closeItem.setEnabled (enabled);
-    exportItem.setEnabled (enabled);
-    fileInfoItem.setEnabled (enabled);
-    navAnalysisItem.setEnabled (enabled);
-    fullScreenItem.setEnabled (enabled);
-    saveProfileItem.setEnabled (enabled);
-    loadProfileItem.setEnabled (enabled);
+    for (JMenuItem item : menuItemDisableList) item.setEnabled (enabled);
 
     // Update interaction mode
     // -----------------------
     for (int i = 0; i < tabbedPane.getTabCount(); i++)
-      ((EarthDataAnalysisPanel) tabbedPane.getComponentAt (i)).
-        resetInteraction();
+      getAnalysisPanelAt (i).resetInteraction();
 
   } // updateEnabled
 
@@ -746,8 +886,7 @@ public final class cdat
       // Close file
       // ----------
       else if (command.equals (CLOSE_COMMAND)) {
-        EarthDataAnalysisPanel analysisPanel = 
-          (EarthDataAnalysisPanel) tabbedPane.getSelectedComponent();
+        EarthDataAnalysisPanel analysisPanel = getAnalysisPanel();
         tabbedPane.remove (analysisPanel);
         analysisPanel.dispose();
         updateEnabled();
@@ -756,8 +895,7 @@ public final class cdat
       // Save to file
       // ------------
       else if (command.equals (EXPORT_COMMAND)) {
-        EarthDataAnalysisPanel analysisPanel = 
-          (EarthDataAnalysisPanel) tabbedPane.getSelectedComponent();
+        EarthDataAnalysisPanel analysisPanel = getAnalysisPanel();
         EarthDataView view = analysisPanel.getView();
         EarthDataReader reader = analysisPanel.getReader();
 
