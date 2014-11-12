@@ -156,6 +156,8 @@ public class EarthDataChooser
     threddsChooser.addPropertyChangeListener (new THREDDSFileListener());
 
 
+// FIXME: For now we disable the network and THREDDS file tabs because
+// for there are no reliable servers for either one for testing.
 
 /*
     tabbedPane.addTab ("THREDDS", GUIServices.getIcon ("open.network"),
@@ -557,7 +559,89 @@ public class EarthDataChooser
     reader = null;
     File file = (name == null ? null : new File (name));
     if (file != null && file.isFile() && file.exists()) {
-        
+
+
+
+
+// TODO: Clean this up and try to understand why it fails
+// to remove the message in some cases.  This is the old source code:
+
+
+/**
+
+
+
+      // Create worker thread
+      // --------------------
+      Thread worker = new Thread () {
+          public void run () {
+
+            SwingUtilities.invokeLater (new Runnable() {
+                public void run () {
+
+                  // Create popup message
+                  // --------------------
+                  PopupFactory factory = PopupFactory.getSharedInstance();
+                  JLabel label = new JLabel ("Reading file information ...");
+                  label.setBorder (BorderFactory.createEmptyBorder (10, 10, 
+                    10, 10));
+                  Dimension labelSize = label.getPreferredSize();
+                  Component parent = openDialog;
+                  Point topLeft = parent.getLocationOnScreen();
+                  popupMessage = factory.getPopup (parent, label,
+                    topLeft.x + parent.getWidth()/2 - 
+                      (int) labelSize.getWidth()/2,
+                    topLeft.y + parent.getHeight()/2 - 
+                      (int) labelSize.getHeight()/2);
+
+                  // Set blocking glass pane to inhibit input
+                  // ----------------------------------------
+                  openDialog.getGlassPane().setVisible (true);
+                  openDialog.getGlassPane().requestFocusInWindow();
+
+                  // Start timer for popup
+                  // ---------------------
+                  Action showPopupAction = new AbstractAction() {
+                      public void actionPerformed (ActionEvent e) {
+                        popupMessage.show();
+                      } // actionPerformed
+                    };
+                  popupTimer = new Timer (500, showPopupAction);
+                  popupTimer.setRepeats (false);
+                  popupTimer.start();
+                  
+                } // run
+                
+              });
+
+            // Open data file
+            // --------------
+            SwathProjection.setNullMode (true);
+            try { reader = EarthDataReaderFactory.create (name); }
+            catch (IOException e) { }
+            SwathProjection.setNullMode (false);
+            
+            // Finish up
+            // ---------
+            SwingUtilities.invokeLater (new Runnable() {
+                public void run () {
+                  if (popupTimer.isRunning())
+                    popupTimer.stop();
+                  else
+                    popupMessage.hide();
+                  updateDisplay();
+                  openDialog.getGlassPane().setVisible (false);
+                } // run
+              });
+
+          } // run
+        };
+      worker.start();
+
+
+**/
+
+      
       // Create worker thread
       // --------------------
       Thread worker = new Thread () {
@@ -574,7 +658,7 @@ public class EarthDataChooser
                 } // run
                 
               });
-            
+
             // Start timer for popup
             // ---------------------
             
@@ -601,19 +685,19 @@ public class EarthDataChooser
             popupTimer = new Timer (500, showPopupAction);
             popupTimer.setRepeats (false);
             popupTimer.start();
-            
+
             // Open data file
             // --------------
             SwathProjection.setNullMode (true);
             try { reader = EarthDataReaderFactory.create (name); }
             catch (IOException e) { }
             SwathProjection.setNullMode (false);
-            
+
             if (popupTimer.isRunning())
                 popupTimer.stop();
             else
                 if(popupMessage != null) popupMessage.hide();
-            
+
             // Finish up
             // ---------
             SwingUtilities.invokeLater (new Runnable() {
