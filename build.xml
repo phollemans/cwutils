@@ -22,6 +22,13 @@
            2013/11/06, PFH, added target/source args for javac tasks
            2014/02/21, PFH, added upload target and extra cleanup for docs
            2014/03/23, PFH, added test_unit target
+           2014/11/11, PFH
+           - Changes: Redesigned the targets for building packages.
+           - Issue: Building one or several packages was becoming an issue,
+             because we want to have the same build number to distribute
+             to users, but didn't always have the ability to build just the
+             subset of packages needed.  So now we have flexibility in the 
+             packages target.
  
   CoastWatch Software Library and Utilities
   Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
@@ -39,17 +46,17 @@
     <format property="current.time" pattern="yyyyMMdd_HHmmss"/>
   </tstamp>
 
-  <!-- Define install task -->
-  <!-- ******************* -->
+  <!-- Define tasks -->
+  <!-- ************ -->
 
-  <!--
-  This is the support library for creating installation packages
-  for various operating systems.
-  -->
-  <taskdef 
+  <!-- This is for the install task that builds packages. -->
+  <taskdef
     name="install4j" 
     classname="com.install4j.Install4JTask"
     classpath="${install4j.dir}/bin/ant.jar"/>
+
+  <!-- These are the contrib tasks. -->
+  <taskdef resource="net/sf/antcontrib/antlib.xml"/>
 
   <!-- Define Java compile classpath -->
   <!-- ***************************** -->
@@ -67,7 +74,8 @@
   <!-- Define main compile targets -->
   <!-- *************************** -->
   
-  <target name="classes" description="Compiles main Java classes in src/">
+  <target name="classes"
+    description="Compiles main Java classes in src/">
     <depend srcdir="src" destdir="classes"/>
     <mkdir dir="classes"/>
     <javac 
@@ -90,7 +98,8 @@
     </jar>
   </target>
 
-  <target name="lint" description="Compiles main Java classes in src/ with lint checking">
+  <target name="lint"
+    description="Compiles main Java classes in src/ with lint checking">
     <depend srcdir="src" destdir="classes"/>
     <mkdir dir="classes"/>
     <javac 
@@ -117,13 +126,14 @@
   <!-- Define source and API targets -->
   <!-- ***************************** -->
   
-  <target name="source" description="Creates Java and C source code ZIP file">
+  <target name="source"
+    description="Creates Java and C source code ZIP file">
     <zip destfile="src.zip">
       <zipfileset dir="src" prefix="src"/>
     </zip>
   </target>
 
-  <target name="doc" depends="classes" 
+  <target name="doc" depends="classes"
     description="Creates Java API documentation, tool manual pages, and user's guide in doc/">
     <delete dir="doc/api"/>
     <javadoc 
@@ -136,6 +146,7 @@
       header="CoastWatch Utils v${version}"
       footer="CoastWatch Utils v${version}">
       <packageset dir="src"/>
+      <arg line="-Xmaxwarns 10000"/>
     </javadoc>
     <delete dir="doc/tools"/>
     <exec executable="${basedir}/scripts/make_docs.sh" dir="doc">
@@ -143,95 +154,85 @@
     </exec>
   </target>
 
-  <target name="api" description="Creates Java API ZIP file in doc/">
+  <target name="api"
+    description="Creates Java API ZIP file in doc/">
     <zip destfile="doc/api.zip">
       <zipfileset dir="doc/api" prefix="api"/>
     </zip>
   </target>
 
-  <target
-    name="all"
+  <target name="all"
     description="Combines classes, doc, source, and api targets"
     depends="classes,doc,source,api"/>
 
   <!-- Define package targets -->
   <!-- ********************** -->
 
-  <target name="pkg_windows" depends="all"
-    description="Creates Windows packages">
-    <install4j 
-      projectfile="cwf.install4j"
-      release="${version}"
-      buildids="10,278"
-      verbose="true">
-      <variable name="buildNumber" value="${build.number}"/>
-    </install4j>
-  </target>
-
-  <target name="pkg_linux" depends="all"
-    description="Creates Linux packages">
-    <install4j 
-      projectfile="cwf.install4j"
-      release="${version}"
-      buildids="88,288"
-      verbose="true">
-      <variable name="buildNumber" value="${build.number}"/>
-    </install4j>
-  </target>
-
-  <target name="pkg_winlin" depends="all"
-    description="Creates Windows and Linux packages">
-    <install4j 
-      projectfile="cwf.install4j"
-      release="${version}"
-      buildids="10,278,88,288"
-      verbose="true">
-      <variable name="buildNumber" value="${build.number}"/>
-    </install4j>
-  </target>
-
-  <target name="pkg_solaris" depends="all"
-    description="Creates Solaris packages">
-    <install4j 
-      projectfile="cwf.install4j"
-      release="${version}"
-      buildids="93,292"
-      verbose="true">
-      <variable name="buildNumber" value="${build.number}"/>
-    </install4j>
-  </target>
-
-  <target name="pkg_macosx" depends="all"
-    description="Creates Mac OS X packages">
-    <install4j 
-      projectfile="cwf.install4j"
-      release="${version}"
-      buildids="276,528"
-      verbose="true">
-      <variable name="buildNumber" value="${build.number}"/>
-    </install4j>
-  </target>
-
-  <target name="pkg_macosx_test" depends="all"
-    description="Creates Mac OS X test package">
-    <install4j 
-      projectfile="cwf.install4j"
-      release="${version}"
-      buildids="528"
-      verbose="true">
-      <variable name="buildNumber" value="${build.number}"/>
-    </install4j>
-  </target>
+  <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64,solaris32,solaris64"/>
+  <property name="build.id.linux32" value="88"/>
+  <property name="build.id.linux64" value="288"/>
+  <property name="build.id.windows32" value="10"/>
+  <property name="build.id.windows64" value="278"/>
+  <property name="build.id.macosx64" value="276"/>
+  <property name="build.id.macosx64.tgz" value="528"/>
+  <property name="build.id.solaris32" value="93"/>
+  <property name="build.id.solaris64" value="292"/>
 
   <target name="packages" depends="all"
-    description="Creates all package files">
-    <install4j 
+    description="Creates package files specified by ${builds}, or all if no builds specified">
+
+    <!-- Check builds -->
+    <if>
+      <not><isset property="builds"/></not>
+      <then>
+        <property name="builds" value="${builds.all}"/>
+      </then>
+    </if>
+
+    <!-- Convert build names to build IDs -->
+    <echo message="Building packages for ${builds}"/>
+    <var name="build.ids" value=""/>
+    <for list="${builds}" param="build.name">
+      <sequential>
+
+        <!-- Set current build ID to append -->
+        <var name="build.id.current" value="${build.id.@{build.name}}"/>
+
+        <if>
+
+          <!-- Check build ID is known -->
+          <not><matches pattern="^[0-9]*$" string="${build.id.current}"/></not>
+          <then>
+            <echo message="No build ID found for @{build.name}, ignoring ..."/>
+          </then>
+
+          <!-- Add build ID to list -->
+          <else>
+            <if>
+             <not><equals arg1="${build.ids}" arg2=""/></not>
+             <then>
+               <var name="build.ids" value="${build.ids},"/>
+             </then>
+            </if>
+            <var name="build.ids" value="${build.ids}${build.id.current}"/>
+          </else>
+
+        </if>
+
+        <!-- Add build ID to list -->
+
+      </sequential>
+    </for>
+
+    <!-- Call install4j task -->
+    <install4j
       projectfile="cwf.install4j"
       release="${version}"
-      buildids="10,278,88,288,93,292,276,528"
+      buildids="${build.ids}"
       verbose="true">
       <variable name="buildNumber" value="${build.number}"/>
     </install4j>
+
   </target>
 
   <target name="upload"
