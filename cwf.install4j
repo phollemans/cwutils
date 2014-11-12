@@ -717,7 +717,7 @@
           <versionLine x="20" y="40" text="version ${compiler:sys.version}" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
         </text>
       </splashScreen>
-      <java mainClass="noaa.coastwatch.tools.hdatt" vmParameters="${compiler:vm32BitOption} ${compiler:vmLogOptions}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+      <java mainClass="noaa.coastwatch.tools.hdatt" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib" failOnError="false" />
