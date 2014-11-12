@@ -229,6 +229,12 @@ public class LightTable
 
   ////////////////////////////////////////////////////////////
   
+  // TODO: We need to move the code for cut/paste of the view center
+  // and magnification to another class, for example EarthDataViewPanel,
+  // and implement it without using data flavours.  They add an unnecessary
+  // layer of complication when we could simply use a static variable within
+  // the class to copy parameters across EarthDataViewPanel objects.
+  
   /**
    * The transferable EarthDataView for copy/paste function on the 
    * local clipboard
@@ -340,7 +346,7 @@ public class LightTable
   }
   
   ////////////////////////////////////////////////////////////
-  
+
   public void doLayout () {
 
     Rectangle bounds = new Rectangle (0, 0, getWidth(), getHeight());
