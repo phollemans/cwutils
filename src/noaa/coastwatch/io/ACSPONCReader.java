@@ -21,9 +21,15 @@
              issues with nighttime data where the cloud bitmask data for SST 
              was showing clear in situations where it should have been masked,
              because the value was being ignored as missing data.
+           2015/04/30, PFH
+           - Changes: Added new getGeoTransform() method.
+           - Issues: We needed support for the Normalized Geostationary 
+             Projection, or in our case the Ellipsoid Perspective Projection 
+             transform class.
+ 
  
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -34,17 +40,32 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
-import java.text.*;
-import java.awt.geom.*;
-import java.io.*;
-import ucar.nc2.*;
-import ucar.nc2.dataset.*;
-import ucar.ma2.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.io.tile.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import noaa.coastwatch.io.NCReader;
+import noaa.coastwatch.io.tile.NCTileSource;
+import noaa.coastwatch.io.tile.TileCachedGrid;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.DateFormatter;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.SatelliteDataInfo;
+import noaa.coastwatch.util.TimePeriod;
+import noaa.coastwatch.util.trans.DataProjection;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.SwathProjection;
+import noaa.coastwatch.util.trans.EllipsoidPerspectiveProjection;
+import ucar.ma2.DataType;
+import ucar.nc2.NetcdfFile;
+import ucar.nc2.Variable;
+import ucar.nc2.dataset.NetcdfDataset;
 
 /** 
  * The <code>ACSPONCReader</code> class reads Java NetCDF accessible
@@ -152,7 +173,96 @@ public class ACSPONCReader
   ////////////////////////////////////////////////////////////
 
   /** Gets the Earth transform information. */
-  private EarthTransform getTransform () {
+  private EarthTransform getTransform () throws IOException {
+
+    EarthTransform trans;
+    
+    // Check for AHI sensor
+    // --------------------
+    String sensor = (String) getAttribute ("SENSOR");
+    if (sensor.equals ("AHI")) {
+      trans = getGeoTransform();
+    } // if
+
+    // Otherwise assume a polar orbiter-like sensor
+    // --------------------------------------------
+    else {
+      trans = getSwathTransform();
+    } // else
+
+    return (trans);
+
+  } // getTransform
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the Earth transform information for geostationary projection. */
+  private EarthTransform getGeoTransform () throws IOException {
+
+    /**
+     * This next part gets and checks the attributes.  In some cases, we
+     * expect attributes to have certain values and if they don't, we
+     * issue a message.  The attribute values look something like this:
+     *
+     * Sub_Lon = 140.7
+     * Dist_Virt_Sat = 42164.0
+     * Dist_Real_Sat = 42159.69555133015
+     * Earth_Radius_Equator = 6378.137
+     * Earth_Radius_Polar = 6356.7523
+     * CFAC = 20466275
+     * LFAC = 20466275
+     * COFF = 2750.5
+     * LOFF = 2750.5
+     */
+
+    // Get projection attributes
+    // -------------------------
+    double subpointLon = ((Number) getAttribute ("Sub_Lon")).doubleValue();
+    double satDist = ((Number) getAttribute ("Dist_Virt_Sat")).doubleValue();
+    int columnFactor = ((Number) getAttribute ("CFAC")).intValue();
+    int lineFactor = ((Number) getAttribute ("LFAC")).intValue();
+
+
+    // TODO: Check these are correct for what we expect.  Our implementation
+    // doesn't use these extra parameter values, they're assumed to be the same
+    // for every data file.  The ellipsoid should always be WGS84 and the COFF/LOFF
+    // should always indicate the center of the pixel line and column to be
+    // the center of the projection.
+    
+    double eqRadius = ((Number) getAttribute ("Earth_Radius_Equator")).doubleValue();
+    double polarRadius = ((Number) getAttribute ("Earth_Radius_Polar")).doubleValue();
+    double columnOffset = ((Number) getAttribute ("COFF")).doubleValue();
+    double lineOffset = ((Number) getAttribute ("LOFF")).doubleValue();
+
+    
+    // Create projection
+    // -----------------
+    DataVariable prototype = getPreview (0);
+    int[] dims = prototype.getDimensions();
+    EarthTransform trans = new EllipsoidPerspectiveProjection (
+      // Subpoint latitude in degrees (geocentric).
+      // Subpoint longitude in degrees.
+      // Distance of satellite from center of Earth in kilometers.
+      // Scan step angle in row direction in radians.
+      // Scan step angle in column direction in radians.
+      new double[] {
+        0,
+        subpointLon,
+        satDist,
+        Math.toRadians (65536.0/lineFactor),
+        Math.toRadians (65536.0/columnFactor)
+      },
+      dims
+    );
+
+    return (trans);
+    
+  } // getGeoTransform
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the Earth transform information for swath projection. */
+  private EarthTransform getSwathTransform () throws IOException {
 	   
     // Create swath
     // ------------
@@ -184,7 +294,7 @@ public class ACSPONCReader
 
     return (trans);
 	   
-  } // getTransform
+  } // getSwathTransform
 
   ////////////////////////////////////////////////////////////
 
