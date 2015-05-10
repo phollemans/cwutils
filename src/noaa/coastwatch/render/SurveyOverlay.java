@@ -7,9 +7,15 @@
   CHANGES: 2005/03/22, PFH, added transparency handling
            2006/01/16, PFH, added check for null color
            2007/01/15, PFH, fixed inaccuracy in box survey rendering
-
+           2015/02/27, PFH
+           - Changes: Rewrote rendering algorithm for point surveys.
+           - Issue: It turns out that AffineTransform doesn't always return
+             an object of type GeneralPath even if that's the input object.  So
+             we need to access the iterator for the transformed shape and
+             use the first iterator point to get the point survey location.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -20,11 +26,25 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
-import java.util.List;
-import noaa.coastwatch.util.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Rectangle2D;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.ImageTransform;
+import noaa.coastwatch.render.LineOverlay;
+import noaa.coastwatch.util.BoxSurvey;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthDataSurvey;
+import noaa.coastwatch.util.LineSurvey;
+import noaa.coastwatch.util.PointSurvey;
+import noaa.coastwatch.util.PolygonSurvey;
 
 /**
  * The <code>SurveyOverlay</code> class may be used to display the
@@ -140,14 +160,17 @@ public class SurveyOverlay
     // Modify draw shape for point survey
     // ----------------------------------
     if (isPoint) {
-      GeneralPath path = (GeneralPath) drawShape;
-      Point2D center = path.getCurrentPoint();
-      float cX = (float) center.getX();
-      float cY = (float) center.getY();
+      PathIterator iterator = drawShape.getPathIterator (null);
+      float[] coords = new float[6];
+      iterator.currentSegment (coords);
+      float cX = coords[0];
+      float cY = coords[1];
+      GeneralPath path = new GeneralPath();
       path.moveTo (cX - 5, cY);
       path.lineTo (cX + 5, cY);
       path.moveTo (cX, cY - 5);
       path.lineTo (cX, cY + 5);
+      drawShape = path;
     } // if
 
     // Draw shape
