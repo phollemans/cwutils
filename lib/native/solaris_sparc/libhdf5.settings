@@ -1,0 +1,75 @@
+	    SUMMARY OF THE HDF5 CONFIGURATION
+	    =================================
+
+General Information:
+-------------------
+		   HDF5 Version: 1.8.10
+		  Configured on: Tue Oct 30 10:29:50 CDT 2012
+		  Configured by: hdftest@linew.hdfgroup.uiuc.edu
+		 Configure mode: production
+		    Host system: sparc-sun-solaris2.10
+	      Uname information: SunOS linew.hdfgroup.uiuc.edu 5.10 Generic_147440-25 sun4u sparc SUNW,A70
+		       Byte sex: big-endian
+		      Libraries: 
+	     Installation point: /mnt/scr1/release-binary/hdf5/v1810/builds/linew-static
+
+Compiling Options:
+------------------
+               Compilation Mode: production
+                     C Compiler: /usr/hdf/bin/sun-511/cc ( SunOS_sparc 2010/08/13 )
+                         CFLAGS: 
+                      H5_CFLAGS:  -erroff=%none -DBSD_COMP -O -s
+                      AM_CFLAGS: 
+                       CPPFLAGS: 
+                    H5_CPPFLAGS:  -LANG:std  -DNDEBUG -UH5_DEBUG_API
+                    AM_CPPFLAGS: -I/mnt/hdf/packages/szip/static/encoder/SunOS-5.10/include -D_FILE_OFFSET_BITS=64 
+               Shared C Library: no
+               Static C Library: yes
+  Statically Linked Executables: no
+                        LDFLAGS: 
+                     H5_LDFLAGS: 
+                     AM_LDFLAGS:  -L/mnt/hdf/packages/szip/static/encoder/SunOS-5.10/lib
+ 	 	Extra libraries:  -lsz -lz -lrt -lnsl -lsocket -lm 
+ 		       Archiver: ar
+ 		 	 Ranlib: ranlib
+ 	      Debugged Packages: 
+		    API Tracing: no
+
+Languages:
+----------
+                        Fortran: yes
+               Fortran Compiler: /usr/hdf/bin/sun-511/f90 ( SunOS_sparc 2010/08/13 )
+          Fortran 2003 Compiler: no
+                  Fortran Flags: 
+               H5 Fortran Flags:  -O2
+               AM Fortran Flags:  
+         Shared Fortran Library: no
+         Static Fortran Library: yes
+
+                            C++: yes
+                   C++ Compiler: /usr/hdf/bin/sun-511/CC ( SunOS_sparc 2010/08/13 )
+                      C++ Flags: 
+                   H5 C++ Flags:  -instances=static -O -s
+                   AM C++ Flags: 
+             Shared C++ Library: no
+             Static C++ Library: yes
+
+Features:
+---------
+                  Parallel HDF5: no
+             High Level library: yes
+                   Threadsafety: no
+            Default API Mapping: v18
+ With Deprecated Public Symbols: yes
+         I/O filters (external): deflate(zlib),szip(encoder)
+         I/O filters (internal): shuffle,fletcher32,nbit,scaleoffset
+                            MPE: no
+                     Direct VFD: no
+                        dmalloc: no
+Clear file buffers before write: yes
+           Using memory checker: no
+         Function Stack Tracing: no
+                           GPFS: no
+      Strict File Format Checks: no
+   Optimization Instrumentation: no
+       Large File Support (LFS): yes

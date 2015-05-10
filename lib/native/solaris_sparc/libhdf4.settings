@@ -1,0 +1,37 @@
+	    SUMMARY OF THE HDF4 CONFIGURATION
+	    =================================
+
+General Information:
+-------------------
+		   HDF4 Version: 4.2.8
+		  Configured on: Thu Aug  9 14:47:03 CDT 2012
+		  Configured by: hdftest@linew.hdfgroup.uiuc.edu
+		 Configure mode: production
+		    Host system: sparc-sun-solaris2.10
+              Uname information: SunOS linew.hdfgroup.uiuc.edu 5.10 Generic_147440-22 sun4u sparc SUNW,A70
+		      Libraries: 
+	     Installation point: /mnt/scr1/release-binary/hdf4/v4.2.8/builds/linew-static
+
+Compiling Options:
+------------------
+               Compilation Mode: production
+                     C compiler: /opt/SUNWspro/bin/cc ( Sun C 5.9 SunOS_sparc Patch 124867-16 2010/08/11 )
+                         CFLAGS:  -Xc -xO2
+                       CPPFLAGS: -I/usr/include/rpc  -I/mnt/hdf/packages/zlib-125/static/SunOS-5.10/include -I/mnt/hdf/packages/static/jpeg/SunOS-5.10/include -I/mnt/hdf/packages/szip/static/encoder/SunOS-5.10/include 
+               Shared Libraries: no
+               Static Libraries: yes
+                        LDFLAGS:  -L/mnt/hdf/packages/zlib-125/static/SunOS-5.10/lib -L/mnt/hdf/packages/static/jpeg/SunOS-5.10/lib -L/mnt/hdf/packages/szip/static/encoder/SunOS-5.10/lib
+ 	 	Extra libraries: -lsz -ljpeg -lz  -lnsl -lm
+ 		       Archiver: ar
+ 		 	 Ranlib: ranlib
+
+Languages:
+----------
+                        Fortran: yes
+               Fortran Compiler: /opt/SUNWspro/bin/f77 ( Sun Fortran 95 8.3 SunOS_sparc Patch 127000-13 2010/01/26 )
+                         FFLAGS:  -O -O
+
+Features:
+---------
+               SZIP compression: enabled with encoder
+   Support for netCDF API 2.3.2: yes
