@@ -22,6 +22,11 @@
            2007/11/05, PFH, added NOAA1bFileReader for non-AVHRR data
            2012/10/19, PFH, removed HDF5-specific reader list
            2012/12/02, PFH, removed IMGMAP-based reading
+           2015/02/27, PFH
+           - Changes: Renamed reader that uses Java NetCDF API with CF parsing
+             to CommonDataModelNCReader.
+           - Issue: We needed to have a name that better reflected the
+             function of the reader.
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
@@ -35,26 +40,49 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import java.lang.reflect.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import noaa.coastwatch.io.EarthDataReader;
 
 /**
  * The Earth data reader factory class creates an appropriate
  * Earth data reader object based on a file name.  The default
  * list of readers is as follows:
  * <ul>
- *   <li> {@link noaa.coastwatch.io.CWHDFReader} </li>
- *   <li> {@link noaa.coastwatch.io.TSHDFReader} </li>
- *   <li> {@link noaa.coastwatch.io.NOAA1bV1Reader} </li>
- *   <li> {@link noaa.coastwatch.io.NOAA1bV2Reader} </li>
- *   <li> {@link noaa.coastwatch.io.NOAA1bV3Reader} </li>
- *   <li> {@link noaa.coastwatch.io.NOAA1bV4Reader} </li>
- *   <li> {@link noaa.coastwatch.io.NOAA1bV5Reader} </li>
- *   <li> {@link noaa.coastwatch.io.CWNCReader} </li>
- *   <li> {@link noaa.coastwatch.io.GenericNCReader} </li>
- *   <li> {@link noaa.coastwatch.io.ACSPOHDFReader} </li>
- *   <li> {@link noaa.coastwatch.io.noaa1b.NOAA1bFileReader} </li>
+ *
+ *   <li>HDF formats:<ul>
+ *     <li> {@link noaa.coastwatch.io.CWHDFReader} </li>
+ *     <li> {@link noaa.coastwatch.io.TSHDFReader} </li>
+ *     <li> {@link noaa.coastwatch.io.ACSPOHDFReader} </li>
+ *   </ul></li>
+ *
+ *   <li>NOAA 1b formats:<ul>
+ *     <li> {@link noaa.coastwatch.io.NOAA1bV1Reader} </li>
+ *     <li> {@link noaa.coastwatch.io.NOAA1bV2Reader} </li>
+ *     <li> {@link noaa.coastwatch.io.NOAA1bV3Reader} </li>
+ *     <li> {@link noaa.coastwatch.io.NOAA1bV4Reader} </li>
+ *     <li> {@link noaa.coastwatch.io.NOAA1bV5Reader} </li>
+ *     <li> {@link noaa.coastwatch.io.noaa1b.NOAA1bFileReader} </li>
+ *   </ul></li>
+ *
+ *   <li>NetCDF formats:<ul>
+ *     <li> {@link noaa.coastwatch.io.ACSPONCReader} </li>
+ *     <li> {@link noaa.coastwatch.io.ACSPONCCFReader} </li>
+ *     <li> {@link noaa.coastwatch.io.CWNCReader} </li>
+ *     <li> {@link noaa.coastwatch.io.CWCFNCReader} </li>
+ *     <li> {@link noaa.coastwatch.io.CommonDataModelNCReader} </li>
+ *   </ul></li>
+ 
  * </ul>
  * Additional readers may be appended to the list using the
  * <code>addReader()</code> method, or by adding the class name
@@ -107,12 +135,11 @@ public class EarthDataReaderFactory {
 
     // Add NetCDF variants
     // -------------------
-    readerList.add (thisPackage + ".L2PNCReader");
     readerList.add (thisPackage + ".ACSPONCReader");
     readerList.add (thisPackage + ".ACSPONCCFReader");
     readerList.add (thisPackage + ".CWNCReader");
-    readerList.add (thisPackage + ".CWNCCFReader");
-    readerList.add (thisPackage + ".GenericNCReader");
+    readerList.add (thisPackage + ".CWCFNCReader");
+    readerList.add (thisPackage + ".CommonDataModelNCReader");
 
     // Add extension readers
     // ---------------------

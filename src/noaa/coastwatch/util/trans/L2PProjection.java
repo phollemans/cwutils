@@ -5,9 +5,13 @@
    AUTHOR: X. Liu
      DATE: 2011/06/15
   CHANGES: 2011/06/15, XL, initial version
+           2015/04/17, PFH
+           - Changes: Deprecated this class.
+           - Issue: We moved the support for L2P data projection to the
+             CommonDataModelNCReader class.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2011, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -18,8 +22,18 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import java.util.*;
-import noaa.coastwatch.util.*;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.List;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.ValueSource;
+import noaa.coastwatch.util.VariableEstimator;
+import noaa.coastwatch.util.trans.EarthTransform2D;
+import noaa.coastwatch.util.trans.SwathProjection;
 
 /**
  * The <code>L2PProjection</code> class implements Earth transform
@@ -28,7 +42,11 @@ import noaa.coastwatch.util.*;
  *
  * @author Xiaoming Liu
  * @since 3.3.0
+ *
+ * @deprecated As of 3.3.1, GHRSST L2P data for which this class was designed
+ * is handled by the {@link noaa.coastwatch.io.CommonDataModelNCReader} class.
  */
+@Deprecated
 public class L2PProjection
   extends EarthTransform2D{
 
@@ -211,7 +229,7 @@ public class L2PProjection
    * in terms of data locations.
    *
    * @see VariableEstimator
-   * @see EarthPartition
+   * @see noaa.coastwatch.util.EarthPartition
    */
   public L2PProjection (
     DataVariable lat,

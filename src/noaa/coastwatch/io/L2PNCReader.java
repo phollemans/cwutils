@@ -11,9 +11,13 @@
              DataVariable so rather than continuing its use, we decided
              to remove it and re-arrange the scaling and offset for CF
              conventions before passing into the Grid constructor.
-
+           2015/02/27, PFH
+           - Changes: Deprecated this class.
+           - Issue: It seems more appropriate to have the CF parsing and 
+             transformation data read in a generic way.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -24,16 +28,32 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
-import java.text.*;
-import java.awt.geom.*;
-import java.io.*;
-import ucar.nc2.*;
-import ucar.nc2.dataset.*;
-import ucar.ma2.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import noaa.coastwatch.io.NCCachedGrid;
+import noaa.coastwatch.io.NCReader;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.DateFormatter;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.SatelliteDataInfo;
+import noaa.coastwatch.util.TimePeriod;
+import noaa.coastwatch.util.trans.DataProjection;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.L2PProjection;
+import ucar.ma2.DataType;
+import ucar.nc2.NetcdfFile;
+import ucar.nc2.Variable;
+import ucar.nc2.dataset.NetcdfDataset;
 
 /** 
  * The <code>L2PNCReader</code> class reads Java NetCDF accessible
@@ -42,7 +62,11 @@ import noaa.coastwatch.util.trans.*;
  *
  * @author Xiaoming Liu
  * @since 3.3.0
+ *
+ * @deprecated As of 3.3.1, GHRSST L2P data for which this class was designed
+ * is handled by the {@link CommonDataModelNCReader} class.
  */
+@Deprecated
 public class L2PNCReader
   extends NCReader {
 
