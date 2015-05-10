@@ -6,17 +6,22 @@
   CHANGES: 2014/09/09, PFH
            - Changes: Updated to use FileFormat.createInstance (String, int).
            - Issue: A user reported an issue on opening read-only files:
- 
-             "ncsa.hdf.hdf5lib.exceptions.HDF5Exception: Cannot write file, 
-             try open as read-only"
- 
+               "ncsa.hdf.hdf5lib.exceptions.HDF5Exception: Cannot write file,
+               try open as read-only"
              This was because we were using getInstance (String) followed by 
              open(), rather than createInstance.  getInstance defaults to
              read/write access, where as createInstance allows read-only
              to be specified.
-
+           2015/05/08, PFH
+           - Changes: Added a synchronized statement around the HDF 5 library
+             calls.
+           - Issue: It's unclear from the HDF 5 documentation if this is
+             needed, but there may be multithreading issues with HDF 5 JNI
+             code.  So to be safe, we serialize access to the code that calls
+             the HDF 5 C library.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2014-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -27,14 +32,27 @@ package noaa.coastwatch.io.tile;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import noaa.coastwatch.io.tile.TilingScheme.*;
-import ucar.nc2.*;
-import ucar.nc2.dataset.*;
-import ucar.ma2.*;
-import ncsa.hdf.object.*;
-import ncsa.hdf.object.h5.*;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import ncsa.hdf.object.Dataset;
+import ncsa.hdf.object.FileFormat;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.DataType;
+import ucar.ma2.Index;
+import ucar.ma2.InvalidRangeException;
+import ucar.nc2.Dimension;
+import ucar.nc2.NetcdfFile;
+import ucar.nc2.NetcdfFileWriter;
+import ucar.nc2.Variable;
+import noaa.coastwatch.io.tile.TileSource;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.Tile;
+import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
+import noaa.coastwatch.io.HDF5Lib;
 
 /**
  * The <code>NCTileSource</code> class provides tiles from a NetCDF 3 or 4
@@ -120,48 +138,79 @@ public class NCTileSource
         throw new IllegalArgumentException ("Start coordinate array length does not match variable");
       this.start = (int[]) start.clone();
     } // else
-    
-    // Check for HDF 5 format
-    // ----------------------
-    FileFormat h5Format = FileFormat.getFileFormat (FileFormat.FILE_TYPE_HDF5);
-    String location = file.getLocation();
-    boolean isH5 = h5Format.isThisType (location);
 
-    // Get chunking and compression data
-    // ---------------------------------
+    /**
+     * We do this next part as synchronized just in case because the HDF 
+     * library documentation seems to indicate that the JNI layer is not
+     * thread safe.
+     *
+     * TODO: How does this interact with the NCCachedGrid check which is
+     * is similar for HDF 4 files?  Also what if we're using the HDF 5 library
+     * from somewhere else in code?  For now this is the only location (that
+     * we can find).
+     */
     boolean isCompressed = false;
     long[] chunkSize = null;
-    if (isH5) {
-
-      try {
-
-        // Open as HDF 5
-        // -------------
-        FileFormat hdfFile = h5Format.createInstance (location, FileFormat.READ);
-        hdfFile.open();
-
-        // Get chunk dimensions
-        // --------------------
-        Dataset hdfDataset = (Dataset) hdfFile.get (varName);
-        hdfDataset.getMetadata();
-        chunkSize = hdfDataset.getChunkSize();
-
-        // Get compression
-        // ---------------
-        String compression = hdfDataset.getCompression();
-        isCompressed = !compression.startsWith ("NONE");
-
-        // Close file
-        // ----------
-        hdfFile.close();
-
-      } // try
-      catch (Exception e) {
-        throw new IOException (e.toString());
-      } // catch
-      
-    } // if
+    synchronized (HDF5Lib.getInstance()) {
     
+      // Check for HDF 5 format
+      // ----------------------
+      FileFormat h5Format = FileFormat.getFileFormat (FileFormat.FILE_TYPE_HDF5);
+      String location = file.getLocation();
+      boolean isH5 = h5Format.isThisType (location);
+
+      // Get chunking and compression info
+      // ---------------------------------
+      if (isH5) {
+
+        try {
+
+          // Open as HDF 5
+          // -------------
+          FileFormat hdfFile = h5Format.createInstance (location, FileFormat.READ);
+          hdfFile.open();
+
+          // Get chunk dimensions
+          // --------------------
+          Dataset hdfDataset = (Dataset) hdfFile.get (varName);
+          hdfDataset.getMetadata();
+          chunkSize = hdfDataset.getChunkSize();
+
+          // Get compression
+          // ---------------
+          String compression = hdfDataset.getCompression();
+          isCompressed = !compression.startsWith ("NONE");
+
+          // Close file
+          // ----------
+          hdfFile.close();
+
+        } // try
+        catch (Exception e) {
+          throw new IOException (e.toString());
+        } // catch
+        
+      } // if
+
+    } // synchronized
+    
+    /**
+     * We could also do the chunk detection using the NetCDF layer as follows
+     * which is a pure Java solution, but the issue is that we can't
+     * get the compression type using this method.  Not knowing the
+     * compression can get us into performance issues below in deciding
+     * what tile size to use.  So for now, we specifically check using the
+     * HDF 5 library if there's compression and chunking.
+     */
+/*
+    boolean isCompressed = false;
+    long[] chunkSize = null;
+    ucar.nc2.Attribute chunkSizeAtt = var.findAttribute ("_ChunkSizes");
+    if (chunkSizeAtt != null) {
+      chunkSize = (long[]) chunkSizeAtt.getValues().get1DJavaArray (long.class);
+    } // if
+*/
+ 
     // Set tile dimensions
     // -------------------
     int[] tileDims;
@@ -205,7 +254,7 @@ public class NCTileSource
     // --------------------
     scheme = new TilingScheme (dims, tileDims);
 
-  } // NCCachedGrid constructor
+  } // NCTileSource constructor
 
   ////////////////////////////////////////////////////////////
 

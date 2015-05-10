@@ -23,13 +23,18 @@
            2005/02/08, PFH, added attribute length check
            2012/12/02, PFH, replaced native method setChunkCompress
            2014/01/23, PFH
-           - changes: created MAX_VAR_DIMS size copy of chunk lengths before
+           - Changes: created MAX_VAR_DIMS size copy of chunk lengths before
              passing to HDF library
-           - issue: getting seg fault issues on calling HDFLibrary.SDsetchunk
+           - Issue: getting seg fault issues on calling HDFLibrary.SDsetchunk
              with chunk length arrays of rank matching the actual data array
- 
+           2015/04/17, PFH
+           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
+           - Issue: The HDF library was crashing the VM due to multiple threads
+             calling the library simultaneously and the library is not
+             threadsafe.
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -40,15 +45,27 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import java.text.*;
-import java.lang.reflect.*;
-import java.awt.geom.*;
-import ncsa.hdf.hdflib.*;
-import noaa.coastwatch.util.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import ncsa.hdf.hdflib.HDFChunkInfo;
+import ncsa.hdf.hdflib.HDFConstants;
+import ncsa.hdf.hdflib.HDFDeflateCompInfo;
+import ncsa.hdf.hdflib.HDFException;
+import noaa.coastwatch.io.HDFLib;
+import noaa.coastwatch.io.CachedGrid;
+import noaa.coastwatch.io.EarthDataWriter;
+import noaa.coastwatch.io.HDFSD;
 import noaa.coastwatch.io.tile.TilingScheme;
-import noaa.coastwatch.io.tile.TilingScheme.*;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.Line;
+import noaa.coastwatch.util.MetadataServices;
 
 /**
  * An HDF writer is an Earth data writer that writes HDF format
@@ -241,7 +258,7 @@ public abstract class HDFWriter
 
     // Set attribute value
     // -------------------
-    if (!HDFLibrary.SDsetattr (sdid, name, attType, attLength, attValue)) {
+    if (!HDFLib.getInstance().SDsetattr (sdid, name, attType, attLength, attValue)) {
       throw new HDFException ("Cannot set attribute value for '" + name + "'");
     } // if
 
@@ -276,7 +293,7 @@ public abstract class HDFWriter
       // ----------------------------------
       String attName = (String) keys[i];
       if (!overwrite) {
-        int attIndex =  HDFLibrary.SDfindattr (sdid, attName);
+        int attIndex =  HDFLib.getInstance().SDfindattr (sdid, attName);
         if (attIndex != -1) {
           continue;
         } // if
@@ -327,7 +344,7 @@ public abstract class HDFWriter
     // Open file
     // ---------
     closed = true;
-    sdid = HDFLibrary.SDstart (file, HDFConstants.DFACC_WRITE);
+    sdid = HDFLib.getInstance().SDstart (file, HDFConstants.DFACC_WRITE);
     closed = false;
 
     // Set chunking and compression
@@ -366,7 +383,7 @@ public abstract class HDFWriter
     // Create new file
     // ---------------
     closed = true;
-    sdid = HDFLibrary.SDstart (file, HDFConstants.DFACC_CREATE);
+    sdid = HDFLib.getInstance().SDstart (file, HDFConstants.DFACC_CREATE);
     closed = false;
 
     // Set chunking and compression
@@ -447,7 +464,7 @@ public abstract class HDFWriter
     // ------------------------
     int index = -1;
     String varName = var.getName ();
-    try { index = HDFLibrary.SDnametoindex (sdid, varName); }
+    try { index = HDFLib.getInstance().SDnametoindex (sdid, varName); }
     catch (Exception e) { }
     if (index != -1)
       throw new IOException ("Variable '" + varName + "' already exists");
@@ -457,7 +474,7 @@ public abstract class HDFWriter
     Class varClass = var.getDataClass();
     int varType = getType (varClass, var.getUnsigned());
     int[] dims = var.getDimensions();
-    int sdsid = HDFLibrary.SDcreate (sdid, varName, varType, dims.length, 
+    int sdsid = HDFLib.getInstance().SDcreate (sdid, varName, varType, dims.length, 
       dims);
     if (sdsid < 0)
       throw new HDFException ("Cannot create variable '" + varName + "'");
@@ -510,7 +527,7 @@ public abstract class HDFWriter
           // Write tile data
           // ---------------
           int[] start = new int[] {i, j};
-          if (!HDFLibrary.SDwritechunk (sdsid, start, data))
+          if (!HDFLib.getInstance().SDwritechunk (sdsid, start, data))
             throw new HDFException ("Chunked write failed for '" +
               varName + "' at start = [" + start[0] + "," + start[1] + "]");
 
@@ -521,7 +538,7 @@ public abstract class HDFWriter
           // Check for canceled
           // ------------------
           if (isCanceled) { 
-            HDFLibrary.SDendaccess (sdsid); 
+            HDFLib.getInstance().SDendaccess (sdsid); 
             return;
           } // if
 
@@ -546,7 +563,7 @@ public abstract class HDFWriter
       Arrays.fill (start, 0);
       int[] stride = new int[dims.length];
       Arrays.fill (stride, 1);
-      if (!HDFLibrary.SDwritedata (sdsid, start, stride, dims, data))
+      if (!HDFLib.getInstance().SDwritedata (sdsid, start, stride, dims, data))
         throw new HDFException ("Compressed write failed for '" + 
           varName + "'");
 
@@ -560,7 +577,7 @@ public abstract class HDFWriter
       // ---------------
       if (var instanceof Line) {
         Object data = var.getData ();
-        if (!HDFLibrary.SDwritedata (sdsid, new int[] {0},
+        if (!HDFLib.getInstance().SDwritedata (sdsid, new int[] {0},
           new int[] {1}, new int[] {dims[0]}, data))
           throw new HDFException ("Write failed for '" + varName + "'");
       } // if
@@ -579,7 +596,7 @@ public abstract class HDFWriter
           // ---------
           int[] start = new int[] {i, 0};
           Object data = ((Grid) var).getData (start, count);
-          if (!HDFLibrary.SDwritedata (sdsid, start, stride, count, data))
+          if (!HDFLib.getInstance().SDwritedata (sdsid, start, stride, count, data))
             throw new HDFException ("Write failed for '" +
               varName + "' at row " + i);
 
@@ -590,7 +607,7 @@ public abstract class HDFWriter
           // Check for canceled
           // ------------------
           if (isCanceled) { 
-            HDFLibrary.SDendaccess (sdsid); 
+            HDFLib.getInstance().SDendaccess (sdsid); 
             return;
           } // if
 
@@ -601,7 +618,7 @@ public abstract class HDFWriter
 
     // End access
     // ----------
-    HDFLibrary.SDendaccess (sdsid);
+    HDFLib.getInstance().SDendaccess (sdsid);
 
   } // writeVariable  
 
@@ -675,7 +692,7 @@ public abstract class HDFWriter
       compInfo = new HDFDeflateCompInfo();
       compInfo.level = 6;
       if (chunk_lengths == null) {
-        boolean success = HDFLibrary.SDsetcompress (sdsid, HDFConstants.COMP_CODE_DEFLATE, compInfo);
+        boolean success = HDFLib.getInstance().SDsetcompress (sdsid, HDFConstants.COMP_CODE_DEFLATE, compInfo);
         if (!success) throw new HDFException ("SDsetcompress call failed");
       } // if
     } // if
@@ -701,7 +718,7 @@ public abstract class HDFWriter
         chunkInfo = new HDFChunkInfo (libChunkLengths, HDFConstants.COMP_CODE_DEFLATE, compInfo);
       } // if
       boolean success = false;
-      try  { success = HDFLibrary.SDsetchunk (sdsid, chunkInfo, flags); }
+      try  { success = HDFLib.getInstance().SDsetchunk (sdsid, chunkInfo, flags); }
       catch (Throwable e) { }
       if (!success) throw new HDFException ("SDsetchunk call failed");
     } // if
@@ -717,7 +734,7 @@ public abstract class HDFWriter
     if (closed) return;
     flush();
     try {
-      if (!HDFLibrary.SDend (sdid)) 
+      if (!HDFLib.getInstance().SDend (sdid)) 
         throw new HDFException ("Failed to end access");
     } // try
     catch (HDFException e) { 

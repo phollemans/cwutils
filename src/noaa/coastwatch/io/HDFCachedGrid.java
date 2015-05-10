@@ -12,9 +12,14 @@
            2004/10/07, PFH, modified to use setOptimizedCacheSize()
            2005/12/20, PFH, added test for chunk length error in netCDF files
            2007/07/11, PFH, changed chunked flag from private to protected
+           2015/04/17, PFH
+           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
+           - Issue: The HDF library was crashing the VM due to multiple threads
+             calling the library simultaneously and the library is not
+             threadsafe.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -25,12 +30,19 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.text.*;
-import java.io.*;
-import java.lang.reflect.*;
-import noaa.coastwatch.util.*;
-import ncsa.hdf.hdflib.*;
-import noaa.coastwatch.io.tile.TilingScheme.*;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import ncsa.hdf.hdflib.HDFConstants;
+import ncsa.hdf.hdflib.HDFException;
+import noaa.coastwatch.io.HDFLib;
+import noaa.coastwatch.io.CachedGrid;
+import noaa.coastwatch.io.HDFReader;
+import noaa.coastwatch.io.HDFSD;
+import noaa.coastwatch.io.HDFWriter;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
+import noaa.coastwatch.io.tile.TilingScheme.Tile;
+import noaa.coastwatch.util.Grid;
 
 /**
  * The HDF cached grid class is a cached grid that understands how to
@@ -111,13 +123,13 @@ public class HDFCachedGrid
 
       // Get variable index
       // ------------------
-      varIndex = HDFLibrary.SDnametoindex (dataset.getSDID(), getName()); 
+      varIndex = HDFLib.getInstance().SDnametoindex (dataset.getSDID(), getName()); 
       if (varIndex < 0) 
         throw new HDFException ("Cannot get index for variable " + getName());
 
       // Access variable
       // ---------------
-      int sdsid = HDFLibrary.SDselect (dataset.getSDID(), varIndex);
+      int sdsid = HDFLib.getInstance().SDselect (dataset.getSDID(), varIndex);
       if (sdsid < 0)
         throw new HDFException ("Cannot access variable " + getName());
 
@@ -126,7 +138,7 @@ public class HDFCachedGrid
       String[] nameArr = new String[] {""};
       int dimArr[] = new int[HDFConstants.MAX_VAR_DIMS];
       int varInfo[] = new int[3];
-      if (!HDFLibrary.SDgetinfo (sdsid, nameArr, dimArr, varInfo))
+      if (!HDFLib.getInstance().SDgetinfo (sdsid, nameArr, dimArr, varInfo))
         throw new HDFException ("Cannot get variable info for " + getName());
       int varType = varInfo[1];
       varClass = HDFReader.getClass (varType);
@@ -154,7 +166,7 @@ public class HDFCachedGrid
 
       // End access
       // ----------
-      HDFLibrary.SDendaccess (sdsid);
+      HDFLib.getInstance().SDendaccess (sdsid);
 
     } // try
 
@@ -202,7 +214,7 @@ public class HDFCachedGrid
       int index = -1;
       String varName = getName();
       int sdid = dataset.getSDID();
-      try { index = HDFLibrary.SDnametoindex (sdid, varName); }
+      try { index = HDFLib.getInstance().SDnametoindex (sdid, varName); }
       catch (Exception e) { }
       if (index != -1)
         throw new IOException ("Variable '" + varName + "' already exists");
@@ -213,7 +225,7 @@ public class HDFCachedGrid
       boolean isUnsigned = grid.getUnsigned();
       setUnsigned (isUnsigned);
       int varType = HDFWriter.getType (varClass, isUnsigned);
-      int sdsid = HDFLibrary.SDcreate (sdid, varName, varType, dims.length, 
+      int sdsid = HDFLib.getInstance().SDcreate (sdid, varName, varType, dims.length, 
         dims);
       if (sdsid < 0)
         throw new HDFException ("Cannot create variable '" + varName + "'");
@@ -221,7 +233,7 @@ public class HDFCachedGrid
 
       // Get variable index
       // ------------------
-      varIndex = HDFLibrary.SDnametoindex (sdid, varName);
+      varIndex = HDFLib.getInstance().SDnametoindex (sdid, varName);
       if (varIndex < 0) 
         throw new HDFException ("Cannot get index for variable " + varName);
 
@@ -241,7 +253,7 @@ public class HDFCachedGrid
 
       // End access
       // ----------
-      HDFLibrary.SDendaccess (sdsid);
+      HDFLib.getInstance().SDendaccess (sdsid);
 
     } // try
 
@@ -290,7 +302,7 @@ public class HDFCachedGrid
 
       // Access variable
       // ---------------
-      int sdsid = HDFLibrary.SDselect (dataset.getSDID(), varIndex);
+      int sdsid = HDFLib.getInstance().SDselect (dataset.getSDID(), varIndex);
       if (sdsid < 0)
         throw new HDFException ("Cannot access variable at index " + varIndex);
 
@@ -301,7 +313,7 @@ public class HDFCachedGrid
 
         // Create data array
         // -----------------
-        int[] dataDims = tiling.getTileDimensions(pos);
+        int[] dataDims = pos.getDimensions();
         int dataValues = dataDims[ROWS]*dataDims[COLS];
         data = Array.newInstance (varClass, dataValues);
 
@@ -313,7 +325,7 @@ public class HDFCachedGrid
           tileCoords[COLS]*tileDims[COLS]};
         int[] stride = new int[] {1, 1};
         int[] length = dataDims;
-        if (!HDFLibrary.SDreaddata (sdsid, start, stride, length, data))
+        if (!HDFLib.getInstance().SDreaddata (sdsid, start, stride, length, data))
           throw new HDFException ("Cannot read tile data for " + getName());
 
       } // if
@@ -331,12 +343,12 @@ public class HDFCachedGrid
         // Read data chunk
         // ---------------
         int[] start = pos.getCoords();
-        if (!HDFLibrary.SDreadchunk (sdsid, start, data))
+        if (!HDFLib.getInstance().SDreadchunk (sdsid, start, data))
           throw new HDFException ("Cannot read tile data for " + getName());
 
         // Rearrange truncated tile data
         // -----------------------------
-        int[] dataDims = tiling.getTileDimensions(pos);
+        int[] dataDims = pos.getDimensions();
         if (dataDims[ROWS] != tileDims[ROWS] || 
           dataDims[COLS] != tileDims[COLS]) {
           int dataValues = dataDims[ROWS] * dataDims[COLS];
@@ -350,7 +362,7 @@ public class HDFCachedGrid
 
       // End access
       // ----------
-      HDFLibrary.SDendaccess (sdsid);
+      HDFLib.getInstance().SDendaccess (sdsid);
 
       // Return tile
       // -----------
@@ -385,7 +397,7 @@ public class HDFCachedGrid
 
       // Access variable
       // ---------------
-      int sdsid = HDFLibrary.SDselect (dataset.getSDID(), varIndex);
+      int sdsid = HDFLib.getInstance().SDselect (dataset.getSDID(), varIndex);
       if (sdsid < 0)
         throw new HDFException ("Cannot access variable at index " + varIndex);
 
@@ -408,7 +420,7 @@ public class HDFCachedGrid
         int[] stride = new int[] {1, 1};
         int[] count = tile.getDimensions();
         Object data = tile.getData();
-        if (!HDFLibrary.SDwritedata (sdsid, start, stride, count, data))
+        if (!HDFLib.getInstance().SDwritedata (sdsid, start, stride, count, data))
           throw new HDFException ("Cannot write tile data for " + getName());
 
       } // if
@@ -434,14 +446,14 @@ public class HDFCachedGrid
 
         // Write tile data
         // ---------------
-        if (!HDFLibrary.SDwritechunk (sdsid, start, data))
+        if (!HDFLib.getInstance().SDwritechunk (sdsid, start, data))
           throw new HDFException ("Cannot write tile data for " + getName());
 
       } // else
 
       // End access
       // ----------
-      HDFLibrary.SDendaccess (sdsid);
+      HDFLib.getInstance().SDendaccess (sdsid);
       tile.setDirty (false);
 
     } // try

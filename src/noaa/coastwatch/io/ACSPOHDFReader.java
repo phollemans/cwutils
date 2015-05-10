@@ -15,14 +15,19 @@
            2010/12/02, XL, modified getGlobalInfo method to read satellite
              name info for ACSPO VIIRS files
            2013/11/18, PFH
-           - changes: updated getGlobalInfo() for Metop-B satellite and to
+           - Changes: updated getGlobalInfo() for Metop-B satellite and to
              properly read SATELLITE, L1B, INSTRUMENT_DATA, SENSOR attributes
              in succession to get satellite and sensor
-           - issue: reading AVHRR Metop-B files shows satellite "Unknown" and
+           - Issue: reading AVHRR Metop-B files shows satellite "Unknown" and
              sensor "FRAC"
+           2015/04/17, PFH
+           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
+           - Issue: The HDF library was crashing the VM due to multiple threads
+             calling the library simultaneously and the library is not
+             threadsafe.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -33,19 +38,33 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import java.util.List;
+import java.io.IOException;
 import java.lang.reflect.Array;
-import java.text.*;
-import java.awt.*;
-import java.awt.geom.*;
-import ncsa.hdf.hdflib.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.io.tile.TilingScheme;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+import ncsa.hdf.hdflib.HDFConstants;
+import ncsa.hdf.hdflib.HDFException;
+import noaa.coastwatch.io.HDFLib;
+import noaa.coastwatch.io.HDFCachedGrid;
+import noaa.coastwatch.io.HDFReader;
 import noaa.coastwatch.io.tile.TilingScheme.Tile;
 import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.SatelliteDataInfo;
+import noaa.coastwatch.util.TimePeriod;
+import noaa.coastwatch.util.trans.DataProjection;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.SwathProjection;
 
 /**
  * A <code>ACSPOHDFReader</code> reads HDF format data output
@@ -122,14 +141,14 @@ public class ACSPOHDFReader
         
         // Get rank and dimensions
         // -----------------------
-        int sdsid = HDFLibrary.SDselect (sdid, HDFLibrary.SDnametoindex (sdid, 
+        int sdsid = HDFLib.getInstance().SDselect (sdid, HDFLib.getInstance().SDnametoindex (sdid, 
           variables[i]));
         if (sdsid < 0)
           throw new HDFException ("Cannot access variable " + variables[i]);
         String[] varName = new String[] {""};
         int varDims[] = new int[HDFConstants.MAX_VAR_DIMS];
         int varInfo[] = new int[3];
-        if (!HDFLibrary.SDgetinfo (sdsid, varName, varDims, varInfo))
+        if (!HDFLib.getInstance().SDgetinfo (sdsid, varName, varDims, varInfo))
           throw new HDFException ("Cannot get variable info for " + 
             variables[i]);
         int rank = varInfo[0];
@@ -413,17 +432,17 @@ public class ACSPOHDFReader
 
           // Read raw data
           // -------------
-          int index = HDFLibrary.SDnametoindex (sdid, var);
-          int sdsid = HDFLibrary.SDselect (sdid, index);
+          int index = HDFLib.getInstance().SDnametoindex (sdid, var);
+          int sdsid = HDFLib.getInstance().SDselect (sdid, index);
           if (sdsid < 0)
             throw new HDFException ("Cannot access variable " + var);
           int[] start = new int[] {line, navigationStart};
           int[] stride = new int[] {1, navigationStep};
           int[] length = new int[] {1, NAVIGATION_VALUES};
           data = new float[NAVIGATION_VALUES];
-          if (!HDFLibrary.SDreaddata (sdsid, start, stride, length, data))
+          if (!HDFLib.getInstance().SDreaddata (sdsid, start, stride, length, data))
             throw new HDFException ("Cannot read navigation data for " + var);
-          HDFLibrary.SDendaccess (sdsid);
+          HDFLib.getInstance().SDendaccess (sdsid);
 
           // Insert into cache
           // -----------------
@@ -561,7 +580,7 @@ public class ACSPOHDFReader
 		try{
 			// Access variable
 		    // ---------------
-			int sdsid = HDFLibrary.SDselect (sdid, HDFLibrary.SDnametoindex (sdid, 
+			int sdsid = HDFLib.getInstance().SDselect (sdid, HDFLib.getInstance().SDnametoindex (sdid, 
 					variables[index]));
 			if (sdsid < 0)
 	        throw new HDFException ("Cannot access variable at index " + index);
@@ -574,7 +593,7 @@ public class ACSPOHDFReader
 	    		if ((var.getName().equals (LAT_VAR) || 
 	    			      var.getName().equals (LON_VAR)))
 	    			cachedGrid.setCacheSize (32*1024*1024);
-	    		HDFLibrary.SDendaccess (sdsid);
+	    		HDFLib.getInstance().SDendaccess (sdsid);
 	    		return cachedGrid;
 	    	}
 	      
@@ -586,12 +605,12 @@ public class ACSPOHDFReader
 	    	Arrays.fill (start, 0);
 	    	int[] stride = new int[dims.length];
 	    	Arrays.fill (stride, 1);
-	    	if (!HDFLibrary.SDreaddata (sdsid, start, stride, dims, data))
+	    	if (!HDFLib.getInstance().SDreaddata (sdsid, start, stride, dims, data))
 	        throw new HDFException ("Cannot read data for " + var.getName());
 
 	    	// End access
 	    	// ----------
-	    	HDFLibrary.SDendaccess (sdsid);
+	    	HDFLib.getInstance().SDendaccess (sdsid);
 
 	    	// Return variable
 	    	// ---------------

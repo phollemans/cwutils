@@ -30,9 +30,14 @@
            2006/05/28, PFH, modified to use MapProjectionFactory
            2006/10/02, PFH, modified to handle missing location values
            2010/03/30, PFH, modified constructor to close file on failure
+           2015/04/17, PFH
+           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
+           - Issue: The HDF library was crashing the VM due to multiple threads
+             calling the library simultaneously and the library is not
+             threadsafe.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -43,14 +48,27 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import java.text.*;
-import java.lang.reflect.*;
-import java.awt.geom.*;
-import ncsa.hdf.hdflib.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Map;
+import java.util.TimeZone;
+import ncsa.hdf.hdflib.HDFException;
+import noaa.coastwatch.io.HDFLib;
+import noaa.coastwatch.io.CachedGrid;
+import noaa.coastwatch.io.HDFReader;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.GCTP;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.SatelliteDataInfo;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.MapProjectionFactory;
+import noaa.coastwatch.util.trans.SwathProjection;
 
 /**
  * <p>A <code>TSHDFReader</code> reads SeaSpace TeraScan HDF format
@@ -236,12 +254,12 @@ public class TSHDFReader
     // Add any import attributes needed
     // --------------------------------
     try {
-      int sdsid = HDFLibrary.SDselect (sdid, HDFLibrary.SDnametoindex (sdid, 
+      int sdsid = HDFLib.getInstance().SDselect (sdid, HDFLib.getInstance().SDnametoindex (sdid, 
         variables[index]));
       if (sdsid < 0) 
         throw new HDFException ("Cannot access variable at index " + index);
       getImportAttributes (sdsid, var.getMetadataMap());
-      HDFLibrary.SDendaccess (sdsid);
+      HDFLib.getInstance().SDendaccess (sdsid);
     } // try
     catch (Exception e) {
       throw new IOException (e.getMessage());

@@ -46,9 +46,14 @@
            2007/04/24, PFH, extended to allow DataProjection transform writing
            2009/06/25, PFH, modified to write the "calibrated_nt" attribute
            2010/03/30, PFH, modified constructor to close file on error
+           2015/04/17, PFH
+           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
+           - Issue: The HDF library was crashing the VM due to multiple threads
+             calling the library simultaneously and the library is not
+             threadsafe.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -59,15 +64,38 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import java.text.*;
-import java.awt.geom.*;
-import ncsa.hdf.hdflib.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.tools.*;
-import noaa.coastwatch.render.*;
+import java.awt.geom.AffineTransform;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.text.NumberFormat;
+import java.util.BitSet;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import ncsa.hdf.hdflib.HDFException;
+import noaa.coastwatch.io.HDFLib;
+import noaa.coastwatch.io.CWHDFReader;
+import noaa.coastwatch.io.HDFReader;
+import noaa.coastwatch.io.HDFWriter;
+import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.tools.ToolServices;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.Line;
+import noaa.coastwatch.util.MetadataServices;
+import noaa.coastwatch.util.SatelliteDataInfo;
+import noaa.coastwatch.util.TimePeriod;
+import noaa.coastwatch.util.trans.DataProjection;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.EarthTransform2D;
+import noaa.coastwatch.util.trans.MapProjection;
+import noaa.coastwatch.util.trans.SensorScanProjection;
+import noaa.coastwatch.util.trans.SwathProjection;
 
 /**
  * A CoastWatch HDF writer is an Earth data writer that writes
@@ -588,10 +616,10 @@ public class CWHDFWriter
 
       // Set dimension names
       // -------------------
-      int rowid = HDFLibrary.SDgetdimid (sdsid, 0);
-      int colid = HDFLibrary.SDgetdimid (sdsid, 1);
-      if (!HDFLibrary.SDsetdimname (rowid, "rows") ||
-        !HDFLibrary.SDsetdimname (colid, "cols"))
+      int rowid = HDFLib.getInstance().SDgetdimid (sdsid, 0);
+      int colid = HDFLib.getInstance().SDgetdimid (sdsid, 1);
+      if (!HDFLib.getInstance().SDsetdimname (rowid, "rows") ||
+        !HDFLib.getInstance().SDsetdimname (colid, "cols"))
         throw new HDFException ("Cannot set dimension names for " + name);
 
       // Set navigation transform
@@ -618,7 +646,7 @@ public class CWHDFWriter
     String coordSys;
     try { coordSys = (String) HDFReader.getAttribute (sdid, "projection"); }
     catch (Exception e) { coordSys = ""; }
-    if (!HDFLibrary.SDsetdatastrs (sdsid, var.getLongName(), 
+    if (!HDFLib.getInstance().SDsetdatastrs (sdsid, var.getLongName(), 
       var.getUnits(), "", coordSys))
       throw new HDFException ("Cannot set data strings for " + name);
 
@@ -627,7 +655,7 @@ public class CWHDFWriter
     Object missing = var.getMissing ();
     if (missing != null) {
       Object fillValue = MetadataServices.toArray (missing);
-      if (!HDFLibrary.SDsetfillvalue (sdsid, fillValue))
+      if (!HDFLib.getInstance().SDsetfillvalue (sdsid, fillValue))
         throw new HDFException ("Cannot set fill value for " + name);
       setAttribute (sdsid, "missing_value", missing);
     } // if
@@ -643,7 +671,7 @@ public class CWHDFWriter
       catch (Exception e) {
         calType = 0;
       } // catch
-      if (!HDFLibrary.SDsetcal (sdsid, scaling[0], 0, scaling[1], 0, calType))
+      if (!HDFLib.getInstance().SDsetcal (sdsid, scaling[0], 0, scaling[1], 0, calType))
         throw new HDFException ("Cannot set calibration info for " + name);
     } // if
 

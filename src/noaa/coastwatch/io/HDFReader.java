@@ -29,11 +29,16 @@
            2012/12/02, PFH, replaced native method getChunkLengths
            2013/03/07, PFH, added extra read for missing_data if _FillValue missing
            2013/12/27, PFH
-           - changes: added call to Hishdf before opening
-           - issue: SDstart was failing on NetCDF 3 files in xdr_NC_array
+           - Changes: added call to Hishdf before opening
+           - Issue: SDstart was failing on NetCDF 3 files in xdr_NC_array
+           2015/04/17, PFH
+           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
+           - Issue: The HDF library was crashing the VM due to multiple threads
+             calling the library simultaneously and the library is not
+             threadsafe.
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -44,13 +49,31 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import java.text.*;
-import java.lang.reflect.*;
-import java.awt.geom.*;
-import ncsa.hdf.hdflib.*;
-import noaa.coastwatch.util.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import ncsa.hdf.hdflib.HDFChunkInfo;
+import ncsa.hdf.hdflib.HDFConstants;
+import ncsa.hdf.hdflib.HDFException;
+import noaa.coastwatch.io.HDFLib;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.HDFCachedGrid;
+import noaa.coastwatch.io.HDFSD;
+import noaa.coastwatch.io.HDFWriter;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.Line;
 
 /**
  * An HDF reader is an Earth data reader that reads HDF format
@@ -146,12 +169,12 @@ public abstract class HDFReader
 
       // Test the file
       // -------------
-      boolean isHDF = HDFLibrary.Hishdf (file);
+      boolean isHDF = HDFLib.getInstance().Hishdf (file);
       if (!isHDF) throw new IOException ("File is not HDF (Hishdf failed)");
 
       // Open the file
       // -------------
-      sdid = HDFLibrary.SDstart (file, HDFConstants.DFACC_READ);
+      sdid = HDFLib.getInstance().SDstart (file, HDFConstants.DFACC_READ);
       closed = false;
 
       // Get variable names
@@ -198,7 +221,7 @@ public abstract class HDFReader
     // Get the variable and attribute count
     // ------------------------------------
     int[] fileInfo = new int[2];
-    if (!HDFLibrary.SDfileinfo (sdid, fileInfo))
+    if (!HDFLib.getInstance().SDfileinfo (sdid, fileInfo))
       throw new HDFException ("Cannot get file info for sdid = " + sdid);
     int varCount = fileInfo[0];
 
@@ -209,26 +232,26 @@ public abstract class HDFReader
 
       // Access variable
       // ---------------
-      int sdsid = HDFLibrary.SDselect (sdid, i);
+      int sdsid = HDFLib.getInstance().SDselect (sdid, i);
       if (sdsid < 0)
         throw new HDFException ("Cannot access variable at index " + i);
 
       // Check for coordinate variable
       // -----------------------------
-      if (HDFLibrary.SDiscoordvar (sdsid)) continue;
+      if (HDFLib.getInstance().SDiscoordvar (sdsid)) continue;
 
       // Get variable name
       // -----------------
       String[] varName = new String[] {""};
       int varDims[] = new int[HDFConstants.MAX_VAR_DIMS];
       int varInfo[] = new int[3];
-      if (!HDFLibrary.SDgetinfo (sdsid, varName, varDims, varInfo))
+      if (!HDFLib.getInstance().SDgetinfo (sdsid, varName, varDims, varInfo))
         throw new HDFException ("Cannot get variable info at index " + i);
       variables.add (varName[0]);
 
       // End access
       // ----------
-      HDFLibrary.SDendaccess (sdsid);
+      HDFLib.getInstance().SDendaccess (sdsid);
 
     } // for
 
@@ -358,7 +381,7 @@ public abstract class HDFReader
   
     // Get attribute value
     // -------------------
-    int attIndex = HDFLibrary.SDfindattr (sdid, name);
+    int attIndex = HDFLib.getInstance().SDfindattr (sdid, name);
     if (attIndex < 0)
       throw new HDFException ("Cannot get attribute value for " + name);
     return (getAttribute (sdid, attIndex));
@@ -385,7 +408,7 @@ public abstract class HDFReader
   
     // Get attribute value
     // -------------------
-    int attIndex = HDFLibrary.SDfindattr (sdid, name);
+    int attIndex = HDFLib.getInstance().SDfindattr (sdid, name);
     if (attIndex < 0)
       throw new HDFException ("Cannot get attribute value for " + name);
     return (getAttributeAsArray (sdid, attIndex));
@@ -417,7 +440,7 @@ public abstract class HDFReader
     // Get attribute info
     // ------------------
     String[] attNameArray = new String[] {""};
-    if (!HDFLibrary.SDattrinfo (sdid, index, attNameArray, attInfo))
+    if (!HDFLib.getInstance().SDattrinfo (sdid, index, attNameArray, attInfo))
       throw new HDFException ("Cannot get attribute info at index " + index);
     String attName = attNameArray[0];
     int attType = attInfo[0];
@@ -427,7 +450,7 @@ public abstract class HDFReader
     // -------------------        
     Class attClass = getClass (attType);
     Object attData = Array.newInstance (attClass, attLength);
-    if (!HDFLibrary.SDreadattr (sdid, index, attData))
+    if (!HDFLib.getInstance().SDreadattr (sdid, index, attData))
       throw new HDFException ("Cannot get attribute value for " + attName);
 
     return (attData);
@@ -573,7 +596,7 @@ public abstract class HDFReader
     int attCount;
     if (global) {
       int[] fileInfo = new int[2];
-      if (!HDFLibrary.SDfileinfo (sdid, fileInfo))
+      if (!HDFLib.getInstance().SDfileinfo (sdid, fileInfo))
         throw new HDFException ("Cannot get file info for sdid = " + sdid);
       attCount = fileInfo[1];
     } // if
@@ -581,7 +604,7 @@ public abstract class HDFReader
       String[] varName = new String[] {""};
       int varDims[] = new int[HDFConstants.MAX_VAR_DIMS];
       int varInfo[] = new int[3];
-      if (!HDFLibrary.SDgetinfo (sdid, varName, varDims, varInfo))
+      if (!HDFLib.getInstance().SDgetinfo (sdid, varName, varDims, varInfo))
         throw new HDFException ("Cannot get variable info for sdid = " + sdid);
       attCount = varInfo[2];
     } // else
@@ -594,7 +617,7 @@ public abstract class HDFReader
       // ------------------
       String[] attName = new String[] {""};
       int attInfo[] = new int[2];
-      if (!HDFLibrary.SDattrinfo (sdid, i, attName, attInfo))
+      if (!HDFLib.getInstance().SDattrinfo (sdid, i, attName, attInfo))
         throw new HDFException ("Cannot get attribute info for " + attName);
 
       // Get attribute value
@@ -615,7 +638,7 @@ public abstract class HDFReader
 
       // Access variable
       // ---------------
-      int sdsid = HDFLibrary.SDselect (sdid, HDFLibrary.SDnametoindex (sdid, 
+      int sdsid = HDFLib.getInstance().SDselect (sdid, HDFLib.getInstance().SDnametoindex (sdid, 
         variables[index]));
       if (sdsid < 0)
         throw new HDFException ("Cannot access variable at index " + index);
@@ -625,7 +648,7 @@ public abstract class HDFReader
       String[] varName = new String[] {""};
       int varDims[] = new int[HDFConstants.MAX_VAR_DIMS];
       int varInfo[] = new int[3];
-      if (!HDFLibrary.SDgetinfo (sdsid, varName, varDims, varInfo))
+      if (!HDFLib.getInstance().SDgetinfo (sdsid, varName, varDims, varInfo))
         throw new HDFException ("Cannot get variable info at index " + index);
       String name = varName[0];
       int rank = varInfo[0];
@@ -640,7 +663,7 @@ public abstract class HDFReader
       // Get data strings
       // ----------------
       String[] dataStrings = new String[] {"", "", "", ""};
-      if (!HDFLibrary.SDgetdatastrs (sdsid, dataStrings, 256))
+      if (!HDFLib.getInstance().SDgetdatastrs (sdsid, dataStrings, 256))
         throw new HDFException ("Cannot get data strings for " + name);
       String longName = dataStrings[0];
       String units = dataStrings[1];
@@ -659,7 +682,7 @@ public abstract class HDFReader
       int[] calType = new int[1];
       double[] scaling;
       try {
-        if (!HDFLibrary.SDgetcal (sdsid, calInfo, calType))
+        if (!HDFLib.getInstance().SDgetcal (sdsid, calInfo, calType))
           throw new HDFException ("Cannot get calibration info for " + name);
         scaling = new double[] {calInfo[0], calInfo[2]};
       } // try
@@ -671,7 +694,7 @@ public abstract class HDFReader
       // -----------------
       Object[] fillValue = new Object[1];
       try {
-        if (!HDFLibrary.SDgetfillvalue (sdsid, fillValue))
+        if (!HDFLib.getInstance().SDgetfillvalue (sdsid, fillValue))
           throw new HDFException ("Cannot get fill value for " + name);
       } // try
       catch (HDFException e) {
@@ -783,7 +806,7 @@ public abstract class HDFReader
 
       // End access
       // ----------
-      HDFLibrary.SDendaccess (sdsid);
+      HDFLib.getInstance().SDendaccess (sdsid);
 
       // Return the new grid
       // -------------------
@@ -818,7 +841,7 @@ public abstract class HDFReader
 
       // Access variable
       // ---------------
-      int sdsid = HDFLibrary.SDselect (sdid, HDFLibrary.SDnametoindex (sdid, 
+      int sdsid = HDFLib.getInstance().SDselect (sdid, HDFLib.getInstance().SDnametoindex (sdid, 
         variables[index]));
       if (sdsid < 0)
         throw new HDFException ("Cannot access variable at index " + index);
@@ -831,12 +854,12 @@ public abstract class HDFReader
       Arrays.fill (start, 0);
       int[] stride = new int[dims.length];
       Arrays.fill (stride, 1);
-      if (!HDFLibrary.SDreaddata (sdsid, start, stride, dims, data))
+      if (!HDFLib.getInstance().SDreaddata (sdsid, start, stride, dims, data))
         throw new HDFException ("Cannot read data for " + var.getName());
 
       // End access
       // ----------
-      HDFLibrary.SDendaccess (sdsid);
+      HDFLib.getInstance().SDendaccess (sdsid);
 
       // Return variable
       // ---------------
@@ -873,7 +896,7 @@ public abstract class HDFReader
     // --------------
     HDFChunkInfo info = new HDFChunkInfo();
     int[] flags = new int[1];
-    success = HDFLibrary.SDgetchunkinfo (sdsid, info, flags);
+    success = HDFLib.getInstance().SDgetchunkinfo (sdsid, info, flags);
     if (!success) throw new HDFException ("Failed to get chunk info at index = " + sdsid);
 
     // Get rank
@@ -881,7 +904,7 @@ public abstract class HDFReader
     String[] varNameArray = new String[] {""};
     int varDims[] = new int[HDFConstants.MAX_VAR_DIMS];
     int varInfo[] = new int[3];
-    success = HDFLibrary.SDgetinfo (sdsid, varNameArray, varDims, varInfo);
+    success = HDFLib.getInstance().SDgetinfo (sdsid, varNameArray, varDims, varInfo);
     if (!success) throw new HDFException ("Cannot get variable info at index = " + sdsid);
     int rank = varInfo[0];
 
@@ -912,7 +935,7 @@ public abstract class HDFReader
     // ------------------
     if (closed) return;
     try {
-      if (!HDFLibrary.SDend (sdid)) 
+      if (!HDFLib.getInstance().SDend (sdid)) 
         throw new HDFException ("Failed to end access");
     } // try
     catch (HDFException e) { 
@@ -941,13 +964,13 @@ public abstract class HDFReader
 
       // Get variable index
       // ------------------
-      int index = HDFLibrary.SDnametoindex (sdid, varName);
+      int index = HDFLib.getInstance().SDnametoindex (sdid, varName);
       if (index < 0)
         throw new HDFException ("Cannot access variable '" + varName + "'");
 
       // Access variable
       // ---------------
-      int sdsid = HDFLibrary.SDselect (sdid, index);
+      int sdsid = HDFLib.getInstance().SDselect (sdid, index);
       if (sdsid < 0)
         throw new HDFException ("Cannot access variable at index " + index);
  
@@ -956,9 +979,9 @@ public abstract class HDFReader
       String[] varNameArray = new String[] {""};
       int varDims[] = new int[HDFConstants.MAX_VAR_DIMS];
       int varInfo[] = new int[3];
-      if (!HDFLibrary.SDgetinfo (sdsid, varNameArray, varDims, varInfo))
+      if (!HDFLib.getInstance().SDgetinfo (sdsid, varNameArray, varDims, varInfo))
         throw new HDFException ("Cannot get variable info at index " + index);
-      HDFLibrary.SDendaccess (sdsid);
+      HDFLib.getInstance().SDendaccess (sdsid);
 
       // Return dimensions
       // -----------------

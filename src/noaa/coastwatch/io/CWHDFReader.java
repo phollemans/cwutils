@@ -38,9 +38,14 @@
            2006/05/28, PFH, modified to use MapProjectionFactory
            2006/10/02, PFH, modified to handle missing location values
            2012/12/04, PFH, added canUpdateNavigation
+           2015/04/17, PFH
+           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
+           - Issue: The HDF library was crashing the VM due to multiple threads
+             calling the library simultaneously and the library is not
+             threadsafe.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -51,15 +56,36 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
-import java.text.*;
-import java.lang.reflect.*;
-import java.awt.geom.*;
-import ncsa.hdf.hdflib.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import ncsa.hdf.hdflib.HDFConstants;
+import ncsa.hdf.hdflib.HDFException;
+import noaa.coastwatch.io.HDFLib;
+import noaa.coastwatch.io.CWHDFWriter;
+import noaa.coastwatch.io.CachedGrid;
+import noaa.coastwatch.io.HDFReader;
+import noaa.coastwatch.io.HDFWriter;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.Line;
+import noaa.coastwatch.util.SatelliteDataInfo;
+import noaa.coastwatch.util.TimePeriod;
+import noaa.coastwatch.util.trans.DataProjection;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.EarthTransform2D;
+import noaa.coastwatch.util.trans.MapProjection;
+import noaa.coastwatch.util.trans.MapProjectionFactory;
+import noaa.coastwatch.util.trans.SensorScanProjection;
+import noaa.coastwatch.util.trans.SensorScanProjectionFactory;
+import noaa.coastwatch.util.trans.SwathProjection;
 
 /**
  * A CWHDF reader is an Earth data reader that reads CoastWatch
@@ -545,9 +571,9 @@ public class CWHDFReader
 
       // Reopen file as read/write
       // -------------------------
-      if (!HDFLibrary.SDend (sdid)) 
+      if (!HDFLib.getInstance().SDend (sdid)) 
         throw new HDFException ("Failed to end access to HDF file");
-      sdid = HDFLibrary.SDstart (getSource(), HDFConstants.DFACC_WRITE);
+      sdid = HDFLib.getInstance().SDstart (getSource(), HDFConstants.DFACC_WRITE);
 
       // Loop over each variable
       // -----------------------
@@ -556,10 +582,10 @@ public class CWHDFReader
 
         // Access variable
         // ---------------
-        int index = HDFLibrary.SDnametoindex (sdid, var);
+        int index = HDFLib.getInstance().SDnametoindex (sdid, var);
         if (index < 0)
           throw new HDFException ("Cannot access variable " + var);
-        int sdsid = HDFLibrary.SDselect (sdid, index);
+        int sdsid = HDFLib.getInstance().SDselect (sdid, index);
         if (sdsid < 0)
           throw new HDFException ("Cannot access variable at index " + index);
 
@@ -568,7 +594,7 @@ public class CWHDFReader
         String[] varName = new String[] {""};
         int varDims[] = new int[HDFConstants.MAX_VAR_DIMS];
         int varInfo[] = new int[3];
-        if (!HDFLibrary.SDgetinfo (sdsid, varName, varDims, varInfo))
+        if (!HDFLib.getInstance().SDgetinfo (sdsid, varName, varDims, varInfo))
           throw new HDFException ("Cannot get variable info for " + var);
         int rank = varInfo[0];
         if (rank != 2) {
@@ -611,15 +637,15 @@ public class CWHDFReader
 
         // End access
         // ----------
-        HDFLibrary.SDendaccess (sdsid);
+        HDFLib.getInstance().SDendaccess (sdsid);
 
       } // for
 
       // Reopen file as read only
       // ------------------------
-      if (!HDFLibrary.SDend (sdid)) 
+      if (!HDFLib.getInstance().SDend (sdid)) 
         throw new HDFException ("Failed to end access to HDF file");
-      sdid = HDFLibrary.SDstart (getSource(), HDFConstants.DFACC_READ);
+      sdid = HDFLib.getInstance().SDstart (getSource(), HDFConstants.DFACC_READ);
 
     } // try
     catch (HDFException e1) { 

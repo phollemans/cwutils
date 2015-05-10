@@ -7,9 +7,14 @@
   CHANGES: 2005/04/23, PFH, added ToolServices.setCommandLine()
            2005/06/23, PFH, modified to use MetadataServices.toString()
            2007/04/23, PFH, added version printing
+           2015/04/17, PFH
+           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
+           - Issue: The HDF library was crashing the VM due to multiple threads
+             calling the library simultaneously and the library is not
+             threadsafe.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -20,14 +25,22 @@ package noaa.coastwatch.tools;
 
 // Imports
 // --------
-import java.io.*;
-import java.lang.reflect.*;
-import java.util.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import ncsa.hdf.hdflib.*;
-import jargs.gnu.*;
-import jargs.gnu.CmdLineParser.*;
+import jargs.gnu.CmdLineParser;
+import jargs.gnu.CmdLineParser.Option;
+import jargs.gnu.CmdLineParser.OptionException;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import ncsa.hdf.hdflib.HDFConstants;
+import noaa.coastwatch.io.HDFLib;
+import noaa.coastwatch.io.HDFReader;
+import noaa.coastwatch.io.HDFWriter;
+import noaa.coastwatch.tools.ToolServices;
+import noaa.coastwatch.util.MetadataServices;
 
 /**
  * <p>The attribute tool reads and writes HDF file attributes.</p>
@@ -337,16 +350,16 @@ public final class hdatt {
     // ---------
     int mode = (value == null ? HDFConstants.DFACC_READ : 
       HDFConstants.DFACC_WRITE);
-    int sdid = HDFLibrary.SDstart (input, mode);
+    int sdid = HDFLib.getInstance().SDstart (input, mode);
 
     // Set target to variable
     // ----------------------
     int sdsid = -1, targetid;
     if (variable != null) {
-      int index = HDFLibrary.SDnametoindex (sdid, variable);
+      int index = HDFLib.getInstance().SDnametoindex (sdid, variable);
       if (index < 0)
         throw new IOException ("Cannot access variable '" + variable + "'");
-      sdsid = HDFLibrary.SDselect (sdid, index);
+      sdsid = HDFLib.getInstance().SDselect (sdid, index);
       if (sdsid < 0)
         throw new IOException ("Cannot access variable at index " + index);
       targetid = sdsid;
@@ -443,8 +456,8 @@ public final class hdatt {
     // Close file
     // ----------
     if (variable != null)
-      HDFLibrary.SDendaccess (sdsid);
-    HDFLibrary.SDend (sdid);
+      HDFLib.getInstance().SDendaccess (sdsid);
+    HDFLib.getInstance().SDend (sdid);
 
   } // main
 

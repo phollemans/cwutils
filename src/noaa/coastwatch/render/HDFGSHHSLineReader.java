@@ -8,9 +8,14 @@
            - Changes: Cleaned up implementation of finalize() to call
              super no matter what happens.
            - Issue: The original finalize wasn't written correctly.
- 
+           2015/04/17, PFH
+           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
+           - Issue: The HDF library was crashing the VM due to multiple threads
+             calling the library simultaneously and the library is not
+             threadsafe.
+
   CoastWatch Software Library and Utilities
-  Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2006-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -21,12 +26,12 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import ncsa.hdf.hdflib.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
+import java.io.IOException;
+import ncsa.hdf.hdflib.HDFConstants;
+import ncsa.hdf.hdflib.HDFException;
+import noaa.coastwatch.io.HDFLib;
+import noaa.coastwatch.io.IOServices;
+import noaa.coastwatch.render.BinnedGSHHSLineReader;
 
 /**
  * The <code>HDFGSHHSLineReader</code> extends
@@ -50,7 +55,7 @@ public class HDFGSHHSLineReader
 
     try {
       int[] stride = new int[] {1};
-      if (!HDFLibrary.SDreaddata (sdsid, start, stride, count, data))
+      if (!HDFLib.getInstance().SDreaddata (sdsid, start, stride, count, data))
         throw new HDFException ("Cannot read data for sdsid " + sdsid);
     } // try
     catch (HDFException e) { throw new IOException (e.getMessage()); }
@@ -69,9 +74,9 @@ public class HDFGSHHSLineReader
     try {
       int sdsid = selectData (var);
       int[] stride = new int[] {1};
-      if (!HDFLibrary.SDreaddata (sdsid, start, stride, count, data))
+      if (!HDFLib.getInstance().SDreaddata (sdsid, start, stride, count, data))
         throw new HDFException ("Cannot read data for " + var);
-      HDFLibrary.SDendaccess (sdsid);
+      HDFLib.getInstance().SDendaccess (sdsid);
     } // try
     catch (HDFException e) { throw new IOException (e.getMessage()); }
 
@@ -84,10 +89,10 @@ public class HDFGSHHSLineReader
   ) throws IOException {
 
     try {
-      int index = HDFLibrary.SDnametoindex (sdID, var);
+      int index = HDFLib.getInstance().SDnametoindex (sdID, var);
       if (index < 0)
         throw new HDFException ("Cannot access variable " + var);
-      int sdsid = HDFLibrary.SDselect (sdID, index);
+      int sdsid = HDFLib.getInstance().SDselect (sdID, index);
       if (sdsid < 0)
         throw new HDFException ("Cannot access variable at index "+index);
       return (sdsid);
@@ -104,7 +109,7 @@ public class HDFGSHHSLineReader
 
     String path = IOServices.getFilePath (getClass(), name);
     try {
-      int id = HDFLibrary.SDstart (path, HDFConstants.DFACC_READ);
+      int id = HDFLib.getInstance().SDstart (path, HDFConstants.DFACC_READ);
       if (sdID < 0) 
         throw new HDFException ("Invalid HDF file " + path);
       return (id);
@@ -193,11 +198,11 @@ public class HDFGSHHSLineReader
   protected void finalize () throws Throwable {
 
     try {
-      HDFLibrary.SDendaccess (segmentLevelID);
-      HDFLibrary.SDendaccess (segmentPointsID);
-      HDFLibrary.SDendaccess (dxID);
-      HDFLibrary.SDendaccess (dyID);
-      HDFLibrary.SDend (sdID);
+      HDFLib.getInstance().SDendaccess (segmentLevelID);
+      HDFLib.getInstance().SDendaccess (segmentPointsID);
+      HDFLib.getInstance().SDendaccess (dxID);
+      HDFLib.getInstance().SDendaccess (dyID);
+      HDFLib.getInstance().SDend (sdID);
     } // try
     finally {
       super.finalize();
