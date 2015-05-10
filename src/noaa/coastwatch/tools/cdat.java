@@ -51,9 +51,15 @@
              potnetial code for setting view panel size (remains commented).
              Also improved the menu enable/disable functionality.
            - Issue: A user requested the functionality.
+           2015/05/08, PFH
+           - Changes: Added a scripting console to the tools menu.
+           - Issue: We'd like to have deeper access to the Java VM for testing
+             and debugging, and also would like to explore what a scripting
+             capability makes available to the user for operations within
+             CDAT that aren't normally possible, such as math or custom code.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -64,25 +70,72 @@ package noaa.coastwatch.tools;
 
 // Imports
 // --------
-import java.io.*;
-import java.net.*;
-import java.beans.*;
-import java.util.*;
+import jargs.gnu.CmdLineParser;
+import jargs.gnu.CmdLineParser.Option;
+import jargs.gnu.CmdLineParser.OptionException;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
-import java.text.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-import noaa.coastwatch.gui.*;
-import noaa.coastwatch.gui.open.*;
-import noaa.coastwatch.gui.save.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.render.*;
-import jargs.gnu.*;
-import jargs.gnu.CmdLineParser.*;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.border.BevelBorder;
+import noaa.coastwatch.gui.CompoundToolBar;
+import noaa.coastwatch.gui.EarthDataAnalysisPanel;
+import noaa.coastwatch.gui.FileOperationChooser;
+import noaa.coastwatch.gui.FileTransferHandler;
+import noaa.coastwatch.gui.FullScreenWindow;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.HTMLPanel;
+import noaa.coastwatch.gui.PreferencesChooser;
+import noaa.coastwatch.gui.ReaderInfoPanel;
+import noaa.coastwatch.gui.SimpleFileFilter;
+import noaa.coastwatch.gui.SplashScreenManager;
+import noaa.coastwatch.gui.TabComponent;
+import noaa.coastwatch.gui.UpdateAgent;
+import noaa.coastwatch.gui.ViewOperationChooser;
+import noaa.coastwatch.gui.WindowMonitor;
+import noaa.coastwatch.gui.open.EarthDataChooser;
+import noaa.coastwatch.gui.save.EarthDataExporter;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.OverlayGroupManager;
+import noaa.coastwatch.tools.Preferences;
+import noaa.coastwatch.tools.ResourceManager;
+import noaa.coastwatch.tools.ToolServices;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.gui.ScriptConsole;
 
 /**
  * <p>The analysis tool allows user to view, survey, and save datasets.</p>
@@ -241,6 +294,9 @@ public final class cdat
 
   /** The Tools/File Information menu command. */
   private static final String INFO_COMMAND = "File Information";
+
+  /** The Tools/Script Console menu command. */
+  private static final String SCRIPT_CONSOLE_COMMAND = "Script Console";
 
   /** The Help/Help menu command. */
   private static final String HELP_COMMAND = "Help and support";
@@ -471,6 +527,12 @@ public final class cdat
     menuItem.addActionListener (toolsListener); 
     toolsMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
+
+    menuItem = new JMenuItem (SCRIPT_CONSOLE_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_C);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_C, keymask));
+    menuItem.addActionListener (toolsListener); 
+    toolsMenu.add (menuItem);
 
     // Create help menu
     // ----------------
@@ -782,6 +844,12 @@ public final class cdat
           } // catch
         } // if
       } // else if
+      
+      // Show script console
+      // -------------------
+      else if (command.equals (SCRIPT_CONSOLE_COMMAND)) {
+        ScriptConsole.getInstance().showRelativeTo (cdat.this);
+      } // else if
 
     } // actionPerformed
   } // ToolsMenuListener class
@@ -857,7 +925,7 @@ public final class cdat
     // Add analysis panel to tabbed pane
     // ---------------------------------
     if (reader != null) {
-      List variables = reader.getStatisticsVariables();
+      List<String> variables = reader.getStatisticsVariables();
       TabComponent tab = new EarthDataAnalysisPanel (reader, variables);
       tabbedPane.addTab (tab.getTitle(), tab.getIcon(), (Component) tab, 
         tab.getToolTip());
