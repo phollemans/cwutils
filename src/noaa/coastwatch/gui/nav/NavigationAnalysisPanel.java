@@ -9,9 +9,15 @@
            - Changes: Updated to use new SolidBackground constructor
            - Issue: The constructor for SolidBackground was throwing a
              NullPointerException on construction.
-
+           2015/02/27, PFH
+           - Changes: Replaced deprecated dataView.getUpsideDown() call
+             with dataView.getOrientationAffine().getType().
+           - Issue: We created a more sophisticted way of flexibly orienting the
+             data view, so the old method was deprecated.  TODO: This change
+             needs to be tested!
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -22,22 +28,76 @@ package noaa.coastwatch.gui.nav;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.beans.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.util.List;
-import java.util.*;
-import java.io.*;
-import noaa.coastwatch.gui.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.io.*;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.JTable;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import noaa.coastwatch.gui.DataViewOverlayControl;
+import noaa.coastwatch.gui.EarthDataViewPanel;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.LightTable;
+import noaa.coastwatch.gui.nav.NavigationPoint;
+import noaa.coastwatch.gui.nav.NavigationPointSavePanel;
+import noaa.coastwatch.gui.nav.NavigationPointTable;
+import noaa.coastwatch.gui.nav.NavigationPointTableModel;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.render.CoastOverlay;
+import noaa.coastwatch.render.ColorEnhancement;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.LinearEnhancement;
+import noaa.coastwatch.render.PaletteFactory;
+import noaa.coastwatch.render.SolidBackground;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.NavigationOffsetEstimator;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>NavigationAnalysisPanel</code> class is a panel that
@@ -438,7 +498,8 @@ public class NavigationAnalysisPanel
       Point2D p1 = line.getP1();
       Point2D p2 = line.getP2();
       double magFactor = getMagFactor();
-      if (dataView.getUpsideDown()) magFactor *= -1;
+      if (dataView.getOrientationAffine().getType() != AffineTransform.TYPE_IDENTITY)
+        magFactor *= -1;
       double rowOffsetUpdate = (p1.getY() - p2.getY()) / magFactor;
       rowOffsetUpdate = Math.rint (rowOffsetUpdate*10)/10;
       double colOffsetUpdate = (p1.getX() - p2.getX()) / magFactor;
@@ -657,7 +718,8 @@ public class NavigationAnalysisPanel
     // Set the view affine
     // -------------------
     double[] offset = point.getOffset();
-    if (dataView.getUpsideDown()) magFactor *= -1;
+    if (dataView.getOrientationAffine().getType() != AffineTransform.TYPE_IDENTITY)
+      magFactor *= -1;
     viewPanel.setImageAffine (AffineTransform.getTranslateInstance (
       -offset[Grid.COLS]*magFactor, -offset[Grid.ROWS]*magFactor));
 
