@@ -10,9 +10,14 @@
            - Changes: Moved Java class to new package and added extra methods
              and unit testing code.
            - Issue: Creating new package for tile-related I/O operations.
-
+           2015/04/11, PFH
+           - Changes: Added getStart() method in TilePosition class.
+           - Issue: We needed a way to easily loop over each tile in the
+             tiling scheme and do something, and the getStart() method 
+             helped to do that.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -23,8 +28,8 @@ package noaa.coastwatch.io.tile;
 
 // Imports
 // -------
-import java.util.*;
-import java.awt.*;
+import java.awt.Rectangle;
+import java.util.Arrays;
 
 /**
  * The tiling scheme class helps support the tiling of 2D data.  A
@@ -139,7 +144,7 @@ public class TilingScheme {
    *
    * @return the tile dimensions at the specified position.
    *
-   * @deprecated As of 3.3.1, use {@link TilePosition#getTileDimensions}.
+   * @deprecated As of 3.3.1, use {@link TilePosition#getDimensions}.
    */
   @Deprecated
   public int[] getTileDimensions (
@@ -173,10 +178,10 @@ public class TilingScheme {
 
     // Check coordinates
     // -----------------
-      if (row < 0 || row >= dims[ROWS])
-        throw new IndexOutOfBoundsException ("Row index out of bounds: " + row);
-      else if (col < 0 || col >= dims[COLS])
-        throw new IndexOutOfBoundsException ("Column index out of bounds: " + col);
+    if (row < 0 || row >= dims[ROWS])
+      throw new IndexOutOfBoundsException ("Row index out of bounds: " + row);
+    else if (col < 0 || col >= dims[COLS])
+      throw new IndexOutOfBoundsException ("Column index out of bounds: " + col);
     
     return (new TilePosition (row/tileDims[ROWS], col/tileDims[COLS]));
 
@@ -281,6 +286,21 @@ public class TilingScheme {
       return (thisDims);
 
     } // getDimensions
+
+    ////////////////////////////////////////////////////////
+
+    /**
+     * Gets the starting global coordinates of the tile at this position.
+     *
+     * @return the starting global coordinates at this position as [rows, columns].
+     *
+     * @since 3.3.1
+     */
+    public int[] getStart () {
+    
+      return ((int[]) start.clone());
+    
+    } // getStart
 
     ////////////////////////////////////////////////////////
 

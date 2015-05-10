@@ -13,9 +13,12 @@
            2014/03/25, PFH
            - Changes: Changed to use getBounds() from getCorners()
            - Issue: API was unclear.
+           2015/04/13, PFH
+           - Changes: Added NetCDF 3 and NetCDF 4 save panels.
+           - Issue: We wanted to be able to save data from CDAT in NetCDF.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -26,18 +29,34 @@ package noaa.coastwatch.gui.save;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.Timer;
-import java.io.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.gui.*;
+import javax.swing.JOptionPane;
+import javax.swing.ProgressMonitor;
+import javax.swing.Timer;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.save.ArcSavePanel;
+import noaa.coastwatch.gui.save.BinarySavePanel;
+import noaa.coastwatch.gui.save.CWHDFSavePanel;
+import noaa.coastwatch.gui.save.SavePanel;
+import noaa.coastwatch.gui.save.SubsetOptionPanel;
+import noaa.coastwatch.gui.save.TextSavePanel;
+import noaa.coastwatch.gui.save.VariableOptionPanel;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataWriter;
+import noaa.coastwatch.render.ColorComposite;
+import noaa.coastwatch.render.ColorEnhancement;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.Datum;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /** 
  * The <code>DataSavePanel</code> class is the abstract parent of all
@@ -109,8 +128,12 @@ public abstract class DataSavePanel
     // Create new panel
     // ----------------
     DataSavePanel panel;
-    if (format.equals ("hdf")) 
+    if (format.equals ("hdf"))
       panel = new CWHDFSavePanel (reader, variableList, view);
+    else if (format.equals ("nc"))
+      panel = new CFNCSavePanel (reader, variableList, view);
+    else if (format.equals ("nc4"))
+      panel = new CFNC4SavePanel (reader, variableList, view);
     else if (format.equals ("raw"))
       panel = new BinarySavePanel (reader, variableList, view);
     else if (format.equals ("txt"))

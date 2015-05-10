@@ -8,6 +8,10 @@
            2006/10/19, PFH, changed save as to export on dialog title
            2006/11/06, PFH, added help button, reorganized class
            2006/12/19, PFH, modified to use FileSavePanel
+           2015/04/13, PFH
+           - Changes: Added NetCDF 3 and NetCDF 4 options in the file chooser
+             format extensions.
+           - Issue: We wanted to be able to save data from CDAT in NetCDF.
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
@@ -21,20 +25,46 @@ package noaa.coastwatch.gui.save;
 
 // Imports
 // -------
-import java.beans.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.filechooser.*;
-import javax.swing.filechooser.FileFilter;
-import java.io.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.gui.*;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import noaa.coastwatch.gui.FileSavePanel;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.SimpleFileFilter;
+import noaa.coastwatch.gui.save.DataSavePanel;
+import noaa.coastwatch.gui.save.ImageSavePanel;
+import noaa.coastwatch.gui.save.SavePanel;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.render.CoastOverlay;
+import noaa.coastwatch.render.ColorComposite;
+import noaa.coastwatch.render.ColorEnhancement;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.LatLonOverlay;
+import noaa.coastwatch.render.LinearEnhancement;
+import noaa.coastwatch.render.PaletteFactory;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.Grid;
 
 /** 
  * The <code>EarthDataExporter</code> class allows the user to
@@ -59,7 +89,9 @@ public class EarthDataExporter
     "JPEG image (.jpg)", 
     "GeoTIFF image (.tif)", 
     "PDF document (.pdf)", 
-    "CoastWatch HDF (.hdf)", 
+    "CoastWatch HDF (.hdf)",
+    "NetCDF-3 (.nc)",
+    "NetCDF-4 (.nc4)",
     "Binary raster (.raw)", 
     "Text file (.txt)", 
     "ArcGIS binary grid (.flt)"
@@ -73,6 +105,8 @@ public class EarthDataExporter
     "tif",
     "pdf",
     "hdf",
+    "nc",
+    "nc4",
     "raw",
     "txt",
     "flt"
@@ -122,7 +156,7 @@ public class EarthDataExporter
       new String[] {"png", "gif", "jpg", "tif", "pdf"}, "Image files");
     fileChooser.addChoosableFileFilter (imageFilter);
     SimpleFileFilter dataFilter = new SimpleFileFilter (
-      new String[] {"hdf", "raw", "txt", "flt"}, "Data files");
+      new String[] {"hdf", "nc", "nc4", "raw", "txt", "flt"}, "Data files");
     fileChooser.addChoosableFileFilter (dataFilter);
     fileChooser.setDialogTitle ("Select");
     fileChooser.setDialogType (JFileChooser.SAVE_DIALOG);

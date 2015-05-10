@@ -1,17 +1,13 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CFNCWriter.java
-  PURPOSE: A class to write NetCDF/CF format files.
+     FILE: CFNC4Writer.java
+  PURPOSE: A class to write NetCDF 4/CF format files.
    AUTHOR: Peter Hollemans
-     DATE: 2010/02/15
-  CHANGES: 2015/04/13, PFH
-           - Changes: Updted to use new NetcdfFileWriter class, and added
-             test main() method.
-           - Issue: The NetcdfFileWritable class was deprecated when we updated
-             to the latest NetCDF Java API.
+     DATE: 2015/04/08
+  CHANGES: n/a
 
   CoastWatch Software Library and Utilities
-  Copyright 2010-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -31,11 +27,15 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Queue;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
 import noaa.coastwatch.io.EarthDataWriter;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
 import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.DataVariable;
@@ -56,41 +56,24 @@ import noaa.coastwatch.util.trans.ProjectionConstants;
 import noaa.coastwatch.util.trans.SpheroidConstants;
 import noaa.coastwatch.util.trans.SwathProjection;
 
-import ucar.ma2.Array;
-import ucar.ma2.DataType;
-import ucar.ma2.InvalidRangeException;
-import ucar.nc2.Attribute;
-import ucar.nc2.Dimension;
-import ucar.nc2.Group;
-import ucar.nc2.NetcdfFileWriter;
-import ucar.nc2.Variable;
+import edu.ucar.ral.nujan.netcdf.NhDimension;
+import edu.ucar.ral.nujan.netcdf.NhException;
+import edu.ucar.ral.nujan.netcdf.NhFileWriter;
+import edu.ucar.ral.nujan.netcdf.NhGroup;
+import edu.ucar.ral.nujan.netcdf.NhVariable;
 
 /**
- * <p>A CF NetCDF writer creates NetCDF format files with CF
- * metadata using the Unidata Java NetCDF library.</p>
+ * <p>A CF NetCDF 4 writer creates NetCDF 4 format files with CF
+ * metadata using the Nujan NetCDF 4 writing library.</p>
  *
  * <p>Some implementation notes:</p>
  *
  * <ol>
  *
- * <li>The Java NetCDF library documentation mentions that it can
- * be extremely I/O intensive to put the file back into define
- * mode (via NetcdfFileWriteable.setRedefineMode (true)), because
- * it may require that the entire file be re-written to
- * accomodate the new header information.  To avoid this issue,
- * we reserve 64 kb of extra space for header information.
- * **NOTE** Currently, there is a bug in the NetCDF library that
- * makes this option not work correctly.  Waiting for it to be
- * fixed.  For now, we have to suffer the performance loss.</li>
- *
- * <li>The NetCDF 3 data model does not allow for unsigned data
- * types.  If unsigned variable data is present (as specified by
+ * <li>The Nujan NetCDF 4 writing library does not support all unsigned data
+ * types.  If unsigned 16-bit or 32-bit data is present (as specified by
  * the {@link DataVariable#getUnsigned} flag), it is written as
- * signed data of the next largest NetCDF data type.  This rule
- * applies for 16-bit and 32-bit integer data, but for 8-bit
- * bytes, we use the NetCDF byte type and indicated unsignedness
- * using the valid_range attribute as recommended by the CF
- * conventions.</li>
+ * signed data of the next largest NetCDF data type.</li>
  *
  * <li>As much as possible, the CF metadata written to the NetCDF
  * file conforms to the examples laid out in the document
@@ -113,17 +96,15 @@ import ucar.nc2.Variable;
  * </ol>
  *
  * @author Peter Hollemans
- * @since 3.3.0
+ * @since 3.3.1
  */
 @noaa.coastwatch.test.Testable
-public class CFNCWriter
+public class CFNC4Writer
   extends EarthDataWriter {
 
   // Constants
   // ---------
-  /** Extra bytes to put into the file header. */
-  private static final int EXTRA_HEADER_BYTES = 64*1024;
-
+  
   /** History date format. */
   private static final String DATE_FMT = "yyyy-MM-dd HH:mm:ss z";
 
@@ -207,16 +188,32 @@ public class CFNCWriter
     NORMAL
   };
 
+  /** The square tile size. */
+  private static final int TILE_SIZE = 512;
+  
+  /** The compression level used for tile data (0-9). */
+  private static final int COMPRESSION_LEVEL = 6;
+  
   // Variables
   // ---------
+  
   /** The NetCDF writeable file. */
-  private NetcdfFileWriter ncFileWriter;
+  private NhFileWriter ncFileWriter;
+
+  /** The write queue with data to write. */
+  private Queue<WriteQueueEntry> writeQueue;
+  
+  /** The list of tile positions to write for the main variables. */
+  private List<TilePosition> tilePositions;
+  
+  /** The chunk lengths to use for the main variables. */
+  private int[] chunkLengths;
   
   /** Flag to signify that the file is closed. */
   private boolean closed;
 
   /** The dimensions for the main variables. */
-  private Dimension[] ncDims;
+  private NhDimension[] ncDims;
 
   /** The latitude bounds as [min,max]. */
   private double[] latBounds = 
@@ -236,7 +233,7 @@ public class CFNCWriter
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new NetCDF file from the specified info and file
+   * Creates a new NetCDF 4 file from the specified info and file
    * name.  The required CF data variables and attributes are
    * written to the file.  No extra DCS or CW attributes are written.
    *
@@ -248,19 +245,19 @@ public class CFNCWriter
    *
    * @since 3.3.1
    */
-  public CFNCWriter (
+  public CFNC4Writer (
     EarthDataInfo info,
     String file
   ) throws IOException {
 
     this (info, file, false, false);
 
-  } // CFNCWriter constructor
+  } // CFNC4Writer constructor
 
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new NetCDF file from the specified info and file
+   * Creates a new NetCDF 4 file from the specified info and file
    * name.  The required CF data variables and attributes are
    * written to the file.
    *
@@ -273,10 +270,8 @@ public class CFNCWriter
    *
    * @throws IOException if an error occurred creating the file
    * or writing the initial data.
-   *
-   * @since 3.3.1
    */
-  public CFNCWriter (
+  public CFNC4Writer (
     EarthDataInfo info,
     String file,
     boolean writeDcs,
@@ -284,18 +279,19 @@ public class CFNCWriter
   ) throws IOException {
 
     super (file);
-    
+
     // Create new file
     // ---------------
     closed = true;
-    ncFileWriter = NetcdfFileWriter.createNew (NetcdfFileWriter.Version.netcdf3, file);
-    ncFileWriter.setExtraHeaderBytes (EXTRA_HEADER_BYTES);
+    try { ncFileWriter = new NhFileWriter (file, NhFileWriter.OPT_OVERWRITE); }
+    catch (NhException e) { throw new IOException (e.toString()); }
     closed = false;
 
     // Setup
     // -----
     this.info = info;
     this.writeCw = writeCw;
+    this.writeQueue = new LinkedList<WriteQueueEntry>();
 
     // Write initial data structures
     // -----------------------------
@@ -304,14 +300,14 @@ public class CFNCWriter
       if (writeDcs) writeDCSInfo();
       if (writeCw) writeCWInfo();
     } // try
-    catch (InvalidRangeException e) { throw new IOException (e.toString()); } 
+    catch (NhException e) { throw new IOException (e.toString()); }
 
-  } // CFNCWriter constructor
+  } // CFNC4Writer constructor
 
   ////////////////////////////////////////////////////////////
 
   /** Writes CF metadata for the specified map projection. */
-  private void writeMapProjection (MapProjection map) throws IOException {
+  private void writeMapProjection (MapProjection map) throws IOException, NhException {
 
     // Set projection parameters
     // -------------------------
@@ -321,9 +317,10 @@ public class CFNCWriter
 
     case ProjectionConstants.ALBERS:
       attributes.put ("grid_mapping_name", "albers_conical_equal_area");
-      Array albersStdPara = Array.factory (double.class, new int[] {2}, 
-        new double[] {GCTP.unpack_angle( params[2]), 
-        GCTP.unpack_angle (params[3])});
+      double[] albersStdPara = new double[] {
+        GCTP.unpack_angle (params[2]),
+        GCTP.unpack_angle (params[3])
+      };
       attributes.put ("standard_parallel", albersStdPara);
       attributes.put ("longitude_of_central_meridian", 
         GCTP.unpack_angle (params[4]));
@@ -355,9 +352,10 @@ public class CFNCWriter
 
     case ProjectionConstants.LAMCC:
       attributes.put ("grid_mapping_name", "lambert_conformal_conic");
-      Array lamCCStdPara = Array.factory (double.class, new int[] {2}, 
-        new double[] {GCTP.unpack_angle (params[2]), 
-        GCTP.unpack_angle (params[3])});
+      double[] lamCCStdPara = new double[] {
+        GCTP.unpack_angle (params[2]),
+        GCTP.unpack_angle (params[3])
+      };
       attributes.put ("standard_parallel", lamCCStdPara);
       attributes.put ("longitude_of_central_meridian", 
         GCTP.unpack_angle (params[4]));
@@ -441,18 +439,20 @@ public class CFNCWriter
 
     // Write all parameters
     // --------------------
-    Variable coordVar = ncFileWriter.findVariable (COORD_REF);
+    NhVariable coordVar = ncFileWriter.getRootGroup().findVariable (COORD_REF);
     for (Map.Entry<String, Object> entry : attributes.entrySet()) {
-      Object value = entry.getValue();
-      Attribute att = null;
-      if (value instanceof String)
-        att = new Attribute (entry.getKey(), (String) value);
-      else if (value instanceof Array)
-        att = new Attribute (entry.getKey(), (Array) value);
-      else if (value instanceof Double)
-        att = new Attribute (entry.getKey(), (Double) value);
-      if (att != null)
-        ncFileWriter.addVariableAttribute (coordVar, att);
+      String attName = entry.getKey();
+      Object attValue = entry.getValue();
+      int attType;
+      if (attValue instanceof String)
+        attType = NhVariable.TP_STRING_VAR;
+      else if (attValue.getClass().isArray())
+        attType = NhVariable.TP_DOUBLE;
+      else if (attValue instanceof Double)
+        attType = NhVariable.TP_DOUBLE;
+      else
+        throw new IllegalStateException ("Illegal attribute type: " + attValue.getClass().getName());
+      coordVar.addAttribute (attName, attType, attValue);
     } // for
 
   } // writeMapProjection
@@ -553,7 +553,7 @@ public class CFNCWriter
   ////////////////////////////////////////////////////////////
 
   /** Returns true if the number n is in the range [min..max]. */
-  private boolean inRange (
+  private static boolean inRange (
     double n, 
     double min,
     double max
@@ -659,18 +659,139 @@ public class CFNCWriter
   ////////////////////////////////////////////////////////////
 
   /**
+   * The <code>WriteQueueEntry</code> class holds information about a pending
+   * entry in the data write queue.
+   */
+  private interface WriteQueueEntry {
+  
+    /**
+     * Writes the data held by this entry to the file.
+     *
+     * @throws IOException if some error occurred in the write operation.
+     */
+    public void write () throws IOException;
+
+  } // WriteQueueEntry interface
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * The <code>DataEntry</code> class holds specific data to be written to
+   * the file.
+   */
+  private class DataEntry implements WriteQueueEntry {
+
+    // Variables
+    // ---------
+    
+    /** The variable name to write. */
+    private String varName;
+    
+    /** The starting index for the write. */
+    private int[] start;
+    
+    /** The data to write. */
+    private Object data;
+    
+    ////////////////////////////////////////////////////////
+    
+    /**
+     * Create an entry with the specified properties.
+     *
+     * @param varName the variable name to write data to for this entry.
+     * @param the starting index, same dimensions as the variable.
+     * @param the data to write, must be compatible with NetCDF data types
+     * and match the variable named.
+     */
+    public DataEntry (
+      String varName,
+      int[] start,
+      Object data
+    ) {
+
+      this.varName = varName;
+      this.start = (start == null ? null : (int[]) start.clone());
+      this.data = data;
+
+    } // DataEntry
+
+    ////////////////////////////////////////////////////////
+
+    @Override
+    public void write () throws IOException {
+    
+      NhVariable ncVar = ncFileWriter.getRootGroup().findVariable (varName);
+      try { ncVar.writeData (start, data, true); }
+      catch (NhException e) { throw new IOException (e.toString()); }
+
+    } // write
+
+    ////////////////////////////////////////////////////////
+
+  } // DataEntry class
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets latitude and longitude data values from an {@link EarthTransform}
+   * object for a specified set of data coordinate bounds.
+   *
+   * @param trans the transform to use for extracting latitude/longitude data.
+   * @param start the starting data coordinates as [row, column].
+   * @param count the number of data values in each direction to copy data as
+   * [rows, columns].
+   * @param latData the output latitude data array, or null to ignore latitude
+   * data.
+   * @param lonData the output longitude data array, or null to ignore longitude
+   * data.
+   */
+  private void getTransformData (
+    EarthTransform trans,
+    int[] start,
+    int[] count,
+    double[] latData,
+    double[] lonData
+  ) {
+
+    // Initialize location values
+    // --------------------------
+    DataLocation dataLoc = new DataLocation (0, 0);
+    EarthLocation earthLoc = new EarthLocation (0, 0);
+
+    // Loop over each row and column
+    // -----------------------------
+    for (int row = 0; row < count[Grid.ROWS]; row++) {
+      dataLoc.set (Grid.ROWS, row + start[Grid.ROWS]);
+      for (int col = 0; col < count[Grid.COLS]; col++) {
+        dataLoc.set (Grid.COLS, col + start[Grid.COLS]);
+
+        // Compute geographic location
+        // ---------------------------
+        trans.transform (dataLoc, earthLoc);
+        int index = row*count[Grid.COLS] + col;
+        if (latData != null) latData[index] = earthLoc.lat;
+        if (lonData != null) lonData[index] = earthLoc.lon;
+
+      } // for
+    } // for
+
+  } // getTransformData
+  
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Writes CF metadata and data variables to the file, using
    * information from the info object.
    */
-  private void writeCFInfo () throws IOException, InvalidRangeException {
+  private void writeCFInfo () throws IOException, NhException {
 
     // Write main global attributes
     // ----------------------------
-    Group root = null;
-    ncFileWriter.addGroupAttribute (root, new Attribute ("Conventions", "CF-1.4"));
-    ncFileWriter.addGroupAttribute (root, new Attribute ("source", getSource().trim()));
+    NhGroup root = ncFileWriter.getRootGroup();
+    root.addAttribute ("Conventions", NhVariable.TP_STRING_VAR, "CF-1.4");
+    root.addAttribute ("source", NhVariable.TP_STRING_VAR, getSource().trim());
     String origin = MetadataServices.collapse (info.getOrigin());
-    ncFileWriter.addGroupAttribute (root, new Attribute ("institution", origin));
+    root.addAttribute ("institution", NhVariable.TP_STRING_VAR, origin);
     TimeZone zone = TimeZone.getDefault();
 
 
@@ -684,7 +805,8 @@ public class CFNCWriter
       ToolServices.getVersion() + " " + 
       System.getProperty ("user.name") + "] " +
       ToolServices.getCommandLine();
-    ncFileWriter.addGroupAttribute (root, new Attribute ("history", history));
+    root.addAttribute ("history", NhVariable.TP_STRING_VAR, history);
+
 
     // TODO: How can we add title, references, and comment?
 
@@ -696,7 +818,7 @@ public class CFNCWriter
      * type of earth transform.  The main transforms supported
      * are swath and map projection (1D and 2D coordinate axes).
      */
-    EarthTransform trans = info.getTransform();
+    final EarthTransform trans = info.getTransform();
     int[] dims = trans.getDimensions();
     int rows = dims[0];
     int cols = dims[1];
@@ -709,36 +831,37 @@ public class CFNCWriter
 
     // Create coordinate reference variable
     // ------------------------------------
-    Variable coordVar = ncFileWriter.addVariable (root, COORD_REF, DataType.INT, "");
+    NhVariable coordVar = root.addVariable (
+      COORD_REF,
+      NhVariable.TP_INT,
+      new NhDimension[0],
+      null,
+      null,
+      0
+    );
 
     // Create swath structures
     // -----------------------
     if (isSwathProj) {
-      ncDims = new Dimension[] {
-        ncFileWriter.addDimension (root, TIME_DIM, 1),
-        ncFileWriter.addDimension (root, LEVEL_DIM, 1),
-        ncFileWriter.addDimension (root, LINE_DIM, rows),
-        ncFileWriter.addDimension (root, SAMPLE_DIM, cols)
+      ncDims = new NhDimension[] {
+        root.addDimension (TIME_DIM, 1),
+        root.addDimension (LEVEL_DIM, 1),
+        root.addDimension (LINE_DIM, rows),
+        root.addDimension (SAMPLE_DIM, cols)
       };
-      ncFileWriter.addVariableAttribute (coordVar, new Attribute (
-        "grid_mapping_name", "latitude_longitude"));
-      ncFileWriter.create();
-      ncFileWriter.setRedefineMode (true);
+      coordVar.addAttribute ("grid_mapping_name", NhVariable.TP_STRING_VAR, "latitude_longitude");
     } // if
 
     // Create 1D map projection structures
     // -----------------------------------
     else if (isMapped1D) {
-      ncDims = new Dimension[] {
-        ncFileWriter.addDimension (root, TIME_DIM, 1),
-        ncFileWriter.addDimension (root, LEVEL_DIM, 1),
-        ncFileWriter.addDimension (root, LAT_DIM, rows),
-        ncFileWriter.addDimension (root, LON_DIM, cols)
+      ncDims = new NhDimension[] {
+        root.addDimension (TIME_DIM, 1),
+        root.addDimension (LEVEL_DIM, 1),
+        root.addDimension (LAT_DIM, rows),
+        root.addDimension (LON_DIM, cols)
       };
-      ncFileWriter.addVariableAttribute (coordVar, new Attribute (
-        "grid_mapping_name", "latitude_longitude"));
-      ncFileWriter.create();
-      ncFileWriter.setRedefineMode (true);
+      coordVar.addAttribute ("grid_mapping_name", NhVariable.TP_STRING_VAR, "latitude_longitude");
     } // else if
 
     // Create 2D map projection structures
@@ -748,15 +871,15 @@ public class CFNCWriter
       // Create dimensions
       // -----------------
       MapProjection map = (MapProjection) trans;
-      ncDims = new Dimension[] {
-        ncFileWriter.addDimension (root, TIME_DIM, 1),
-        ncFileWriter.addDimension (root, LEVEL_DIM, 1),
-        ncFileWriter.addDimension (root, ROW_DIM, rows),
-        ncFileWriter.addDimension (root, COLUMN_DIM, cols)
+      ncDims = new NhDimension[] {
+        root.addDimension (TIME_DIM, 1),
+        root.addDimension (LEVEL_DIM, 1),
+        root.addDimension (ROW_DIM, rows),
+        root.addDimension (COLUMN_DIM, cols)
       };
 
-      // Write coordinate metadata
-      // -------------------------
+      // Create coordinate metadata
+      // --------------------------
       writeMapProjection (map);
 
       // Compute map coordinate arrays
@@ -767,37 +890,38 @@ public class CFNCWriter
       double[] xy = new double[maxDim*2];
       for (int i = 0; i < maxDim; i++) { rowCol[i*2] = i; rowCol[i*2+1] = i; }
       affine.transform (rowCol, 0, xy, 0, maxDim);
-      double[] x = new double[cols];
-      for (int i = 0; i < cols; i++) x[i] = xy[i*2];
-      double[] y = new double[rows];
-      for (int i = 0; i < rows; i++) y[i] = xy[i*2 + 1];
+      double[] projXData = new double[cols];
+      for (int i = 0; i < cols; i++) projXData[i] = xy[i*2];
+      double[] projYData = new double[rows];
+      for (int i = 0; i < rows; i++) projYData[i] = xy[i*2 + 1];
 
-      // Write x coordinate array
-      // ------------------------
-      Variable projXVar = ncFileWriter.addVariable (root, PROJ_X_VAR, DataType.DOUBLE,
-        ncDims[COLUMN_INDEX].getShortName());
-      ncFileWriter.addVariableAttribute (projXVar,
-        new Attribute ("standard_name", "projection_x_coordinate"));
-      ncFileWriter.addVariableAttribute (projXVar,
-        new Attribute ("units", "m"));
-      int[] start = new int[] {0};
-      int[] count = new int[] {cols};
-      ncFileWriter.create();
-      ncFileWriter.write (projXVar, start, Array.factory (double.class, count, x));
-      ncFileWriter.setRedefineMode (true);
+      // Create x coordinate array
+      // -------------------------
+      NhVariable projXVar = root.addVariable (
+        PROJ_X_VAR,
+        NhVariable.TP_DOUBLE,
+        new NhDimension[] {ncDims[COLUMN_INDEX]},
+        null,
+        null,
+        0
+      );
+      projXVar.addAttribute ("standard_name", NhVariable.TP_STRING_VAR, "projection_x_coordinate");
+      projXVar.addAttribute ("units", NhVariable.TP_STRING_VAR, "m");
+      writeQueue.add (new DataEntry (PROJ_X_VAR, null, projXData));
 
-      // Write y coordinate array
-      // ------------------------
-      Variable projYVar = ncFileWriter.addVariable (root, PROJ_Y_VAR, DataType.DOUBLE,
-        ncDims[ROW_INDEX].getShortName());
-      ncFileWriter.addVariableAttribute (projYVar,
-        new Attribute ("standard_name", "projection_y_coordinate"));
-      ncFileWriter.addVariableAttribute (projYVar,
-        new Attribute ("units", "m"));
-      count[0] = rows;
-      ncFileWriter.setRedefineMode (false);
-      ncFileWriter.write (projYVar, start, Array.factory (double.class, count, y));
-      ncFileWriter.setRedefineMode (true);
+      // Create y coordinate array
+      // -------------------------
+      NhVariable projYVar = root.addVariable (
+        PROJ_Y_VAR,
+        NhVariable.TP_DOUBLE,
+        new NhDimension[] {ncDims[ROW_INDEX]},
+        null,
+        null,
+        0
+      );
+      projYVar.addAttribute ("standard_name", NhVariable.TP_STRING_VAR, "projection_y_coordinate");
+      projYVar.addAttribute ("units", NhVariable.TP_STRING_VAR, "m");
+      writeQueue.add (new DataEntry (PROJ_Y_VAR, null, projYData));
 
     } // else if
 
@@ -806,61 +930,72 @@ public class CFNCWriter
     else
       throw new IOException ("Unsupported earth transform type");
 
-    // Write ellipsoid parameters
-    // --------------------------
+    // Create tile position list for main variables
+    // --------------------------------------------
+    TilingScheme scheme = new TilingScheme (dims, new int[] {TILE_SIZE, TILE_SIZE});
+    tilePositions = new ArrayList<TilePosition>();
+    int[] tileCounts = scheme.getTileCounts();
+    for (int tileRow = 0; tileRow < tileCounts[TilingScheme.ROWS]; tileRow++)
+      for (int tileCol = 0; tileCol < tileCounts[TilingScheme.COLS]; tileCol++)
+        tilePositions.add (scheme.new TilePosition (tileRow, tileCol));
+
+    // Set chunk lengths for main variables
+    // ------------------------------------
+    chunkLengths = new int[4];
+    chunkLengths[TIME_INDEX] = 1;
+    chunkLengths[LEVEL_INDEX] = 1;
+    chunkLengths[ROW_INDEX] = (rows > TILE_SIZE ? TILE_SIZE : rows);
+    chunkLengths[COLUMN_INDEX] = (cols > TILE_SIZE ? TILE_SIZE : cols);
+
+    // Create ellipsoid parameters
+    // ---------------------------
     Datum datum = trans.getDatum();
-    ncFileWriter.addVariableAttribute (coordVar,
-      new Attribute ("semi_major_axis", datum.getAxis()));
-    ncFileWriter.addVariableAttribute (coordVar,
-      new Attribute ("inverse_flattening", 1.0/datum.getFlat()));
-    ncFileWriter.addVariableAttribute (coordVar,
-      new Attribute ("longitude_of_prime_meridian", 0.0));
+    coordVar.addAttribute ("semi_major_axis", NhVariable.TP_DOUBLE, datum.getAxis());
+    coordVar.addAttribute ("inverse_flattening", NhVariable.TP_DOUBLE, 1.0/datum.getFlat());
+    coordVar.addAttribute ("longitude_of_prime_meridian", NhVariable.TP_DOUBLE, 0.0);
 
-    // Write lat/lon 1D data
-    // ---------------------
+    // Create lat/lon 1D data vectors
+    // ------------------------------
     if (isMapped1D) {
+    
+      // Create latitude vector
+      // ----------------------
+      NhVariable latVar = root.addVariable (
+        LAT_VAR,
+        NhVariable.TP_DOUBLE,
+        new NhDimension[] {ncDims[ROW_INDEX]},
+        null,
+        null,
+        0
+      );
+      latVar.addAttribute ("standard_name", NhVariable.TP_STRING_VAR, "latitude");
+      latVar.addAttribute ("units", NhVariable.TP_STRING_VAR, "degrees_north");
+      double[] latData = new double[rows];
+      getTransformData (trans, new int[] {0, 0}, new int[] {rows, 1}, latData, null);
+      for (int i = 0; i < rows; i++) addToLatBounds (latData[i]);
+      writeQueue.add (new DataEntry (LAT_VAR, null, latData));
 
-      Variable latVar = ncFileWriter.addVariable (root, LAT_VAR, DataType.DOUBLE, ncDims[ROW_INDEX].getShortName());
-      ncFileWriter.addVariableAttribute (latVar, new Attribute ("standard_name", "latitude"));
-      ncFileWriter.addVariableAttribute (latVar, new Attribute ("units", "degrees_north"));
-
-      Variable lonVar = ncFileWriter.addVariable (root, LON_VAR, DataType.DOUBLE, ncDims[COLUMN_INDEX].getShortName());
-      ncFileWriter.addVariableAttribute (lonVar, new Attribute ("standard_name", "longitude"));
-      ncFileWriter.addVariableAttribute (lonVar, new Attribute ("units", "degrees_east"));
-
-      int[] start = new int[] {0};
-      int[] count = new int[] {rows};
-
-      double[] lat = new double[rows];
-      Array latArray = Array.factory (double.class, count, lat);
-      DataLocation dataLoc = new DataLocation (0, 0);
-      EarthLocation earthLoc = new EarthLocation (0, 0); 
-      for (int row = 0; row < rows; row++) {
-        dataLoc.set (Grid.ROWS, row);
-        trans.transform (dataLoc, earthLoc);
-        lat[row] = earthLoc.lat;
-        addToLatBounds (lat[row]);
-      } // for
-      ncFileWriter.setRedefineMode (false);
-      ncFileWriter.write (latVar, start, latArray);
-
-      double[] lon = new double[cols];
-      Array lonArray = Array.factory (double.class, count, lon);
-      dataLoc = new DataLocation (0, 0);
-      for (int col = 0; col < cols; col++) {
-        dataLoc.set (Grid.COLS, col);
-        trans.transform (dataLoc, earthLoc);
-        lon[col] = earthLoc.lon;
-        addToLonBounds (lon[col]);
-      } // for
-      ncFileWriter.setRedefineMode (false);
-      ncFileWriter.write (lonVar, start, lonArray);
-      ncFileWriter.setRedefineMode (true);
+      // Create longitude vector
+      // -----------------------
+      NhVariable lonVar = root.addVariable (
+        LON_VAR,
+        NhVariable.TP_DOUBLE,
+        new NhDimension[] {ncDims[COLUMN_INDEX]},
+        null,
+        null,
+        0
+      );
+      lonVar.addAttribute ("standard_name", NhVariable.TP_STRING_VAR, "longitude");
+      lonVar.addAttribute ("units", NhVariable.TP_STRING_VAR, "degrees_east");
+      double[] lonData = new double[cols];
+      getTransformData (trans, new int[] {0, 0}, new int[] {1, cols}, null, lonData);
+      for (int j = 0; j < cols; j++) addToLonBounds (lonData[j]);
+      writeQueue.add (new DataEntry (LON_VAR, null, lonData));
 
     } // if
     
-    // Write lat/lon 2D data
-    // ---------------------
+    // Create lat/lon 2D data arrays
+    // -----------------------------
     else {
 
       // TODO: What if the original data for the swath came from something like
@@ -868,104 +1003,149 @@ public class CFNCWriter
       // the data as smooth like the swath projection creates, then it's not
       // true to the original data.
       
-      List<Dimension> coordDimsList = new ArrayList<Dimension>();
-      coordDimsList.add (ncDims[ROW_INDEX]);
-      coordDimsList.add (ncDims[COLUMN_INDEX]);
-      Variable latVar = ncFileWriter.addVariable (root, LAT_VAR, DataType.DOUBLE, coordDimsList);
-      ncFileWriter.addVariableAttribute (latVar, new Attribute ("standard_name", "latitude"));
-      ncFileWriter.addVariableAttribute (latVar, new Attribute ("units", "degrees_north"));
+      // Create latitude array
+      // ---------------------
+      final NhVariable latVar = root.addVariable (
+        LAT_VAR,
+        NhVariable.TP_DOUBLE,
+        new NhDimension[] {ncDims[ROW_INDEX], ncDims[COLUMN_INDEX]},
+        new int[] {chunkLengths[ROW_INDEX], chunkLengths[COLUMN_INDEX]},
+        null,
+        COMPRESSION_LEVEL
+      );
+      latVar.addAttribute ("standard_name", NhVariable.TP_STRING_VAR, "latitude");
+      latVar.addAttribute ("units", NhVariable.TP_STRING_VAR, "degrees_north");
 
-      Variable lonVar = ncFileWriter.addVariable (root, LON_VAR, DataType.DOUBLE, coordDimsList);
-      ncFileWriter.addVariableAttribute (lonVar, new Attribute ("standard_name", "longitude"));
-      ncFileWriter.addVariableAttribute (lonVar, new Attribute ("units", "degrees_east"));
+      // Create longitude array
+      // ----------------------
+      final NhVariable lonVar = root.addVariable (
+        LON_VAR,
+        NhVariable.TP_DOUBLE,
+        new NhDimension[] {ncDims[ROW_INDEX], ncDims[COLUMN_INDEX]},
+        new int[] {chunkLengths[ROW_INDEX], chunkLengths[COLUMN_INDEX]},
+        null,
+        COMPRESSION_LEVEL
+      );
+      lonVar.addAttribute ("standard_name", NhVariable.TP_STRING_VAR, "longitude");
+      lonVar.addAttribute ("units", NhVariable.TP_STRING_VAR, "degrees_east");
 
-      int[] start = new int[] {0, 0};
-      int[] count = new int[] {1, cols};
-      double[] lat = new double[cols];
-      double[] lon = new double[cols];
-      Array latArray = Array.factory (double.class, count, lat);
-      Array lonArray = Array.factory (double.class, count, lon);
-      ncFileWriter.setRedefineMode (false);
+      // Write lat/lon tile data
+      // -----------------------
+      writeQueue.add (new WriteQueueEntry () {
+        public void write () throws IOException {
 
-      DataLocation dataLoc = new DataLocation (0, 0);
-      EarthLocation earthLoc = new EarthLocation (0, 0); 
-      for (int row = 0; row < rows; row++) {
-        dataLoc.set (Grid.ROWS, row);
-        for (int col = 0; col < cols; col++) {
-          dataLoc.set (Grid.COLS, col);
-          trans.transform (dataLoc, earthLoc);
-          lat[col] = earthLoc.lat;
-          lon[col] = earthLoc.lon;
-          addToLatBounds (lat[col]);
-          addToLonBounds (lon[col]);
+          // Loop over each tile position
+          // ----------------------------
+          for (TilePosition pos : tilePositions) {
+
+            // Compute data for tile
+            // ---------------------
+            int[] tileStart = pos.getStart();
+            int[] tileDims = pos.getDimensions();
+            int values = tileDims[TilingScheme.ROWS]*tileDims[TilingScheme.COLS];
+            double[] latData = new double[values];
+            double[] lonData = new double[values];
+            getTransformData (trans, tileStart, tileDims, latData, lonData);
+
+            // Write data for tile
+            // -------------------
+            try {
+              latVar.writeData (tileStart, latData, true);
+              lonVar.writeData (tileStart, lonData, true);
+            } // try
+            catch (NhException e) { throw new IOException (e.toString()); }
+
+          } // for
+
+        } // write
+      });
+
+      // Add lat/lon data to bounds
+      // --------------------------
+      for (TilePosition pos : tilePositions) {
+        int[] tileStart = pos.getStart();
+        int[] tileDims = pos.getDimensions();
+        int values = tileDims[TilingScheme.ROWS]*tileDims[TilingScheme.COLS];
+        double[] latData = new double[values];
+        double[] lonData = new double[values];
+        getTransformData (trans, tileStart, tileDims, latData, lonData);
+        for (int i = 0; i < values; i++) {
+          addToLatBounds (latData[i]);
+          addToLonBounds (lonData[i]);
         } // for
-        start[0] = row;
-        ncFileWriter.write (latVar, start, latArray);
-        ncFileWriter.write (lonVar, start, lonArray);
       } // for
-      ncFileWriter.setRedefineMode (true);
 
     } // else
 
-    // Write time data
-    // ---------------
-    Variable timeVar = ncFileWriter.addVariable (root, TIME_VAR, DataType.DOUBLE,
-      ncDims[TIME_INDEX].getShortName());
-    ncFileWriter.addVariableAttribute (timeVar,
-      new Attribute ("standard_name", "time"));
-    ncFileWriter.addVariableAttribute (timeVar,
-      new Attribute ("units", "seconds since 1970-01-01 00:00:00 UTC"));
-    ncFileWriter.setRedefineMode (false);
-    Array timeArray = Array.factory (DataType.DOUBLE, new int[] {1});
+    // Create time variable
+    // --------------------
+    NhVariable timeVar = root.addVariable (
+      TIME_VAR,
+      NhVariable.TP_DOUBLE,
+      new NhDimension[] {ncDims[TIME_INDEX]},
+      null,
+      null,
+      0
+    );
+    timeVar.addAttribute ("standard_name", NhVariable.TP_STRING_VAR, "time");
+    timeVar.addAttribute ("units", NhVariable.TP_STRING_VAR, "seconds since 1970-01-01 00:00:00 UTC");
+
+    // Write instantaneous time data
+    // -----------------------------
     if (info.isInstantaneous()) {
       Date startDate = info.getStartDate();
-      timeArray.setDouble (0, startDate.getTime()/1000.0);
-      int[] start = new int[] {0};
-      ncFileWriter.write (timeVar, start, timeArray);
+      double[] timeData = new double[] {startDate.getTime()/1000.0};
+      writeQueue.add (new DataEntry (TIME_VAR, null, timeData));
     } // if
+
+    // Write time span data
+    // --------------------
     else {
 
       // TODO: Add an option here for climatology?
 
+      // Write time as half way between start and end
+      // --------------------------------------------
       Date startDate = info.getStartDate();
       double startTime = startDate.getTime()/1000.0;
       Date endDate = info.getEndDate();
       double endTime = endDate.getTime()/1000.0;
       double time = (startTime + endTime)/2;
-      timeArray.setDouble (0, time);
-      int[] start = new int[] {0};
-      ncFileWriter.write (timeVar, start, timeArray);
-      ncFileWriter.setRedefineMode (true);
-      ncFileWriter.addVariableAttribute (timeVar, new Attribute ("bounds", TIME_BOUNDS_VAR));
-      Dimension nvalsDim = ncFileWriter.addDimension (root, NVALS_DIM, 2);
-      Variable timeBoundsVar = ncFileWriter.addVariable (root, TIME_BOUNDS_VAR, DataType.DOUBLE,
-        ncDims[TIME_INDEX].getShortName() + " " + nvalsDim.getShortName());
-      ncFileWriter.setRedefineMode (false);
-      Array timeBoundsArray = Array.factory (DataType.DOUBLE, new int[] {1, 2});
-      timeBoundsArray.setDouble (0, startTime);
-      timeBoundsArray.setDouble (1, endTime);
-      start = new int[] {0, 0};
-      ncFileWriter.write (timeBoundsVar, start, timeBoundsArray);
+      double[] timeData = new double[] {time};
+      writeQueue.add (new DataEntry (TIME_VAR, null, timeData));
+
+      // Create and write time bounds variable
+      // -------------------------------------
+      timeVar.addAttribute ("bounds", NhVariable.TP_STRING_VAR, TIME_BOUNDS_VAR);
+      NhDimension nvalsDim = root.addDimension (NVALS_DIM, 2);
+      NhVariable timeBoundsVar = root.addVariable (
+        TIME_BOUNDS_VAR,
+        NhVariable.TP_DOUBLE,
+        new NhDimension[] {ncDims[TIME_INDEX], nvalsDim},
+        null,
+        null,
+        0
+      );
+      double[] timeBoundsData = new double[] {startTime, endTime};
+      writeQueue.add (new DataEntry (TIME_BOUNDS_VAR, null, timeBoundsData));
+
     } // else
-    ncFileWriter.setRedefineMode (true);
 
-    // Write level data
-    // ----------------
-    Variable levelVar = ncFileWriter.addVariable (root, LEVEL_VAR, DataType.DOUBLE,
-      ncDims[LEVEL_INDEX].getShortName());
-    ncFileWriter.addVariableAttribute (levelVar, new Attribute ("standard_name", "height"));
-    ncFileWriter.addVariableAttribute (levelVar, new Attribute ("units", "m"));
-    ncFileWriter.addVariableAttribute (levelVar, new Attribute ("positive", "up"));
-    ncFileWriter.setRedefineMode (false);
-    Array levelArray = Array.factory (DataType.DOUBLE, new int[] {1});
-    levelArray.setDouble (0, 0);
-    int[] start = new int[] {0};
-    ncFileWriter.write (levelVar, start, levelArray);
-    ncFileWriter.setRedefineMode (true);
-
-    // Flush all data
-    // --------------
-    ncFileWriter.flush();
+    // Create level variable
+    // ---------------------
+    NhVariable levelVar = root.addVariable (
+      LEVEL_VAR,
+      NhVariable.TP_DOUBLE,
+      new NhDimension[] {ncDims[LEVEL_INDEX]},
+      null,
+      null,
+      0
+    );
+    levelVar.addAttribute ("standard_name", NhVariable.TP_STRING_VAR, "height");
+    levelVar.addAttribute ("units", NhVariable.TP_STRING_VAR, "m");
+    levelVar.addAttribute ("positive", NhVariable.TP_STRING_VAR, "up");
+    double[] levelData = new double[] {0};
+    writeQueue.add (new DataEntry (LEVEL_VAR, null, levelData));
 
   } // writeCFInfo
 
@@ -975,7 +1155,7 @@ public class CFNCWriter
    * Writes DCS global metadata to the file, using information
    * from the info object.
    */
-  private void writeDCSInfo () throws IOException, InvalidRangeException {
+  private void writeDCSInfo () throws IOException, NhException {
 
     // Check conditions for writing DCS
     // --------------------------------
@@ -988,46 +1168,43 @@ public class CFNCWriter
 
     // Write origin
     // ------------
-    Group root = null;
+    NhGroup root = ncFileWriter.getRootGroup();
     String origin = MetadataServices.collapse (info.getOrigin());
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:createInstitution", origin));
+    root.addAttribute ("dcs:createInstitution", NhVariable.TP_STRING_VAR, origin);
 
     // Write creation and acquisition dates
     // ------------------------------------
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:createDateTime",
-      DateFormatter.formatDate (new Date(), ISO_DATE_FMT)));
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:acquisitionStartDateTime",
-      DateFormatter.formatDate (info.getStartDate(), ISO_DATE_FMT)));
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:acquisitionEndDateTime",
-      DateFormatter.formatDate (info.getEndDate(), ISO_DATE_FMT)));
+    root.addAttribute ("dcs:createDateTime", NhVariable.TP_STRING_VAR,
+      DateFormatter.formatDate (new Date(), ISO_DATE_FMT));
+    root.addAttribute ("dcs:acquisitionStartDateTime", NhVariable.TP_STRING_VAR,
+      DateFormatter.formatDate (info.getStartDate(), ISO_DATE_FMT));
+    root.addAttribute ("dcs:acquisitionEndDateTime", NhVariable.TP_STRING_VAR,
+      DateFormatter.formatDate (info.getEndDate(), ISO_DATE_FMT));
 
     // Write sensor/satellite names
     // ----------------------------
     String sensor = satInfo.getSensor();
     sensor = MetadataServices.collapse (sensor).replaceAll ("\n", ",");
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:sensor", sensor));
+    root.addAttribute ("dcs:sensor", NhVariable.TP_STRING_VAR, sensor);
     String satellite = satInfo.getSatellite();
     satellite = MetadataServices.collapse (satellite).replaceAll ("\n", ",");
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:sensorPlatform", satellite));
+    root.addAttribute ("dcs:sensorPlatform", NhVariable.TP_STRING_VAR, satellite);
 
     // Write earth location info
     // -------------------------
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:mapProjection", map.getSystemName()));
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:geodeticDatum",
-      map.getDatum().getDatumName()));
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:northernLatitude", getNorthBound()));
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:southernLatitude", getSouthBound()));
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:easternLongitude", getEastBound()));
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:westernLongitude", getWestBound()));
+    root.addAttribute ("dcs:mapProjection", NhVariable.TP_STRING_VAR, map.getSystemName());
+    root.addAttribute ("dcs:geodeticDatum", NhVariable.TP_STRING_VAR,
+      map.getDatum().getDatumName());
+    root.addAttribute ("dcs:northernLatitude", NhVariable.TP_DOUBLE, getNorthBound());
+    root.addAttribute ("dcs:southernLatitude", NhVariable.TP_DOUBLE, getSouthBound());
+    root.addAttribute ("dcs:easternLongitude", NhVariable.TP_DOUBLE, getEastBound());
+    root.addAttribute ("dcs:westernLongitude", NhVariable.TP_DOUBLE, getWestBound());
 
     // Write observed property
     // -----------------------
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:observedProperty", "Unknown"));
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:observedPropertyAlgorithm", "Unknown"));
-    ncFileWriter.addGroupAttribute (root, new Attribute ("dcs:processingLevel", "Level 3"));
-
-    ncFileWriter.setRedefineMode (false);
-    ncFileWriter.setRedefineMode (true);
+    root.addAttribute ("dcs:observedProperty", NhVariable.TP_STRING_VAR, "Unknown");
+    root.addAttribute ("dcs:observedPropertyAlgorithm", NhVariable.TP_STRING_VAR, "Unknown");
+    root.addAttribute ("dcs:processingLevel", NhVariable.TP_STRING_VAR, "Level 3");
 
   } // writeDCSInfo
 
@@ -1037,7 +1214,7 @@ public class CFNCWriter
    * Writes CW global metadata to the file, using information
    * from the info object.
    */
-  private void writeCWInfo () throws IOException, InvalidRangeException {
+  private void writeCWInfo () throws IOException, NhException {
 
     // Copy string attributes
     // ----------------------
@@ -1049,11 +1226,11 @@ public class CFNCWriter
       "region_code",
       "region_name"
     };
-    Group root = null;
+    NhGroup root = ncFileWriter.getRootGroup();
     for (String attName : attributeArray) {
       String attValue = (String) info.getMetadataMap().get (attName);
       if (attValue != null)
-        ncFileWriter.addGroupAttribute (root, new Attribute ("cw:" + attName, attValue));
+        root.addAttribute ("cw:" + attName, NhVariable.TP_STRING_VAR, attValue);
     } // for
 
     // Copy polygon points
@@ -1063,58 +1240,119 @@ public class CFNCWriter
     double[] lonPoints = 
       (double[]) info.getMetadataMap().get ("polygon_longitude"); 
     if (latPoints != null && lonPoints != null) {
-      ncFileWriter.addGroupAttribute (root, new Attribute ("cw:polygon_latitude",
-        Array.factory (double.class, new int[] {latPoints.length}, latPoints)));
-      ncFileWriter.addGroupAttribute (root, new Attribute ("cw:polygon_longitude",
-        Array.factory (double.class, new int[] {lonPoints.length}, lonPoints)));
+      root.addAttribute ("cw:polygon_latitude", NhVariable.TP_DOUBLE, latPoints);
+      root.addAttribute ("cw:polygon_longitude", NhVariable.TP_DOUBLE, lonPoints);
     } // if
-
-    ncFileWriter.setRedefineMode (false);
-    ncFileWriter.setRedefineMode (true);
 
   } // writeCWInfo
 
   ////////////////////////////////////////////////////////////
 
   /**
-   * Writes a data variable to the file.
+   * Gets a NetCDF 4 type from a Java class type.  This can be used to determine
+   * which NetCDF 4 type variable or attribute can be used to encode the value
+   * of a Java primitive or String value.
    *
-   * @param var the variable to write.
+   * @param dataClass thr Java class type to convert.
+   * @param isUnsigned true if the numerical values for the specified
+   * Java class are to be interpreted as unsigned, or false if not. This
+   * is currently only useful for byte, short, or int data.
    *
-   * @throws IOException if creating the variable or writing the
-   * data failed.
-   * @throws InvalidRangeException if writing the variable data
-   * failed.
+   * @return the corresponding NetCDF 4 type, or -1 if the type is unknown.
    */
-  private void writeVariable (
-    DataVariable var
-  ) throws IOException, InvalidRangeException { 
+  private static int getType (
+    Class dataClass,
+    boolean isUnsigned
+  ) {
+
+    int type = -1;
+    if (isUnsigned) {
+      if (dataClass.equals (Byte.TYPE) || dataClass.equals (Byte.class))
+        type = NhVariable.TP_UBYTE;
+      else if (dataClass.equals (Short.TYPE) || dataClass.equals (Short.class))
+        type = NhVariable.TP_INT;
+      else if (dataClass.equals (Integer.TYPE) || dataClass.equals (Integer.class))
+        type = NhVariable.TP_LONG;
+    } // if
+    else {
+      if (dataClass.equals (Byte.TYPE) || dataClass.equals (Byte.class))
+        type = NhVariable.TP_SBYTE;
+      else if (dataClass.equals (Short.TYPE) || dataClass.equals (Short.class))
+        type = NhVariable.TP_SHORT;
+      else if (dataClass.equals (Integer.TYPE) || dataClass.equals (Integer.class))
+        type = NhVariable.TP_INT;
+      else if (dataClass.equals (Long.TYPE) || dataClass.equals (Long.class))
+        type = NhVariable.TP_LONG;
+      else if (dataClass.equals (Float.TYPE) || dataClass.equals (Float.class))
+        type = NhVariable.TP_FLOAT;
+      else if (dataClass.equals (Double.TYPE) || dataClass.equals (Double.class))
+        type = NhVariable.TP_DOUBLE;
+      else if (dataClass.equals (Character.TYPE) || dataClass.equals (Character.class))
+        type = NhVariable.TP_CHAR;
+      else if (dataClass.equals (String.class))
+        type = NhVariable.TP_STRING_VAR;
+    } // else
+    
+    return (type);
+
+  } // getType
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a new data variable in the file and queues its data for writing.
+   *
+   * @param var the variable to create.
+   *
+   * @throws IOException if creating the variable or its attributes failed.
+   * @throws NhException if an error occurred in the NetCDF 4 layer.
+   */
+  private void createVariable (
+    final DataVariable var
+  ) throws IOException, NhException {
 
     // Check rank
     // ----------
     if (!(var instanceof Grid))
       throw new IOException ("Unsupported variable type:" + var.getClass());
 
+    // Get data type
+    // -------------
+    NhGroup root = ncFileWriter.getRootGroup();
+    Class dataClass = var.getDataClass();
+    final boolean isUnsigned = var.getUnsigned();
+    final int dataType = getType (dataClass, isUnsigned);
+    if (dataType == -1)
+      throw new IOException ("Unsupported variable data type: " + dataClass +
+        " with " + (isUnsigned ? "unsigned" : "signed") + " values");
+
+    // Get missing value
+    // -----------------
+    Object missing = var.getMissing();
+
+    // Convert unsigned missing to next wider type
+    // -------------------------------------------
+    if (missing != null) {
+      if (isUnsigned) {
+        if (dataType == NhVariable.TP_INT)
+          missing = (((Short) missing).shortValue()) & 0xffff;
+        else if (dataType == NhVariable.TP_LONG)
+          missing = (((Integer) missing).intValue()) & 0xffffffffL;
+      } // if
+    } // if
+
     // Create variable
     // ---------------
-    Group root = null;
-    Class dataClass = var.getDataClass();
-    boolean isUnsigned = var.getUnsigned();
-    DataType dataType = DataType.getType (dataClass);
-    if (dataType == null)
-      throw new IOException ("Unsupported data type: " + dataClass);
-    if (isUnsigned) {
-      if (dataType == DataType.BYTE)
-        ; // do nothing
-      else if (dataType == DataType.SHORT)
-        dataType = DataType.INT;
-      else if (dataType == DataType.INT)
-        dataType = DataType.LONG;
-      else 
-        throw new IOException ("Unsupported unsigned data type: " + dataClass);
-    } // if
     String varName = var.getName();
-    Variable ncVar = ncFileWriter.addVariable (root, varName, dataType, Arrays.asList (ncDims));
+    final NhVariable ncVar = root.addVariable (
+      varName,
+      dataType,
+      ncDims,
+      chunkLengths,
+      missing,
+      COMPRESSION_LEVEL
+    );
+    ncVar.addAttribute ("missing", dataType, missing);
 
     // Set packing info
     // ----------------
@@ -1126,49 +1364,33 @@ public class CFNCWriter
     if (scaling != null) {
       Number scaleFactor = scaling[0];
       Number addOffset = -scaling[0]*scaling[1];
-      if (dataType == DataType.FLOAT) {
+      if (dataType == NhVariable.TP_FLOAT) {
         scaleFactor = (Float) scaleFactor;
         addOffset = (Float) addOffset;
       } // if
-      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("scale_factor", scaleFactor));
-      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("add_offset", addOffset));
-    } // if
-
-    // Set missing info
-    // ----------------
-    Object missing = var.getMissing();
-    if (missing != null) {
-      if (isUnsigned) {
-        if (dataType == DataType.INT)
-          missing = DataType.unsignedShortToInt ((Short) missing);
-        else if (dataType == DataType.LONG)
-          missing = DataType.unsignedIntToLong ((Integer) missing);
-      } // if
-      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("missing", (Number) missing));
-    } // if
-    if (dataType == DataType.BYTE) {
-      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("valid_range",
-        Array.factory (DataType.INT, new int[] {2}, new int[] {0, 255})));
+      int packingDataType = getType (scaleFactor.getClass(), false);
+      ncVar.addAttribute ("scale_factor", packingDataType, scaleFactor);
+      ncVar.addAttribute ("add_offset", packingDataType, addOffset);
     } // if
 
     // Set standard and long name
     // --------------------------
     String standard = (String) var.getMetadataMap().get ("standard_name");
     if (standard != null) 
-      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("standard_name", standard));
+      ncVar.addAttribute ("standard_name", NhVariable.TP_STRING_VAR, standard);
     String longName = var.getLongName();
     if (longName != null && !longName.equals ("") && !longName.equals (varName))
-      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("long_name", longName));
+      ncVar.addAttribute ("long_name", NhVariable.TP_STRING_VAR, longName);
 
     // Set units
     // ---------
     String units = var.getUnits();
     if (units != null && !units.equals (""))
-      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("units", units));
+      ncVar.addAttribute ("units", NhVariable.TP_STRING_VAR, units);
 
     // Set coordinate info
     // -------------------
-    ncFileWriter.addVariableAttribute (ncVar, new Attribute ("coordinates", "lat lon"));
+    ncVar.addAttribute ("coordinates", NhVariable.TP_STRING_VAR, "lat lon");
 
 
     // TODO: What about when cell_methods should indicate a climatology?
@@ -1176,8 +1398,8 @@ public class CFNCWriter
 
     String rasterType = (String) info.getMetadataMap().get ("raster_type");
     if (rasterType == null || !rasterType.equals ("RasterPixelIsPoint"))
-      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("cell_methods", "area: mean"));
-    ncFileWriter.addVariableAttribute (ncVar, new Attribute ("grid_mapping", COORD_REF));
+      ncVar.addAttribute ("cell_methods", NhVariable.TP_STRING_VAR, "area: mean");
+    ncVar.addAttribute ("grid_mapping", NhVariable.TP_STRING_VAR, COORD_REF);
 
     // Set ancillary variables
     // -----------------------
@@ -1186,7 +1408,7 @@ public class CFNCWriter
       "direction_variable"
       }, var.getMetadataMap());
     if (ancillary != null)
-      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("ancillary_variables", ancillary));
+      ncVar.addAttribute ("ancillary_variables", NhVariable.TP_STRING_VAR, ancillary);
 
 
     // TODO: We currently have no way to associate variables that
@@ -1202,7 +1424,7 @@ public class CFNCWriter
       "atmospheric_correction"
       }, var.getMetadataMap());
     if (source != null)
-      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("source", source));
+      ncVar.addAttribute ("source", NhVariable.TP_STRING_VAR, source);
 
     // TODO: This is a pretty rough cut for getting the source
     // attribute right!  Also, what about references?
@@ -1214,38 +1436,38 @@ public class CFNCWriter
       if (!nav.isIdentity()) {
         double[] matrix = new double[6];
         nav.getMatrix (matrix); 
-        ncFileWriter.addVariableAttribute (ncVar, new Attribute ("cw:nav_affine",
-          Array.factory (double.class, new int[] {6}, matrix)));
+        ncVar.addAttribute ("cw:nav_affine", NhVariable.TP_DOUBLE, matrix);
       } // if
     } // if
 
-    // Write data
-    // ----------
-    int[] dims = var.getDimensions();
-    int[] start = new int[] {0, 0, 0, 0};
-    int[] count = new int[] {1, 1, 1, dims[Grid.COLS]};
-    int[] dataStart = new int[] {0, 0};
-    int[] dataCount = new int[] {1, dims[Grid.COLS]};
-    ncFileWriter.setRedefineMode (false);
-    try {
-      for (int row = 0; row < dims[Grid.ROWS]; row++) {
-        dataStart[Grid.ROWS] = row;
-        start[2] = row;
-        Object data = ((Grid) var).getData (dataStart, dataCount);
-        if (isUnsigned) data = convertUnsignedData (data, dataType);
-        Array dataArray = Array.factory (dataType, count, data);
-        ncFileWriter.write (ncVar, start, dataArray);
-      } // for
-    } // try
-    finally {
-      ncFileWriter.setRedefineMode (true);
-    } // finally
+    // Add variable data to write queue
+    // --------------------------------
+    writeQueue.add (new WriteQueueEntry () {
+      public void write () throws IOException {
 
-    // Flush to the file
-    // -----------------
-    ncFileWriter.flush();
+        // Loop over each tile position
+        // ----------------------------
+        for (TilePosition pos : tilePositions) {
 
-  } // writeVariable
+          // Get data for tile
+          // -----------------
+          int[] tileStart = pos.getStart();
+          int[] tileDims = pos.getDimensions();
+          int[] start = new int[] {0, 0, tileStart[TilingScheme.ROWS], tileStart[TilingScheme.COLS]};
+          Object data = ((Grid) var).getData (tileStart, tileDims);
+          if (isUnsigned) data = convertUnsignedData (data, dataType);
+
+          // Write tile
+          // ----------
+          try { ncVar.writeData (start, data, true); }
+          catch (NhException e) { throw new IOException (e.toString()); }
+
+        } // for
+
+      } // write
+    });
+
+  } // createVariable
 
   ////////////////////////////////////////////////////////////
 
@@ -1253,50 +1475,53 @@ public class CFNCWriter
    * Converts unsigned data to the next largest signed data type.
    *
    * @param data the data array to convert.
-   * @param dataType the NetCDF data type to convert to.
+   * @param dataType the NetCDF 4 data type to convert to.
    *
    * @return the new converted data array.
+   *
    * @throws IOException if the data type to convert ot is not
    * supported.
    */
   private static Object convertUnsignedData (
     Object data,
-    DataType dataType
+    int dataType
   ) throws IOException {
 
     Object newData;
 
     // Do nothing to byte data
     // -----------------------
-    if (dataType == DataType.BYTE) {
+    if (dataType == NhVariable.TP_UBYTE) {
       newData = data;
     } // if
 
     // Convert ushort to int
     // ---------------------
-    else if (dataType == DataType.INT) {
+    else if (dataType == NhVariable.TP_INT) {
       short[] shortData = (short[]) data;
       int[] intData = new int[shortData.length];
       for (int i = 0; i < shortData.length; i++)
-        intData[i] = DataType.unsignedShortToInt (shortData[i]);
+        intData[i] = shortData[i] & 0xffff;
       newData = intData;
     } // else if
 
     // Convert uint to long
     // --------------------
-    else if (dataType == DataType.LONG) {
+    else if (dataType == NhVariable.TP_LONG) {
       int[] intData = (int[]) data;
       long[] longData = new long[intData.length];
       for (int i = 0; i < intData.length; i++)
-        longData[i] = DataType.unsignedIntToLong (intData[i]);
+        longData[i] = intData[i] & 0xffffffffL;
       newData = longData;
     } // else if
 
     // Unsupported destination type
     // ----------------------------
-    else 
-      throw new IOException ("Unsupported destination data type: " + dataType);
-
+    else {
+      throw new IOException ("Unsupported destination data type: " +
+        NhVariable.nhTypeNames[dataType]);
+    } // else
+    
     return (newData);
 
   } // convertUnsignedData
@@ -1368,10 +1593,10 @@ public class CFNCWriter
 
       // Write variable
       // --------------
-      DataVariable var = (DataVariable) variables.remove (0);
+      DataVariable var = variables.remove (0);
       writeVariableName = var.getName();
-      try { writeVariable (var); }
-      catch (InvalidRangeException e) { throw new IOException (e.toString()); }
+      try { createVariable (var); }
+      catch (NhException e) { throw new IOException (e.toString()); }
 
       // Update progress
       // ---------------
@@ -1393,12 +1618,26 @@ public class CFNCWriter
   @Override
   public void close () throws IOException {
 
-    // Flush and close
-    // ---------------
-    if (closed) return;
-    flush();
-    ncFileWriter.close();
-    closed = true;
+    // Check for already closed
+    // ------------------------
+    if (!closed) {
+    
+      // Flush and process write queue
+      // -----------------------------
+      flush();
+      try {
+        ncFileWriter.endDefine();
+        WriteQueueEntry entry;
+        while ((entry = writeQueue.poll()) != null) entry.write();
+        ncFileWriter.close();
+      } // try
+      catch (NhException e) { throw new IOException (e.toString()); }
+
+      // Mark as closed
+      // --------------
+      closed = true;
+      
+    } // if
 
   } // close
 
@@ -1411,35 +1650,67 @@ public class CFNCWriter
    */
   public static void main (String[] argv) throws Exception {
 
-    // Create mapped info
-    // ------------------
-    SatelliteDataInfo info = new SatelliteDataInfo (
-      "satellite-1",
-      "sensor-1",
-      Arrays.asList (
-        new TimePeriod (new Date (0), 12*60*1000),
-        new TimePeriod (new Date (12*60*1000 + 90*60*1000), 12*60*1000)
-      ),
-      MapProjectionFactory.getInstance().create (
-        ProjectionConstants.MERCAT,
-        0,
-        new double[15],
-        SpheroidConstants.WGS84,
-        new int[] {512, 512},
-        new EarthLocation (48, -125),
-        new double[] {2000, 2000}
-      ),
-      "origin-1",
-      "history-1"
+    // Create transforms
+    // -----------------
+    List<EarthTransform> transforms = new ArrayList<EarthTransform>();
+    transforms.add (MapProjectionFactory.getInstance().create (
+      ProjectionConstants.MERCAT,
+      0,
+      new double[15],
+      SpheroidConstants.WGS84,
+      new int[] {512, 512},
+      new EarthLocation (48, -125),
+      new double[] {2000, 2000}
+    ));
+    transforms.add (MapProjectionFactory.getInstance().create (
+      ProjectionConstants.GEO,
+      0,
+      new double[15],
+      SpheroidConstants.WGS84,
+      new int[] {512, 512},
+      new EarthLocation (48, -125),
+      new double[] {0.02, 0.02}
+    ));
+
+    double[] latData = new double[512*512];
+    double[] lonData = new double[512*512];
+    for (int i = 0; i < 512; i++) {
+      for (int j = 0; j < 512; j++) {
+        latData[i*512 + j] = 48 - 2.56 + i*0.01;
+        lonData[i*512 + j] = -125 - 2.56 + j*0.01;
+      } // for
+    } // for
+    Grid latVar = new Grid (
+      "lat",
+      "Latitude",
+      "degrees",
+      512, 512,
+      latData,
+      new java.text.DecimalFormat ("0"),
+      null,
+      Double.NaN
     );
+    Grid lonVar = new Grid (
+      "lon",
+      "Longitude",
+      "degrees",
+      512, 512,
+      lonData,
+      new java.text.DecimalFormat ("0"),
+      null,
+      Double.NaN
+    );
+    transforms.add (new SwathProjection (latVar, lonVar, 100, new int[] {512, 512}));
 
     // Create variable
     // ---------------
     short[] data = new short[512*512];
-    for (int i = 0; i < data.length; i++) data[i] = (short) i;
+    for (int i = 0; i < 512; i++)
+      for (int j = 0; j < 512; j++)
+        data[i*512 + j] = (short) (Math.cos (-500 + Math.sqrt ((256-i)*(256-i) + (256-j)*(256-j))/40)*4500);
     Grid var = new Grid (
-      "grid-1",
-      "Grid number one",
+      "sst",
+      "Sea surface temperature",
       "degrees_Celsius",
       512, 512,
       data,
@@ -1447,32 +1718,53 @@ public class CFNCWriter
       new double[] {0.01, 0},
       Short.MIN_VALUE
     );
+
+    for (EarthTransform trans : transforms) {
+
+      // Create info
+      // -----------
+      SatelliteDataInfo info = new SatelliteDataInfo (
+        "petros-1",
+        "java-19",
+        Arrays.asList (
+          new TimePeriod (new Date (0), 12*60*1000),
+          new TimePeriod (new Date (12*60*1000 + 90*60*1000), 12*60*1000)
+        ),
+        trans,
+        "Petros RS Inc.",
+        "Created by unit test on " + new Date()
+      );
+
+      // Write file
+      // ----------
+      String ncFileName = "/tmp/test." + trans.getClass().getName() + ".nc4";
+      System.out.print ("Testing constructor, addVariable, flush, close (" +
+        ncFileName + ") ... ");
     
-    String ncFileName = "/tmp/test.nc";
-    System.out.print ("Testing constructor, addVariable, flush, close (" + ncFileName + ") ... ");
-  
-    CFNCWriter writer = new CFNCWriter (
-      info,
-      ncFileName,
-      true,
-      true
-    );
-    writer.addVariable (var);
-    writer.flush();
-    writer.close();
+      CFNC4Writer writer = new CFNC4Writer (
+        info,
+        ncFileName,
+        (trans instanceof MapProjection),
+        true
+      );
+      writer.addVariable (var);
+      writer.flush();
+      writer.close();
 
-    File ncFile = new File (ncFileName);
-    assert (ncFile.exists());
-    assert (ncFile.length() != 0);
-//    ncFile.delete();
-//    assert (!ncFile.exists());
+      File ncFile = new File (ncFileName);
+      assert (ncFile.exists());
+      assert (ncFile.length() != 0);
+  //    ncFile.delete();
+  //    assert (!ncFile.exists());
 
-    System.out.println ("OK");
-
+      System.out.println ("OK");
+      
+    } // for
+    
   } // main
 
   ////////////////////////////////////////////////////////////
 
-} // CFNCWriter class
+} // CFNC4Writer class
 
 ////////////////////////////////////////////////////////////////////////

@@ -15,9 +15,14 @@
            2005/04/23, PFH, added ToolServices.setCommandLine()
            2007/04/19, PFH, added version printing
            2010/02/16, PFH, added NetCDF format output
+           2015/04/13, PFH
+           - Changes: Added NetCDF 4 write support.
+           - Issue: We want to start supporting NetCDF 4 read/write as an
+            alternative to HDF 4.  This is the first appearance of that
+            support, along with CDAT write support.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -28,13 +33,25 @@ package noaa.coastwatch.tools;
 
 // Imports
 // --------
-import java.util.*;
-import java.text.*;
-import java.io.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import jargs.gnu.*;
-import jargs.gnu.CmdLineParser.*;
+import jargs.gnu.CmdLineParser;
+import jargs.gnu.CmdLineParser.Option;
+import jargs.gnu.CmdLineParser.OptionException;
+import java.io.IOException;
+import noaa.coastwatch.io.ArcWriter;
+import noaa.coastwatch.io.BinaryWriter;
+import noaa.coastwatch.io.ByteWriter;
+import noaa.coastwatch.io.CFNCWriter;
+import noaa.coastwatch.io.CFNC4Writer;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.io.EarthDataWriter;
+import noaa.coastwatch.io.FloatWriter;
+import noaa.coastwatch.io.ShortWriter;
+import noaa.coastwatch.io.TextWriter;
+import noaa.coastwatch.tools.CleanupHook;
+import noaa.coastwatch.tools.ToolServices;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
 
 /**
  * <p>The export tool translates Earth data into external file
@@ -149,7 +166,7 @@ import jargs.gnu.CmdLineParser.*;
  *
  * <h3>NetCDF:</h3>
  * 
- * <p>The output is a NetCDF-3 dataset with CF 1.4 convention
+ * <p>The output is either a NetCDF 3 or 4 dataset with CF 1.4 convention
  * metadata.  The formatting follows as much as possible the
  * recommendations and examples in the document "Encoding
  * CoastWatch Satellite Data in NetCDF using the CF Metadata
@@ -170,8 +187,14 @@ import jargs.gnu.CmdLineParser.*;
  *   <dt> output </dt>
  *   <dd> The output data file name.  Unless the <b>--format</b>
  *   option is used, the output file extension indicates the
- *   desired output format: '.raw' for binary, '.txt' for text,
- *   '.flt' for ArcGIS, and '.nc' for NetCDF. </dd>
+ *   desired output format:
+ *   <ul>
+ *     <li>.raw = binary</li>
+ *     <li>.txt = text</li>
+ *     <li>.flt = ArcGIS</li>
+ *     <li>.nc = NetCDF 3</li>
+ *     <li>.nc4 = NetCDF 4</li>
+ *   </ul></dd>
  *
  * </dl>
  *
@@ -182,9 +205,9 @@ import jargs.gnu.CmdLineParser.*;
  *   <dt> -f, --format=TYPE </dt>
  *   <dd> The output format.  The current formats are 'bin' for
  *   binary raster, 'text' for ASCII text, 'arc' for ArcGIS
- *   binary grid, 'netcdf' for NetCDF, or 'auto' to detect the
- *   format from the output file name.  The default is
- *   'auto'.</dd>
+ *   binary grid, 'netcdf' for NetCDF 3, 'netcdf4' for NetCDF 4,
+ *   or 'auto' to detect the format from the output file name.
+ *   The default is 'auto'.</dd>
  *
  *   <dt> -h, --help </dt>
  *   <dd> Prints a brief help message. </dd>
@@ -580,6 +603,8 @@ public class cwexport {
         format = "arc";
       else if (ext.equalsIgnoreCase ("nc"))
         format = "netcdf";
+      else if (ext.equalsIgnoreCase ("nc4"))
+        format = "netcdf4";
       else {
         System.err.println (PROG + 
           ": Cannot determine output format from extension '" + ext + "'");
@@ -718,6 +743,13 @@ public class cwexport {
         writer = ncWriter;
       } // else if
 
+      // Create NetCDF-4 writer
+      // ----------------------
+      else if (format.equals ("netcdf4")) {
+        CFNC4Writer nc4Writer = new CFNC4Writer (info, output, dcs, cw);
+        writer = nc4Writer;
+      } // else if
+
       // Report invalid format
       // ---------------------
       else {
@@ -753,8 +785,8 @@ public class cwexport {
 
       // Close files
       // -----------
-      reader.close();
       writer.close();
+      reader.close();
       CleanupHook.getInstance().cancelDelete (output);
 
     } // try
@@ -782,7 +814,8 @@ public class cwexport {
 "\n" +
 "General options:\n" +
 "  -f, --format=TYPE          Set the output format.  TYPE may be\n" +
-"                              'bin', 'text', 'arc', 'netcdf', or 'auto'.\n" +
+"                              'bin', 'text', 'arc', 'netcdf', 'netcdf4',\n" +
+"                              or 'auto'.\n" +
 "  -h, --help                 Show this help message.\n" +
 "  -H, --header               Write header before data output.\n" +
 "  -m, --match=PATTERN        Write only data whose variable name matches\n" +
