@@ -19,9 +19,12 @@
            - Issue: Memory was being held onto even after the dispose method
              was called, and we found that it was largely through the 
              VariableChooser instance.
-
+           2015/02/27, PFH
+           - Changes: Added call to compositeChooser.dispose()
+           - Issue: Same as the last change, memory was being leaked.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -32,21 +35,72 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.beans.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.util.*;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.io.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.tools.*;
-import noaa.coastwatch.gui.nav.*;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import noaa.coastwatch.gui.AnnotationListChooser;
+import noaa.coastwatch.gui.CompositeChooser;
+import noaa.coastwatch.gui.EarthDataViewPanel;
+import noaa.coastwatch.gui.EnhancementChooser;
+import noaa.coastwatch.gui.LegendPanel;
+import noaa.coastwatch.gui.LightTable;
+import noaa.coastwatch.gui.NavigationChooser;
+import noaa.coastwatch.gui.OverlayListChooser;
+import noaa.coastwatch.gui.PaletteChooser;
+import noaa.coastwatch.gui.SurveyListChooser;
+import noaa.coastwatch.gui.VariableChooser;
+import noaa.coastwatch.gui.ViewOperationChooser;
+import noaa.coastwatch.gui.nav.NavigationAnalysisPanel;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.render.ColorComposite;
+import noaa.coastwatch.render.ColorEnhancement;
+import noaa.coastwatch.render.ColorEnhancementSettings;
+import noaa.coastwatch.render.EarthDataOverlay;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.EnhancementFunction;
+import noaa.coastwatch.render.GridContainerOverlay;
+import noaa.coastwatch.render.ImageTransform;
+import noaa.coastwatch.render.LinearEnhancement;
+import noaa.coastwatch.render.Palette;
+import noaa.coastwatch.render.PaletteFactory;
+import noaa.coastwatch.tools.Preferences;
+import noaa.coastwatch.tools.ResourceManager;
+import noaa.coastwatch.util.BoxSurvey;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.EarthDataSurvey;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.LineSurvey;
+import noaa.coastwatch.util.PointSurvey;
+import noaa.coastwatch.util.PolygonSurvey;
+import noaa.coastwatch.util.Statistics;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>EarthDataViewController</code> class handles
@@ -397,7 +451,7 @@ public class EarthDataViewController {
    */
   public EarthDataViewController (
     EarthDataReader reader,
-    List variableList
+    List<String> variableList
   ) {
 
     // Set reader
@@ -511,6 +565,7 @@ public class EarthDataViewController {
     ViewOperationChooser.getInstance().removePropertyChangeListener (
       ViewOperationChooser.OPERATION_PROPERTY, operationListener);
     variableChooser.dispose();
+    compositeChooser.dispose();
 
     // TODO: We found here that when all CDAT windows were closed, the variable
     // chooser was leaking memory (a lot of it).  When we fixed that, it turns

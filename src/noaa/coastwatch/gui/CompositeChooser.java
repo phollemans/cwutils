@@ -4,10 +4,14 @@
   PURPOSE: Selects a set of data composite variables.
    AUTHOR: Peter Hollemans
      DATE: 2004/05/25
-  CHANGES: n/a
+  CHANGES: 2015/02/27, PFH
+           - Changes: Added dispose() method.
+           - Issue: Object references saved by this class were leading to
+             memory being not released automatically.  So we remove the action
+             listeners and the combo boxes when the chooser is no longer needed.
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -18,18 +22,26 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.io.*;
-import java.beans.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-import java.util.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
+import javax.swing.Icon;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.TabComponent;
+import noaa.coastwatch.gui.TestContainer;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
 
 /**
  * The <code>CompositeChooser</code> class allows the user to select a
@@ -76,13 +88,13 @@ public class CompositeChooser
   // ---------    
 
   /** The red component combo. */
-  private JComboBox redCombo;
+  private JComboBox<String> redCombo;
 
   /** The green component combo. */
-  private JComboBox greenCombo;
+  private JComboBox<String> greenCombo;
 
   /** The blue component combo. */
-  private JComboBox blueCombo;
+  private JComboBox<String> blueCombo;
 
   /** The composite mode check box. */
   private JCheckBox modeCheck;
@@ -144,7 +156,7 @@ public class CompositeChooser
    * @param variableList the list of variables to make available.
    */  
   public CompositeChooser (
-    List variableList
+    List<String> variableList
   ) {
 
     // Initialize
@@ -162,7 +174,7 @@ public class CompositeChooser
       1, 0);
     this.add (componentPanel, gc);
 
-    Object[] items = variableList.toArray();
+    String[] items = variableList.toArray (new String[]{});
     ComponentComboListener componentListener = new ComponentComboListener();
     redCombo = new JComboBox (items);
     redCombo.addActionListener (componentListener);
@@ -235,6 +247,32 @@ public class CompositeChooser
     } // actionPerformed
   } // ComponentComboListener class
 
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Disposes of any resources used by this chooser. 
+   * 
+   * @since 3.3.1
+   */
+  public void dispose () {
+
+    /**
+     * We do the following because it was found that retaining references
+     * in this class were transitively holding references to the other
+     * panels and data caches that were associated with this class.
+     */
+    removeAll();
+    for (JComboBox combo : new JComboBox[] {redCombo, greenCombo, blueCombo}) {
+      for (ActionListener listener : combo.getActionListeners()) {
+        combo.removeActionListener (listener);
+      } // for
+    } // for
+    redCombo = null;
+    greenCombo = null;
+    blueCombo = null;
+
+  } // dispose
+  
   ////////////////////////////////////////////////////////////
 
   @Override
