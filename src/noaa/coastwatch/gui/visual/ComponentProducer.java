@@ -19,7 +19,7 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
+import java.awt.Component;
 
 /**
  * The <code>ComponentProducer</code> interface defines the methods

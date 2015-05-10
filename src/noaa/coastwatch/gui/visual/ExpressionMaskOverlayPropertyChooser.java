@@ -18,11 +18,13 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import noaa.coastwatch.render.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
+import javax.swing.JTextField;
+import noaa.coastwatch.gui.visual.GenericOverlayPropertyChooser;
+import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
+import noaa.coastwatch.render.ExpressionMaskOverlay;
 
 /** 
  * The <code>ExpressionMaskOverlayPropertyChooser</code> class is an

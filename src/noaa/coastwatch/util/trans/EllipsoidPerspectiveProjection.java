@@ -19,10 +19,11 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import java.awt.geom.*;
-import java.util.*;
-import Jama.*;
-import noaa.coastwatch.util.*;
+import Jama.Matrix;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.SensorScanProjection;
 
 /**
  * The <code>EllipsoidPerspectiveProjection</code> class simulates the

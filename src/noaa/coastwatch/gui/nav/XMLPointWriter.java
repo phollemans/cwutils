@@ -18,10 +18,20 @@ package noaa.coastwatch.gui.nav;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.List;
+import java.util.Map;
+import noaa.coastwatch.gui.nav.NavigationPoint;
+import noaa.coastwatch.gui.nav.NavigationPointWriter;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
 
 /**
  * The <code>XMLPointWriter</code> class writes navigation point data

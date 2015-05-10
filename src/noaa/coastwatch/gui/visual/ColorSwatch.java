@@ -19,8 +19,10 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import javax.swing.Icon;
 
 /**
  * The <code>ColorSwatch</code> class is an icon that shows a

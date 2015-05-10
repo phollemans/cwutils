@@ -18,9 +18,13 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import noaa.coastwatch.gui.TestContainer;
+import noaa.coastwatch.gui.visual.AbstractVisualObject;
 
 /**
  * The <code>VisualBoolean</code> class represents a Boolean as a

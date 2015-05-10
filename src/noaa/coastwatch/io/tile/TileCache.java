@@ -17,8 +17,9 @@ package noaa.coastwatch.io.tile;
 
 // Imports
 // -------
-import java.util.*;
-import noaa.coastwatch.io.tile.TilingScheme.*;
+import java.util.Map;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.Tile;
 
 /**
  * A <code>TileCache</code> object stores a set of {@link TilingScheme.Tile} 

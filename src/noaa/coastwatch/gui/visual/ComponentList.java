@@ -18,13 +18,31 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import noaa.coastwatch.gui.*;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import javax.swing.Box;
+import javax.swing.JPanel;
+import javax.swing.Scrollable;
+import javax.swing.UIManager;
+import javax.swing.event.MouseInputAdapter;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.TestContainer;
+import noaa.coastwatch.gui.visual.ComponentProducer;
+import noaa.coastwatch.gui.visual.VisualOverlay;
+import noaa.coastwatch.render.CoastOverlay;
+import noaa.coastwatch.render.LatLonOverlay;
 
 /** 
  * The <code>ComponentList</code> class is similar to a Swing

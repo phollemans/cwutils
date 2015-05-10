@@ -18,13 +18,12 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import java.beans.*;
-import noaa.coastwatch.render.*;
+import javax.swing.JPanel;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import noaa.coastwatch.render.EarthDataOverlay;
 
 /** 
  * The <code>OverlayPropertyChooser</code> class is a panel that

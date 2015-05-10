@@ -21,14 +21,35 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.beans.*;
-import java.lang.reflect.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.gui.*;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.TestContainer;
+import noaa.coastwatch.gui.visual.AbstractVisualObject;
+import noaa.coastwatch.gui.visual.GenericOverlayPropertyChooser;
+import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
+import noaa.coastwatch.gui.visual.OverlayPropertyChooserFactory;
+import noaa.coastwatch.gui.visual.VisualObject;
+import noaa.coastwatch.gui.visual.VisualObjectFactory;
+import noaa.coastwatch.gui.visual.VisualServices;
+import noaa.coastwatch.render.CoastOverlay;
+import noaa.coastwatch.render.EarthDataOverlay;
+import noaa.coastwatch.render.MultilayerBitmaskOverlay;
 
 /**
  * The <code>VisualOverlay</code> class represents an

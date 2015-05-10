@@ -18,7 +18,7 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import terrenus.instrument.*;
+import terrenus.instrument.Radiometer;
 
 /**
  * The <code>MHS</code> is a radiometer for the NOAA Microwave Humidity

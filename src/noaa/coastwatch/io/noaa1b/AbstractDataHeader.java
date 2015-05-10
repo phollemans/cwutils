@@ -18,10 +18,12 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import java.nio.*;
-import java.nio.channels.*;
-import java.util.*;
-import noaa.coastwatch.io.*;
+import java.nio.ByteBuffer;
+import java.util.Date;
+import noaa.coastwatch.io.BinaryStreamReader;
+import noaa.coastwatch.io.BinaryStreamReaderFactory;
+import noaa.coastwatch.io.noaa1b.DataHeader;
+import noaa.coastwatch.io.noaa1b.NOAA1bServices;
 
 /**
  * The <code>AbstractDataHeader</code> class reads NOAA 1b data

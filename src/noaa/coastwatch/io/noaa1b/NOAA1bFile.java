@@ -18,10 +18,18 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import java.io.*;
-import java.nio.*;
-import java.nio.channels.*;
-import terrenus.instrument.*;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.channels.FileChannel;
+import noaa.coastwatch.io.noaa1b.ArchiveHeader;
+import noaa.coastwatch.io.noaa1b.ArchiveHeaderFactory;
+import noaa.coastwatch.io.noaa1b.DataHeader;
+import noaa.coastwatch.io.noaa1b.DataHeaderFactory;
+import noaa.coastwatch.io.noaa1b.DataRecord;
+import terrenus.instrument.Instrument;
+import terrenus.instrument.InstrumentData;
 
 /**
  * The <code>NOAA1bFile</code> is an interface for reading NOAA

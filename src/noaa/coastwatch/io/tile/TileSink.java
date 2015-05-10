@@ -17,8 +17,9 @@ package noaa.coastwatch.io.tile;
 
 // Imports
 // -------
-import java.io.*;
-import noaa.coastwatch.io.tile.TilingScheme.*;
+import java.io.IOException;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.Tile;
 
 /**
  * The <code>TileSink</code> interface is for writing individual rectangles

@@ -19,12 +19,16 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.util.*;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import noaa.coastwatch.gui.TestContainer;
+import noaa.coastwatch.gui.visual.AbstractVisualObject;
 
 /**
  * The <code>VisualChoice</code> class represents a value choice as a

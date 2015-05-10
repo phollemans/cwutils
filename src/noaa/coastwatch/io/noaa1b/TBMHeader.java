@@ -18,9 +18,10 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import java.io.*;
-import java.nio.*;
-import java.util.*;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import noaa.coastwatch.io.noaa1b.AbstractArchiveHeader;
+import noaa.coastwatch.io.noaa1b.NOAA1bServices;
 
 /**
  * The <code>TBMHeader</code> class reads Terabit Memory header

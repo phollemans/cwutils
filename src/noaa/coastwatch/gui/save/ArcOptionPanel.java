@@ -18,11 +18,17 @@ package noaa.coastwatch.gui.save;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import noaa.coastwatch.gui.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.TestContainer;
 
 /** 
  * The <code>ArcOptionPanel</code> class allows the user to choose

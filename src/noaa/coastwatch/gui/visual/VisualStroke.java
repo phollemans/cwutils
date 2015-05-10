@@ -18,12 +18,20 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.beans.*;
-import noaa.coastwatch.gui.*;
+import java.awt.Component;
+import java.awt.Insets;
+import java.awt.Stroke;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.TestContainer;
+import noaa.coastwatch.gui.visual.AbstractVisualObject;
+import noaa.coastwatch.gui.visual.StrokeChooser;
+import noaa.coastwatch.gui.visual.StrokeSwatch;
 
 /**
  * The <code>VisualStroke</code> class represents a line stroke as a

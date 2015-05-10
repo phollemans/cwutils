@@ -18,9 +18,14 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import java.nio.*;
-import java.util.*;
-import terrenus.instrument.*;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import noaa.coastwatch.io.BinaryStreamReader;
+import noaa.coastwatch.io.noaa1b.AbstractDataRecord;
+import noaa.coastwatch.io.noaa1b.MHS;
+import noaa.coastwatch.io.noaa1b.MHSData;
+import noaa.coastwatch.io.noaa1b.MHSHeader;
+import terrenus.instrument.InstrumentData;
 
 /**
  * The <code>MHSRecord</code> class reads NOAA 1b MHS data

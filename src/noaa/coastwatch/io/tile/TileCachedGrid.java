@@ -28,14 +28,21 @@ package noaa.coastwatch.io.tile;
 
 // Imports
 // -------
-import java.lang.reflect.*;
-import java.util.*;
+import java.awt.Rectangle;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Array;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.awt.*;
-import java.io.*;
-import java.lang.ref.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.tile.TilingScheme.*;
+import noaa.coastwatch.io.tile.TileCache;
+import noaa.coastwatch.io.tile.TileCacheManager;
+import noaa.coastwatch.io.tile.TileSource;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.Tile;
+import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
+import noaa.coastwatch.util.Grid;
 
 /**
  * The <code>TileCachedGrid</code> class is a <code>Grid</code> whose data 

@@ -21,13 +21,29 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.beans.*;
-import java.lang.reflect.*;
-import noaa.coastwatch.gui.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.util.List;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.TestContainer;
+import noaa.coastwatch.gui.visual.AbstractVisualObject;
 
 /**
  * The <code>VisualArray</code> class represents an array as a list

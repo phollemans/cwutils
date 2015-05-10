@@ -41,7 +41,12 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import noaa.coastwatch.util.*;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.MetadataContainer;
+import noaa.coastwatch.util.trans.Datum;
+import noaa.coastwatch.util.trans.DatumFactory;
+import noaa.coastwatch.util.trans.SpheroidConstants;
 
 /**
  * The Earth transform class translates between data coordinates and

@@ -18,8 +18,9 @@ package noaa.coastwatch.gui.save;
 
 // Imports
 // -------
-import java.io.*;
-import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import javax.swing.JPanel;
 
 /** 
  * The <code>SavePanel</code> class is the abstract parent of all save

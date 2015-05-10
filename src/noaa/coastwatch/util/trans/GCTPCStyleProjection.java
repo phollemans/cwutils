@@ -18,9 +18,11 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import java.awt.geom.*;
-import java.io.*;
-import java.util.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.io.PrintStream;
+import java.util.Arrays;
+import noaa.coastwatch.util.trans.GCTPStyleProjection;
 
 /**
  * The <code>GCTPCStyleProjection</code> class provides method signatures

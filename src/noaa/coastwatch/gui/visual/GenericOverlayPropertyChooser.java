@@ -22,16 +22,32 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.util.*;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.io.*;
-import java.beans.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.gui.*;
+import java.util.Map;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
+import noaa.coastwatch.gui.visual.VisualArray;
+import noaa.coastwatch.gui.visual.VisualBoolean;
+import noaa.coastwatch.gui.visual.VisualObject;
+import noaa.coastwatch.gui.visual.VisualObjectFactory;
+import noaa.coastwatch.gui.visual.VisualServices;
+import noaa.coastwatch.render.EarthDataOverlay;
 
 /** 
  * The <code>GenericOverlayPropertyChooser</code> class is an

@@ -18,7 +18,13 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import noaa.coastwatch.render.*;
+import noaa.coastwatch.gui.visual.ExpressionMaskOverlayPropertyChooser;
+import noaa.coastwatch.gui.visual.GenericOverlayPropertyChooser;
+import noaa.coastwatch.gui.visual.MultilayerBitmaskOverlayPropertyChooser;
+import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
+import noaa.coastwatch.render.EarthDataOverlay;
+import noaa.coastwatch.render.ExpressionMaskOverlay;
+import noaa.coastwatch.render.MultilayerBitmaskOverlay;
 
 /**
  * The <code>OverlayPropertyChooserFactory</code> class may be used to

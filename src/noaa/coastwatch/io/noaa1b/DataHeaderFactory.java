@@ -19,9 +19,16 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import java.io.*;
-import java.nio.*;
-import java.nio.channels.*;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.channels.ByteChannel;
+import noaa.coastwatch.io.noaa1b.AMSUAHeader;
+import noaa.coastwatch.io.noaa1b.AMSUBHeader;
+import noaa.coastwatch.io.noaa1b.DataHeader;
+import noaa.coastwatch.io.noaa1b.HIRS4Header;
+import noaa.coastwatch.io.noaa1b.MHSHeader;
+import noaa.coastwatch.io.noaa1b.NOAA1bServices;
 
 /**
  * The <code>DataHeaderFactory</code> creates data header

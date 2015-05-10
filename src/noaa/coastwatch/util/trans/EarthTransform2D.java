@@ -26,8 +26,15 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.util.*;
+import java.awt.geom.AffineTransform;
+import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.MapProjection;
+import noaa.coastwatch.util.trans.PolarStereographicProjection;
+import noaa.coastwatch.util.trans.SpheroidConstants;
 
 /**
  * The <code>EarthTransform2D</code> class adds extra functionality to

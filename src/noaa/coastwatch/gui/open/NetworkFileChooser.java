@@ -18,15 +18,25 @@ package noaa.coastwatch.gui.open;
 
 // Imports
 // -------
-import java.beans.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import java.io.*;
-import java.util.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.LinkedList;
 import java.util.List;
-import noaa.coastwatch.gui.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.open.DirectoryLister;
+import noaa.coastwatch.gui.open.FileChooser;
+import noaa.coastwatch.gui.open.HTTPDirectoryLister;
+import noaa.coastwatch.gui.open.OpendapURLFilter;
+import noaa.coastwatch.gui.open.ServerChooser;
+import noaa.coastwatch.gui.open.ServerTableModel;
 
 /** 
  * The <code>NetworkFileChooser</code> class allows the user to choose

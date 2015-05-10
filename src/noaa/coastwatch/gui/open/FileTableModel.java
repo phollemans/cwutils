@@ -18,12 +18,15 @@ package noaa.coastwatch.gui.open;
 
 // Imports
 // -------
-import java.text.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.table.*;
-import noaa.coastwatch.util.*;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+import javax.swing.table.AbstractTableModel;
+import noaa.coastwatch.gui.open.DirectoryLister;
 import noaa.coastwatch.gui.open.DirectoryLister.Entry;
+import noaa.coastwatch.util.DateFormatter;
 
 /**
  * The <code>FileTableModel</code> uses a list of {@link

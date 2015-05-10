@@ -18,8 +18,10 @@ package noaa.coastwatch.gui.open;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import noaa.coastwatch.gui.open.DirectoryLister;
 
 /**
  * The <code>AbstractDirectoryLister</code> is an abstract helper that

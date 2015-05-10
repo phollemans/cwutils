@@ -23,8 +23,15 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.Datum;
+import noaa.coastwatch.util.trans.DatumFactory;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.EarthTransform2D;
+import noaa.coastwatch.util.trans.ProjectionConstants;
 
 /**
  * The <code>MapProjection</code> class is the abstract parent of

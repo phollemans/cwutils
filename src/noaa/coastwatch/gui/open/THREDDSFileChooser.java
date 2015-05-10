@@ -18,25 +18,30 @@ package noaa.coastwatch.gui.open;
 
 // Imports
 // -------
-import java.beans.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import java.io.*;
-import java.util.*;
-import java.util.List;
-import noaa.coastwatch.gui.*;
-
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import javax.swing.tree.*;
+import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EtchedBorder;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import noaa.coastwatch.util.*;
+import org.w3c.dom.Document;
+import noaa.coastwatch.gui.open.XMLTree;
 
 /** 
  * The <code>THREDDSFileChooser</code> class allows the user to choose

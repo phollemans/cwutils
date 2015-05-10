@@ -20,12 +20,24 @@ package noaa.coastwatch.gui.save;
 
 // Imports
 // -------
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import java.util.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import noaa.coastwatch.gui.*;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.TestContainer;
 
 /** 
  * The <code>VariableOptionPanel</code> class allows the user to

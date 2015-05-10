@@ -17,9 +17,12 @@ package noaa.coastwatch.io.tile;
 
 // Imports
 // -------
-import java.util.*;
-import java.io.*;
-import noaa.coastwatch.io.tile.TilingScheme.*;
+import java.io.IOException;
+import java.util.Arrays;
+import noaa.coastwatch.io.tile.TileSource;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.Tile;
+import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
 
 /**
  * A <code>TileCacheKey</code> object stores a pair of values: a tile source,

@@ -18,11 +18,20 @@ package noaa.coastwatch.gui.nav;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import noaa.coastwatch.gui.nav.NavigationPoint;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>NavigationPointWriter</code> class is an abstract class 

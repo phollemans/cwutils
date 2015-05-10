@@ -18,8 +18,13 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.GCTPCStyleProjection;
+import noaa.coastwatch.util.trans.GCTPStyleProjection;
+import noaa.coastwatch.util.trans.ProjectionConstants;
+import noaa.coastwatch.util.trans.SpheroidConstants;
 
 /**
  * The <code>OrthographicProjection</code> class performs 

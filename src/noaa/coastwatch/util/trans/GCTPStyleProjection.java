@@ -22,8 +22,12 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import noaa.coastwatch.util.trans.Datum;
+import noaa.coastwatch.util.trans.DatumFactory;
+import noaa.coastwatch.util.trans.MapProjection;
+import noaa.coastwatch.util.trans.SpheroidConstants;
 
 /**
  * The <code>GCTPStyleProjection</code> class provides various static

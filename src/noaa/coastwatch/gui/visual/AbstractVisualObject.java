@@ -18,9 +18,9 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.beans.*;
-import javax.swing.event.*;
+import java.beans.PropertyChangeListener;
+import javax.swing.event.SwingPropertyChangeSupport;
+import noaa.coastwatch.gui.visual.VisualObject;
 
 /**
  * The <code>AbstractVisualObject</code> class implements property

@@ -18,9 +18,11 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import noaa.coastwatch.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import noaa.coastwatch.util.trans.Datum;
+import noaa.coastwatch.util.trans.SpheroidConstants;
 
 /**
  * The <code>DatumFactory</code> class creates geodetic

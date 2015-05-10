@@ -18,12 +18,21 @@ package noaa.coastwatch.gui.open;
 
 // Imports
 // -------
-import java.awt.*;
-import java.text.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.table.*;
-import noaa.coastwatch.gui.*;
+import java.awt.Container;
+import javax.swing.Icon;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.open.DirectoryLister;
+import noaa.coastwatch.gui.open.LocalDirectoryLister;
 
 /**
  * The <code>FileTable</code> uses a {@link FileTableModel} object to

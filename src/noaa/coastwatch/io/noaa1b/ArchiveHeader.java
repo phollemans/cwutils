@@ -18,8 +18,6 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import java.nio.*;
-import java.util.*;
 
 /**
  * The <code>ArchiveHeader</code> interface is for reading NOAA

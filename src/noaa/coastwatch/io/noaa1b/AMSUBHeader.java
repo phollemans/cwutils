@@ -18,9 +18,13 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import java.nio.*;
-import java.util.*;
-import terrenus.instrument.*;
+import java.nio.ByteBuffer;
+import noaa.coastwatch.io.BinaryStreamReader;
+import noaa.coastwatch.io.noaa1b.AMSUB;
+import noaa.coastwatch.io.noaa1b.AMSUBRecord;
+import noaa.coastwatch.io.noaa1b.AbstractDataHeader;
+import noaa.coastwatch.io.noaa1b.DataRecord;
+import terrenus.instrument.Instrument;
 
 /**
  * The <code>AMSUBHeader</code> class reads NOAA 1b data AMSU-B

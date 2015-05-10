@@ -18,9 +18,9 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import java.awt.geom.*;
-import java.util.*;
-import noaa.coastwatch.util.*;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.EarthTransform2D;
 
 /**
  * The <code>GeoVectorProjection</code> class uses arrays of latitude

@@ -18,8 +18,12 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The <code>VisualServices</code> class contains static methods

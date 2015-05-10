@@ -18,18 +18,41 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import java.io.*;
-import java.nio.*;
-import java.nio.channels.*;
-import java.util.*;
-import java.text.*;
-import java.lang.reflect.*;
-import terrenus.instrument.*;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import noaa.coastwatch.io.CachedGrid;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.noaa1b.DataHeader;
+import noaa.coastwatch.io.noaa1b.DataRecord;
+import noaa.coastwatch.io.noaa1b.NOAA1bFile;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
+import noaa.coastwatch.io.tile.TilingScheme.Tile;
+import noaa.coastwatch.tools.cwinfo;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.SatelliteDataInfo;
+import noaa.coastwatch.util.TimePeriod;
+import noaa.coastwatch.util.trans.DataProjection;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.SwathProjection;
+import terrenus.instrument.Instrument;
+import terrenus.instrument.Radiometer;
+import terrenus.instrument.RadiometerCalibrator;
 import terrenus.instrument.RadiometerCalibrator.CalibrationType;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.io.tile.TilingScheme.*;
+import terrenus.instrument.RadiometerData;
 
 /**
  * The <code>NOAA1bFileReader</code> class extends {@link
@@ -485,7 +508,7 @@ public class NOAA1bFileReader extends EarthDataReader {
 
       // Create data arrays
       // ------------------
-      int[] dataDims = tiling.getTileDimensions (pos);
+      int[] dataDims = pos.getDimensions();
       int dataValues = dataDims[ROWS]*dataDims[COLS];
       Object data = Array.newInstance (varClass, dataValues);
       short[] shortData = (varClass.equals (Short.TYPE) ? (short[]) data:null);

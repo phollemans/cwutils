@@ -18,8 +18,9 @@ package noaa.coastwatch.gui.open;
 
 // Imports
 // -------
-import java.util.*;
-import java.io.*;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 /**
  * A <code>DirectoryLister</code> performs simple directory listing

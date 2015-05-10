@@ -18,17 +18,44 @@ package noaa.coastwatch.gui.open;
 
 // Imports
 // -------
-import java.beans.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import javax.swing.*;
-import javax.swing.table.*;
-import javax.swing.event.*;
-import noaa.coastwatch.gui.*;
+import javax.swing.AbstractAction;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.open.DirectoryLister;
 import noaa.coastwatch.gui.open.DirectoryLister.Entry;
+import noaa.coastwatch.gui.open.FileTable;
+import noaa.coastwatch.gui.open.FileTableModel;
+import noaa.coastwatch.gui.open.HTTPDirectoryLister;
+import noaa.coastwatch.gui.open.LocalDirectoryLister;
+import noaa.coastwatch.gui.open.OpendapURLFilter;
 
 /**
  * The <code>FileChooser</code> class is a simplified version of the

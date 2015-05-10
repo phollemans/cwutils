@@ -20,7 +20,8 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import noaa.coastwatch.util.*;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.SpheroidConstants;
 
 /**
  * A <code>Datum</code> holds a geodetic datum name, spheroid name,

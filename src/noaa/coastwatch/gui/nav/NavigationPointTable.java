@@ -18,11 +18,16 @@ package noaa.coastwatch.gui.nav;
 
 // Imports
 // -------
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.util.List;
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
 
 /**
  * The <code>NavigationPointTable</code> class is a table that

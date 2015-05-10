@@ -42,8 +42,20 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import java.util.*;
-import noaa.coastwatch.util.*;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.List;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Encodable;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.LongitudeFilter;
+import noaa.coastwatch.util.ValueSource;
+import noaa.coastwatch.util.VariableEstimator;
+import noaa.coastwatch.util.trans.DataProjection;
+import noaa.coastwatch.util.trans.EarthTransform2D;
 
 /**
  * The <code>SwathProjection</code> class implements Earth transform
@@ -238,7 +250,7 @@ public class SwathProjection
    * in terms of data locations.
    *
    * @see VariableEstimator
-   * @see EarthPartition
+   * @see noaa.coastwatch.util.EarthPartition
    */
   public SwathProjection (
     DataVariable lat,

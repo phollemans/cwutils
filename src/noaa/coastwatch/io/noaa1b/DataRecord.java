@@ -18,9 +18,8 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import java.nio.*;
-import java.util.*;
-import terrenus.instrument.*;
+import java.util.Date;
+import terrenus.instrument.InstrumentData;
 
 /**
  * The <code>DataRecord</code> interface is for reading NOAA

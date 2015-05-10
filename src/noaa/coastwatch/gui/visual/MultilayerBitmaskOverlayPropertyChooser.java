@@ -19,17 +19,24 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
-import java.io.*;
-import java.beans.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.gui.*;
-import noaa.coastwatch.io.*;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import noaa.coastwatch.gui.AbstractOverlayListPanel;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.render.BitmaskOverlay;
+import noaa.coastwatch.render.MultilayerBitmaskOverlay;
 
 /** 
  * The <code>MultilayerBitmaskOverlayPropertyChooser</code> class is

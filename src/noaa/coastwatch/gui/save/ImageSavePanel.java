@@ -25,14 +25,27 @@ package noaa.coastwatch.gui.save;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import java.io.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.gui.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.save.GIFSavePanel;
+import noaa.coastwatch.gui.save.GeoTIFFSavePanel;
+import noaa.coastwatch.gui.save.JPEGSavePanel;
+import noaa.coastwatch.gui.save.PDFSavePanel;
+import noaa.coastwatch.gui.save.PNGSavePanel;
+import noaa.coastwatch.gui.save.SavePanel;
+import noaa.coastwatch.io.EarthImageWriter;
+import noaa.coastwatch.render.ColorEnhancement;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.IconElement;
+import noaa.coastwatch.render.IconElementFactory;
+import noaa.coastwatch.util.EarthDataInfo;
 
 /** 
  * The <code>ImageSavePanel</code> class is the abstract parent of all

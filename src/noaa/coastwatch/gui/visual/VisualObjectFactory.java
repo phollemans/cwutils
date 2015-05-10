@@ -18,11 +18,24 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import javax.swing.*;
-import java.beans.*;
-import java.lang.reflect.*;
-import noaa.coastwatch.render.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Stroke;
+import java.awt.Component;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import noaa.coastwatch.gui.visual.VisualArray;
+import noaa.coastwatch.gui.visual.VisualBoolean;
+import noaa.coastwatch.gui.visual.VisualChoice;
+import noaa.coastwatch.gui.visual.VisualColor;
+import noaa.coastwatch.gui.visual.VisualFont;
+import noaa.coastwatch.gui.visual.VisualInteger;
+import noaa.coastwatch.gui.visual.VisualObject;
+import noaa.coastwatch.gui.visual.VisualServices;
+import noaa.coastwatch.gui.visual.VisualString;
+import noaa.coastwatch.gui.visual.VisualStroke;
 
 /**
  * The <code>VisualObjectFactory</code> class contains static methods

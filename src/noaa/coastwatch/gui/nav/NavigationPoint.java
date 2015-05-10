@@ -18,7 +18,8 @@ package noaa.coastwatch.gui.nav;
 
 // Imports
 // -------
-import noaa.coastwatch.util.*;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
 
 /**
  * The <code>NavigationPoint</code> class holds data for a single

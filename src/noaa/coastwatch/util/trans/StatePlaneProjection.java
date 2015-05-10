@@ -22,11 +22,25 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
-import java.io.*;
-import java.nio.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import noaa.coastwatch.io.IOServices;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.GCTPCStyleProjection;
+import noaa.coastwatch.util.trans.GCTPStyleProjection;
+import noaa.coastwatch.util.trans.HotineObliqueMercatorProjection;
+import noaa.coastwatch.util.trans.LambertConformalConicProjection;
+import noaa.coastwatch.util.trans.MapProjection;
+import noaa.coastwatch.util.trans.MapProjectionFactory;
+import noaa.coastwatch.util.trans.PolyconicProjection;
+import noaa.coastwatch.util.trans.ProjectionConstants;
+import noaa.coastwatch.util.trans.SpheroidConstants;
+import noaa.coastwatch.util.trans.TransverseMercatorProjection;
 
 /**
  * The <code>StatePlaneProjection</code> class performs 

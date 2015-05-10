@@ -19,11 +19,13 @@ package noaa.coastwatch.gui.save;
 
 // Imports
 // -------
-import java.awt.*;
-import javax.swing.*;
-import java.io.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.util.*;
+import java.awt.BorderLayout;
+import java.io.File;
+import java.io.IOException;
+import noaa.coastwatch.gui.save.ImageSavePanel;
+import noaa.coastwatch.gui.save.RenderOptionPanel;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.util.EarthDataInfo;
 
 /** 
  * The <code>PDFSavePanel</code> class allows the user to select save

@@ -19,8 +19,8 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.beans.*;
+import java.beans.PropertyChangeListener;
+import noaa.coastwatch.gui.visual.ComponentProducer;
 
 /**
  * The <code>VisualObject</code> interface defines the methods

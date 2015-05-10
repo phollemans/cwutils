@@ -20,9 +20,13 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import java.nio.*;
-import java.util.*;
-import terrenus.instrument.*;
+import java.nio.ByteBuffer;
+import noaa.coastwatch.io.BinaryStreamReader;
+import noaa.coastwatch.io.noaa1b.AbstractDataRecord;
+import noaa.coastwatch.io.noaa1b.HIRS4;
+import noaa.coastwatch.io.noaa1b.HIRS4Data;
+import noaa.coastwatch.io.noaa1b.HIRS4Header;
+import terrenus.instrument.InstrumentData;
 
 /**
  * The <code>HIRS4Record</code> class reads NOAA

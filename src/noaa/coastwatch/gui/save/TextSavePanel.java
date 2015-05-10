@@ -18,16 +18,18 @@ package noaa.coastwatch.gui.save;
 
 // Imports
 // -------
-import java.awt.*;
-import javax.swing.*;
-import java.io.*;
-import java.util.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.gui.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.tools.*;
-import noaa.coastwatch.util.*;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.save.DataSavePanel;
+import noaa.coastwatch.gui.save.TextOptionPanel;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.TextWriter;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.util.EarthDataInfo;
 
 /** 
  * The <code>TextSavePanel</code> class allows the user to select save

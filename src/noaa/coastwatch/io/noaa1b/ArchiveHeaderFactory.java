@@ -18,9 +18,12 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import java.io.*;
-import java.nio.*;
-import java.nio.channels.*;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.ByteChannel;
+import noaa.coastwatch.io.noaa1b.ARSHeader;
+import noaa.coastwatch.io.noaa1b.ArchiveHeader;
+import noaa.coastwatch.io.noaa1b.TBMHeader;
 
 /**
  * The <code>ArchiveHeaderFactory</code> creates archive header

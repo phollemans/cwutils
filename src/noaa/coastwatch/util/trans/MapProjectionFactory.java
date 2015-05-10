@@ -24,11 +24,48 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import java.awt.geom.*;
-import java.util.*;
-import java.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*; 
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.io.IOException;
+import noaa.coastwatch.io.IOServices;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.AlaskaConformalProjection;
+import noaa.coastwatch.util.trans.AlbersConicalEqualAreaProjection;
+import noaa.coastwatch.util.trans.AzimuthalEquidistantProjection;
+import noaa.coastwatch.util.trans.EquidistantConicProjection;
+import noaa.coastwatch.util.trans.EquirectangularProjection;
+import noaa.coastwatch.util.trans.GCTPCStyleProjection;
+import noaa.coastwatch.util.trans.GCTPStyleProjection;
+import noaa.coastwatch.util.trans.GeneralVerticalNearsidePerspectiveProjection;
+import noaa.coastwatch.util.trans.GeographicProjection;
+import noaa.coastwatch.util.trans.GnomonicProjection;
+import noaa.coastwatch.util.trans.HammerProjection;
+import noaa.coastwatch.util.trans.HotineObliqueMercatorProjection;
+import noaa.coastwatch.util.trans.InterruptedGoodeHomolosineProjection;
+import noaa.coastwatch.util.trans.InterruptedMollweideProjection;
+import noaa.coastwatch.util.trans.LambertAzimuthalEqualAreaProjection;
+import noaa.coastwatch.util.trans.LambertConformalConicProjection;
+import noaa.coastwatch.util.trans.MapProjection;
+import noaa.coastwatch.util.trans.MercatorProjection;
+import noaa.coastwatch.util.trans.MillerCylindricalProjection;
+import noaa.coastwatch.util.trans.MollweideProjection;
+import noaa.coastwatch.util.trans.OblatedEqualAreaProjection;
+import noaa.coastwatch.util.trans.OrthographicProjection;
+import noaa.coastwatch.util.trans.PolarStereographicProjection;
+import noaa.coastwatch.util.trans.PolyconicProjection;
+import noaa.coastwatch.util.trans.ProjectionConstants;
+import noaa.coastwatch.util.trans.RobinsonProjection;
+import noaa.coastwatch.util.trans.SinusoidalProjection;
+import noaa.coastwatch.util.trans.SpaceObliqueMercatorProjection;
+import noaa.coastwatch.util.trans.StatePlaneProjection;
+import noaa.coastwatch.util.trans.StereographicProjection;
+import noaa.coastwatch.util.trans.TransverseMercatorProjection;
+import noaa.coastwatch.util.trans.UniversalTransverseMercatorProjection;
+import noaa.coastwatch.util.trans.VanderGrintenProjection;
+import noaa.coastwatch.util.trans.WagnerIVProjection;
+import noaa.coastwatch.util.trans.WagnerVIIProjection;
 
 /**
  * The <code>MapProjectionFactory</code> class creates instances

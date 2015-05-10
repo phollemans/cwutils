@@ -17,9 +17,16 @@ package noaa.coastwatch.io.tile;
 
 // Imports
 // -------
-import java.util.*;
-import java.io.*;
-import noaa.coastwatch.io.tile.TilingScheme.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import noaa.coastwatch.io.tile.TileSource;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.Tile;
+import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
 
 /**
  * A <code>TileDeliveryOperation</code> represents an asynchronous process for

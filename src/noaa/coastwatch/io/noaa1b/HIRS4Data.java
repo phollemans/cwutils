@@ -18,11 +18,13 @@ package noaa.coastwatch.io.noaa1b;
 
 // Import 
 // ------
-import java.io.*;
-import java.nio.*;
-import java.util.*;
-import terrenus.instrument.*;
-import terrenus.instrument.RadiometerCalibrator.Record;
+import java.io.IOException;
+import noaa.coastwatch.io.noaa1b.HIRS4;
+import noaa.coastwatch.io.noaa1b.HIRS4Header;
+import noaa.coastwatch.io.noaa1b.HIRS4Record;
+import terrenus.instrument.Instrument;
+import terrenus.instrument.RadiometerCalibrator;
+import terrenus.instrument.RadiometerData;
 import terrenus.instrument.RadiometerCalibrator.CalibrationType;
 
 /**

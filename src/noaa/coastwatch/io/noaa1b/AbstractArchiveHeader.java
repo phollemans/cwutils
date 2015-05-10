@@ -18,9 +18,11 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import java.io.*;
-import java.nio.*;
-import noaa.coastwatch.io.*;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import noaa.coastwatch.io.BinaryStreamReader;
+import noaa.coastwatch.io.BinaryStreamReaderFactory;
+import noaa.coastwatch.io.noaa1b.ArchiveHeader;
 
 /**
  * The <code>AbstractArchiveHeader</code> class reads header data

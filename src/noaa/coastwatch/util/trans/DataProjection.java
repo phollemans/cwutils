@@ -23,8 +23,11 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import java.util.*;
-import noaa.coastwatch.util.*;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform2D;
 
 /**
  * The <code>DataProjection</code> class implements Earth transform

@@ -18,7 +18,7 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import terrenus.instrument.*;
+import terrenus.instrument.Radiometer;
 
 /**
  * The <code>AMSUB</code> is a radiometer for the NOAA Advanced

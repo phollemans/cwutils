@@ -18,7 +18,8 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
-import java.util.*;
+import noaa.coastwatch.util.trans.EllipsoidPerspectiveProjection;
+import noaa.coastwatch.util.trans.SensorScanProjection;
 
 /**
  * The <code>SensorScanProjectionFactory</code> is used to generate 

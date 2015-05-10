@@ -18,11 +18,10 @@ package noaa.coastwatch.io.noaa1b;
 
 // Imports
 // -------
-import java.io.*;
-import java.nio.*;
-import java.nio.channels.*;
-import java.util.*;
-import terrenus.instrument.*;
+import java.nio.ByteBuffer;
+import java.util.Date;
+import noaa.coastwatch.io.noaa1b.DataRecord;
+import terrenus.instrument.Instrument;
 
 /**
  * The <code>DataHeader</code> interface is for reading NOAA

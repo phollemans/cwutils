@@ -18,16 +18,31 @@ package noaa.coastwatch.gui.open;
 
 // Imports
 // -------
-import java.io.*;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.tools.*;
 import com.braju.format.Format;
+import java.awt.BorderLayout;
+import java.awt.Font;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.tools.cwinfo;
+import noaa.coastwatch.util.DateFormatter;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.MetadataServices;
+import noaa.coastwatch.util.SatelliteDataInfo;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.MapProjection;
 
 /**
  * The <code>BasicReaderInfoPanel</code> class displays basic

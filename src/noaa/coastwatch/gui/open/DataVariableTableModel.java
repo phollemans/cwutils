@@ -18,11 +18,18 @@ package noaa.coastwatch.gui.open;
 
 // Imports
 // -------
-import java.util.*;
-import javax.swing.*;
-import javax.swing.table.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
+import java.awt.Container;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.table.AbstractTableModel;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.util.DataVariable;
 
 /** 
  * The <code>DataVariableTableModel</code> class models the

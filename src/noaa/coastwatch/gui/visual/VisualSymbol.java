@@ -18,16 +18,19 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import java.beans.*;
-import java.util.*;
-import java.util.List;
 import jahuwaldt.plot.PlotSymbol;
-import noaa.coastwatch.render.*;
+import java.awt.Component;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+import noaa.coastwatch.gui.visual.AbstractVisualObject;
+import noaa.coastwatch.render.PlotSymbolFactory;
 
+import jahuwaldt.plot.PlotSymbol;
 /**
  * The <code>VisualSymbol</code> class represents a plot symbol
  * as a combo box with an icon of the symbol.

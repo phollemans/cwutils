@@ -18,10 +18,13 @@ package noaa.coastwatch.gui.nav;
 
 // Imports
 // -------
-import javax.swing.*;
-import javax.swing.table.*;
-import java.util.*;
-import noaa.coastwatch.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.AbstractTableModel;
+import noaa.coastwatch.gui.nav.NavigationPoint;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
 
 /**
  * The <code>NavigationPointTableModel</code> class provides data

@@ -18,9 +18,12 @@ package noaa.coastwatch.gui.visual;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import javax.swing.*;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.awt.geom.Line2D;
+import javax.swing.Icon;
 
 /**
  * The <code>StrokeSwatch</code> class is an icon that shows a
