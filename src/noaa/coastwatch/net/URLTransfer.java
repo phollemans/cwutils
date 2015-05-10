@@ -22,11 +22,13 @@ package noaa.coastwatch.net;
 
 // Imports
 // -------
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.text.*;
-import noaa.coastwatch.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.net.URL;
+import noaa.coastwatch.io.DataTransfer;
 
 /**
  * The <code>URLTransfer</code> class initiates a connection to an

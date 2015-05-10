@@ -18,7 +18,12 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 
 /**
  * A legend is used to annotate data with descriptive elements.  A

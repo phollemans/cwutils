@@ -33,8 +33,11 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.util.Date;
+import java.util.List;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.MetadataServices;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>SatelliteDataInfo</code> class is a special

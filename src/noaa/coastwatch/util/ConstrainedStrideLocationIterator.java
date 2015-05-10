@@ -18,9 +18,13 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
+import java.awt.Shape;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.util.NoSuchElementException;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataLocationIterator;
 
 /**
  * The <code>ConstrainedStrideLocationIterator</code> class iterates

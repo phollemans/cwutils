@@ -19,7 +19,8 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * The <code>MetadataContainer</code> class is designed to be extended

@@ -18,10 +18,22 @@ package noaa.coastwatch.net;
 
 // Imports
 // -------
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import opendap.dap.*;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import noaa.coastwatch.net.CatalogQueryAgent;
+import opendap.dap.DConnect;
+import opendap.dap.DFloat64;
+import opendap.dap.DInt16;
+import opendap.dap.DSequence;
+import opendap.dap.DString;
+import opendap.dap.DataDDS;
+import opendap.dap.NoSuchVariableException;
 
 /**
  * A <code>OpendapQueryAgent</code> uses OPeNDAP to query a

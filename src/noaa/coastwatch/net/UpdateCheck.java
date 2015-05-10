@@ -19,12 +19,14 @@ package noaa.coastwatch.net;
 
 // Imports
 // -------
-import java.net.*;
-import java.io.*;
-import java.util.*;
-import java.util.prefs.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Date;
 import java.util.prefs.Preferences;
-import noaa.coastwatch.tools.*;
+import noaa.coastwatch.tools.ToolServices;
 
 /**
  * The <code>UpdateCheck</code> class checks for updates of the

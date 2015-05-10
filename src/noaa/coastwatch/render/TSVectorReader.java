@@ -27,10 +27,19 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import noaa.coastwatch.util.*;
+import java.io.DataInput;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
+import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.LineFeatureSource;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthLocation;
 
 /**
  * The TeraScan vector reader class reads databases in the SeaSpace

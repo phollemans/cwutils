@@ -35,10 +35,24 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.PolygonFeature;
+import noaa.coastwatch.render.PolygonFeatureSource;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthLocation;
 
 /**
  * The binned GSHHS reader class reads Global Self-consistent

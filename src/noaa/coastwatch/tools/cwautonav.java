@@ -25,15 +25,26 @@ package noaa.coastwatch.tools;
 
 // Imports
 // --------
-import java.util.*;
-import java.awt.geom.*;
-import java.io.*;
-import java.text.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import jargs.gnu.*;
-import jargs.gnu.CmdLineParser.*;
+import jargs.gnu.CmdLineParser;
+import jargs.gnu.CmdLineParser.Option;
+import jargs.gnu.CmdLineParser.OptionException;
+import java.awt.geom.AffineTransform;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.tools.ToolServices;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.NavigationOffsetEstimator;
+import noaa.coastwatch.util.trans.Datum;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * <p>The autonavigation tool automatically determines a navigation

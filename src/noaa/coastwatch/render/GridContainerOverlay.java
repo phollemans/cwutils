@@ -20,9 +20,9 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.util.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
+import java.util.List;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.util.Grid;
 
 /**
  * The <code>GridContainerOverlay</code> interface marks overlays

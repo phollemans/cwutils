@@ -18,7 +18,7 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import ucar.nc2.dataset.*;
+import ucar.nc2.dataset.NetcdfDataset;
 
 /**
  * The NetCDF scientific dataset (SD) interface sets the methods required

@@ -25,15 +25,26 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.tile.TilingScheme.*;
-import ucar.nc2.*;
-import ucar.nc2.dataset.*;
-import ucar.ma2.*;
-import ncsa.hdf.object.*;
-import javax.swing.tree.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+import ncsa.hdf.object.Dataset;
+import ncsa.hdf.object.Datatype;
+import ncsa.hdf.object.FileFormat;
+import ncsa.hdf.object.HObject;
+import noaa.coastwatch.io.CachedGrid;
+import noaa.coastwatch.io.NCReader;
+import noaa.coastwatch.io.tile.TilingScheme.Tile;
+import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
+import noaa.coastwatch.util.Grid;
+import ucar.ma2.InvalidRangeException;
+import ucar.nc2.NetcdfFile;
+import ucar.nc2.Variable;
+import ucar.nc2.dataset.NetcdfDataset;
 
 /**
  * The <code>NCCachedGrid</code> class is a cached grid that understands how to
@@ -317,7 +328,7 @@ public class NCCachedGrid
 
     // Set read length
     // ---------------
-    int[] dataDims = tiling.getTileDimensions(pos);
+    int[] dataDims = pos.getDimensions();
     int[] length = new int[varRank];
     Arrays.fill (length, 1);
     length[rowIndex] = dataDims[ROWS];

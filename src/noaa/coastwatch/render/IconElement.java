@@ -19,12 +19,21 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.image.*;
-import javax.imageio.*;
-import java.net.*;
-import java.io.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.Area;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
+import noaa.coastwatch.render.GraphicsServices;
+import noaa.coastwatch.render.PictureElement;
 
 /**
  * An icon element is a picture element that is rendered from image

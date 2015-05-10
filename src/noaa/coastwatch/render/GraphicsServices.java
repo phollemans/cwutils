@@ -22,8 +22,12 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import com.lowagie.text.pdf.*;
+import com.lowagie.text.pdf.PdfGraphics2D;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.Rectangle;
 
 /**
  * The graphics services class defines various static methods relating

@@ -18,8 +18,10 @@ package noaa.coastwatch.tools;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * The <code>CleanupHook</code> class may be used by programs to clean

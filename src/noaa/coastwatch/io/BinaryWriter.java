@@ -21,9 +21,16 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.nio.*;
-import noaa.coastwatch.util.*;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteOrder;
+import java.util.List;
+import noaa.coastwatch.io.EarthDataWriter;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
 
 /**
  * A binary writer is an Earth data writer that writes variable

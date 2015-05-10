@@ -28,12 +28,26 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
-import java.io.*;
-import ucar.nc2.*;
-import ucar.nc2.dataset.*;
-import ucar.ma2.*;
-import noaa.coastwatch.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.GridSubsetReader;
+import noaa.coastwatch.io.IOServices;
+import noaa.coastwatch.io.NCSD;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.Grid;
+import ucar.ma2.InvalidRangeException;
+import ucar.nc2.Attribute;
+import ucar.nc2.NetcdfFile;
+import ucar.nc2.Variable;
+import ucar.nc2.dataset.CoordinateSystem;
+import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.dataset.VariableDS;
 
 /** 
  * The <code>NCReader</code> class is the base class for readers that
@@ -107,7 +121,7 @@ public abstract class NCReader
     List attList = dataset.getGlobalAttributes();
     for (Iterator iter = attList.iterator(); iter.hasNext();) {
       Attribute att = (Attribute) iter.next();
-      rawMetadataMap.put (att.getName(), convertAttributeValue (att, false));
+      rawMetadataMap.put (att.getShortName(), convertAttributeValue (att, false));
     } // for
 
   } // NCReader constructor

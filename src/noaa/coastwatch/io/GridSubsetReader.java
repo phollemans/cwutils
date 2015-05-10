@@ -17,8 +17,8 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import noaa.coastwatch.util.*;
+import java.io.IOException;
+import noaa.coastwatch.util.Grid;
 
 /** 
  * The <code>GridSubsetReader</code> is an interface that any {@link

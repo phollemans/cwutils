@@ -22,11 +22,15 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.image.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import noaa.coastwatch.render.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
+import java.awt.image.WritableRaster;
+import javax.swing.JPanel;
+import noaa.coastwatch.render.EnhancementFunction;
+import noaa.coastwatch.render.LinearEnhancement;
+import noaa.coastwatch.render.Palette;
 
 /**
  * A palette panel displays a color palette graphically as a stripe
@@ -151,7 +155,7 @@ public class PalettePanel
    *
    * @param func the enhancement function.
    *
-   * @see ColorEnhancement
+   * @see noaa.coastwatch.render.ColorEnhancement
    */   
   public void setFunction (
     EnhancementFunction func

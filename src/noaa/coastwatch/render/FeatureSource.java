@@ -18,9 +18,9 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import noaa.coastwatch.util.*;
+import java.io.IOException;
+import java.util.Iterator;
+import noaa.coastwatch.util.EarthArea;
 
 /**
  * The <code>FeatureSource</code> interface provides methods

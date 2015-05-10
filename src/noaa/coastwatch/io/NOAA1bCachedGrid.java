@@ -25,13 +25,16 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.text.*;
-import java.io.*;
-import java.util.*;
-import java.lang.reflect.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.tile.TilingScheme.*;
-import noaa.coastwatch.io.NOAA1bReader.*;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import noaa.coastwatch.io.CachedGrid;
+import noaa.coastwatch.io.NOAA1bReader;
+import noaa.coastwatch.io.NOAA1bReader.ScanLine;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
+import noaa.coastwatch.io.tile.TilingScheme.Tile;
+import noaa.coastwatch.util.Grid;
 
 /**
  * The NOAA1b cached grid class is a cached grid that understands how
@@ -192,7 +195,7 @@ public class NOAA1bCachedGrid
 
     // Create data array
     // -----------------
-    int[] dataDims = tiling.getTileDimensions(pos);
+    int[] dataDims = pos.getDimensions();
     int dataValues = dataDims[ROWS]*dataDims[COLS];
     Object data = Array.newInstance (varClass, dataValues);
     byte[] byteData = (varClass.equals (Byte.TYPE) ? (byte[]) data : null);

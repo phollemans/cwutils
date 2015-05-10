@@ -20,8 +20,15 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import noaa.coastwatch.render.BinnedGSHHSLineReader;
+import noaa.coastwatch.render.BinnedGSHHSReader;
+import noaa.coastwatch.render.HDFGSHHSLineReader;
+import noaa.coastwatch.render.HDFGSHHSReader;
+import noaa.coastwatch.render.OpendapGSHHSLineReader;
+import noaa.coastwatch.render.OpendapGSHHSReader;
 
 /**
  * A <code>BinnedGSHHSReaderFactory</code> creates instances of

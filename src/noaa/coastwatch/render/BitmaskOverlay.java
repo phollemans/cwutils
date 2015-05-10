@@ -34,13 +34,16 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.image.*;
-import java.util.*;
+import java.awt.Color;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
-import java.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.GridContainerOverlay;
+import noaa.coastwatch.render.MaskOverlay;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.Grid;
 
 /**
  * A <code>BitmaskOverlay</code> annotates a data view using a

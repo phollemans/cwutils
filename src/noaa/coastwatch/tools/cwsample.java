@@ -27,14 +27,31 @@ package noaa.coastwatch.tools;
 
 // Imports
 // --------
-import java.util.*;
-import java.text.*;
-import java.io.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import jargs.gnu.*;
-import jargs.gnu.CmdLineParser.*;
+import jargs.gnu.CmdLineParser;
+import jargs.gnu.CmdLineParser.Option;
+import jargs.gnu.CmdLineParser.OptionException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.io.SimpleParser;
+import noaa.coastwatch.tools.ToolServices;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.Datum;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * <p>The sampling tool extracts data values at specified Earth

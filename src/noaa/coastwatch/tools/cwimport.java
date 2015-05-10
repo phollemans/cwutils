@@ -30,13 +30,21 @@ package noaa.coastwatch.tools;
 
 // Imports
 // --------
-import java.io.*;
-import java.util.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import jargs.gnu.*;
-import jargs.gnu.CmdLineParser.*;
+import jargs.gnu.CmdLineParser;
+import jargs.gnu.CmdLineParser.Option;
+import jargs.gnu.CmdLineParser.OptionException;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import noaa.coastwatch.io.CWHDFReader;
+import noaa.coastwatch.io.CWHDFWriter;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.tools.CleanupHook;
+import noaa.coastwatch.tools.ToolServices;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * <p>The import tool translates Earth data into CoastWatch HDF format.</p> 

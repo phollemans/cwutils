@@ -22,7 +22,9 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
+import java.util.Arrays;
+import java.util.Random;
+import noaa.coastwatch.util.DataIterator;
 
 /**
  * The statistics class is a container for various data variable

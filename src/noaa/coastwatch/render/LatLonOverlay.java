@@ -37,10 +37,17 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.util.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Stroke;
+import java.util.Iterator;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.LabeledLineOverlay;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.Datum;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>LatLonOverlay</code> class annotates an {@link

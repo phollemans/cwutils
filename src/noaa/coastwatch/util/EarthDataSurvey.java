@@ -18,8 +18,10 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.text.*;
-import noaa.coastwatch.util.trans.*;
+import java.text.NumberFormat;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.Statistics;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>EarthDataSurvey</code> class is used to perform surveys

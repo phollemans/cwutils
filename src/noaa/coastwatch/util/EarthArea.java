@@ -27,8 +27,12 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.util.BitSet;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The Earth area class represents irregularly shaped areas on a

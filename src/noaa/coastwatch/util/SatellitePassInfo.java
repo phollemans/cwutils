@@ -19,13 +19,13 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.awt.*;
-import java.util.*;
-import java.io.*;
-import java.text.*;
-import java.net.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.net.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import noaa.coastwatch.net.ServerQuery;
+import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.SatelliteDataInfo;
 
 /**
  * A satellite pass info object holds information about one pass

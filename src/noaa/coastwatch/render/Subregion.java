@@ -18,10 +18,9 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /*
  * A <code>Subregion</code> holds position and geographic extent

@@ -21,7 +21,7 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import noaa.coastwatch.util.*;
+import noaa.coastwatch.render.LinearEnhancement;
 
 /**
  * A step enhancement is an enhancement function formed by a number of

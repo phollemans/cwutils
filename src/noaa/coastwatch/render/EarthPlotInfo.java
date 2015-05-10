@@ -28,17 +28,35 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.text.*;
-import java.util.*;
-import java.util.List;
-import java.awt.geom.*;
-import java.awt.font.*;
-import java.awt.image.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.tools.*;
-import noaa.coastwatch.gui.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.text.DecimalFormat;
+import java.util.Date;
+import java.util.Vector;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.render.EarthContextElement;
+import noaa.coastwatch.render.GraphicsServices;
+import noaa.coastwatch.render.IconElement;
+import noaa.coastwatch.render.Legend;
+import noaa.coastwatch.render.TextElement;
+import noaa.coastwatch.util.DateFormatter;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.GCTP;
+import noaa.coastwatch.util.MetadataServices;
+import noaa.coastwatch.util.SatelliteDataInfo;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.MapProjection;
+import noaa.coastwatch.tools.cwinfo;
 
 /**
  * A Earth plot information legend annotates an Earth data view with

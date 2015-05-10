@@ -18,14 +18,30 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.util.Iterator;
 import java.util.List;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-import noaa.coastwatch.render.*;
+import javax.swing.Action;
+import javax.swing.DefaultListModel;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.render.EarthDataOverlay;
 
 /**
  * The <code>OverlayGroupSavePanel</code> shows a list of overlays

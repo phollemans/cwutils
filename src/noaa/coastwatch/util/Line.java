@@ -18,7 +18,9 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.text.*;
+import java.text.NumberFormat;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
 
 /**
  * The 1D line class is a special form of data variable with

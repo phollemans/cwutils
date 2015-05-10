@@ -18,11 +18,26 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.lang.reflect.*;
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.*;
-import opendap.dap.*;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import noaa.coastwatch.render.BinnedGSHHSReader;
+import opendap.dap.DArray;
+import opendap.dap.DArrayDimension;
+import opendap.dap.DConnect;
+import opendap.dap.DDS;
+import opendap.dap.DVector;
+import opendap.dap.DataDDS;
+import opendap.dap.NoSuchVariableException;
+import opendap.dap.PrimitiveVector;
 
 /**
  * The <code>OpendapGSHHSReader</code> extends

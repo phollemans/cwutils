@@ -18,7 +18,8 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * The window monitor class performs a system exit when it receives the

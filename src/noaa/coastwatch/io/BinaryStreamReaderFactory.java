@@ -18,7 +18,9 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import noaa.coastwatch.io.BinaryStreamReader;
 
 /**
  * The <code>BinaryStreamReaderFactory</code> class handles

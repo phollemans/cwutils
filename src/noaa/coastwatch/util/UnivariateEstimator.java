@@ -18,7 +18,8 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import Jama.*;
+import Jama.Matrix;
+import noaa.coastwatch.util.Function;
 
 /**
  * A univariate estimator approximates the value of a function of one

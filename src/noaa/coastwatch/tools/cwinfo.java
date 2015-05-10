@@ -54,20 +54,37 @@ package noaa.coastwatch.tools;
 
 // Imports
 // --------
-import java.util.*;
-import java.text.*;
-import java.io.*;
-import java.lang.reflect.*;
-import java.awt.geom.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import jargs.gnu.*;
-import jargs.gnu.CmdLineParser.*;
-import ucar.nc2.dataset.*;
+import jargs.gnu.CmdLineParser;
+import jargs.gnu.CmdLineParser.Option;
+import jargs.gnu.CmdLineParser.OptionException;
+import java.awt.geom.AffineTransform;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.tools.ToolServices;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.DateFormatter;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.MetadataServices;
+import noaa.coastwatch.util.SatelliteDataInfo;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.MapProjection;
 import ucar.ma2.Array;
-import ucar.nc2.units.DateUnit;
 import ucar.nc2.constants.AxisType;
+import ucar.nc2.dataset.CoordinateAxis;
+import ucar.nc2.dataset.CoordinateSystem;
+import ucar.nc2.units.DateUnit;
 
 /**
  * <p>The information utility dumps earth data information in a

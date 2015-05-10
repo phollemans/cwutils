@@ -18,14 +18,21 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.filechooser.*;
+import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
-import java.beans.*;
-import java.io.*;
-import java.util.*;
+import noaa.coastwatch.gui.SimpleFileFilter;
+import noaa.coastwatch.gui.TestContainer;
 
 /** 
  * The <code>DynamicExtensionFileChooser</code> class allows the user

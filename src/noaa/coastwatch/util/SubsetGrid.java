@@ -18,10 +18,8 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.text.*;
-import java.awt.geom.*;
-import java.lang.reflect.*;
-import java.util.*;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.Grid;
 
 /**
  * The <code>SubsetGrid</code> class uses an existing

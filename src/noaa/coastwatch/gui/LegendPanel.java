@@ -18,9 +18,12 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import javax.swing.*;
-import noaa.coastwatch.render.*;
+import java.awt.AlphaComposite;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import javax.swing.JPanel;
+import noaa.coastwatch.render.Legend;
 
 /**
  * The <code>LegendPanel</code> class displays a {@link

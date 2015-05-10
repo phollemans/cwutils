@@ -20,8 +20,10 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
-import java.lang.reflect.*;
+import java.lang.reflect.Array;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * The <code>MetadataServices</code> class defines various static

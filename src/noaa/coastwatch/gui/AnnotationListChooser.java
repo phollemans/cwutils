@@ -28,16 +28,45 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-import java.beans.*;
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Shape;
+import java.awt.Stroke;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.gui.visual.*;
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import noaa.coastwatch.gui.AbstractOverlayListPanel;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.TabComponent;
+import noaa.coastwatch.gui.visual.VisualColor;
+import noaa.coastwatch.gui.visual.VisualFont;
+import noaa.coastwatch.gui.visual.VisualInteger;
+import noaa.coastwatch.gui.visual.VisualStroke;
+import noaa.coastwatch.render.EarthDataOverlay;
+import noaa.coastwatch.render.FilledShapeOverlay;
+import noaa.coastwatch.render.ShapeOverlay;
+import noaa.coastwatch.render.TextElement;
+import noaa.coastwatch.render.TextOverlay;
 
 /**
  * The <code>AnnotationListChooser</code> class is a panel that allows

@@ -18,10 +18,17 @@ package noaa.coastwatch.render;
 
 // Import
 // ------
-import java.awt.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.geom.AffineTransform;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.GCTP;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform2D;
+import noaa.coastwatch.util.trans.MapProjection;
+import noaa.coastwatch.util.trans.MapProjectionFactory;
+import noaa.coastwatch.util.trans.PolarStereographicProjection;
+import noaa.coastwatch.util.trans.SpheroidConstants;
+import noaa.coastwatch.util.trans.SwathProjection;
 
 ////////////////////////////////////////////////////////////////////////
 

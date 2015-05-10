@@ -13,7 +13,7 @@
            2014/08/26, PFH
            - Changes: Cleaned up implementation of finalize() to call
              super no matter what happens.
-           - Issue: The original finalize wasn't written correctly.
+           - Issue: The original finalize() wasn't written correctly.
 
   CoastWatch Software Library and Utilities
   Copyright 2004-2014, USDOC/NOAA/NESDIS CoastWatch
@@ -27,9 +27,11 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import noaa.coastwatch.util.*;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
 
 /**
  * All Earth data writers obtain Earth data from Earth
@@ -55,7 +57,7 @@ public abstract class EarthDataWriter {
   protected EarthDataInfo info;
 
   /** Earth data variables. */
-  protected List variables;
+  protected List<DataVariable> variables;
 
   /** The data destination. */
   private String destination;
@@ -66,9 +68,7 @@ public abstract class EarthDataWriter {
    */
   protected int writeVariables;
 
-  /** 
-   * The current variable progress as a value in the range [0..100].
-   */
+  /** The current variable progress as a value in the range [0..100]. */
   protected int writeProgress;
 
   /** The name of the variable currently being written. */
@@ -148,7 +148,7 @@ public abstract class EarthDataWriter {
   ) {
     
     this.destination = destination;
-    variables = new ArrayList();
+    variables = new ArrayList<DataVariable>();
 
   } // EarthDataWriter constructor
 

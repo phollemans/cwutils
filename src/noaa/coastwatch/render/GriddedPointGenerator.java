@@ -18,10 +18,18 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.util.*;
-import java.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import noaa.coastwatch.render.PointFeature;
+import noaa.coastwatch.render.PointFeatureSource;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform2D;
 
 /**
  * A <code>GriddedPointGenerator</code> creates point features from a

@@ -18,11 +18,14 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import java.awt.image.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.IndexColorModel;
+import noaa.coastwatch.render.ColorEnhanced;
+import noaa.coastwatch.render.EnhancementFunction;
+import noaa.coastwatch.render.Palette;
+import noaa.coastwatch.render.WindBarbSymbol;
+import noaa.coastwatch.util.trans.EarthTransform2D;
 
 /**
  * A <code>ColorWindBarbSymbol</code> is similar to a normal wind

@@ -46,15 +46,48 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.image.*;
-import java.util.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Arc2D;
+import java.awt.geom.Area;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.io.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.io.*;
+import noaa.coastwatch.render.BinnedGSHHSReader;
+import noaa.coastwatch.render.BinnedGSHHSReaderFactory;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.GraphicsServices;
+import noaa.coastwatch.render.ImageTransform;
+import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.LineFeatureSource;
+import noaa.coastwatch.render.PictureElement;
+import noaa.coastwatch.render.TextElement;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.GCTP;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.SolarZenith;
+import noaa.coastwatch.util.trans.Datum;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.EarthTransform2D;
+import noaa.coastwatch.util.trans.MapProjection;
+import noaa.coastwatch.util.trans.MapProjectionFactory;
+import noaa.coastwatch.util.trans.ProjectionConstants;
+import noaa.coastwatch.util.trans.SpheroidConstants;
+import noaa.coastwatch.util.trans.SwathProjection;
 
 /**
  * The Earth context element is a picture element that renders a

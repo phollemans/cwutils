@@ -18,11 +18,14 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import javax.swing.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import noaa.coastwatch.render.PointFeatureSymbol;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform2D;
+import noaa.coastwatch.util.trans.OrthographicProjection;
 
 /**
  * A <code>DirectionSymbol</code> is a <code>PointFeatureSymbol</code>

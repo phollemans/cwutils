@@ -31,10 +31,12 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.text.*;
-import java.awt.geom.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.awt.geom.AffineTransform;
+import java.lang.reflect.Array;
+import java.text.NumberFormat;
+import java.util.Map;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
 
 /**
  * The 2D grid class is a special form of data variable with

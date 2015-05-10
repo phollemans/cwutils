@@ -22,13 +22,20 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.table.*;
-import javax.swing.event.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.net.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import javax.swing.event.TableModelEvent;
+import javax.swing.table.AbstractTableModel;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.net.ServerQuery;
+import noaa.coastwatch.util.SatellitePassInfo;
 
 /**
  * The satellite pass table model contains satellite pass data as

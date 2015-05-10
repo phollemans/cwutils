@@ -26,12 +26,17 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.util.*;
-import java.awt.*;
-import java.awt.image.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.GCTP;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.MapProjectionFactory;
 
 /**
  * The solid background class is an Earth data view that creates a

@@ -36,16 +36,40 @@ package noaa.coastwatch.tools;
 
 // Imports
 // --------
-import java.io.*;
-import java.util.*;
-import java.text.*;
-import java.lang.reflect.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import jargs.gnu.*;
-import jargs.gnu.CmdLineParser.*;
-import org.nfunk.jep.*;
+import jargs.gnu.CmdLineParser;
+import jargs.gnu.CmdLineParser.Option;
+import jargs.gnu.CmdLineParser.OptionException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import noaa.coastwatch.io.CWHDFReader;
+import noaa.coastwatch.io.CWHDFWriter;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.io.HDFCachedGrid;
+import noaa.coastwatch.tools.CleanupHook;
+import noaa.coastwatch.tools.ToolServices;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.ExpressionParserFactory;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform;
+import org.nfunk.jep.ASTVarNode;
+import org.nfunk.jep.JEP;
+import org.nfunk.jep.Node;
 
 /**
  * <p>The math tool combines Earth data using a mathematical expression.</p>

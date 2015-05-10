@@ -17,7 +17,9 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.SplashScreen;
 
 /**
  * The <code>SplashScreenManager</code> class handles updates to the 

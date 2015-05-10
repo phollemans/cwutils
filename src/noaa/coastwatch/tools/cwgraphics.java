@@ -24,17 +24,31 @@ package noaa.coastwatch.tools;
 
 // Imports
 // --------
-import java.awt.*;
-import java.awt.image.*;
-import java.util.*;
+import jargs.gnu.CmdLineParser;
+import jargs.gnu.CmdLineParser.Option;
+import jargs.gnu.CmdLineParser.OptionException;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
-import java.text.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.render.*;
-import jargs.gnu.*;
-import jargs.gnu.CmdLineParser.*;
+import noaa.coastwatch.io.CWHDFReader;
+import noaa.coastwatch.io.CWHDFWriter;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.io.HDFCachedGrid;
+import noaa.coastwatch.render.CoastOverlay;
+import noaa.coastwatch.render.EarthDataOverlay;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.LatLonOverlay;
+import noaa.coastwatch.render.PoliticalOverlay;
+import noaa.coastwatch.render.SolidBackground;
+import noaa.coastwatch.tools.ToolServices;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * <p>The graphics tool creates Earth data annotation graphics.</p>

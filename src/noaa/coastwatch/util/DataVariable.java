@@ -60,10 +60,17 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
-import java.text.*;
-import java.lang.reflect.*;
-import ucar.units.*;
+import java.lang.reflect.Array;
+import java.text.NumberFormat;
+import java.util.Arrays;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.MetadataContainer;
+import noaa.coastwatch.util.Statistics;
+import noaa.coastwatch.util.StrideLocationIterator;
+import noaa.coastwatch.util.UnitFactory;
+import noaa.coastwatch.util.ValueSource;
+import ucar.units.ConversionException;
+import ucar.units.Unit;
 
 /**
  * A data variable is a container class to hold data values

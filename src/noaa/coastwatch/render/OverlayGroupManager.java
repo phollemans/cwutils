@@ -19,11 +19,15 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.util.*;
-import java.io.*;
-import java.beans.*;
-import javax.swing.event.*;
-import noaa.coastwatch.io.*;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import javax.swing.event.SwingPropertyChangeSupport;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.SerializedObjectManager;
+import noaa.coastwatch.render.EarthDataOverlay;
+import noaa.coastwatch.render.GridContainerOverlay;
 
 /** 
  * The <code>OverlayGroupManager</code> class can be used to save,

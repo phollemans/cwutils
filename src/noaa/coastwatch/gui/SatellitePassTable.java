@@ -18,10 +18,13 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.event.*;
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.JTableHeader;
+import noaa.coastwatch.util.SatellitePassInfo;
 
 /**
  * The satellite pass table is a Swing table that holds satellite pass

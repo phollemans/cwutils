@@ -32,7 +32,7 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.awt.geom.*;
+import java.awt.geom.AffineTransform;
 
 /**
  * A data location represents a set of coordinates that uniquely

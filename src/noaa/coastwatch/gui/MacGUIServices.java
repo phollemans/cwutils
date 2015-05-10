@@ -18,10 +18,15 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.util.*;
-import java.io.*;
-import java.awt.event.*;
-import com.apple.eawt.*;
+import com.apple.eawt.AppEvent;
+import com.apple.eawt.Application;
+import com.apple.eawt.OpenFilesHandler;
+import com.apple.eawt.QuitHandler;
+import com.apple.eawt.QuitResponse;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.List;
 
 /**
  * The <code>MacGUIServices</code> class defines various static

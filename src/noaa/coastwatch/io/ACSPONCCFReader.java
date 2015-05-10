@@ -38,17 +38,31 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
-import java.text.*;
-import java.awt.geom.*;
-import java.io.*;
-import ucar.nc2.*;
-import ucar.nc2.dataset.*;
-import ucar.ma2.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.io.tile.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import noaa.coastwatch.io.NCReader;
+import noaa.coastwatch.io.tile.NCTileSource;
+import noaa.coastwatch.io.tile.TileCachedGrid;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.DateFormatter;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.SatelliteDataInfo;
+import noaa.coastwatch.util.TimePeriod;
+import noaa.coastwatch.util.trans.DataProjection;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.SwathProjection;
+import ucar.ma2.DataType;
+import ucar.nc2.NetcdfFile;
+import ucar.nc2.Variable;
+import ucar.nc2.dataset.NetcdfDataset;
 
 /** 
  * The <code>ACSPONCCFReader</code> class reads Java NetCDF accessible

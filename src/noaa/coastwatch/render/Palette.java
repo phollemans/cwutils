@@ -27,15 +27,8 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.image.*;
-import java.io.*;
-import java.util.*;
-import java.util.List;
-import javax.xml.parsers.*;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
-import noaa.coastwatch.io.*;
+import java.awt.Color;
+import java.awt.image.IndexColorModel;
 
 /**
  * The <code>Palette</code> allows the user to associate a name and

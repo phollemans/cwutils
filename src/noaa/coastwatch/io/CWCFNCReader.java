@@ -1,18 +1,19 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CWNCReader.java
+     FILE: CWCFNCReader.java
   PURPOSE: Reads CoastWatch-style data through the NetCDF interface.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/07/04
-  CHANGES: 2006/02/16, PFH, moved coordinate variable check to constructor
-           2006/05/28, PFH, modified to use MapProjectionFactory
-           2006/06/14, PFH, modified to ignore grids with odd sizes
-           2006/11/03, PFH, changed getPreview(int) to getPreviewImpl(int)
-           2010/02/14, PFH, modified to use new Java netCDF 4.1 library
-           2013/06/21, PFH, updated to use Variable.getShortName()
- 
+   AUTHOR: X. Liu
+     DATE: 2012/06/27
+  CHANGES: 2013/06/21, PFH, updated to use Variable.getShortName()
+           2014/04/09, PFH
+           - Changes: Removed use of setIsCFConventions in DataVariable.
+           - Issue: The use of the method was never fully implemented in 
+             DataVariable so rather than continuing its use, we decided
+             to remove it and re-arrange the scaling and offset for CF
+             conventions before passing into the Grid constructor.
+  
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -24,7 +25,6 @@ package noaa.coastwatch.io;
 // Imports
 // -------
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
@@ -43,33 +43,33 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.Line;
 import noaa.coastwatch.util.SatelliteDataInfo;
 import noaa.coastwatch.util.TimePeriod;
+import noaa.coastwatch.util.trans.DataProjection;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.EarthTransform2D;
 import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
 import ucar.ma2.DataType;
 import ucar.nc2.Attribute;
-import ucar.nc2.Dimension;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.NetcdfDataset;
 
 /** 
- * The <code>CWNCReader</code> class reads Java NetCDF accessible
+ * The <code>CWCFNCReader</code> class reads Java NetCDF accessible
  * datasets and uses the CoastWatch HDF metadata conventions to parse
  * the attribute and variable data.
  *
- * @author Peter Hollemans
- * @since 3.2.0
+ * @author Xiaoming Liu
+ * @since 3.3.0
  */
-public class CWNCReader 
+public class CWCFNCReader
   extends NCReader {
 
   // Constants
   // ---------
 
   /** The data format description. */
-  private static final String DATA_FORMAT = "CoastWatch HDF/NC";
+  private static final String DATA_FORMAT = "CoastWatch NC4-CF";
 
   /** Number of milliseconds in a day. */
   private static final long MSEC_PER_DAY = (1000L * 3600L * 24L);
@@ -101,7 +101,7 @@ public class CWNCReader
     // ----------------------
     try {
       String att = 
-        dataset.findGlobalAttribute ("cwhdf_version").getStringValue();
+        dataset.findGlobalAttribute ("cw:cwhdf_version").getStringValue();
       return (Double.parseDouble (att));
     } // try
     catch (Exception e) {
@@ -117,10 +117,10 @@ public class CWNCReader
 
     // Get simple attributes
     // ---------------------
-    String sat = (String) getAttribute ("satellite");
-    String sensor = (String) getAttribute ("sensor");
-    String source = (String) getAttribute ("data_source");
-    String origin = (String) getAttribute ("origin");
+    String sat = (String) getAttribute ("cw:satellite");
+    String sensor = (String) getAttribute ("cw:sensor");
+    String source = (String) getAttribute ("source");
+    String origin = (String) getAttribute ("cw:origin");
     if (origin == null) origin = "unknown";
     String history = (String) getAttribute ("history");
     if (history == null) history = "";
@@ -157,10 +157,10 @@ public class CWNCReader
 
     // Read data
     // ---------
-    int[] passDateArray = (int[]) getAttributeAsArray ("pass_date");
-    double[] startTimeArray = (double[]) getAttributeAsArray ("start_time");
+    int[] passDateArray = (int[]) getAttributeAsArray ("cw:pass_date");
+    double[] startTimeArray = (double[]) getAttributeAsArray ("cw:start_time");
     int periods = passDateArray.length;
-    double[] extentArray = (double[]) getAttributeAsArray ("temporal_extent");
+    double[] extentArray = (double[]) getAttributeAsArray ("cw:temporal_extent");
     if (extentArray == null) extentArray = new double[periods];
     if (passDateArray.length != startTimeArray.length ||
       startTimeArray.length != extentArray.length)
@@ -190,7 +190,8 @@ public class CWNCReader
     // -------------------
     double version = getMetaVersion();
     String type;
-    if (version >= 3) type = (String) getAttribute ("projection_type");
+    //if (version >= 3) type = (String) getAttribute ("cw:projection");
+    if (version >= 3) type = "mapped";
     else type = MapProjection.DESCRIPTION;
 
     // Read map projection
@@ -199,15 +200,15 @@ public class CWNCReader
 
       // Get GCTP parameters
       // -------------------
-      int system = ((Integer) getAttribute ("gctp_sys")).intValue();
-      int zone = ((Integer) getAttribute ("gctp_zone")).intValue();
-      double[] parameters = (double[]) getAttribute ("gctp_parm");
-      int spheroid = ((Integer) getAttribute ("gctp_datum")).intValue();
+      int system = ((Integer) getAttribute ("cw:gctp_sys")).intValue();
+      int zone = ((Integer) getAttribute ("cw:gctp_zone")).intValue();
+      double[] parameters = (double[]) getAttribute ("cw:gctp_parm");
+      int spheroid = ((Integer) getAttribute ("cw:gctp_datum")).intValue();
 
       // Get affine transform
       // --------------------
       AffineTransform affine;
-      double[] matrix = (double[]) getAttribute ("et_affine");
+      double[] matrix = (double[]) getAttribute ("cw:et_affine");
       if (version >= 3)
         affine = new AffineTransform (matrix);
       else {
@@ -223,20 +224,30 @@ public class CWNCReader
 
       // Get dimensions
       // --------------
-      int rows = ((Integer) getAttribute ("rows")).intValue();
-      int cols = ((Integer) getAttribute ("cols")).intValue();
+      EarthTransform2D trans = null;
+      int cols = 0;
+      int rows = 0;
+      try {
+    	  DataVariable lat = getVariable ("latitude");
+          cols = lat.getDimensions()[Grid.COLS];
+          rows = lat.getDimensions()[Grid.ROWS];
+          if(rows != 0 && cols != 0){
+    		  trans = MapProjectionFactory.getInstance().create (system, zone, 
+    				  parameters, spheroid, new int[] {rows, cols}, affine);
+    	  }
+    	  else{
+    		  DataVariable lon = getVariable ("longitude");
+    		  trans = new DataProjection (lat, lon);
+    	  }
+        } // try
+        catch (Exception e) {
+          System.err.println (this.getClass() + 
+            ": Warning: Problems encountered using Earth location data");
+          e.printStackTrace();
+        } // catch
 
       // Create map projection
       // ---------------------
-      EarthTransform2D trans;
-      try {
-        trans = MapProjectionFactory.getInstance().create (system, zone, 
-          parameters, spheroid, new int[] {rows, cols}, affine);
-      } // try
-      catch (NoninvertibleTransformException e) {
-        throw new RuntimeException ("Got noninvertible transform error " +
-                                    "initializing map projection");
-      } // catch
 
       // Attach metadata
       // ---------------
@@ -257,32 +268,26 @@ public class CWNCReader
   /** Gets the list of variable names. */
   private String[] getVariableNames () {
 
-    // Get variable names
-    // ------------------
-    List variableList = dataset.getReferencedFile().getVariables();
-    List nameList = new ArrayList();
-    int[] dims = info.getTransform().getDimensions();
-    for (Iterator iter = variableList.iterator(); iter.hasNext(); ) {
-      Variable var = (Variable) iter.next();
+	    // Get variable names
+	    // ------------------
+	    List variableList = dataset.getReferencedFile().getVariables();
+	    List nameList = new ArrayList();
+	    for (Iterator iter = variableList.iterator(); iter.hasNext(); ) {
+	      Variable var = (Variable) iter.next();
 
-      // Check for coordinate variable
-      // -----------------------------
-      if (var.isCoordinateVariable()) continue;
+	      // Check for coordinate variable
+	      // -----------------------------
+	      if (var.isCoordinateVariable()) continue;
 
-      // Check for correct dimensions
-      // ----------------------------
-      if (var.getRank() == 2) {
-        if (var.getDimension (0).getLength() != dims[0] ||
-          var.getDimension (1).getLength() != dims[1]) continue;
-      } // if
+	      // Check for correct dimensions
+	      // ----------------------------
+	      if (var.getRank() >= 2 && !var.getShortName().equals("time_bounds")) {
+	    	  nameList.add (var.getShortName());
+	    	  
+	      } // if
+	    } // for
 
-      // Add name to list
-      // ----------------
-      nameList.add (var.getShortName());
-
-    } // for
-
-    return ((String[]) nameList.toArray (new String[]{}));
+	    return ((String[]) nameList.toArray (new String[]{}));
 
   } // getVariableNames
 
@@ -295,15 +300,16 @@ public class CWNCReader
    *
    * @throws IOException if an error occurred reading the metadata.
    */
-  public CWNCReader (
+  public CWCFNCReader (
     String name
   ) throws IOException {
 
     super (name);
-    info = getGlobalInfo();
     variables = getVariableNames();
+    info = getGlobalInfo();
+    if(info == null) throw new RuntimeException("no global info found");
 
-  } // CWNCReader constructor
+  } // CWCFNCReader constructor
 
   ////////////////////////////////////////////////////////////
 
@@ -347,23 +353,31 @@ public class CWNCReader
 
     // Get calibration
     // ---------------
-    double[] calInfo = new double[4];
-    int[] calType = new int[1];
     double[] scaling;
     try {
       Double scale = (Double) getAttribute (var, "scale_factor");
       Double offset = (Double) getAttribute (var, "add_offset");
       scaling = new double[] {scale.doubleValue(), offset.doubleValue()};
+      /** 
+       * We re-arrange the CF scaling conventions here into HDF:
+       *
+       *   y = a'x + b'      (CF)
+       *   y = (x - b)*a     (HDF)
+       *   => a = a'
+       *      b = -b'/a'
+       */
+      scaling[1] = -scaling[1]/scaling[0];
     } // try
     catch (Exception e) {
-      scaling = null;
+      scaling = new double[] {1.0, 0.0};
     } // catch
 
     // Get missing value
     // -----------------
     Object missing;
     try {
-      missing = getAttribute (var, "_FillValue");
+      //missing = getAttribute (var, "_FillValue");
+      missing = getAttribute (var, "missing_value");
     } // try
     catch (Exception e) {
       missing = null;
@@ -401,7 +415,7 @@ public class CWNCReader
     // -------------------------------------
     int digits = -1;
     try { 
-      digits = ((Integer) getAttribute (var, "fraction_digits")).intValue();
+      digits = ((Integer) getAttribute (var, "cw:fraction_digits")).intValue();
     } // try
     catch (Exception e) { }
 
@@ -445,7 +459,7 @@ public class CWNCReader
     AffineTransform nav = null;
     if (rank == 2) {
       try { 
-        double[] matrix  = (double[]) getAttribute (var, "nav_affine");
+        double[] matrix  = (double[]) getAttribute (var, "cw:nav_affine");
         nav = new AffineTransform (matrix);
       } // try
       catch (Exception e) { }
@@ -463,6 +477,11 @@ public class CWNCReader
         data, format, scaling, missing);
       if (nav != null) ((Grid) dataVar).setNavigation (nav);
     } // else if 
+    else if (rank == 4) {
+        dataVar = new Grid (name, longName, units, varDims[2], varDims[3], 
+          data, format, scaling, missing);
+        if (nav != null) ((Grid) dataVar).setNavigation (nav);
+      } // else if
     else {
       throw new UnsupportedEncodingException ("Unsupported rank = " + rank +
         " for " + name);
@@ -508,7 +527,8 @@ public class CWNCReader
 
   ////////////////////////////////////////////////////////////
 
-} // CWNCReader class
+} // CWCFNCReader class
 
 ////////////////////////////////////////////////////////////////////////
+
 

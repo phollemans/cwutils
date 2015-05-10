@@ -18,10 +18,17 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
+import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.LineFeatureSource;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthLocation;
 
 /**
  * The <code>BinnedGSHHSLineReader</code> class reads Global

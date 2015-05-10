@@ -33,11 +33,15 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
+import java.awt.Graphics2D;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
-import noaa.coastwatch.util.*;
+import noaa.coastwatch.render.AbstractFeature;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthLocation;
 
 /**
  * The <code>LineFeature</code> class holds a list of Earth location

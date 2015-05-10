@@ -71,13 +71,39 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.image.*;
-import java.awt.geom.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.util.Set;
+import noaa.coastwatch.render.EarthDataOverlay;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.GraphicsServices;
+import noaa.coastwatch.render.ImageTransform;
+import noaa.coastwatch.render.Legend;
+import noaa.coastwatch.render.OrientationAffineFactory;
+import noaa.coastwatch.render.Renderable;
+import noaa.coastwatch.render.Subregion;
+import noaa.coastwatch.render.TransparentOverlay;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.GCTP;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.EarthTransform2D;
+import noaa.coastwatch.util.trans.MapProjectionFactory;
 
 /**
  * The Earth data view class sets up a correspondence between 2D Earth

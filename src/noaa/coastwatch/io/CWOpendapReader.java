@@ -19,15 +19,44 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
-import java.text.*;
-import java.awt.geom.*;
-import java.io.*;
-import opendap.dap.*;
-import opendap.dap.Server.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.lang.reflect.Field;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import noaa.coastwatch.io.OpendapReader;
+import noaa.coastwatch.tools.cwinfo;
+import noaa.coastwatch.tools.cwstats;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.Line;
+import noaa.coastwatch.util.SatelliteDataInfo;
+import noaa.coastwatch.util.TimePeriod;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.EarthTransform2D;
+import noaa.coastwatch.util.trans.MapProjection;
+import noaa.coastwatch.util.trans.MapProjectionFactory;
+import opendap.dap.BaseType;
+import opendap.dap.DAS;
+import opendap.dap.DArray;
+import opendap.dap.DArrayDimension;
+import opendap.dap.DConnect;
+import opendap.dap.DDS;
+import opendap.dap.DVector;
+import opendap.dap.DataDDS;
+import opendap.dap.NoSuchAttributeException;
+import opendap.dap.NoSuchVariableException;
+import opendap.dap.PrimitiveVector;
+import opendap.dap.Server.InvalidParameterException;
 
 /** 
  * The <code>CWOpendapReader</code> class reads OPeNDAP

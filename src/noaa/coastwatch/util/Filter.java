@@ -18,7 +18,6 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
 
 /**
  * The filter interface provides a method for performing processing on

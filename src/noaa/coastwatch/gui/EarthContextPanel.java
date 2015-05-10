@@ -18,10 +18,15 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import javax.swing.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.util.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import javax.swing.JPanel;
+import noaa.coastwatch.render.EarthContextElement;
+import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.util.EarthLocation;
 
 /**
  * The Earth context panel displays an Earth context element.

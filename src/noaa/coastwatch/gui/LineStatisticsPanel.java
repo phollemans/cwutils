@@ -18,11 +18,16 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import javax.swing.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.render.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import noaa.coastwatch.gui.StatisticsPanel;
+import noaa.coastwatch.gui.XYPlotPanel;
+import noaa.coastwatch.render.DataColorScale;
+import noaa.coastwatch.util.Statistics;
 
 /**
  * The <code>LineStatisticsPanel</code> shows a simple data plot of

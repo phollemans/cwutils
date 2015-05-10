@@ -23,9 +23,10 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.trans.*;
+import java.util.ArrayList;
+import java.util.List;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>GridResampler</code> class performs generic data

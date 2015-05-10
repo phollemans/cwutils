@@ -20,11 +20,21 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.io.*;
-import javax.swing.*;
-import java.awt.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.tools.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Font;
+import java.io.PrintStream;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+import noaa.coastwatch.gui.PanelOutputStream;
+import noaa.coastwatch.gui.WindowMonitor;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.tools.cwinfo;
 
 /**
  * The <code>ReaderInfoPanel</code> class displays information from a 

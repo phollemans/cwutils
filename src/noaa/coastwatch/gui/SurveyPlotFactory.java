@@ -18,8 +18,14 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import javax.swing.*;
-import noaa.coastwatch.util.*;
+import javax.swing.JPanel;
+import noaa.coastwatch.gui.HistogramStatisticsPanel;
+import noaa.coastwatch.gui.LineStatisticsPanel;
+import noaa.coastwatch.util.BoxSurvey;
+import noaa.coastwatch.util.EarthDataSurvey;
+import noaa.coastwatch.util.LineSurvey;
+import noaa.coastwatch.util.PointSurvey;
+import noaa.coastwatch.util.PolygonSurvey;
 
 /** 
  * The <code>SurveyPlotFactory</code> creates data plot panels that

@@ -18,7 +18,8 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 
 /**
  * The renderable interface sets the methods for classes that render

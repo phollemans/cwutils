@@ -25,9 +25,14 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.geom.AffineTransform;
+import java.util.List;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.GridResampler;
+import noaa.coastwatch.util.LocationEstimator;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>InverseGridResampler</code> class performs generic data

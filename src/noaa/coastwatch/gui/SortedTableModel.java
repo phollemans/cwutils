@@ -18,10 +18,13 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.util.*;
-import javax.swing.*;
-import javax.swing.table.*;
-import javax.swing.event.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 
 /**
  * A <code>SortedTableModel</code> can be used to provide row

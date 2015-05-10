@@ -18,8 +18,9 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
-import noaa.coastwatch.net.*;
+import noaa.coastwatch.io.DataTransferAdapter;
+import noaa.coastwatch.io.DataTransferEvent;
+import noaa.coastwatch.net.Timeout;
 
 /**
  * A stall monitor is a data transfer listener that helps to handle

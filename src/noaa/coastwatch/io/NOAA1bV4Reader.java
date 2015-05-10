@@ -18,9 +18,9 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.NOAA1bReader.*;
+import java.io.IOException;
+import noaa.coastwatch.io.NOAA1bReader;
+import noaa.coastwatch.io.NOAA1bV3Reader;
 
 /**
  * A NOAA 1b version 4 reader is similar to the 1b version 3

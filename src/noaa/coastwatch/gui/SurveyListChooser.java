@@ -27,18 +27,34 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.beans.*;
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.gui.visual.*;
+import java.util.Map;
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JToggleButton;
+import noaa.coastwatch.gui.AbstractOverlayListPanel;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.SurveyPlotFactory;
+import noaa.coastwatch.gui.TabComponent;
+import noaa.coastwatch.render.SurveyOverlay;
+import noaa.coastwatch.util.EarthDataSurvey;
 
 /**
  * The <code>SurveyListChooser</code> class is a panel that

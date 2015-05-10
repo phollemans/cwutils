@@ -34,10 +34,15 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import java.io.*;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.EarthImageTransform;
 
 /**
  * An Earth data overlay specifies information used for the annotation

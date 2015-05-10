@@ -30,15 +30,41 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.io.*;
-import java.beans.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.util.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.AbstractAction;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import noaa.coastwatch.gui.EnhancementFunctionPanel;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.HistogramPanel;
+import noaa.coastwatch.gui.PalettePanel;
+import noaa.coastwatch.gui.TabComponent;
+import noaa.coastwatch.render.EnhancementFunction;
+import noaa.coastwatch.render.LinearEnhancement;
+import noaa.coastwatch.render.LogEnhancement;
+import noaa.coastwatch.render.Palette;
+import noaa.coastwatch.render.PaletteFactory;
+import noaa.coastwatch.render.StepEnhancement;
+import noaa.coastwatch.util.Statistics;
 
 /**
  * An enhancement chooser is a panel that allows the user to select

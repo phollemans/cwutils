@@ -18,9 +18,14 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.net.*;
-import java.util.regex.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The IO services class defines various static methods relating

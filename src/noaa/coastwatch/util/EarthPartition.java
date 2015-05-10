@@ -26,9 +26,14 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.lang.reflect.*;
-import java.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.List;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Encodable;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>EarthPartition</code> class sets up a partitioning of

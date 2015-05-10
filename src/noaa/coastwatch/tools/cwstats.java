@@ -30,16 +30,21 @@ package noaa.coastwatch.tools;
 
 // Imports
 // --------
-import java.util.*;
-import java.text.*;
-import java.lang.reflect.*;
-import java.awt.geom.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.render.*;
-import jargs.gnu.*;
-import jargs.gnu.CmdLineParser.*;
 import com.braju.format.Format;
+import jargs.gnu.CmdLineParser;
+import jargs.gnu.CmdLineParser.Option;
+import jargs.gnu.CmdLineParser.OptionException;
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.render.Subregion;
+import noaa.coastwatch.tools.ToolServices;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Statistics;
 
 /**
  * <p>The statistics utility calculates a number of statistics for each

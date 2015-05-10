@@ -19,8 +19,13 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.Datum;
+import noaa.coastwatch.util.trans.DatumFactory;
+import noaa.coastwatch.util.trans.SpheroidConstants;
 
 /**
  * The solar zenith class may be used to calculate solar zenith angles

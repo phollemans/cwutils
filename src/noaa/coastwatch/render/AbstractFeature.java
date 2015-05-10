@@ -18,7 +18,10 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import noaa.coastwatch.render.Feature;
 
 /*
  * An <code>AbstractFeature</code> can be extended by any concrete

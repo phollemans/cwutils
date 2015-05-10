@@ -18,7 +18,8 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Image;
 
 /**
  * An image loading observer is capable of drawing small tiles of an

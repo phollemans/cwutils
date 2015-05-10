@@ -18,7 +18,8 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
+import java.util.EventListener;
+import noaa.coastwatch.io.DataTransferEvent;
 
 /**
  * A data transfer listener receives data transfer events and performs

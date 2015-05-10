@@ -19,12 +19,30 @@ package noaa.coastwatch.tools;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import javax.xml.parsers.*;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
-import noaa.coastwatch.render.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import noaa.coastwatch.render.ColorEnhancementSettings;
+import noaa.coastwatch.render.EnhancementFunction;
+import noaa.coastwatch.render.EnhancementFunctionFactory;
+import noaa.coastwatch.render.Palette;
+import noaa.coastwatch.render.PaletteFactory;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * The <code>Preferences</code> class handles preferences set by the

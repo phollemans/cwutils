@@ -23,16 +23,16 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
-import java.io.*;
-import java.util.*;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
-import javax.swing.*;
-import javax.swing.event.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import noaa.coastwatch.gui.TestContainer;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
 
 /**
  * The <code>VariableChooser</code> is a simple panel that displays a

@@ -21,13 +21,20 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.util.*;
-import java.io.*;
+import java.awt.Color;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
-import org.nfunk.jep.*;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.GridContainerOverlay;
+import noaa.coastwatch.render.MaskOverlay;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.ExpressionParserFactory;
+import noaa.coastwatch.util.Grid;
+import org.nfunk.jep.JEP;
+import org.nfunk.jep.SymbolTable;
 
 /**
  * The <code>ExpressionMaskOverlay</code> class uses a mathematical

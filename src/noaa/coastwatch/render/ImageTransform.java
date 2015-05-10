@@ -33,9 +33,13 @@ package noaa.coastwatch.render;
 
 // Import
 // ------
-import java.awt.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.Grid;
 
 /**
  * The ImageTransform class translates between 2D data coordinates

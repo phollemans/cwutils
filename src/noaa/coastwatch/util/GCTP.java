@@ -37,8 +37,10 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.util.Hashtable;
+import noaa.coastwatch.util.trans.ProjectionConstants;
+import noaa.coastwatch.util.trans.SpheroidConstants;
+import noaa.coastwatch.util.trans.GCTPStyleProjection;
 
 /**
  * The static routines in the General Cartographic Transformations

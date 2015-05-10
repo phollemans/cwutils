@@ -27,9 +27,17 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import noaa.coastwatch.util.BivariateEstimator;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.EarthPartition;
+import noaa.coastwatch.util.Function;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>LocationEstimator</code> class uses a reference and

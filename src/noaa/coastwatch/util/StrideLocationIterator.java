@@ -18,7 +18,9 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
+import java.util.NoSuchElementException;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataLocationIterator;
 
 /**
  * The <code>StrideLocationIterator</code> class iterates over data

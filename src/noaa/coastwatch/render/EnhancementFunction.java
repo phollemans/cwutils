@@ -26,8 +26,10 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.util.*;
-import noaa.coastwatch.util.*;
+import java.io.Serializable;
+import java.util.Arrays;
+import noaa.coastwatch.util.Function;
+import noaa.coastwatch.util.Statistics;
 
 /**
  * An enhancement function normalizes a data value to the range
@@ -171,7 +173,7 @@ public abstract class EnhancementFunction
    * @param units the number of standard deviation units above and
    * below the mean for the data range.
    * 
-   * @see DataVariable#getStatistics
+   * @see noaa.coastwatch.util.DataVariable#getStatistics
    */
   public void normalize (
     Statistics stats,

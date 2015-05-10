@@ -18,11 +18,35 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.lang.reflect.*;
-import java.util.*;
-import java.io.*;
-import opendap.dap.*;
-import noaa.coastwatch.util.*;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.IOServices;
+import noaa.coastwatch.util.DataVariable;
+import opendap.dap.Attribute;
+import opendap.dap.AttributeTable;
+import opendap.dap.BaseType;
+import opendap.dap.BooleanPrimitiveVector;
+import opendap.dap.BytePrimitiveVector;
+import opendap.dap.DAS;
+import opendap.dap.DConnect;
+import opendap.dap.DDS;
+import opendap.dap.DVector;
+import opendap.dap.Float32PrimitiveVector;
+import opendap.dap.Float64PrimitiveVector;
+import opendap.dap.Int16PrimitiveVector;
+import opendap.dap.Int32PrimitiveVector;
+import opendap.dap.NoSuchAttributeException;
+import opendap.dap.PrimitiveVector;
+import opendap.dap.UInt16PrimitiveVector;
+import opendap.dap.UInt32PrimitiveVector;
 
 /** 
  * The <code>OpendapReader</code> class is the base class for readers that

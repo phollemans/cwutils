@@ -19,8 +19,16 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.text.*;
-import noaa.coastwatch.util.trans.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.DataVariableIterator;
+import noaa.coastwatch.util.EarthDataSurvey;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.LineLocationIterator;
+import noaa.coastwatch.util.Statistics;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>LineSurvey</code> class holds survey information for a

@@ -27,15 +27,20 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
+import java.awt.Rectangle;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.text.*;
-import java.io.*;
-import java.awt.*;
-import java.lang.reflect.*;
-import noaa.coastwatch.util.*;
+import java.util.Map;
 import noaa.coastwatch.io.tile.TilingScheme;
-import noaa.coastwatch.io.tile.TilingScheme.*;
+import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
+import noaa.coastwatch.io.tile.TilingScheme.Tile;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.Grid;
 
 /**
  * The cached grid class is a grid that uses caching to reduce the

@@ -25,20 +25,49 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.beans.*;
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import javax.swing.Action;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import noaa.coastwatch.gui.AbstractOverlayListPanel;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.SimpleFileFilter;
+import noaa.coastwatch.gui.TabComponent;
+import noaa.coastwatch.gui.visual.MultilayerBitmaskOverlayPropertyChooser;
+import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
+import noaa.coastwatch.gui.visual.OverlayPropertyChooserFactory;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.render.BitmaskOverlay;
+import noaa.coastwatch.render.CoastOverlay;
+import noaa.coastwatch.render.DataReferenceOverlay;
+import noaa.coastwatch.render.ESRIShapefileReader;
+import noaa.coastwatch.render.EarthDataOverlay;
+import noaa.coastwatch.render.ExpressionMaskOverlay;
+import noaa.coastwatch.render.GridContainerOverlay;
+import noaa.coastwatch.render.LatLonOverlay;
+import noaa.coastwatch.render.MultilayerBitmaskOverlay;
+import noaa.coastwatch.render.PoliticalOverlay;
+import noaa.coastwatch.render.PolygonOverlay;
+import noaa.coastwatch.render.TopographyOverlay;
 
 import java.util.List;
-import java.util.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.gui.visual.*;
-
 /**
  * The <code>OverlayListChooser</code> class is a panel that
  * allows the user to manipulate a list of {@link

@@ -18,11 +18,8 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import javax.swing.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.render.*;
+import noaa.coastwatch.gui.XYPlotPanel;
+import noaa.coastwatch.util.Statistics;
 
 /**
  * The <code>StatisticsPanel</code> is an abstract class that holds a

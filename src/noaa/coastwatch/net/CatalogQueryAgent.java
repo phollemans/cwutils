@@ -18,9 +18,10 @@ package noaa.coastwatch.net;
 
 // Imports
 // -------
-import java.net.*;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Date;
+import java.util.List;
 
 /**
  * A <code>CatalogQueryAgent</code> is an abstract class for

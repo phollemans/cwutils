@@ -18,8 +18,11 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.util.*;
-import noaa.coastwatch.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import noaa.coastwatch.render.AbstractFeature;
+import noaa.coastwatch.util.EarthLocation;
 
 /*
  * A <code>PointFeature</code> is a single geographic point with

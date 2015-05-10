@@ -18,10 +18,16 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import java.text.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import noaa.coastwatch.util.BoxSurvey;
+import noaa.coastwatch.util.ConstrainedStrideLocationIterator;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.DataVariableIterator;
+import noaa.coastwatch.util.Statistics;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>PolygonSurvey</code> class holds survey information for a

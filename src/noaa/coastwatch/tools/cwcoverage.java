@@ -23,19 +23,37 @@ package noaa.coastwatch.tools;
 
 // Imports
 // --------
-import java.io.*;
-import java.util.*;
+import jargs.gnu.CmdLineParser;
+import jargs.gnu.CmdLineParser.Option;
+import jargs.gnu.CmdLineParser.OptionException;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.PathIterator;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.awt.*;
-import java.awt.image.*;
-import java.awt.geom.*;
-import javax.imageio.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.render.*;
-import jargs.gnu.*;
-import jargs.gnu.CmdLineParser.*;
+import javax.imageio.ImageIO;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.render.ColorLookup;
+import noaa.coastwatch.render.EarthContextElement;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.tools.ToolServices;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.SpheroidConstants;
 
 /**
  * <p>The coverage tool creates an Earth data coverage map.</p>

@@ -18,7 +18,9 @@ package noaa.coastwatch.render;
 // Imports
 // -------
 import jahuwaldt.plot.PlotSymbol;
-import java.awt.*;
+import jahuwaldt.plot.PlotSymbol;
+import java.awt.Color;
+import java.awt.Graphics;
 
 /**
  * The <code>XSymbol</code> class draws an X for a point symbol.

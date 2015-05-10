@@ -22,11 +22,18 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import noaa.coastwatch.util.*;
+import noaa.coastwatch.render.AnnotationElement;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.ImageTransform;
+import noaa.coastwatch.render.PolygonOverlay;
 
 /**
  * An annotation overlay annotes a data view with annotation elements.

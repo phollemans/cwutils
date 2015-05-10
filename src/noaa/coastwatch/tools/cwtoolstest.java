@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import noaa.coastwatch.io.IOServices;
-import ucar.unidata.util.StringUtil;
 
 /**
  * The <code>cwtoolstest</code> program goes through every command 
@@ -587,8 +586,14 @@ public class cwtoolstest {
       // Format failed string
       // --------------------
       else {
-        return ("[FAILED] " + toolName + " test #" + testNumber + 
-          ", args = {" + StringUtil.join (" ", args) + "}\n" + 
+        StringBuffer argsBuf = new StringBuffer();
+        for (String str : args) {
+          argsBuf.append (str);
+          argsBuf.append (" ");
+        } // for
+        String argsStr = argsBuf.toString().trim();
+        return ("[FAILED] " + toolName + " test #" + testNumber +
+          ", args = {" + argsStr + "}\n" +
           errorString);
       } // else
       

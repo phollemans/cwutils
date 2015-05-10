@@ -18,9 +18,17 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
-import java.util.zip.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /** 
  * The <code>SerializedObjectManager</code> class can be used to save,

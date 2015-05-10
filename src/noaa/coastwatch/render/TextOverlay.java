@@ -19,10 +19,20 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import noaa.coastwatch.render.EarthDataOverlay;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.ImageTransform;
+import noaa.coastwatch.render.LineOverlay;
+import noaa.coastwatch.render.TextElement;
 
 /**
  * The <code>TextOverlay</code> class may be used to render a list of

@@ -18,9 +18,6 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.util.*;
-import java.io.*;
-import noaa.coastwatch.util.*;
 
 /**
  * A contour generator creates lists of Earth data points that follow

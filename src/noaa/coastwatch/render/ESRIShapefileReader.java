@@ -19,21 +19,41 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.awt.*;
-import noaa.coastwatch.util.*;
-import org.geotools.data.*;
-import org.geotools.data.FeatureSource;
-import org.geotools.data.shapefile.*;
-import org.geotools.feature.*;
-import org.geotools.feature.Feature;
-import com.vividsolutions.jts.geom.*;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryCollection;
+import com.vividsolutions.jts.geom.GeometryCollectionIterator;
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.MultiPoint;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import jahuwaldt.plot.*;
+import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.List;
+import noaa.coastwatch.render.EarthDataOverlay;
+import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.LineFeatureOverlay;
+import noaa.coastwatch.render.LineFeatureSource;
+import noaa.coastwatch.render.PointFeature;
+import noaa.coastwatch.render.PointFeatureSource;
+import noaa.coastwatch.render.PolygonFeature;
+import noaa.coastwatch.render.PolygonFeatureOverlay;
+import noaa.coastwatch.render.PolygonFeatureSource;
+import noaa.coastwatch.util.EarthLocation;
+import org.geotools.data.FeatureReader;
+import org.geotools.data.FeatureResults;
+import org.geotools.data.FeatureSource;
+import org.geotools.data.shapefile.ShapefileDataStore;
+import org.geotools.feature.Feature;
+import org.geotools.feature.IllegalAttributeException;
 
+import com.vividsolutions.jts.geom.Polygon;
 /**
  * <p>The <code>ESRIShapefileReader</code> class reads geographic
  * features from ESRI shapefile data and presents the data as an

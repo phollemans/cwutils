@@ -18,7 +18,8 @@ package noaa.coastwatch.net;
 
 // Imports
 // -------
-import java.util.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * A timeout allows the user to perform a certain task after some amount

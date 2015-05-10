@@ -33,10 +33,23 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.util.*;
-import java.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.LineFeatureSource;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.Datum;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * A contour generator creates lists of Earth data points that follow

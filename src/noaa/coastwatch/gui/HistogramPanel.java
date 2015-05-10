@@ -18,11 +18,10 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.image.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import noaa.coastwatch.util.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import javax.swing.JPanel;
+import noaa.coastwatch.util.Statistics;
 
 /**
  * A histogram panel displays a histogram plot as a series of 

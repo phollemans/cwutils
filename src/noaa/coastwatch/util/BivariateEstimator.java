@@ -20,7 +20,10 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import Jama.*;
+import Jama.Matrix;
+import Jama.SingularValueDecomposition;
+import java.util.Arrays;
+import noaa.coastwatch.util.Function;
 
 /**
  * A bivariate estimator approximates the value of a function of two

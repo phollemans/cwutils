@@ -37,13 +37,16 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.nio.*;
-import java.util.*;
-import java.text.*;
-import java.lang.reflect.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.NOAA1bReader.*;
+import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Map;
+import java.util.TimeZone;
+import noaa.coastwatch.io.NOAA1bReader;
 
 /**
  * A NOAA 1b version 2 reader is a NOAA 1b reader that reads NOAA

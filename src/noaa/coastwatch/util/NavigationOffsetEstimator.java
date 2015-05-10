@@ -20,11 +20,15 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.text.*;
-import java.util.*;
-import java.awt.geom.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.geom.AffineTransform;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.LandMask;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>NavigationOffsetEstimator</code> class uses image and

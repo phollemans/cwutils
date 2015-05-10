@@ -18,7 +18,7 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.util.*;
+import java.util.Iterator;
 
 /*
  * A <code>Feature</code> represents any geographic object with a list

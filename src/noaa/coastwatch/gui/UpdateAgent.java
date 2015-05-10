@@ -18,10 +18,12 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import noaa.coastwatch.net.*;
+import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import noaa.coastwatch.net.UpdateCheck;
 
 /**
  * The <code>UpdateAgent</code> class performs an update check on the

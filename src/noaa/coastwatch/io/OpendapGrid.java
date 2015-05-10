@@ -18,11 +18,15 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.awt.*;
-import java.util.*;
-import opendap.dap.*;
-import noaa.coastwatch.util.*;
+import java.awt.Rectangle;
+import java.io.IOException;
+import java.util.Arrays;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.Grid;
+import opendap.dap.DConnect;
+import opendap.dap.DVector;
+import opendap.dap.DataDDS;
+import opendap.dap.PrimitiveVector;
 
 /** 
  * The <code>OpendapGrid</code> is an intelligent OPeNDAP client

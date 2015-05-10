@@ -22,11 +22,11 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import java.util.List;
-import java.awt.*;
-import noaa.coastwatch.util.*;
+import java.awt.Graphics2D;
+import java.util.Iterator;
+import noaa.coastwatch.render.AbstractFeatureSource;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.LineFeature;
 
 /**
  * The <code>LineFeatureSource</code> class supplies methods that read

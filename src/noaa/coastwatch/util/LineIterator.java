@@ -18,8 +18,9 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.awt.*;
-import java.util.*;
+import java.awt.Point;
+import java.util.NoSuchElementException;
+import noaa.coastwatch.util.ResettableIterator;
 
 /**
  * The <code>LineIterator</code> class may be used to get the set of

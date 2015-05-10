@@ -18,10 +18,14 @@ package noaa.coastwatch.gui;
 
 // Imports
 // --------
-import java.io.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
-import java.awt.datatransfer.*;
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.TransferHandler;
 
 /**
  * The <code>FileTransferHandler</code> class is used with the

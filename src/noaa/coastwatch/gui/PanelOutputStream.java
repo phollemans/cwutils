@@ -18,9 +18,18 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import javax.swing.*;
-import java.io.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+import noaa.coastwatch.gui.WindowMonitor;
 
 /**
  * The <code>PanelOutputStream</code> class extends

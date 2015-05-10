@@ -18,7 +18,9 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StreamTokenizer;
 
 /**
  * The simple parser class is a stream tokenizer with various methods

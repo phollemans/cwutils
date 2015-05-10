@@ -18,8 +18,8 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.beans.*;
+import java.awt.Shape;
+import java.beans.PropertyChangeListener;
 
 /**
  * The <code>DataViewOverlayControl</code> class is an interface

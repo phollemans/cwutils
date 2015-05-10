@@ -18,11 +18,26 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import javax.swing.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Line2D;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import noaa.coastwatch.render.DirectionSymbol;
+import noaa.coastwatch.render.PointFeature;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.EarthTransform2D;
+import noaa.coastwatch.util.trans.OrthographicProjection;
 
 /**
  * A <code>WindBarbSymbol</code> is a <code>PointFeatureSymbol</code>

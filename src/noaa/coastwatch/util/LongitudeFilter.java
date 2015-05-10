@@ -18,7 +18,7 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
+import noaa.coastwatch.util.Filter;
 
 /**
  * The longitude filter is a filter with special considerations for

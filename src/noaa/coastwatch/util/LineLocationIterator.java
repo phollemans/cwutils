@@ -18,7 +18,10 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.awt.*;
+import java.awt.Point;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataLocationIterator;
+import noaa.coastwatch.util.LineIterator;
 
 /**
  * The <code>LineLocationIterator</code> class iterates over data

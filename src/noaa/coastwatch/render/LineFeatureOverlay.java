@@ -21,11 +21,13 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.util.*;
-import java.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.io.IOException;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.LineFeatureSource;
+import noaa.coastwatch.render.LineOverlay;
 
 /**
  * The <code>LineFeatureOverlay</code> class annotates a data view

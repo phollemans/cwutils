@@ -18,7 +18,7 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
+import java.util.EventObject;
 
 /**
  * A data transfer event handles the details of a data transfer.  Data

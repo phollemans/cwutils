@@ -18,7 +18,9 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import noaa.coastwatch.render.IconElement;
 
 /**
  * The <code>IconElementFactory</code> class creates

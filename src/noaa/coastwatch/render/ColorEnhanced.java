@@ -18,7 +18,9 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
+import java.awt.Color;
+import noaa.coastwatch.render.EnhancementFunction;
+import noaa.coastwatch.render.Palette;
 
 /**
  * The <code>ColorEnhanced</code> interface gives methods for classes

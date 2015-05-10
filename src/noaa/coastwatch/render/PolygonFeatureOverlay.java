@@ -19,11 +19,14 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.util.*;
-import java.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.io.IOException;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.PolygonFeatureSource;
+import noaa.coastwatch.render.PolygonOverlay;
 
 /**
  * The <code>PolygonFeatureOverlay</code> class annotes a data view with

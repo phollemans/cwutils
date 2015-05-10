@@ -18,10 +18,11 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
-import java.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.io.IOException;
+import java.util.Date;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>ReaderList</code> interface is designed to group together

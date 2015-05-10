@@ -46,23 +46,65 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
-import java.beans.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
-import java.util.*;
-import java.lang.reflect.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.text.BreakIterator;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.io.*;
-import java.net.*;
-import java.text.*;
-import noaa.coastwatch.tools.*;
-import java.util.prefs.*;
+import java.util.Properties;
 import java.util.prefs.Preferences;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTextArea;
+import javax.swing.JToggleButton;
+import javax.swing.JViewport;
+import javax.swing.LookAndFeel;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
+import noaa.coastwatch.gui.HTMLPanel;
+import noaa.coastwatch.gui.PanelOutputStream;
+import noaa.coastwatch.tools.ToolServices;
 
 /**
  * The GUI services class defines various static methods relating
@@ -963,7 +1005,7 @@ public class GUIServices {
   /**
    * Stores the specified window size for the target class.  Storing a window
    * size is useful for maintaining a window size across application 
-   * invokations.
+   * invocations.
    *
    * @param windowSize the window size to store.
    * @param targetClass the class to associate with the window size.

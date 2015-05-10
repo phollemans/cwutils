@@ -20,10 +20,10 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
-import noaa.coastwatch.util.*;
+import java.awt.Graphics2D;
+import java.awt.geom.GeneralPath;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.LineFeature;
 
 /**
  * The <code>PolygonFeature</code> class is a {@link LineFeature} with

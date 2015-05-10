@@ -18,7 +18,13 @@ package noaa.coastwatch.util;
 
 // Imports
 // --------
-import ucar.units.*;
+import ucar.units.Unit;
+import ucar.units.UnitDB;
+import ucar.units.UnitDBManager;
+import ucar.units.UnitFormat;
+import ucar.units.UnitFormatManager;
+import ucar.units.UnitName;
+import ucar.units.UnknownUnit;
 
 /**
  * The <code>UnitFactory</code> class create Unidata UDUNITS style

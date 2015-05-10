@@ -18,10 +18,17 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.Color;
+import java.awt.geom.NoninvertibleTransformException;
+import noaa.coastwatch.render.ColorEnhanced;
+import noaa.coastwatch.render.ColorEnhancementSettings;
+import noaa.coastwatch.render.DataColorScale;
+import noaa.coastwatch.render.EnhancementFunction;
+import noaa.coastwatch.render.Legend;
+import noaa.coastwatch.render.Palette;
+import noaa.coastwatch.render.PointFeatureOverlay;
+import noaa.coastwatch.render.SolidBackground;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>ColorPointEnhancement</code> class uses a {@link Palette}

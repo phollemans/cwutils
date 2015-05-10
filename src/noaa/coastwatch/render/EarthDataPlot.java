@@ -22,11 +22,27 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.image.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import noaa.coastwatch.render.EarthContextElement;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.EarthPlotInfo;
+import noaa.coastwatch.render.GraphicsServices;
+import noaa.coastwatch.render.IconElement;
+import noaa.coastwatch.render.ImageTransform;
+import noaa.coastwatch.render.Legend;
+import noaa.coastwatch.render.Renderable;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The Earth data plot class is used for rendering Earth data

@@ -19,10 +19,11 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import noaa.coastwatch.render.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+import javax.swing.JPanel;
+import noaa.coastwatch.render.EnhancementFunction;
 
 /**
  * An enhancement function panel displays an enhancement function

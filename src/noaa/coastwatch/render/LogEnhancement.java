@@ -20,7 +20,7 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import noaa.coastwatch.util.*;
+import noaa.coastwatch.render.EnhancementFunction;
 
 /**
  * A log enhancement is an enhancement function formed by a logarithm

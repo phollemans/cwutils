@@ -18,13 +18,17 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.image.*;
-import java.io.*;
-import java.util.*;
-import noaa.coastwatch.util.*;
-import com.fmsware.gif.*;
-import no.geosoft.cc.io.*;
+import com.fmsware.gif.NeuQuant;
+import java.awt.AWTException;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.IndexColorModel;
+import java.awt.image.WritableRaster;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashSet;
+import java.util.Set;
+import no.geosoft.cc.io.GifEncoder;
 
 /**
  * The <code>GIFWriter</code> class writes non-interlaced GIF87a

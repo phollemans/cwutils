@@ -18,10 +18,15 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.image.*;
-import java.util.*;
-import javax.swing.*;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.image.ColorModel;
+import java.awt.image.ImageConsumer;
+import java.awt.image.ImageProducer;
+import java.awt.image.MemoryImageSource;
+import java.util.Hashtable;
+import javax.swing.SwingUtilities;
 
 /**
  * The image loader class is used to render an image asychronously

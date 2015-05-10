@@ -18,8 +18,9 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
+import java.awt.Dimension;
+import java.awt.geom.Point2D;
+import noaa.coastwatch.render.AnnotationElement;
 
 /**
  * A picture element is an annotation element the renders graphics and

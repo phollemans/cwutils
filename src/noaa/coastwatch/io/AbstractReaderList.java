@@ -18,7 +18,8 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
+import java.util.Date;
+import noaa.coastwatch.io.ReaderList;
 
 /**
  * The <code>AbstractReaderList</code> class implements some of the

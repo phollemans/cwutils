@@ -18,9 +18,11 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.lang.reflect.*;
-import javax.swing.*;
+import java.awt.Container;
+import java.lang.reflect.Constructor;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import noaa.coastwatch.gui.WindowMonitor;
 
 /**
  * The test container class simply creates a <code>JFrame</code> and

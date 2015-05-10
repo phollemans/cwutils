@@ -18,9 +18,10 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
-import org.nfunk.jep.*;
-import org.nfunk.jep.function.*;
+import java.util.Stack;
+import org.nfunk.jep.JEP;
+import org.nfunk.jep.ParseException;
+import org.nfunk.jep.function.PostfixMathCommand;
 
 /**
  * The <code>ExpressionParserFactory</code> class create standard

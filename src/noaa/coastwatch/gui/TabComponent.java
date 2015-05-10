@@ -17,7 +17,7 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import javax.swing.*;
+import javax.swing.Icon;
 
 /**
  * The <code>TabComponent</code> interface is used to specify that

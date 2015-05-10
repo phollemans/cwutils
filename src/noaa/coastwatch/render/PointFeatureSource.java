@@ -18,11 +18,13 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import java.util.*;
-import jahuwaldt.plot.PlotSymbol;
-import noaa.coastwatch.util.*;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.util.Iterator;
+import noaa.coastwatch.render.AbstractFeatureSource;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.PointFeature;
+import noaa.coastwatch.render.PointFeatureSymbol;
 
 /**
  * The <code>PointFeatureSource</code> class supplied and renders

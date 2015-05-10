@@ -18,7 +18,7 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.geom.*;
+import java.awt.geom.AffineTransform;
 
 /**
  * The <code>TransformableImageComponent</code> interface may be

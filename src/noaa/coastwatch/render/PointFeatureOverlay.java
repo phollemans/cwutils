@@ -18,12 +18,14 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.util.*;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.io.IOException;
 import java.util.List;
-import java.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.PointFeatureSource;
+import noaa.coastwatch.render.PointFeatureSymbol;
+import noaa.coastwatch.render.PolygonOverlay;
 
 /**
  * The <code>PointFeatureOverlay</code> class annotes a data view with

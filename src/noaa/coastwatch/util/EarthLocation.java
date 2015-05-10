@@ -37,11 +37,13 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import java.text.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.text.DecimalFormat;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.util.trans.Datum;
+import noaa.coastwatch.util.trans.DatumFactory;
+import noaa.coastwatch.util.trans.SpheroidConstants;
 
 /**
  * An Earth location represents a point using latitude and longitude

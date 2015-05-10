@@ -28,12 +28,25 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.text.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.image.IndexColorModel;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.awt.image.*;
-import noaa.coastwatch.util.*;
+import noaa.coastwatch.render.EnhancementFunction;
+import noaa.coastwatch.render.GraphicsServices;
+import noaa.coastwatch.render.Legend;
+import noaa.coastwatch.render.LinearEnhancement;
+import noaa.coastwatch.render.LogEnhancement;
+import noaa.coastwatch.render.Palette;
+import noaa.coastwatch.render.StepEnhancement;
+import noaa.coastwatch.render.TextElement;
 
 /**
  * A color scale annotates a data enhancement plot with a scale of

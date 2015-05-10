@@ -18,13 +18,24 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import javax.swing.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.tools.*;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.GridSubsetReader;
+import noaa.coastwatch.io.NCReader;
+import noaa.coastwatch.render.ColorEnhancement;
+import noaa.coastwatch.render.ColorEnhancementSettings;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.EnhancementFunction;
+import noaa.coastwatch.render.LinearEnhancement;
+import noaa.coastwatch.render.Palette;
+import noaa.coastwatch.render.PaletteFactory;
+import noaa.coastwatch.tools.Preferences;
+import noaa.coastwatch.tools.ResourceManager;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.Statistics;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.MapProjection;
 
 /**
  * The <code>EarthDataViewFactory</code> uses an {@link

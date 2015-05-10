@@ -27,12 +27,31 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.image.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
+import java.awt.image.WritableRaster;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.*;
+import java.util.Map;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.render.BitmaskOverlay;
+import noaa.coastwatch.render.EarthDataOverlay;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.GraphicsServices;
+import noaa.coastwatch.render.GridContainerOverlay;
+import noaa.coastwatch.render.ImageTransform;
+import noaa.coastwatch.render.TransparentOverlay;
+import noaa.coastwatch.util.Grid;
 
 /**
  * The <code>MultilayerBitmaskOverlay</code> class uses a set of

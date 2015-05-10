@@ -25,10 +25,13 @@ package noaa.coastwatch.render;
 
 // Import
 // ------
-import java.awt.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import noaa.coastwatch.render.ImageTransform;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The Earth image transform class translates between 2D geographic

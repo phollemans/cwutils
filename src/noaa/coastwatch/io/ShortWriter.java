@@ -19,8 +19,9 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import noaa.coastwatch.util.*;
+import java.io.IOException;
+import noaa.coastwatch.io.BinaryWriter;
+import noaa.coastwatch.util.EarthDataInfo;
 
 /**
  * A short writer is a binary writer that writes data as a stream of

@@ -27,8 +27,24 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimeZone;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DateFormatter;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.MetadataContainer;
+import noaa.coastwatch.util.MetadataServices;
+import noaa.coastwatch.util.SolarZenith;
+import noaa.coastwatch.util.TimePeriod;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>EarthDataInfo</code> class is a container for global

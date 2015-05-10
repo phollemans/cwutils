@@ -18,8 +18,11 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
-import java.text.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+import noaa.coastwatch.util.EarthLocation;
 
 /**
  * The <code>DateFormatter</code> class contains a number of static

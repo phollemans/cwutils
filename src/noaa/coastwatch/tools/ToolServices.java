@@ -34,10 +34,14 @@ package noaa.coastwatch.tools;
 
 // Imports
 // -------
-import java.awt.*;
-import java.io.*;
-import java.util.*;
-import noaa.coastwatch.util.*;
+import java.awt.Dimension;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
+import noaa.coastwatch.util.MetadataServices;
 
 /**
  * The tool services class defines various static methods relating
@@ -68,11 +72,11 @@ public class ToolServices {
 
   /** The software copyright. */
   public static final String COPYRIGHT = 
-    "1998-2014 USDOC/NOAA/NESDIS CoastWatch";
+    "1998-2015 USDOC/NOAA/NESDIS CoastWatch";
 
   /** The software copyright (short version). */
   public static final String COPYRIGHT_SHORT = 
-    "1998-2014\nUSDOC/NOAA/NESDIS CoastWatch";
+    "1998-2015\nUSDOC/NOAA/NESDIS CoastWatch";
 
   /** The tool parameter splitting expression. */
   public static final String SPLIT_REGEX = "[,/]";

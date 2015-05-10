@@ -64,9 +64,11 @@ package noaa.coastwatch.gui;
 // Imports
 // --------
 import java.io.File;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.filechooser.*;
+import java.io.File;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import javax.swing.filechooser.FileFilter;
 
 /**
  * A convenience implementation of <code>FileFilter</code> that

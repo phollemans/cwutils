@@ -18,7 +18,9 @@ package noaa.coastwatch.render;
 // Imports
 // -------
 import jahuwaldt.plot.PlotSymbol;
-import java.awt.*;
+import jahuwaldt.plot.PlotSymbol;
+import java.awt.Color;
+import java.awt.Graphics;
 
 /**
  * The <code>CrossSymbol</code> class draws a cross for a point symbol.

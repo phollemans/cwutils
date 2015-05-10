@@ -19,10 +19,15 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.event.*;
-import noaa.coastwatch.util.*;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import javax.swing.event.MouseInputAdapter;
+import noaa.coastwatch.gui.EarthContextPanel;
+import noaa.coastwatch.render.EarthContextElement;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.SatellitePassInfo;
+import noaa.coastwatch.util.SolarZenith;
 
 /**
  * The satellite pass coverage panel displays a graphical

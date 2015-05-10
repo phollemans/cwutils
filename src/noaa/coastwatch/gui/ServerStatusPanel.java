@@ -22,14 +22,30 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.io.*;
-import java.awt.*;
-import java.util.*;
-import java.net.*;
-import java.applet.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import noaa.coastwatch.net.*;
+import java.applet.Applet;
+import java.applet.AudioClip;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Vector;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.EtchedBorder;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.net.ServerQuery;
 
 /**
  * The server status panel queries the status of a CoastWatch data

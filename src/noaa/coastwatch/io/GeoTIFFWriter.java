@@ -21,15 +21,29 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.awt.image.*;
-import java.awt.geom.*;
-import java.io.*;
-import java.util.*;
-import java.text.*;
-import com.sun.media.jai.codec.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.render.*;
+import com.sun.media.jai.codec.ImageCodec;
+import com.sun.media.jai.codec.ImageEncoder;
+import com.sun.media.jai.codec.TIFFEncodeParam;
+import com.sun.media.jai.codec.TIFFField;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.image.RenderedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.TreeSet;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.ImageTransform;
+import noaa.coastwatch.util.GCTP;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.MapProjection;
 
 /**
  * A GeoTIFF writer uses an Earth image transform and rendered image

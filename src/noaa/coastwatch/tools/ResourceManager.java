@@ -23,12 +23,21 @@ package noaa.coastwatch.tools;
 
 // Imports
 // -------
-import java.util.*;
-import java.io.*;
-import noaa.coastwatch.gui.*;
-import noaa.coastwatch.gui.open.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.render.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.open.ServerTableModel;
+import noaa.coastwatch.io.SerializedObjectManager;
+import noaa.coastwatch.render.OverlayGroupManager;
+import noaa.coastwatch.render.PaletteFactory;
+import noaa.coastwatch.tools.Preferences;
 
 /** 
  * The <code>ResourceManager</code> class stores and retrieves

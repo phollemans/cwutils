@@ -18,7 +18,7 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
+import java.util.Iterator;
 
 /**
  * The <code>DoubleIterator</code> class adds an extra interface

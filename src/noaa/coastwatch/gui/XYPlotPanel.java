@@ -18,11 +18,21 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.geom.*;
-import java.text.*;
-import javax.swing.*;
-import noaa.coastwatch.render.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
+import java.text.NumberFormat;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import noaa.coastwatch.render.DataColorScale;
+import noaa.coastwatch.render.TextElement;
 
 /**
  * The <code>XYPlotPanel</code> is an abstract class that draws axes

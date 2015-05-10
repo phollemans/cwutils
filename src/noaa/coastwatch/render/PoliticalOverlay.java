@@ -21,9 +21,15 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.io.*;
-import noaa.coastwatch.util.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import noaa.coastwatch.render.BinnedGSHHSLineReader;
+import noaa.coastwatch.render.BinnedGSHHSReaderFactory;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.LineOverlay;
+import noaa.coastwatch.util.EarthArea;
 
 /**
  * The <code>PoliticalOverlay</code> class annotates an

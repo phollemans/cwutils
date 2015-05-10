@@ -19,10 +19,10 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Stroke;
 import java.util.List;
-import noaa.coastwatch.util.*;
+import noaa.coastwatch.render.LineOverlay;
 
 /**
  * A polygon overlay annotes a data view with vector-specified polygon

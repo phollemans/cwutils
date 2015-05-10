@@ -19,12 +19,10 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import java.text.*;
-import java.lang.reflect.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.io.NOAA1bReader.*;
+import java.io.IOException;
+import java.util.Map;
+import noaa.coastwatch.io.NOAA1bReader;
+import noaa.coastwatch.io.NOAA1bV2Reader;
 
 /**
  * A NOAA 1b version 3 reader is a NOAA 1b reader that reads NOAA 1b

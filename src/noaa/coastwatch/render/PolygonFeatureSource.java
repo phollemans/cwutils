@@ -25,12 +25,15 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
+import java.awt.Graphics2D;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.awt.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.LineFeatureSource;
+import noaa.coastwatch.render.PolygonFeature;
 
 /**
  * The <code>PolygonFeatureSource</code> extends the

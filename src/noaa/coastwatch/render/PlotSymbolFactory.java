@@ -17,8 +17,13 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.util.*;
 import jahuwaldt.plot.PlotSymbol;
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * The <code>PlotSymbolFactory</code> class supplies plot symbols

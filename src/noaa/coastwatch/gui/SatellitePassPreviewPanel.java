@@ -20,12 +20,24 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.awt.event.*;
-import java.net.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import noaa.coastwatch.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.ImageViewPanel;
+import noaa.coastwatch.util.SatellitePassInfo;
 
 /**
  * The satellite pass preview panel displays a satellite pass data

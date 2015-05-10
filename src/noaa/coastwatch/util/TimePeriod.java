@@ -18,7 +18,7 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
+import java.util.Date;
 
 /**
  * The <code>TimePeriod</code> class is a container for a date and 

@@ -22,9 +22,19 @@ package noaa.coastwatch.util;
 
 // Imports
 // -------
-import java.util.*;
-import java.lang.reflect.*;
-import noaa.coastwatch.util.trans.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import noaa.coastwatch.util.BivariateEstimator;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthPartition;
+import noaa.coastwatch.util.Encodable;
+import noaa.coastwatch.util.Filter;
+import noaa.coastwatch.util.Function;
+import noaa.coastwatch.util.UnivariateEstimator;
+import noaa.coastwatch.util.ValueSource;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>VariableEstimator</code> class provides an

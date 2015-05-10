@@ -24,14 +24,23 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.io.*;
-import java.beans.*;
-import java.awt.*;
-import java.awt.image.*;
-import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.border.*;
-import noaa.coastwatch.render.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.util.List;
+import javax.swing.Icon;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.PalettePanel;
+import noaa.coastwatch.gui.TabComponent;
+import noaa.coastwatch.render.Palette;
+import noaa.coastwatch.render.PaletteFactory;
 
 /**
  * A palette chooser is a panel that allows the user to pick a colour

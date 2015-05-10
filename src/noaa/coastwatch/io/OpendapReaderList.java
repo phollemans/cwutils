@@ -18,12 +18,20 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.util.*;
-import java.io.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import noaa.coastwatch.io.AbstractReaderList;
+import noaa.coastwatch.io.CWOpendapReader;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.OpendapGrid;
+import noaa.coastwatch.io.OpendapReader;
+import noaa.coastwatch.net.CatalogQueryAgent;
 import noaa.coastwatch.net.CatalogQueryAgent.Entry;
-import noaa.coastwatch.net.*;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * An <code>OpendapReaderList</code> holds a list of {@link

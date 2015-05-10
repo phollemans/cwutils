@@ -32,12 +32,23 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
-import java.io.*;
-import java.util.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
-import noaa.coastwatch.io.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.Arrays;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.io.IOServices;
+import noaa.coastwatch.render.ContourGenerator;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.LineOverlay;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.MapProjection;
 
 /**
  * A topography overlay annotates an Earth data view with topography

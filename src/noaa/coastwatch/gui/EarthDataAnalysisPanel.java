@@ -32,25 +32,50 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import java.beans.*;
-import java.io.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
-
-
-import java.awt.event.*;
-
-
-
-import javax.swing.*;
-import javax.swing.border.*;
-import noaa.coastwatch.io.*;
-import noaa.coastwatch.render.*;
-import noaa.coastwatch.gui.nav.*;
+import javax.swing.Box;
+import javax.swing.Icon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.border.BevelBorder;
+import noaa.coastwatch.gui.EarthDataViewController;
+import noaa.coastwatch.gui.EarthDataViewPanel;
+import noaa.coastwatch.gui.EnhancementChooser;
+import noaa.coastwatch.gui.FullScreenWindow;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.LegendPanel;
+import noaa.coastwatch.gui.LightTable;
+import noaa.coastwatch.gui.OverlayListChooser;
+import noaa.coastwatch.gui.PaletteChooser;
+import noaa.coastwatch.gui.TabComponent;
+import noaa.coastwatch.gui.VariableChooser;
+import noaa.coastwatch.gui.ViewOperationChooser;
+import noaa.coastwatch.gui.WindowMonitor;
+import noaa.coastwatch.gui.nav.NavigationAnalysisPanel;
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.EnhancementFunction;
+import noaa.coastwatch.render.Palette;
 
 /**
  * The <code>EarthDataAnalysisPanel</code> groups together a variety
@@ -210,7 +235,7 @@ public class EarthDataAnalysisPanel
    */
   public EarthDataAnalysisPanel (
     EarthDataReader reader,
-    List variableList
+    List<String> variableList
   ) {
     
     super (new BorderLayout());

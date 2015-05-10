@@ -42,12 +42,26 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.util.*;
-import java.awt.*;
-import java.awt.image.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
+import java.awt.image.WritableRaster;
+import noaa.coastwatch.render.DataColorScale;
+import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.EnhancementFunction;
+import noaa.coastwatch.render.ImageTransform;
+import noaa.coastwatch.render.Legend;
+import noaa.coastwatch.render.Palette;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.Statistics;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * A color enhancement is an Earth data view that creates an image

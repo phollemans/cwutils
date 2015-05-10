@@ -18,10 +18,15 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.util.*;
+import java.awt.FlowLayout;
+import java.util.ArrayList;
 import java.util.List;
-import java.awt.*;
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JToolBar;
+import noaa.coastwatch.gui.FileOperationChooser;
+import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.TestContainer;
+import noaa.coastwatch.gui.ViewOperationChooser;
 
 /**
  * The <code>CompoundToolBar</code> class combines two or more

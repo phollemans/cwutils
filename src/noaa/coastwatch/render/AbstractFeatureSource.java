@@ -18,9 +18,12 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import noaa.coastwatch.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import noaa.coastwatch.render.FeatureSource;
+import noaa.coastwatch.util.EarthArea;
 
 /**
  * The <code>AbstractFeatureSource</code> class supplies default

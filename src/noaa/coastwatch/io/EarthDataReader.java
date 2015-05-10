@@ -41,11 +41,19 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.util.*;
-import java.awt.geom.*;
-import noaa.coastwatch.util.*;
-import ucar.nc2.dataset.*;
+import java.awt.geom.AffineTransform;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.Statistics;
+import ucar.nc2.dataset.CoordinateSystem;
 
 /**
  * All Earth data readers obtain Earth data from a data source and
@@ -90,7 +98,7 @@ public abstract class EarthDataReader {
   private String source;
 
   /** The map of variable name to statistics. */
-  private Map statsMap;
+  private Map<String, Statistics> statsMap;
 
   /** 
    * The data projection flag, true if reading explicit lat/lon data
@@ -158,9 +166,9 @@ public abstract class EarthDataReader {
    *
    * @return the list of variable names.
    */
-  public List getStatisticsVariables () {
+  public List<String> getStatisticsVariables () {
 
-    return (new ArrayList (statsMap.keySet()));
+    return (new ArrayList<String> (statsMap.keySet()));
 
   } // getStatisticsVariables
 
@@ -180,7 +188,7 @@ public abstract class EarthDataReader {
     String name
   ) {
 
-    return ((Statistics) statsMap.get (name));
+    return (statsMap.get (name));
 
   } // getStatistics
 
@@ -235,7 +243,7 @@ public abstract class EarthDataReader {
     // Initialize
     // ----------
     this.source = source;
-    this.statsMap = new LinkedHashMap();
+    this.statsMap = new LinkedHashMap<String, Statistics>();
 
   } // EarthDataReader constructor
 

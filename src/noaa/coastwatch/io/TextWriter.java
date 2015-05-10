@@ -24,10 +24,18 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import java.io.*;
-import java.text.*;
-import noaa.coastwatch.util.*;
-import noaa.coastwatch.util.trans.*;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.text.DecimalFormat;
+import java.util.List;
+import noaa.coastwatch.io.EarthDataWriter;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * A text writer is an Earth data writer that writes variable data

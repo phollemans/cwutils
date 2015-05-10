@@ -18,8 +18,20 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
-import java.awt.*;
 import jahuwaldt.plot.PlotSymbol;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.util.Iterator;
+import javax.swing.JPanel;
+import noaa.coastwatch.gui.TestContainer;
+import noaa.coastwatch.render.PlotSymbolFactory;
+import noaa.coastwatch.render.PointFeature;
+import noaa.coastwatch.render.PointFeatureSymbol;
+import noaa.coastwatch.render.TextElement;
 
 /**
  * A <code>SimpleSymbol</code> is a <code>PointFeatureSymbol</code>

@@ -18,9 +18,11 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
-import java.awt.*;
-import javax.swing.*;
-import noaa.coastwatch.render.*;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import javax.swing.JPanel;
+import noaa.coastwatch.render.Renderable;
 
 /**
  * The renderable panel displays the output from a renderable object.
