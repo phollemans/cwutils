@@ -1,5 +1,5 @@
 CoastWatch Software Library and Utilities
-Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 Permission to use, copy, modify, and distribute this software and
 its documentation for any purpose and without fee is hereby

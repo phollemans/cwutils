@@ -14,7 +14,6 @@
 
 
   -h, -{-}help \\ 
- -s, -{-}splash \\ 
  -{-}version \\ 
 
 \subsection*{\underline{Description}}
@@ -31,7 +30,7 @@
 \subsubsection*{Options:}
 \begin{description}
 \item[-h, -{-}help]Prints a brief help message.
-\item[-s, -{-}splash]Shows the splash window on startup. The splash window shows the version, author, and web site information.
+\item[-g, -{-}geometry=WxH]The window geometry width and height in pixels. The default is 960x720.
 \item[-{-}version]Prints the software version.
 
 \end{description}
@@ -927,18 +926,26 @@
 \subsubsection*{NetCDF:}
 
 
- The output is a NetCDF-3 dataset with CF 1.4 convention metadata. The formatting follows as much as possible the recommendations and examples in the document ``Encoding CoastWatch Satellite Data in NetCDF using the CF Metadata Conventions'', Peter Hollemans, February 2010. In some cases, the source data for some attributes may not be available, in which case the output NetCDF may need to be modified and extended.
+ The output is either a NetCDF 3 or 4 dataset with CF 1.4 convention metadata. The formatting follows as much as possible the recommendations and examples in the document ``Encoding CoastWatch Satellite Data in NetCDF using the CF Metadata Conventions'', Peter Hollemans, February 2010. In some cases, the source data for some attributes may not be available, in which case the output NetCDF may need to be modified and extended.
 \subsection*{\underline{Parameters}}
 \subsubsection*{Main parameters:}
 \begin{description}
 \item[ input ] The input data file name. 
 \item[ output ] The output data file name. Unless the \textbf{-{-}format}
- option is used, the output file extension indicates the desired output format: '.raw' for binary, '.txt' for text, '.flt' for ArcGIS, and '.nc' for NetCDF. 
+ option is used, the output file extension indicates the desired output format: \begin{itemize}
+\item .raw = binary
+\item .txt = text
+\item .flt = ArcGIS
+\item .nc = NetCDF 3
+\item .nc4 = NetCDF 4
+
+\end{itemize}
+
 
 \end{description}
 \subsubsection*{General options:}
 \begin{description}
-\item[ -f, -{-}format=TYPE ] The output format. The current formats are 'bin' for binary raster, 'text' for ASCII text, 'arc' for ArcGIS binary grid, 'netcdf' for NetCDF, or 'auto' to detect the format from the output file name. The default is 'auto'.
+\item[ -f, -{-}format=TYPE ] The output format. The current formats are 'bin' for binary raster, 'text' for ASCII text, 'arc' for ArcGIS binary grid, 'netcdf' for NetCDF 3, 'netcdf4' for NetCDF 4, or 'auto' to detect the format from the output file name. The default is 'auto'.
 \item[ -h, -{-}help ] Prints a brief help message. 
 \item[ -H, -{-}header ] Specifies that a header should be written with the output data. The header is written before any data and is different depending on the output format: \begin{itemize}
 \item Binary: The header consists of one byte specifying the number of dimensions followed by a series of 32-bit signed integers specifying the dimension lengths.
@@ -1437,7 +1444,6 @@
 
 
   -h, -{-}help \\ 
- -s, -{-}splash \\ 
  -{-}version \\ 
 
 \subsection*{\underline{Description}}
@@ -1454,7 +1460,6 @@
 \subsubsection*{Options:}
 \begin{description}
 \item[-h, -{-}help]Prints a brief help message.
-\item[-s, -{-}splash]Shows the splash window on startup. The splash window shows the version, author, and web site information.
 \item[-{-}version]Prints the software version.
 
 \end{description}
@@ -2646,7 +2651,6 @@ would put tick marks and labels at evenly spaced locations on the color scale fr
 
   -c, -{-}script=PATH \\ 
  -h, -{-}help \\ 
- -s, -{-}splash \\ 
  -o, -{-}operator \\ 
  -{-}version \\ 
 
@@ -2666,7 +2670,6 @@ would put tick marks and labels at evenly spaced locations on the color scale fr
 \begin{description}
 \item[ -c, -{-}script=PATH ] ADVANCED USERS ONLY. The query script path. The default is /ctera/query.cgi. 
 \item[ -h, -{-}help ] Prints a brief help message. 
-\item[-s, -{-}splash]Shows the splash window on startup. The splash window shows the version, author, and web site information.
 \item[ -o, -{-}operator ] Specifies that operator messages should be displayed. By default, errors on the server are not of interest to normal users and are not displayed. Operator messages take the form of a special message box that appears when an error occurs.
 \item[-{-}version]Prints the software version.
 
