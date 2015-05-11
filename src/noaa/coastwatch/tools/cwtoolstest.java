@@ -5,9 +5,14 @@
    AUTHOR: Melanie Wright
      DATE: 2009/03/29
            2010/03/23, PFH, edited comments and modified output format
-
+           2015/05/10, PFH
+           - Changes: Added "test-" identifier to input and output file names.
+           - Issue: We needed a better way to identify which files were
+             used in the testing to allow a cleanup task to differentiate 
+             between original input files and test files.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
  */
 ////////////////////////////////////////////////////////////////////////
@@ -266,7 +271,7 @@ public class cwtoolstest {
   ) throws IOException {
 
     String source = absolutePathToTestData + testFile;
-    String dest = absolutePathToTestData + tool + "-" + testFile;
+    String dest = absolutePathToTestData + "test-" + tool + "-" + testFile;
     copyFile (source, dest);
     return (dest);
 
@@ -352,7 +357,7 @@ public class cwtoolstest {
 
     // Create file name
     // ----------------
-    String newName = absolutePathToTestData + tool + "-output." + extension;
+    String newName = absolutePathToTestData + "test-" + tool + "-output." + extension;
 
     // Delete any existing file
     // ------------------------

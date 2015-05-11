@@ -29,13 +29,24 @@
              to users, but didn't always have the ability to build just the
              subset of packages needed.  So now we have flexibility in the 
              packages target.
+           2015/01/30, PFH
+           - Changes: Updated to use new class and native paths.
+           - Issue: Updating support libraries was getting confusing because
+             sometimes support for a given feature is spread over a number
+             of primary libraries and secondary dependencies.  So we rearranged
+             the library directory structure to separate things more clearly.
+           2015/05/10, PFH
+           - Changes: Added cleanup of test suite data files.
+           - Issues: The source code check-in was being confused by test suite
+             input and output files, so this way we can clean up those files
+             before building packages and source code check-in.
  
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 -->
 
-<project name="CWF" default="classes">
+<project name="cwf" default="classes">
 
   <!-- Setup global properties -->
   <!-- *********************** -->
@@ -63,7 +74,7 @@
   
   <path id="cp">
     <!-- The main libraries used by the code. -->
-    <fileset dir="lib" includes="**/*.jar,**/*.zip"/>
+    <fileset dir="lib/java" includes="**/*.jar,**/*.zip"/>
   </path>
 
   <!-- Add to default excludes -->
@@ -92,7 +103,7 @@
     <echo
       file="resources/version.properties" 
       message="cwf.version=${version.full} ${current.time}${line.separator}"/>
-    <jar destfile="lib/cwf.jar">
+    <jar destfile="lib/java/cwf.jar">
       <fileset dir="classes"/>
       <fileset dir="resources"/>
     </jar>
@@ -117,7 +128,7 @@
     <echo
       file="resources/version.properties" 
       message="cwf.version=${version.full} ${current.time}${line.separator}"/>
-    <jar destfile="lib/cwf.jar">
+    <jar destfile="lib/java/cwf.jar">
       <fileset dir="classes"/>
       <fileset dir="resources"/>
     </jar>
@@ -146,7 +157,7 @@
       header="CoastWatch Utils v${version}"
       footer="CoastWatch Utils v${version}">
       <packageset dir="src"/>
-      <arg line="-Xmaxwarns 10000"/>
+      <arg line="-Xmaxwarns 10"/>
     </javadoc>
     <delete dir="doc/tools"/>
     <exec executable="${basedir}/scripts/make_docs.sh" dir="doc">
@@ -177,6 +188,10 @@
   <property name="build.id.macosx64.tgz" value="528"/>
   <property name="build.id.solaris32" value="93"/>
   <property name="build.id.solaris64" value="292"/>
+
+  <target name="packages-help" description="Lists packages available to build">
+    <echo>Available packages: ${builds.all}</echo>
+  </target>
 
   <target name="packages" depends="all"
     description="Creates package files specified by ${builds}, or all if no builds specified">
@@ -231,6 +246,7 @@
       buildids="${build.ids}"
       verbose="true">
       <variable name="buildNumber" value="${build.number}"/>
+      <vmParameter value="-Xmx1024m"/>
     </install4j>
 
   </target>
@@ -258,7 +274,7 @@
     <delete dir="classes"/>
     <delete dir="doc/api"/>
     <delete verbose="true" quiet="true" includeemptydirs="true">
-      <fileset file="lib/cwf.jar"/>
+      <fileset file="lib/java/cwf.jar"/>
       <fileset file="src.zip"/>
       <fileset dir="doc/tools"/>
       <fileset dir="doc">
@@ -266,10 +282,13 @@
         <include name="cwf_ug_*.pdf"/>
       </fileset>
       <fileset dir="doc/users_guide" excludes="*.tex,*.bib,figures/*,icons/*"/>
+      <fileset dir="data/noaa/coastwatch/tools/test">
+        <include name="test-*"/>
+      </fileset>
     </delete>
   </target>
 
-  <target name="clean_packages"
+  <target name="clean-packages"
     description="Deletes all packages">
     <delete>
       <fileset dir="${pkg.dir}" includes="**/*"/>
@@ -279,13 +298,13 @@
   <!-- Define test targets -->
   <!-- ******************* -->
   
-  <target name="test_jar" depends="classes"
+  <target name="test-jar" depends="classes"
     description="Copies the CWF jar file into the install directory for direct in-situ testing">
-    <copy file="lib/cwf.jar" todir="${install.dir}/lib"/>
+    <copy file="lib/java/cwf.jar" todir="${install.dir}/lib/java"/>
   </target>
   
-  <path id="testcp">
-    <fileset dir="lib" includes="**/*.jar,**/*.zip"/>
+  <path id="test.class.path">
+    <fileset dir="lib/java" includes="**/*.jar,**/*.zip"/>
     <pathelement location="data"/>
     <pathelement location="extensions"/>
     <pathelement location="${java.home}/lib/plugin.jar"/>
@@ -295,15 +314,15 @@
     description="Tests the Java class ${class} by calling its main() method with arguments ${args}">
     <java 
       classname="${class}" 
-      classpathref="testcp"
+      classpathref="test.class.path"
       fork="true">
-      <env key="${ld.var}" value="${basedir}/lib/${os.libs}"/>
-      <jvmarg line="${vm.args} -enableassertions:noaa.coastwatch..."/>
+      <env key="${ld.var}" value="${basedir}/lib/native/${os.libs}"/>
+      <jvmarg line="${vm.args} -Djna.library.path='${basedir}/lib/native/${os.libs}' -ea:noaa.coastwatch..."/>
       <arg line="${args}"/>
     </java>
   </target>
 
-  <target name="test_cdat" 
+  <target name="test-cdat"
     description="Tests CDAT by calling its main() method with no arguments">
     <antcall target="test">
       <param name="class" value="noaa.coastwatch.tools.cdat"/>
@@ -311,21 +330,21 @@
     </antcall>
   </target>
 
-  <target name="test_info" 
+  <target name="test-info"
     description="Tests the cwinfo tool by calling its main() method with arguments ${args}">
     <antcall target="test">
       <param name="class" value="noaa.coastwatch.tools.cwinfo"/>
     </antcall>
   </target>
 
-  <target name="test_tool" 
+  <target name="test-tool"
     description="Tests a CoastWatch tool named ${tool} by calling its main() method with arguments ${args}">
     <antcall target="test">
       <param name="class" value="noaa.coastwatch.tools.${tool}"/>
     </antcall>
   </target>
 
-  <target name="test_suite"
+  <target name="test-suite"
     description="Runs the CoastWatch test suite by calling cwtoolstest">
     <antcall target="test">
       <param name="class" value="noaa.coastwatch.tools.cwtoolstest"/>
@@ -333,7 +352,7 @@
     </antcall>
   </target>
 
-  <target name="test_con"
+  <target name="test-con"
     description="Tests the Java GUI class ${contain} using the noaa.coastwatch.gui.TestContainer class">
     <antcall target="test">
       <param name="class" value="noaa.coastwatch.gui.TestContainer"/>
@@ -341,7 +360,7 @@
     </antcall>
   </target>
 
-  <target name="test_unit"
+  <target name="test-unit"
     description="Runs the CoastWatch unit tests by running noaa.coastwatch.test.TestableTester">
     <antcall target="test">
       <param name="class" value="noaa.coastwatch.test.TestableTester"/>
