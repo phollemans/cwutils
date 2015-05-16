@@ -14,9 +14,14 @@
            2006/11/03, PFH, added units and list icons
            2006/11/08, PFH, added help button
            2012/12/04, PFH, updated to use getSelectedValuesList()
+           2015/05/15, PFH
+          - Changes: Added support for heap and cache size preferences.
+          - Issue: We needed some way to give the user the ability to
+            change the Java VM heap size and tile cache size without
+            having to edit batch or script files.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -160,14 +165,14 @@ public class PreferencesChooser
   /** The preferences object displayed by this panel. */
   private Preferences prefs;
 
-  /** 
-   * The flag that indicates that the original preferences have been
-   * changed. 
-   */
+  /** The change flag, true if the original preferences have been changed. */
   private boolean prefsChanged;
 
   /** The enhancement preferences panel. */
   private EnhancementPreferencesChooser enhancePrefsChooser;
+
+  /** The general preferences chooser. */
+  private GeneralPreferencesChooser generalPrefsChooser;
 
   ////////////////////////////////////////////////////////////
   
@@ -191,7 +196,8 @@ public class PreferencesChooser
     final CardLayout cardLayout = new CardLayout();
     final JPanel cards = new JPanel (cardLayout);
     add (cards, BorderLayout.CENTER);
-    cards.add (new GeneralPreferencesChooser(), GENERAL_CATEGORY);
+    generalPrefsChooser = new GeneralPreferencesChooser();
+    cards.add (generalPrefsChooser, GENERAL_CATEGORY);
     enhancePrefsChooser = new EnhancementPreferencesChooser();
     cards.add (enhancePrefsChooser, ENHANCEMENT_CATEGORY);
 
@@ -318,8 +324,9 @@ public class PreferencesChooser
    */
   public boolean getPrefsChanged () { 
 
+    generalPrefsChooser.applyChanges();
     enhancePrefsChooser.applyChanges();
-    return (prefsChanged); 
+    return (prefsChanged);
 
   } // getPrefsChanged
 
@@ -332,6 +339,7 @@ public class PreferencesChooser
    */
   public Preferences getPreferences () {
 
+    generalPrefsChooser.applyChanges();
     enhancePrefsChooser.applyChanges();
     return (prefs);
 
@@ -346,6 +354,53 @@ public class PreferencesChooser
   private class GeneralPreferencesChooser
     extends JPanel {
 
+    // Variables
+    // ---------
+    
+    /** The text field for heap size. */
+    JTextField heapField;
+
+    /** The text field for tile cache size. */
+    JTextField cacheField;
+
+    ////////////////////////////////////////////////////////
+
+    /**
+     * Applies any changes that have been made but not applied to the
+     * to the current preferences.
+     *
+     * @since 3.3.1
+     */
+    public void applyChanges () {
+
+      // Get new heap size
+      // -----------------
+      try {
+        int newHeapSize = Integer.parseInt (heapField.getText());
+        if (newHeapSize != prefs.getHeapSize()) {
+          prefs.setHeapSize (newHeapSize);
+          prefsChanged = true;
+        } // if
+      } // try
+      catch (NumberFormatException e) {
+        heapField.setText (Integer.toString (prefs.getHeapSize()));
+      } // catch
+      
+      // Get new tile cache size
+      // -----------------------
+      try {
+        int newCacheSize = Integer.parseInt (cacheField.getText());
+        if (newCacheSize != prefs.getCacheSize()) {
+          prefs.setCacheSize (newCacheSize);
+          prefsChanged = true;
+        } // if
+      } // try
+      catch (NumberFormatException e) {
+        cacheField.setText (Integer.toString (prefs.getCacheSize()));
+      } // catch
+      
+    } // applyChanges
+
     ////////////////////////////////////////////////////////
   
     /** 
@@ -358,13 +413,57 @@ public class PreferencesChooser
       super (new GridBagLayout());
       setBorder (new TitledBorder (new EtchedBorder(), "General Preferences"));
 
-      // Add geographic coordinate selection
-      // -----------------------------------
       GridBagConstraints gc = new GridBagConstraints();
       gc.insets = new Insets (2, 0, 2, 0);
-      gc.anchor = GridBagConstraints.NORTHWEST;
-      GUIServices.setConstraints (gc, 0, 0, 1, 1, 
-        GridBagConstraints.HORIZONTAL, 1, 0);
+      gc.anchor = GridBagConstraints.WEST;
+
+      // Add memory options
+      // ------------------
+      int row = -1;
+      GUIServices.setConstraints (gc, 0, ++row, 3, 1, GridBagConstraints.HORIZONTAL, 1, 0);
+      add (new JLabel ("Memory limits (restart required for changes to take effect):"), gc);
+
+      GUIServices.setConstraints (gc, 0, ++row, 1, 1, GridBagConstraints.NONE, 0, 0);
+      gc.insets = new Insets (2, 15, 2, 10);
+      add (new JLabel ("Maximum heap size:"), gc);
+
+      heapField = new JTextField (8);
+      heapField.setText (Integer.toString (prefs.getHeapSize()));
+      heapField.setEditable (true);
+      FocusAdapter focusAdapter = new FocusAdapter() {
+        public void focusLost (FocusEvent event) {
+          applyChanges();
+        } // focusLost
+      };
+      heapField.addFocusListener (focusAdapter);
+
+      GUIServices.setConstraints (gc, 1, row, 1, 1, GridBagConstraints.NONE, 0, 0);
+      gc.insets = new Insets (2, 0, 2, 0);
+      add (heapField, gc);
+
+      GUIServices.setConstraints (gc, 2, row, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
+      add (new JLabel ("mb"), gc);
+
+      GUIServices.setConstraints (gc, 0, ++row, 1, 1, GridBagConstraints.NONE, 0, 0);
+      gc.insets = new Insets (2, 15, 2, 10);
+      add (new JLabel ("Tile cache size:"), gc);
+
+      cacheField = new JTextField (8);
+      cacheField.setText (Integer.toString (prefs.getCacheSize()));
+      cacheField.setEditable (true);
+      cacheField.addFocusListener (focusAdapter);
+
+      GUIServices.setConstraints (gc, 1, row, 1, 1, GridBagConstraints.NONE, 0, 0);
+      gc.insets = new Insets (2, 0, 2, 0);
+      add (cacheField, gc);
+
+      GUIServices.setConstraints (gc, 2, row, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
+      add (new JLabel ("mb"), gc);
+
+      // Add geographic coordinate selection
+      // -----------------------------------
+      GUIServices.setConstraints (gc, 0, ++row, 3, 1, GridBagConstraints.HORIZONTAL, 1, 0);
+      gc.insets = new Insets (5, 0, 5, 0);
       add (new JLabel ("Geographic coordinates:"), gc);
       
       final JRadioButton decimalRadio = new JRadioButton (
@@ -373,23 +472,26 @@ public class PreferencesChooser
       group.add (decimalRadio);
       decimalRadio.addItemListener (new ItemListener () {
           public void itemStateChanged (ItemEvent e) {
-            prefs.setEarthLocDegrees (e.getStateChange() == 
-              ItemEvent.SELECTED);
+            prefs.setEarthLocDegrees (e.getStateChange() == ItemEvent.SELECTED);
             prefsChanged = true;
           } // itemStateChanged
         });
-      GUIServices.setConstraints (gc, 0, 1, 1, 1, 
-        GridBagConstraints.HORIZONTAL, 1, 0);
+      GUIServices.setConstraints (gc, 0, ++row, 3, 1, GridBagConstraints.HORIZONTAL, 1, 0);
+      gc.insets = new Insets (2, 10, 2, 0);
       add (decimalRadio, gc);
 
       JRadioButton dmsRadio = new JRadioButton (
         "Display as degrees/minutes/seconds", !prefs.getEarthLocDegrees());
       group.add (dmsRadio);
-      GUIServices.setConstraints (gc, 0, 2, 1, 1, 
-        GridBagConstraints.HORIZONTAL, 1, 1);
+      GUIServices.setConstraints (gc, 0, ++row, 3, 1, GridBagConstraints.HORIZONTAL, 1, 0);
       add (dmsRadio, gc);
 
+      GUIServices.setConstraints (gc, 0, ++row, 3, 1, GridBagConstraints.HORIZONTAL, 1, 1);
+      add (new JLabel(), gc);
+
     } // GeneralPreferencesChooser constructor
+
+    ////////////////////////////////////////////////////////
 
   } // GeneralPreferencesChooser
 
@@ -833,7 +935,6 @@ public class PreferencesChooser
       // Modify range
       // ------------
       double[] newRange = (double[]) oldRange.clone();
-      boolean retval = true;
       int index = (fieldChanged == minField ? 0 : 1);
       try {
         newRange[index] = Double.parseDouble (fieldChanged.getText());

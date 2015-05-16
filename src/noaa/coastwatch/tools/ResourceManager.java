@@ -10,9 +10,18 @@
            2006/12/29, PFH, made overlay manager non-static
            2007/08/03, PFH, made feedback from checkResources() more verbose
            2007/12/19, PFH, modified comments for getOverlayManager()
+           2015/05/15, PFH
+           - Changes: Updated to write the VM options file, and to use a
+             more dependable location for preferences files under Windows.
+           - Issue: We needed to write the VM options file based on user
+             preferences being set so that tools that run with the VM options
+             startup using them.  At the same time, there were reports on
+             Windows of the preferences directory being inaccessible, and
+             we discovered that the directory is in a new location, best
+             accessible using the APPDATA environment variable.
            
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -53,8 +62,7 @@ public class ResourceManager {
   // ---------
 
   /** The user-specific base directory for resources. */
-  private static final String RESOURCE_BASE = 
-    System.getProperty ("user.home") + File.separator + getResourceBase();
+  private static final String RESOURCE_BASE = getAbsoluteResourceBase();
 
   /** The palette resource directory. */
   private static final File PALETTES_DIR = new File (
@@ -80,6 +88,9 @@ public class ResourceManager {
     "Oceanographic.jso",
     "Oceanographic - Coral Reef Watch.jso"
   };
+  
+  /** The Java VM options file. */
+  private static final String VMOPTIONS_FILE = "cwf.vmoptions";
 
   // Variables
   // ---------
@@ -90,11 +101,51 @@ public class ResourceManager {
   ////////////////////////////////////////////////////////////
 
   /**
+   * Gets the OS-specific absolute resource base directory.
+   *
+   * @return the directory off the user's home directory where
+   * resources should be placed.
+   *
+   * @since 3.3.1
+   */
+  private static String getAbsoluteResourceBase () {
+
+    String base;
+  
+    if (GUIServices.IS_WIN) {
+      base =
+        System.getenv ("APPDATA") +
+        File.separator + "CoastWatch";
+    } // if
+    else if (GUIServices.IS_MAC) {
+      base =
+        System.getProperty ("user.home") +
+        File.separator + "Library" +
+        File.separator + "Application Support" +
+        File.separator + "CoastWatch";
+    } // else if
+    else {
+      base =
+        System.getProperty ("user.home") +
+        File.separator + ".coastwatch";
+    } // else
+
+    return (base);
+
+  } // getAbsoluteResourceBase
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Gets the OS-specific resource base directory.
    *
    * @return the directory off the user's home directory where
    * resources should be placed.
+   *
+   * @deprecated As of version 3.3.1, replaced by 
+   * {@link #getAbsoluteResourceBase}.
    */
+  @Deprecated
   private static String getResourceBase () {
 
     if (GUIServices.IS_WIN)
@@ -446,6 +497,8 @@ public class ResourceManager {
     try {
       preferences.write (new FileOutputStream (
         new File (PREFERENCES_DIR, PREFERENCES_FILE)));
+      preferences.writeOptions (new FileOutputStream (
+        new File (PREFERENCES_DIR, VMOPTIONS_FILE)));
     } // try
     catch (IOException e) {
       throw new RuntimeException ("Cannot write preferences file: " + 
