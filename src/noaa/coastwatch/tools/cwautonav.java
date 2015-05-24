@@ -12,9 +12,13 @@
            2006/10/25, PFH, fixed problem with lat/lon separator characters
            2007/04/20, PFH, added version printing
            2012/12/04, PFH, added call to canUpdateNavigation for reader
-
+           2015/05/23, PFH
+           - Changes: Updated documentation.
+           - Issue: We created Unix man pages and the documentation needed
+             a few changes.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -109,7 +113,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * </ul>
  *
  * <p>Note that because of the autonavigation algorithm design, there
- * are a number of <b>limitations</b>:</p>
+ * are a number of <b>limitations:</b></p>
  * <ul>
  * 
  *   <li><b>Coastline features</b> - The algorithm relies partly on

@@ -20,7 +20,11 @@
            - Issue: We want to start supporting NetCDF 4 read/write as an
             alternative to HDF 4.  This is the first appearance of that
             support, along with CDAT write support.
-
+           2015/05/23, PFH
+           - Changes: Updated documentation.
+           - Issue: We created Unix man pages and the documentation needed
+             a few changes.
+ 
   CoastWatch Software Library and Utilities
   Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
@@ -189,11 +193,11 @@ import noaa.coastwatch.util.EarthDataInfo;
  *   option is used, the output file extension indicates the
  *   desired output format:
  *   <ul>
- *     <li>.raw = binary</li>
- *     <li>.txt = text</li>
- *     <li>.flt = ArcGIS</li>
- *     <li>.nc = NetCDF 3</li>
- *     <li>.nc4 = NetCDF 4</li>
+ *     <li>filename.raw = binary</li>
+ *     <li>filename.txt = text</li>
+ *     <li>filename.flt = ArcGIS</li>
+ *     <li>filename.nc = NetCDF 3</li>
+ *     <li>filename.nc4 = NetCDF 4</li>
  *   </ul></dd>
  *
  * </dl>
@@ -262,7 +266,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  *     <li>NetCDF: Not applicable, the missing values for
  *     variable data are copied from the input data source.</li>
  *
- *   </ul>
+ *   </ul></dd>
  *
  *   <dt> -v, --verbose </dt>
  *   <dd> Turns verbose mode on.  The current status of data

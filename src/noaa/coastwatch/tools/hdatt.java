@@ -12,6 +12,10 @@
            - Issue: The HDF library was crashing the VM due to multiple threads
              calling the library simultaneously and the library is not
              threadsafe.
+           2015/05/23, PFH
+           - Changes: Updated documentation.
+           - Issue: We created Unix man pages and the documentation needed
+             a few changes.
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
@@ -138,8 +142,8 @@ import noaa.coastwatch.util.MetadataServices;
  *   <table>
  *     <caption></caption>
  *     <tr>
- *       <th>Type name</th>
- *       <th>HDF type</th>
+ *       <th abbr="Type name">Type name</th>
+ *       <th abbr="DFNT_FLOAT64">HDF type</th>
  *     </tr>
  *     <tr>
  *       <td>string</td>

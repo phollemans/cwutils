@@ -9,6 +9,7 @@
 /* Begin PBXFileReference section */
 		E906137B16B234C50047F604 /* ACSPONCCFReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = ACSPONCCFReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E91838D6189209DF00A2F3DD /* cwf_users_guide.tex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cwf_users_guide.tex; sourceTree = "<group>"; };
+		E91FD1B61B1003BA0096CCA3 /* html2mdoc.xsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = html2mdoc.xsl; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xml; };
 		E92229931AF4937B00E392D0 /* ScriptConsole.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ScriptConsole.java; sourceTree = "<group>"; };
 		E9339BBF16D1F0740019383B /* logging.properties */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = logging.properties; sourceTree = "<group>"; };
 		E93DCCB618DBC10B0075CF38 /* Testable.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = Testable.java; path = test/Testable.java; sourceTree = "<group>"; };
@@ -895,6 +896,7 @@
 		E9A91443196E33A700ABC12D /* LRUTileCache.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = LRUTileCache.java; path = io/tile/LRUTileCache.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9B50A141652F29C00D997D5 /* GeographicProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GeographicProjection.java; sourceTree = "<group>"; };
 		E9CA7C6D1AD5DD2800C2C96C /* CFNC4Writer.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CFNC4Writer.java; sourceTree = "<group>"; };
+		E9D3A73E1B06D3C10027AA5F /* saxon9he.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = saxon9he.jar; path = scripts/saxon9he.jar; sourceTree = "<group>"; };
 		E9DD13B6184D6E1200139E22 /* areadirblock.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = areadirblock.xml; path = mcidas/areadirblock.xml; sourceTree = "<group>"; };
 		E9DEDF7E19C278320028193C /* SplashScreenManager.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = SplashScreenManager.java; sourceTree = "<group>"; };
 		E9E9BCC91976110200B85B5E /* TileCacheKey.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileCacheKey.java; path = io/tile/TileCacheKey.java; sourceTree = "<group>"; };
@@ -1002,6 +1004,7 @@
 		E93DCCB718DCCDDA0075CF38 /* scripts */ = {
 			isa = PBXGroup;
 			children = (
+				E9D3A73E1B06D3C10027AA5F /* saxon9he.jar */,
 				E93DCCB818DCCE760075CF38 /* make_docs.sh */,
 			);
 			name = scripts;
@@ -1109,6 +1112,7 @@
 		E96D87DB161661420009B833 /* doc */ = {
 			isa = PBXGroup;
 			children = (
+				E91FD1B61B1003BA0096CCA3 /* html2mdoc.xsl */,
 				E9875CC6161E652F00C423BB /* license.txt */,
 				E9875CC7161E652F00C423BB /* tool_categories.txt */,
 				E96D87DD161661420009B833 /* cw_cf_metadata.pdf */,

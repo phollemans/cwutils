@@ -46,9 +46,9 @@
           <entry location="cwf.properties" fileType="regular" />
           <entry location="data/noaa/coastwatch/tools/test" fileType="regular" />
           <entry location="doc/api" fileType="regular" />
+          <entry location="doc/html2mdoc.xsl" fileType="regular" />
           <entry location="doc/tool_categories.txt" fileType="regular" />
           <entry location="doc/users_guide" fileType="regular" />
-          <entry location="lib/java/stubs" fileType="regular" />
           <entry location="resources" fileType="regular" />
           <entry location="scripts" fileType="regular" />
           <entry location="src" fileType="regular" />
@@ -89,16 +89,15 @@
           <entry location="bin/cwstats" fileType="launcher" />
           <entry location="bin/cwautonav" fileType="launcher" />
           <entry location="bin/hdatt" fileType="launcher" />
+          <entry location="doc/man" fileType="regular" />
         </include>
         <dependencies />
       </component>
       <component name="Source code and API docs" id="118" customizedId="" displayDescription="false" hideHelpButton="false" selected="false" changeable="true" downloadable="false" hidden="false">
         <description />
         <include all="false">
-          <entry location="doc/api.zip" fileType="regular" />
           <entry location="doc/cw_cf_metadata.pdf" fileType="regular" />
           <entry location="doc/metadata_comparison_v1_1_jan_2010.pdf" fileType="regular" />
-          <entry location="src.zip" fileType="regular" />
         </include>
         <dependencies />
       </component>

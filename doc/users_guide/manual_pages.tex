@@ -209,8 +209,8 @@
 \end{itemize}
 
 
- Note that because of the autonavigation algorithm design, there are a number of \textbf{limitations}
-:
+ Note that because of the autonavigation algorithm design, there are a number of \textbf{limitations:}
+
 \begin{itemize}
 \item \textbf{Coastline features}
  - The algorithm relies partly on the user being able to specify navigation boxes containing ``wiggly'' coastline features such as peninsulas and bays. A flat coastline can cause the algorithm to generate inaccurate offset estimates.
@@ -933,11 +933,11 @@
 \item[ input ] The input data file name. 
 \item[ output ] The output data file name. Unless the \textbf{-{-}format}
  option is used, the output file extension indicates the desired output format: \begin{itemize}
-\item .raw = binary
-\item .txt = text
-\item .flt = ArcGIS
-\item .nc = NetCDF 3
-\item .nc4 = NetCDF 4
+\item filename.raw = binary
+\item filename.txt = text
+\item filename.flt = ArcGIS
+\item filename.nc = NetCDF 3
+\item filename.nc4 = NetCDF 4
 
 \end{itemize}
 
@@ -1530,9 +1530,11 @@ Operator &Symbol \\
  \hline 
 Power &\^{} \\
  \hline 
-Boolean Not &! \\
+Boolean not &! \\
  \hline 
-Unary Plus, Unary Minus &+x, -x \\
+Unary plus &+x \\
+ \hline 
+Unary minus &-x \\
  \hline 
 Modulus &\% \\
  \hline 
@@ -1540,17 +1542,25 @@ Division &/ \\
  \hline 
 Multiplication &* \\
  \hline 
-Addition, Subtraction &+, - \\
+Addition &+ \\
  \hline 
-Less or Equal, More or Equal &$<$=, $>$= \\
+Subtraction &- \\
  \hline 
-Less Than, Greater Than &$<$, $>$ \\
+Less than or equal to &$<$= \\
  \hline 
-Not Equal, Equal &!=, == \\
+Greater than or equal to &$>$= \\
  \hline 
-Boolean And &\&\& \\
+Less than &$<$ \\
  \hline 
-Boolean Or &$|$$|$ \\
+Greater than &$>$ \\
+ \hline 
+Not equal &!= \\
+ \hline 
+Equal &== \\
+ \hline 
+Boolean and &\&\& \\
+ \hline 
+Boolean or &$|$$|$ \\
  \hline 
 
 \end{tabular}
@@ -1569,55 +1579,53 @@ Cosine &cos (x) \\
  \hline 
 Tangent &tan (x) \\
  \hline 
-Arc Sine &asin (x) \\
+Arcsine &asin (x) \\
  \hline 
-Arc Cosine &acos (x) \\
+Arccosine &acos (x) \\
  \hline 
-Arc Tangent &atan (x) \\
+Arctangent &atan (x) \\
  \hline 
-Hyperbolic Sine &sinh (x) \\
+Hyperbolic sine &sinh (x) \\
  \hline 
-Hyperbolic Cosine &cosh (x) \\
+Hyperbolic cosine &cosh (x) \\
  \hline 
-Hyperbolic Tangent &tanh (x) \\
+Hyperbolic tangent &tanh (x) \\
  \hline 
-Inverse Hyperbolic Sine &asinh (x) \\
+Inverse hyperbolic sine &asinh (x) \\
  \hline 
-Inverse Hyperbolic Cosine &acosh (x) \\
+Inverse hyperbolic cosine &acosh (x) \\
  \hline 
-Inverse Hyperbolic Tangent &atanh (x) \\
+Inverse hyperbolic tangent &atanh (x) \\
  \hline 
-Natural Logarithm &ln (x) \\
+Natural log &ln (x) \\
  \hline 
-Logarithm base 10 &log (x) \\
+Log base 10 &log (x) \\
  \hline 
 Angle &angle (x) \\
  \hline 
-Absolute Value / Magnitude &abs (x) \\
+Absolute value &abs (x) \\
  \hline 
-Random number (between 0 and 1) &rand () \\
+Random [0..1] &rand () \\
  \hline 
 Modulus &mod (x) \\
  \hline 
-Square Root &sqrt (x) \\
+Square root &sqrt (x) \\
  \hline 
 Sum &sum (x1, x2, ...) \\
  \hline 
-if (condition is true) then return (x1)\\ 
- else return (x2) &select (condition, x1, x2) \\
+if (cond) then x1 else x2 &select (cond, x1, x2) \\
  \hline 
-Hexadecimal decoder &hex (string) \\
+Hex decode &hex (string) \\
  \hline 
-if (b (BITWISE OR) mask == 0) then return (x)\\ 
- else return (Not-a-Number) &mask (x, b, mask) \\
+if (or (b,mask) == 0) then x else NaN &mask (x, b, mask) \\
  \hline 
-Bitwise And &and (x1, x2) \\
+Bitwise and &and (x1, x2) \\
  \hline 
-Bitwise Or &or (x1, x2) \\
+Bitwise or &or (x1, x2) \\
  \hline 
-Bitwise Xor &xor (x1, x2) \\
+Bitwise xor &xor (x1, x2) \\
  \hline 
-Bitwise Not &not (x) \\
+Bitwise not &not (x) \\
  \hline 
 
 \end{tabular}
@@ -1634,7 +1642,7 @@ e &2.7182818... \\
  \hline 
 pi &3.1415927... \\
  \hline 
-nan (Not-a-Number) &NaN \\
+nan &IEEE 754 NaN \\
  \hline 
 
 \end{tabular}
@@ -2210,7 +2218,7 @@ nan (Not-a-Number) &NaN \\
 \item[-S, -{-}nostates]Turns off state boundary rendering. The default when \textbf{-{-}political}
  is specified is to render international and state boundaries. With this option is specified, only international boundaries are rendered.
 \item[-t, -{-}topo=COLOR[/LEVEL1/LEVEL2/...{]}]The topographic contour color and levels. The color is specified by name or hexadecimal value (see above). Topographic contours are generated for the specified integer levels in meters. If no levels are specified, contours are drawn at 200 m, 500 m, 1000 m, 2000 m, and 3000 m. The default is not to render topographic contours.
-\item[-u, -{-}group=GROUP]The overlay group name to render. Overlay groups are a concept from the CoastWatch Data Analysis Tool (CDAT). CDAT users can save a set of preferred overlays as a group and then restore those overlays when viewing a new data file. The same group names saved from CDAT are available to be rendered here. This is an extremely useful option that allows users to design a set of overlays graphically and adjust the various overlay properties beyond what can be achieved using the command line options for cwrender. If specified, this option will cause all overlays in the group to be drawn on top of any other overlays specified by command line options. 
+\item[-u, -{-}group=GROUP]The overlay group name to render. Overlay groups are a concept from the CoastWatch Data Analysis Tool (CDAT). CDAT users can save a set of preferred overlays as a group and then restore those overlays when viewing a new data file. The same group names saved from CDAT are available to be rendered here. This is an extremely useful option that allows users to design a set of overlays graphically and adjust the various overlay properties beyond what can be achieved using the command line options for cwrender. If specified, this option will cause all overlays in the group to be drawn on top of any other overlays specified by command line options.
 \item[-w, -{-}water=COLOR]The water mask color. The color is specified by name or hexadecimal value (see above). Water masking is performed similarly to land masking (see the \textbf{-{-}land}
  option), but the sense of the land mask is inverted. The default is not to render a water mask.
 \item[-X, -{-}exprmask=EXPRESSION/COLOR]Specifies that a mask should be rendered on top of the data image whose pixels are obtained by evaluating the expression. The color is specified by name or hexadecimal value (see above). An expression mask is a special type of multipurpose mask similar to a bitmask (see the \textbf{-{-}bitmask}
