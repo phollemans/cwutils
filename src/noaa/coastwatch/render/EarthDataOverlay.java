@@ -70,7 +70,7 @@ public abstract class EarthDataOverlay
   // ---------
 
   /** The serialization constant. */
-  static final long serialVersionUID = -7008374236800330226L;
+  private static final long serialVersionUID = -7008374236800330226L;
 
   // Variables
   // ---------

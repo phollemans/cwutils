@@ -24,9 +24,16 @@
            2006/11/19, PFH, added light text halo for dark foreground colors
            2006/11/20, PFH, modified rendering method for shadows
            2006/12/21, PFH, moved some functionality to LabeledLineOverlay
+           2015/06/17, PFH
+           - Changes: Added serialization constant.
+           - Issue: The parent class was changed and refactored, so the
+             overlays that were previously saved were not being de-serialized
+             correctly.  So running "serialver" on the new classes, and 
+             comparing to the error message produced in the ResourceManager
+             class, yields the proper serialization constants.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -44,6 +51,7 @@ import java.util.Iterator;
 import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.render.LabeledLineOverlay;
+import noaa.coastwatch.render.lines.LineCollection;
 import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.Datum;
@@ -62,6 +70,10 @@ public class LatLonOverlay
 
   // Constants
   // ---------
+
+  /** The serialization constant. */
+  private static final long serialVersionUID = -6424130357334364832L;
+
   /** The allowed automatic grid increment values. */
   private static final int[] GRID_INCS = {1, 2, 5, 10, 15, 20, 30};
 
@@ -203,6 +215,7 @@ public class LatLonOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected LineCollection getLines (
     EarthDataView view
   ) {

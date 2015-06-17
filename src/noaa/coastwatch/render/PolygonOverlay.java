@@ -39,7 +39,7 @@ public abstract class PolygonOverlay
   // ---------
 
   /** The serialization constant. */
-  static final long serialVersionUID = -8535512620300938216L;
+  private static final long serialVersionUID = -8535512620300938216L;
 
   // Variables
   // ---------

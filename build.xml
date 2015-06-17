@@ -40,6 +40,11 @@
            - Issues: The source code check-in was being confused by test suite
              input and output files, so this way we can clean up those files
              before building packages and source code check-in.
+           2015/06/17, PFH
+           - Changes: Added api-zip and test-cwmaster targets.
+           - Issues: We wanted to be able to build the API without having
+             to run the entire documentation sequence.  Also wanted to be able
+             to quickly test the master tool.
  
   CoastWatch Software Library and Utilities
   Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
@@ -144,8 +149,8 @@
     </zip>
   </target>
 
-  <target name="doc" depends="classes"
-    description="Creates Java API documentation, tool manual pages, and user's guide in doc/">
+  <target name="api" depends="classes"
+    description="Creates Java API documentation">
     <delete dir="doc/api"/>
     <javadoc 
       sourcepath="src" 
@@ -159,13 +164,17 @@
       <packageset dir="src"/>
       <arg line="-Xmaxwarns 10"/>
     </javadoc>
+  </target>
+
+  <target name="doc" depends="api"
+    description="Creates Java API documentation, tool manual pages, and user's guide in doc/">
     <delete dir="doc/tools"/>
     <exec executable="${basedir}/scripts/make_docs.sh" dir="doc">
       <arg line="${version}"/>
     </exec>
   </target>
 
-  <target name="api"
+  <target name="api-zip"
     description="Creates Java API ZIP file in doc/">
     <zip destfile="doc/api.zip">
       <zipfileset dir="doc/api" prefix="api"/>
@@ -173,8 +182,8 @@
   </target>
 
   <target name="all"
-    description="Combines classes, doc, source, and api targets"
-    depends="classes,doc,source,api"/>
+    description="Combines classes, doc, source, and api-zip targets"
+    depends="classes,doc,source,api-zip"/>
 
   <!-- Define package targets -->
   <!-- ********************** -->
@@ -326,6 +335,14 @@
     description="Tests CDAT by calling its main() method with no arguments">
     <antcall target="test">
       <param name="class" value="noaa.coastwatch.tools.cdat"/>
+      <param name="args" value=""/>
+    </antcall>
+  </target>
+
+  <target name="test-cwmaster"
+    description="Tests cwmaster by calling its main() method with no arguments">
+    <antcall target="test">
+      <param name="class" value="noaa.coastwatch.tools.cwmaster"/>
       <param name="args" value=""/>
     </antcall>
   </target>

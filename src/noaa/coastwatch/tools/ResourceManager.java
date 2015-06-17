@@ -201,6 +201,10 @@ public class ResourceManager {
         for (Iterator iter = groupList.iterator(); iter.hasNext();) {
           try { manager.loadObject ((String) iter.next()); }
           catch (Exception e) { moveDir = true; break; }
+          
+          // TODO: This would be a good place to put an informational
+          // log message, about the serialization error UID codes.
+          
         } // for
       } // if
 

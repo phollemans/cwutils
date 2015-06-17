@@ -63,6 +63,9 @@ public class TextElement
   /** The drop shadow offset factor as a fraction of the font size. */
   private static final double SHADOW_OFFSET = 0.1;
 
+  /** The default font. */
+  public static final Font DEFAULT_FONT = new Font (null, Font.PLAIN, 12);
+
   // Variables
   // ---------
   /** The text string. */
@@ -285,7 +288,7 @@ public class TextElement
     Point2D base
   ) {
 
-    this (text, new Font (null, Font.PLAIN, 12), base, null, 0);
+    this (text, DEFAULT_FONT, base, null, 0);
 
   } // TextElement constructor
 

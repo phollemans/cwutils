@@ -74,7 +74,7 @@ public class MultilayerBitmaskOverlay
   // ---------
 
   /** The serialization constant. */
-  static final long serialVersionUID = 1833669752906042660L;
+  private static final long serialVersionUID = 1833669752906042660L;
 
   // Variables
   // ---------
