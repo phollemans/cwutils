@@ -9,9 +9,15 @@
            2006/11/02, PFH, added getComponent()
            2006/12/21, PFH, changed labels to drawLabels
            2006/12/24, PFH, added properties for data reference overlays
+           2015/06/08, PFH
+             - Changes: Changed the maximum value for "mask" property values
+               to Integer.MAX_VALUE.
+             - Issue: It was limiting in CDAT to only be allowed to type in 
+               up to 255 for the integer mask value for a bitmask overlay, so
+               we increased the value to allow any mask value.
            
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -68,19 +74,19 @@ public class GenericOverlayPropertyChooser
   // ---------
 
   /** The map used for overlay labels. */
-  private static Map labelMap;
+  private static Map<String, String> labelMap;
 
   /** The map used for overlay property dependencies. */
-  private static Map dependencyMap;
+  private static Map<String, List<String>> dependencyMap;
 
   /** The map used for ordering overlays properties. */
-  private static Map orderMap;
+  private static Map<String, Integer> orderMap;
 
   /** The map used for overlay property visual object restrictions. */
-  private static Map restrictionMap;
+  private static Map<String, Object> restrictionMap;
 
   /** The map of property to label. */
-  private Map propertyMap;
+  private Map<String, JLabel> propertyMap;
 
   ////////////////////////////////////////////////////////////
 
@@ -89,7 +95,7 @@ public class GenericOverlayPropertyChooser
 
     // Setup label map
     // ---------------
-    labelMap = new HashMap();
+    labelMap = new HashMap<String, String>();
     labelMap.put ("color", 
                   "Drawing color");
     labelMap.put ("fillColor", 
@@ -139,17 +145,17 @@ public class GenericOverlayPropertyChooser
 
     // Setup dependency map
     // --------------------
-    dependencyMap = new HashMap();
+    dependencyMap = new HashMap<String, List<String>>();
     dependencyMap.put ("manualIncrement",
-      Arrays.asList (new Object[] {"increment"}));
+      Arrays.asList (new String[] {"increment"}));
     dependencyMap.put ("manualLines",
-      Arrays.asList (new Object[] {"rows", "cols"}));
+      Arrays.asList (new String[] {"rows", "cols"}));
     dependencyMap.put ("drawLabels",
-      Arrays.asList (new Object[] {"font", "textDropShadow"}));
+      Arrays.asList (new String[] {"font", "textDropShadow"}));
 
     // Setup order map
     // ---------------
-    orderMap = new HashMap();
+    orderMap = new HashMap<String, Integer>();
     int n = 0;
     orderMap.put ("gridName", new Integer (n++));
     orderMap.put ("color", new Integer (n++));
@@ -174,14 +180,14 @@ public class GenericOverlayPropertyChooser
 
     // Setup restriction map
     // ---------------------
-    restrictionMap = new HashMap();
+    restrictionMap = new HashMap<String, Object>();
     restrictionMap.put ("increment", new Object[] {
       new Integer (1),
       new Integer (30),
       new Integer (1)});
     restrictionMap.put ("mask", new Object[] {
       new Integer (0),
-      new Integer (255),
+      new Integer (Integer.MAX_VALUE),
       new Integer (1)});
     restrictionMap.put ("transparency", new Object[] {
       new Integer (0),
@@ -207,7 +213,7 @@ public class GenericOverlayPropertyChooser
 
     // Loop over each exposed property
     // -------------------------------
-    propertyMap = new HashMap();
+    propertyMap = new HashMap<String, JLabel>();
     List properties = getProperties();
     List enablingProperties = new ArrayList();
     int lineIndex = 0;
@@ -326,7 +332,7 @@ public class GenericOverlayPropertyChooser
     String property
   ) {
 
-    return (((JLabel) propertyMap.get (property)).getLabelFor());
+    return (propertyMap.get (property).getLabelFor());
 
   } // getComponent
 
@@ -344,15 +350,14 @@ public class GenericOverlayPropertyChooser
     // Get enabled status
     // ------------------
     JCheckBox checkBox = 
-      (JCheckBox) ((JLabel) propertyMap.get (property)).getLabelFor();
+      (JCheckBox) propertyMap.get (property).getLabelFor();
     boolean isEnabled = checkBox.isSelected();
 
     // Update dependencies
     // -------------------
-    List dependencies = getDependencies (property);
-    for (Iterator iter = dependencies.iterator(); iter.hasNext();) {
-      String dependentProperty = (String) iter.next();
-      JLabel label = (JLabel) propertyMap.get (dependentProperty);
+    List<String> dependencies = getDependencies (property);
+    for (String dependentProperty : dependencies) {
+      JLabel label = propertyMap.get (dependentProperty);
       label.setEnabled (isEnabled);
       label.getLabelFor().setEnabled (isEnabled);
     } // for
@@ -417,7 +422,7 @@ public class GenericOverlayPropertyChooser
     String property
   ) {
 
-    String label = (String) labelMap.get (property);
+    String label = labelMap.get (property);
     if (label == null) label = property;
     return (label);
 
@@ -432,9 +437,9 @@ public class GenericOverlayPropertyChooser
    * properties are active or inactive depending on the boolean
    * property value.
    */
-  private List getDependencies (String property) {
+  private List<String> getDependencies (String property) {
 
-    return ((List) dependencyMap.get (property));
+    return (dependencyMap.get (property));
 
   } // getDependencies
 
