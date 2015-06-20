@@ -40,10 +40,15 @@
            - Issues: The source code check-in was being confused by test suite
              input and output files, so this way we can clean up those files
              before building packages and source code check-in.
-            2015/05/23, PFH
+           2015/05/23, PFH
            - Changes: Updated documentation task.
            - Issue: We created Unix man pages and the documentation task needed
              a few changes.
+           2015/06/17, PFH
+           - Changes: Added api-zip and test-cwmaster targets.
+           - Issues: We wanted to be able to build the API without having
+             to run the entire documentation sequence.  Also wanted to be able
+             to quickly test the master tool.
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
