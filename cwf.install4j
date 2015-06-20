@@ -129,7 +129,7 @@
       <includedFiles />
       <unextractableFiles />
       <vmOptionsFile mode="content" overwriteMode="0" fileMode="644">
-        <content>-include-options "${compiler:vmOptionsFile}"</content>
+        <content>-include-options ${compiler:vmOptionsFile}</content>
       </vmOptionsFile>
       <customScript mode="1" file="">
         <content />
