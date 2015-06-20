@@ -992,6 +992,7 @@
 		E9F2A8071B000E8E00A2FC11 /* jhdf5.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = jhdf5.dll; sourceTree = "<group>"; };
 		E9F2A8091B000E8E00A2FC11 /* jhdf.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = jhdf.dll; sourceTree = "<group>"; };
 		E9F2A80A1B000E8E00A2FC11 /* jhdf5.dll */ = {isa = PBXFileReference; lastKnownFileType = file; path = jhdf5.dll; sourceTree = "<group>"; };
+		E9F2A80B1B0353B200A2FC11 /* cwf_splash_2_export.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cwf_splash_2_export.png; sourceTree = "<group>"; };
 		E9F3C8821ADCB486008C3C4C /* CFNCSavePanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CFNCSavePanel.java; sourceTree = "<group>"; };
 		E9F3C8831ADCB625008C3C4C /* CFNC4SavePanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CFNC4SavePanel.java; sourceTree = "<group>"; };
 		E9F3ED8916C3398400E05633 /* NCCachedGrid.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = NCCachedGrid.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
@@ -1356,6 +1357,7 @@
 				E96D89CB161661420009B833 /* 24x24 */,
 				E96D89FC161661420009B833 /* 48x48 */,
 				E96D8A04161661420009B833 /* cwf_splash.png */,
+				E9F2A80B1B0353B200A2FC11 /* cwf_splash_2_export.png */,
 				E96D8A05161661420009B833 /* doorbell.wav */,
 				E96D8A06161661420009B833 /* help.properties */,
 				E96D8A07161661420009B833 /* icon.properties */,

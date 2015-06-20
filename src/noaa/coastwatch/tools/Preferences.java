@@ -6,9 +6,14 @@
      DATE: 2004/05/19
   CHANGES: 2005/02/04, PFH, added general settings and enhancement functions
            2006/11/03, PFH, added units support
+           2015/05/15, PFH
+          - Changes: Added support for heap and cache size preferences.
+          - Issue: We needed some way to give the user the ability to
+            change the Java VM heap size and tile cache size without
+            having to edit batch or script files.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -79,6 +84,12 @@ public class Preferences
    */
   private boolean earthLocDegrees = true;
 
+  /** The Java VM heap size in megabytes. */
+  private int heapSize = 512;
+  
+  /** The data tile cache size in megabytes. */
+  private int cacheSize = 128;
+
   ////////////////////////////////////////////////////////////
 
   /** Gets the map of variable name to units. */
@@ -136,6 +147,26 @@ public class Preferences
 
   /** Sets the Earth location in decimal degrees flag. */
   public void setEarthLocDegrees (boolean flag) { earthLocDegrees = flag; }
+
+  ////////////////////////////////////////////////////////////
+
+  /** Sets the heap size in megabytes. */
+  public void setHeapSize (int heapSize) { this.heapSize = heapSize; }
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the heap size in megabytes. */
+  public int getHeapSize () { return (heapSize); }
+
+  ////////////////////////////////////////////////////////////
+
+  /** Sets the tile cache size in megabytes. */
+  public void setCacheSize (int cacheSize) { this.cacheSize = cacheSize; }
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the tile cache size in megabytes. */
+  public int getCacheSize () { return (cacheSize); }
 
   ////////////////////////////////////////////////////////////
 
@@ -222,6 +253,26 @@ public class Preferences
   } // removeEnhancement
 
   ////////////////////////////////////////////////////////////
+
+  /** 
+   * Writes the set of options to the specified output stream.
+   *
+   * @param output the output stream to write.
+   *
+   * @since 3.3.1
+   */
+  public void writeOptions (
+    OutputStream output
+  ) {
+
+    PrintStream printStream = new PrintStream (output);
+    printStream.println ("-Xmx" + heapSize + "m");
+    printStream.println ("-Dcw.cache.size=" + cacheSize);
+    printStream.println();
+
+  } // writeOptions
+
+  ////////////////////////////////////////////////////////////
   
   /** 
    * Writes this set of preferences to the specified output stream in
@@ -266,6 +317,16 @@ public class Preferences
     printStream.print ("  <general ");
     printStream.print ("item=\"earthLocationDisplay\" ");
     printStream.print ("value=\"" + (earthLocDegrees ? "dd" : "dms") + "\" ");
+    printStream.println ("/>");
+
+    printStream.print ("  <general ");
+    printStream.print ("item=\"heapSize\" ");
+    printStream.print ("value=\"" + heapSize + "\" ");
+    printStream.println ("/>");
+
+    printStream.print ("  <general ");
+    printStream.print ("item=\"cacheSize\" ");
+    printStream.print ("value=\"" + cacheSize + "\" ");
     printStream.println ("/>");
 
     // Write footer
@@ -426,6 +487,10 @@ public class Preferences
         String value = attributes.getValue ("value");
         if (item.equals ("earthLocationDisplay"))
           earthLocDegrees = value.equals ("dd");
+        else if (item.equals ("heapSize"))
+          heapSize = Integer.parseInt (value);
+        else if (item.equals ("cacheSize"))
+          cacheSize = Integer.parseInt (value);
       } // if
 
       /** 

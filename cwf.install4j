@@ -129,7 +129,7 @@
       <includedFiles />
       <unextractableFiles />
       <vmOptionsFile mode="content" overwriteMode="0" fileMode="644">
-        <content>-include-options "${compiler:vmOptionsFile}"</content>
+        <content>-include-options ${compiler:vmOptionsFile}</content>
       </vmOptionsFile>
       <customScript mode="1" file="">
         <content />
@@ -1918,6 +1918,7 @@ wizardContext.setCancelButtonVisible(false);</preActivation>
         <variable name="vm32BitOption" value="-d32" description="" category="" />
         <variable name="osName" value="windows" description="" category="" />
         <variable name="arch" value="x86" description="" category="" />
+        <variable name="vmOptionsFile" value="${APPDATA}\CoastWatch\cwf.vmoptions" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
         <commentFiles />
@@ -1948,6 +1949,7 @@ wizardContext.setCancelButtonVisible(false);</preActivation>
         <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.sun.java.swing.plaf.windows.WindowsLookAndFeel" description="" category="" />
         <variable name="osName" value="windows" description="" category="" />
         <variable name="arch" value="x86_64" description="" category="" />
+        <variable name="vmOptionsFile" value="${APPDATA}\CoastWatch\cwf.vmoptions" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
         <commentFiles />
@@ -1977,6 +1979,7 @@ wizardContext.setCancelButtonVisible(false);</preActivation>
         <variable name="osName" value="linux" description="" category="" />
         <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
         <variable name="arch" value="x86" description="" category="" />
+        <variable name="vmOptionsFile" value="${HOME}/.coastwatch/cwf.vmoptions" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
         <commentFiles />
@@ -2004,6 +2007,7 @@ wizardContext.setCancelButtonVisible(false);</preActivation>
         <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
         <variable name="osName" value="linux" description="" category="" />
         <variable name="arch" value="x86_64" description="" category="" />
+        <variable name="vmOptionsFile" value="${HOME}/.coastwatch/cwf.vmoptions" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
         <commentFiles />
@@ -2031,6 +2035,7 @@ wizardContext.setCancelButtonVisible(false);</preActivation>
         <variable name="osName" value="solaris" description="" category="" />
         <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
         <variable name="arch" value="sparc" description="" category="" />
+        <variable name="vmOptionsFile" value="${HOME}/.coastwatch/cwf.vmoptions" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
         <commentFiles />
@@ -2058,6 +2063,7 @@ wizardContext.setCancelButtonVisible(false);</preActivation>
         <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
         <variable name="osName" value="solaris" description="" category="" />
         <variable name="arch" value="sparcv9" description="" category="" />
+        <variable name="vmOptionsFile" value="${HOME}/.coastwatch/cwf.vmoptions" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
         <commentFiles />
@@ -2109,6 +2115,7 @@ wizardContext.setCancelButtonVisible(false);</preActivation>
         <variable name="osName" value="macosx" description="" category="" />
         <variable name="arch" value="x86_64" description="" category="" />
         <variable name="vmLafOptions" value="-Dapple.laf.useScreenMenuBar=true -Dapple.awt.brushMetalLook=true" description="" category="" />
+        <variable name="vmOptionsFile" value="${HOME}/Library/Application Support/CoastWatch/cwf.vmoptions" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
         <commentFiles />
