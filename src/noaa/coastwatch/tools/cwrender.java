@@ -67,9 +67,13 @@
            2012/08/11, PFH, added --palettecolors, --function boolean,
              HSB-Cycle palette, watermark, and tickmark options
            2013/11/07, PFH, added more detailed output for range normalization
+           2015/05/23, PFH
+           - Changes: Updated documentation.
+           - Issue: We created Unix man pages and the documentation needed
+             a few changes.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -649,7 +653,7 @@ import ucar.units.Unit;
  *   overlay properties beyond what can be achieved using the command
  *   line options for cwrender.  If specified, this option will cause
  *   all overlays in the group to be drawn on top of any other
- *   overlays specified by command line options.
+ *   overlays specified by command line options.</dd>
  *
  *   <dt>-w, --water=COLOR</dt> 
  *

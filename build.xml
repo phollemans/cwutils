@@ -40,7 +40,11 @@
            - Issues: The source code check-in was being confused by test suite
              input and output files, so this way we can clean up those files
              before building packages and source code check-in.
- 
+            2015/05/23, PFH
+           - Changes: Updated documentation task.
+           - Issue: We created Unix man pages and the documentation task needed
+             a few changes.
+
   CoastWatch Software Library and Utilities
   Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
@@ -160,6 +164,7 @@
       <arg line="-Xmaxwarns 10"/>
     </javadoc>
     <delete dir="doc/tools"/>
+    <delete dir="doc/man"/>
     <exec executable="${basedir}/scripts/make_docs.sh" dir="doc">
       <arg line="${version}"/>
     </exec>
@@ -277,6 +282,7 @@
       <fileset file="lib/java/cwf.jar"/>
       <fileset file="src.zip"/>
       <fileset dir="doc/tools"/>
+      <fileset dir="doc/man"/>
       <fileset dir="doc">
         <include name="api.zip"/>
         <include name="cwf_ug_*.pdf"/>

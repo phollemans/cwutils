@@ -8,6 +8,8 @@ awk=/usr/local/bin/gawk
 pdflatex=/usr/texbin/pdflatex
 bibtex=/usr/texbin/bibtex
 html2latex=/usr/local/bin/html2latex
+saxon_jar=../scripts/saxon9he.jar
+saxon="java -cp ${saxon_jar} net.sf.saxon.Transform"
 
 # Get command line parameters
 # ---------------------------
@@ -19,7 +21,7 @@ fi
 
 # Create tool documentation pages
 # -------------------------------
-echo "Making tool documentation pages ... \c"
+echo "Making tool usage sections for user's guide ... \c"
 mkdir tools
 
 # Extract HTML from API pages
@@ -57,6 +59,8 @@ EOF
 
 </html>
 EOF
+  sed -e 's/<br>/<br\/>/g' $newfname > $newfname.new
+  mv $newfname.new $newfname
 done
 
 # Check for conversion script to Latex
@@ -118,8 +122,41 @@ for fname in tools/*.html ; do
   ' tools/$tool.tex >> $manual
   echo '\\newpage' >> $manual
   rm -f tools/$tool.tex
-done  
+done
+
 echo "OK"
+
+# Create manual pages in Unix troff format
+# ----------------------------------------
+echo "Making tool Unix manual pages ... \c"
+if [ -z `which java` ] ; then
+  echo "FAILED (no java)"
+  exit
+fi
+mkdir -p man/man1
+for fname in tools/*.html ; do
+#for fname in tools/cwexport.html ; do
+  tool=`basename $fname .html`
+  echo "$tool \c"
+  date="`date +'%b %e, %Y'`"
+  package="CoastWatch Utilities"
+  $saxon \
+    tool="$tool" \
+    date="$date" \
+    package="$package" \
+    version="$version" \
+    $fname html2mdoc.xsl > man/man1/$tool.1 2> /tmp/err$$.txt
+  if [ $? -ne 0 ] ; then
+    echo "FAILED (making troff from $fname)"
+    cat /tmp/err$$.txt
+    rm -f man/man1/$tool.1
+    continue
+  fi
+  awk '{if ($0 == "BLANKLINE") {print ""} else if ($0 !~ /^[ ]*$/) {print}}' man/man1/$tool.1 | gzip -c > man/man1/$tool.1.gz
+  rm -f man/man1/$tool.1
+done
+echo "OK"
+
 rm -rf tools
 
 # Create user guide

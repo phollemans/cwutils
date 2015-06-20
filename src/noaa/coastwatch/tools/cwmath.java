@@ -23,9 +23,13 @@
            2008/03/04, PFH, added special code for symbols in variable names
            2008/04/03, PFH, fixed problem with nan, pi, e constants
            2009/06/26, PFH, added extra attribute copying for template variables
-          
+           2015/05/23, PFH
+           - Changes: Updated documentation.
+           - Issue: We created Unix man pages and the documentation needed
+             a few changes.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2009, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -120,8 +124,8 @@ import org.nfunk.jep.Node;
  *   <caption></caption>
  *
  *   <tr>
- *     <th>Operator</th>
- *     <th>Symbol</th>
+ *     <th abbr="Greater than or equal to">Operator</th>
+ *     <th abbr="&lt;=">Symbol</th>
  *   </tr>
  *
  *    <tr> 
@@ -130,16 +134,21 @@ import org.nfunk.jep.Node;
  *    </tr>
  *
  *    <tr> 
- *      <td>Boolean Not</td>
+ *      <td>Boolean not</td>
  *      <td>!</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Unary Plus, Unary Minus</td>
- *     <td>+x, -x</td>
+ *     <td>Unary plus</td>
+ *     <td>+x</td>
  *   </tr>
  *
  *   <tr> 
+ *     <td>Unary minus</td>
+ *     <td>-x</td>
+ *   </tr>
+ *
+ *   <tr>
  *     <td>Modulus</td>
  *     <td>%</td>
  *   </tr>
@@ -155,32 +164,52 @@ import org.nfunk.jep.Node;
  *   </tr>
  *
  *   <tr> 
- *     <td>Addition, Subtraction</td>
- *     <td>+, -</td>
+ *     <td>Addition</td>
+ *     <td>+</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Less or Equal, More or Equal</td>
- *     <td>&lt;=, &gt;=</td>
- *   </tr>
- *
- *   <tr> 
- *     <td>Less Than, Greater Than</td>
- *     <td>&lt;, &gt;</td>
- *   </tr>
- *
- *   <tr> 
- *     <td>Not Equal, Equal</td>
- *     <td>!=, ==</td>
+ *     <td>Subtraction</td>
+ *     <td>-</td>
  *   </tr>
  *
  *   <tr>
- *     <td>Boolean And</td>
+ *     <td>Less than or equal to</td>
+ *     <td>&lt;=</td>
+ *   </tr>
+ *
+ *   <tr>
+ *     <td>Greater than or equal to</td>
+ *     <td>&gt;=</td>
+ *   </tr>
+ *
+ *   <tr>
+ *     <td>Less than</td>
+ *     <td>&lt;</td>
+ *   </tr>
+ *
+ *   <tr>
+ *     <td>Greater than</td>
+ *     <td>&gt;</td>
+ *   </tr>
+ *
+ *   <tr>
+ *     <td>Not equal</td>
+ *     <td>!=</td>
+ *   </tr>
+ *
+ *   <tr>
+ *     <td>Equal</td>
+ *     <td>==</td>
+ *   </tr>
+ *
+ *   <tr>
+ *     <td>Boolean and</td>
  *     <td>&amp;&amp;</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Boolean Or</td>
+ *     <td>Boolean or</td>
  *     <td>||</td>
  *   </tr>
  *
@@ -190,8 +219,8 @@ import org.nfunk.jep.Node;
  *   <caption></caption>
  *
  *   <tr> 
- *     <th>Function</th>
- *     <th>Calling sequence</th>
+ *     <th abbr="if (or (b,mask) == 0) then x else NaN">Function</th>
+ *     <th abbr="select (cond, x1, x2)">Calling sequence</th>
  *   </tr>
  *
  *   <tr> 
@@ -210,57 +239,57 @@ import org.nfunk.jep.Node;
  *   </tr>
  *
  *   <tr> 
- *     <td>Arc Sine</td>
+ *     <td>Arcsine</td>
  *     <td>asin (x)</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Arc Cosine</td>
+ *     <td>Arccosine</td>
  *     <td>acos (x)</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Arc Tangent</td>
+ *     <td>Arctangent</td>
  *     <td>atan (x)</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Hyperbolic Sine</td>
+ *     <td>Hyperbolic sine</td>
  *     <td>sinh (x)</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Hyperbolic Cosine</td>
+ *     <td>Hyperbolic cosine</td>
  *     <td>cosh (x)</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Hyperbolic Tangent</td>
+ *     <td>Hyperbolic tangent</td>
  *     <td>tanh (x)</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Inverse Hyperbolic Sine</td>
+ *     <td>Inverse hyperbolic sine</td>
  *     <td>asinh (x)</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Inverse Hyperbolic Cosine</td>
+ *     <td>Inverse hyperbolic cosine</td>
  *     <td>acosh (x)</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Inverse Hyperbolic Tangent</td>
+ *     <td>Inverse hyperbolic tangent</td>
  *     <td>atanh (x)</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Natural Logarithm</td>
+ *     <td>Natural log</td>
  *     <td>ln (x)</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Logarithm base 10</td>
+ *     <td>Log base 10</td>
  *     <td>log (x)</td>
  *   </tr>
  *
@@ -270,12 +299,12 @@ import org.nfunk.jep.Node;
  *   </tr>
  *
  *   <tr> 
- *     <td>Absolute Value / Magnitude</td>
+ *     <td>Absolute value</td>
  *     <td>abs (x)</td>
  *   </tr>
  *
  *   <tr> 
- *     <td>Random number (between 0 and 1)</td>
+ *     <td>Random [0..1]</td>
  *     <td>rand ()</td>
  *   </tr>
  *
@@ -285,7 +314,7 @@ import org.nfunk.jep.Node;
  *   </tr>
  *
  *   <tr>
- *     <td>Square Root</td>
+ *     <td>Square root</td>
  *     <td>sqrt (x)</td>
  *   </tr>
  *
@@ -294,40 +323,38 @@ import org.nfunk.jep.Node;
  *     <td>sum (x1, x2, ...)</td>
  *   </tr>
  *
- *   <tr valign=top>
- *     <td>if (condition is true) then return (x1)<br>
- *     else return (x2)</td>
- *     <td>select (condition, x1, x2)</td>
+ *   <tr>
+ *     <td>if (cond) then x1 else x2</td>
+ *     <td>select (cond, x1, x2)</td>
  *   </tr>
  *
  *   <tr>
- *     <td>Hexadecimal decoder</td>
+ *     <td>Hex decode</td>
  *     <td>hex (string)</td>
  *   </tr>
  *
- *   <tr valign=top>
- *     <td>if (b (BITWISE OR) mask == 0) then return (x)<br>
- *     else return (Not-a-Number)</td>
+ *   <tr>
+ *     <td>if (or (b,mask) == 0) then x else NaN</td>
  *     <td>mask (x, b, mask)</td>
  *   </tr>
  *
  *   <tr>
- *     <td>Bitwise And</td>
+ *     <td>Bitwise and</td>
  *     <td>and (x1, x2)</td>
  *   </tr>
  *
  *   <tr>
- *     <td>Bitwise Or</td>
+ *     <td>Bitwise or</td>
  *     <td>or (x1, x2)</td>
  *   </tr>
  *
  *   <tr>
- *     <td>Bitwise Xor</td>
+ *     <td>Bitwise xor</td>
  *     <td>xor (x1, x2)</td>
  *   </tr>
  *
  *   <tr>
- *     <td>Bitwise Not</td>
+ *     <td>Bitwise not</td>
  *     <td>not (x)</td>
  *   </tr>
  *
@@ -337,8 +364,8 @@ import org.nfunk.jep.Node;
  *   <caption></caption>
  *
  *   <tr> 
- *     <th>Constant</th>
- *     <th>Value</th>
+ *     <th abbr="nan">Constant</th>
+ *     <th abbr="IEEE 754 NaN">Value</th>
  *   </tr>
  *
  *   <tr> 
@@ -352,8 +379,8 @@ import org.nfunk.jep.Node;
  *   </tr>
  *
  *   <tr> 
- *     <td>nan (Not-a-Number)</td>
- *     <td>NaN</td>
+ *     <td>nan</td>
+ *     <td>IEEE 754 NaN</td>
  *   </tr>
  *
  * </table>
