@@ -47,7 +47,7 @@ public class PoliticalOverlay
   // ---------
 
   /** The serialization constant. */
-  static final long serialVersionUID = 2995481037661135344L;
+  private static final long serialVersionUID = 2995481037661135344L;
 
   // Variables
   // ---------

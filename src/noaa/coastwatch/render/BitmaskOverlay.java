@@ -66,7 +66,7 @@ public class BitmaskOverlay
   // ---------
 
   /** The serialization constant. */
-  static final long serialVersionUID = -1831067398269937724L;
+  private static final long serialVersionUID = -1831067398269937724L;
 
   // Variables
   // ---------

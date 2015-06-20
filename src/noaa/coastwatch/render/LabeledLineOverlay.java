@@ -4,10 +4,17 @@
   PURPOSE: Draws lines and labels on a data view.
    AUTHOR: Peter Hollemans
      DATE: 2006/12/20
-  CHANGES: n/a
+  CHANGES: 2015/06/17, PFH
+           - Changes: Refactored private classes into noaa.coastwatch.render.lines
+             package.  Added ability to use different labelling algorithms.
+             Added serialization constant.
+           - Issue: A user requested the ability to have labels be centered
+             in the data view for geostationary projections.  The code needed
+             to be refactored to allow for different label placement algorithms.
+ 
 
   CoastWatch Software Library and Utilities
-  Copyright 2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2006-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -22,24 +29,21 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.geom.Area;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeMap;
 import noaa.coastwatch.render.EarthDataView;
-import noaa.coastwatch.render.EarthImageTransform;
-import noaa.coastwatch.render.ImageTransform;
 import noaa.coastwatch.render.LineOverlay;
+import noaa.coastwatch.render.lines.LineCollection;
+import noaa.coastwatch.render.lines.LineLabelFactory;
+import noaa.coastwatch.render.lines.EdgeLabelFactory;
+import noaa.coastwatch.render.lines.CenteredLabelFactory;
 import noaa.coastwatch.render.TextElement;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.EarthLocation;
@@ -55,6 +59,12 @@ import noaa.coastwatch.util.EarthLocation;
  */
 public abstract class LabeledLineOverlay 
   extends LineOverlay {
+
+  // Constants
+  // ---------
+
+  /** The serialization constant. */
+  private static final long serialVersionUID = 4102557195004157599L;
 
   // Variables
   // ---------
@@ -189,567 +199,6 @@ public abstract class LabeledLineOverlay
   ////////////////////////////////////////////////////////////
 
   /**
-   * The <code>LabeledLine</code> class holds the line label text
-   * and segment information for one labeled line on the earth.
-   */
-  private class LabeledLine 
-    implements Comparable<LabeledLine> {
-
-    // Variables
-    // ---------
-
-    /** The line label text. */
-    private String labelText;
-
-    /** The list of line segments as Line2D objects. */
-    private List<Line2D> lineSegments;
-
-    ////////////////////////////////////////////////////////
-
-    /**
-     * Creates an empty line with the specified label text.
-     *
-     * @param labelText the text for labeling the line.
-     */
-    public LabeledLine (
-      String labelText
-    ) {
-    
-      this.labelText = labelText;
-      lineSegments = new ArrayList<Line2D>();
-
-    } // LabeledLine constructor
-
-    ////////////////////////////////////////////////////////
-
-    /** 
-     * Adds a segment to the line.  The starting and ending
-     * locations are translated to image points, and only added
-     * if the points are valid.
-     *
-     * @param start the starting data location.
-     * @param end the ending data location.
-     * @param trans the transform for converting from data location to
-     * image location.
-     */
-    public void addSegment (
-      DataLocation start,
-      DataLocation end,
-      EarthImageTransform trans
-    ) {
-
-      // Convert segment points
-      // ----------------------
-      Point2D p1 = trans.getImageTransform().transform (start);
-      Point2D p2 = trans.getImageTransform().transform (end);
-
-      // Add segment if valid
-      // --------------------
-      if (p1 != null && p2 != null) {
-        lineSegments.add (new Line2D.Double (p1, p2));
-      } // if
-
-    } // addSegment
-
-    ////////////////////////////////////////////////////////
-
-    /** 
-     * Adds a segment to the line.  The starting and ending
-     * locations are translated to image points, and only added
-     * if the points are valid.
-     *
-     * @param start the starting Earth location.
-     * @param end the ending Earth location.
-     * @param trans the transform for converting from earth
-     * location to image location.
-     */
-    public void addSegment (
-      EarthLocation start,
-      EarthLocation end,
-      EarthImageTransform trans
-    ) {
-
-      // Convert segment points
-      // ----------------------
-      Point2D p1 = trans.transform (start);
-      Point2D p2 = trans.transform (end);
-
-      // Add segment if valid
-      // --------------------
-      if (p1 != null && p2 != null 
-        && !trans.isDiscontinuous (start, end, p1, p2)) {
-        lineSegments.add (new Line2D.Double (p1, p2));
-      } // if
-
-    } // addSegment
-
-    ////////////////////////////////////////////////////////
-
-    /** Gets the number of segments in this line. */
-    public int getSegmentCount () { return (lineSegments.size()); }
-
-    ////////////////////////////////////////////////////////
-
-    public int compareTo (LabeledLine line) {
-
-      return (this.labelText.compareTo (line.labelText));
-
-    } // compareTo
-
-    ////////////////////////////////////////////////////////
-
-    /** 
-     * Renders this line.
-     * 
-     * @param g the graphics device for rendering.
-     */
-    public void render (
-      Graphics2D g
-    ) {
-
-      for (Line2D line : lineSegments) 
-        g.draw (line);
-
-    } // render
-
-    ////////////////////////////////////////////////////////
-
-    /**
-     * Gets the edge segments closest to the image edges and
-     * inside the image boundaries.
-     *
-     * @param imageDims the image dimensions.
-     *
-     * @return a list of edge segments, one for each edge, or
-     * null if the entire line is outside the image
-     * boundaries.
-     */
-    public List<EdgeSegment> getEdges (
-      Dimension imageDims
-    ) {
-
-      // Initialize search
-      // -----------------
-      EdgeSegment top = null, bottom = null, left = null, right = null;
-      boolean init = false;
-      Rectangle rect = new Rectangle (imageDims);
-
-      // Loop over each segment
-      // ----------------------
-      for (Line2D line : lineSegments) {
-
-        // Copy and clip segment
-        // ---------------------
-        Line2D segment = clip (line, rect);
-        if (segment == null) continue;
-        if (segment.getP1().equals (segment.getP2())) continue;
-
-        // Initialize segment distances
-        // ----------------------------
-        if (!init) {
-          top = new EdgeSegment (EdgeSegment.TOP, imageDims, segment);
-          bottom = new EdgeSegment (EdgeSegment.BOTTOM, imageDims, segment);
-          left = new EdgeSegment (EdgeSegment.LEFT, imageDims, segment);
-          right = new EdgeSegment (EdgeSegment.RIGHT, imageDims, segment);
-          init = true;
-        } // if
-
-        // Find closest edge segments
-        // --------------------------
-        else {
-          EdgeSegment edge;
-          edge = new EdgeSegment (EdgeSegment.TOP, imageDims, segment);
-          if (edge.dist < top.dist) top = edge;    
-          edge = new EdgeSegment (EdgeSegment.BOTTOM, imageDims, segment);
-          if (edge.dist < bottom.dist) bottom = edge;    
-          edge = new EdgeSegment (EdgeSegment.LEFT, imageDims, segment);
-          if (edge.dist < left.dist) left = edge;    
-          edge = new EdgeSegment (EdgeSegment.RIGHT, imageDims, segment);
-          if (edge.dist < right.dist) right = edge;    
-        } // else
-
-      } // while
-
-      // Return edges
-      // ------------
-      if (!init) return (null);
-      List<EdgeSegment> edges = new LinkedList<EdgeSegment>();
-      edges.add (top);
-      edges.add (bottom);
-      edges.add (left);
-      edges.add (right);
-      return (edges);
-
-    } // getEdges
-
-    ////////////////////////////////////////////////////////
-
-    /**
-     * Gets the line labels.  A line is given two labels for
-     * annotation of each edge of the image boundaries that the
-     * line encounters.
-     *
-     * @param imageDims the image dimensions.
-     *
-     * @return an array of text elements for line labels, or null
-     * if no segments are inside the image boundaries.
-     */
-    public List<TextElement> getLabels (
-      Dimension imageDims
-    ) {
-
-      // Get edges and sort
-      // ------------------
-      List<EdgeSegment> edges = getEdges (imageDims);
-      if (edges == null) return (null);
-      Collections.sort (edges);
-
-      // Remove all but the first two unique segments
-      // --------------------------------------------
-      edges = new LinkedList<EdgeSegment> (edges.subList (0, 2));
-      if (edges.get(0).line == edges.get(1).line)
-        edges.remove (1);
-
-      // Get edge segment labels
-      // -----------------------
-      List<TextElement> labels = new ArrayList<TextElement>();
-      for (EdgeSegment edge : edges) {
-        TextElement label = (edge.getLabel (labelText));
-        if (label != null) labels.add (label);
-      } // for
-
-      return (labels);
-
-    } // getLabels
-
-    ////////////////////////////////////////////////////////
-
-  } // LabeledLine class
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * The <code>EdgeSegment</code> class holds information about a
-   * segment which is close to an image edge.  The edge,
-   * distance, and segment points are stored.
-   */
-  private class EdgeSegment
-    implements Comparable<EdgeSegment> {
-
-    // Constants
-    // ---------
-
-    /** Top edge. */
-    public final static int TOP = 0;
-
-    /** Bottom edge. */
-    public final static int BOTTOM = 1;
-    
-    /** Left edge. */
-    public final static int LEFT = 2;
-
-    /** Right edge. */
-    public final static int RIGHT = 3;
-
-    /** The line label offset as a fraction of the label size. */
-    private final static double OFFSET = 0.2;
-
-    // Variables
-    // ---------
-
-    /** The segment edge type. */
-    public int type;
-
-    /** The distance to the segment edge. */
-    public double dist;
-
-    /** The segment points. */
-    public Line2D line;
-
-    ////////////////////////////////////////////////////////
-
-    /**
-     * Creates a new edge segment from the specified parameters.
-     * The distance to the edge is calculated.
-     *
-     * @param type the segment type.
-     * @param imageDims the image dimensions.
-     * @param line the segment line.
-     */
-    public EdgeSegment (
-      int type,
-      Dimension imageDims,
-      Line2D line
-    ) {     
-
-      // Initialize
-      // ----------
-      this.line = line;
-      this.type = type;
-
-      // Calculate distance
-      // ------------------
-      switch (type) {
-      case TOP: 
-        dist = Math.min (line.getY1(), line.getY2()); 
-        break;
-      case BOTTOM: 
-        dist = imageDims.height - 1 - Math.max (line.getY1(), line.getY2()); 
-        break;
-      case LEFT: 
-        dist = Math.min (line.getX1(), line.getX2()); 
-        break;
-      case RIGHT:
-        dist = imageDims.width - 1 - Math.max (line.getX1(), line.getX2()); 
-        break;
-      } // switch
-
-    } // EdgeSegment constructor
-
-    ////////////////////////////////////////////////////////
-
-    public int compareTo (EdgeSegment edge) {
-
-      return (Double.compare (this.dist, edge.dist));
-
-    } // compareTo
-
-    ////////////////////////////////////////////////////////
-
-    /** 
-     * Orients this edge segment with respect to its edge.  The
-     * edge segment points are rearranged so that this edge
-     * segment starts at its edge and ends towards the center of
-     * the image.
-     */
-    public void orient () {
-
-      if (type == TOP && line.getY1() > line.getY2())
-        line = new Line2D.Double (line.getP2(), line.getP1());
-
-      else if (type == BOTTOM && line.getY1() < line.getY2())
-        line = new Line2D.Double (line.getP2(), line.getP1());
-
-      else if (type == LEFT && line.getX1() > line.getX2())
-        line = new Line2D.Double (line.getP2(), line.getP1());
-
-      else if (type == RIGHT && line.getX1() < line.getX2())
-        line = new Line2D.Double (line.getP2(), line.getP1());
-
-    } // orient
-
-    ////////////////////////////////////////////////////////
-
-    /**
-     * Gets a label for this edge segment using the specified
-     * text.
-     *
-     * @param text the text string for the label, or null if the
-     * label is not valid.
-     */
-    public TextElement getLabel (
-      String text
-    ) {
-    
-      // Orient the segment points
-      // -------------------------
-      orient();
-
-      // Create the label
-      // ----------------
-      if (type == TOP) {
-        double a = line.getX2() - line.getX1();
-        double b = line.getY2() - line.getY1();
-        double angle = Math.toDegrees (Math.asin (b / Math.sqrt (a*a + b*b)));
-        if (angle < 10) return (null);
-        if (a <= 0) return (new TextElement (text, font, line.getP1(), 
-          new double[] {1+OFFSET, 1+OFFSET}, angle));
-        else return (new TextElement (text, font, line.getP1(),
-          new double[] {-OFFSET,1+OFFSET}, -angle));
-      } // if
-
-      else if (type == BOTTOM) {
-        double a = line.getX2() - line.getX1();
-        double b = line.getY1() - line.getY2();
-        double angle = Math.toDegrees (Math.asin (b / Math.sqrt (a*a + b*b)));
-        if (angle < 10) return (null);
-        if (a < 0) return (new TextElement (text, font, line.getP1(),
-          new double[] {1+OFFSET,-OFFSET}, -angle));
-        else return (new TextElement (text, font, line.getP1(),
-          new double[] {-OFFSET,-OFFSET}, angle));
-      } // else if
-
-      else if (type == LEFT) {
-        double a = line.getY2() - line.getY1();
-        double b = line.getX2() - line.getX1();
-        double angle = Math.toDegrees (Math.acos (b / Math.sqrt (a*a + b*b)));
-        if (angle > 80) return (null);
-        if (a < 0) return (new TextElement (text, font, line.getP1(),
-          new double[] {-OFFSET,1+OFFSET}, angle));
-        else return (new TextElement (text, font, line.getP1(),
-          new double[] {-OFFSET,-OFFSET}, -angle));
-      } // else if
-
-      else { // if (type == RIGHT)
-        double a = line.getY2() - line.getY1();
-        double b = line.getX1() - line.getX2();
-        double angle = Math.toDegrees (Math.acos (b / Math.sqrt (a*a + b*b)));
-        if (angle > 80) return (null);
-        if (a <= 0) return (new TextElement (text, font, line.getP1(),
-          new double[] {1+OFFSET,1+OFFSET}, -angle));
-        else return (new TextElement (text, font, line.getP1(), 
-          new double[] {1+OFFSET,-OFFSET}, angle));
-      } // else
-
-    } // getLabel
-
-    ////////////////////////////////////////////////////////
-
-  } // EdgeSegment class
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * The <code>LineCollection</code> class holds an ordered set of
-   * line objects.  Each line encodes information about which line it
-   * is and what line segments it contains.  The line collection is
-   * used as a convenient interface for adding segments to a set of
-   * lines, and then iterating over the lines for rendering.
-   */
-  protected class LineCollection
-    extends TreeMap<String,LabeledLine> {
-
-    /////////////////////////////////////////////////////////
-
-    /** Creates a new empty collection of lines. */
-    public LineCollection () { }
-
-    /////////////////////////////////////////////////////////
-
-    /** 
-     * Adds a line segment to the collection.  The segment is added to
-     * the appropriate line object.  If the line does not yet exist,
-     * it is created.
-     *
-     * @param textLabel the line text label, used as a key in the
-     * collection.
-     * @param trans the Earth image transform used for
-     * translating Earth locations to image points.
-     * @param start the starting Earth location.
-     * @param end the ending Earth location.
-     */
-    public void addSegment (
-      String textLabel,
-      EarthImageTransform trans,
-      EarthLocation start,
-      EarthLocation end
-    ) {
-
-      // Add new line
-      // ------------
-      if (!this.containsKey (textLabel)) {
-        LabeledLine line = new LabeledLine (textLabel);
-        line.addSegment (start, end, trans);
-        if (line.getSegmentCount() != 0) this.put (textLabel, line);
-      } // if
-
-      // Add to existing line
-      // --------------------
-      else {
-        LabeledLine line = this.get (textLabel);
-        line.addSegment (start, end, trans);
-      } // else
-
-    } // addSegment
-
-    /////////////////////////////////////////////////////////
-
-    /** 
-     * Adds a line segment to the collection.  The segment is added to
-     * the appropriate line object.  If the line does not yet exist,
-     * it is created.
-     *
-     * @param textLabel the line text label, used as a key in the
-     * collection.
-     * @param trans the Earth image transform used for
-     * translating data locations to image points.
-     * @param start the starting data location.
-     * @param end the ending Earthdata location.
-     */
-    public void addSegment (
-      String textLabel,
-      EarthImageTransform trans,
-      DataLocation start,
-      DataLocation end
-    ) {
-
-      // Add new line
-      // ------------
-      if (!this.containsKey (textLabel)) {
-        LabeledLine line = new LabeledLine (textLabel);
-        line.addSegment (start, end, trans);
-        if (line.getSegmentCount() != 0) this.put (textLabel, line);
-      } // if
-
-      // Add to existing line
-      // --------------------
-      else {
-        LabeledLine line = this.get (textLabel);
-        line.addSegment (start, end, trans);
-      } // else
-
-    } // addSegment
-
-    /////////////////////////////////////////////////////////
-
-    /** 
-     * Renders this collection of lines.
-     * 
-     * @param g the graphics device for rendering.
-     */
-    public void render (
-      Graphics2D g
-    ) {
-
-      // Loop over each line and render
-      // ------------------------------
-      for (LabeledLine line : this.values())
-        line.render (g);
-
-    } // render
-
-    /////////////////////////////////////////////////////////
-
-    /**
-     * Gets the labels for this collection of lines.
-     * 
-     * @param imageDims the image dimensions.
-     *
-     * @return a list of text elements for the line labels.
-     */
-    public List<TextElement> getLabels (
-      Dimension imageDims
-    ) {
-
-      // Loop over each line and get labels
-      // ----------------------------------
-      List<TextElement> labels = new ArrayList<TextElement>();
-      for (LabeledLine line : this.values()) {
-        List<TextElement> lineLabels = line.getLabels (imageDims);
-        if (lineLabels != null) labels.addAll (lineLabels);
-      } // while
-
-      return (labels);
-
-    } // getLabels
-
-    /////////////////////////////////////////////////////////
-
-  } // LineCollection class
-
-  ////////////////////////////////////////////////////////////
-
-  /**
    * Gets the collection of lines for this overlay.  This method
    * should be implemented by the subclass and is called by
    * {@link #prepare}.
@@ -764,6 +213,7 @@ public abstract class LabeledLineOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void prepare (
     Graphics2D g,
     EarthDataView view
@@ -777,12 +227,40 @@ public abstract class LabeledLineOverlay
     // -------------
     if (drawLabels) {
 
+      // Determine which factory to use for labels
+      // -----------------------------------------
+      EarthImageTransform trans = view.getTransform();
+      Dimension imageDims = trans.getImageTransform().getImageDimensions();
+      List<Point2D> pointList = new ArrayList<Point2D>();
+      pointList.add (new Point2D.Double (0, 0));
+      pointList.add (new Point2D.Double ((imageDims.width-1)/2, 0));
+      pointList.add (new Point2D.Double (imageDims.width-1, 0));
+      pointList.add (new Point2D.Double (imageDims.width-1, (imageDims.height-1)/2));
+      pointList.add (new Point2D.Double (imageDims.width-1, imageDims.height-1));
+      pointList.add (new Point2D.Double ((imageDims.width-1)/2, imageDims.height-1));
+      pointList.add (new Point2D.Double (0, imageDims.height-1));
+      pointList.add (new Point2D.Double (0, (imageDims.height-1)/2));
+      boolean foundValid = false;
+      for (Point2D point : pointList) {
+        if (trans.transform (point).isValid()) {
+          foundValid = true;
+          break;
+        } // if
+      } // for
+      LineLabelFactory labelFactory;
+      if (foundValid) labelFactory = EdgeLabelFactory.getInstance();
+      else labelFactory = CenteredLabelFactory.getInstance();
+
       // Create initial label collection
       // -------------------------------
-      Dimension imageDims = 
-        view.getTransform().getImageTransform().getImageDimensions();
       lineLabels = new ArrayList<TextElement>();
-      lineLabels.addAll (lineCollection.getLabels (imageDims));
+      lineLabels.addAll (lineCollection.getLabels (imageDims, labelFactory));
+
+      // Set label font
+      // --------------
+      for (TextElement label : lineLabels) {
+        label.setFont (font);
+      } // for
 
       // Filter overlapping and out of bounds labels
       // -------------------------------------------
@@ -820,6 +298,7 @@ public abstract class LabeledLineOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void draw (
     Graphics2D g,
     EarthDataView view

@@ -15,6 +15,8 @@
 		E93DCCB618DBC10B0075CF38 /* Testable.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = Testable.java; path = test/Testable.java; sourceTree = "<group>"; };
 		E93DCCB818DCCE760075CF38 /* make_docs.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = make_docs.sh; path = scripts/make_docs.sh; sourceTree = "<group>"; };
 		E93DCCBD18DFAEAA0075CF38 /* TestableTester.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TestableTester.java; path = test/TestableTester.java; sourceTree = "<group>"; };
+		E94294B41B2F5C7E00C0BBA4 /* LineCollection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = LineCollection.java; path = lines/LineCollection.java; sourceTree = "<group>"; };
+		E94294B61B2F606400C0BBA4 /* LabeledLine.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = LabeledLine.java; path = lines/LabeledLine.java; sourceTree = "<group>"; };
 		E95FF124164326B4002C27C6 /* GCTPCStyleProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GCTPCStyleProjection.java; sourceTree = "<group>"; };
 		E965CD981AE1A54400D3E59B /* HDFLib.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = HDFLib.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D87B7161661420009B833 /* build.number */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build.number; sourceTree = "<group>"; };
@@ -932,6 +934,9 @@
 		E9EA43211649F228006AD294 /* InterruptedMollweideProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = InterruptedMollweideProjection.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9EA4323164A16EE006AD294 /* nad27sp */ = {isa = PBXFileReference; lastKnownFileType = file; path = nad27sp; sourceTree = "<group>"; };
 		E9EA4324164A16EE006AD294 /* nad83sp */ = {isa = PBXFileReference; lastKnownFileType = file; path = nad83sp; sourceTree = "<group>"; };
+		E9EA91861B2FFA9F00A5836D /* LineLabelFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = LineLabelFactory.java; path = lines/LineLabelFactory.java; sourceTree = "<group>"; };
+		E9EA91871B2FFEDC00A5836D /* EdgeLabelFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = EdgeLabelFactory.java; path = lines/EdgeLabelFactory.java; sourceTree = "<group>"; };
+		E9EA91881B308EF800A5836D /* CenteredLabelFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = CenteredLabelFactory.java; path = lines/CenteredLabelFactory.java; sourceTree = "<group>"; };
 		E9F1F3F519638010005494E6 /* TilingScheme.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TilingScheme.java; path = io/tile/TilingScheme.java; sourceTree = "<group>"; };
 		E9F1F3F619638108005494E6 /* TileSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileSource.java; path = io/tile/TileSource.java; sourceTree = "<group>"; };
 		E9F1F3F719638124005494E6 /* TileSink.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileSink.java; path = io/tile/TileSink.java; sourceTree = "<group>"; };
@@ -1018,6 +1023,19 @@
 				E93DCCBD18DFAEAA0075CF38 /* TestableTester.java */,
 			);
 			name = test;
+			sourceTree = "<group>";
+		};
+		E94294B51B2F5CB800C0BBA4 /* lines */ = {
+			isa = PBXGroup;
+			children = (
+				E9CD11511B2FA7D5005C4FB5 /* EdgeSegment.java */,
+				E94294B41B2F5C7E00C0BBA4 /* LineCollection.java */,
+				E94294B61B2F606400C0BBA4 /* LabeledLine.java */,
+				E9EA91861B2FFA9F00A5836D /* LineLabelFactory.java */,
+				E9EA91871B2FFEDC00A5836D /* EdgeLabelFactory.java */,
+				E9EA91881B308EF800A5836D /* CenteredLabelFactory.java */,
+			);
+			name = lines;
 			sourceTree = "<group>";
 		};
 		E9549082161660FE00BFA76C = {
@@ -2141,6 +2159,7 @@
 				E96D8BEA161661420009B833 /* LineFeatureOverlay.java */,
 				E96D8BEB161661420009B833 /* LineFeatureSource.java */,
 				E96D8BEC161661420009B833 /* LineOverlay.java */,
+				E94294B51B2F5CB800C0BBA4 /* lines */,
 				E96D8BED161661420009B833 /* LogEnhancement.java */,
 				E96D8BEE161661420009B833 /* MaskOverlay.java */,
 				E96D8BEF161661420009B833 /* MultilayerBitmaskOverlay.java */,

@@ -74,7 +74,7 @@ public class CoastOverlay
   extends PolygonOverlay {
 
   /** The serialization constant. */
-  static final long serialVersionUID = 2437261200101474557L;
+  private static final long serialVersionUID = 2437261200101474557L;
 
   // Variables
   // ---------

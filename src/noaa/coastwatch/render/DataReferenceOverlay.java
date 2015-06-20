@@ -28,6 +28,7 @@ import java.util.Arrays;
 import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.render.LabeledLineOverlay;
+import noaa.coastwatch.render.lines.LineCollection;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.Grid;
 
@@ -43,6 +44,9 @@ public class DataReferenceOverlay
 
   // Constants
   // ---------
+
+  /** The serialization constant. */
+  private static final long serialVersionUID = 3580402521822495401L;
 
   /** The allowed automatic grid increment base powers. */
   private static final int[] GRID_BASES = {1, 2, 5};
@@ -252,6 +256,7 @@ public class DataReferenceOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected LineCollection getLines (
     EarthDataView view
   ) {
