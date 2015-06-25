@@ -421,7 +421,7 @@ public class PreferencesChooser
       // ------------------
       int row = -1;
       GUIServices.setConstraints (gc, 0, ++row, 3, 1, GridBagConstraints.HORIZONTAL, 1, 0);
-      add (new JLabel ("Memory limits (restart required for changes to take effect):"), gc);
+      add (new JLabel ("Memory limits (software restart required for changes to take effect):"), gc);
 
       GUIServices.setConstraints (gc, 0, ++row, 1, 1, GridBagConstraints.NONE, 0, 0);
       gc.insets = new Insets (2, 15, 2, 10);
@@ -442,7 +442,7 @@ public class PreferencesChooser
       add (heapField, gc);
 
       GUIServices.setConstraints (gc, 2, row, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
-      add (new JLabel ("mb"), gc);
+      add (new JLabel ("Mb"), gc);
 
       GUIServices.setConstraints (gc, 0, ++row, 1, 1, GridBagConstraints.NONE, 0, 0);
       gc.insets = new Insets (2, 15, 2, 10);
@@ -458,7 +458,7 @@ public class PreferencesChooser
       add (cacheField, gc);
 
       GUIServices.setConstraints (gc, 2, row, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
-      add (new JLabel ("mb"), gc);
+      add (new JLabel ("Mb"), gc);
 
       // Add geographic coordinate selection
       // -----------------------------------

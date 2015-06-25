@@ -12,7 +12,6 @@
              in the data view for geostationary projections.  The code needed
              to be refactored to allow for different label placement algorithms.
  
-
   CoastWatch Software Library and Utilities
   Copyright 2006-2015, USDOC/NOAA/NESDIS CoastWatch
 
