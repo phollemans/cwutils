@@ -54,10 +54,10 @@ public abstract class GridResampler {
   protected EarthTransform destTrans;
 
   /** The list of source grids. */
-  protected List sourceGrids;
+  protected List<Grid> sourceGrids;
 
   /** The list of destination grids. */
-  protected List destGrids;
+  protected List<Grid> destGrids;
 
   ////////////////////////////////////////////////////////////
 

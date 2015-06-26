@@ -1,0 +1,161 @@
+////////////////////////////////////////////////////////////////////////
+/*
+     FILE: DirectGridResampler.java
+  PURPOSE: Resamples data from one grid to another using a direct copy.
+   AUTHOR: Peter Hollemans
+     DATE: 2015/06/25
+  CHANGES: n/a
+
+  CoastWatch Software Library and Utilities
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+
+*/
+////////////////////////////////////////////////////////////////////////
+
+// Package
+// -------
+package noaa.coastwatch.util;
+
+// Imports
+// -------
+import java.awt.geom.AffineTransform;
+import java.util.List;
+import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.GridResampler;
+import noaa.coastwatch.util.trans.EarthTransform;
+
+/**
+ * <p>The <code>DirectGridResampler</code> class performs generic data
+ * resampling between 2D Earth transforms using a direct location
+ * lookup method.  The steps are as follows:</p>
+ * <ol>
+ *
+ *   <li>For each pixel in the destination grid, compute the lat/lon using
+ *   the destination Earth transform, then the source
+ *   grid coordinates using the source Earth transform.</li>
+ * 
+ *   <li>Transfer the data from the source to the destination at the 
+ *   specified location.</li>
+ *
+ * </ol>
+ * <p>This class is best suited for working with source and destination 
+ * {@link EarthTransform} objects that compute forward and inverse transforms
+ * relatively quickly.</p>
+ *
+ * <p><b>WARNING: This class is not thread-safe.</b></p>
+ *
+ * @author Peter Hollemans
+ * @since 3.3.1
+ */
+public class DirectGridResampler 
+  extends GridResampler {
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a new grid resampler from the specified source and
+   * destination transforms.
+   *
+   * @param sourceTrans the source Earth transform.
+   * @param destTrans the destination Earth transform.
+   *
+   * @see LocationEstimator
+   */
+  public DirectGridResampler (
+    EarthTransform sourceTrans,
+    EarthTransform destTrans
+  ) {
+  
+    super (sourceTrans, destTrans);
+
+  } // DirectGridResampler constructor
+
+  ////////////////////////////////////////////////////////////
+
+  public void perform (
+    boolean verbose
+  ) {
+
+    // Check grid count
+    // ----------------
+    int grids = sourceGrids.size();
+    if (verbose) 
+      System.out.println (this.getClass() + ": Found " + grids + 
+        " grid(s) for resampling");
+    if (grids == 0) return;
+
+    // Get grid arrays
+    // ---------------
+    Grid[] sourceArray = sourceGrids.toArray (new Grid[]{});
+    Grid[] destArray = destGrids.toArray (new Grid[]{});
+    int[] sourceDims = sourceArray[0].getDimensions();
+    int[] destDims = destArray[0].getDimensions();
+
+    // Loop over each destination location
+    // -----------------------------------
+    if (verbose) 
+      System.out.println (this.getClass() + ": Resampling to " + 
+        destDims[Grid.ROWS] + "x" + destDims[Grid.COLS] + " from " +
+        sourceDims[Grid.ROWS] + "x" + sourceDims[Grid.COLS]);
+    DataLocation destLoc = new DataLocation (2);
+    DataLocation sourceLoc = new DataLocation (2);
+    EarthLocation earthLoc = new EarthLocation();
+    for (int i = 0; i < destDims[Grid.ROWS]; i++) {
+      if (verbose && i%100 == 0)
+        System.out.println (this.getClass() + ": Working on output row " + i);
+      for (int j = 0; j < destDims[Grid.COLS]; j++) {
+
+        // Get source location
+        // -------------------
+        destLoc.set (Grid.ROWS, i);
+        destLoc.set (Grid.COLS, j);
+        destTrans.transform (destLoc, earthLoc);
+        boolean isDestValid = earthLoc.isValid();
+        boolean isSourceValid = false;
+        if (isDestValid) {
+          sourceTrans.transform (earthLoc, sourceLoc);
+          isSourceValid = (sourceLoc.isValid() && sourceLoc.isContained (sourceDims));
+        } // if
+
+        // Copy data value
+        // ---------------
+        if (isSourceValid) {
+ 
+          // Get nearest neighbour source coordinate
+          // ---------------------------------------
+          int sourceRow = (int) Math.round (sourceLoc.get (Grid.ROWS));
+          int sourceCol = (int) Math.round (sourceLoc.get (Grid.COLS));
+                 
+          // Loop over each grid
+          // -------------------
+          for (int k = 0; k < grids; k++) {
+            double val = sourceArray[k].getValue (sourceRow, sourceCol);
+            destArray[k].setValue (i, j, val);
+          } // for
+
+        } // if
+
+        // Set missing value
+        // -----------------
+        else {
+
+          // Loop over each grid
+          // -------------------
+          for (int k = 0; k < grids; k++) {
+            destArray[k].setValue (i, j, Double.NaN);
+          } // for
+
+        } // else
+
+      } // for
+    } // for
+
+  } // perform
+
+  ////////////////////////////////////////////////////////////
+
+} // DirectGridResampler class
+
+////////////////////////////////////////////////////////////////////////

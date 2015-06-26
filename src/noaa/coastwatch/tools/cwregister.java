@@ -16,9 +16,15 @@
            2007/04/19, PFH, added version printing
            2011/09/13, XL, modified to use ACSPOInverseGridResampler for ACSPO files
            2013/03/06, PFH, modified to make ACSPO resampler usage a method subtype
-
+           2015/06/26, PFH
+           - Changes: Added a method called "direct".
+           - Issue: We want to have some way of comparing the accuracy of 
+             remapping methods to the ultimate direct mapping approach which
+             may be slow but very accurate.  So we now have a "direct" method
+             of remapping to compare the results to other methods.
+             
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -46,6 +52,7 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.GridResampler;
 import noaa.coastwatch.util.InverseGridResampler;
 import noaa.coastwatch.util.MixedGridResampler;
+import noaa.coastwatch.util.DirectGridResampler;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
@@ -411,6 +418,21 @@ public final class cwregister {
         mixed.setOverwriteMode (overwriteMode);
         resampler = mixed;
       } // else if
+
+
+      // TODO: We should move the creation of the specific resampler into
+      // a factory.  For now, we hide this method.
+
+
+      // Direct resampler
+      // ----------------
+      else if (method.equals ("direct")) {
+        resampler = new DirectGridResampler (inputInfo.getTransform(),
+          masterTrans);
+      } // else if
+
+
+
 
       // Invalid method
       // --------------

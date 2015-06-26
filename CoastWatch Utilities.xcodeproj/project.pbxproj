@@ -895,6 +895,7 @@
 		E9721ED818B89BAD0073918D /* OrientationAffineFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = OrientationAffineFactory.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9875CC6161E652F00C423BB /* license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = license.txt; sourceTree = "<group>"; };
 		E9875CC7161E652F00C423BB /* tool_categories.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tool_categories.txt; sourceTree = "<group>"; };
+		E98B4C9C1B3CAF93008D9EA8 /* DirectGridResampler.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DirectGridResampler.java; sourceTree = "<group>"; };
 		E9A91443196E33A700ABC12D /* LRUTileCache.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = LRUTileCache.java; path = io/tile/LRUTileCache.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9B50A141652F29C00D997D5 /* GeographicProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GeographicProjection.java; sourceTree = "<group>"; };
 		E9CA7C6D1AD5DD2800C2C96C /* CFNC4Writer.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CFNC4Writer.java; sourceTree = "<group>"; };
@@ -1028,7 +1029,6 @@
 		E94294B51B2F5CB800C0BBA4 /* lines */ = {
 			isa = PBXGroup;
 			children = (
-				E9CD11511B2FA7D5005C4FB5 /* EdgeSegment.java */,
 				E94294B41B2F5C7E00C0BBA4 /* LineCollection.java */,
 				E94294B61B2F606400C0BBA4 /* LabeledLine.java */,
 				E9EA91861B2FFA9F00A5836D /* LineLabelFactory.java */,
@@ -2245,6 +2245,7 @@
 				E96D8C33161661420009B833 /* DataVariable.java */,
 				E96D8C34161661420009B833 /* DataVariableIterator.java */,
 				E96D8C35161661420009B833 /* DateFormatter.java */,
+				E98B4C9C1B3CAF93008D9EA8 /* DirectGridResampler.java */,
 				E96D8C36161661420009B833 /* DoubleIterator.java */,
 				E96D8C37161661420009B833 /* EarthArea.java */,
 				E96D8C38161661420009B833 /* EarthDataInfo.java */,
