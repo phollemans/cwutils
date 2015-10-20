@@ -51,6 +51,14 @@
            - Issue: The HDF library was crashing the VM due to multiple threads
              calling the library simultaneously and the library is not
              threadsafe.
+           2015/09/03, PFH
+           - Changes: Added an extra test if missing data value is set for
+             a variable when writing data.
+           - Issue: If a data provider of swath data doesn't see a need for
+             a missing value, and then the data is reprojected, then we have a
+             problem for pixels that fall outside the swath in the
+             master region.  So we added some reasonable guesses for good 
+             missing values on IEEE floating point types.
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
@@ -652,7 +660,21 @@ public class CWHDFWriter
 
     // Set fill value
     // --------------
-    Object missing = var.getMissing ();
+    Object missing = var.getMissing();
+    /**
+     * We set up a reasonable missing value here for variables that don't
+     * have it.  It may be that the data provider didn't see a need for a
+     * missing value because all values were going to be written, but consider
+     * the case of a reprojection, where some of the destination points
+     * are not going to be populated, then they need to have a default value.
+     */
+    if (missing == null) {
+      Class dataClass = var.getDataClass();
+      if (dataClass.equals (Float.TYPE))
+        missing = new Float (Float.NaN);
+      else if (dataClass.equals (Double.TYPE))
+        missing = new Double (Double.NaN);
+    } // if
     if (missing != null) {
       Object fillValue = MetadataServices.toArray (missing);
       if (!HDFLib.getInstance().SDsetfillvalue (sdsid, fillValue))
