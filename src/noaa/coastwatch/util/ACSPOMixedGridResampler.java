@@ -174,6 +174,22 @@ public class ACSPOMixedGridResampler
         sourceRows[8] = sourceRows[6]; 
         sourceCols[8] = sourceCols[2];
 
+
+if (rectangle == 6487) {
+
+
+  System.out.println ("sourceRows = " + java.util.Arrays.toString (sourceRows));
+  System.out.println ("sourceCols = " + java.util.Arrays.toString (sourceCols));
+  
+  
+
+  
+} // if
+
+
+
+
+
         // Create source polynomial estimators
         // -----------------------------------
         /**
@@ -211,6 +227,25 @@ public class ACSPOMixedGridResampler
            */
           continue rectLoop;
         } // catch
+
+
+
+if (rectangle == 6487) {
+
+
+  System.out.println ("destRows = " + java.util.Arrays.toString (destRows));
+  System.out.println ("destCols = " + java.util.Arrays.toString (destCols));
+  
+  
+
+  
+} // if
+
+
+
+
+
+
 
         // Create destination polynomial estimators
         // ----------------------------------------
@@ -342,6 +377,31 @@ public class ACSPOMixedGridResampler
 
             // Copy pixel values for each grid
             // -------------------------------
+            
+
+
+            if (destRow == 480) {
+            
+              System.out.println ("sourceRow = " + sourceRow);
+              System.out.println ("sourceCol = " + sourceCol);
+            
+              System.out.println ("destRow = " + destRow);
+              System.out.println ("destCol = " + destCol);
+              
+              System.out.println ("rectangle = " + rectangle);
+              System.out.println ("rowMin = " + rowMin);
+              System.out.println ("rowMax = " + rowMax);
+              System.out.println ("colMin = " + colMin);
+              System.out.println ("colMax = " + colMax);
+
+              System.out.println();
+            
+            
+            
+            } // if
+            
+            
+            
             for (int k = 0; k < grids; k++) {
               double val = sourceArray[k].getValue (sourceRow, sourceCol);
               destArray[k].setValue (destRow, destCol, val);
