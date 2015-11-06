@@ -7,10 +7,10 @@
            possible pixels on the edges of the source grids for ACSPO files. 
    AUTHOR: X. Liu
      DATE: 2011/09/13
-  CHANGES: n/a
+  CHANGES: 2015/11/05, PFH, deprecated
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2011, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -48,8 +48,12 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  * @author Xiaoming Liu
  * @since 3.3.0
+ *
+ * @deprecated As of 3.3.1, use {@link InverseGridResampler} which now performs
+ * the exact same operation as this class.
  */
-public class ACSPOInverseGridResampler 
+@Deprecated
+public class ACSPOInverseGridResampler
 	extends GridResampler{
 	
 	  // Variables

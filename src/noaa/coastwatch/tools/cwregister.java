@@ -16,9 +16,14 @@
            2007/04/19, PFH, added version printing
            2011/09/13, XL, modified to use ACSPOInverseGridResampler for ACSPO files
            2013/03/06, PFH, modified to make ACSPO resampler usage a method subtype
+           2015/11/05, PFH
+           - Changes: Removed usage of ACSPO-specific registration classes.
+           - Issue: In order to avoid duplicate changes/updates to
+             registration algorithms, we combined ACSPO and
+             regular registration classes into single classes.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -38,8 +43,7 @@ import noaa.coastwatch.io.EarthDataReaderFactory;
 import noaa.coastwatch.io.HDFCachedGrid;
 import noaa.coastwatch.tools.CleanupHook;
 import noaa.coastwatch.tools.ToolServices;
-import noaa.coastwatch.util.ACSPOInverseGridResampler;
-import noaa.coastwatch.util.ACSPOMixedGridResampler;
+import noaa.coastwatch.util.ACSPOVIIRSBowtieDeletionFilter;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.Grid;
@@ -313,14 +317,10 @@ public final class cwregister {
     // Detect method subtype
     // ---------------------
     /** 
-     * We do this primarily to support ACSPO resampling, which performs
-     * a slightly different algorithm.  In the case of inverse resampling,
-     * there is a greater tolerance for pixels at the edges of source 
-     * rectangles.  In the case of mixed resampling, the VIIRS bowtie overlap
-     * pixels are set to missing, and so are filled properly.  We currently 
-     * don't document the ACSPO method subtype, mainly because the 
-     * modifications for ACSPO data are a kludgy one-off aberration of nature 
-     * that no sane and regular user of cwregister should have to know about.
+     * We do this primarily to support ACSPO VIIRS mixed mode resampling, in
+     * which the VIIRS bowtie overlap pixels are set to missing, and so are 
+     * detected and filled properly.  We currently don't document the ACSPO 
+     * method subtype, as it's for NOAA users who know that the option exists.
      */
     String[] methodArray = method.split ("-");
     String methodSubtype = "";
@@ -371,12 +371,8 @@ public final class cwregister {
       // ------------------------
       GridResampler resampler = null;
       if (method.equals ("inverse")) {
-    	if (methodSubtype.equals ("acspo"))
-          resampler = new ACSPOInverseGridResampler (inputInfo.getTransform(), 
-            masterTrans, polysize);
-    	else
-          resampler = new InverseGridResampler (inputInfo.getTransform(), 
-            masterTrans, polysize);
+        resampler = new InverseGridResampler (inputInfo.getTransform(),
+          masterTrans, polysize);
       } // if
 
       // Create mixed resampler
@@ -390,13 +386,11 @@ public final class cwregister {
         } // if
         int rectWidth = Integer.parseInt (rectsizeArray[0]);
         int rectHeight = Integer.parseInt (rectsizeArray[1]);
-        MixedGridResampler mixed = null;
-        if (methodSubtype.equals ("acspo")) 
-          mixed = new ACSPOMixedGridResampler (inputInfo.getTransform(), 
-            masterTrans, rectWidth, rectHeight);
-    	else
-          mixed = new MixedGridResampler (inputInfo.getTransform(),
-            masterTrans, rectWidth, rectHeight);
+        MixedGridResampler mixed = new MixedGridResampler (inputInfo.getTransform(),
+          masterTrans, rectWidth, rectHeight);
+        if (methodSubtype.equals ("acspo")) {
+          mixed.setSourceFilter (ACSPOVIIRSBowtieDeletionFilter.getInstance());
+        } // if
         int overwriteMode = -1;
         if (overwrite.equals ("always")) 
           overwriteMode = MixedGridResampler.OVERWRITE_ALWAYS;
