@@ -19,7 +19,6 @@
 		E94294B61B2F606400C0BBA4 /* LabeledLine.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = LabeledLine.java; path = lines/LabeledLine.java; sourceTree = "<group>"; };
 		E95FF124164326B4002C27C6 /* GCTPCStyleProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GCTPCStyleProjection.java; sourceTree = "<group>"; };
 		E965CD981AE1A54400D3E59B /* HDFLib.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = HDFLib.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D87B7161661420009B833 /* build.number */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build.number; sourceTree = "<group>"; };
 		E96D87B8161661420009B833 /* build.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = build.xml; sourceTree = "<group>"; };
 		E96D87B9161661420009B833 /* cwf.install4j */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = cwf.install4j; sourceTree = "<group>"; };
 		E96D87BA161661420009B833 /* cwf.properties */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cwf.properties; sourceTree = "<group>"; };
@@ -896,6 +895,8 @@
 		E9875CC6161E652F00C423BB /* license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = license.txt; sourceTree = "<group>"; };
 		E9875CC7161E652F00C423BB /* tool_categories.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tool_categories.txt; sourceTree = "<group>"; };
 		E9A91443196E33A700ABC12D /* LRUTileCache.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = LRUTileCache.java; path = io/tile/LRUTileCache.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E9AF25A51BE43D6E00A2E69F /* LocationFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = LocationFilter.java; sourceTree = "<group>"; };
+		E9AF25A61BE4576C00A2E69F /* ACSPOVIIRSBowtieDeletionFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ACSPOVIIRSBowtieDeletionFilter.java; sourceTree = "<group>"; };
 		E9B50A141652F29C00D997D5 /* GeographicProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GeographicProjection.java; sourceTree = "<group>"; };
 		E9CA7C6D1AD5DD2800C2C96C /* CFNC4Writer.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CFNC4Writer.java; sourceTree = "<group>"; };
 		E9D3A73E1B06D3C10027AA5F /* saxon9he.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = saxon9he.jar; path = scripts/saxon9he.jar; sourceTree = "<group>"; };
@@ -1028,7 +1029,6 @@
 		E94294B51B2F5CB800C0BBA4 /* lines */ = {
 			isa = PBXGroup;
 			children = (
-				E9CD11511B2FA7D5005C4FB5 /* EdgeSegment.java */,
 				E94294B41B2F5C7E00C0BBA4 /* LineCollection.java */,
 				E94294B61B2F606400C0BBA4 /* LabeledLine.java */,
 				E9EA91861B2FFA9F00A5836D /* LineLabelFactory.java */,
@@ -1041,7 +1041,6 @@
 		E9549082161660FE00BFA76C = {
 			isa = PBXGroup;
 			children = (
-				E96D87B7161661420009B833 /* build.number */,
 				E96D87B8161661420009B833 /* build.xml */,
 				E96D87B9161661420009B833 /* cwf.install4j */,
 				E96D87BA161661420009B833 /* cwf.properties */,
@@ -2236,6 +2235,7 @@
 			children = (
 				E96D8C2B161661420009B833 /* ACSPOInverseGridResampler.java */,
 				E96D8C2C161661420009B833 /* ACSPOMixedGridResampler.java */,
+				E9AF25A61BE4576C00A2E69F /* ACSPOVIIRSBowtieDeletionFilter.java */,
 				E96D8C2D161661420009B833 /* BivariateEstimator.java */,
 				E96D8C2E161661420009B833 /* BoxSurvey.java */,
 				E96D8C2F161661420009B833 /* ConstrainedStrideLocationIterator.java */,
@@ -2266,6 +2266,7 @@
 				E96D8C48161661420009B833 /* LineLocationIterator.java */,
 				E96D8C49161661420009B833 /* LineSurvey.java */,
 				E96D8C4A161661420009B833 /* LocationEstimator.java */,
+				E9AF25A51BE43D6E00A2E69F /* LocationFilter.java */,
 				E96D8C4B161661420009B833 /* LongitudeFilter.java */,
 				E96D8C4C161661420009B833 /* MetadataContainer.java */,
 				E96D8C4D161661420009B833 /* MetadataServices.java */,
