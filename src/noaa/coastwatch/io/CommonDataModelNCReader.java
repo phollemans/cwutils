@@ -319,6 +319,68 @@ public class CommonDataModelNCReader
     GridDataset.Gridset gridset
   ) throws IOException {
 
+
+
+// TODO: We need to do something here to create a map projection whose
+// calculations are backed by a CDM projection instance plus x and y
+// variable vectors.
+
+
+/**
+
+
+
+
+Types of transforms: 
+
+- swath: earth locations given for each pixel in a pattern irregular enough
+  to have no simple (lat,lon) --> (i,j) translation (often from a sensor)
+ 
+- mapped: earth locations that can be translated to/from (i,j) using a map 
+  projection calculation in both directions
+  
+- vector: earth locations that fall along 1D vectors of latitude and 
+  longitude, not necessarily regularly spaced
+  
+- sensor: earth locations that have a complex relationship to their (i,j)
+  given by a calculation that models the sensor and earth geometry
+
+
+
+
+How transform class instanceof calls are used in the utilities:
+
+- writing ArcInfo compatible HDR and world files, to write the map projection
+  coordinates of the corner points, and the resolution
+  
+- displaying general file information in GUI, command line, or image sidebar, 
+  to print the map projection specifications and system
+
+- writing NetCDF, HDF, or GeoTIFF metadata, to decide which metadata to write
+
+- creating a subsampling of a map projection when viewing a GUI preview of a
+  grid
+
+- truncating top-left and bottom-right in swath to trace bounding box for
+  GUI and plotting
+  
+- detection of swath in order to decide if coastlines should be plotted on 
+  a preview image (ie: might be very slow rendering, or no (lat,lon) -> (i,j)
+  translation available
+
+
+
+
+
+
+
+*/
+
+
+
+
+
+
     // Get and check coordinate system
     // -------------------------------
     GridCoordSystem coordSystem = gridset.getGeoCoordSystem();

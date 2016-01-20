@@ -66,6 +66,25 @@ public abstract class EarthTransform
   private static final Datum WGS84 = 
     DatumFactory.create (SpheroidConstants.WGS84);
 
+
+
+
+
+  public enum TransformType {
+    SWATH ("swath"),
+    MAPPED ("mapped"),
+    VECTOR ("vector"),
+    SENSOR ("sensor");
+    private String name;
+    private TransformType (String name) { this.name = name; }
+    public String toString () { return (name); }
+  };
+  
+  
+
+
+
+
   // Variables
   // ---------
 
