@@ -10,9 +10,15 @@
              so it was difficult to locate a test reliably from one run to
              another, so we added a sort of class names before the testing
              to resolve this.
-
+           2016/01/19, PFH
+           - Changes: Updated to new TestLogger class.
+           - Issues: With more classes being unit tested, it was difficult to
+             see the pass/fail status of each test.  The singleton class
+             TestLogger now handles unit test output, and prints messages 
+             in color using a standard message layout.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 2014-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2014-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -30,6 +36,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.TreeMap;
 import noaa.coastwatch.test.Testable;
+import noaa.coastwatch.test.TestLogger;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanner;
 
@@ -77,15 +84,19 @@ public class TestableTester {
       
     // Run tests
     // ---------
+    TestLogger logger = TestLogger.getInstance();
     Class[] parameterArray = new Class[1];
     parameterArray[0] = String[].class;
     for (Class testableClass : testableClassMap.values()) {
-      System.out.println ("***** " + testableClass + " *****");
       Method mainMethod = testableClass.getMethod ("main", parameterArray);
       try { mainMethod.invoke (null, (Object) null); }
       catch (InvocationTargetException e) {
-        System.out.println();
-        e.getCause().printStackTrace (System.out);
+        logger.failed();
+        Throwable cause = e.getCause();
+        logger.error (cause.getClass().getName());
+        for (StackTraceElement element : cause.getStackTrace()) {
+          logger.error ("  at " + element);
+        } // for
       } // catch
       catch (Exception e) {
         System.out.println ("Got an Exception while testing");

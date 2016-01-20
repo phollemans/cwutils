@@ -3,10 +3,11 @@
      FILE: LRUTileCache.java
    AUTHOR: Peter Hollemans
      DATE: 2014/07/09
-  CHANGES: n/a
+  CHANGES: 2016/01/19, PFH
+           - Changes: Updated to new logging API.
 
   CoastWatch Software Library and Utilities
-  Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2014-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -30,6 +31,9 @@ import noaa.coastwatch.io.tile.TileSource;
 import noaa.coastwatch.io.tile.TilingScheme;
 import noaa.coastwatch.io.tile.TilingScheme.Tile;
 import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * The <code>LRUTileCache</code> is a tile cache that uses a 
@@ -205,6 +209,9 @@ public class LRUTileCache
    */
   public static void main (String[] argv) throws Exception {
 
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (LRUTileCache.class);
+
     /*
      *     0    1    2    3    4
      *   +----+----+----+----+----+  \
@@ -221,7 +228,7 @@ public class LRUTileCache
      *     40   40   40   40   40
      */
 
-    System.out.print ("Testing getBytesUsed ... ");
+    logger.test ("getBytesUsed");
     assert (getBytesUsed (new boolean[10]) == 10);
     assert (getBytesUsed (new byte[20]) == 20);
     assert (getBytesUsed (new short[30]) == 60);
@@ -236,7 +243,7 @@ public class LRUTileCache
     catch (IllegalArgumentException e) {
       assert (true);
     } // catch
-    System.out.println ("OK");
+    logger.passed();
 
     int[] globalDims = new int[] {100, 200};
     int[] tileDims = new int[] {40, 40};
@@ -257,18 +264,18 @@ public class LRUTileCache
       public TilingScheme getScheme() { return (scheme); }
     };
 
-    System.out.print ("Testing constructor ... ");
+    logger.test ("constructor");
     LRUTileCache cache = new LRUTileCache();
     assert (cache.getCacheSize() == 0);
     assert (cache.getCacheSizeLimit() == 1024*1024*16);
-    System.out.println ("OK");
+    logger.passed();
 
-    System.out.print ("Testing setCacheSizeLimit ... ");
+    logger.test ("setCacheSizeLimit");
     cache.setCacheSizeLimit (40*40*3);
     assert (cache.getCacheSizeLimit() == 40*40*3);
-    System.out.println ("OK");
+    logger.passed();
     
-    System.out.print ("Testing put ... ");
+    logger.test ("put");
 
     TilePosition pos1 = scheme.new TilePosition (0, 0);
     Tile tile1 = source.readTile (pos1);
@@ -317,9 +324,9 @@ public class LRUTileCache
     assert (cache.get (key4) == tile4);
     assert (cache.getCacheSize() == 40*40*2 + 40*20);
     
-    System.out.println ("OK");
+    logger.passed();
     
-    System.out.print ("Testing remove ... ");
+    logger.test ("remove");
     cache.remove (key3);
     assert (!cache.containsKey (key1));
     assert (cache.containsKey (key2));
@@ -328,12 +335,12 @@ public class LRUTileCache
     assert (cache.containsKey (key4));
     assert (cache.get (key4) == tile4);
     assert (cache.getCacheSize() == 40*40*2);
-    System.out.println ("OK");
+    logger.passed();
 
-    System.out.print ("Testing clear ... ");
+    logger.test ("clear");
     cache.clear();
     assert (cache.getCacheSize() == 0);
-    System.out.println ("OK");
+    logger.passed();
 
   } // main
 

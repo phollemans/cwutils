@@ -58,9 +58,11 @@
            - Changes: Corrected all documentation on scale factor.
            - Issue: The meaning of scale factor was described inverse to its
              implementation.
+           2016/01/19, PFH
+           - Changes: Updated to new logging API.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -104,6 +106,9 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.EarthTransform2D;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * The Earth data view class sets up a correspondence between 2D Earth
@@ -1532,8 +1537,12 @@ public abstract class EarthDataView
    */
   public static void main (String[] argv) throws Exception {
 
-    System.out.print ("Testing constructor ... ");
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (EarthDataView.class);
 
+    // Create mapped info
+    // ------------------
+    logger.test ("Framework");
     int rows = 3;
     int cols = 4;
     EarthTransform trans = MapProjectionFactory.getInstance().create (
@@ -1545,6 +1554,9 @@ public abstract class EarthDataView
       new EarthLocation (0, 0),
       new double[] {1, 1}
     );
+    logger.passed();
+    
+    logger.test ("constructor");
     EarthDataView view = new EarthDataView (trans.getDimensions(), trans) {
       protected void prepare (Graphics2D g) { }
     };
@@ -1559,24 +1571,24 @@ public abstract class EarthDataView
     assert (Math.abs (lowerRight.getX() - cols) < epsilon);
     assert (Math.abs (lowerRight.getY() - rows) < epsilon);
   
-    System.out.println ("OK");
+    logger.passed();
   
-    System.out.print ("Testing getBounds ... ");
+    logger.test ("getBounds");
     DataLocation[] bounds = view.getBounds();
     assert (Math.abs (bounds[0].get (Grid.ROWS) - (-0.5)) < epsilon);
     assert (Math.abs (bounds[0].get (Grid.COLS) - (-0.5)) < epsilon);
     assert (Math.abs (bounds[1].get (Grid.ROWS) - (rows-1-0.5)) < epsilon);
     assert (Math.abs (bounds[1].get (Grid.COLS) - (cols-1-0.5)) < epsilon);
-    System.out.println ("OK");
+    logger.passed();
 
-    System.out.print ("Testing resize ... ");
+    logger.test ("resize");
     view.resize (new Dimension (cols*10, rows*10));
     bounds = view.getBounds();
     assert (Math.abs (bounds[0].get (Grid.ROWS) - (-0.5)) < epsilon);
     assert (Math.abs (bounds[0].get (Grid.COLS) - (-0.5)) < epsilon);
     assert (Math.abs (bounds[1].get (Grid.ROWS) - (rows-1+0.4)) < epsilon);
     assert (Math.abs (bounds[1].get (Grid.COLS) - (cols-1+0.4)) < epsilon);
-    System.out.println ("OK");
+    logger.passed();
   
   } // main
 

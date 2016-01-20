@@ -4,10 +4,11 @@
   PURPOSE: Analyses Earth transforms to determine need for a transform.
    AUTHOR: Peter Hollemans
      DATE: 2014/02/23
-  CHANGES: n/a
+  CHANGES: 2016/01/19, PFH
+           - Changes: Updated to new logging API.
 
   CoastWatch Software Library and Utilities
-  Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2014-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -29,6 +30,9 @@ import noaa.coastwatch.util.trans.MapProjectionFactory;
 import noaa.coastwatch.util.trans.PolarStereographicProjection;
 import noaa.coastwatch.util.trans.SpheroidConstants;
 import noaa.coastwatch.util.trans.SwathProjection;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -149,8 +153,10 @@ public class OrientationAffineFactory {
    */
   public static void main (String[] argv) throws Exception {
 
-    System.out.print ("Testing create ... ");
-    
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (OrientationAffineFactory.class);
+
+    logger.test ("create");
     MapProjection map = new PolarStereographicProjection (
       SpheroidConstants.SPHEROID_SEMI_MAJOR[12],
       SpheroidConstants.SPHEROID_SEMI_MINOR[12],
@@ -185,7 +191,7 @@ public class OrientationAffineFactory {
     orient = OrientationAffineFactory.create (swath);
     assert (orient == null);
     
-    System.out.println ("OK");
+    logger.passed();
     
   } // main
 

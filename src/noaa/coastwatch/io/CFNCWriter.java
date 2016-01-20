@@ -5,13 +5,15 @@
    AUTHOR: Peter Hollemans
      DATE: 2010/02/15
   CHANGES: 2015/04/13, PFH
-           - Changes: Updted to use new NetcdfFileWriter class, and added
+           - Changes: Updated to use new NetcdfFileWriter class, and added
              test main() method.
            - Issue: The NetcdfFileWritable class was deprecated when we updated
              to the latest NetCDF Java API.
+           2016/01/19, PFH
+           - Changes: Updated to new logging API.
 
   CoastWatch Software Library and Utilities
-  Copyright 2010-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2010-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -64,6 +66,9 @@ import ucar.nc2.Dimension;
 import ucar.nc2.Group;
 import ucar.nc2.NetcdfFileWriter;
 import ucar.nc2.Variable;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * <p>A CF NetCDF writer creates NetCDF format files with CF
@@ -1411,8 +1416,12 @@ public class CFNCWriter
    */
   public static void main (String[] argv) throws Exception {
 
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (CFNCWriter.class);
+
     // Create mapped info
     // ------------------
+    logger.test ("Framework");
     SatelliteDataInfo info = new SatelliteDataInfo (
       "satellite-1",
       "sensor-1",
@@ -1447,9 +1456,10 @@ public class CFNCWriter
       new double[] {0.01, 0},
       Short.MIN_VALUE
     );
+    logger.passed();
     
     String ncFileName = "/tmp/test.nc";
-    System.out.print ("Testing constructor, addVariable, flush, close (" + ncFileName + ") ... ");
+    logger.test ("constructor, addVariable, flush, close (" + ncFileName + ")");
   
     CFNCWriter writer = new CFNCWriter (
       info,
@@ -1467,7 +1477,7 @@ public class CFNCWriter
 //    ncFile.delete();
 //    assert (!ncFile.exists());
 
-    System.out.println ("OK");
+    logger.passed();
 
   } // main
 

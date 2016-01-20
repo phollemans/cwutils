@@ -24,9 +24,12 @@
            - Issue: We needed a way to mark Earth locations as invalid in
              one call, with no need to know about how invalid locations are
              actually implemented.
- 
+           2016/01/19, PFH
+           - Changes: Updated to new logging API and created static 
+             distance() method.
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -44,6 +47,9 @@ import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.util.trans.Datum;
 import noaa.coastwatch.util.trans.DatumFactory;
 import noaa.coastwatch.util.trans.SpheroidConstants;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * An Earth location represents a point using latitude and longitude
@@ -271,7 +277,7 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /**
-   * Calculates the great circle distance from this location to another.
+   * Calculates the great circle distance between two locations A and B.
    * The method uses a calculation for distance on a sphere.<p>
    *
    * Haversine Formula (from R.W. Sinnott, "Virtues of the Haversine",
@@ -285,20 +291,28 @@ public class EarthLocation
    *   d = R * c
    * </pre>
    *
-   * @param loc the location for which to calculate the distance.
-   * 
+   * @param latA the latitude of point A in degrees.
+   * @param lonA the longitude of point A in degrees.
+   * @param latB the latitude of point B in degrees.
+   * @param lonB the longitude of point B in degrees.
+   *
    * @return the distance between points in kilometres.
+   * 
+   * @see #distance(EarthLocation)
    */
-  public double distance (
-    EarthLocation loc
+  public static double distance (
+    double latA,
+    double lonA,
+    double latB,
+    double lonB
   ) {
 
     // Convert to radians
     // ------------------
-    double lat1 = Math.toRadians (this.lat);
-    double lon1 = Math.toRadians (this.lon);
-    double lat2 = Math.toRadians (loc.lat);
-    double lon2 = Math.toRadians (loc.lon);
+    double lat1 = Math.toRadians (latA);
+    double lon1 = Math.toRadians (lonA);
+    double lat2 = Math.toRadians (latB);
+    double lon2 = Math.toRadians (lonB);
 
     // Calculate distance
     // ------------------
@@ -310,6 +324,25 @@ public class EarthLocation
     double d = SpheroidConstants.STD_RADIUS * c;
     return (d);
 
+  } // distance
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Calculates the great circle distance from this location to another.
+   *
+   * @param loc the location for which to calculate the distance.
+   * 
+   * @return the distance between points in kilometres.
+   * 
+   * @see #distance(double,double,double,double)
+   */
+  public double distance (
+    EarthLocation loc
+  ) {
+
+    return (distance (this.lat, this.lon, loc.lat, loc.lon));
+    
   } // distance
 
   ////////////////////////////////////////////////////////////
@@ -667,7 +700,10 @@ public class EarthLocation
    */
   public static void main (String[] argv) throws Exception {
 
-    System.out.print ("Testing constructors ... ");
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (EarthLocation.class);
+
+    logger.test ("constructors");
 
     EarthLocation loc = new EarthLocation();
     assert (loc.lat == 0);
@@ -691,14 +727,14 @@ public class EarthLocation
     assert (loc.lon == 20);
     assert (loc.getDatum() == grsDatum);
     
-    System.out.println ("OK");
+    logger.passed();
 
-    System.out.print ("Testing markInvalid, isValid ... ");
+    logger.test ("markInvalid, isValid");
     loc = new EarthLocation (0, 0);
     assert (loc.isValid());
     loc.markInvalid();
     assert (!loc.isValid());
-    System.out.println ("OK");
+    logger.passed();
 
   } // main
 

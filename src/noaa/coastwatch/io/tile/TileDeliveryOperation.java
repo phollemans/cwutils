@@ -3,10 +3,11 @@
      FILE: TileDeliveryOperation.java
    AUTHOR: Peter Hollemans
      DATE: 2014/07/01
-  CHANGES: n/a
+  CHANGES: 2016/01/19, PFH
+           - Changes: Updated to new logging API.
 
   CoastWatch Software Library and Utilities
-  Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2014-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -27,6 +28,9 @@ import noaa.coastwatch.io.tile.TileSource;
 import noaa.coastwatch.io.tile.TilingScheme;
 import noaa.coastwatch.io.tile.TilingScheme.Tile;
 import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * A <code>TileDeliveryOperation</code> represents an asynchronous process for
@@ -225,6 +229,9 @@ public class TileDeliveryOperation
    */
   public static void main (String[] argv) throws Exception {
 
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (TileDeliveryOperation.class);
+
     /*
      *     0    1    2    3    4
      *   +----+----+----+----+----+  \
@@ -240,7 +247,9 @@ public class TileDeliveryOperation
      *   \----X----X----X----X----/
      *     40   40   40   40   40
      */
-     
+    
+    logger.test ("Framework");
+    
     int[] globalDims = new int[] {100, 200};
     int[] tileDims = new int[] {40, 40};
     final TilingScheme scheme = new TilingScheme (globalDims, tileDims);
@@ -270,13 +279,15 @@ public class TileDeliveryOperation
     positions.add (scheme.new TilePosition (2, 3));
     positions.add (scheme.new TilePosition (1, 0));
 
-    System.out.print ("Testing constructor, getSource ... ");
+    logger.passed();
+
+    logger.test ("constructor, getSource");
     TileDeliveryOperation op = new TileDeliveryOperation (source, positions);
     assert (op.getSource() == source);
     assert (op.getLastReadException() == null);
-    System.out.println ("OK");
+    logger.passed();
 
-    System.out.print ("Testing start, waitUntilFinished, getLastReadException, isFinished ... ");
+    logger.test ("start, waitUntilFinished, getLastReadException, isFinished");
 
     final int[] tilesObserved = new int[] {0};
     op.addObserver (new Observer() {
@@ -316,9 +327,9 @@ public class TileDeliveryOperation
     assert (tilesObserved[0] == positions.size());
     assert (op.isFinished());
     
-    System.out.println ("OK");
+    logger.passed();
 
-    System.out.print ("Testing cancel ... ");
+    logger.test ("cancel");
     throwError[0] = false;
     tilesObserved[0] = 0;
     op = new TileDeliveryOperation (source, positions);
@@ -332,7 +343,7 @@ public class TileDeliveryOperation
     op.start();
     op.waitUntilFinished();
     assert (tilesObserved[0] == positions.size()-1);
-    System.out.println ("OK");
+    logger.passed();
   
   } // main
 

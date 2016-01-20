@@ -13,9 +13,11 @@
              the logical place to put that code.  Also, the isOrientable() 
              method provides a hint to users of whether or not the transform
              should be oriented differently for display.
+           2016/01/19, PFH
+           - Changes: Updated to new logging API.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -35,6 +37,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.util.trans.PolarStereographicProjection;
 import noaa.coastwatch.util.trans.SpheroidConstants;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * The <code>EarthTransform2D</code> class adds extra functionality to
@@ -266,8 +271,10 @@ public abstract class EarthTransform2D
    */
   public static void main (String[] argv) throws Exception {
 
-    System.out.print ("Testing getWorldAxes ... ");
-    
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (EarthTransform2D.class);
+
+    logger.test ("Framework");
     EarthTransform2D trans = new EarthTransform2D () {
       protected void transformImpl (
         DataLocation dataLoc,
@@ -284,6 +291,9 @@ public abstract class EarthTransform2D
       }
       public String describe () { return (null); }
     };
+    logger.passed();
+    
+    logger.test ("getWorldAxes");
     double[] north = new double[2];
     double[] east = new double[2];
     EarthLocation center = new EarthLocation();
@@ -315,7 +325,7 @@ public abstract class EarthTransform2D
     assert (east[Grid.ROWS] < 0);
     assert (east[Grid.COLS] > 0);
 
-    System.out.println ("OK");
+    logger.passed();
 
   } // main
 
