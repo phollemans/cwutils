@@ -96,8 +96,10 @@
       <component name="Source code and API docs" id="118" customizedId="" displayDescription="false" hideHelpButton="false" selected="false" changeable="true" downloadable="false" hidden="false">
         <description />
         <include all="false">
+          <entry location="doc/api.zip" fileType="regular" />
           <entry location="doc/cw_cf_metadata.pdf" fileType="regular" />
           <entry location="doc/metadata_comparison_v1_1_jan_2010.pdf" fileType="regular" />
+          <entry location="src.zip" fileType="regular" />
         </include>
         <dependencies />
       </component>
@@ -1894,7 +1896,7 @@ wizardContext.setCancelButtonVisible(false);</preActivation>
     </applications>
   </installerGui>
   <mediaSets>
-    <windows name="windows32" id="10" customizedId="" mediaFileName="" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="windows-i586-1.8.0_45.tar.gz" manualJREEntry="true" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" verifyIntegrity="true">
+    <windows name="windows32" id="10" customizedId="" mediaFileName="" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="windows-x86-1.8.0_72" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" verifyIntegrity="true">
       <excludedLaunchers>
         <launcher id="498" />
         <launcher id="505" />
@@ -1926,7 +1928,7 @@ wizardContext.setCancelButtonVisible(false);</preActivation>
       <excludedComponents />
       <includedDownloadableComponents />
     </windows>
-    <windows name="windows64" id="278" customizedId="" mediaFileName="" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="64" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="windows-x64-1.8.0_45.tar.gz" manualJREEntry="true" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" verifyIntegrity="true">
+    <windows name="windows64" id="278" customizedId="" mediaFileName="" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="64" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="windows-amd64-1.8.0_72" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" verifyIntegrity="true">
       <excludedLaunchers>
         <launcher id="498" />
         <launcher id="505" />
@@ -2069,7 +2071,7 @@ wizardContext.setCancelButtonVisible(false);</preActivation>
         <customAttributes />
       </autoUpdate>
     </unixArchive>
-    <macosFolder name="macosx64 (dmg)" id="276" customizedId="" mediaFileName="" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="macosx-amd64-1.8.0_20" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" appleJre="false" requiredVmIdPrefix="" customInstallBaseDir="" contentFilesType="1" downloadURL="" signLaunchers="false">
+    <macosFolder name="macosx64 (dmg)" id="276" customizedId="" mediaFileName="" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="macosx-amd64-1.8.0_72" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" appleJre="false" requiredVmIdPrefix="" customInstallBaseDir="" contentFilesType="1" downloadURL="" signLaunchers="false">
       <excludedLaunchers />
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
@@ -2098,7 +2100,7 @@ wizardContext.setCancelButtonVisible(false);</preActivation>
       <excludedComponents />
       <includedDownloadableComponents />
     </macosFolder>
-    <unixArchive name="macosx64 (tgz)" id="528" customizedId="" mediaFileName="" installDir="${compiler:baseInstallDir}" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="macosx-x64-1.8.0_45" manualJREEntry="false">
+    <unixArchive name="macosx64 (tgz)" id="528" customizedId="" mediaFileName="" installDir="${compiler:baseInstallDir}" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="macosx-amd64-1.8.0_72" manualJREEntry="false">
       <excludedLaunchers />
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
