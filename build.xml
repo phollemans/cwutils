@@ -193,7 +193,13 @@
   <!-- Define package targets -->
   <!-- ********************** -->
 
-  <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64,solaris32,solaris64"/>
+  <!--
+    For now we leave out Solaris support, because we have no way of testing it.
+    If a user asks for it, we can provide a package.
+  -->
+  <!--  <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64,solaris32,solaris64"/> -->
+
+  <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64"/>
   <property name="build.id.linux32" value="88"/>
   <property name="build.id.linux64" value="288"/>
   <property name="build.id.windows32" value="10"/>
