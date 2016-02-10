@@ -9,6 +9,7 @@
 /* Begin PBXFileReference section */
 		E906137B16B234C50047F604 /* ACSPONCCFReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = ACSPONCCFReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E91838D6189209DF00A2F3DD /* cwf_users_guide.tex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cwf_users_guide.tex; sourceTree = "<group>"; };
+		E91D3DDB1C6ACB8600EAFF79 /* build.number */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build.number; sourceTree = "<group>"; };
 		E91FD1B61B1003BA0096CCA3 /* html2mdoc.xsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = html2mdoc.xsl; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xml; };
 		E92229931AF4937B00E392D0 /* ScriptConsole.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ScriptConsole.java; sourceTree = "<group>"; };
 		E9339BBF16D1F0740019383B /* logging.properties */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = logging.properties; sourceTree = "<group>"; };
@@ -1041,6 +1042,7 @@
 		E9549082161660FE00BFA76C = {
 			isa = PBXGroup;
 			children = (
+				E91D3DDB1C6ACB8600EAFF79 /* build.number */,
 				E96D87B8161661420009B833 /* build.xml */,
 				E96D87B9161661420009B833 /* cwf.install4j */,
 				E96D87BA161661420009B833 /* cwf.properties */,
