@@ -11,9 +11,17 @@
              DataVariable so rather than continuing its use, we decided
              to remove it and re-arrange the scaling and offset for CF
              conventions before passing into the Grid constructor.
+           2016/02/10, PFH
+           - Changes: Added more sophisticated detection of rows and columns
+             dimensions for map transforms.  Previously the code was hard
+             coded to detect a "latitude" variable.  Now it looks for the
+             first 2D variable and uses that.
+           - Issue: Files that had CoastWatch HDF-like metadata but no 
+             "latitude" variable were not having a correct transform being
+             created.
   
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -69,7 +77,7 @@ public class CWCFNCReader
   // ---------
 
   /** The data format description. */
-  private static final String DATA_FORMAT = "CoastWatch NC4-CF";
+  private static final String DATA_FORMAT = "CoastWatch HDF/NC/CF";
 
   /** Number of milliseconds in a day. */
   private static final long MSEC_PER_DAY = (1000L * 3600L * 24L);
@@ -222,38 +230,37 @@ public class CWCFNCReader
         affine = new AffineTransform (newMatrix);
       } // else
 
-      // Get dimensions
-      // --------------
+      // Create transform
+      // ----------------
       EarthTransform2D trans = null;
-      int cols = 0;
-      int rows = 0;
       try {
-    	  DataVariable lat = getVariable ("latitude");
-          cols = lat.getDimensions()[Grid.COLS];
-          rows = lat.getDimensions()[Grid.ROWS];
-          if(rows != 0 && cols != 0){
-    		  trans = MapProjectionFactory.getInstance().create (system, zone, 
-    				  parameters, spheroid, new int[] {rows, cols}, affine);
-    	  }
-    	  else{
-    		  DataVariable lon = getVariable ("longitude");
-    		  trans = new DataProjection (lat, lon);
-    	  }
+      
+          // Search for the first variable with rank 2
+          // -----------------------------------------
+          DataVariable var = null;
+          int varCount = getVariables();
+          for (int i = 0; i < varCount && var == null; i++) {
+            DataVariable preview = getPreview (i);
+            if (preview.getRank() == 2) var = preview;
+          } // for
+          if (var == null)
+            throw new RuntimeException ("No prototype variable found for dimensions");
+
+          // Create a map projection
+          // -----------------------
+          int[] dims = var.getDimensions();
+	  trans = MapProjectionFactory.getInstance().create (system, zone,
+            parameters, spheroid, dims, affine);
+
         } // try
+      
         catch (Exception e) {
           System.err.println (this.getClass() + 
             ": Warning: Problems encountered using Earth location data");
           e.printStackTrace();
         } // catch
 
-      // Create map projection
-      // ---------------------
-
-      // Attach metadata
-      // ---------------
-      //      getAttributes (MAP_METADATA, trans.getMetadataMap());
-
-      return (trans);
+        return (trans);
 
     } // if
 
