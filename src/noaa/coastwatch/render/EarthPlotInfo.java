@@ -15,9 +15,18 @@
            2005/02/14, PFH, added data courtesy notice
            2005/03/07, PFH, modified courtesy notice to use lineWrap()
            2006/11/20, PFH, modified to use GraphicsServices.drawRect()
+           2016/02/10, PFH
+           - Changes: Added the wrapTruncateValue() method and modified
+             the constructor to call it.
+           - Issue: There were instances when very long string values for 
+             the satellite, sensor, and data source were causing the width 
+             of to plot legends to be unreasonably large.  We should really
+             be protecting against these cases, especiially when reading files
+             like NetCDF with CF metadata that users can specify much longer
+             strings than needed or anticipated.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -40,7 +49,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.render.EarthContextElement;
 import noaa.coastwatch.render.GraphicsServices;
@@ -122,6 +133,66 @@ public class EarthPlotInfo
   ////////////////////////////////////////////////////////////
 
   /**
+   * Wraps and truncates a string value to fit on a specific number of lines
+   * and line width.
+   *
+   * @param input the input string to work on.
+   * @param indent the number of spaces of indent at the start of each line,
+   * or 0 for no indenting.
+   * @param maxLength the maximum length of each line.
+   * @param maxLines the maximum number of lines in the output array.
+   *
+   * @return the output list of lines.
+   */
+  private static List<String> wrapTruncateValue (
+    String input,
+    int indent,
+    int maxLength,
+    int maxLines
+  ) {
+
+    // Create initial wrapped version of output
+    // ----------------------------------------
+    List<String> outputLines = new ArrayList<String>();
+    outputLines.addAll (Arrays.asList (GUIServices.lineWrap (input, maxLength-indent).split ("\n")));
+
+    // Truncate the number of lines
+    // ----------------------------
+    if (outputLines.size() > maxLines) {
+      outputLines = outputLines.subList (0, maxLines);
+      String lastLine = outputLines.get (outputLines.size()-1);
+      if (lastLine.length() > maxLength-3) lastLine = lastLine.substring (0, maxLength-3);
+      lastLine = lastLine + "...";
+      outputLines.set (outputLines.size()-1, lastLine);
+    } // if
+
+    // Indent the lines
+    // ----------------
+    if (indent > 0) {
+      String indentStr = "";
+      for (int i = 0; i < indent; i++) indentStr += " ";
+      for (int i = 0; i < outputLines.size(); i++)
+        outputLines.set (i, indentStr + outputLines.get (i));
+    } // if
+
+    // Truncate each line in the middle
+    // --------------------------------
+    for (int i = 0; i < outputLines.size(); i++) {
+      String line = outputLines.get (i);
+      if (line.length() > maxLength) {
+        line = line.substring (0, maxLength/2-2) + "..." +
+          line.substring (line.length()-(maxLength/2-1), line.length());
+        outputLines.set (i, line);
+      } // if
+    } // for
+
+    return (outputLines);
+
+  } // wrapTruncateValue
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Creates an Earth plot information legend from the specified
    * parameters.
    *
@@ -156,14 +227,14 @@ public class EarthPlotInfo
 
     // Create strings
     // --------------
-    Vector strings = new Vector();
+    List<String> strings = new ArrayList<String>();
 
     // Add origin
     // ----------
     strings.add ("Data courtesy of:");
     String origin = MetadataServices.format (info.getOrigin(), " ");
     String[] originArray = GUIServices.lineWrap (origin, 20).split ("\n");
-    for (int i = 0; i < originArray.length; i++) strings.add (originArray[i]);
+    strings.addAll (Arrays.asList (originArray));
     strings.add (" ");
 
     // Add data source
@@ -171,16 +242,16 @@ public class EarthPlotInfo
     if (info instanceof SatelliteDataInfo) {
       SatelliteDataInfo satInfo = (SatelliteDataInfo) info;
       strings.add ("Satellite:");
-      strings.add ("  " + 
-        MetadataServices.format (satInfo.getSatellite().toUpperCase(), ", "));
+      String sat = satInfo.getSatellite().toUpperCase();
+      strings.addAll (wrapTruncateValue (MetadataServices.format (sat, ", "), 2, 20, 3));
       strings.add ("Sensor:");
-      strings.add ("  " + 
-        MetadataServices.format (satInfo.getSensor().toUpperCase(), ", "));
+      String sensor = satInfo.getSensor().toUpperCase();
+      strings.addAll (wrapTruncateValue (MetadataServices.format (sensor, ", "), 2, 20, 3));
     } // if
     else {
       strings.add ("Data source:");
-      strings.add ("  " + 
-        MetadataServices.format (info.getSource().toUpperCase(), ", "));
+      String source = info.getSource().toUpperCase();
+      strings.addAll (wrapTruncateValue (MetadataServices.format (source, ", "), 2, 20, 3));
     } // else
 
     // Add single time info
