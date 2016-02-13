@@ -71,9 +71,14 @@
            - Changes: Updated documentation.
            - Issue: We created Unix man pages and the documentation needed
              a few changes.
+           2016/02/10, PFH
+           - Changes: Added the --split option.
+           - Issue: We needed an alternative to the slash character for 
+             splitting command line arguments, because sometimes variable names
+             can contain a slash.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -383,6 +388,16 @@ import ucar.units.Unit;
  *   <dt>--version</dt>
  *
  *   <dd>Prints the software version.</dd>
+ *
+ *   <dt>--split=EXPRESSION</dt>
+ *
+ *   <dd>The command line parameter splitting expression.  By default,
+ *   parameters on the command line are specified using a slash '/' character
+ *   between multiple arguments, for example <b>--coast white/brown</b>.  
+ *   But in some cases, for example when a variable name includes a slash,
+ *   another character should be used to parse the command line parameters.
+ *   A common alternative to the slash is a comma ',' character, for example
+ *   <b>--coast white,brown</b>.
  *
  * </dl>
  *
@@ -1084,6 +1099,7 @@ public class cwrender {
     Option watermarkshadowOpt = cmd.addBooleanOption ("watermarkshadow");
     Option ticklabelsOpt = cmd.addStringOption ("ticklabels");
     Option versionOpt = cmd.addBooleanOption ("version");
+    Option splitOpt = cmd.addStringOption ("split");
     try { cmd.parse (argv); }
     catch (OptionException e) {
       System.err.println (PROG + ": " + e.getMessage());
@@ -1116,6 +1132,11 @@ public class cwrender {
     } // if
     String input = remain[0];
     String output = remain[1];
+
+    // Set split expression
+    // --------------------
+    String splitStr = (String) cmd.getOptionValue (splitOpt);
+    if (splitStr != null) ToolServices.setSplitRegex (splitStr);
 
     // Detect output format
     // --------------------
@@ -1233,7 +1254,7 @@ public class cwrender {
         // ------------------------------------
         Palette palette = null;
         if (paletteColors != null) {
-          String[] colorStringArray = paletteColors.split (ToolServices.SPLIT_REGEX);
+          String[] colorStringArray = paletteColors.split (ToolServices.getSplitRegex());
           int colors = colorStringArray.length;
           int[] rgb = new int[colors];
           for (int i = 0; i < colors; i++) {
@@ -1267,7 +1288,7 @@ public class cwrender {
         // ---------------------
         double min, max;
         if (range != null) {
-          String[] rangeArray = range.split (ToolServices.SPLIT_REGEX);
+          String[] rangeArray = range.split (ToolServices.getSplitRegex());
           if (rangeArray.length != 2) {
             System.err.println (PROG + ": Invalid range '" + range + "'");
             System.exit (2);
@@ -1284,7 +1305,7 @@ public class cwrender {
 
         // Check for vector/scalar enhancement
         // -----------------------------------
-        String[] enhanceArray = enhance.split (ToolServices.SPLIT_REGEX);
+        String[] enhanceArray = enhance.split (ToolServices.getSplitRegex());
         if (enhanceArray.length > 2) {
           System.err.println (PROG + ": Invalid enhancement '" + enhance + 
             "'");
@@ -1309,7 +1330,7 @@ public class cwrender {
           // Check vector array
           // ------------------
           String[] vectorArray = 
-            enhancevector.split (ToolServices.SPLIT_REGEX);
+            enhancevector.split (ToolServices.getSplitRegex());
           if (vectorArray.length < 2) {
             System.err.println (PROG + ": Invalid vector specification '" + 
               enhancevector + "'");
@@ -1431,7 +1452,7 @@ public class cwrender {
 
         // Get variables
         // -------------
-        String[] compositeArray = composite.split (ToolServices.SPLIT_REGEX);
+        String[] compositeArray = composite.split (ToolServices.getSplitRegex());
         if (compositeArray.length != 3) {
           System.err.println (PROG + ": Composite '" + composite + 
             "' must contain 3 variables");
@@ -1449,7 +1470,7 @@ public class cwrender {
         double[] min = new double[3];
         for (int i = 0; i < 3; i++) {
           if (ranges[i] != null) {
-            String[] rangeArray = ranges[i].split (ToolServices.SPLIT_REGEX);
+            String[] rangeArray = ranges[i].split (ToolServices.getSplitRegex());
             if (rangeArray.length != 2) {
               System.err.println (PROG + ": Invalid range '" + 
                 ranges[i] + "'");
@@ -1490,7 +1511,7 @@ public class cwrender {
         Legend legend = view.getLegend();
         if (legend != null && legend instanceof DataColorScale) {
           DataColorScale scale = (DataColorScale) legend;
-          String[] ticklabelArray = ticklabels.split (ToolServices.SPLIT_REGEX);
+          String[] ticklabelArray = ticklabels.split (ToolServices.getSplitRegex());
           scale.setTickLabels (ticklabelArray);
         } // if
       } // if
@@ -1511,7 +1532,7 @@ public class cwrender {
 
           // Get bitmask parameters
           // ----------------------
-          String[] bitmaskArray = bitmask.split (ToolServices.SPLIT_REGEX);
+          String[] bitmaskArray = bitmask.split (ToolServices.getSplitRegex());
           if (bitmaskArray.length != 3) {
             System.err.println (PROG + ": Invalid bitmask parameters '" + 
               bitmask + "'");
@@ -1574,7 +1595,7 @@ public class cwrender {
       // Add bathymetric contours
       // ------------------------
       if (bath != null) {
-        String[] bathArray = bath.split (ToolServices.SPLIT_REGEX);
+        String[] bathArray = bath.split (ToolServices.getSplitRegex());
         Color bathColor = lookup.convert (bathArray[0]);
         int[] bathLevels;
         if (bathArray.length == 1)
@@ -1600,7 +1621,7 @@ public class cwrender {
       // Add coast lines
       // ---------------
       if (coast != null) {
-        String[] coastArray = coast.split (ToolServices.SPLIT_REGEX);
+        String[] coastArray = coast.split (ToolServices.getSplitRegex());
         Color lineColor = lookup.convert (coastArray[0]);
         Color fillColor = (coastArray.length == 1 ? null : 
           lookup.convert (coastArray[1]));
@@ -1621,7 +1642,7 @@ public class cwrender {
       // Add topographic contours
       // ------------------------
       if (topo != null) {
-        String[] topoArray = topo.split (ToolServices.SPLIT_REGEX);
+        String[] topoArray = topo.split (ToolServices.getSplitRegex());
         Color topoColor = lookup.convert (topoArray[0]);
         int[] topoLevels;
         if (topoArray.length == 1)
@@ -1644,7 +1665,7 @@ public class cwrender {
         
           // Get shape parameters
           // --------------------
-          String[] shapeArray = shape.split (ToolServices.SPLIT_REGEX);
+          String[] shapeArray = shape.split (ToolServices.getSplitRegex());
           if (shapeArray.length < 2) {
             System.err.println (PROG + ": Invalid shape parameters '" + 
               shape + "'");
@@ -1710,7 +1731,7 @@ public class cwrender {
 
         // Get magnification parameters
         // ----------------------------
-        String[] magnifyArray = magnify.split (ToolServices.SPLIT_REGEX);
+        String[] magnifyArray = magnify.split (ToolServices.getSplitRegex());
         if (magnifyArray.length != 3) {
           System.err.println (PROG + ": Invalid magnification parameters '" + 
             magnify + "'");
@@ -1752,7 +1773,7 @@ public class cwrender {
       // Add watermark overlay
       // ---------------------
       if (watermark != null) {
-        String[] watermarkArray = watermark.split (ToolServices.SPLIT_REGEX);
+        String[] watermarkArray = watermark.split (ToolServices.getSplitRegex());
         String watermarkText = watermarkArray[0];
         Color watermarkColor = (watermarkArray.length >= 2 ?
           lookup.convert (watermarkArray[1]) : new Color (0x80ffffff, true));
@@ -1863,6 +1884,8 @@ public class cwrender {
 "  -h, --help                 Show this help message.\n" +
 "  -v, --verbose              Print verbose messages.\n" +
 "  --version                  Show version information.\n" +
+"  --split=EXPRESSION         Set the command line parameter split expression.\n" +
+"                               EXPRESSION may be any regular expression.\n" +
 "\n" +
 "Output content and format options:\n" +
 "  -a, --noantialias          Do not smooth lines and fonts.\n" +

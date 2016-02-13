@@ -4,10 +4,13 @@
   PURPOSE: A class to write NetCDF 4/CF format files.
    AUTHOR: Peter Hollemans
      DATE: 2015/04/08
-  CHANGES: n/a
+  CHANGES: 2016/02/12, PFH
+           - Changes: Corrected "missing" in metadata writing to "missing_value".
+           - Issue: This was causing problems in output datasets, computing
+             statistics while ignoring missing values.
 
   CoastWatch Software Library and Utilities
-  Copyright 2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2015-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -1352,7 +1355,7 @@ public class CFNC4Writer
       missing,
       COMPRESSION_LEVEL
     );
-    ncVar.addAttribute ("missing", dataType, missing);
+    ncVar.addAttribute ("missing_value", dataType, missing);
 
     // Set packing info
     // ----------------

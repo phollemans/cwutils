@@ -37,9 +37,14 @@
            - Changes: Renamed class to "CommonDataModel" from "Generic"
            - Issue: We needed a more accurate description of the reader class,
              since we'd like to expand its functionality in the future.
+           2016/02/12, PFH
+           - Changes: Added extra test for missing scaling factor in float
+             or double data types.
+           - Issue: Float and double variables with no scaling factor were 
+             being printed as integer values.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -844,12 +849,23 @@ public class CommonDataModelNCReader
           maxValue = Short.MAX_VALUE*scaling[0];
         else if (varClass.equals (Integer.TYPE)) 
           maxValue = Integer.MAX_VALUE*scaling[0];
-        else if (varClass.equals (Float.TYPE)) 
+        else if (varClass.equals (Float.TYPE))
           maxValue = Float.MAX_VALUE*scaling[0];
         else if (varClass.equals (Double.TYPE)) 
           maxValue = Double.MAX_VALUE*scaling[0];
         digits = DataVariable.getDecimals (Double.toString (maxValue));
       } // else if
+      
+      // Use full precision for floating point types
+      // -------------------------------------------
+      if (digits == -1 && scaling == null) {
+        double maxValue = 0;
+        if (varClass.equals (Float.TYPE))
+          maxValue = Float.MAX_VALUE;
+        else if (varClass.equals (Double.TYPE)) 
+          maxValue = Double.MAX_VALUE;
+        digits = DataVariable.getDecimals (Double.toString (maxValue));
+      } // if
 
       // Set fractional digits
       // ---------------------
