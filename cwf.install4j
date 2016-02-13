@@ -63,7 +63,7 @@
           <entry location="bin/${compiler:cwmasterName}" fileType="launcher" />
           <entry location="bin/${compiler:cwstatusName}" fileType="launcher" />
           <entry location="data" fileType="regular" />
-          <entry location="doc/cwf_ug_3_3_1.pdf" fileType="regular" />
+          <entry location="doc/cwf_ug_3_3_2.pdf" fileType="regular" />
           <entry location="doc/license.txt" fileType="regular" />
           <entry location="extensions" fileType="regular" />
           <entry location="lib" fileType="regular" />

@@ -397,7 +397,7 @@ import ucar.units.Unit;
  *   But in some cases, for example when a variable name includes a slash,
  *   another character should be used to parse the command line parameters.
  *   A common alternative to the slash is a comma ',' character, for example
- *   <b>--coast white,brown</b>.
+ *   <b>--coast white,brown</b>.</dd>
  *
  * </dl>
  *

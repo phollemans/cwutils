@@ -335,7 +335,7 @@ public class ToolServices {
   /**
    * Sets the current command line parameter splitting regular expression.
    *
-   * @param the new splitting expression.
+   * @param expr the new splitting expression.
    */
   public static void setSplitRegex (String expr) { splitRegex = expr; }
 
