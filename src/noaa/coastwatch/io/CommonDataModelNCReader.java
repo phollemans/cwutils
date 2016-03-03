@@ -42,7 +42,17 @@
              or double data types.
            - Issue: Float and double variables with no scaling factor were 
              being printed as integer values.
-
+           2016/03/03, PFH
+           - Changes: Modified getVariableNamesInGroup() and getVariableNames()
+             for better handling of coordinate axes.
+           - Issue: When NetCDF / CF data files contained data grids in which
+             the rank of data variables in a grid set was different than the
+             number of axes in the coordinate system, this violated the 
+             assumption in the getVariableNamesInGroup() method that they were
+             equal in rank.  Also, if coordinate axes were showing up as 
+             data variables as well as coordinate axes and being shared between
+             grid sets, they were being included in the list of variables twice.
+ 
   CoastWatch Software Library and Utilities
   Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
@@ -70,6 +80,7 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -93,6 +104,7 @@ import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
+import ucar.nc2.Dimension;
 import ucar.nc2.constants.AxisType;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.CoordinateAxis;
@@ -304,13 +316,15 @@ public class CommonDataModelNCReader
 
     // Check that all transforms are equal
     // -----------------------------------
-    EarthTransform baseTrans = transList.get (0);
-    for (int i = 1; i < transList.size(); i++) {
-      if (!baseTrans.equals (transList.get (i)))
+    EarthTransform firstTrans = null;
+    for (EarthTransform trans : transList) {
+      if (firstTrans == null)
+        firstTrans = trans;
+      else if (!firstTrans.equals (trans))
         throw new IOException ("Earth transforms are not equal in all grids");
-    } // if
+    } // for
 
-    return (baseTrans);
+    return (firstTrans);
 
   } // getTransform
 
@@ -428,14 +442,14 @@ public class CommonDataModelNCReader
     
     // Loop over each group
     // --------------------
-    List<String> nameList = new ArrayList<String>();
+    Set<String> nameSet = new LinkedHashSet<String>();
     for (VariableGroup group : groupList) {
 
       // Add variable names from group to list
       // -------------------------------------
       String[] nameArray = getVariableNamesInGroup (group);
       for (String name : nameArray) {
-        nameList.add (name);
+        nameSet.add (name);
         groupMap.put (name, group);
       } // for
       
@@ -444,13 +458,13 @@ public class CommonDataModelNCReader
       List<CoordinateAxis> axes = group.gridset.getGeoCoordSystem().getCoordinateAxes();
       for (CoordinateAxis axis : axes) {
         String name = axis.getFullName();
-        nameList.add (name);
+        nameSet.add (name);
         groupMap.put (name, new VariableGroup());
       } // for
       
     } // for
 
-    return (nameList.toArray (new String[0]));
+    return (nameSet.toArray (new String[0]));
 
   } // getVariableNames
 
@@ -476,23 +490,41 @@ public class CommonDataModelNCReader
     for (int i = 0; i < grids.size(); i++) {
       variableNameArray[i] = grids.get(i).getName();
     } // for
+    GridDatatype prototypeGrid = grids.get (0);
     
     // Find coordinate axes for expansion
     // ----------------------------------
     GridCoordSystem coordSystem = group.gridset.getGeoCoordSystem();
     CoordinateAxis latAxis = coordSystem.getYHorizAxis();
     CoordinateAxis lonAxis = coordSystem.getXHorizAxis();
-    int rank = coordSystem.getDomain().size();
+    int rank = prototypeGrid.getRank();
     group.expandDims = new int[rank];
-    CoordinateAxis[] axes = (CoordinateAxis[]) 
-      coordSystem.getCoordinateAxes().toArray (new CoordinateAxis[] {});
+    CoordinateAxis[] axes = new CoordinateAxis[rank];
     boolean hasNonSpatial = false;
     group.extraDims = 0;
     String[] axisPrefix = new String[rank];
     for (int i = 0; i < rank; i++) {
+    
+      // Find axis that uses dimension
+      // -----------------------------
+      Dimension gridDimension = prototypeGrid.getDimension (i);
+      for (CoordinateAxis axis : coordSystem.getCoordinateAxes()) {
+        if (axis.getDimensions().contains (gridDimension)) {
+          axes[i] = axis;
+          break;
+        } // for
+      } // for
+      if (axes[i] == null)
+        throw new IOException ("Cannot find coordinate axis for dimension " + gridDimension);
+      
+      // Check if axis is spatial
+      // ------------------------
       if (!axes[i].equals (latAxis) && !axes[i].equals (lonAxis)) {
         if (axes[i].getRank() != 1) 
           throw new IOException ("Unsupported coordinate axis rank");
+
+        // Save info on non-spatial axis
+        // -----------------------------
         group.expandDims[i] = axes[i].getShape()[0];
         AxisType axisType = axes[i].getAxisType();
         if (axisType.equals (AxisType.Time)) axisPrefix[i] = "T";

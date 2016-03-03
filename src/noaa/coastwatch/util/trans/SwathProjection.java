@@ -29,9 +29,16 @@
            2007/10/27, PFH, added seed list
            2007/11/15, PFH, fixed seed list initialization
            2007/12/14, PFH, added caching of seed earth locations
+           2016/03/03, PFH
+           - Changes: Added support in equals() method for two swaths created
+             in null mode.
+           - Issue: When swaths are created in null mode, we need to have some
+             way that the user can compare them without having to do some
+             complicated cast to SwathProjection, or adding another method in
+             EarthTransform.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -634,7 +641,9 @@ public class SwathProjection
   /**
    * Compares the specified object with this swath projection for
    * equality.  The encodings of the two swath projections are
-   * compared value by value.
+   * compared value by value.  If both swath projections were created
+   * in null mode, then they are considered equal (although this may not
+   * actually be the case).
    *
    * @param obj the object to be compared for equality.
    *
@@ -648,6 +657,17 @@ public class SwathProjection
     // Check object instance
     // ---------------------
     if (!(obj instanceof SwathProjection)) return (false);
+
+    // Check for null mode used
+    // ------------------------
+    if (
+      this.latEst == null &&
+      this.lonEst == null &&
+      ((SwathProjection) obj).latEst == null &&
+      ((SwathProjection) obj).lonEst == null
+    ) {
+      return (true);
+    } // if
 
     // Get encodings
     // -------------
