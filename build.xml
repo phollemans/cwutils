@@ -262,10 +262,9 @@
     <!-- Call install4j task -->
     <install4j
       projectfile="cwf.install4j"
-      release="${version}"
+      release="${version.full}"
       buildids="${build.ids}"
       verbose="true">
-      <variable name="buildNumber" value="${build.number}"/>
       <vmParameter value="-Xmx1024m"/>
     </install4j>
 
