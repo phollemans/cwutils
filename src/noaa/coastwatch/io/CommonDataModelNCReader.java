@@ -495,12 +495,12 @@ public class CommonDataModelNCReader
     // Find coordinate axes for expansion
     // ----------------------------------
     GridCoordSystem coordSystem = group.gridset.getGeoCoordSystem();
-    CoordinateAxis latAxis = coordSystem.getYHorizAxis();
-    CoordinateAxis lonAxis = coordSystem.getXHorizAxis();
+    CoordinateAxis yAxis = coordSystem.getYHorizAxis();
+    CoordinateAxis xAxis = coordSystem.getXHorizAxis();
     int rank = prototypeGrid.getRank();
     group.expandDims = new int[rank];
     CoordinateAxis[] axes = new CoordinateAxis[rank];
-    boolean hasNonSpatial = false;
+    boolean hasNonHorizontal = false;
     group.extraDims = 0;
     String[] axisPrefix = new String[rank];
     for (int i = 0; i < rank; i++) {
@@ -508,23 +508,39 @@ public class CommonDataModelNCReader
       // Find axis that uses dimension
       // -----------------------------
       Dimension gridDimension = prototypeGrid.getDimension (i);
+      List<CoordinateAxis> axesUsingDimension = new ArrayList<CoordinateAxis>();
       for (CoordinateAxis axis : coordSystem.getCoordinateAxes()) {
-        if (axis.getDimensions().contains (gridDimension)) {
-          axes[i] = axis;
-          break;
-        } // for
+        if (axis.getDimensions().contains (gridDimension))
+          axesUsingDimension.add (axis);
       } // for
-      if (axes[i] == null)
-        throw new IOException ("Cannot find coordinate axis for dimension " + gridDimension);
+      if (axesUsingDimension.size() == 0)
+        throw new IOException ("Cannot find coordinate axes for dimension " + gridDimension);
       
-      // Check if axis is spatial
-      // ------------------------
-      if (!axes[i].equals (latAxis) && !axes[i].equals (lonAxis)) {
-        if (axes[i].getRank() != 1) 
+      // Check if one of the axes for the dimension is horizontal
+      // ---------------------------------------------------------
+      boolean isDimensionHorizontal = (
+        axesUsingDimension.contains (xAxis) ||
+        axesUsingDimension.contains (yAxis)
+      );
+      axes[i] = axesUsingDimension.get (0);
+      
+      // Handle horizontal axis
+      // ----------------------
+      if (isDimensionHorizontal) {
+        group.expandDims[i] = -1;
+      } // if
+      
+      // Handle non-horizontal axis
+      // --------------------------
+      else {
+
+        // Check for rank 1 axis
+        // ---------------------
+        if (axes[i].getRank() != 1)
           throw new IOException ("Unsupported coordinate axis rank");
 
-        // Save info on non-spatial axis
-        // -----------------------------
+        // Save info about axis
+        // --------------------
         group.expandDims[i] = axes[i].getShape()[0];
         AxisType axisType = axes[i].getAxisType();
         if (axisType.equals (AxisType.Time)) axisPrefix[i] = "T";
@@ -532,14 +548,14 @@ public class CommonDataModelNCReader
         else if (axisType.equals (AxisType.Pressure)) axisPrefix[i] = "P";
         else if (axisType.equals (AxisType.Height)) axisPrefix[i] = "H";
         else axisPrefix[i] = "I";
-        hasNonSpatial = true;
+        hasNonHorizontal = true;
         group.extraDims++;
-      } // if
-      else
-        group.expandDims[i] = -1;
+        
+      } // else
+
     } // for
 
-    if (hasNonSpatial) {
+    if (hasNonHorizontal) {
 
       // Create name extensions
       // ----------------------
