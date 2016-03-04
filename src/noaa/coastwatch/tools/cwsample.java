@@ -125,7 +125,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  *   <dt> output </dt>
  *   <dd> The output text file name.  If the output file name is '-',
- *   output is sent to standard output (normally the terminal). </dd>
+ *   output is sent to standard output (normally the terminal).  In this case,
+ *   the end of the options must be indicated with a lone '--' (see the
+ *   examples) or the '-' output file name will be interpreted as an option. </dd>
  *
  * </dl>
  *
@@ -224,7 +226,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * this line with output to the terminal screen:</p>
  * <pre>
  *   phollema$ cwsample --header --match '(sst|cloud)' --samples sample_locs.txt
- *     2002_325_1546_n17_mr.hdf -
+ *     -- 2002_325_1546_n17_mr.hdf -
  *
  *   latitude longitude sst cloud
  *   28 -93 25.24 0
@@ -243,7 +245,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * of comparison with a single buoy measurement with output to the
  * terminal screen:</p>
  * <pre>
- *   phollema$ cwsample --header --match sst --sample 28.8/-93 2002_325_1546_n17_mr.hdf -
+ *   phollema$ cwsample --header --match sst --sample 28.8/-93 -- 2002_325_1546_n17_mr.hdf -
  *
  *   latitude longitude sst
  *   28.8 -93 22.72
