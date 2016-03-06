@@ -368,4 +368,11 @@
     </exec>
   </target>
 
+  <target name="branch-log"
+    description="Shows a history of latest commits to the active branch">
+    <exec executable="git">
+      <arg line="log -n 10 --pretty='%n----> %cd%n%cn&lt;%ce&gt;%n%s' --name-status"/>
+    </exec>
+  </target>
+
 </project>
