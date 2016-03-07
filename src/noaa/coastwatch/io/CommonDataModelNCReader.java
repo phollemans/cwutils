@@ -52,7 +52,14 @@
              equal in rank.  Also, if coordinate axes were showing up as 
              data variables as well as coordinate axes and being shared between
              grid sets, they were being included in the list of variables twice.
- 
+           2016/03/06, PFH
+           - Changes: Added support for CDM-style grid mapped projections.
+           - Issue: There was a request for support for satellite geostationary
+             projection from CF metadata, so we needed to add a generic way
+             to have grid mapped projections be read and a special type of
+             Earth transform used to pass transformation calculations into 
+             and out of the CDM projection layer.
+
   CoastWatch Software Library and Utilities
   Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 

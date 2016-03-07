@@ -4,7 +4,9 @@
   PURPOSE: A class to write NetCDF 4/CF format files.
    AUTHOR: Peter Hollemans
      DATE: 2015/04/08
-  CHANGES: 2016/02/12, PFH
+  CHANGES: 2016/01/19, PFH
+           - Changes: Updated to new logging API.
+           2016/02/12, PFH
            - Changes: Corrected "missing" in metadata writing to "missing_value".
            - Issue: This was causing problems in output datasets, computing
              statistics while ignoring missing values.
