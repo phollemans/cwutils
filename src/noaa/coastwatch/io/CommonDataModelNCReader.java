@@ -37,9 +37,16 @@
            - Changes: Renamed class to "CommonDataModel" from "Generic"
            - Issue: We needed a more accurate description of the reader class,
              since we'd like to expand its functionality in the future.
+           2016/03/06, PFH
+           - Changes: Added support for CDM-style grid mapped projections.
+           - Issue: There was a request for support for satellite geostationary
+             projection from CF metadata, so we needed to add a generic way
+             to have grid mapped projections be read and a special type of
+             Earth transform used to pass transformation calculations into 
+             and out of the CDM projection layer.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -79,6 +86,7 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.Line;
 import noaa.coastwatch.util.SatelliteDataInfo;
 import noaa.coastwatch.util.TimePeriod;
+import noaa.coastwatch.util.trans.CDMGridMappedProjection;
 import noaa.coastwatch.util.trans.DataProjection;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
@@ -319,19 +327,11 @@ public class CommonDataModelNCReader
     GridDataset.Gridset gridset
   ) throws IOException {
 
+/*
 
+FIXME
 
-// TODO: We need to do something here to create a map projection whose
-// calculations are backed by a CDM projection instance plus x and y
-// variable vectors.
-
-
-/**
-
-
-
-
-Types of transforms: 
+There are several types of transforms:
 
 - swath: earth locations given for each pixel in a pattern irregular enough
   to have no simple (lat,lon) --> (i,j) translation (often from a sensor)
@@ -345,10 +345,10 @@ Types of transforms:
 - sensor: earth locations that have a complex relationship to their (i,j)
   given by a calculation that models the sensor and earth geometry
 
-
-
-
-How transform class instanceof calls are used in the utilities:
+The issue is that the instanceof operator is used to determine which class
+of transform is being used, and then act accordingly.  This could indicate an
+issue with class design.  Transform class instanceof calls are used in the 
+utilities when:
 
 - writing ArcInfo compatible HDR and world files, to write the map projection
   coordinates of the corner points, and the resolution
@@ -368,100 +368,102 @@ How transform class instanceof calls are used in the utilities:
   a preview image (ie: might be very slow rendering, or no (lat,lon) -> (i,j)
   translation available
 
-
-
-
-
-
-
 */
 
-
-
-
-
-
-    // Get and check coordinate system
-    // -------------------------------
-    GridCoordSystem coordSystem = gridset.getGeoCoordSystem();
-    if (!coordSystem.isLatLon()) {
-      throw new UnsupportedEncodingException (
-        "Unsupported coordinate system, not latitude/longitude based");
-    } // if
-    CoordinateAxis latAxis = coordSystem.getYHorizAxis();
-    if (latAxis.getAxisType() != AxisType.Lat)
-      throw new UnsupportedEncodingException ("Expected Y horizontal axis type to be latitude");
-    CoordinateAxis lonAxis = (CoordinateAxis) coordSystem.getXHorizAxis();
-    if (lonAxis.getAxisType() != AxisType.Lon)
-      throw new UnsupportedEncodingException ("Expected X horizontal axis type to be longitude");
-
-    // Create map projection
-    // ---------------------
     EarthTransform trans = null;
-    if (coordSystem.isProductSet()) {
 
-      // Get latitude and longitude spacing and center
-      // ---------------------------------------------
-      double[] latValues = ((CoordinateAxis1D) latAxis).getCoordValues();
-      double[] lonValues = ((CoordinateAxis1D) lonAxis).getCoordValues();
-      int[] dims = new int[] {latValues.length, lonValues.length};
-      double[] pixelDims = new double[] {
-        (latValues[0] - latValues[latValues.length-1]) / (latValues.length-1),
-        (lonValues[lonValues.length-1] - lonValues[0]) / (lonValues.length-1)
-      };
-      EarthLocation center = new EarthLocation (
-        (latAxis.getMinValue() + latAxis.getMaxValue())/2,
-        (lonAxis.getMinValue() + lonAxis.getMaxValue())/2
-      );
+    // Get detected coordinate system
+    // ------------------------------
+    GridCoordSystem coordSystem = gridset.getGeoCoordSystem();
 
-      // Create GEO projection
-      // ---------------------
-      try {
-        trans = MapProjectionFactory.getInstance().create (GCTP.GEO, 0,
-          new double[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, GCTP.WGS84,
-          dims, center, pixelDims);
-      } // try
-      catch (NoninvertibleTransformException e) {
-        throw new RuntimeException ("Got non-invertible transform creating map projection");
-      } // catch
+    // Check if grid mapped projection
+    // -------------------------------
+    if (CDMGridMappedProjection.isCompatibleSystem (coordSystem))
+      trans = new CDMGridMappedProjection (coordSystem);
 
-    } // if
-    
-    // Create swath projection
-    // -----------------------
     else {
     
+      // Check for latitude/longitude axes
+      // ---------------------------------
+      if (!coordSystem.isLatLon()) {
+        throw new UnsupportedEncodingException (
+          "Expected latitude/longitude based coordinate system");
+      } // if
+      CoordinateAxis latAxis = coordSystem.getYHorizAxis();
+      if (latAxis.getAxisType() != AxisType.Lat)
+        throw new UnsupportedEncodingException ("Expected Y horizontal axis type to be latitude");
+      CoordinateAxis lonAxis = (CoordinateAxis) coordSystem.getXHorizAxis();
+      if (lonAxis.getAxisType() != AxisType.Lon)
+        throw new UnsupportedEncodingException ("Expected X horizontal axis type to be longitude");
+
+      // Create geographic map projection
+      // --------------------------------
+      if (coordSystem.isProductSet()) {
+
+        // Get latitude and longitude spacing and center
+        // ---------------------------------------------
+        double[] latValues = ((CoordinateAxis1D) latAxis).getCoordValues();
+        double[] lonValues = ((CoordinateAxis1D) lonAxis).getCoordValues();
+        int[] dims = new int[] {latValues.length, lonValues.length};
+        double[] pixelDims = new double[] {
+          (latValues[0] - latValues[latValues.length-1]) / (latValues.length-1),
+          (lonValues[lonValues.length-1] - lonValues[0]) / (lonValues.length-1)
+        };
+        EarthLocation center = new EarthLocation (
+          (latAxis.getMinValue() + latAxis.getMaxValue())/2,
+          (lonAxis.getMinValue() + lonAxis.getMaxValue())/2
+        );
+
+        // Create GEO projection
+        // ---------------------
+        try {
+          trans = MapProjectionFactory.getInstance().create (GCTP.GEO, 0,
+            new double[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, GCTP.WGS84,
+            dims, center, pixelDims);
+        } // try
+        catch (NoninvertibleTransformException e) {
+          throw new RuntimeException ("Got non-invertible transform creating geographic projection");
+        } // catch
+
+      } // if
     
-      // TODO: Is this a potential point of leaking memory, where the
-      // swath transform will hold onto the nc tile cached grid variable?
+      // Create swath projection
+      // -----------------------
+      else {
       
-    
-      String latVarName = latAxis.getFullName();
-      String lonVarName = lonAxis.getFullName();
-      DataVariable lat = null, lon = null;
-      try {
-        lat = getVariable (latVarName);
-        int cols = lat.getDimensions()[Grid.COLS];
-        lon = getVariable (lonVarName);
-        if (dataProjection) {
-          trans = new DataProjection (lat, lon);
-        } // if
-        else {
-          trans = new SwathProjection (lat, lon, 100, //SWATH_POLY_SIZE,
-            new int[] {cols, cols});
-        } // else
-      } // try
-      catch (Exception e) {
-        System.err.println (this.getClass() + 
-          ": Warning: Problems encountered using Earth location data");
-        e.printStackTrace();
-        if (lat != null && lon != null) {
+      
+        // TODO: Is this a potential point of leaking memory, where the
+        // swath transform will hold onto the nc tile cached grid variable?
+        
+      
+        String latVarName = latAxis.getFullName();
+        String lonVarName = lonAxis.getFullName();
+        DataVariable lat = null, lon = null;
+        try {
+          lat = getVariable (latVarName);
+          int cols = lat.getDimensions()[Grid.COLS];
+          lon = getVariable (lonVarName);
+          if (dataProjection) {
+            trans = new DataProjection (lat, lon);
+          } // if
+          else {
+            trans = new SwathProjection (lat, lon, 100, //SWATH_POLY_SIZE,
+              new int[] {cols, cols});
+          } // else
+        } // try
+        catch (Exception e) {
           System.err.println (this.getClass() + 
-            ": Warning: Falling back on data-only projection, " +
-            "Earth location reverse lookup will not function");
-          trans = new DataProjection (lat, lon);
-        } // if
-      } // catch
+            ": Warning: Problems encountered using Earth location data");
+          e.printStackTrace();
+          if (lat != null && lon != null) {
+            System.err.println (this.getClass() + 
+              ": Warning: Falling back on data-only projection, " +
+              "Earth location reverse lookup will not function");
+            trans = new DataProjection (lat, lon);
+          } // if
+        } // catch
+      } // else
+    
     } // else
     
     return (trans);

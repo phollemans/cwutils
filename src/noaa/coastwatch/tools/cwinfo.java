@@ -41,9 +41,15 @@
              Also, long variable names were preventing the output from lining
              up in columns and being readable.  So we buffer the variable names
              and then print in a reliable columns.
- 
+           2016/03/06, PFH
+           - Changes: Updated to recognize invalid locations with -t option.
+           - Issues: When an Earth transform was having its corner points
+             printed, if the transform had no valid locations at the edges
+             (such as a geostationary satellite view) then the locations
+             printed with strange ? like characters.
+           
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -403,16 +409,17 @@ public final class cwinfo {
 
     // Add location info
     // -----------------
-    valueMap.put ("Center", 
-      trans.transform (new DataLocation (centerRow, centerCol)).format());
-    valueMap.put ("Upper-left", 
-      trans.transform (new DataLocation (0, 0)).format());
-    valueMap.put ("Upper-right", 
-      trans.transform (new DataLocation (0, cols-1)).format());
-    valueMap.put ("Lower-left", 
-      trans.transform (new DataLocation (rows-1, 0)).format());
-    valueMap.put ("Lower-right", 
-      trans.transform (new DataLocation (rows-1, cols-1)).format());
+    EarthLocation earthLoc;
+    earthLoc = trans.transform (new DataLocation (centerRow, centerCol));
+    valueMap.put ("Center", earthLoc.isValid() ? earthLoc.format() : "Invalid");
+    earthLoc = trans.transform (new DataLocation (0, 0));
+    valueMap.put ("Upper-left", earthLoc.isValid() ? earthLoc.format() : "Invalid");
+    earthLoc = trans.transform (new DataLocation (0, cols-1));
+    valueMap.put ("Upper-right", earthLoc.isValid() ? earthLoc.format() : "Invalid");
+    earthLoc = trans.transform (new DataLocation (rows-1, 0));
+    valueMap.put ("Lower-left", earthLoc.isValid() ? earthLoc.format() : "Invalid");
+    earthLoc = trans.transform (new DataLocation (rows-1, cols-1));
+    valueMap.put ("Lower-right", earthLoc.isValid() ? earthLoc.format() : "Invalid");
 
     // Print data
     // ----------

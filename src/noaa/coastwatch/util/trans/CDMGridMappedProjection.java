@@ -4,10 +4,14 @@
   PURPOSE: Common Data Model wrapped projection.
    AUTHOR: Peter Hollemans
      DATE: 2015/12/24
-  CHANGES: n/a
+  CHANGES: 2016/03/06, PFH
+           - Changes: Added setting of the dims internal variable in the 
+             constructor.
+           - Issue: We were getting a NUllPointerException for some operations
+             when getDimensions() was needed.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -330,11 +334,19 @@ public class CDMGridMappedProjection
     if (!isCompatibleSystem (coordSystem))
       throw new IllegalArgumentException ("Coordinate system must have 1D X and Y axes with regularly spaced coordinates");
 
+    // Set dimensions
+    // --------------
+    CoordinateAxis1D xAxis = (CoordinateAxis1D) coordSystem.getXHorizAxis();
+    CoordinateAxis1D yAxis = (CoordinateAxis1D) coordSystem.getYHorizAxis();
+    dims = new int[2];
+    dims[Grid.ROWS] = yAxis.getShape (0);
+    dims[Grid.COLS] = xAxis.getShape (0);
+
     // Set axis values
     // ---------------
     proj = coordSystem.getProjection();
-    xAxisTrans = getProjectionAxisTransform (proj, (CoordinateAxis1D) coordSystem.getXHorizAxis());
-    yAxisTrans = getProjectionAxisTransform (proj, (CoordinateAxis1D) coordSystem.getYHorizAxis());
+    xAxisTrans = getProjectionAxisTransform (proj, xAxis);
+    yAxisTrans = getProjectionAxisTransform (proj, yAxis);
     
     // Detect datum
     // ------------

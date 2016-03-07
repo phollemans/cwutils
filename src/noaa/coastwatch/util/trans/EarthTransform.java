@@ -66,24 +66,23 @@ public abstract class EarthTransform
   private static final Datum WGS84 = 
     DatumFactory.create (SpheroidConstants.WGS84);
 
-
-
-
-
-  public enum TransformType {
-    SWATH ("swath"),
-    MAPPED ("mapped"),
-    VECTOR ("vector"),
-    SENSOR ("sensor");
-    private String name;
-    private TransformType (String name) { this.name = name; }
-    public String toString () { return (name); }
-  };
+/*
   
-  
+TODO - This is a possible location for a set of transform types, to be used
+in conjunction with whatever convention replaces instanceof calls for this
+class.
 
+public enum TransformType {
+  SWATH ("swath"),
+  MAPPED ("mapped"),
+  VECTOR ("vector"),
+  SENSOR ("sensor");
+  private String name;
+  private TransformType (String name) { this.name = name; }
+  public String toString () { return (name); }
+};
 
-
+*/
 
   // Variables
   // ---------
