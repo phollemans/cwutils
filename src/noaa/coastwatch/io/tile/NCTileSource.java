@@ -19,9 +19,11 @@
              needed, but there may be multithreading issues with HDF 5 JNI
              code.  So to be safe, we serialize access to the code that calls
              the HDF 5 C library.
- 
+          2016/01/19, PFH
+           - Changes: Updated to new logging API.
+
   CoastWatch Software Library and Utilities
-  Copyright 2014-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2014-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -53,6 +55,9 @@ import noaa.coastwatch.io.tile.TilingScheme;
 import noaa.coastwatch.io.tile.TilingScheme.Tile;
 import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
 import noaa.coastwatch.io.HDF5Lib;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * The <code>NCTileSource</code> class provides tiles from a NetCDF 3 or 4
@@ -310,6 +315,9 @@ public class NCTileSource
    */
   public static void main (String[] argv) throws Exception {
 
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (NCTileSource.class);
+
     /**
      * First we create a small NetCDF 3 dataset to test with.  Example
      * writing code with notes on chunking are found here (although compression
@@ -320,6 +328,8 @@ public class NCTileSource
      *
      */
 
+    logger.test ("Framework");
+    
     String testNC3 = "/tmp/test.nc";
     String testNC4 = "/tmp/test.nc4";
     NetcdfFileWriter writer = NetcdfFileWriter.createNew (NetcdfFileWriter.Version.netcdf3, testNC3, null);
@@ -372,6 +382,8 @@ public class NCTileSource
     process.waitFor();
     assert (process.exitValue() == 0);
 
+    logger.passed();
+
     /**
      * Now we can do some actual testing.  This is what the scheme should look
      * like:
@@ -390,7 +402,8 @@ public class NCTileSource
     int chunkSize = DEFAULT_UNCHUNKED_SIZE;
     for (String location : new String[] {testNC3, testNC4}) {
 
-      System.out.print ("Testing constructor, getScheme (" + location + ") ... ");
+      logger.test ("constructor, getScheme (" + location + ")");
+      
       NetcdfFile file = NetcdfFile.open (location);
 
       try {
@@ -425,9 +438,9 @@ public class NCTileSource
       posDims = scheme.new TilePosition (1, 1).getDimensions();
       assert (posDims[0] == (rows - chunkSize));
       assert (posDims[1] == (cols - chunkSize));
-      System.out.println ("OK");
+      logger.passed();
       
-      System.out.print ("Testing readTile ...");
+      logger.test ("readTile");
 
       Tile tile = source.readTile (scheme.new TilePosition (0, 0));
       Object data = tile.getData();
@@ -463,7 +476,7 @@ public class NCTileSource
       new File (location).delete();
       assert (!new File (location).exists());
 
-      System.out.println ("OK");
+      logger.passed();
 
       /**
        * Here we change the chunk size by a small amount so that we know we're

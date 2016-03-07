@@ -65,6 +65,9 @@ import edu.ucar.ral.nujan.netcdf.NhFileWriter;
 import edu.ucar.ral.nujan.netcdf.NhGroup;
 import edu.ucar.ral.nujan.netcdf.NhVariable;
 
+// Testing
+import noaa.coastwatch.test.TestLogger;
+
 /**
  * <p>A CF NetCDF 4 writer creates NetCDF 4 format files with CF
  * metadata using the Nujan NetCDF 4 writing library.</p>
@@ -1393,6 +1396,10 @@ public class CFNC4Writer
 
     // Set coordinate info
     // -------------------
+    
+    // TODO: Should we add extra variables here?  eg: "time level x y lat lon" ?
+    
+    
     ncVar.addAttribute ("coordinates", NhVariable.TP_STRING_VAR, "lat lon");
 
 
@@ -1653,8 +1660,12 @@ public class CFNC4Writer
    */
   public static void main (String[] argv) throws Exception {
 
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (CFNC4Writer.class);
+
     // Create transforms
     // -----------------
+    logger.test ("Framework");
     List<EarthTransform> transforms = new ArrayList<EarthTransform>();
     transforms.add (MapProjectionFactory.getInstance().create (
       ProjectionConstants.MERCAT,
@@ -1722,7 +1733,13 @@ public class CFNC4Writer
       Short.MIN_VALUE
     );
 
+    logger.passed();
+
     for (EarthTransform trans : transforms) {
+
+      String ncFileName = "/tmp/test." + trans.getClass().getName() + ".nc4";
+      logger.test ("constructor, addVariable, flush, close (" +
+        ncFileName + ")");
 
       // Create info
       // -----------
@@ -1740,10 +1757,6 @@ public class CFNC4Writer
 
       // Write file
       // ----------
-      String ncFileName = "/tmp/test." + trans.getClass().getName() + ".nc4";
-      System.out.print ("Testing constructor, addVariable, flush, close (" +
-        ncFileName + ") ... ");
-    
       CFNC4Writer writer = new CFNC4Writer (
         info,
         ncFileName,
@@ -1760,7 +1773,7 @@ public class CFNC4Writer
   //    ncFile.delete();
   //    assert (!ncFile.exists());
 
-      System.out.println ("OK");
+      logger.passed();
       
     } // for
     

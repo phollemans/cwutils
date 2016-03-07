@@ -3,10 +3,11 @@
      FILE: TileCacheKey.java
    AUTHOR: Peter Hollemans
      DATE: 2014/07/15
-  CHANGES: n/a
+  CHANGES: 2016/01/19, PFH
+           - Changes: Updated to new logging API.
 
   CoastWatch Software Library and Utilities
-  Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2014-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -23,6 +24,9 @@ import noaa.coastwatch.io.tile.TileSource;
 import noaa.coastwatch.io.tile.TilingScheme;
 import noaa.coastwatch.io.tile.TilingScheme.Tile;
 import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * A <code>TileCacheKey</code> object stores a pair of values: a tile source,
@@ -122,6 +126,9 @@ public class TileCacheKey {
    */
   public static void main (String[] argv) throws Exception {
 
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (TileCacheKey.class);
+
     /*
      *     0    1    2    3    4
      *   +----+----+----+----+----+  \
@@ -137,7 +144,9 @@ public class TileCacheKey {
      *   \----X----X----X----X----/
      *     40   40   40   40   40
      */
-     
+
+    logger.test ("Framework");
+    
     int[] globalDims = new int[] {100, 200};
     int[] tileDims = new int[] {40, 40};
     final TilingScheme scheme = new TilingScheme (globalDims, tileDims);
@@ -157,14 +166,15 @@ public class TileCacheKey {
       public TilingScheme getScheme() { return (scheme); }
     };
     TilePosition pos = scheme.new TilePosition (2, 3);
+    logger.passed();
 
-    System.out.print ("Testing constructor ... ");
+    logger.test ("constructor");
     TileCacheKey key = new TileCacheKey (source, pos);
     assert (key.getSource() == source);
     assert (key.getPosition() == pos);
-    System.out.println ("OK");
+    logger.passed();
 
-    System.out.print ("Testing equals ... ");
+    logger.test ("equals");
     TilePosition pos2 = scheme.new TilePosition (2, 2);
     TileCacheKey key2 = new TileCacheKey (source, pos2);
     assert (!key.equals (key2));
@@ -190,13 +200,13 @@ public class TileCacheKey {
     TileCacheKey key4 = new TileCacheKey (source2, pos);
     assert (!key.equals (key4));
     assert (!key2.equals (key4));
-    System.out.println ("OK");
+    logger.passed();
     
-    System.out.print ("Testing hashCode ... ");
+    logger.test ("hashCode");
     assert (key.hashCode() != key2.hashCode());
     assert (key.hashCode() == key3.hashCode());
     assert (key.hashCode() != key4.hashCode());
-    System.out.println ("OK");
+    logger.passed();
 
   } // main
 
