@@ -9,6 +9,12 @@
              constructor.
            - Issue: We were getting a NUllPointerException for some operations
              when getDimensions() was needed.
+           2016/03/11, PFH
+           - Changes: Added an equals() method.
+           - Issue: We needed to be able to compare projections for equality,
+             especially in the case where we have more than one grid mapped
+             projection defined in a file, and we want to make sure they match
+             before continuing.
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
@@ -31,6 +37,7 @@ import noaa.coastwatch.util.trans.Datum;
 import noaa.coastwatch.util.UnitFactory;
 
 import java.util.List;
+import java.util.Arrays;
 
 import ucar.nc2.dt.GridCoordSystem;
 import ucar.nc2.Dimension;
@@ -399,6 +406,42 @@ public class CDMGridMappedProjection
     earthLoc.lon = geoPoint.getLongitude();
 
   } // transformImpl
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean equals (
+    Object obj
+  ) {
+
+    // Check object instance
+    // ---------------------
+    if (!(obj instanceof CDMGridMappedProjection)) return (false);
+
+    /*
+     * TODO: The datum check here could fail to detect two identical datums.
+     * Normally datums are created by the DatumFactory class, in which case
+     * we can be assured that their references match.  But this class creates custom
+     * datums if it needs to, so we could be trying to compare two custom
+     * datums, and since the Datum class only compares references for equality,
+     * the Datum.equals() method could return false, even if the datums have
+     * identical values.  This should be fixed.
+     */
+
+    // Check projection and datum
+    // --------------------------
+    CDMGridMappedProjection otherObject = (CDMGridMappedProjection) obj;
+    if (!this.proj.equals (otherObject.proj)) return (false);
+    if (!this.datum.equals (otherObject.datum)) return (false);
+
+    // Check axis transformations
+    // --------------------------
+    if (!Arrays.equals (this.xAxisTrans, otherObject.xAxisTrans)) return (false);
+    if (!Arrays.equals (this.yAxisTrans, otherObject.yAxisTrans)) return (false);
+    
+    return (true);
+    
+  } // equals
 
   ////////////////////////////////////////////////////////////
 

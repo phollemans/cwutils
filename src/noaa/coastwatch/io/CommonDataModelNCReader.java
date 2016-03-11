@@ -59,6 +59,21 @@
              to have grid mapped projections be read and a special type of
              Earth transform used to pass transformation calculations into 
              and out of the CDM projection layer.
+           2016/03/11, PFH
+           - Changes: Added a nasty hack to support the geostationary projection
+             data for the Himawari satellite via an EllipsoidPerspectiveProjection
+             object.
+           - Issue: Users wanted to be able to have full lat/lon <--> row/col
+             transformation capability, using just the swath level data provided
+             in level 2 style files.  The current SwathTransform doesn't handle
+             geostationary projection so we have put in this hack to help the
+             users for now.  We also tried to use the CDM grid map projection
+             classes, but in our case the geostationary projection computations
+             didn't seem to be returning the correct values -- the coastlines
+             were shifted at off-nadir angles.  Also, the users were reluctant
+             to but all the extra metadata into the L2 files that are required 
+             for properly specifying a CF grid mapped projection (concern about
+             limitation of the GHRSST L2 format).
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
@@ -107,6 +122,9 @@ import noaa.coastwatch.util.trans.DataProjection;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
 import noaa.coastwatch.util.trans.SwathProjection;
+
+import noaa.coastwatch.util.trans.EllipsoidPerspectiveProjection;
+
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Attribute;
@@ -226,32 +244,9 @@ public class CommonDataModelNCReader
     for (VariableGroup group : groupList) {
       GridCoordSystem coordSystem = group.gridset.getGeoCoordSystem();
       CalendarDateRange dateRange = coordSystem.getCalendarDateRange();
-
-
-
-//System.out.println ("time axis = " + coordSystem.getTimeAxis());
-//System.out.println ("time boundary ref = " + coordSystem.getTimeAxis1D().getBoundaryRef());
-
-
-
       if (dateRange != null) {
         dateSet.add (new Date (dateRange.getStart().getMillis()));
-
-
-//System.out.println ("dateRange start = " + new Date (dateRange.getStart().getMillis()));
-
-
         dateSet.add (new Date (dateRange.getEnd().getMillis()));
-
-
-//System.out.println ("dateRange end = " + new Date (dateRange.getEnd().getMillis()));
-//System.out.println ("dateRange isPoint = " + dateRange.isPoint());
-//System.out.println ("dateRange duration = " + dateRange.getDuration());
-
-
-
-
-
       } // if
     } // for
     if (dateSet.size() == 0) dateSet.add (new Date(0));
@@ -395,6 +390,55 @@ utilities when:
     // ------------------------------
     GridCoordSystem coordSystem = gridset.getGeoCoordSystem();
 
+
+
+
+
+
+    
+    
+    
+/**
+ * Here we have a very nasty hack in order to get the transform information
+ * correct for Himawari data.  The issue is that we cannot get the CDM class
+ * for geostationary data to produce the correct lat/lon transformation.
+ * So we insert our own detection of Himawari geostationary parameters in the
+ * global metadata, and create an EllipsoidPerspectiveProjection in response
+ * This is very similar to the code in the ACSPONCReader.
+ */
+
+    try {
+      double subpointLon = ((Number) getAttribute ("Sub_Lon")).doubleValue();
+      double satDist = ((Number) getAttribute ("Dist_Virt_Sat")).doubleValue();
+      int columnFactor = ((Number) getAttribute ("CFAC")).intValue();
+      int lineFactor = ((Number) getAttribute ("LFAC")).intValue();
+      double eqRadius = ((Number) getAttribute ("Earth_Radius_Equator")).doubleValue();
+      double polarRadius = ((Number) getAttribute ("Earth_Radius_Polar")).doubleValue();
+      double columnOffset = ((Number) getAttribute ("COFF")).doubleValue();
+      double lineOffset = ((Number) getAttribute ("LOFF")).doubleValue();
+      CoordinateAxis xHorizAxis = coordSystem.getXHorizAxis();
+      int[] dims = xHorizAxis.getShape();
+      trans = new EllipsoidPerspectiveProjection (
+        new double[] {
+          0,
+          subpointLon,
+          satDist,
+          Math.toRadians (65536.0/lineFactor),
+          Math.toRadians (65536.0/columnFactor)
+        },
+        dims
+      );
+      return (trans);
+    } // try
+    catch (Exception e) { }
+    
+
+
+
+
+
+
+
     // Check if grid mapped projection
     // -------------------------------
     if (CDMGridMappedProjection.isCompatibleSystem (coordSystem))
@@ -411,7 +455,7 @@ utilities when:
       CoordinateAxis latAxis = coordSystem.getYHorizAxis();
       if (latAxis.getAxisType() != AxisType.Lat)
         throw new UnsupportedEncodingException ("Expected Y horizontal axis type to be latitude");
-      CoordinateAxis lonAxis = (CoordinateAxis) coordSystem.getXHorizAxis();
+      CoordinateAxis lonAxis = coordSystem.getXHorizAxis();
       if (lonAxis.getAxisType() != AxisType.Lon)
         throw new UnsupportedEncodingException ("Expected X horizontal axis type to be longitude");
 
@@ -850,8 +894,9 @@ utilities when:
     // ---------------
     String baseName = getBaseVariableName (variables[index]);
     Variable var = dataset.getReferencedFile().findVariable (baseName);
+    if (var == null) var = dataset.findCoordinateAxis (baseName);
     if (var == null)
-      throw new IOException ("Cannot access variable at index " + index);
+      throw new IOException ("Cannot access variable '" + baseName + "' at index " + index);
     VariableGroup group = groupMap.get (variables[index]);
     
     try {
@@ -1031,8 +1076,9 @@ utilities when:
     // ---------------
     String baseName = getBaseVariableName (variables[index]);
     Variable var = dataset.getReferencedFile().findVariable (baseName);
+    if (var == null) var = dataset.findCoordinateAxis (baseName);
     if (var == null)
-      throw new IOException ("Cannot access variable at index " + index);
+      throw new IOException ("Cannot access variable '" + baseName + "' at index " + index);
     VariableGroup group = groupMap.get (variables[index]);
 
     // Create tile cached grid
