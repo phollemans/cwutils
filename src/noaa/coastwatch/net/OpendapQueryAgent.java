@@ -5,9 +5,16 @@
    AUTHOR: Peter Hollemans
      DATE: 2006/05/09
   CHANGES: 2008/02/18, PFH, modified to use opendap.dap classes
+           2016/03/16, PFH
+           - Changes: Updated to use new opendap.dap.DConnect2 class and call
+             DArray.getClearName().
+           - Issue: The Java NetCDF library uses the newer OPeNDAP Java
+             classes and they were conflicting with the older API that we were
+             using, so we had to remove the old dap2 jar and conform to the 
+             API found in the classes in the latest toolsUI jar file.
 
   CoastWatch Software Library and Utilities
-  Copyright 2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2006-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -27,7 +34,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import noaa.coastwatch.net.CatalogQueryAgent;
-import opendap.dap.DConnect;
+import opendap.dap.DConnect2;
 import opendap.dap.DFloat64;
 import opendap.dap.DInt16;
 import opendap.dap.DSequence;
@@ -134,7 +141,7 @@ public class OpendapQueryAgent
     String expr = "?" + vars + coverExpr + epochExpr;
     DSequence sequence;
     try {
-      DConnect connect = new DConnect (url.toString(), true);
+      DConnect2 connect = new DConnect2 (url.toString(), true);
       DataDDS dds = connect.getData (expr, null);
       sequence = (DSequence) dds.getVariable ("catalogRecords");
     } // try

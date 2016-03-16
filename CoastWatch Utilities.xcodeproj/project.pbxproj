@@ -1042,7 +1042,6 @@
 		E9F2A7CC1B000E8E00A2FC11 /* alloy.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = alloy.jar; sourceTree = "<group>"; };
 		E9F2A7CD1B000E8E00A2FC11 /* AppleJavaExtensions.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = AppleJavaExtensions.jar; sourceTree = "<group>"; };
 		E9F2A7CE1B000E8E00A2FC11 /* bsh-2.1.8.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = "bsh-2.1.8.jar"; sourceTree = "<group>"; };
-		E9F2A7CF1B000E8E00A2FC11 /* dap2-1.0.0.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = "dap2-1.0.0.jar"; sourceTree = "<group>"; };
 		E9F2A7D01B000E8E00A2FC11 /* geoapi-1.1.0alpha.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = "geoapi-1.1.0alpha.jar"; sourceTree = "<group>"; };
 		E9F2A7D11B000E8E00A2FC11 /* gifencoder.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = gifencoder.jar; sourceTree = "<group>"; };
 		E9F2A7D21B000E8E00A2FC11 /* gt2-main-nojai.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; path = "gt2-main-nojai.jar"; sourceTree = "<group>"; };
@@ -2586,7 +2585,6 @@
 				E9F2A7CC1B000E8E00A2FC11 /* alloy.jar */,
 				E9F2A7CD1B000E8E00A2FC11 /* AppleJavaExtensions.jar */,
 				E9F2A7CE1B000E8E00A2FC11 /* bsh-2.1.8.jar */,
-				E9F2A7CF1B000E8E00A2FC11 /* dap2-1.0.0.jar */,
 				E9F2A7D01B000E8E00A2FC11 /* geoapi-1.1.0alpha.jar */,
 				E9F2A7D11B000E8E00A2FC11 /* gifencoder.jar */,
 				E9F2A7D21B000E8E00A2FC11 /* gt2-main-nojai.jar */,

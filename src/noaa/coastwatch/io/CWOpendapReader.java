@@ -6,9 +6,16 @@
      DATE: 2006/05/08
   CHANGES: 2006/11/03, PFH, changed getPreview(int) to getPreviewImpl(int)
            2008/02/18, PFH, modified to use opendap.dap classes
+           2016/03/16, PFH
+           - Changes: Updated to use new opendap.dap.DConnect2 class and call
+             DArray.getClearName().
+           - Issue: The Java NetCDF library uses the newer OPeNDAP Java
+             classes and they were conflicting with the older API that we were
+             using, so we had to remove the old dap2 jar and conform to the 
+             API found in the classes in the latest toolsUI jar file.
 
   CoastWatch Software Library and Utilities
-  Copyright 2006-2008, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2006-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -49,14 +56,13 @@ import opendap.dap.BaseType;
 import opendap.dap.DAS;
 import opendap.dap.DArray;
 import opendap.dap.DArrayDimension;
-import opendap.dap.DConnect;
+import opendap.dap.DConnect2;
 import opendap.dap.DDS;
 import opendap.dap.DVector;
 import opendap.dap.DataDDS;
 import opendap.dap.NoSuchAttributeException;
 import opendap.dap.NoSuchVariableException;
 import opendap.dap.PrimitiveVector;
-import opendap.dap.Server.InvalidParameterException;
 
 /** 
  * The <code>CWOpendapReader</code> class reads OPeNDAP
@@ -253,7 +259,7 @@ public class CWOpendapReader
     for (Enumeration en = dds.getVariables(); en.hasMoreElements();) {
       BaseType baseType = (BaseType) en.nextElement();
       if (baseType instanceof DVector)
-        nameList.add (baseType.getName());
+        nameList.add (baseType.getClearName());
     } // for
 
     return ((String[]) nameList.toArray (new String[]{}));
@@ -303,7 +309,7 @@ public class CWOpendapReader
     catch (NoSuchVariableException e) { 
       throw new IOException ("Error accessing variable " + variables[index]);
     } // catch
-    String name = var.getName();
+    String name = var.getClearName();
     Class varClass = getPrimitiveClassType (var);
     if (varClass == null)
       throw new IOException ("Cannot determine primitive class for " + name);
@@ -319,7 +325,7 @@ public class CWOpendapReader
     int[] varDims = new int[rank];
     for (int i = 0; i < rank; i++) {
       try { varDims[i] = var.getDimension (i).getSize(); }
-      catch (InvalidParameterException e) {
+      catch (Exception e) {
         throw new IOException ("Error accessing dimension size for " + name);
       } // catch
     } // for

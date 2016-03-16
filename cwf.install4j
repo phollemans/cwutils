@@ -1039,7 +1039,7 @@
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.formcomponents.UpdateScheduleSelectorComponent">
                       <void property="initialUpdateSchedule">
-                        <object class="com.install4j.api.update.UpdateSchedule" field="ON_EVERY_START" />
+                        <object class="com.install4j.api.update.UpdateSchedule" field="WEEKLY" />
                       </void>
                     </object>
                   </java>
@@ -1917,6 +1917,9 @@ wizardContext.setCancelButtonVisible(false);</preActivation>
                   </object>
                 </void>
               </void>
+              <void property="customWatermarkText">
+                <string>CoastWatch Utilities</string>
+              </void>
               <void property="executableName">
                 <string>AutoUpdater</string>
               </void>
@@ -2690,8 +2693,8 @@ if (context.isUnattended()) {
       </exclude>
       <variables>
         <variable name="osName" value="linux" description="" category="" />
-        <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
         <variable name="arch" value="x86" description="" category="" />
+        <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel" description="" category="" />
         <variable name="vmOptionsFile" value="${HOME}/.coastwatch/cwf.vmoptions" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">

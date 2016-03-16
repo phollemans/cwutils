@@ -19,6 +19,12 @@
            - Issue: Files that had CoastWatch HDF-like metadata but no 
              "latitude" variable were not having a correct transform being
              created.
+           2016/03/16, PFH
+           - Changes: Updated getPreviewImpl method to read any rank of
+             data, assuming that the rows and cols dimensions are the last 
+             two.
+           - Issue: The CoastWatch THREDDS server contained files that have
+             a rank of 5, and this reader was balking at those variables.
   
   CoastWatch Software Library and Utilities
   Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
@@ -479,16 +485,11 @@ public class CWCFNCReader
       dataVar = new Line (name, longName, units, varDims[0], data, format,
         scaling, missing);
     } // if
-    else if (rank == 2) {
-      dataVar = new Grid (name, longName, units, varDims[0], varDims[1], 
+    else if (rank >= 2) {
+      dataVar = new Grid (name, longName, units, varDims[rank-2], varDims[rank-1],
         data, format, scaling, missing);
       if (nav != null) ((Grid) dataVar).setNavigation (nav);
-    } // else if 
-    else if (rank == 4) {
-        dataVar = new Grid (name, longName, units, varDims[2], varDims[3], 
-          data, format, scaling, missing);
-        if (nav != null) ((Grid) dataVar).setNavigation (nav);
-      } // else if
+    } // else if
     else {
       throw new UnsupportedEncodingException ("Unsupported rank = " + rank +
         " for " + name);
