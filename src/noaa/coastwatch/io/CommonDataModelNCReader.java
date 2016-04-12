@@ -74,6 +74,13 @@
              to but all the extra metadata into the L2 files that are required 
              for properly specifying a CF grid mapped projection (concern about
              limitation of the GHRSST L2 format).
+            2016/03/24, PFH
+            - Changes: Updated getBaseVariableName method to use more specific
+              regular expression.
+            - Issue: There were some Grib files found in testing that had
+              variables with names like "Land_cover_0__sea_1__land_surface"
+              which broke the variable name extension scheme that uses "__"
+              as a field separator.
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
@@ -782,7 +789,7 @@ utilities when:
    */
   private String getBaseVariableName (String name) {
 
-    return (name.replaceFirst ("^(.*)" + START + ".*" + END + "$", "$1"));
+    return (name.replaceFirst ("^(.*)" + START + "[TZPHI][0-9]+_.*" + END + "$", "$1"));
     
   } // getBaseVariableName
 
