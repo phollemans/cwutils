@@ -1,13 +1,13 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ACSPOVIIRSBowtieDeletionFilter.java
-  PURPOSE: Filters locations that have been deleted from ACSPO VIIRS files.
+     FILE: VIIRSBowtieFilter.java
+  PURPOSE: Filters locations that have been deleted from VIIRS files.
    AUTHOR: Peter Hollemans
-     DATE: 2015/10/30
+     DATE: 2016/06/07
   CHANGES: n/a
 
   CoastWatch Software Library and Utilities
-  Copyright 2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -21,22 +21,22 @@ package noaa.coastwatch.util;
 import noaa.coastwatch.util.LocationFilter;
 
 /**
- * The <code>ACSPOVIIRSBowtieDeletionFilter</code> class detects locations
- * in a level 2 swath file from the VIIRS sensor that has been produced by
- * the ACSPO system in which certain pixels are deleted because of a bow-tie
- * overlap effect of the successive scan head sweeps.  The filter returns
- * true for those pixels that are actual data, and false for deleted pixels.
+ * The <code>VIIRSBowtieFilter</code> class detects locations
+ * in a level 2 swath file from the VIIRS sensor in which certain pixels 
+ * are deleted because of a bow-tie overlap effect of the successive scan 
+ * head sweeps.  The filter returns true for those pixels that are actual 
+ * data, and false for deleted pixels.
  *
  * @author Peter Hollemans
- * @since 3.3.1
+ * @since 3.3.2
  */
-public class ACSPOVIIRSBowtieDeletionFilter implements LocationFilter {
+public class VIIRSBowtieFilter implements LocationFilter {
 
   // Variables
   // ---------
   
   /** The single instance of this class. */
-  private static ACSPOVIIRSBowtieDeletionFilter instance;
+  private static VIIRSBowtieFilter instance;
   
   /** 
    * The VIIRS bow-tie deletion pattern array, true for locations
@@ -52,7 +52,7 @@ public class ACSPOVIIRSBowtieDeletionFilter implements LocationFilter {
    *
    * @return the instance of this class.
    */
-  private ACSPOVIIRSBowtieDeletionFilter () {
+  private VIIRSBowtieFilter () {
   
     // Set up bow-tie deletion pattern
     // -------------------------------
@@ -67,15 +67,15 @@ public class ACSPOVIIRSBowtieDeletionFilter implements LocationFilter {
       } // for
     } // for
   
-  } // ACSPOVIIRSBowtieDeletionFilter
+  } // VIIRSBowtieFilter
 
   ////////////////////////////////////////////////////////////
 
   /** Gets the singleton instance of this class. */
-  public static ACSPOVIIRSBowtieDeletionFilter getInstance() {
+  public static VIIRSBowtieFilter getInstance() {
   
     if (instance == null) {
-      instance = new ACSPOVIIRSBowtieDeletionFilter();
+      instance = new VIIRSBowtieFilter();
     } // if
     return (instance);
   
@@ -94,6 +94,6 @@ public class ACSPOVIIRSBowtieDeletionFilter implements LocationFilter {
 
   ////////////////////////////////////////////////////////////
 
-} // ACSPOVIIRSBowtieDeletionFilter class
+} // VIIRSBowtieFilter class
 
 ////////////////////////////////////////////////////////////////////////

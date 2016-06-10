@@ -21,9 +21,16 @@
            - Issue: In order to avoid duplicate changes/updates to
              registration algorithms, we combined ACSPO and
              regular registration classes into single classes.
+           2016/06/10, PFH
+           - Changes: Moved VIIRS bow-tie detection to new class.  Added options
+             for using an expression or filter to determine if a source pixel
+             should be used in registration.
+           - We had a request from Phil Keegstra to let the user supply a
+             data variable that contains a 1/0 flag for usability of the source
+             pixel data.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -43,7 +50,6 @@ import noaa.coastwatch.io.EarthDataReaderFactory;
 import noaa.coastwatch.io.HDFCachedGrid;
 import noaa.coastwatch.tools.CleanupHook;
 import noaa.coastwatch.tools.ToolServices;
-import noaa.coastwatch.util.ACSPOVIIRSBowtieDeletionFilter;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.Grid;
@@ -51,6 +57,9 @@ import noaa.coastwatch.util.GridResampler;
 import noaa.coastwatch.util.InverseGridResampler;
 import noaa.coastwatch.util.MixedGridResampler;
 import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.LocationFilter;
+import noaa.coastwatch.util.VIIRSBowtieFilter;
+import noaa.coastwatch.util.ExpressionFilter;
 
 /**
  * <p>The registration tool resamples gridded Earth data to a master
@@ -70,12 +79,14 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * <h3>Options:</h3>
  *
  * <p>
+ * -f, --srcfilter=TYPE <br>
  * -h, --help <br>
  * -m, --match=PATTERN <br>
  * -M, --method=TYPE <br>
  * -O, --overwrite=TYPE <br>
  * -p, --polysize=KILOMETERS <br>
  * -r, --rectsize=WIDTH/HEIGHT <br>
+ * -s, --srcexpr=EXPRESSION <br>
  * -v, --verbose <br>
  * --version <br>
  * </p>
@@ -116,6 +127,15 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   <dt>-h, --help</dt>
  *
  *   <dd>Prints a brief help message.</dd>
+ *
+ *   <dt>-f, --srcfilter=TYPE</dt>
+ *
+ *   <dd>Specifies a filter used to determine whether source pixels
+ *   at a given location should be used in registration.  The only filter 
+ *   type currently supported is 'viirs', which filters out pixels from the
+ *   VIIRS sensor that have been omitted due to bow-tie overlap.  By default 
+ *   all valid source pixels are used in registration.  See also the
+ *   <b>--srcexpr</b> option to filter using an expression.</dd>
  *
  *   <dt>-m, --match=PATTERN</dt>
  *
@@ -181,7 +201,18 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   dimensions of the resampling rectangles in the source.  The
  *   default polynomial rectangle size is 50/50, which introduces
  *   only a small error for AVHRR LAC data.</dd>
- * 
+ *
+ *   <dt>-s, --srcexpr=EXPRESSION</dt>
+ *   
+ *   <dd>Specifies that an expression should be used to
+ *   determine if pixels from the source should be used in
+ *   registration.  If the result of the expression is true (in the case of a
+ *   boolean result) or non-zero (in the case of a numerical
+ *   result), the source pixel at the given location is used, otherwise it is
+ *   ignored. The syntax for the expression is identical to the right-hand-side
+ *   of a <b>cwmath</b> expression (see the <b>cwmath</b> tool manual
+ *   page).  By default all valid source pixels are used in registration.</dd>
+ *
  *   <dt>-v, --verbose</dt>
  *
  *   <dd>Turns verbose mode on.  The current status of data
@@ -266,6 +297,8 @@ public final class cwregister {
     Option methodOpt = cmd.addStringOption ('M', "method");
     Option rectsizeOpt = cmd.addStringOption ('r', "rectsize");
     Option overwriteOpt = cmd.addStringOption ('O', "overwrite");
+    Option srcexprOpt = cmd.addStringOption ('s', "srcexpr");
+    Option srcfilterOpt = cmd.addStringOption ('f', "srcfilter");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -313,21 +346,8 @@ public final class cwregister {
     if (rectsize == null) rectsize = "50/50";
     String overwrite = (String) cmd.getOptionValue (overwriteOpt);
     if (overwrite == null) overwrite = "always";
-
-    // Detect method subtype
-    // ---------------------
-    /** 
-     * We do this primarily to support ACSPO VIIRS mixed mode resampling, in
-     * which the VIIRS bowtie overlap pixels are set to missing, and so are 
-     * detected and filled properly.  We currently don't document the ACSPO 
-     * method subtype, as it's for NOAA users who know that the option exists.
-     */
-    String[] methodArray = method.split ("-");
-    String methodSubtype = "";
-    if (methodArray.length == 2) {
-      method = methodArray[0];
-      methodSubtype = methodArray[1];
-    } // if
+    String srcexpr = (String) cmd.getOptionValue (srcexprOpt);
+    String srcfilter = (String) cmd.getOptionValue (srcfilterOpt);
 
     try {
 
@@ -378,6 +398,9 @@ public final class cwregister {
       // Create mixed resampler
       // ----------------------
       else if (method.equals ("mixed")) {
+
+        // Get rectangle size
+        // ------------------
         String[] rectsizeArray = rectsize.split (ToolServices.SPLIT_REGEX);
         if (rectsizeArray.length != 2) {
           System.err.println (PROG + ": Invalid rectangle size '" + rectsize + 
@@ -386,13 +409,40 @@ public final class cwregister {
         } // if
         int rectWidth = Integer.parseInt (rectsizeArray[0]);
         int rectHeight = Integer.parseInt (rectsizeArray[1]);
+        
+        // Create resampler
+        // ----------------
         MixedGridResampler mixed = new MixedGridResampler (inputInfo.getTransform(),
           masterTrans, rectWidth, rectHeight);
-        if (methodSubtype.equals ("acspo")) {
-          mixed.setSourceFilter (ACSPOVIIRSBowtieDeletionFilter.getInstance());
+        resampler = mixed;
+
+        // Add location filter
+        // -------------------
+        if (srcexpr != null && srcfilter != null) {
+          System.err.println (PROG + ": Cannot specify *both* source filter and expression");
+          System.exit (2);
         } // if
+
+        LocationFilter filter = null;
+        if (srcexpr != null) {
+          filter = new ExpressionFilter (reader, srcexpr);
+        } // if
+        else if (srcfilter != null) {
+          if (srcfilter.equals ("viirs")) {
+            filter = VIIRSBowtieFilter.getInstance();
+          } // if
+          else {
+            System.err.println (PROG + ": Invalid source filter");
+            System.exit (2);
+          } // else
+        } // else if
+
+        if (filter != null) mixed.setSourceFilter (filter);
+
+        // Set overwrite mode
+        // ------------------
         int overwriteMode = -1;
-        if (overwrite.equals ("always")) 
+        if (overwrite.equals ("always"))
           overwriteMode = MixedGridResampler.OVERWRITE_ALWAYS;
         else if (overwrite.equals ("never")) 
           overwriteMode = MixedGridResampler.OVERWRITE_NEVER;
@@ -403,7 +453,7 @@ public final class cwregister {
           System.exit (2);
         } // else
         mixed.setOverwriteMode (overwriteMode);
-        resampler = mixed;
+        
       } // else if
 
       // Invalid method
@@ -485,6 +535,7 @@ public final class cwregister {
 "  output                     The output data file name.\n" +
 "\n" +
 "Options:\n" +
+"  -f, --srcfilter=TYPE       Filter the source pixels.  TYPE may be 'viirs'.\n" +
 "  -h, --help                 Show this help message.\n" +
 "  -m, --match=PATTERN        Register only variables matching the pattern.\n"+
 "  -M, --method=TYPE          Set resampling method.  TYPE may be\n" +
@@ -496,6 +547,7 @@ public final class cwregister {
 "  -r, --rectsize=WIDTH/HEIGHT\n" +
 "                             Set rectangle size in pixels for mixed\n" +
 "                              resampling.\n" +
+"  -s, --srcexpr=EXPRESSION   Use only source pixels matching an expression.\n" +
 "  -v, --verbose              Print verbose messages.\n" +
 "  --version                  Show version information.\n"
     );
