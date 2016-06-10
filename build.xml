@@ -154,7 +154,8 @@
   -->
   <!--  <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64,solaris32,solaris64"/> -->
 
-  <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64"/>
+  <property name="builds.default" value="linux32,linux64,windows64,macosx64"/>
+  <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64,solaris32,solaris64"/>
   <property name="build.id.linux32" value="88"/>
   <property name="build.id.linux64" value="288"/>
   <property name="build.id.windows32" value="10"/>
@@ -165,17 +166,18 @@
   <property name="build.id.solaris64" value="292"/>
 
   <target name="packages-help" description="Lists packages available to build">
-    <echo>Available packages: ${builds.all}</echo>
+    <echo>Default build set: ${builds.default}</echo>
+    <echo>All packages: ${builds.all}</echo>
   </target>
 
   <target name="packages" depends="all"
-    description="Creates package files specified by ${builds}, or all if no builds specified">
+    description="Creates package files specified by ${builds}, or default set if no builds specified">
 
     <!-- Check builds -->
     <if>
       <not><isset property="builds"/></not>
       <then>
-        <property name="builds" value="${builds.all}"/>
+        <property name="builds" value="${builds.default}"/>
       </then>
     </if>
 
@@ -225,6 +227,7 @@
 
   </target>
 
+<!--
   <target name="upload"
     description="Uploads packages to the Terrenus server">
     <input message="Password: " addproperty="password">
@@ -238,6 +241,12 @@
       username="terrenus"
       password="${password}"
       command="cd web/download ; md5sum -c md5sums"/>
+  </target>
+-->
+
+  <target name="upload"
+    description="Uploads the latest packages to the Terrenus server">
+    <exec executable="${pkg.dir}/send.sh" dir="${pkg.dir}"/>
   </target>
 
   <!-- Define cleanup targets -->
