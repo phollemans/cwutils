@@ -49,7 +49,7 @@ import noaa.coastwatch.util.EarthDataInfo;
 
 /** 
  * The <code>ImageSavePanel</code> class is the abstract parent of all
- * image save panels, which allow the user to save Earth data to an
+ * image save panels, which allow the user to save earth data to an
  * image file format.  To save a view as an image, create a new panel
  * with the <code>create()</code> method, then call the
  * <code>write()</code> method.  Generally, the save panel is enclosed
@@ -67,7 +67,7 @@ public abstract class ImageSavePanel
   /** The view to save as an image. */
   protected EarthDataView view;
 
-  /** The Earth data information to use for legends. */
+  /** The earth data information to use for legends. */
   protected EarthDataInfo info;
 
   /** The indexable flag, true if we can limit the colors to an index model. */
@@ -78,8 +78,8 @@ public abstract class ImageSavePanel
   /* 
    * Creates a new panel appropriate for the specified format. 
    *
-   * @param view the Earth data view to save.
-   * @param info the Earth data information to use for the
+   * @param view the earth data view to save.
+   * @param info the earth data information to use for the
    * legends.
    * @param format the file format.
    */
@@ -213,8 +213,8 @@ public abstract class ImageSavePanel
   /* 
    * Creates a new image save panel.
    *
-   * @param view the Earth data view to save.
-   * @param info the Earth data information to use for the
+   * @param view the earth data view to save.
+   * @param info the earth data information to use for the
    * legends.
    */
   protected ImageSavePanel (

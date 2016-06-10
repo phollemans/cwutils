@@ -51,7 +51,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.MapProjection;
 
 /**
- * A GeoTIFF writer uses an Earth image transform and rendered image
+ * A GeoTIFF writer uses an earth image transform and rendered image
  * to create a TIFF file with extra TIFF tags decribing the Earth
  * location of the image data.  The GeoTIFF content conforms to the
  * GeoTIFF specification version 1.8.2 as obtained from the <a
@@ -65,7 +65,7 @@ public class GeoTIFFWriter {
 
   // Constants
   // ---------
-  /** The GeoTIFF Earth transform translations file. */
+  /** The GeoTIFF earth transform translations file. */
   private static final String PROPERTIES_FILE = "geotiff.properties";
 
   /** The GCTP spheroid citation. */
@@ -489,10 +489,10 @@ public class GeoTIFFWriter {
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the GeoTIFF fields representing the specified Earth image
+   * Gets the GeoTIFF fields representing the specified earth image
    * transform.
    * 
-   * @param trans the Earth image transform for encoding.
+   * @param trans the earth image transform for encoding.
    *
    * @return the TIFF fields to use as extra fields.
    *
@@ -592,10 +592,10 @@ public class GeoTIFFWriter {
 
   /**
    * Creates a new GeoTIFF writer using the specified output stream,
-   * Earth image transform, and no TIFF compression.
+   * earth image transform, and no TIFF compression.
    * 
    * @param output the output stream for writing.
-   * @param trans the Earth image transform for Earth location metadata.
+   * @param trans the earth image transform for earth location metadata.
    *
    * @throws IOException if an error occurred writing to the output
    * stream.
@@ -613,10 +613,10 @@ public class GeoTIFFWriter {
 
   /**
    * Creates a new GeoTIFF writer using the specified output stream,
-   * Earth image transform, and compression.
+   * earth image transform, and compression.
    * 
    * @param output the output stream for writing.
-   * @param trans the Earth image transform for Earth location metadata.
+   * @param trans the earth image transform for earth location metadata.
    * @param compress the TIFF compression type.
    *
    * @throws IOException if an error occurred writing to the output

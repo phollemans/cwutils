@@ -331,11 +331,11 @@ public class TSHDFReader
   //////////////////////////////////////////////////////////////////////
 
   /**
-   * Reads the Earth transform information.  The projection metadata
+   * Reads the earth transform information.  The projection metadata
    * in the HDF file is converted into the equivalent {@link
    * MapProjection} or {@link SwathProjection}.
    *
-   * @return an Earth transform based on the HDF file data.
+   * @return an earth transform based on the HDF file data.
    *
    * @throws HDFException if there were errors reading the HDF metadata.
    * @throws ClassNotFoundException if the HDF attribute type is unknown.

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthDataView.java
-  PURPOSE: A class to set up a graphical view of 2D Earth locatable data.
+  PURPOSE: A class to set up a graphical view of 2D earth locatable data.
    AUTHOR: Peter Hollemans
      DATE: 2002/04/17
   CHANGES: 2002/07/21, PFH, added implementation
@@ -111,10 +111,10 @@ import noaa.coastwatch.util.trans.MapProjectionFactory;
 import noaa.coastwatch.test.TestLogger;
 
 /**
- * The Earth data view class sets up a correspondence between 2D Earth
+ * The earth data view class sets up a correspondence between 2D Earth
  * locatable data variables (possibly more than one) and a visual
  * image.  A view has a certain size in width and height and a
- * translation between Earth locations and image coordinates.  A view
+ * translation between earth locations and image coordinates.  A view
  * may also have a number of data overlays for annotation.  For a
  * swath transform, the data view forces north to be in the upwards
  * direction, at the top of the image.  If the transform is such that
@@ -140,7 +140,7 @@ import noaa.coastwatch.test.TestLogger;
  * the graphics context.  This two-step process may involve delays,
  * both in rendering the main image and the overlays.  For example, a
  * delay may occur when translating data values into image colours, or
- * in translating overlay Earth locations to image coordinates.<p>
+ * in translating overlay earth locations to image coordinates.<p>
  *
  * In order to help handle delays, two protected variables are used:
  * <code>changed</code> and <code>progress</code>.  The changed flag
@@ -211,10 +211,10 @@ public abstract class EarthDataView
   private double scale;
 
   /** 
-   * The Earth to image coordinate transform. This is used to
-   * translate between Earth (lat,lon) and view image (x,y).  It holds
+   * The earth to image coordinate transform. This is used to
+   * translate between earth (lat,lon) and view image (x,y).  It holds
    * both the image transform for view image (x,y) to data (row,col)
-   * and the Earth transform for data (row,col) to Earth (lat,lon).
+   * and the earth transform for data (row,col) to earth (lat,lon).
    */
   protected EarthImageTransform trans;
 
@@ -233,7 +233,7 @@ public abstract class EarthDataView
   /** 
    * The view area.  At any one time, the view shows some area of the
    * Earth.  Since the view may be using any one of a number Earth
-   * transforms, the area may be an irregular shape.  This Earth area
+   * transforms, the area may be an irregular shape.  This earth area
    * may be required and should only be created once each time the
    * view is modified since it can take time to create.
    */
@@ -660,7 +660,7 @@ public abstract class EarthDataView
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth image transform. */
+  /** Gets the earth image transform. */
   public EarthImageTransform getTransform() { return (trans); }
 
   ////////////////////////////////////////////////////////////
@@ -820,8 +820,8 @@ public abstract class EarthDataView
 
   /** 
    * Sets the properties of this view based on the specified view.
-   * The two views should have compatible Earth transforms and data
-   * grids.  The overlays, Earth transform, and verbose mode are all
+   * The two views should have compatible earth transforms and data
+   * grids.  The overlays, earth transform, and verbose mode are all
    * copied.
    *
    * @param view the source view to copy properties from.
@@ -1130,7 +1130,7 @@ public abstract class EarthDataView
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Constructs a new Earth data view using the specified parameters.
+   * Constructs a new earth data view using the specified parameters.
    * The view dimensions are initialized to the data dimensions, and
    * the ratio of data to image pixel count to 1.  A check is performed on the
    * transform to determine if it should be oriented differently for
@@ -1138,7 +1138,7 @@ public abstract class EarthDataView
    * progress mode flags are initially set to false.
    *
    * @param dataDims the data dimensions as [rows, columns].
-   * @param earthTrans the Earth transform.
+   * @param earthTrans the earth transform.
    *
    * @throws NoninvertibleTransformException if the image to data
    * transform is not invertible.
@@ -1203,7 +1203,7 @@ public abstract class EarthDataView
    * Gets the status of view and overlay preparation. If the view is
    * prepared, a render call will return after almost no delay.  If
    * not, the render may require time to complete due to loading data
-   * from disk or cache, converting Earth locations to screen points,
+   * from disk or cache, converting earth locations to screen points,
    * and so on.
    */
   public synchronized boolean isPrepared () { 

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthDataViewFactory.java
-  PURPOSE: Creates preview panels for Earth data.
+  PURPOSE: Creates preview panels for earth data.
    AUTHOR: Peter Hollemans
      DATE: 2005/07/29
   CHANGES: 2007/03/30, PFH, added check for failed grid subset read
@@ -90,7 +90,7 @@ public class EarthDataViewFactory {
 
     try {
 
-      // Get Earth transform
+      // Get earth transform
       // -------------------
       EarthTransform trans = reader.getInfo().getTransform();
 

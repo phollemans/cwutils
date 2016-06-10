@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: OrientationAffineFactory.java
-  PURPOSE: Analyses Earth transforms to determine need for a transform.
+  PURPOSE: Analyses earth transforms to determine need for a transform.
    AUTHOR: Peter Hollemans
      DATE: 2014/02/23
   CHANGES: 2016/01/19, PFH

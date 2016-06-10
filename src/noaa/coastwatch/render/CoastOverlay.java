@@ -45,11 +45,11 @@ import noaa.coastwatch.render.PolygonOverlay;
 import noaa.coastwatch.util.EarthArea;
 
 /**
- * A <code>CoastOverlay</code> annotates an Earth data view with
+ * A <code>CoastOverlay</code> annotates an earth data view with
  * coast lines and polygons.  The coast lines are rendered using
  * GSHHS coast line vector data (see {@link BinnedGSHHSReader}
  * and {@link BinnedGSHHSReaderFactory}).  The resolution of the
- * rendered Earth vector data is based on the view resolution at
+ * rendered earth vector data is based on the view resolution at
  * the time of rendering.  The resolution of the view is taken to
  * be the number of kilometers per pixel at the view center
  * point.  In order to help reduce the rendering time and keep

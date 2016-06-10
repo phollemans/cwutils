@@ -111,7 +111,7 @@ public class ArrowSymbol
    *
    * @param magnitudeAtt the feature attribute for vector magnitude.
    * @param directionAtt the feature attribute for vector direction.
-   * @param trans the Earth transform used for converting directions.
+   * @param trans the earth transform used for converting directions.
    */
   public ArrowSymbol (
     int magnitudeAtt,

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: VisualOverlay.java
-  PURPOSE: Defines a visual interface for an Earth data overlay.
+  PURPOSE: Defines a visual interface for an earth data overlay.
    AUTHOR: Peter Hollemans
      DATE: 2004/03/01
   CHANGES: 2004/10/19, PFH, modified to show only one chooser dialog

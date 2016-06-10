@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: cwregister.java
-  PURPOSE: To register a number of Earth data variables to a master 
+  PURPOSE: To register a number of earth data variables to a master 
            projection.
    AUTHOR: Peter Hollemans
      DATE: 2002/11/11
@@ -62,14 +62,14 @@ import noaa.coastwatch.util.VIIRSBowtieFilter;
 import noaa.coastwatch.util.ExpressionFilter;
 
 /**
- * <p>The registration tool resamples gridded Earth data to a master
+ * <p>The registration tool resamples gridded earth data to a master
  * projection.</p>
  * <!-- START MAN PAGE -->
  *
  * <h2>Name</h2>
  * <p>
  *   <!-- START NAME -->
- *   cwregister - resamples gridded Earth data to a master projection.
+ *   cwregister - resamples gridded earth data to a master projection.
  *   <!-- END NAME -->
  * </p>
  *
@@ -92,12 +92,12 @@ import noaa.coastwatch.util.ExpressionFilter;
  * </p>
  *
  * <h2>Description</h2>
- * <p> The register tool resamples gridded Earth data to
+ * <p> The register tool resamples gridded earth data to
  * a master projection.  A master projection specifies the translation
- * between grid row and column coordinates and Earth latitude and
+ * between grid row and column coordinates and earth latitude and
  * longitude coordinates.  The master projection file is any valid
- * Earth data file from which a set of row and column dimensions
- * and Earth transform parameters may be extracted.  This includes
+ * earth data file from which a set of row and column dimensions
+ * and earth transform parameters may be extracted.  This includes
  * standard CoastWatch product files as well as master files created
  * using the <b>cwmaster</b> tool. </p>
  *
@@ -110,7 +110,7 @@ import noaa.coastwatch.util.ExpressionFilter;
  *   <dt>master</dt>
  *   <dd>The master projection file name.  Note that the master file
  *   is not altered in any way.  It is simply accessed in order to
- *   determine grid and Earth transform parameters.</dd>
+ *   determine grid and earth transform parameters.</dd>
  *
  *   <dt>input</dt>
  *   <dd>The input data file name.</dd>
@@ -351,7 +351,7 @@ public final class cwregister {
 
     try {
 
-      // Get master Earth info
+      // Get master earth info
       // ---------------------
       if (verbose) System.out.println (PROG + ": Reading master " + master);
       EarthDataInfo masterInfo = null;
@@ -372,7 +372,7 @@ public final class cwregister {
         System.exit (2);
       } // catch
 
-      // Get input Earth info
+      // Get input earth info
       // --------------------
       if (verbose) System.out.println (PROG + ": Reading input " + input);
       if (method.equals ("mixed")) EarthDataReader.setDataProjection (true);
@@ -527,7 +527,7 @@ public final class cwregister {
 
     System.out.println (
 "Usage: cwregister [OPTIONS] master input output\n" +
-"Resamples gridded Earth data to a master projection.\n" +
+"Resamples gridded earth data to a master projection.\n" +
 "\n" +
 "Main parameters:\n" +
 "  master                     The master projection data file name.\n" +

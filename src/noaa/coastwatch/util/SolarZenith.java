@@ -29,7 +29,7 @@ import noaa.coastwatch.util.trans.SpheroidConstants;
 
 /**
  * The solar zenith class may be used to calculate solar zenith angles
- * for any Earth location at a given date and time.  The solar zenith
+ * for any earth location at a given date and time.  The solar zenith
  * angle is the angle between two vectors: one vector normal to the
  * Earth's surface and the other pointing to the sun:
  * <pre>
@@ -103,9 +103,9 @@ public class SolarZenith {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the solar zenith angle for a specified Earth location.  
+   * Gets the solar zenith angle for a specified earth location.  
    * 
-   * @param loc the Earth location for the solar zenith calculation.
+   * @param loc the earth location for the solar zenith calculation.
    *
    * @return the solar zenith angle in degrees.
    */
@@ -142,7 +142,7 @@ public class SolarZenith {
    * solar terminator has two points at every latitude.  The solution
    * flag selects one of the two points.
    *
-   * @return the Earth location of the terminator.
+   * @return the earth location of the terminator.
    */   
   public EarthLocation getTerminator (
     double lat,

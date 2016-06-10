@@ -42,7 +42,7 @@ public abstract class PointFeatureSource
    * Renders the selected point feature data to a graphics context.
    *
    * @param g the graphics context for drawing.
-   * @param trans the Earth image transform for converting Earth
+   * @param trans the earth image transform for converting Earth
    * locations to image points.
    * @param symbol the symbol to use for rendering each point feature.
    */

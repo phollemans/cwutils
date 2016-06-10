@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: cwstats.java
-  PURPOSE: To calculate Earth data file statistics.
+  PURPOSE: To calculate earth data file statistics.
    AUTHOR: Peter Hollemans
      DATE: 2002/05/25
            2002/07/16, PFH, added man page
@@ -48,14 +48,14 @@ import noaa.coastwatch.util.Statistics;
 
 /**
  * <p>The statistics utility calculates a number of statistics for each
- * variable in an Earth data file.</p>
+ * variable in an earth data file.</p>
  *
  * <!-- START MAN PAGE -->
  *
  * <h2>Name</h2>
  * <p> 
  *   <!-- START NAME -->
- *   cwstats - calculates Earth data file statistics.
+ *   cwstats - calculates earth data file statistics.
  *   <!-- END NAME -->
  * </p>
  *
@@ -76,7 +76,7 @@ import noaa.coastwatch.util.Statistics;
  *
  * <h2>Description</h2>
  * <p> The statistics utility calculates a number of
- * statistics for each variable in an Earth data file:</p>
+ * statistics for each variable in an earth data file:</p>
  * <ul>
  *   <li> Count - the count of total data values sampled. </li>
  *   <li> Valid - the number of valid (not missing) data
@@ -318,7 +318,7 @@ public final class cwstats {
   /**
    * Prints the variable statistics information.
    *
-   * @param reader the Earth data reader object to use.
+   * @param reader the earth data reader object to use.
    * @param start the starting data location, or null for the
    * beginning of the data.
    * @param end the ending data location, or null for the end of the
@@ -429,7 +429,7 @@ public final class cwstats {
 
     System.out.println (
 "Usage: cwstats [OPTIONS] input\n" +
-"Calculates a number of statistics for each variable in an Earth data file.\n"+
+"Calculates a number of statistics for each variable in an earth data file.\n"+
 "\n" +
 "Main parameters:\n" +
 "  input                      The input data file name.\n" +

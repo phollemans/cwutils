@@ -88,7 +88,7 @@ import noaa.coastwatch.util.trans.SensorScanProjectionFactory;
 import noaa.coastwatch.util.trans.SwathProjection;
 
 /**
- * A CWHDF reader is an Earth data reader that reads CoastWatch
+ * A CWHDF reader is an earth data reader that reads CoastWatch
  * HDF format files using the HDF library class.
  *
  * @author Peter Hollemans
@@ -161,7 +161,7 @@ public class CWHDFReader
    *
    * @throws HDFException if an error occurred in an HDF routine.
    * @throws IOException if an error occurred reading the file metadata.
-   * @throws NoninvertibleTransformException if the Earth transform object
+   * @throws NoninvertibleTransformException if the earth transform object
    * could not be initialized.
    * @throws ClassNotFoundException if the HDF attribute type is unknown.
    */  
@@ -183,7 +183,7 @@ public class CWHDFReader
    *
    * @throws HDFException if an error occurred in an HDF routine.
    * @throws IOException if an error occurred reading the file metadata.
-   * @throws NoninvertibleTransformException if the Earth transform object
+   * @throws NoninvertibleTransformException if the earth transform object
    * could not be initialized.
    * @throws ClassNotFoundException if the HDF attribute type is unknown.
    */  
@@ -305,11 +305,11 @@ public class CWHDFReader
   ////////////////////////////////////////////////////////////
 
   /**
-   * Reads the Earth transform information.  The projection metadata
+   * Reads the earth transform information.  The projection metadata
    * in the HDF file is converted into the equivalent {@link
    * EarthTransform}.
    *
-   * @return an Earth transform based on the HDF file data.
+   * @return an earth transform based on the HDF file data.
    *
    * @throws HDFException if there were errors reading the HDF metadata.
    * @throws ClassNotFoundException if the HDF attribute type is unknown.
@@ -459,13 +459,13 @@ public class CWHDFReader
        * below has no effect and every time a row of lat/lon data is
        * read, the entire chunk will be read and/or decompressed.
        * That could cause a major slow-down in reading swath data.  So
-       * the best options for a Earth locations in a swath file are:
+       * the best options for a earth locations in a swath file are:
        * 
-       * 1) Use polynomial estimators for Earth locations.
+       * 1) Use polynomial estimators for earth locations.
        * 2) Use explicit lat/lon data but do *not* chunk or compress
        *    the lat/lon variables in the HDF file.
        * 3) If chunking or compression are desired, use a chunk size
-       *    of [1, cols] so that reading Earth locations is efficient.
+       *    of [1, cols] so that reading earth locations is efficient.
        */
       if (trans == null) {
         DataVariable lat = null, lon = null;
@@ -485,12 +485,12 @@ public class CWHDFReader
         } // try
         catch (Exception e) {
           System.err.println (this.getClass() + 
-            ": Warning: Problems encountered using Earth location data");
+            ": Warning: Problems encountered using earth location data");
           e.printStackTrace();
           if (lat != null && lon != null) {
             System.err.println (this.getClass() + 
               ": Warning: Falling back on data-only projection, " +
-              "Earth location reverse lookup will not function");
+              "earth location reverse lookup will not function");
             trans = new DataProjection (lat, lon);
           } // if
         } // catch

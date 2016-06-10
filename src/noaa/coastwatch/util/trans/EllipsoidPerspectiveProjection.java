@@ -27,11 +27,11 @@ import noaa.coastwatch.util.trans.SensorScanProjection;
 
 /**
  * The <code>EllipsoidPerspectiveProjection</code> class simulates the
- * Earth view that a theoretical satellite would have from orbit.  The
+ * earth view that a theoretical satellite would have from orbit.  The
  * satellite is equipped with a sensor that sweeps rows from top to
  * bottom and columns from left to right at user-specified stepping
  * angles.  It is assumed that the satellite is pointed at the center
- * of the Earth.  A WGS 84 Earth model is used to perform ellipsoid
+ * of the Earth.  A WGS 84 earth model is used to perform ellipsoid
  * intersection and geodetic latitude calculations.
  *
  * @author Peter Hollemans
@@ -43,28 +43,28 @@ public class EllipsoidPerspectiveProjection
   // Constants
   // ---------
  
-  /** The Earth equatorial radius in meters. */
+  /** The earth equatorial radius in meters. */
   private static final double REM = 6378137.0;
 
-  /** The Earth equatorial radius in equator radius units. */
+  /** The earth equatorial radius in equator radius units. */
   private static final double RE = 1;
 
-  /** The Earth equatorial radius squared. */
+  /** The earth equatorial radius squared. */
   private static final double RE2 = RE*RE;
 
-  /** The Earth polar radius in meters. */
+  /** The earth polar radius in meters. */
   private static final double RPM = 6356752.314245;
 
-  /** The Earth polar radius in equator radius units. */
+  /** The earth polar radius in equator radius units. */
   private static final double RP = RPM/REM;
 
-  /** The Earth polar radius squared. */
+  /** The earth polar radius squared. */
   private static final double RP2 = RP*RP;
 
-  /** The Earth equatorial radius over polar radius, all squared. */
+  /** The earth equatorial radius over polar radius, all squared. */
   private static final double RE_O_RP_2 = Math.pow (REM/RPM, 2);
 
-  /** The Earth equatorial radius over polar radius, all to the fourth. */
+  /** The earth equatorial radius over polar radius, all to the fourth. */
   private static final double RE_O_RP_4 = Math.pow (REM/RPM, 4);
 
   /** The index of the x coordinate. */
@@ -191,7 +191,7 @@ public class EllipsoidPerspectiveProjection
   /**
    * Converts geodetic coordinates to Earth-centered Earth-fixed.
    *
-   * @param earthLoc the geodetic Earth location.
+   * @param earthLoc the geodetic earth location.
    * @param height the height above the reference ellipsoid in radians.
    * @param output the output coordinate array to fill.  If null, an
    * output array is created.
@@ -224,7 +224,7 @@ public class EllipsoidPerspectiveProjection
   /**
    * Converts geocentric coordinates to Earth-centered Earth-fixed.
    *
-   * @param earthLoc the geocentric Earth location.
+   * @param earthLoc the geocentric earth location.
    * @param radius the location radius in radians.
    * @param output the output coordinate array to fill.  If null, an
    * output array is created.
@@ -254,10 +254,10 @@ public class EllipsoidPerspectiveProjection
    *
    * @param vector the ECEF coordinate vector.
    * @param height the height above the reference ellipsoid in radians.
-   * @param output the output Earth location to fill.  If null, an
+   * @param output the output earth location to fill.  If null, an
    * output location is created.
    *
-   * @return the output geodetic Earth location.
+   * @return the output geodetic earth location.
    */
   private static EarthLocation ECEFToGD (
     double[] vector,
@@ -585,7 +585,7 @@ public class EllipsoidPerspectiveProjection
    * <ol>
    *   <li>Subpoint latitude in degrees (geocentric).</li>
    *   <li>Subpoint longitude in degrees.</li>
-   *   <li>Distance of satellite from center of Earth in kilometers.</li>
+   *   <li>Distance of satellite from center of earth in kilometers.</li>
    *   <li>Scan step angle in row direction in radians.</li>
    *   <li>Scan step angle in column direction in radians.</li>
    * </ol>
@@ -689,7 +689,7 @@ public class EllipsoidPerspectiveProjection
     DataLocation dataLoc
   ) {
 
-    // Convert Earth location to ECEF (x,y,z)
+    // Convert earth location to ECEF (x,y,z)
     // --------------------------------------
     GDToECEF (earthLoc, 0, locVector);
 

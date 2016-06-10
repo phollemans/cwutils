@@ -113,7 +113,7 @@ public class CWOpendapReader
 
   ////////////////////////////////////////////////////////////
   
-  /** Gets the Earth data info object. */
+  /** Gets the earth data info object. */
   private EarthDataInfo getGlobalInfo () {
 
     // Get simple attributes
@@ -183,7 +183,7 @@ public class CWOpendapReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth transform information. */
+  /** Gets the earth transform information. */
   private EarthTransform getTransform () {
 
     // Get projection type

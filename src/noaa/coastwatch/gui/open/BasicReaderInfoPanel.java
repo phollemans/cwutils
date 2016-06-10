@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: BasicReaderInfoPanel.java
-  PURPOSE: To show basic information from an Earth data reader.
+  PURPOSE: To show basic information from an earth data reader.
    AUTHOR: Peter Hollemans
      DATE: 2005/06/23
   CHANGES: n/a
@@ -217,7 +217,7 @@ public class BasicReaderInfoPanel
       } // else
     } // else
 
-    // Add Earth transform info
+    // Add earth transform info
     // ------------------------
     EarthTransform trans = info.getTransform();
     String projection;

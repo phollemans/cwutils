@@ -79,7 +79,7 @@ public class Preferences
   private HashMap unitsMap;
 
   /** 
-   * The Earth location degrees flag, true to display Earth locations
+   * The earth location degrees flag, true to display earth locations
    * as decimal degrees, false to display as degrees/minutes/seconds.
    */
   private boolean earthLocDegrees = true;
@@ -140,12 +140,12 @@ public class Preferences
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth location in decimal degrees flag. */
+  /** Gets the earth location in decimal degrees flag. */
   public boolean getEarthLocDegrees () { return (earthLocDegrees); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the Earth location in decimal degrees flag. */
+  /** Sets the earth location in decimal degrees flag. */
   public void setEarthLocDegrees (boolean flag) { earthLocDegrees = flag; }
 
   ////////////////////////////////////////////////////////////

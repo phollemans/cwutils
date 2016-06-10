@@ -7,7 +7,7 @@
      DATE: 2002/04/18
   CHANGES: 2002/07/23, PFH, added package, javadoc
            2002/03/09, PFH, renamed to EarthDataOverlay and rearranged
-           2002/11/29, PFH, added last Earth image transform, prepare, draw
+           2002/11/29, PFH, added last earth image transform, prepare, draw
            2002/12/15, PFH, added isPrepared
            2004/03/01, PFH, added visible and name properties
            2004/03/03, PFH, changed render() to use isPrepared()
@@ -45,8 +45,8 @@ import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.EarthImageTransform;
 
 /**
- * An Earth data overlay specifies information used for the annotation
- * of an Earth data view, for example grid lines, coastlines, symbols,
+ * An earth data overlay specifies information used for the annotation
+ * of an earth data view, for example grid lines, coastlines, symbols,
  * text, and so on.  All overlays have a color, transparency, layer
  * number, visibility flag, and name.  The layer number may be used by
  * rendering software to determine the order for rendering multiple
@@ -81,7 +81,7 @@ public abstract class EarthDataOverlay
   /** The overlay layer number. */
   private int layer;
 
-  /** The last Earth image transform used for rendering. */
+  /** The last earth image transform used for rendering. */
   protected transient EarthImageTransform lastTrans;
 
   /** The overlay visibility flag. */
@@ -248,10 +248,10 @@ public abstract class EarthDataOverlay
    * Gets the status of the overlay preparation. If the overlay is
    * prepared, a render call will return after almost no delay.  If
    * not, the render may require time to complete due to loading data
-   * from disk or cache, converting Earth locations to screen points,
+   * from disk or cache, converting earth locations to screen points,
    * and so on.
    *
-   * @param view the Earth data view for the next rendering operation.
+   * @param view the earth data view for the next rendering operation.
    */
   public boolean isPrepared (
     EarthDataView view
@@ -283,7 +283,7 @@ public abstract class EarthDataOverlay
    * Renders the overlay graphics. 
    * 
    * @param g the graphics object for drawing.
-   * @param view the Earth data view.
+   * @param view the earth data view.
    */
   public void render (
     Graphics2D g,
@@ -310,7 +310,7 @@ public abstract class EarthDataOverlay
    * Prepares the overlay graphics prior to drawing.
    * 
    * @param g the graphics object for drawing.
-   * @param view the Earth data view.
+   * @param view the earth data view.
    */
   protected abstract void prepare (
     Graphics2D g,
@@ -323,7 +323,7 @@ public abstract class EarthDataOverlay
    * Draws the overlay graphics.
    * 
    * @param g the graphics object for drawing.
-   * @param view the Earth data view.
+   * @param view the earth data view.
    */
   protected abstract void draw (
     Graphics2D g,

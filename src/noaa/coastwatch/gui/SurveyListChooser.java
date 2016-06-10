@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: SurveyListChooser.java
-  PURPOSE: Allows the user to manipulate a list of Earth data surveys.
+  PURPOSE: Allows the user to manipulate a list of earth data surveys.
    AUTHOR: Peter Hollemans
      DATE: 2004/03/26
   CHANGES: 2006/03/15, PFH, modified to use GUIServices.getIconToggle()

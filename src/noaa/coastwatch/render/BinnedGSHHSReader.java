@@ -135,7 +135,7 @@ public abstract class BinnedGSHHSReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a bin index using the specified Earth location. */
+  /** Gets a bin index using the specified earth location. */
   public int getBinIndex (
     EarthLocation loc
   ) {
@@ -219,7 +219,7 @@ public abstract class BinnedGSHHSReader
 
     ////////////////////////////////////////////////////////
 
-    /** Translates a segment sorting key into an Earth location. */
+    /** Translates a segment sorting key into an earth location. */
     private EarthLocation translateSegmentKey (
       Integer key
     ) {
@@ -233,7 +233,7 @@ public abstract class BinnedGSHHSReader
       if (side == NORTH || side == WEST) 
         offset = 65535 - offset;
 
-      // Create Earth location
+      // Create earth location
       // ---------------------
       double lat = corner.lat, lon = corner.lon;
       switch (side) {
@@ -288,12 +288,12 @@ public abstract class BinnedGSHHSReader
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the south-west corner Earth location. */
+    /** Gets the south-west corner earth location. */
     public EarthLocation getCorner () { return (corner); }
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the specified corner Earth location. */
+    /** Gets the specified corner earth location. */
     public EarthLocation getCorner (
       int index
     ) {
@@ -452,11 +452,11 @@ public abstract class BinnedGSHHSReader
     ////////////////////////////////////////////////////////
 
     /** 
-     * Gets an Earth vector for the specified segment.
+     * Gets an earth vector for the specified segment.
      *
      * @param index the index of the segment to convert.
      *
-     * @return the new Earth vector.
+     * @return the new earth vector.
      */
     public LineFeature getLineFeature (
       int index
@@ -515,7 +515,7 @@ public abstract class BinnedGSHHSReader
      * clockwise winding.  The polygons in the list are specified in
      * rendering order.
      *
-     * @return a list of Earth polygon objects based on the segments
+     * @return a list of earth polygon objects based on the segments
      * in this bin.
      */
     public List getPolygonFeatures () {
@@ -911,7 +911,7 @@ public abstract class BinnedGSHHSReader
 
       ////////////////////////////////////////////////////
 
-      /** Gets the Earth vector for this segment. */
+      /** Gets the earth vector for this segment. */
       public LineFeature getLineFeature () {
 
         LineFeature vector = new LineFeature();
@@ -1325,9 +1325,9 @@ public abstract class BinnedGSHHSReader
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the bin indices containing the specified Earth area. 
+   * Gets the bin indices containing the specified earth area. 
    * 
-   * @param area the Earth area.
+   * @param area the earth area.
    *
    * @return a collection of bin indices as <code>Integer</code> objects.
    */

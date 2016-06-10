@@ -56,8 +56,8 @@ import noaa.coastwatch.util.Statistics;
 import ucar.nc2.dataset.CoordinateSystem;
 
 /**
- * All Earth data readers obtain Earth data from a data source and
- * provide it to the user in a consistent format.  An Earth data reader
+ * All earth data readers obtain earth data from a data source and
+ * provide it to the user in a consistent format.  An earth data reader
  * should do the following:
  * <ul>
  *   <li> Construct from some type of file or data stream </li>
@@ -135,17 +135,17 @@ public abstract class EarthDataReader {
 
   /**
    * Sets the data projection flag.  This is only applicable to
-   * readers that deal with Earth transforms stored as explicit Earth
+   * readers that deal with earth transforms stored as explicit Earth
    * location data.  When true, the data projection flag forces the
    * reader to return a <code>DataProjection</code> object for the
-   * Earth transform when reading explicit latitude and longitude
+   * earth transform when reading explicit latitude and longitude
    * data, rather than interpolating the data and returning a
    * <code>SwathProjection</code>.  The main difference is that a
    * <code>DataProjection</code> cannot be used to transform an
    * <code>EarthLocation</code> object into a
    * <code>DataLocation</code> object.  Generally, setting this flag
    * is only desirable if there are inherent problems with
-   * interpolating the Earth location data.  By default, the reader is
+   * interpolating the earth location data.  By default, the reader is
    * set to return a <code>SwathProjection</code>.
    *
    * @param flag the data projection flag.
@@ -211,7 +211,7 @@ public abstract class EarthDataReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth data info object. */
+  /** Gets the earth data info object. */
   public EarthDataInfo getInfo () { return (info); }
 
   ////////////////////////////////////////////////////////////
@@ -232,7 +232,7 @@ public abstract class EarthDataReader {
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Creates a new Earth data reader.
+   * Creates a new earth data reader.
    * 
    * @param source the data source.
    */
@@ -249,7 +249,7 @@ public abstract class EarthDataReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Get the Earth data source. */
+  /** Get the earth data source. */
   public String getSource () { return (source); }
 
   ////////////////////////////////////////////////////////////

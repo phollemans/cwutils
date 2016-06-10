@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: cwangles.java
-  PURPOSE: To compute various angle parameters for an Earth data file.
+  PURPOSE: To compute various angle parameters for an earth data file.
    AUTHOR: Peter Hollemans
      DATE: 2002/12/23
   CHANGES: 2003/01/16, PFH, modified for solar zenith class
@@ -43,8 +43,8 @@ import noaa.coastwatch.util.SolarZenith;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
- * <p>The angles tool computes Earth location and solar angles for an
- * Earth data file.</p>
+ * <p>The angles tool computes earth location and solar angles for an
+ * earth data file.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -52,7 +52,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  * <p>
  *   <!-- START NAME -->
- *   cwangles - computes Earth location and solar angles.
+ *   cwangles - computes earth location and solar angles.
  *   <!-- END NAME -->
  * </p>
  *
@@ -76,10 +76,10 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  * <h2>Description</h2>
  *
- * <p>The angles tool computes Earth location and solar angles for an
- * Earth data file.  Angles may be computed as scaled integer or
+ * <p>The angles tool computes earth location and solar angles for an
+ * earth data file.  Angles may be computed as scaled integer or
  * floating point values, and in radians, degrees, or cosine.  The
- * Earth location values computed refer to the center of each
+ * earth location values computed refer to the center of each
  * pixel.</p>
  *
  * <h2>Parameters</h2>
@@ -111,7 +111,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   <dd>Prints a brief help message.</dd>
  *
  *   <dt>-l, --location</dt>
- *   <dd>Specifies that Earth location latitude and longitude data
+ *   <dd>Specifies that earth location latitude and longitude data
  *   should be computed.</dd>
  *
  *   <dt>-s, --scale=FACTOR/OFFSET</dt>
@@ -459,7 +459,7 @@ public final class cwangles {
 
     System.out.println (
 "Usage: cwangles [OPTIONS] input\n" +
-"Computes Earth location and solar angles for an Earth data file.\n" +
+"Computes earth location and solar angles for an earth data file.\n" +
 "\n" +
 "Main parameters:\n" +
 "  input                      The input data file name.\n" +
@@ -468,7 +468,7 @@ public final class cwangles {
 "  -f, --float                Write angles as 32-bit floating-point values.\n"+
 "  -d, --double               Write angles as 64-bit floating-point values.\n"+
 "  -h, --help                 Show this help message.\n" +
-"  -l, --location             Compute Earth latitude/longitude values.\n" +
+"  -l, --location             Compute earth latitude/longitude values.\n" +
 "  -s, --scale=FACTOR/OFFSET  Set scale factor and offset for integer data\n" +
 "                              storage.\n" + 
 "  -u, --units=TYPE           Set angle units.  TYPE may be 'deg', 'rad',\n" +

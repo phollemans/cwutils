@@ -29,7 +29,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>ACSPOInverseGridResampler</code> class performs generic data
- * resampling between 2D Earth transforms using an inverse location
+ * resampling between 2D earth transforms using an inverse location
  * lookup method.  The steps are as follows:
  * <ol>
  *
@@ -68,8 +68,8 @@ public class ACSPOInverseGridResampler
 	   * Creates a new grid resampler from the specified source and
 	   * destination transforms.
 	   *
-	   * @param sourceTrans the source Earth transform.
-	   * @param destTrans the destination Earth transform.
+	   * @param sourceTrans the source earth transform.
+	   * @param destTrans the destination earth transform.
 	   * @param polySize the estimation polynomial size in kilometers.
 	   *
 	   * @see LocationEstimator

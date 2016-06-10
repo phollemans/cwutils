@@ -29,7 +29,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>LandMask</code> class may be used to retrieve a true or
- * false value for the presence of land at a certain Earth location.
+ * false value for the presence of land at a certain earth location.
  *
  * @author Peter Hollemans
  * @since 3.1.9
@@ -79,7 +79,7 @@ public class LandMask {
   /** The array of grids. */
   private Grid[] gridArray;
 
-  /** The array of Earth transforms. */
+  /** The array of earth transforms. */
   private EarthTransform[] transArray;
 
   ////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ public class LandMask {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the database index for the specified Earth location. */
+  /** Gets the database index for the specified earth location. */
   private int getDatabase (
     EarthLocation loc
   ) {
@@ -113,10 +113,10 @@ public class LandMask {
       case 1: return (WEST1);
       case 2: return (EAST1);
       case 3: return (EAST2);
-      default: throw new IllegalArgumentException ("Invalid Earth location");
+      default: throw new IllegalArgumentException ("Invalid earth location");
       } // switch
     case 3: return (NORTH);
-    default: throw new IllegalArgumentException ("Invalid Earth location");
+    default: throw new IllegalArgumentException ("Invalid earth location");
     } // switch
 
   } // getDatabase
@@ -136,9 +136,9 @@ public class LandMask {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the land flag for a specified Earth location.  
+   * Gets the land flag for a specified earth location.  
    * 
-   * @param loc the Earth location for the land flag.
+   * @param loc the earth location for the land flag.
    *
    * @return true if land is present, false if not.
    */

@@ -140,10 +140,10 @@ public class OrthographicProjection
    * specified projection center point.  The Earth is assumed to
    * be a sphere of radius 6370.997 km.
    * 
-   * @param projCenter the Earth location at the projection center.
+   * @param projCenter the earth location at the projection center.
    * @param dimensions the dimensions of the data grid as <code>[rows,
    * columns]</code>.
-   * @param centerLoc the Earth location at the map center.
+   * @param centerLoc the earth location at the map center.
    * @param pixelDims the pixel dimensions in meters at the projection
    * reference point as <code>[height, width]</code>.
    *

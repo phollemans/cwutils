@@ -57,7 +57,7 @@
            - Issue: There was a request for support for satellite geostationary
              projection from CF metadata, so we needed to add a generic way
              to have grid mapped projections be read and a special type of
-             Earth transform used to pass transformation calculations into 
+             earth transform used to pass transformation calculations into 
              and out of the CDM projection layer.
            2016/03/11, PFH
            - Changes: Added a nasty hack to support the geostationary projection
@@ -159,7 +159,7 @@ import ucar.nc2.time.CalendarDateRange;
  * expanded to a series of 2D variables by extending the variable
  * name for each non-geographic axis.  Datasets must:
  * <ul>
- *   <li>have the same Earth transform for all grids, and</li>
+ *   <li>have the same earth transform for all grids, and</li>
  *   <li>use either a geographic map projection with equally spaced lat/lon
  *   intervals, or a swath-style map projection with lat/lon data variables
  *   provided (since 3.3.1).</li>
@@ -239,7 +239,7 @@ public class CommonDataModelNCReader
 
   ////////////////////////////////////////////////////////////
   
-  /** Gets the Earth data info object. */
+  /** Gets the earth data info object. */
   private EarthDataInfo getGlobalInfo () throws IOException { 
 
     // TODO: Does this correctly detect the time periods in the file?
@@ -314,7 +314,7 @@ public class CommonDataModelNCReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth transform information for the dataset. */
+  /** Gets the earth transform information for the dataset. */
   private EarthTransform getTransform () throws IOException {
 
     // Get list of transforms
@@ -341,7 +341,7 @@ public class CommonDataModelNCReader
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the Earth transform information for the specified grid
+   * Gets the earth transform information for the specified grid
    * set. 
    */
   private EarthTransform getTransform (
@@ -523,12 +523,12 @@ utilities when:
         } // try
         catch (Exception e) {
           System.err.println (this.getClass() + 
-            ": Warning: Problems encountered using Earth location data");
+            ": Warning: Problems encountered using earth location data");
           e.printStackTrace();
           if (lat != null && lon != null) {
             System.err.println (this.getClass() + 
               ": Warning: Falling back on data-only projection, " +
-              "Earth location reverse lookup will not function");
+              "earth location reverse lookup will not function");
             trans = new DataProjection (lat, lon);
           } // if
         } // catch

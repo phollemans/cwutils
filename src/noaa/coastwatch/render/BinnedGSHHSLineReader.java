@@ -109,7 +109,7 @@ public abstract class BinnedGSHHSLineReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a bin index using the specified Earth location. */
+  /** Gets a bin index using the specified earth location. */
   public int getBinIndex (
     EarthLocation loc
   ) {
@@ -160,7 +160,7 @@ public abstract class BinnedGSHHSLineReader
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the south-west corner Earth location. */
+    /** Gets the south-west corner earth location. */
     public EarthLocation getCorner () { return (corner); }
 
     ////////////////////////////////////////////////////////
@@ -245,11 +245,11 @@ public abstract class BinnedGSHHSLineReader
     ////////////////////////////////////////////////////////
 
     /** 
-     * Gets an Earth vector for the specified segment.
+     * Gets an earth vector for the specified segment.
      *
      * @param index the index of the segment to convert.
      *
-     * @return the new Earth vector.
+     * @return the new earth vector.
      */
     public LineFeature getLineFeature (
       int index
@@ -305,7 +305,7 @@ public abstract class BinnedGSHHSLineReader
 
       ////////////////////////////////////////////////////
 
-      /** Gets the Earth vector for this segment. */
+      /** Gets the earth vector for this segment. */
       public LineFeature getLineFeature () {
 
         LineFeature vector = new LineFeature();
@@ -592,9 +592,9 @@ public abstract class BinnedGSHHSLineReader
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the bin indices containing the specified Earth area. 
+   * Gets the bin indices containing the specified earth area. 
    * 
-   * @param area the Earth area.
+   * @param area the earth area.
    *
    * @return a collection of bin indices as <code>Integer</code> objects.
    */

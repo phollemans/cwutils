@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: cwexport.java
-  PURPOSE: To translate Earth data to external formats.
+  PURPOSE: To translate earth data to external formats.
    AUTHOR: Mark Robinson
      DATE: 2002/07/07
   CHANGES: 2002/07/31, PFH, added extra documentation and fixes
@@ -58,7 +58,7 @@ import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 
 /**
- * <p>The export tool translates Earth data into external file
+ * <p>The export tool translates earth data into external file
  * formats.</p>
  *
  * <!-- START MAN PAGE -->
@@ -66,7 +66,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  * <h2>Name</h2>
  * <p> 
  *   <!-- START NAME -->          
- *   cwexport - translates Earth data into external file formats.
+ *   cwexport - translates earth data into external file formats.
  *   <!-- END NAME -->
  * </p>
  *
@@ -113,7 +113,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  *
  * <h2>Description</h2>
  * <p>
- * The export tool translates Earth data into external formats as
+ * The export tool translates earth data into external formats as
  * described below.  In all cases, 2D data sets are exported in row
  * major order starting from row 0.  For example, if the Earth
  * data values form the 2D array:</p>
@@ -163,7 +163,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  * 
  * <p>The output is a stream of 32-bit IEEE floating point values,
  * ready for input to ArcGIS applications as a binary grid file.  A
- * header file may also be created to specify the Earth location and
+ * header file may also be created to specify the earth location and
  * other parameters.  In the case of the ArcGIS format, only one variable
  * is allowed per binary grid file.  If an attempt to export multiple
  * variables is made, only the first variable is actually written.</p>
@@ -810,7 +810,7 @@ public class cwexport {
 
     System.out.println (
 "Usage: cwexport [OPTIONS] input output\n" +
-"Translates Earth data into external formats.\n" +
+"Translates earth data into external formats.\n" +
 "\n" +
 "Main parameters:\n" +
 "  input                      The input data file name.\n" +

@@ -38,7 +38,7 @@ import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
- * A text writer is an Earth data writer that writes variable data
+ * A text writer is an earth data writer that writes variable data
  * as a series of lines in an ASCII text file.  An optional dimension
  * header may be prepended to each variable.
  *
@@ -92,7 +92,7 @@ public class TextWriter
   /** 
    * Sets coordinate printing.
    *
-   * @param coords the coordinate flag.  If true, the Earth location
+   * @param coords the coordinate flag.  If true, the earth location
    * coordinates are printed along with each data value in the order
    * latitude, longitude.  Otherwise no coordinates are printed. 
    */
@@ -152,13 +152,13 @@ public class TextWriter
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new text file from the specified Earth data info
+   * Creates a new text file from the specified earth data info
    * and file name.  By default, each line contains the latitude,
    * longitude, and data value to 6 decimal places, separated by a
    * space with no header line.  The double value
    * <code>Double.NaN</code> is used for the missing value.
    *
-   * @param info the Earth data info object.
+   * @param info the earth data info object.
    * @param file the new binary file name.
    *
    * @throws IOException if an error occurred opening the file.
@@ -297,7 +297,7 @@ public class TextWriter
     int values = var.getValues();
     for (int i = 0; i < values; i++) {
 
-      // Print Earth location
+      // Print earth location
       // --------------------
       DataLocation loc = new DataLocation (i, dims);
       if (coords) {

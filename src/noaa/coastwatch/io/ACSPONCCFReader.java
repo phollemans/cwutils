@@ -103,7 +103,7 @@ public class ACSPONCCFReader
 
   ////////////////////////////////////////////////////////////
   
-  /** Gets the Earth data info object. */
+  /** Gets the earth data info object. */
   private EarthDataInfo getGlobalInfo () throws IOException {
 
     // Check that we have ACSPO data
@@ -179,7 +179,7 @@ public class ACSPONCCFReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth transform information. */
+  /** Gets the earth transform information. */
   private EarthTransform getTransform () {
 
     // Create swath
@@ -200,12 +200,12 @@ public class ACSPONCCFReader
     } // try
     catch (Exception e) {
       System.err.println (this.getClass() + 
-        ": Warning: Problems encountered using Earth location data");
+        ": Warning: Problems encountered using earth location data");
       e.printStackTrace();
       if (lat != null && lon != null) {
         System.err.println (this.getClass() + 
           ": Warning: Falling back on data-only projection, " +
-          "Earth location reverse lookup will not function");
+          "earth location reverse lookup will not function");
         trans = new DataProjection (lat, lon);
       } // if
     } // catch

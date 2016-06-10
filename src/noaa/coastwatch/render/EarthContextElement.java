@@ -1,16 +1,16 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthContextElement.java
-  PURPOSE: A class to handle an Earth context annotation element.
+  PURPOSE: A class to handle an earth context annotation element.
    AUTHOR: Peter Hollemans
      DATE: 2002/09/30
   CHANGES: 2002/10/23, PFH, set default stroke to beveled joins
            2002/22/08, PFH, added minimum context resolution
            2002/12/03, PFH, modified for map projection changes
-           2002/12/12, PFH, modified for Earth vector transform() change
+           2002/12/12, PFH, modified for earth vector transform() change
            2002/12/30, PFH, changed to use binned GSHHS reader
            2003/01/15, PFH, modified for global re-centerable views, grid
-             lines, Earth edge, and solar zenith terminator
+             lines, earth edge, and solar zenith terminator
            2003/03/29, PFH, added bounding box polygon check for swath
            2003/10/04, PFH, added handling for null coastline data
            2003/11/16, PFH
@@ -25,7 +25,7 @@
            2004/04/01, PFH, added render() exception for invalid transform
            2004/09/30, PFH, modified to use EarthTransform.getBoundingBox()
            2005/02/01, PFH, changed to output warnings to System.out
-           2005/05/21, PFH, modified to handle Earth location datum
+           2005/05/21, PFH, modified to handle earth location datum
            2005/05/27, PFH, modified to not draw discontinuous polygons
            2005/12/20, PFH, corrected label colors to match docs
            2006/05/26, PFH, modified to use SpheroidConstants
@@ -90,16 +90,16 @@ import noaa.coastwatch.util.trans.SpheroidConstants;
 import noaa.coastwatch.util.trans.SwathProjection;
 
 /**
- * The Earth context element is a picture element that renders a
- * simplified view of the Earth with coastlines and the bounding boxes
- * of a number of arbitrarily shaped areas.  The Earth is shown in an
+ * The earth context element is a picture element that renders a
+ * simplified view of the earth with coastlines and the bounding boxes
+ * of a number of arbitrarily shaped areas.  The earth is shown in an
  * orthographic projection.  The picture element is designed similarly
  * to a National Geographic magazine map legend, which shows a little
  * version of the big map with extra context information around it in
  * the form of coastlines and grid lines in order to give the user
- * some idea of where on the Earth the current map is located.  In a
+ * some idea of where on the earth the current map is located.  In a
  * context element, the "context area" is the area of interest,
- * usually the boundaries of some Earth dataset.  By default the
+ * usually the boundaries of some earth dataset.  By default the
  * largest dimension of the context area is about 15% of the element
  * size.  This size factor may be set, along with other properties
  * such as the center point and context area itself.<p>
@@ -164,10 +164,10 @@ public class EarthContextElement
   /** The list of polygon colors. */
   private List colors;
 
-  /** The Earth image transform for geographic to image coordinates. */
+  /** The earth image transform for geographic to image coordinates. */
   private EarthImageTransform earthImageTrans;
 
-  /** The context Earth transform. */
+  /** The context earth transform. */
   private EarthTransform contextTrans;
 
   /** The context upper-left corner data coordinates. */
@@ -241,7 +241,7 @@ public class EarthContextElement
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the edge flag to render the Earth edges. */
+  /** Sets the edge flag to render the earth edges. */
   public void setEdge (boolean flag) { showEdge = flag; }
 
   ////////////////////////////////////////////////////////////
@@ -272,7 +272,7 @@ public class EarthContextElement
    * is created by tracing the edges of the data window at regular
    * intervals to form a closed polygon.
    *
-   * @param trans the Earth transform for converting data to
+   * @param trans the earth transform for converting data to
    * geographic coordinates.
    * @param upperLeft the upper-left corner of the data window.
    * @param lowerRight the lower-right corner of the data window.
@@ -330,7 +330,7 @@ public class EarthContextElement
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the Earth transform used in the context area, or null if no
+   * Gets the earth transform used in the context area, or null if no
    * context area is defined. 
    */
   public EarthTransform getTransform() { return (contextTrans); }
@@ -339,10 +339,10 @@ public class EarthContextElement
 
   /** 
    * Sets the area which should be used as the center of attention in
-   * the context element using an Earth area object.  The context area
+   * the context element using an earth area object.  The context area
    * apears centered and magnified.
    *
-   * @param area the Earth area to use for the context area.  The area
+   * @param area the earth area to use for the context area.  The area
    * center point and context size are determined by examining the
    * extreme latitude and longitude values.
    *
@@ -380,10 +380,10 @@ public class EarthContextElement
 
   /**
    * Sets the area which should be used as the center of attention in
-   * the context element using an Earth transform and data location
+   * the context element using an earth transform and data location
    * bounds.  The context area appears centered and magnified.
    *
-   * @param trans the Earth transform for converting data to
+   * @param trans the earth transform for converting data to
    * geographic coordinates.
    * @param upperLeft the upper-left corner of the data window.
    * @param lowerRight the lower-right corner of the data window.
@@ -458,7 +458,7 @@ public class EarthContextElement
       );
     } catch (Exception e) { return (null); }
 
-    // Create Earth image transform
+    // Create earth image transform
     // ----------------------------
     try { return (new EarthImageTransform (imageDims, center, 1, map)); }
     catch (Exception e) { return (null); }
@@ -471,7 +471,7 @@ public class EarthContextElement
    * Gets a local map projection appropriate for the specified context
    * area.
    *
-   * @param trans the Earth transform for converting data to
+   * @param trans the earth transform for converting data to
    * geographic coordinates.
    * @param upperLeft the upper-left corner of the data window.
    * @param lowerRight the lower-right corner of the data window.
@@ -514,7 +514,7 @@ public class EarthContextElement
    * Gets a global map projection appropriate for the specified
    * context center.
    *
-   * @param center the center Earth location.
+   * @param center the center earth location.
    *
    * @return the context map projection.
    */
@@ -547,7 +547,7 @@ public class EarthContextElement
       );
     } catch (Exception e) { return (null); }
 
-    // Create Earth image transform
+    // Create earth image transform
     // ----------------------------
     try { return (new EarthImageTransform (imageDims, center, 1, map)); }
     catch (Exception e) { return (null); }
@@ -570,7 +570,7 @@ public class EarthContextElement
   /**
    * Adds a bounding box to this context element.
    *
-   * @param polygon the bounding box Earth location polygon points.
+   * @param polygon the bounding box earth location polygon points.
    * @param color the bounding box color.
    * @param label the bounding box label, or null for no label.
    */
@@ -603,12 +603,12 @@ public class EarthContextElement
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new Earth context element from the specified properties.
+   * Creates a new earth context element from the specified properties.
    *
    * @param position the top-left corner position of the picture.
    * @param size the preferred size of the picture (see {@link
    * PictureElement#setPreferredSize}).
-   * @param trans the Earth transform for converting data to
+   * @param trans the earth transform for converting data to
    * geographic coordinates.
    * @param upperLeft the upper-left corner of the context data window.
    * @param lowerRight the lower-right corner of the context data window.
@@ -668,7 +668,7 @@ public class EarthContextElement
   ////////////////////////////////////////////////////////////
 
   /**
-   * Sets the Earth context center projection point.  This has the
+   * Sets the earth context center projection point.  This has the
    * effect of changing the context element to a global view centered
    * on the specified location.
    * 
@@ -692,7 +692,7 @@ public class EarthContextElement
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the context element center Earth location. */
+  /** Gets the context element center earth location. */
   public EarthLocation getCenter () {
 
     Dimension imageDims = 
@@ -706,7 +706,7 @@ public class EarthContextElement
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new Earth context element showing the entire Earth.
+   * Creates a new earth context element showing the entire Earth.
    *
    * @see #setContextCenter
    *
@@ -733,9 +733,9 @@ public class EarthContextElement
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new Earth context element from the specified properties.
+   * Creates a new earth context element from the specified properties.
    *
-   * @param trans the Earth transform for converting data to
+   * @param trans the earth transform for converting data to
    * geographic coordinates.
    * @param upperLeft the upper-left corner of the context data window.
    * @param lowerRight the lower-right corner of the context data window.
@@ -803,7 +803,7 @@ public class EarthContextElement
     // Check for valid transform
     // -------------------------
     if (earthImageTrans == null) {
-      throw new RuntimeException ("Cannot render with null Earth transform");
+      throw new RuntimeException ("Cannot render with null earth transform");
     } // if
 
     // Initialize
@@ -1094,7 +1094,7 @@ public class EarthContextElement
    * @param index the index of the desired polygon bounding box,
    * in the range [0..boxes-1].
    *
-   * @return the bounding box as a list of Earth locations.
+   * @return the bounding box as a list of earth locations.
    *
    * @see #getBoundingBoxes
    * @see #addBoundingBox
@@ -1109,7 +1109,7 @@ public class EarthContextElement
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current Earth image transform for this element. */
+  /** Gets the current earth image transform for this element. */
   public EarthImageTransform getEarthImageTransform () { 
 
     return (earthImageTrans);

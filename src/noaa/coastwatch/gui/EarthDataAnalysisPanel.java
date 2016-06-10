@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthDataAnalysisPanel.java
-  PURPOSE: Groups together related Earth data view and chooser
+  PURPOSE: Groups together related earth data view and chooser
            components in one panel.
    AUTHOR: Peter Hollemans
      DATE: 2004/02/17
@@ -79,7 +79,7 @@ import noaa.coastwatch.render.Palette;
 
 /**
  * The <code>EarthDataAnalysisPanel</code> groups together a variety
- * of Earth data view and chooser components into one main panel that
+ * of earth data view and chooser components into one main panel that
  * may be used to display the contents of a
  * <code>EarthDataReader</code> object.  The grouped components
  * are:
@@ -210,7 +210,7 @@ public class EarthDataAnalysisPanel
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the Earth data view from the view panel.
+   * Gets the earth data view from the view panel.
    *
    * @return the data view.
    */

@@ -8,7 +8,7 @@
            2004/10/12, PFH
            - fixed zero contour levels problem
            - added setLevelNudge() for contouring problems
-           2005/05/21, PFH, modified to handle Earth location datum
+           2005/05/21, PFH, modified to handle earth location datum
            2005/05/26, PFH, changed vectorList to featureList
 
     NOTES: The algorithm for contouring gridded data values using a
@@ -52,7 +52,7 @@ import noaa.coastwatch.util.trans.Datum;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
- * A contour generator creates lists of Earth data points that follow
+ * A contour generator creates lists of earth data points that follow
  * lines of constant value in a gridded dataset.  A contour generator
  * may be used, for example, to create bathymetry or topographic
  * contours from digital elevation model data, or to create contour
@@ -101,7 +101,7 @@ public class ContourGenerator
   /** The grid data for contouring. */
   private Grid grid;
 
-  /** The Earth transform for the grid data. */
+  /** The earth transform for the grid data. */
   private EarthTransform trans;
 
   /** The contour levels to generate. */
@@ -204,7 +204,7 @@ public class ContourGenerator
    * <code>select()</code> is made.
    *
    * @param grid the grid data for contouring.
-   * @param trans the Earth transform for the grid.   
+   * @param trans the earth transform for the grid.   
    */
   public ContourGenerator (
     Grid grid,
@@ -264,10 +264,10 @@ public class ContourGenerator
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the contour level of the Earth vector at the specified
+   * Gets the contour level of the earth vector at the specified
    * index.
    *
-   * @param index the Earth vector index.
+   * @param index the earth vector index.
    *
    * @return the contour level value for the specified vector.
    *
@@ -737,7 +737,7 @@ public class ContourGenerator
     ////////////////////////////////////////////////////////
 
     /** 
-     * Gets the contour as a list of Earth vector objects.
+     * Gets the contour as a list of earth vector objects.
      */
     public List getContour () {
 

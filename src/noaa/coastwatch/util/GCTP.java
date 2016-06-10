@@ -45,7 +45,7 @@ import noaa.coastwatch.util.trans.GCTPStyleProjection;
 /**
  * The static routines in the General Cartographic Transformations
  * Package (GCTP) class handle the transformation of data coordinates
- * between common Earth projection systems.  The class is simply a
+ * between common earth projection systems.  The class is simply a
  * Java wrapper for the GCTP package in C.  See the <a
  * href="http://edcwww.cr.usgs.gov/pub/software/gctpc">GCTPC</a>
  * package documentation for full documentation on routine parameters
@@ -362,7 +362,7 @@ public class GCTP
 
   /**
    * Determines if the projection system supports the specified
-   * spheroid Earth model.  This is the preferred method now over
+   * spheroid earth model.  This is the preferred method now over
    * {@link #supportsSpheroid} because it gives more specific
    * information about spheroids supported.  This routine should be
    * used prior to creating a map projection with the 
@@ -452,7 +452,7 @@ public class GCTP
  
   /**
    * Determines if the projection system supports a generic
-   * spheroid Earth model, or only a perfect sphere.
+   * spheroid earth model, or only a perfect sphere.
    * 
    * @param system the projection system code.
    *

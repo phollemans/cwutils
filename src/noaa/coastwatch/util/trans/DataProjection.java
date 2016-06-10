@@ -30,7 +30,7 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.trans.EarthTransform2D;
 
 /**
- * The <code>DataProjection</code> class implements Earth transform
+ * The <code>DataProjection</code> class implements earth transform
  * calculations for data coordinates with explicit latitude and
  * longitude data.  The only possible operation is translation from
  * data coordinates to geographic coordinates -- the reverse is not

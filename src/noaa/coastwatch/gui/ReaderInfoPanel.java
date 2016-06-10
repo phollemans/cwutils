@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: ReaderInfoPanel.java
-  PURPOSE: To show information from an Earth data reader.
+  PURPOSE: To show information from an earth data reader.
    AUTHOR: Peter Hollemans
      DATE: 2004/02/17
   CHANGES: 2004/11/24, PFH, extended to print transform info

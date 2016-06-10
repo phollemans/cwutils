@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthDataInfo.java
-  PURPOSE: A class to hold all the essential Earth data 
+  PURPOSE: A class to hold all the essential earth data 
            information, along with additional attributes if needed.
            The hash map acts as a catch-all container for attribute
            key/value pairs.
@@ -210,7 +210,7 @@ public class EarthDataInfo
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth transform object. */
+  /** Gets the earth transform object. */
   public EarthTransform getTransform () { return (trans); }
 
   ////////////////////////////////////////////////////////////
@@ -226,14 +226,14 @@ public class EarthDataInfo
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Constructs a new Earth data info object with the specified
+   * Constructs a new earth data info object with the specified
    * properties.
    * 
    * @param source the data source.  The source name should be a data
    * collection instrument or numerical model name using to collect or
    * generate the data.
    * @param periodList the list of data recording time periods.
-   * @param trans the Earth transform.  The transform specifies the
+   * @param trans the earth transform.  The transform specifies the
    * translation between data array coordinates and geographic
    * coordinates.  The parameter is null if no transform is known.
    * @param origin the original data producer.  The origin should be
@@ -264,7 +264,7 @@ public class EarthDataInfo
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Constructs a new Earth data info object with the specified
+   * Constructs a new earth data info object with the specified
    * properties.
    * 
    * @param source the data source.  The source name should be a data
@@ -273,7 +273,7 @@ public class EarthDataInfo
    * @param date the data recording date.  It is assumed that the data
    * was recorded on the specified date and time, with essentially no
    * time duration.
-   * @param trans the Earth transform.  The transform specifies the
+   * @param trans the earth transform.  The transform specifies the
    * translation between data array coordinates and geographic
    * coordinates.  The parameter is null if no transform is known.
    * @param origin the original data producer.  The origin should be
@@ -301,9 +301,9 @@ public class EarthDataInfo
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Sets the Earth transform.
+   * Sets the earth transform.
    *
-   * @param trans the new Earth transform to use.
+   * @param trans the new earth transform to use.
    */
   public void setTransform (
     EarthTransform trans
@@ -454,7 +454,7 @@ public class EarthDataInfo
     if (!this.getClass().equals (appendInfo.getClass()))
       throw new IllegalArgumentException ("Classes do not match");
 
-    // Check Earth transforms
+    // Check earth transforms
     // ----------------------
     if (!this.getTransform().equals (appendInfo.getTransform()))
       throw new IllegalArgumentException ("Transforms do not match");

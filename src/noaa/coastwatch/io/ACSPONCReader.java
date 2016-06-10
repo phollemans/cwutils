@@ -110,7 +110,7 @@ public class ACSPONCReader
 
   ////////////////////////////////////////////////////////////
   
-  /** Gets the Earth data info object. */
+  /** Gets the earth data info object. */
   private EarthDataInfo getGlobalInfo () throws IOException {
 
     // Get simple attributes
@@ -172,7 +172,7 @@ public class ACSPONCReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth transform information. */
+  /** Gets the earth transform information. */
   private EarthTransform getTransform () throws IOException {
 
     EarthTransform trans;
@@ -196,7 +196,7 @@ public class ACSPONCReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth transform information for geostationary projection. */
+  /** Gets the earth transform information for geostationary projection. */
   private EarthTransform getGeoTransform () throws IOException {
 
     /**
@@ -261,7 +261,7 @@ public class ACSPONCReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth transform information for swath projection. */
+  /** Gets the earth transform information for swath projection. */
   private EarthTransform getSwathTransform () throws IOException {
 	   
     // Create swath
@@ -282,12 +282,12 @@ public class ACSPONCReader
     } // try
     catch (Exception e) {
       System.err.println (this.getClass() + 
-        ": Warning: Problems encountered using Earth location data");
+        ": Warning: Problems encountered using earth location data");
       e.printStackTrace();
       if (lat != null && lon != null) {
         System.err.println (this.getClass() + 
           ": Warning: Falling back on data-only projection, " +
-          "Earth location reverse lookup will not function");
+          "earth location reverse lookup will not function");
         trans = new DataProjection (lat, lon);
       } // if
     } // catch

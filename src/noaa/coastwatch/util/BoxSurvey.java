@@ -116,7 +116,7 @@ public class BoxSurvey
    * Creates a new box survey.
    * 
    * @param variable the survey variable.
-   * @param trans the survey variable Earth transform.
+   * @param trans the survey variable earth transform.
    * @param start the box starting location.
    * @param end the box ending location.  The ending location must
    * have coordinates &gt;= the starting location.

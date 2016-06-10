@@ -34,7 +34,7 @@ import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
- * The Earth image transform class translates between 2D geographic
+ * The earth image transform class translates between 2D geographic
  * coordinates in latitude, longitude and image coordinates in x, y.
  *
  * @author Peter Hollemans
@@ -42,7 +42,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  */
 public class EarthImageTransform {
 
-  /** The Earth transform for geo<-->data. */
+  /** The earth transform for geo<-->data. */
   private EarthTransform earthTrans;
 
   /** The image transform for data<-->image. */
@@ -50,7 +50,7 @@ public class EarthImageTransform {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth transform. */
+  /** Gets the earth transform. */
   public EarthTransform getEarthTransform () { return (earthTrans); }
 
   ////////////////////////////////////////////////////////////
@@ -61,9 +61,9 @@ public class EarthImageTransform {
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Constructs an Earth image transform with the specified parameters.
+   * Constructs an earth image transform with the specified parameters.
    *
-   * @param earthTrans the Earth transform.
+   * @param earthTrans the earth transform.
    * @param imageTrans the image transform.
    */
   public EarthImageTransform (
@@ -79,13 +79,13 @@ public class EarthImageTransform {
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Constructs a new Earth image transform from the specified image
+   * Constructs a new earth image transform from the specified image
    * dimensions and geographic center.
    *
    * @param imageDims the image dimensions.
-   * @param center the center Earth location.
+   * @param center the center earth location.
    * @param scales the image to data scaling factors as [row, column].
-   * @param earthTrans the Earth transform.
+   * @param earthTrans the earth transform.
    *
    * @throws NoninvertibleTransformException if the image to data
    * transform is not invertible.
@@ -112,13 +112,13 @@ public class EarthImageTransform {
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Constructs a new Earth image transform from the specified image
+   * Constructs a new earth image transform from the specified image
    * dimensions and geographic center.
    *
    * @param imageDims the image dimensions.
-   * @param center the center Earth location.
+   * @param center the center earth location.
    * @param scale the image to data scaling factor.
-   * @param earthTrans the Earth transform.
+   * @param earthTrans the earth transform.
    *
    * @throws NoninvertibleTransformException if the image to data
    * transform is not invertible.
@@ -226,18 +226,18 @@ public class EarthImageTransform {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Determines if a segment running from one Earth location to
+   * Determines if a segment running from one earth location to
    * another is discontinuous in the image space.  The calculation
    * uses a heuristic, so in some extreme cases it may not return the
    * correct answer.
    *
-   * @param e1 the first Earth location.
-   * @param e2 the second Earth location.
+   * @param e1 the first earth location.
+   * @param e2 the second earth location.
    * @param p1 the first image point (or null to calculate).
    * @param p2 the second image point (or null to calculate).
    *
    * @return true if the segment is discontinuous, or false if not or
-   * if the Earth locations could not be resolved to image points.
+   * if the earth locations could not be resolved to image points.
    */
   public boolean isDiscontinuous (
     EarthLocation e1,

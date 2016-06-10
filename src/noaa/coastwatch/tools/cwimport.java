@@ -47,14 +47,14 @@ import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
- * <p>The import tool translates Earth data into CoastWatch HDF format.</p> 
+ * <p>The import tool translates earth data into CoastWatch HDF format.</p> 
  *
  * <!-- START MAN PAGE -->
  *
  * <h2>Name</h2>
  * <p>
  *   <!-- START NAME -->
- *   cwimport - translates Earth data into CoastWatch HDF.
+ *   cwimport - translates earth data into CoastWatch HDF.
  *   <!-- END NAME -->
  * </p>
  *
@@ -72,9 +72,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * </p>
  *
  * <h2>Description</h2>
- * <p> The import tool translates Earth data into
+ * <p> The import tool translates earth data into
  * CoastWatch HDF format.  Multiple input files may be specified, but
- * must have matching Earth transforms and dates.  The utility loops
+ * must have matching earth transforms and dates.  The utility loops
  * over all input files and creates a single CoastWatch HDF output
  * file.  The utility does not handle multiple variables with the same
  * name -- if a variable in an input file is encountered with the same
@@ -91,7 +91,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   <dt> input1 [input2 ...] </dt>
  *   <dd> The input data file name(s).  At least one input file is
  *   required.  If multiple files are specified, they must have
- *   matching dates and Earth transforms.  The currently supported
+ *   matching dates and earth transforms.  The currently supported
  *   input formats are CoastWatch HDF, CoastWatch IMGMAP, TeraScan
  *   HDF, and NOAA 1b format GAC/LAC/HRPT AVHRR. </dd>
  *
@@ -142,7 +142,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input or output file names. </li>
  *   <li> Unsupported input file format. </li>
- *   <li> Input file dates or Earth transforms do not match. </li>
+ *   <li> Input file dates or earth transforms do not match. </li>
  * </ul>
  *
  * <h2>Examples</h2>
@@ -355,7 +355,7 @@ public final class cwimport {
 
     System.out.println (
 "Usage: cwimport [OPTIONS] input1 [input2 ...] output\n" +
-"Translates Earth data into CoastWatch HDF format.\n" +
+"Translates earth data into CoastWatch HDF format.\n" +
 "\n" +
 "Main parameters:\n" +
 "  input1 [input2 ...]        The input data file name(s).\n" +

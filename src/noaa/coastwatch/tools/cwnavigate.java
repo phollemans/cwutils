@@ -40,14 +40,14 @@ import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * <p>The navigation tool adds navigation corrections to 2D variables
- * in an Earth data file.</p>
+ * in an earth data file.</p>
  *
  * <!-- START MAN PAGE -->
  *
  * <h2>Name</h2>
  * <p>
  *   <!-- START NAME -->
- *   cwnavigate - adds navigation corrections to Earth data.
+ *   cwnavigate - adds navigation corrections to earth data.
  *   <!-- END NAME -->
  * </p>
  *
@@ -72,11 +72,11 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * <h2>Description</h2>
  *
  * <p>The navigation tool adds navigation corrections to 2D variables
- * in an Earth data file by setting navigation transform
+ * in an earth data file by setting navigation transform
  * parameters.  The most basic navigation transform consists of
  * additive translation in the row and column data coordinates.  As an
  * example of translation, the following diagram shows coastlines in
- * the Earth image data as a '.' (period) symbol and coastlines
+ * the earth image data as a '.' (period) symbol and coastlines
  * derived from a GIS database as a '*' (star).  Translation has been
  * used to correct the position of the image data:</p>
  * <pre>
@@ -407,7 +407,7 @@ public final class cwnavigate {
 "       cwnavigate [OPTIONS] {-r, --rotate=ANGLE} input\n" +
 "       cwnavigate [OPTIONS] {-a, --affine=A/B/C/D/E/F} input\n" +
 "       cwnavigate [OPTIONS] {-R, --reset} input\n" +
-"Adds navigation corrections to 2D variables in an Earth data file\n" +
+"Adds navigation corrections to 2D variables in an earth data file\n" +
 "by setting navigation transform parameters.\n" +
 "\n" +
 "Main parameters:\n" +

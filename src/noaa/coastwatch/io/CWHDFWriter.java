@@ -106,7 +106,7 @@ import noaa.coastwatch.util.trans.SensorScanProjection;
 import noaa.coastwatch.util.trans.SwathProjection;
 
 /**
- * A CoastWatch HDF writer is an Earth data writer that writes
+ * A CoastWatch HDF writer is an earth data writer that writes
  * CoastWatch HDF format files using the HDF library class.
  *
  * @author Peter Hollemans
@@ -271,7 +271,7 @@ public class CWHDFWriter
    * writer settings are determined from the system properties and
    * defaults constants.
    * 
-   * @param info the Earth data info object.
+   * @param info the earth data info object.
    * @param file the new HDF file name.
    *
    * @throws HDFException if an error occurred in an HDF routine.
@@ -297,7 +297,7 @@ public class CWHDFWriter
    * writer settings are determined from the system properties and
    * defaults constants, except for the metadata version.
    * 
-   * @param info the Earth data info object.
+   * @param info the earth data info object.
    * @param version the metadata version.
    * @param file the new HDF file name.
    *
@@ -438,11 +438,11 @@ public class CWHDFWriter
   ////////////////////////////////////////////////////////////
 
   /**
-   * Writes the Earth transform information.  The projection metadata
+   * Writes the earth transform information.  The projection metadata
    * in the HDF file is converted from the equivalent {@link
    * EarthTransform}.
    *
-   * @param trans the Earth transform to write.
+   * @param trans the earth transform to write.
    *
    * @throws HDFException if there were errors writing the HDF metadata.
    * @throws ClassNotFoundException if the HDF attribute type is unknown.
@@ -574,7 +574,7 @@ public class CWHDFWriter
     // ---------------------
     else
       throw new UnsupportedEncodingException (
-        "Unsupported Earth transform");
+        "Unsupported earth transform");
 
     // Write transform dimensions
     // --------------------------
@@ -582,7 +582,7 @@ public class CWHDFWriter
     setAttribute (sdid, "rows", new Integer (dims[0]));
     setAttribute (sdid, "cols", new Integer (dims[1]));
 
-    // Write Earth polygon data
+    // Write earth polygon data
     // ------------------------
     DataLocation min = new DataLocation (0, 0);
     DataLocation max = new DataLocation (dims[Grid.ROWS]-1, 

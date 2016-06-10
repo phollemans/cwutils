@@ -60,7 +60,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
 
 /** 
  * The <code>DataSavePanel</code> class is the abstract parent of all
- * data save panels, which allow the user to export Earth data to
+ * data save panels, which allow the user to export earth data to
  * various file formats.  To export data, create a new panel with the
  * <code>create()</code> method, then call the <code>write()</code>
  * method.  Generally, the save panel is enclosed in a dialog with OK
@@ -75,13 +75,13 @@ public abstract class DataSavePanel
   // Variables 
   // ---------
 
-  /** The Earth data reader to use for data. */
+  /** The earth data reader to use for data. */
   protected EarthDataReader reader;
 
   /** The list of variables for export. */
   protected List variableList;
 
-  /** The current Earth view. */
+  /** The current earth view. */
   protected EarthDataView view;
 
   /** The subset panel used for creating data subsets. */
@@ -303,7 +303,7 @@ public abstract class DataSavePanel
     else if (view instanceof ColorComposite)
       grid = ((ColorComposite) view).getGrids()[0];
     else 
-      throw new IllegalStateException ("Unknown Earth data view");
+      throw new IllegalStateException ("Unknown earth data view");
 
     return (grid);
 

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthContextPanel.java
-  PURPOSE: To display an Earth context element.
+  PURPOSE: To display an earth context element.
    AUTHOR: Peter Hollemans
      DATE: 2003/01/15
   CHANGES: 2005/05/27, PFH, modified to use getFastMode() to save/restore mode
@@ -29,7 +29,7 @@ import noaa.coastwatch.render.LineFeature;
 import noaa.coastwatch.util.EarthLocation;
 
 /**
- * The Earth context panel displays an Earth context element.
+ * The earth context panel displays an earth context element.
  *
  * @see EarthContextElement
  *
@@ -50,7 +50,7 @@ public class EarthContextPanel
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new Earth context panel showing the entire globe.
+   * Creates a new earth context panel showing the entire globe.
    */
   public EarthContextPanel () {
 
@@ -61,9 +61,9 @@ public class EarthContextPanel
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new Earth context panel.
+   * Creates a new earth context panel.
    *
-   * @param element the Earth context element for display.
+   * @param element the earth context element for display.
    */
   public EarthContextPanel (
     EarthContextElement element

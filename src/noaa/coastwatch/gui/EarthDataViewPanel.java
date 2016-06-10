@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthDataViewPanel.java
-  PURPOSE: A class to display an Earth data view.
+  PURPOSE: A class to display an earth data view.
    AUTHOR: Peter Hollemans
      DATE: 2002/12/04
   CHANGES: 2003/04/19, PFH, added rendering progress mode to view
@@ -132,7 +132,7 @@ public class EarthDataViewPanel
   // Variables
   // ---------
 
-  /** The Earth data view for rendering. */
+  /** The earth data view for rendering. */
   private EarthDataView view;
 
   /** 
@@ -255,7 +255,7 @@ public class EarthDataViewPanel
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the Earth data view.
+   * Gets the earth data view.
    *
    * @return the data view.
    */
@@ -264,7 +264,7 @@ public class EarthDataViewPanel
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Sets the Earth data view.
+   * Sets the earth data view.
    *
    * @param view the new data view.
    */
@@ -623,9 +623,9 @@ public class EarthDataViewPanel
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new Earth data view panel using the specified view.
+   * Creates a new earth data view panel using the specified view.
    *
-   * @param view the Earth data view to display.
+   * @param view the earth data view to display.
    */
   public EarthDataViewPanel (
     EarthDataView view
@@ -858,7 +858,7 @@ public class EarthDataViewPanel
     /**
      * Creates a track bar with the specified fields.
      *
-     * @param earthLoc the Earth location field flag, true for
+     * @param earthLoc the earth location field flag, true for
      * latitude and longitude display.
      * @param dataLoc the data location field flag, true for data row
      * and column display.
@@ -877,7 +877,7 @@ public class EarthDataViewPanel
       // -------------
       setLayout (new BoxLayout (this, BoxLayout.X_AXIS));
 
-      // Add Earth location fields
+      // Add earth location fields
       // -------------------------
       textFields = new JTextField[MAX_FIELDS];
       if (earthLoc) {
@@ -968,7 +968,7 @@ public class EarthDataViewPanel
       p.translate (-origin.x, -origin.y);
       boolean valid = new Rectangle (view.getSize (null)).contains (p);
 
-      // If valid, get data and Earth locations
+      // If valid, get data and earth locations
       // --------------------------------------
       DataLocation dataLoc = null;
       EarthLocation earthLoc = null;
@@ -1002,7 +1002,7 @@ public class EarthDataViewPanel
         textFields[COL_FIELD].setText (col);
       } // if
 
-      // Update Earth location
+      // Update earth location
       // ---------------------
       if (textFields[LAT_FIELD] != null) {
         String lat, lon;

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: cwmath.java
-  PURPOSE: To combine Earth data variables using an expression.
+  PURPOSE: To combine earth data variables using an expression.
    AUTHOR: Peter Hollemans
      DATE: 2003/04/20
   CHANGES: 2003/05/22, PFH, added bitwise or/and functions
@@ -76,14 +76,14 @@ import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
 
 /**
- * <p>The math tool combines Earth data using a mathematical expression.</p>
+ * <p>The math tool combines earth data using a mathematical expression.</p>
  *
  * <!-- START MAN PAGE -->
  *
  * <h2>Name</h2>
  * <p>
  *   <!-- START NAME -->
- *   cwmath - combines Earth data using a mathematical expression.
+ *   cwmath - combines earth data using a mathematical expression.
  *   <!-- END NAME -->
  * </p>
  *
@@ -108,7 +108,7 @@ import org.nfunk.jep.Node;
  * </p>
  *
  * <h2>Description</h2>
- * <p> The math tool combines Earth data using a mathematical
+ * <p> The math tool combines earth data using a mathematical
  * expression.  The expression takes the form:</p>
  * <pre>
  *   variable = formula
@@ -415,7 +415,7 @@ import org.nfunk.jep.Node;
  *   <dd>The output data file name.  If specified and the file does not
  *   already exist, it will be created using metadata from the first
  *   input file.  If it does exist, it will be opened and checked for
- *   a compatible Earth transform and the new variable data will be
+ *   a compatible earth transform and the new variable data will be
  *   added to the file.  The new variable created by the expression
  *   must not already exist in the output file.  The output file can
  *   be one of the input files if needed.</dd>
@@ -1114,7 +1114,7 @@ public final class cwmath {
     System.out.println (
 "Usage: cwmath [OPTIONS] input\n" +
 "       cwmath [OPTIONS] input1 [input2 ...] output\n" +
-"Combines Earth data using a mathematical expression.\n" +
+"Combines earth data using a mathematical expression.\n" +
 "\n" +
 "Main parameters:\n" +
 "  input                      The single input/output data file name.\n" +

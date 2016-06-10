@@ -962,7 +962,7 @@ public class EarthDataViewController {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current Earth data view. */
+  /** Gets the current earth data view. */
   private EarthDataView getView() { 
 
     if (viewIsComposite) return (compositeView);
@@ -999,7 +999,7 @@ public class EarthDataViewController {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current Earth data view navigation. */
+  /** Gets the current earth data view navigation. */
   private AffineTransform getNavigation() { 
 
     if (viewIsComposite) return (compositeView.getGrids()[0].getNavigation());

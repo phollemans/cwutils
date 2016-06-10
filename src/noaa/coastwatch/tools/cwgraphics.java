@@ -51,14 +51,14 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
- * <p>The graphics tool creates Earth data annotation graphics.</p>
+ * <p>The graphics tool creates earth data annotation graphics.</p>
  *
  * <!-- START MAN PAGE -->
  *
  * <h2>Name</h2>
  * <p> 
  *   <!-- START NAME -->          
- *   cwgraphics - creates Earth data annotation graphics.
+ *   cwgraphics - creates earth data annotation graphics.
  *   <!-- END NAME -->
  * </p>
  *
@@ -82,7 +82,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * </p>
  *
  * <h2>Description</h2>
- * <p> The graphics tool creates Earth data annotation
+ * <p> The graphics tool creates earth data annotation
  * graphics in the form of a byte-valued variable.  Each output byte
  * in the new variable contains 8 bits, one for each of 8 possible
  * graphics planes numbered 1 to 8 from the least significant bit to
@@ -108,7 +108,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * change the output variable name.</p>
  *
  * <p>Once the graphics planes are created, they may be used as overlay
- * graphics for rendered Earth data images.  The graphics byte
+ * graphics for rendered earth data images.  The graphics byte
  * data may be exported using the cwexport tool for use in other
  * software packages, or may be used in the cwrender tool with the
  * <b>--bitmask</b> option.</p>
@@ -414,7 +414,7 @@ public class cwgraphics {
     System.out.println (
 "Usage: cwgraphics [OPTIONS] input\n" +
 "       cwgraphics [OPTIONS] input output\n" +
-"Creates Earth data annotation graphics in the form of a\n" +
+"Creates earth data annotation graphics in the form of a\n" +
 "byte-valued variable.\n" +
 "\n" +
 "Main parameters:\n" +

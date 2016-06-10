@@ -1048,7 +1048,7 @@ public class NOAA1bV2Reader
     /** The instrument status attribute (Long). */
     public static final int INSTRUMENT_STATUS = 102;
 
-    /** The count of calibrated, Earth located lines attribute (Integer). */
+    /** The count of calibrated, earth located lines attribute (Integer). */
     public static final int CALIBRATED_LINES = 103;
 
     /** The count of missing scan lines attribute (Integer). */

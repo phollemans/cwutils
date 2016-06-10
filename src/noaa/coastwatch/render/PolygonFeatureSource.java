@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: PolygonFeatureSource.java
-  PURPOSE: An abstract class for Earth polygon data source methods.
+  PURPOSE: An abstract class for earth polygon data source methods.
    AUTHOR: Peter Hollemans
      DATE: 2003/05/11
   CHANGES: 2003/05/22, PFH, added test for degenerate polygon path
@@ -92,7 +92,7 @@ public abstract class PolygonFeatureSource
    * </ol>
    *
    * @param g the graphics context for drawing.
-   * @param trans the Earth image transform for converting Earth
+   * @param trans the earth image transform for converting Earth
    * locations to image points.
    */
   public void renderPolygons (
@@ -150,7 +150,7 @@ public abstract class PolygonFeatureSource
    * the polygons outlines.
    *
    * @param g the graphics context for drawing.
-   * @param trans the Earth image transform for converting Earth
+   * @param trans the earth image transform for converting Earth
    * locations to image points.
    */
   public void renderOutlines (

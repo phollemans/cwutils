@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: cdat.java
-  PURPOSE: To view and analyze Earth data.
+  PURPOSE: To view and analyze earth data.
    AUTHOR: Peter Hollemans
      DATE: 2004/05/10
   CHANGES: 2004/09/28, PFH, modified to use ToolServices.setCommandLine()
@@ -146,7 +146,7 @@ import noaa.coastwatch.gui.ScriptConsole;
  *
  * <p>
  *   <!-- START NAME -->
- *   cdat - performs visual Earth data analysis.
+ *   cdat - performs visual earth data analysis.
  *   <!-- END NAME -->
  * </p>
  *
@@ -167,7 +167,7 @@ import noaa.coastwatch.gui.ScriptConsole;
  * <h2>Description</h2>
  *
  * <p>The CoastWatch Data Analysis Tool (CDAT) allows users to view,
- * survey, and save Earth datasets.  Detailed help on the usage of
+ * survey, and save earth datasets.  Detailed help on the usage of
  * CDAT is available from within the utility using the menu bar under
  * <i>Help | Help and Support</i>.</p>
  *
@@ -1001,7 +1001,7 @@ public final class cdat
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Sets the Earth location formatting from the specified
+   * Sets the earth location formatting from the specified
    * preferences.
    *
    * @param prefs the preferences to use.
@@ -1189,7 +1189,7 @@ public final class cdat
     System.out.println (
 "Usage: cdat [OPTIONS] input\n" +
 "       cdat [OPTIONS]\n" +
-"Allows users to view, survey, and save Earth datasets interactively.\n" +
+"Allows users to view, survey, and save earth datasets interactively.\n" +
 "\n" +
 "Main parameters:\n" +
 "  input                      The initial input data file to open.\n" +

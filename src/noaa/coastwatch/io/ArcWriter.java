@@ -38,7 +38,7 @@ import noaa.coastwatch.util.trans.MapProjection;
 /**
  * An Arc writer is a float writer that writes a binary format file
  * for input to ArcView or ArcInfo as a binary grid.  An optional
- * header file may also be created to specify the Earth location and
+ * header file may also be created to specify the earth location and
  * other parameters.  The Arc writer limits the functionality of the
  * float writer in order to write files compatible with Arc.  Only one
  * variable per grid file is allowed, and the variable must have two
@@ -109,10 +109,10 @@ public class ArcWriter
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new binary file from the specified Earth data info
+   * Creates a new binary file from the specified earth data info
    * and file name.
    *
-   * @param info the Earth data info object.
+   * @param info the earth data info object.
    * @param file the new binary file name.
    *
    * @throws IOException if an error occurred opening the file.

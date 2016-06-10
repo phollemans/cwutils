@@ -39,7 +39,7 @@ public interface FeatureSource {
    * Selects a set of features from the data source based on the
    * specified area.
    *
-   * @param area the Earth area for feature selection.
+   * @param area the earth area for feature selection.
    * 
    * @throws IOException if an error occurred accessing the data source.
    */
@@ -49,7 +49,7 @@ public interface FeatureSource {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the currently selected Earth area. */
+  /** Gets the currently selected earth area. */
   public EarthArea getArea ();
 
   ////////////////////////////////////////////////////////////

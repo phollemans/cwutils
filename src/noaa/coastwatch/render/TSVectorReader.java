@@ -197,7 +197,7 @@ public class TSVectorReader
    * @param in the data input.  The polyline is constructed by reading
    * at the current input position.
    *
-   * @return a new polyline as a vector of Earth locations.
+   * @return a new polyline as a vector of earth locations.
    * 
    * @throws IOException if an error occurred reading the data file.
    */

@@ -33,7 +33,7 @@ import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 
 /**
- * A binary writer is an Earth data writer that writes variable
+ * A binary writer is an earth data writer that writes variable
  * data as a stream of binary values.  The data may be scaled and/or
  * byte swapped prior to writing.  An optional dimension header may be
  * prepended to each variable.
@@ -281,12 +281,12 @@ abstract public class BinaryWriter
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new binary file from the specified Earth data info
+   * Creates a new binary file from the specified earth data info
    * and file name.  By default the byte order is <code>HOST</code>,
    * scaling is unity, the missing value is set to the default, and
    * the header flag is false.
    *
-   * @param info the Earth data info object.
+   * @param info the earth data info object.
    * @param file the new binary file name.
    *
    * @throws IOException if an error occurred opening the file.

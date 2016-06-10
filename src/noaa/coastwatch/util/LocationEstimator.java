@@ -2,7 +2,7 @@
 /*
      FILE: LocationEstimator.java
   PURPOSE: A class to perform data location estimation using 
-           two Earth transforms.
+           two earth transforms.
    AUTHOR: Peter Hollemans
      DATE: 2002/11/13
   CHANGES: 2004/03/23, PFH, modified to use ArrayList rather than Vector
@@ -41,7 +41,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>LocationEstimator</code> class uses a reference and
- * target Earth transform to estimate the data location of a target
+ * target earth transform to estimate the data location of a target
  * point given a reference point.  The following diagram shows the two
  * reference frames, with an arrow showing the direction of estimation:
  * <pre>
@@ -53,10 +53,10 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   | point   |      |  point  |
  *   *----*----*      *----*----*
  * </pre>
- * An Earth partition is used to divide the reference into equal size
+ * An earth partition is used to divide the reference into equal size
  * partitions, upon which a set of polynomials is calculated to
  * estimate locations.  Currently the location estimator class is
- * limited to 2D Earth transforms.
+ * limited to 2D earth transforms.
  * 
  * The location lookup operation has two modes: accurate and fast.  In
  * accurate mode, partitions with insufficient data coverage from the
@@ -87,31 +87,31 @@ public class LocationEstimator {
 
   // Variables
   // ---------
-  /** The reference Earth transform. */
+  /** The reference earth transform. */
   private EarthTransform refTrans;
 
-  /** The reference Earth transform dimensions. */
+  /** The reference earth transform dimensions. */
   private int[] refDims;
  
-  /** The target Earth transform. */
+  /** The target earth transform. */
   private EarthTransform targetTrans;
 
-  /** The target Earth transform dimensions. */
+  /** The target earth transform dimensions. */
   private int[] targetDims;
  
   /** The target navigation transform. */
   private AffineTransform targetNav;
 
-  /** The Earth partition used for estimation. */
+  /** The earth partition used for estimation. */
   private EarthPartition partition;
 
-  /** The array of child Earth partitions. */
+  /** The array of child earth partitions. */
   private EarthPartition[] parts;
 
   /** The location query mode. */
   private int queryMode;
 
-  /** Temporary Earth location for calculations. */
+  /** Temporary earth location for calculations. */
   private EarthLocation tempEarthLoc;
 
   /** Temporary coordinate array for calculations. */
@@ -362,11 +362,11 @@ public class LocationEstimator {
    * transforms.  By default, the query mode is set to
    * <code>ACCURATE</code>.
    * 
-   * @param refTrans the reference Earth transform.  This is the
+   * @param refTrans the reference earth transform.  This is the
    * transform against which data location queries will be made.
    * @param refDims the reference dimensions.  Queries are limited to
    * locations within these dimensions.
-   * @param targetTrans the target Earth transform.  This is the
+   * @param targetTrans the target earth transform.  This is the
    * transform for which queries will return a data location.
    * @param targetDims the target dimensions.  Target points outside
    * these dimensions are considered out of bounds.

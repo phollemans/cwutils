@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthTransform2D.java
-  PURPOSE: Performs two-dimensional Earth transform computations.
+  PURPOSE: Performs two-dimensional earth transform computations.
    AUTHOR: Peter Hollemans
      DATE: 2005/05/30
   CHANGES: 2014/03/05, PFH
@@ -43,13 +43,13 @@ import noaa.coastwatch.test.TestLogger;
 
 /**
  * The <code>EarthTransform2D</code> class adds extra functionality to
- * its super class common to two-dimensional Earth transforms.  It
+ * its super class common to two-dimensional earth transforms.  It
  * also allows the use of a raster-is-point transform mode rather than
  * the default raster-is-area mode.  In raster-is-area mode, the Earth
  * location returned by {@link #transform(DataLocation,EarthLocation)}
  * refers to the center of the raster pixel area.  In raster-is-point
  * mode, the extra method {@link #transformToPoint} may be used to
- * retrieve the Earth location of the point data, which may not be at
+ * retrieve the earth location of the point data, which may not be at
  * the center of the raster pixel area.
  *
  * @author Peter Hollemans
@@ -91,7 +91,7 @@ public abstract class EarthTransform2D
   /**
    * Sets the data to geographic transform used when {@link
    * #transformToPoint} is called.  This transform is different from
-   * the normal 2D transform in that it returns Earth locations that
+   * the normal 2D transform in that it returns earth locations that
    * correspond to a raster-is-point style model rather than
    * raster-is-area.  By default, {@link #transformToPoint} returns
    * the same value as {@link #transform(DataLocation,EarthLocation)}.
@@ -199,7 +199,7 @@ public abstract class EarthTransform2D
    * The world axes are the north-pointing unit vector and east-pointing
    * unit vector in data coordinates.
    *
-   * @param earthLoc the Earth location to get the world axes.  The location
+   * @param earthLoc the earth location to get the world axes.  The location
    * must transform to a valid data location, or the output vectors may contain
    * NaN values.
    * @param northVector the north-pointing vector array of length 2 (modified).
@@ -244,11 +244,11 @@ public abstract class EarthTransform2D
    * passes the data location to the stored point transform.
    *
    * @param dataLoc the data location.
-   * @param earthLoc the Earth location or null.  If null, an object
+   * @param earthLoc the earth location or null.  If null, an object
    * is created and returned.  If non-null, the object is simply
    * modified.
    *
-   * @return the Earth location.  The Earth location may contain
+   * @return the earth location.  The earth location may contain
    * <code>Double.NaN</code> if no conversion is possible.
    *
    * @see #transform(DataLocation)

@@ -1,11 +1,11 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: cwinfo.java
-  PURPOSE: To display Earth data file information.
+  PURPOSE: To display earth data file information.
    AUTHOR: Mark Robinson
      DATE: 2002/04/15
   CHANGES: 2002/05/25, PFH, added javadoc, package, reformatted
-           2002/06/06, PFH, added multiple Earth transforms
+           2002/06/06, PFH, added multiple earth transforms
            2002/07/16, PFH, added man page
            2002/10/25, PFH, added null mode for swath projections
            2002/11/12, PFH, replaced pass type with scene time, removed 
@@ -43,7 +43,7 @@
              and then print in a reliable columns.
            2016/03/06, PFH
            - Changes: Updated to recognize invalid locations with -t option.
-           - Issues: When an Earth transform was having its corner points
+           - Issues: When an earth transform was having its corner points
              printed, if the transform had no valid locations at the edges
              (such as a geostationary satellite view) then the locations
              printed with strange ? like characters.
@@ -359,11 +359,11 @@ public final class cwinfo {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Prints Earth transform data from the specified file.  The Earth
+   * Prints earth transform data from the specified file.  The Earth
    * transform data includes pixel resolution, total width and height,
    * and latitude and longitude data for selected locations.
    *
-   * @param reader the Earth data reader object to use.
+   * @param reader the earth data reader object to use.
    * @param stream the output stream for printing.
    * @param useEdges true to use actual edges for location values,
    * false to use center of edge pixels.
@@ -551,7 +551,7 @@ public final class cwinfo {
   /**
    * Prints the information from the specified file.
    *
-   * @param reader the Earth data reader object to use.
+   * @param reader the earth data reader object to use.
    * @param stream the output stream for printing.
    */
   public static void printInfo (
@@ -575,7 +575,7 @@ public final class cwinfo {
   /**
    * Prints the global file information.
    *
-   * @param reader the Earth data reader object to use.
+   * @param reader the earth data reader object to use.
    * @param stream the output stream for printing.
    *
    * @throws IOException if an error occurred printing to the stream.
@@ -713,7 +713,7 @@ public final class cwinfo {
   /**
    * Prints the variable information.
    *
-   * @param reader the Earth data reader object to use.
+   * @param reader the earth data reader object to use.
    * @param stream the output stream for printing.
    *
    * @throws IOException if an error occurred printing to the stream.

@@ -63,8 +63,8 @@ public class PNGSavePanel
   /* 
    * Creates a new PNG save panel.
    *
-   * @param view the Earth data view to save.
-   * @param info the Earth data information to use for the
+   * @param view the earth data view to save.
+   * @param info the earth data information to use for the
    * legends.
    */
   public PNGSavePanel (

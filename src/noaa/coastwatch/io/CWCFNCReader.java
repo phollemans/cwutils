@@ -126,7 +126,7 @@ public class CWCFNCReader
 
   ////////////////////////////////////////////////////////////
   
-  /** Gets the Earth data info object. */
+  /** Gets the earth data info object. */
   private EarthDataInfo getGlobalInfo () {
 
     // Get simple attributes
@@ -197,7 +197,7 @@ public class CWCFNCReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth transform information. */
+  /** Gets the earth transform information. */
   private EarthTransform getTransform () {
 
     // Get projection type
@@ -262,7 +262,7 @@ public class CWCFNCReader
       
         catch (Exception e) {
           System.err.println (this.getClass() + 
-            ": Warning: Problems encountered using Earth location data");
+            ": Warning: Problems encountered using earth location data");
           e.printStackTrace();
         } // catch
 

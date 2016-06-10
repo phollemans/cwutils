@@ -47,7 +47,7 @@ import noaa.coastwatch.util.LocationFilter;
 
 /**
  * The <code>MixedGridResampler</code> class performs generic data
- * resampling between 2D Earth transforms using a mix of forward and
+ * resampling between 2D earth transforms using a mix of forward and
  * inverse resampling methods.  The steps are as follows:
  * <ol>
  *
@@ -152,8 +152,8 @@ public class MixedGridResampler
    * Creates a new grid resampler from the specified source and
    * destination transforms.
    *
-   * @param sourceTrans the source Earth transform.
-   * @param destTrans the destination Earth transform.
+   * @param sourceTrans the source earth transform.
+   * @param destTrans the destination earth transform.
    * @param rectWidth the source rectangle width.
    * @param rectHeight the source rectangle height.
    */
@@ -366,7 +366,7 @@ public class MixedGridResampler
            * happens when the rectangle to convert is too small so
            * that the source data locations are repeated.  But it may
            * happen in other unknown cases as well, for example if the
-           * source transform gives us wonky Earth locations.  So it's
+           * source transform gives us wonky earth locations.  So it's
            * best to catch the error here and just ignore the
            * offending rectangle.
            */

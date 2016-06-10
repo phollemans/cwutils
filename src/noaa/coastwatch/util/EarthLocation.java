@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthLocation.java
-  PURPOSE: To define an Earth location point and operations.
+  PURPOSE: To define an earth location point and operations.
    AUTHOR: Peter Hollemans
      DATE: 2002/07/25
   CHANGES: 2002/09/04, PFH, added isValid
@@ -21,7 +21,7 @@
            2006/05/26, PFH, modified to use SpheroidConstants
            2014/03/20, PFH
            - Changes: Added the markInvalid method and test code
-           - Issue: We needed a way to mark Earth locations as invalid in
+           - Issue: We needed a way to mark earth locations as invalid in
              one call, with no need to know about how invalid locations are
              actually implemented.
            2016/01/19, PFH
@@ -52,7 +52,7 @@ import noaa.coastwatch.util.trans.SpheroidConstants;
 import noaa.coastwatch.test.TestLogger;
 
 /**
- * An Earth location represents a point using latitude and longitude
+ * An earth location represents a point using latitude and longitude
  * in degrees.  Unless otherwise specified, the latitude and longitude
  * are geodetic relative to the WGS84 datum.
  *
@@ -94,13 +94,13 @@ public class EarthLocation
   // Variables
   // ---------
   /** 
-   * The Earth location latitude in degrees.  Latitudes have the range
+   * The earth location latitude in degrees.  Latitudes have the range
    * [-90..90]. 
    */
   public double lat;
 
   /** 
-   * The Earth location longitude in degrees.  Longitudes have the range
+   * The earth location longitude in degrees.  Longitudes have the range
    * [-180..180). 
    */
   public double lon;
@@ -179,7 +179,7 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Constructs a new Earth location at the origin (0,0).  The datum
+   * Constructs a new earth location at the origin (0,0).  The datum
    * defaults to WGS84.
    */
   public EarthLocation () {
@@ -192,7 +192,7 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Constructs a new Earth location from the specified parameters.
+   * Constructs a new earth location from the specified parameters.
    * If needed, the longitude value is adjusted to be in the range
    * [-180..180).  The datum defaults to WGS84.
    *
@@ -212,7 +212,7 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Constructs a new Earth location at the origin (0,0) with the
+   * Constructs a new earth location at the origin (0,0) with the
    * specified datum.
    *
    * @param datum the geodetic datum.
@@ -230,7 +230,7 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Constructs a new Earth location from the specified parameters.
+   * Constructs a new earth location from the specified parameters.
    * If needed, the longitude value is adjusted to be in the range
    * [-180..180).  The datum defaults to WGS84.
    *
@@ -348,7 +348,7 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /**
-   * Translates an Earth location by the specified increments.  If the
+   * Translates an earth location by the specified increments.  If the
    * translation causes the latitude to be outside the range
    * [-90..90], the latitude and longitude are adjusted to travel over
    * the pole and down the other side.  If the translation causes the
@@ -435,7 +435,7 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /**
-   * Formats a single coordinate from an Earth location to a string.
+   * Formats a single coordinate from an earth location to a string.
    *
    * @param deg the latitude or longitude value in degrees.
    * @param style the format style to use.
@@ -495,7 +495,7 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /**
-   * Formats a single coordinate from this Earth location to a string.
+   * Formats a single coordinate from this earth location to a string.
    *
    * @param style the format style to use.
    * @param select the coordinate selection.  Use <code>LAT</code> for
@@ -515,7 +515,7 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /**
-   * Formats a single coordinate from this Earth location coordinate
+   * Formats a single coordinate from this earth location coordinate
    * to a string using the default format style.
    *
    * @param select the coordinate selection.  Use <code>LAT</code> for
@@ -534,7 +534,7 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /**
-   * Formats this Earth location to a string.  Both latitude and
+   * Formats this earth location to a string.  Both latitude and
    * longitude are formatted.
    *
    * @param style the format style to use.
@@ -552,7 +552,7 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /**
-   * Formats this Earth location to a string using the default format
+   * Formats this earth location to a string using the default format
    * style.  Both latitude and longitude are formatted.
    *
    * @return the formatted coordinate values.
@@ -590,10 +590,10 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Checks if this Earth location is valid.
+   * Checks if this earth location is valid.
    *
    * @return true if the location is valid or false if not.  An invalid 
-   * Earth location is normally used as a flag for a computation that has
+   * earth location is normally used as a flag for a computation that has
    * failed.
    *
    * @see #markInvalid
@@ -656,10 +656,10 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /**
-   * Renders this Earth location to a graphics context as a point.
+   * Renders this earth location to a graphics context as a point.
    *
    * @param g the graphics context for drawing.
-   * @param trans the Earth image transform for converting Earth
+   * @param trans the earth image transform for converting Earth
    * locations to image points.
    */
   public void render (

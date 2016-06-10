@@ -83,7 +83,7 @@ public class PolygonSurvey
    * Creates a new polygon survey.
    * 
    * @param variable the survey variable.
-   * @param trans the survey variable Earth transform.
+   * @param trans the survey variable earth transform.
    * @param shape the polygon shape.
    */
   public PolygonSurvey (

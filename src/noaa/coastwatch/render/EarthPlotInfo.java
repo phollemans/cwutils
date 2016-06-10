@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthPlotInfo.java
-  PURPOSE: A class to render an Earth plot information legend.
+  PURPOSE: A class to render an earth plot information legend.
    AUTHOR: Peter Hollemans
      DATE: 2002/10/03
   CHANGES: 2002/11/12, PFH, replaced pass type with scene time
@@ -70,9 +70,9 @@ import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.tools.cwinfo;
 
 /**
- * A Earth plot information legend annotates an Earth data view with
+ * An earth plot information legend annotates an earth data view with
  * information about the data source, date, time, projection, and
- * Earth location.
+ * earth location.
  *
  * @author Peter Hollemans
  * @since 3.1.1
@@ -99,24 +99,24 @@ public class EarthPlotInfo
   /** The icon element for the top of the legend. */
   private IconElement icon;
 
-  /** The Earth data information for legend text. */
+  /** The earth data information for legend text. */
   private String[] labels;
 
-  /** The Earth context element for the bottom of the legend. */
+  /** The earth context element for the bottom of the legend. */
   private EarthContextElement context;
 
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates an Earth plot information legend from the specified
+   * Creates an earth plot information legend from the specified
    * parameters.  The font is set to the default font face, plain
    * style, 12 point, the preferred size to none, the foreground color
    * is set to black, and the background color to none.
    *
    * @param icon the icon element to use for the top of the legend.
-   * @param info the Earth data information for text annotations.
-   * @param area the Earth area for geographic bounds.
-   * @param context the Earth context for the bottom of the legend.
+   * @param info the earth data information for text annotations.
+   * @param area the earth area for geographic bounds.
+   * @param context the earth context for the bottom of the legend.
    */
   public EarthPlotInfo (
     IconElement icon,
@@ -193,14 +193,14 @@ public class EarthPlotInfo
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates an Earth plot information legend from the specified
+   * Creates an earth plot information legend from the specified
    * parameters.
    *
    * @param icon the icon element to use for the top of the legend.
-   * @param info the Earth data information for text annotations.
-   * @param area the Earth area for geographic bounds.
-   * @param context the Earth context for the bottom of the legend.
-   * @param center the Earth location of the plot center.
+   * @param info the earth data information for text annotations.
+   * @param area the earth area for geographic bounds.
+   * @param context the earth context for the bottom of the legend.
+   * @param center the earth location of the plot center.
    * @param dim the preferred scale dimensions, or null for none.
    * @param font the font for variable name, units, and scale values, or 
    * null for the default font face, plain style, 12 point.

@@ -40,7 +40,7 @@ public abstract class DirectionSymbol
   // Variables
   // ---------
 
-  /** The Earth transform used for converting directions. */
+  /** The earth transform used for converting directions. */
   private EarthTransform2D trans;  
 
   /** 
@@ -74,7 +74,7 @@ public abstract class DirectionSymbol
   /** 
    * Creates a new direction symbol. 
    *
-   * @param trans the Earth transform used for converting directions.
+   * @param trans the earth transform used for converting directions.
    */
   public DirectionSymbol (
     EarthTransform2D trans
@@ -136,15 +136,15 @@ public abstract class DirectionSymbol
   /** 
    * Converts a direction angle that is clockwise relative to north to
    * a direction angle that is counterclockwise relative to the x axis
-   * of the Earth transform.  For example, suppose that the passed
+   * of the earth transform.  For example, suppose that the passed
    * direction is 45 deg WRT north, meaning directly northeast.  But
-   * suppose that in the Earth transform, north is in the positive x
+   * suppose that in the earth transform, north is in the positive x
    * direction and east is in the negative y direction (positive x is
    * right and positive y is up).  Then the 45 deg WRT north direction
-   * angle is converted to -45 deg WRT the Earth transform.
+   * angle is converted to -45 deg WRT the earth transform.
    *
    * @param inAngle the input direction angle in radians.
-   * @param earthLoc the Earth location at which the direction applies.
+   * @param earthLoc the earth location at which the direction applies.
    *
    * @return the converted angle, or <code>Double.NaN</code> if the
    * angle could not be converted.

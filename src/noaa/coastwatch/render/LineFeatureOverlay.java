@@ -41,13 +41,13 @@ public class LineFeatureOverlay
 
   // Variables
   // ---------
-  /** The Earth vector source. */
+  /** The earth vector source. */
   private LineFeatureSource source;
 
   ////////////////////////////////////////////////////////////
 
   /**
-   * Constructs a new Earth vector overlay.
+   * Constructs a new earth vector overlay.
    * 
    * @param color the overlay color.
    * @param layer the overlay layer number.  
@@ -69,7 +69,7 @@ public class LineFeatureOverlay
   ////////////////////////////////////////////////////////////
 
   /**
-   * Constructs a new Earth vector overlay.  The layer number is
+   * Constructs a new earth vector overlay.  The layer number is
    * initialized to 0 and the stroke to the default
    * <code>BasicStroke</code>.
    * 

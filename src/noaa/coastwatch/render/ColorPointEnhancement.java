@@ -33,7 +33,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
 /**
  * The <code>ColorPointEnhancement</code> class uses a {@link Palette}
  * and {@link EnhancementFunction} to render a {@link
- * PointFeatureOverlay} to an Earth view.
+ * PointFeatureOverlay} to an earth view.
  *
  * @see ColorEnhanced
  * @see ColorEnhancement
@@ -119,7 +119,7 @@ public class ColorPointEnhancement
    * @param overlay the overlay to use for rendering point data.
    * @param name the enhancement variable name used for color bar legend.
    * @param units the enhancement variable units used for color bar legend.
-   * @param trans the view Earth transform.
+   * @param trans the view earth transform.
    *
    * @throws NoninvertibleTransformException if the resulting image 
    * transform is not invertible.

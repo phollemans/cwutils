@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: cwrender.java
-  PURPOSE: To perform Earth data visualizations.
+  PURPOSE: To perform earth data visualizations.
    AUTHOR: Peter Hollemans
      DATE: 2002/10/11
   CHANGES: 2002/10/21, PFH, modified BitmaskOverlay to accept Grid
@@ -47,7 +47,7 @@
            2005/04/22, PFH, added --group option for overlay groups
            2005/04/23, PFH, added ToolServices.setCommandLine()
            2005/04/28, PFH, added spectrum and wind palettes
-           2005/05/19, PFH, modified to use reader datum for Earth locations
+           2005/05/19, PFH, modified to use reader datum for earth locations
            2005/05/30, PFH, added --worldfile option
            2005/06/03, PFH, added vector rendering and units conversion
            2005/08/30, PFH, added call to ResourceManager.setupPalettes()
@@ -152,7 +152,7 @@ import noaa.coastwatch.util.trans.EarthTransform2D;
 import ucar.units.Unit;
 
 /**
- * <p>The render tool performs Earth data visualization.</p>
+ * <p>The render tool performs earth data visualization.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -160,7 +160,7 @@ import ucar.units.Unit;
  *
  * <p>
  *   <!-- START NAME -->          
- *   cwrender - performs Earth data visualization.
+ *   cwrender - performs earth data visualization.
  *   <!-- END NAME -->
  * </p>
  *
@@ -244,13 +244,13 @@ import ucar.units.Unit;
  *
  * <h3>Overview</h3>
  *
- * <p>The render tool performs Earth data visualization by
+ * <p>The render tool performs earth data visualization by
  * converting 2D data sets in the input file to color images.
  * The data values are converted from scientific units to a color
  * using either an enhancement function and color palette or by
  * performing a color composite of three data variables -- one
  * for each of the red, green, and blue color components.  The
- * resulting Earth data plot may have legends displaying the
+ * resulting earth data plot may have legends displaying the
  * color scale, data origin, date, time, projection info, as well
  * as data overlays showing latitude/longitude grid lines, coast
  * lines, political boundaries, masks, and shapes.</p>
@@ -447,7 +447,7 @@ import ucar.units.Unit;
  *     in smaller image file sizes. </li>
  *
  *     <li> <b>GeoTIFF</b> is a flexible image format with
- *     support for Earth location metadata.  Many popular GIS
+ *     support for earth location metadata.  Many popular GIS
  *     packages handle GeoTIFF images and allow the user to
  *     combine a GeoTIFF base map image with other sources of
  *     raster and vector data.  The GeoTIFF images generated are

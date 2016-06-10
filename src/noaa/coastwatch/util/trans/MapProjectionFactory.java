@@ -147,7 +147,7 @@ public class MapProjectionFactory
    * @param spheroid the spheroid code or -1 for custom spheroid.
    * @param dimensions the dimensions of the data grid as <code>[rows,
    * columns]</code>.
-   * @param centerLoc the Earth location at the map center.
+   * @param centerLoc the earth location at the map center.
    * @param pixelDims the pixel dimensions in meters at the projection
    * reference point as <code>[height, width]</code>.
    *

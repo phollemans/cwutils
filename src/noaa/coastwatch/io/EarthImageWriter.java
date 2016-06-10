@@ -112,8 +112,8 @@ public class EarthImageWriter {
    * undesired, the view should be cloned prior to passing to this
    * routine.
    *
-   * @param view the Earth data view to write.
-   * @param info the Earth data information to use for the
+   * @param view the earth data view to write.
+   * @param info the earth data information to use for the
    * legends.
    * @param isVerbose the verbose flag, true to print verbose messages.
    * @param hasLegends the legends flag, true to draw color scale and
