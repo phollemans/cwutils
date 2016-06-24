@@ -74,13 +74,17 @@
              to but all the extra metadata into the L2 files that are required 
              for properly specifying a CF grid mapped projection (concern about
              limitation of the GHRSST L2 format).
-            2016/03/24, PFH
-            - Changes: Updated getBaseVariableName method to use more specific
-              regular expression.
-            - Issue: There were some Grib files found in testing that had
-              variables with names like "Land_cover_0__sea_1__land_surface"
-              which broke the variable name extension scheme that uses "__"
-              as a field separator.
+           2016/03/24, PFH
+           - Changes: Updated getBaseVariableName method to use more specific
+             regular expression.
+           - Issue: There were some Grib files found in testing that had
+             variables with names like "Land_cover_0__sea_1__land_surface"
+             which broke the variable name extension scheme that uses "__"
+             as a field separator.
+           2016/06/24, PFH
+           - Changes: Updates attribute names for geostationary projection data.
+           - Issue: The attribute names were changed from mixed case to all
+             lower case.
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
@@ -414,15 +418,28 @@ utilities when:
  * This is very similar to the code in the ACSPONCReader.
  */
 
+
+/*
+		:sub_lon = 140.7 ;
+		:dist_virt_sat = 42164. ;
+		:earth_radius_equator = 6378.137 ;
+		:earth_radius_polar = 6356.7523 ;
+		:cfac = 20466275 ;
+		:lfac = 20466275 ;
+		:coff = 2750.5f ;
+		:loff = 2750.5f ;
+*/
+
+
     try {
-      double subpointLon = ((Number) getAttribute ("Sub_Lon")).doubleValue();
-      double satDist = ((Number) getAttribute ("Dist_Virt_Sat")).doubleValue();
-      int columnFactor = ((Number) getAttribute ("CFAC")).intValue();
-      int lineFactor = ((Number) getAttribute ("LFAC")).intValue();
-      double eqRadius = ((Number) getAttribute ("Earth_Radius_Equator")).doubleValue();
-      double polarRadius = ((Number) getAttribute ("Earth_Radius_Polar")).doubleValue();
-      double columnOffset = ((Number) getAttribute ("COFF")).doubleValue();
-      double lineOffset = ((Number) getAttribute ("LOFF")).doubleValue();
+      double subpointLon = ((Number) getAttribute ("sub_lon")).doubleValue();
+      double satDist = ((Number) getAttribute ("dist_virt_sat")).doubleValue();
+      int columnFactor = ((Number) getAttribute ("cfac")).intValue();
+      int lineFactor = ((Number) getAttribute ("lfac")).intValue();
+      double eqRadius = ((Number) getAttribute ("earth_radius_equator")).doubleValue();
+      double polarRadius = ((Number) getAttribute ("earth_radius_polar")).doubleValue();
+      double columnOffset = ((Number) getAttribute ("coff")).doubleValue();
+      double lineOffset = ((Number) getAttribute ("loff")).doubleValue();
       CoordinateAxis xHorizAxis = coordSystem.getXHorizAxis();
       int[] dims = xHorizAxis.getShape();
       trans = new EllipsoidPerspectiveProjection (
