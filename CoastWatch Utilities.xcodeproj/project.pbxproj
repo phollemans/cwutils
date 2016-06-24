@@ -706,14 +706,9 @@
 		E96D8BB2161661420009B833 /* Timeout.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = Timeout.java; sourceTree = "<group>"; };
 		E96D8BB3161661420009B833 /* UpdateCheck.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = UpdateCheck.java; sourceTree = "<group>"; };
 		E96D8BB4161661420009B833 /* URLTransfer.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = URLTransfer.java; sourceTree = "<group>"; };
-		E96D8BB6161661420009B833 /* AbstractFeature.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = AbstractFeature.java; sourceTree = "<group>"; };
-		E96D8BB7161661420009B833 /* AbstractFeatureSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = AbstractFeatureSource.java; sourceTree = "<group>"; };
 		E96D8BB9161661420009B833 /* AnnotationElement.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = AnnotationElement.java; sourceTree = "<group>"; };
 		E96D8BBA161661420009B833 /* AnnotationOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = AnnotationOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BBB161661420009B833 /* ArrowSymbol.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = ArrowSymbol.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8BBC161661420009B833 /* BinnedGSHHSLineReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = BinnedGSHHSLineReader.java; sourceTree = "<group>"; };
-		E96D8BBD161661420009B833 /* BinnedGSHHSReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = BinnedGSHHSReader.java; sourceTree = "<group>"; };
-		E96D8BBE161661420009B833 /* BinnedGSHHSReaderFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = BinnedGSHHSReaderFactory.java; sourceTree = "<group>"; };
 		E96D8BBF161661420009B833 /* BitmaskOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = BitmaskOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BC0161661420009B833 /* CoastOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = CoastOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BC1161661420009B833 /* ColorArrowSymbol.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = ColorArrowSymbol.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
@@ -724,8 +719,6 @@
 		E96D8BC6161661420009B833 /* ColorLookup.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ColorLookup.java; sourceTree = "<group>"; };
 		E96D8BC7161661420009B833 /* ColorPointEnhancement.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = ColorPointEnhancement.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BC8161661420009B833 /* ColorWindBarbSymbol.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = ColorWindBarbSymbol.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8BC9161661420009B833 /* ContourGenerator.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = ContourGenerator.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8BCA161661420009B833 /* ContourGenerator.java.orig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ContourGenerator.java.orig; sourceTree = "<group>"; };
 		E96D8BCB161661420009B833 /* CrossSymbol.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CrossSymbol.java; sourceTree = "<group>"; };
 		E96D8BCC161661420009B833 /* DataColorScale.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = DataColorScale.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BCD161661420009B833 /* DataReferenceOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = DataReferenceOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
@@ -738,17 +731,10 @@
 		E96D8BD4161661420009B833 /* EarthPlotInfo.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = EarthPlotInfo.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BD5161661420009B833 /* EnhancementFunction.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = EnhancementFunction.java; sourceTree = "<group>"; };
 		E96D8BD6161661420009B833 /* EnhancementFunctionFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = EnhancementFunctionFactory.java; sourceTree = "<group>"; };
-		E96D8BD7161661420009B833 /* ESRIShapefileReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ESRIShapefileReader.java; sourceTree = "<group>"; };
 		E96D8BD8161661420009B833 /* ExpressionMaskOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = ExpressionMaskOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8BD9161661420009B833 /* Feature.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = Feature.java; sourceTree = "<group>"; };
-		E96D8BDA161661420009B833 /* FeatureSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = FeatureSource.java; sourceTree = "<group>"; };
 		E96D8BDB161661420009B833 /* FilledShapeOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = FilledShapeOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BDC161661420009B833 /* GraphicsServices.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GraphicsServices.java; sourceTree = "<group>"; };
 		E96D8BDD161661420009B833 /* GridContainerOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GridContainerOverlay.java; sourceTree = "<group>"; };
-		E96D8BDE161661420009B833 /* GriddedPointGenerator.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GriddedPointGenerator.java; sourceTree = "<group>"; };
-		E96D8BDF161661420009B833 /* GSHHSReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GSHHSReader.java; sourceTree = "<group>"; };
-		E96D8BE0161661420009B833 /* HDFGSHHSLineReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = HDFGSHHSLineReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8BE1161661420009B833 /* HDFGSHHSReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = HDFGSHHSReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BE2161661420009B833 /* IconElement.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = IconElement.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BE3161661420009B833 /* IconElementFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = IconElementFactory.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BE4161661420009B833 /* ImageTransform.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = ImageTransform.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
@@ -756,29 +742,21 @@
 		E96D8BE6161661420009B833 /* LatLonOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = LatLonOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BE7161661420009B833 /* Legend.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = Legend.java; sourceTree = "<group>"; };
 		E96D8BE8161661420009B833 /* LinearEnhancement.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = LinearEnhancement.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8BE9161661420009B833 /* LineFeature.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = LineFeature.java; sourceTree = "<group>"; };
 		E96D8BEA161661420009B833 /* LineFeatureOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = LineFeatureOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8BEB161661420009B833 /* LineFeatureSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = LineFeatureSource.java; sourceTree = "<group>"; };
 		E96D8BEC161661420009B833 /* LineOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = LineOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BED161661420009B833 /* LogEnhancement.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = LogEnhancement.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BEE161661420009B833 /* MaskOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = MaskOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BEF161661420009B833 /* MultilayerBitmaskOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = MultilayerBitmaskOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8BF0161661420009B833 /* OpendapGSHHSLineReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = OpendapGSHHSLineReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8BF1161661420009B833 /* OpendapGSHHSReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = OpendapGSHHSReader.java; sourceTree = "<group>"; };
 		E96D8BF2161661420009B833 /* OverlayGroupManager.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = OverlayGroupManager.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BF3161661420009B833 /* package.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; lineEnding = 0; path = package.html; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.html; };
 		E96D8BF4161661420009B833 /* Palette.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = Palette.java; sourceTree = "<group>"; };
 		E96D8BF5161661420009B833 /* PaletteFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = PaletteFactory.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BF6161661420009B833 /* PictureElement.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = PictureElement.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BF7161661420009B833 /* PlotSymbolFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = PlotSymbolFactory.java; sourceTree = "<group>"; };
-		E96D8BF8161661420009B833 /* PointFeature.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = PointFeature.java; sourceTree = "<group>"; };
 		E96D8BF9161661420009B833 /* PointFeatureOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = PointFeatureOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8BFA161661420009B833 /* PointFeatureSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = PointFeatureSource.java; sourceTree = "<group>"; };
 		E96D8BFB161661420009B833 /* PointFeatureSymbol.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = PointFeatureSymbol.java; sourceTree = "<group>"; };
 		E96D8BFC161661420009B833 /* PoliticalOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = PoliticalOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8BFD161661420009B833 /* PolygonFeature.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = PolygonFeature.java; sourceTree = "<group>"; };
 		E96D8BFE161661420009B833 /* PolygonFeatureOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = PolygonFeatureOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8BFF161661420009B833 /* PolygonFeatureSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = PolygonFeatureSource.java; sourceTree = "<group>"; };
 		E96D8C00161661420009B833 /* PolygonOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = PolygonOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8C01161661420009B833 /* Renderable.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = Renderable.java; sourceTree = "<group>"; };
 		E96D8C02161661420009B833 /* ShapeOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = ShapeOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
@@ -791,7 +769,6 @@
 		E96D8C09161661420009B833 /* TextOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = TextOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8C0A161661420009B833 /* TopographyOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = TopographyOverlay.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8C0B161661420009B833 /* TransparentOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TransparentOverlay.java; sourceTree = "<group>"; };
-		E96D8C0C161661420009B833 /* TSVectorReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TSVectorReader.java; sourceTree = "<group>"; };
 		E96D8C0D161661420009B833 /* WindBarbSymbol.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = WindBarbSymbol.java; sourceTree = "<group>"; };
 		E96D8C0E161661420009B833 /* XSymbol.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = XSymbol.java; sourceTree = "<group>"; };
 		E96D8C10161661420009B833 /* cdat.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = cdat.java; sourceTree = "<group>"; };
@@ -901,7 +878,6 @@
 		E9D3A73E1B06D3C10027AA5F /* saxon9he.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = saxon9he.jar; path = scripts/saxon9he.jar; sourceTree = "<group>"; };
 		E9DD13B6184D6E1200139E22 /* areadirblock.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = areadirblock.xml; path = mcidas/areadirblock.xml; sourceTree = "<group>"; };
 		E9DEDF7E19C278320028193C /* SplashScreenManager.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = SplashScreenManager.java; sourceTree = "<group>"; };
-		E9E058FD1D18E0DE00DA53C5 /* IQuamNCReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = IQuamNCReader.java; sourceTree = "<group>"; };
 		E9E059001D19F46F00DA53C5 /* AbstractFeature.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = AbstractFeature.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9E059011D19F46F00DA53C5 /* AbstractFeatureSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = AbstractFeatureSource.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9E059021D19F46F00DA53C5 /* BinnedGSHHSLineReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = BinnedGSHHSLineReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
@@ -2130,14 +2106,9 @@
 		E96D8BB5161661420009B833 /* render */ = {
 			isa = PBXGroup;
 			children = (
-				E96D8BB6161661420009B833 /* AbstractFeature.java */,
-				E96D8BB7161661420009B833 /* AbstractFeatureSource.java */,
 				E96D8BB9161661420009B833 /* AnnotationElement.java */,
 				E96D8BBA161661420009B833 /* AnnotationOverlay.java */,
 				E96D8BBB161661420009B833 /* ArrowSymbol.java */,
-				E96D8BBC161661420009B833 /* BinnedGSHHSLineReader.java */,
-				E96D8BBD161661420009B833 /* BinnedGSHHSReader.java */,
-				E96D8BBE161661420009B833 /* BinnedGSHHSReaderFactory.java */,
 				E96D8BBF161661420009B833 /* BitmaskOverlay.java */,
 				E96D8BC0161661420009B833 /* CoastOverlay.java */,
 				E96D8BC1161661420009B833 /* ColorArrowSymbol.java */,
@@ -2148,8 +2119,6 @@
 				E96D8BC6161661420009B833 /* ColorLookup.java */,
 				E96D8BC7161661420009B833 /* ColorPointEnhancement.java */,
 				E96D8BC8161661420009B833 /* ColorWindBarbSymbol.java */,
-				E96D8BC9161661420009B833 /* ContourGenerator.java */,
-				E96D8BCA161661420009B833 /* ContourGenerator.java.orig */,
 				E96D8BCB161661420009B833 /* CrossSymbol.java */,
 				E96D8BCC161661420009B833 /* DataColorScale.java */,
 				E96D8BCD161661420009B833 /* DataReferenceOverlay.java */,
@@ -2162,36 +2131,24 @@
 				E96D8BD4161661420009B833 /* EarthPlotInfo.java */,
 				E96D8BD5161661420009B833 /* EnhancementFunction.java */,
 				E96D8BD6161661420009B833 /* EnhancementFunctionFactory.java */,
-				E96D8BD7161661420009B833 /* ESRIShapefileReader.java */,
 				E96D8BD8161661420009B833 /* ExpressionMaskOverlay.java */,
 				E9E058FF1D19F46F00DA53C5 /* feature */,
-				E96D8BD9161661420009B833 /* Feature.java */,
-				E96D8BDA161661420009B833 /* FeatureSource.java */,
 				E96D8BDB161661420009B833 /* FilledShapeOverlay.java */,
 				E96D8BDC161661420009B833 /* GraphicsServices.java */,
 				E96D8BDD161661420009B833 /* GridContainerOverlay.java */,
-				E96D8BDE161661420009B833 /* GriddedPointGenerator.java */,
-				E96D8BDF161661420009B833 /* GSHHSReader.java */,
-				E96D8BE0161661420009B833 /* HDFGSHHSLineReader.java */,
-				E96D8BE1161661420009B833 /* HDFGSHHSReader.java */,
 				E96D8BE2161661420009B833 /* IconElement.java */,
 				E96D8BE3161661420009B833 /* IconElementFactory.java */,
-				E9E058FD1D18E0DE00DA53C5 /* IQuamNCReader.java */,
 				E96D8BE4161661420009B833 /* ImageTransform.java */,
 				E96D8BE5161661420009B833 /* LabeledLineOverlay.java */,
 				E96D8BE6161661420009B833 /* LatLonOverlay.java */,
 				E96D8BE7161661420009B833 /* Legend.java */,
 				E96D8BE8161661420009B833 /* LinearEnhancement.java */,
-				E96D8BE9161661420009B833 /* LineFeature.java */,
 				E96D8BEA161661420009B833 /* LineFeatureOverlay.java */,
-				E96D8BEB161661420009B833 /* LineFeatureSource.java */,
 				E96D8BEC161661420009B833 /* LineOverlay.java */,
 				E94294B51B2F5CB800C0BBA4 /* lines */,
 				E96D8BED161661420009B833 /* LogEnhancement.java */,
 				E96D8BEE161661420009B833 /* MaskOverlay.java */,
 				E96D8BEF161661420009B833 /* MultilayerBitmaskOverlay.java */,
-				E96D8BF0161661420009B833 /* OpendapGSHHSLineReader.java */,
-				E96D8BF1161661420009B833 /* OpendapGSHHSReader.java */,
 				E9721ED818B89BAD0073918D /* OrientationAffineFactory.java */,
 				E96D8BF2161661420009B833 /* OverlayGroupManager.java */,
 				E96D8BF3161661420009B833 /* package.html */,
@@ -2199,14 +2156,10 @@
 				E96D8BF5161661420009B833 /* PaletteFactory.java */,
 				E96D8BF6161661420009B833 /* PictureElement.java */,
 				E96D8BF7161661420009B833 /* PlotSymbolFactory.java */,
-				E96D8BF8161661420009B833 /* PointFeature.java */,
 				E96D8BF9161661420009B833 /* PointFeatureOverlay.java */,
-				E96D8BFA161661420009B833 /* PointFeatureSource.java */,
 				E96D8BFB161661420009B833 /* PointFeatureSymbol.java */,
 				E96D8BFC161661420009B833 /* PoliticalOverlay.java */,
-				E96D8BFD161661420009B833 /* PolygonFeature.java */,
 				E96D8BFE161661420009B833 /* PolygonFeatureOverlay.java */,
-				E96D8BFF161661420009B833 /* PolygonFeatureSource.java */,
 				E96D8C00161661420009B833 /* PolygonOverlay.java */,
 				E96D8C01161661420009B833 /* Renderable.java */,
 				E96D8C02161661420009B833 /* ShapeOverlay.java */,
@@ -2219,7 +2172,6 @@
 				E96D8C09161661420009B833 /* TextOverlay.java */,
 				E96D8C0A161661420009B833 /* TopographyOverlay.java */,
 				E96D8C0B161661420009B833 /* TransparentOverlay.java */,
-				E96D8C0C161661420009B833 /* TSVectorReader.java */,
 				E96D8C0D161661420009B833 /* WindBarbSymbol.java */,
 				E96D8C0E161661420009B833 /* XSymbol.java */,
 			);
