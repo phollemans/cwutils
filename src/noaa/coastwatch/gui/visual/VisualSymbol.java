@@ -30,7 +30,6 @@ import javax.swing.ListCellRenderer;
 import noaa.coastwatch.gui.visual.AbstractVisualObject;
 import noaa.coastwatch.render.PlotSymbolFactory;
 
-import jahuwaldt.plot.PlotSymbol;
 /**
  * The <code>VisualSymbol</code> class represents a plot symbol
  * as a combo box with an icon of the symbol.

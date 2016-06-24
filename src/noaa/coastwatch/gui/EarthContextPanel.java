@@ -25,7 +25,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import javax.swing.JPanel;
 import noaa.coastwatch.render.EarthContextElement;
-import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.feature.LineFeature;
 import noaa.coastwatch.util.EarthLocation;
 
 /**

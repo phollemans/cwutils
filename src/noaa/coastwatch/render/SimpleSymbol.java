@@ -29,7 +29,7 @@ import java.util.Iterator;
 import javax.swing.JPanel;
 import noaa.coastwatch.gui.TestContainer;
 import noaa.coastwatch.render.PlotSymbolFactory;
-import noaa.coastwatch.render.PointFeature;
+import noaa.coastwatch.render.feature.PointFeature;
 import noaa.coastwatch.render.PointFeatureSymbol;
 import noaa.coastwatch.render.TextElement;
 

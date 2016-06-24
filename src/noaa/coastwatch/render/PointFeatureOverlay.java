@@ -23,7 +23,7 @@ import java.awt.Stroke;
 import java.io.IOException;
 import java.util.List;
 import noaa.coastwatch.render.EarthDataView;
-import noaa.coastwatch.render.PointFeatureSource;
+import noaa.coastwatch.render.feature.PointFeatureSource;
 import noaa.coastwatch.render.PointFeatureSymbol;
 import noaa.coastwatch.render.PolygonOverlay;
 
@@ -148,7 +148,7 @@ public class PointFeatureOverlay
       for (Integer attIndex : attList) {
       
 
-
+// TODO: The drawing of attribute values needs to be implemented!
 
 
 

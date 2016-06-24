@@ -57,7 +57,7 @@ import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.render.BitmaskOverlay;
 import noaa.coastwatch.render.CoastOverlay;
 import noaa.coastwatch.render.DataReferenceOverlay;
-import noaa.coastwatch.render.ESRIShapefileReader;
+import noaa.coastwatch.render.feature.ESRIShapefileReader;
 import noaa.coastwatch.render.EarthDataOverlay;
 import noaa.coastwatch.render.ExpressionMaskOverlay;
 import noaa.coastwatch.render.GridContainerOverlay;

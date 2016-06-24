@@ -27,7 +27,7 @@ package noaa.coastwatch.util.trans;
 // Imports
 // -------
 import java.awt.geom.AffineTransform;
-import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.feature.LineFeature;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.Grid;

@@ -26,7 +26,7 @@ import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.io.IOException;
 import noaa.coastwatch.render.EarthDataView;
-import noaa.coastwatch.render.LineFeatureSource;
+import noaa.coastwatch.render.feature.LineFeatureSource;
 import noaa.coastwatch.render.LineOverlay;
 
 /**
