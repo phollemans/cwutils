@@ -94,19 +94,35 @@ public abstract class AbstractFeatureSource
 
   ////////////////////////////////////////////////////////////
 
+  @Override
+  public List<Attribute> getAttributes() { return (new ArrayList<Attribute> (attributeList)); }
+
+  ////////////////////////////////////////////////////////////
+
   /**
    * Sets the list of attributes in this source.
    *
    * @param attributeList the list of attributes.
    */
   protected void setAttributes (
-    List<Attribute> attributes
+    List<Attribute> attributeList
   ) {
 
     this.attributeList = new ArrayList<Attribute> (attributeList);
 
   } // setAttributes
 
+  ////////////////////////////////////////////////////////////
+  
+  @Override
+  public void select (
+    List<SelectionRule> selectionRuleList
+  ) throws IOException {
+
+    throw new UnsupportedOperationException();
+
+  } // select
+  
   ////////////////////////////////////////////////////////////
 
 } // AbstractFeatureSource class

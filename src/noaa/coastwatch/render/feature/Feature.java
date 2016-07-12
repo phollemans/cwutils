@@ -29,7 +29,8 @@ import noaa.coastwatch.util.EarthLocation;
  * @author Peter Hollemans
  * @since 3.2.0
  */
-public interface Feature {
+public interface Feature
+  extends Iterable<EarthLocation> {
 
   /** Gets the value of the indexed attribute. */
   public Object getAttribute (int index);

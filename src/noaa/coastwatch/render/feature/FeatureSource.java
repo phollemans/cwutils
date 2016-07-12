@@ -20,6 +20,7 @@ package noaa.coastwatch.render.feature;
 // -------
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.render.feature.Feature;
 import noaa.coastwatch.render.feature.Attribute;
@@ -33,7 +34,8 @@ import noaa.coastwatch.render.feature.Attribute;
  * @author Peter Hollemans
  * @since 3.2.0
  */
-public interface FeatureSource {
+public interface FeatureSource
+  extends Iterable<Feature> {
 
   ////////////////////////////////////////////////////////////
 
@@ -47,6 +49,21 @@ public interface FeatureSource {
    */
   public void select (
     EarthArea area
+  ) throws IOException;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Selects a set of features from the data source based on the
+   * list of selection rules.
+   *
+   * @param selectionRuleList the selection rules that the features must
+   * satisfy.
+   *
+   * @throws IOException if an error occurred accessing the data source.
+   */
+  public void select (
+    List<SelectionRule> selectionRuleList
   ) throws IOException;
 
   ////////////////////////////////////////////////////////////

@@ -36,21 +36,27 @@ public class Attribute {
   /** The attribute type. */
   private Class type;
 
+  /** The attribute type. */
+  private String units;
+
   ////////////////////////////////////////////////////////////
 
   /** 
    * Creates a new attribute.
    *
-   * @param the attribute name.
-   * @param the attribute data type.
+   * @param name the attribute name.
+   * @param type the attribute data type.
+   * @param units the attribute units or null for no units.
    */
   public Attribute (
     String name,
-    Class type
+    Class type,
+    String units
   ) {
 
     this.name = name;
     this.type = type;
+    this.units = units;
 
   } // Attribute constructor
 
@@ -71,6 +77,15 @@ public class Attribute {
    * @return the attribute data type.
    */
   public Class getType () { return (type); }
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the attribute units.
+   * 
+   * @return the attribute or null if the attribute has no units.
+   */
+  public String getUnits () { return (units); }
 
  ////////////////////////////////////////////////////////////
 

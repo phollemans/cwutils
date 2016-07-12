@@ -903,6 +903,10 @@
 		E9E059161D19FD2F00DA53C5 /* ContourGenerator.java.orig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ContourGenerator.java.orig; sourceTree = "<group>"; };
 		E9E059171D19FDF700DA53C5 /* OpendapGSHHSLineReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = OpendapGSHHSLineReader.java; sourceTree = "<group>"; };
 		E9E059181D1C534B00DA53C5 /* Attribute.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = Attribute.java; sourceTree = "<group>"; };
+		E9E059191D2B27C500DA53C5 /* SelectionRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = SelectionRule.java; sourceTree = "<group>"; };
+		E9E0591A1D2B2AB500DA53C5 /* AreaRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = AreaRule.java; sourceTree = "<group>"; };
+		E9E0591B1D2ECF4D00DA53C5 /* AttributeRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = AttributeRule.java; sourceTree = "<group>"; };
+		E9E0591D1D34132200DA53C5 /* TextRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TextRule.java; sourceTree = "<group>"; };
 		E9E9BCC91976110200B85B5E /* TileCacheKey.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileCacheKey.java; path = io/tile/TileCacheKey.java; sourceTree = "<group>"; };
 		E9E9BCCA1989F37300B85B5E /* NCTileSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = NCTileSource.java; path = io/tile/NCTileSource.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9E9BCD1198C9AFC00B85B5E /* TileCachedGrid.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileCachedGrid.java; path = io/tile/TileCachedGrid.java; sourceTree = "<group>"; };
@@ -2340,7 +2344,9 @@
 			children = (
 				E9E059001D19F46F00DA53C5 /* AbstractFeature.java */,
 				E9E059011D19F46F00DA53C5 /* AbstractFeatureSource.java */,
+				E9E0591A1D2B2AB500DA53C5 /* AreaRule.java */,
 				E9E059181D1C534B00DA53C5 /* Attribute.java */,
+				E9E0591B1D2ECF4D00DA53C5 /* AttributeRule.java */,
 				E9E059021D19F46F00DA53C5 /* BinnedGSHHSLineReader.java */,
 				E9E059031D19F46F00DA53C5 /* BinnedGSHHSReader.java */,
 				E9E059041D19F46F00DA53C5 /* BinnedGSHHSReaderFactory.java */,
@@ -2362,6 +2368,8 @@
 				E9E059111D19F46F00DA53C5 /* PointFeatureSource.java */,
 				E9E059121D19F46F00DA53C5 /* PolygonFeature.java */,
 				E9E059131D19F46F00DA53C5 /* PolygonFeatureSource.java */,
+				E9E059191D2B27C500DA53C5 /* SelectionRule.java */,
+				E9E0591D1D34132200DA53C5 /* TextRule.java */,
 				E9E059141D19F46F00DA53C5 /* TSVectorReader.java */,
 			);
 			path = feature;
