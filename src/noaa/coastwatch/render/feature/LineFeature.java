@@ -44,9 +44,9 @@ import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.EarthLocation;
 
 /**
- * The <code>LineFeature</code> class holds a list of Earth location
+ * The <code>LineFeature</code> class holds a list of earth location
  * data.  Various methods are provided for converting from lines of
- * Earth location data to projected image data.
+ * earth location data to projected image data.
  *
  * @author Peter Hollemans
  * @since 3.1.1
@@ -59,7 +59,7 @@ public class LineFeature
   /** The last transformed path. */
   protected GeneralPath lastPath;
 
-  /** The last Earth image transform. */
+  /** The last earth image transform. */
   protected EarthImageTransform lastTrans;
 
   /** The last discontinuous status. */
@@ -75,7 +75,7 @@ public class LineFeature
 
   /** 
    * Returns the discontinuous flag.  If during the last transformation
-   * from a set of Earth locations to a general path under an Earth
+   * from a set of earth locations to a general path under an Earth
    * image transform, the vector was discontinuous at some point due
    * to an invalid transformation, then the path is discontinuous.  If the
    * fast rendering mode is on, or the vector has never been
@@ -133,12 +133,12 @@ public class LineFeature
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Filters this feature based on an Earth area.  If the line
-   * segments leave and re-enter the specified Earth area, they are
+   * Filters this feature based on an earth area.  If the line
+   * segments leave and re-enter the specified earth area, they are
    * split into multiple features.  The resulting features are
    * returned.
    *
-   * @param area the Earth area to use for filtering Earth locations.
+   * @param area the earth area to use for filtering earth locations.
    *
    * @return the list of features resulting from the filter operation.
    */
@@ -194,11 +194,11 @@ public class LineFeature
   ////////////////////////////////////////////////////////////
   
   /** 
-   * Transforms this feature to a general path.  The Earth image
+   * Transforms this feature to a general path.  The earth image
    * transform is used to eliminate any line segments which do not
    * transform to valid image points.
    *
-   * @param trans the Earth image transform for converting Earth
+   * @param trans the earth image transform for converting Earth
    * locations to image points.
    *
    * @return the general path that follows the feature data.
@@ -274,7 +274,7 @@ public class LineFeature
    * Gets the general path for this feature under the specified
    * transform.
    *
-   * @param trans the Earth image transform for converting Earth
+   * @param trans the earth image transform for converting Earth
    * locations to image points.
    *
    * @return the general path corresponding to this feature.
@@ -306,7 +306,7 @@ public class LineFeature
    * Renders this feature to a graphics context.
    *
    * @param g the graphics context for drawing.
-   * @param trans the Earth image transform for converting Earth
+   * @param trans the earth image transform for converting Earth
    * locations to image points.
    */
   public void render (

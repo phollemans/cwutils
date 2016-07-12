@@ -5,9 +5,16 @@
    AUTHOR: Peter Hollemans
      DATE: 2006/06/09
   CHANGES: 2008/02/18, PFH, modified to use opendap.dap classes
+           2016/03/16, PFH
+           - Changes: Updated to use new opendap.dap.DConnect2 class and call
+             DArray.getClearName().
+           - Issue: The Java NetCDF library uses the newer OPeNDAP Java
+             classes and they were conflicting with the older API that we were
+             using, so we had to remove the old dap2 jar and conform to the 
+             API found in the classes in the latest toolsUI jar file.
 
   CoastWatch Software Library and Utilities
-  Copyright 2006-2008, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2006-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -32,7 +39,7 @@ import java.util.concurrent.Executors;
 import noaa.coastwatch.render.feature.BinnedGSHHSReader;
 import opendap.dap.DArray;
 import opendap.dap.DArrayDimension;
-import opendap.dap.DConnect;
+import opendap.dap.DConnect2;
 import opendap.dap.DDS;
 import opendap.dap.DVector;
 import opendap.dap.DataDDS;
@@ -81,7 +88,7 @@ public class OpendapGSHHSReader
   private String path;
 
   /** The data connection. */
-  private DConnect connect;
+  private DConnect2 connect;
 
   /** The cache of bin data. */
   private Map binDataCache = Collections.synchronizedMap (new HashMap());
@@ -424,7 +431,7 @@ public class OpendapGSHHSReader
     String name
   ) throws IOException {
 
-    connect = new DConnect (path + "/" + name, true);
+    connect = new DConnect2 (path + "/" + name, true);
     return (0);
 
   } // openFile 
@@ -488,7 +495,7 @@ public class OpendapGSHHSReader
     // --------------------
     DataDDS dds;
     try { 
-      DConnect newConnect = new DConnect (connect.URL(), true);
+      DConnect2 newConnect = new DConnect2 (connect.URL(), true);
       dds = newConnect.getData (constraint.toString(), null); 
     } // try
     catch (Exception e) {

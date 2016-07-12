@@ -101,10 +101,10 @@ public class FloatWriter
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new binary file from the specified Earth data info
+   * Creates a new binary file from the specified earth data info
    * and file name.
    *
-   * @param info the Earth data info object.
+   * @param info the earth data info object.
    * @param file the new binary file name.
    *
    * @throws IOException if an error occurred opening the file.

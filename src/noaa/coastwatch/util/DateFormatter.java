@@ -90,7 +90,7 @@ public class DateFormatter {
    * @param date the date to format.
    * @param format a format string in the style of the Java
    * <code>SimpleDateFormat</code> class.
-   * @param loc the Earth location used to determine the appropriate
+   * @param loc the earth location used to determine the appropriate
    * time zone.
    *
    * @return a string with the date formatted.

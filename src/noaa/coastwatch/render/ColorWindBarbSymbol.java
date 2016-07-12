@@ -102,7 +102,7 @@ public class ColorWindBarbSymbol
    * @param directionAtt the feature attribute for wind direction.
    * @param speedUnits the units of speed, either
    * <code>SPEED_KNOTS</code> or <code>SPEED_METERS_PER_SECOND</code>.
-   * @param trans the Earth transform used for converting directions.
+   * @param trans the earth transform used for converting directions.
    * @param pal the color palette for color enhancement.
    * @param func the enhancement function.
    */

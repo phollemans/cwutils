@@ -7,10 +7,10 @@
            possible pixels on the edges of the source grids for ACSPO files. 
    AUTHOR: X. Liu
      DATE: 2011/09/13
-  CHANGES: n/a
+  CHANGES: 2015/11/05, PFH, deprecated
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2011, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>ACSPOInverseGridResampler</code> class performs generic data
- * resampling between 2D Earth transforms using an inverse location
+ * resampling between 2D earth transforms using an inverse location
  * lookup method.  The steps are as follows:
  * <ol>
  *
@@ -48,8 +48,12 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  * @author Xiaoming Liu
  * @since 3.3.0
+ *
+ * @deprecated As of 3.3.1, use {@link InverseGridResampler} which now performs
+ * the exact same operation as this class.
  */
-public class ACSPOInverseGridResampler 
+@Deprecated
+public class ACSPOInverseGridResampler
 	extends GridResampler{
 	
 	  // Variables
@@ -64,8 +68,8 @@ public class ACSPOInverseGridResampler
 	   * Creates a new grid resampler from the specified source and
 	   * destination transforms.
 	   *
-	   * @param sourceTrans the source Earth transform.
-	   * @param destTrans the destination Earth transform.
+	   * @param sourceTrans the source earth transform.
+	   * @param destTrans the destination earth transform.
 	   * @param polySize the estimation polynomial size in kilometers.
 	   *
 	   * @see LocationEstimator

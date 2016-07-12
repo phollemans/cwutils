@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthDataReaderFactory.java
-  PURPOSE: A class to act as a factory for Earth data readers.
+  PURPOSE: A class to act as a factory for earth data readers.
    AUTHOR: Peter Hollemans
      DATE: 2002/04/15
   CHANGES: 2002/04/21, MSR, added implementation
@@ -55,8 +55,8 @@ import java.util.Set;
 import noaa.coastwatch.io.EarthDataReader;
 
 /**
- * The Earth data reader factory class creates an appropriate
- * Earth data reader object based on a file name.  The default
+ * The earth data reader factory class creates an appropriate
+ * earth data reader object based on a file name.  The default
  * list of readers is as follows:
  * <ul>
  *
@@ -197,13 +197,13 @@ public class EarthDataReaderFactory {
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Creates an Earth data reader object.
+   * Creates an earth data reader object.
    *
    * @param file the file name.  The file will be opened using the
-   * different Earth data reader classes in the list until the
+   * different earth data reader classes in the list until the
    * correct constructor is found.
    * 
-   * @return an Earth data reader object specific to the file
+   * @return an earth data reader object specific to the file
    * format.
    *
    * @throws IOException if the reader could not be created.  Either

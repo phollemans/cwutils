@@ -37,9 +37,57 @@
            - Changes: Renamed class to "CommonDataModel" from "Generic"
            - Issue: We needed a more accurate description of the reader class,
              since we'd like to expand its functionality in the future.
+           2016/02/12, PFH
+           - Changes: Added extra test for missing scaling factor in float
+             or double data types.
+           - Issue: Float and double variables with no scaling factor were 
+             being printed as integer values.
+           2016/03/03, PFH
+           - Changes: Modified getVariableNamesInGroup() and getVariableNames()
+             for better handling of coordinate axes.
+           - Issue: When NetCDF / CF data files contained data grids in which
+             the rank of data variables in a grid set was different than the
+             number of axes in the coordinate system, this violated the 
+             assumption in the getVariableNamesInGroup() method that they were
+             equal in rank.  Also, if coordinate axes were showing up as 
+             data variables as well as coordinate axes and being shared between
+             grid sets, they were being included in the list of variables twice.
+           2016/03/06, PFH
+           - Changes: Added support for CDM-style grid mapped projections.
+           - Issue: There was a request for support for satellite geostationary
+             projection from CF metadata, so we needed to add a generic way
+             to have grid mapped projections be read and a special type of
+             earth transform used to pass transformation calculations into 
+             and out of the CDM projection layer.
+           2016/03/11, PFH
+           - Changes: Added a nasty hack to support the geostationary projection
+             data for the Himawari satellite via an EllipsoidPerspectiveProjection
+             object.
+           - Issue: Users wanted to be able to have full lat/lon <--> row/col
+             transformation capability, using just the swath level data provided
+             in level 2 style files.  The current SwathTransform doesn't handle
+             geostationary projection so we have put in this hack to help the
+             users for now.  We also tried to use the CDM grid map projection
+             classes, but in our case the geostationary projection computations
+             didn't seem to be returning the correct values -- the coastlines
+             were shifted at off-nadir angles.  Also, the users were reluctant
+             to but all the extra metadata into the L2 files that are required 
+             for properly specifying a CF grid mapped projection (concern about
+             limitation of the GHRSST L2 format).
+           2016/03/24, PFH
+           - Changes: Updated getBaseVariableName method to use more specific
+             regular expression.
+           - Issue: There were some Grib files found in testing that had
+             variables with names like "Land_cover_0__sea_1__land_surface"
+             which broke the variable name extension scheme that uses "__"
+             as a field separator.
+           2016/06/24, PFH
+           - Changes: Updates attribute names for geostationary projection data.
+           - Issue: The attribute names were changed from mixed case to all
+             lower case.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -65,6 +113,7 @@ import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -79,15 +128,20 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.Line;
 import noaa.coastwatch.util.SatelliteDataInfo;
 import noaa.coastwatch.util.TimePeriod;
+import noaa.coastwatch.util.trans.CDMGridMappedProjection;
 import noaa.coastwatch.util.trans.DataProjection;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
 import noaa.coastwatch.util.trans.SwathProjection;
+
+import noaa.coastwatch.util.trans.EllipsoidPerspectiveProjection;
+
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
+import ucar.nc2.Dimension;
 import ucar.nc2.constants.AxisType;
 import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.CoordinateAxis;
@@ -109,7 +163,7 @@ import ucar.nc2.time.CalendarDateRange;
  * expanded to a series of 2D variables by extending the variable
  * name for each non-geographic axis.  Datasets must:
  * <ul>
- *   <li>have the same Earth transform for all grids, and</li>
+ *   <li>have the same earth transform for all grids, and</li>
  *   <li>use either a geographic map projection with equally spaced lat/lon
  *   intervals, or a swath-style map projection with lat/lon data variables
  *   provided (since 3.3.1).</li>
@@ -189,7 +243,7 @@ public class CommonDataModelNCReader
 
   ////////////////////////////////////////////////////////////
   
-  /** Gets the Earth data info object. */
+  /** Gets the earth data info object. */
   private EarthDataInfo getGlobalInfo () throws IOException { 
 
     // TODO: Does this correctly detect the time periods in the file?
@@ -201,32 +255,9 @@ public class CommonDataModelNCReader
     for (VariableGroup group : groupList) {
       GridCoordSystem coordSystem = group.gridset.getGeoCoordSystem();
       CalendarDateRange dateRange = coordSystem.getCalendarDateRange();
-
-
-
-//System.out.println ("time axis = " + coordSystem.getTimeAxis());
-//System.out.println ("time boundary ref = " + coordSystem.getTimeAxis1D().getBoundaryRef());
-
-
-
       if (dateRange != null) {
         dateSet.add (new Date (dateRange.getStart().getMillis()));
-
-
-//System.out.println ("dateRange start = " + new Date (dateRange.getStart().getMillis()));
-
-
         dateSet.add (new Date (dateRange.getEnd().getMillis()));
-
-
-//System.out.println ("dateRange end = " + new Date (dateRange.getEnd().getMillis()));
-//System.out.println ("dateRange isPoint = " + dateRange.isPoint());
-//System.out.println ("dateRange duration = " + dateRange.getDuration());
-
-
-
-
-
       } // if
     } // for
     if (dateSet.size() == 0) dateSet.add (new Date(0));
@@ -287,7 +318,7 @@ public class CommonDataModelNCReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth transform information for the dataset. */
+  /** Gets the earth transform information for the dataset. */
   private EarthTransform getTransform () throws IOException {
 
     // Get list of transforms
@@ -299,107 +330,227 @@ public class CommonDataModelNCReader
 
     // Check that all transforms are equal
     // -----------------------------------
-    EarthTransform baseTrans = transList.get (0);
-    for (int i = 1; i < transList.size(); i++) {
-      if (!baseTrans.equals (transList.get (i)))
+    EarthTransform firstTrans = null;
+    for (EarthTransform trans : transList) {
+      if (firstTrans == null)
+        firstTrans = trans;
+      else if (!firstTrans.equals (trans))
         throw new IOException ("Earth transforms are not equal in all grids");
-    } // if
+    } // for
 
-    return (baseTrans);
+    return (firstTrans);
 
   } // getTransform
 
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the Earth transform information for the specified grid
+   * Gets the earth transform information for the specified grid
    * set. 
    */
   private EarthTransform getTransform (
     GridDataset.Gridset gridset
   ) throws IOException {
 
-    // Get and check coordinate system
-    // -------------------------------
-    GridCoordSystem coordSystem = gridset.getGeoCoordSystem();
-    if (!coordSystem.isLatLon()) {
-      throw new UnsupportedEncodingException (
-        "Unsupported coordinate system, not latitude/longitude based");
-    } // if
-    CoordinateAxis latAxis = coordSystem.getYHorizAxis();
-    if (latAxis.getAxisType() != AxisType.Lat)
-      throw new UnsupportedEncodingException ("Expected Y horizontal axis type to be latitude");
-    CoordinateAxis lonAxis = (CoordinateAxis) coordSystem.getXHorizAxis();
-    if (lonAxis.getAxisType() != AxisType.Lon)
-      throw new UnsupportedEncodingException ("Expected X horizontal axis type to be longitude");
+/*
 
-    // Create map projection
-    // ---------------------
+FIXME
+
+There are several types of transforms:
+
+- swath: earth locations given for each pixel in a pattern irregular enough
+  to have no simple (lat,lon) --> (i,j) translation (often from a sensor)
+ 
+- mapped: earth locations that can be translated to/from (i,j) using a map 
+  projection calculation in both directions
+  
+- vector: earth locations that fall along 1D vectors of latitude and 
+  longitude, not necessarily regularly spaced
+  
+- sensor: earth locations that have a complex relationship to their (i,j)
+  given by a calculation that models the sensor and earth geometry
+
+The issue is that the instanceof operator is used to determine which class
+of transform is being used, and then act accordingly.  This could indicate an
+issue with class design.  Transform class instanceof calls are used in the 
+utilities when:
+
+- writing ArcInfo compatible HDR and world files, to write the map projection
+  coordinates of the corner points, and the resolution
+  
+- displaying general file information in GUI, command line, or image sidebar, 
+  to print the map projection specifications and system
+
+- writing NetCDF, HDF, or GeoTIFF metadata, to decide which metadata to write
+
+- creating a subsampling of a map projection when viewing a GUI preview of a
+  grid
+
+- truncating top-left and bottom-right in swath to trace bounding box for
+  GUI and plotting
+  
+- detection of swath in order to decide if coastlines should be plotted on 
+  a preview image (ie: might be very slow rendering, or no (lat,lon) -> (i,j)
+  translation available
+
+*/
+
     EarthTransform trans = null;
-    if (coordSystem.isProductSet()) {
 
-      // Get latitude and longitude spacing and center
-      // ---------------------------------------------
-      double[] latValues = ((CoordinateAxis1D) latAxis).getCoordValues();
-      double[] lonValues = ((CoordinateAxis1D) lonAxis).getCoordValues();
-      int[] dims = new int[] {latValues.length, lonValues.length};
-      double[] pixelDims = new double[] {
-        (latValues[0] - latValues[latValues.length-1]) / (latValues.length-1),
-        (lonValues[lonValues.length-1] - lonValues[0]) / (lonValues.length-1)
-      };
-      EarthLocation center = new EarthLocation (
-        (latAxis.getMinValue() + latAxis.getMaxValue())/2,
-        (lonAxis.getMinValue() + lonAxis.getMaxValue())/2
-      );
+    // Get detected coordinate system
+    // ------------------------------
+    GridCoordSystem coordSystem = gridset.getGeoCoordSystem();
 
-      // Create GEO projection
-      // ---------------------
-      try {
-        trans = MapProjectionFactory.getInstance().create (GCTP.GEO, 0,
-          new double[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, GCTP.WGS84,
-          dims, center, pixelDims);
-      } // try
-      catch (NoninvertibleTransformException e) {
-        throw new RuntimeException ("Got non-invertible transform creating map projection");
-      } // catch
 
-    } // if
+
+
+
+
     
-    // Create swath projection
-    // -----------------------
+    
+    
+/**
+ * Here we have a very nasty hack in order to get the transform information
+ * correct for Himawari data.  The issue is that we cannot get the CDM class
+ * for geostationary data to produce the correct lat/lon transformation.
+ * So we insert our own detection of Himawari geostationary parameters in the
+ * global metadata, and create an EllipsoidPerspectiveProjection in response
+ * This is very similar to the code in the ACSPONCReader.
+ */
+
+
+/*
+		:sub_lon = 140.7 ;
+		:dist_virt_sat = 42164. ;
+		:earth_radius_equator = 6378.137 ;
+		:earth_radius_polar = 6356.7523 ;
+		:cfac = 20466275 ;
+		:lfac = 20466275 ;
+		:coff = 2750.5f ;
+		:loff = 2750.5f ;
+*/
+
+
+    try {
+      double subpointLon = ((Number) getAttribute ("sub_lon")).doubleValue();
+      double satDist = ((Number) getAttribute ("dist_virt_sat")).doubleValue();
+      int columnFactor = ((Number) getAttribute ("cfac")).intValue();
+      int lineFactor = ((Number) getAttribute ("lfac")).intValue();
+      double eqRadius = ((Number) getAttribute ("earth_radius_equator")).doubleValue();
+      double polarRadius = ((Number) getAttribute ("earth_radius_polar")).doubleValue();
+      double columnOffset = ((Number) getAttribute ("coff")).doubleValue();
+      double lineOffset = ((Number) getAttribute ("loff")).doubleValue();
+      CoordinateAxis xHorizAxis = coordSystem.getXHorizAxis();
+      int[] dims = xHorizAxis.getShape();
+      trans = new EllipsoidPerspectiveProjection (
+        new double[] {
+          0,
+          subpointLon,
+          satDist,
+          Math.toRadians (65536.0/lineFactor),
+          Math.toRadians (65536.0/columnFactor)
+        },
+        dims
+      );
+      return (trans);
+    } // try
+    catch (Exception e) { }
+    
+
+
+
+
+
+
+
+    // Check if grid mapped projection
+    // -------------------------------
+    if (CDMGridMappedProjection.isCompatibleSystem (coordSystem))
+      trans = new CDMGridMappedProjection (coordSystem);
+
     else {
     
+      // Check for latitude/longitude axes
+      // ---------------------------------
+      if (!coordSystem.isLatLon()) {
+        throw new UnsupportedEncodingException (
+          "Expected latitude/longitude based coordinate system");
+      } // if
+      CoordinateAxis latAxis = coordSystem.getYHorizAxis();
+      if (latAxis.getAxisType() != AxisType.Lat)
+        throw new UnsupportedEncodingException ("Expected Y horizontal axis type to be latitude");
+      CoordinateAxis lonAxis = coordSystem.getXHorizAxis();
+      if (lonAxis.getAxisType() != AxisType.Lon)
+        throw new UnsupportedEncodingException ("Expected X horizontal axis type to be longitude");
+
+      // Create geographic map projection
+      // --------------------------------
+      if (coordSystem.isProductSet()) {
+
+        // Get latitude and longitude spacing and center
+        // ---------------------------------------------
+        double[] latValues = ((CoordinateAxis1D) latAxis).getCoordValues();
+        double[] lonValues = ((CoordinateAxis1D) lonAxis).getCoordValues();
+        int[] dims = new int[] {latValues.length, lonValues.length};
+        double[] pixelDims = new double[] {
+          (latValues[0] - latValues[latValues.length-1]) / (latValues.length-1),
+          (lonValues[lonValues.length-1] - lonValues[0]) / (lonValues.length-1)
+        };
+        EarthLocation center = new EarthLocation (
+          (latAxis.getMinValue() + latAxis.getMaxValue())/2,
+          (lonAxis.getMinValue() + lonAxis.getMaxValue())/2
+        );
+
+        // Create GEO projection
+        // ---------------------
+        try {
+          trans = MapProjectionFactory.getInstance().create (GCTP.GEO, 0,
+            new double[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, GCTP.WGS84,
+            dims, center, pixelDims);
+        } // try
+        catch (NoninvertibleTransformException e) {
+          throw new RuntimeException ("Got non-invertible transform creating geographic projection");
+        } // catch
+
+      } // if
     
-      // TODO: Is this a potential point of leaking memory, where the
-      // swath transform will hold onto the nc tile cached grid variable?
+      // Create swath projection
+      // -----------------------
+      else {
       
-    
-      String latVarName = latAxis.getFullName();
-      String lonVarName = lonAxis.getFullName();
-      DataVariable lat = null, lon = null;
-      try {
-        lat = getVariable (latVarName);
-        int cols = lat.getDimensions()[Grid.COLS];
-        lon = getVariable (lonVarName);
-        if (dataProjection) {
-          trans = new DataProjection (lat, lon);
-        } // if
-        else {
-          trans = new SwathProjection (lat, lon, 100, //SWATH_POLY_SIZE,
-            new int[] {cols, cols});
-        } // else
-      } // try
-      catch (Exception e) {
-        System.err.println (this.getClass() + 
-          ": Warning: Problems encountered using Earth location data");
-        e.printStackTrace();
-        if (lat != null && lon != null) {
+      
+        // TODO: Is this a potential point of leaking memory, where the
+        // swath transform will hold onto the nc tile cached grid variable?
+        
+      
+        String latVarName = latAxis.getFullName();
+        String lonVarName = lonAxis.getFullName();
+        DataVariable lat = null, lon = null;
+        try {
+          lat = getVariable (latVarName);
+          int cols = lat.getDimensions()[Grid.COLS];
+          lon = getVariable (lonVarName);
+          if (dataProjection) {
+            trans = new DataProjection (lat, lon);
+          } // if
+          else {
+            trans = new SwathProjection (lat, lon, 100, //SWATH_POLY_SIZE,
+              new int[] {cols, cols});
+          } // else
+        } // try
+        catch (Exception e) {
           System.err.println (this.getClass() + 
-            ": Warning: Falling back on data-only projection, " +
-            "Earth location reverse lookup will not function");
-          trans = new DataProjection (lat, lon);
-        } // if
-      } // catch
+            ": Warning: Problems encountered using earth location data");
+          e.printStackTrace();
+          if (lat != null && lon != null) {
+            System.err.println (this.getClass() + 
+              ": Warning: Falling back on data-only projection, " +
+              "earth location reverse lookup will not function");
+            trans = new DataProjection (lat, lon);
+          } // if
+        } // catch
+      } // else
+    
     } // else
     
     return (trans);
@@ -423,14 +574,14 @@ public class CommonDataModelNCReader
     
     // Loop over each group
     // --------------------
-    List<String> nameList = new ArrayList<String>();
+    Set<String> nameSet = new LinkedHashSet<String>();
     for (VariableGroup group : groupList) {
 
       // Add variable names from group to list
       // -------------------------------------
       String[] nameArray = getVariableNamesInGroup (group);
       for (String name : nameArray) {
-        nameList.add (name);
+        nameSet.add (name);
         groupMap.put (name, group);
       } // for
       
@@ -439,13 +590,13 @@ public class CommonDataModelNCReader
       List<CoordinateAxis> axes = group.gridset.getGeoCoordSystem().getCoordinateAxes();
       for (CoordinateAxis axis : axes) {
         String name = axis.getFullName();
-        nameList.add (name);
+        nameSet.add (name);
         groupMap.put (name, new VariableGroup());
       } // for
       
     } // for
 
-    return (nameList.toArray (new String[0]));
+    return (nameSet.toArray (new String[0]));
 
   } // getVariableNames
 
@@ -471,23 +622,57 @@ public class CommonDataModelNCReader
     for (int i = 0; i < grids.size(); i++) {
       variableNameArray[i] = grids.get(i).getName();
     } // for
+    GridDatatype prototypeGrid = grids.get (0);
     
     // Find coordinate axes for expansion
     // ----------------------------------
     GridCoordSystem coordSystem = group.gridset.getGeoCoordSystem();
-    CoordinateAxis latAxis = coordSystem.getYHorizAxis();
-    CoordinateAxis lonAxis = coordSystem.getXHorizAxis();
-    int rank = coordSystem.getDomain().size();
+    CoordinateAxis yAxis = coordSystem.getYHorizAxis();
+    CoordinateAxis xAxis = coordSystem.getXHorizAxis();
+    int rank = prototypeGrid.getRank();
     group.expandDims = new int[rank];
-    CoordinateAxis[] axes = (CoordinateAxis[]) 
-      coordSystem.getCoordinateAxes().toArray (new CoordinateAxis[] {});
-    boolean hasNonSpatial = false;
+    CoordinateAxis[] axes = new CoordinateAxis[rank];
+    boolean hasNonHorizontal = false;
     group.extraDims = 0;
     String[] axisPrefix = new String[rank];
     for (int i = 0; i < rank; i++) {
-      if (!axes[i].equals (latAxis) && !axes[i].equals (lonAxis)) {
-        if (axes[i].getRank() != 1) 
+    
+      // Find axis that uses dimension
+      // -----------------------------
+      Dimension gridDimension = prototypeGrid.getDimension (i);
+      List<CoordinateAxis> axesUsingDimension = new ArrayList<CoordinateAxis>();
+      for (CoordinateAxis axis : coordSystem.getCoordinateAxes()) {
+        if (axis.getDimensions().contains (gridDimension))
+          axesUsingDimension.add (axis);
+      } // for
+      if (axesUsingDimension.size() == 0)
+        throw new IOException ("Cannot find coordinate axes for dimension " + gridDimension);
+      
+      // Check if one of the axes for the dimension is horizontal
+      // ---------------------------------------------------------
+      boolean isDimensionHorizontal = (
+        axesUsingDimension.contains (xAxis) ||
+        axesUsingDimension.contains (yAxis)
+      );
+      axes[i] = axesUsingDimension.get (0);
+      
+      // Handle horizontal axis
+      // ----------------------
+      if (isDimensionHorizontal) {
+        group.expandDims[i] = -1;
+      } // if
+      
+      // Handle non-horizontal axis
+      // --------------------------
+      else {
+
+        // Check for rank 1 axis
+        // ---------------------
+        if (axes[i].getRank() != 1)
           throw new IOException ("Unsupported coordinate axis rank");
+
+        // Save info about axis
+        // --------------------
         group.expandDims[i] = axes[i].getShape()[0];
         AxisType axisType = axes[i].getAxisType();
         if (axisType.equals (AxisType.Time)) axisPrefix[i] = "T";
@@ -495,14 +680,14 @@ public class CommonDataModelNCReader
         else if (axisType.equals (AxisType.Pressure)) axisPrefix[i] = "P";
         else if (axisType.equals (AxisType.Height)) axisPrefix[i] = "H";
         else axisPrefix[i] = "I";
-        hasNonSpatial = true;
+        hasNonHorizontal = true;
         group.extraDims++;
-      } // if
-      else
-        group.expandDims[i] = -1;
+        
+      } // else
+
     } // for
 
-    if (hasNonSpatial) {
+    if (hasNonHorizontal) {
 
       // Create name extensions
       // ----------------------
@@ -621,7 +806,7 @@ public class CommonDataModelNCReader
    */
   private String getBaseVariableName (String name) {
 
-    return (name.replaceFirst ("^(.*)" + START + ".*" + END + "$", "$1"));
+    return (name.replaceFirst ("^(.*)" + START + "[TZPHI][0-9]+_.*" + END + "$", "$1"));
     
   } // getBaseVariableName
 
@@ -733,8 +918,9 @@ public class CommonDataModelNCReader
     // ---------------
     String baseName = getBaseVariableName (variables[index]);
     Variable var = dataset.getReferencedFile().findVariable (baseName);
+    if (var == null) var = dataset.findCoordinateAxis (baseName);
     if (var == null)
-      throw new IOException ("Cannot access variable at index " + index);
+      throw new IOException ("Cannot access variable '" + baseName + "' at index " + index);
     VariableGroup group = groupMap.get (variables[index]);
     
     try {
@@ -844,12 +1030,23 @@ public class CommonDataModelNCReader
           maxValue = Short.MAX_VALUE*scaling[0];
         else if (varClass.equals (Integer.TYPE)) 
           maxValue = Integer.MAX_VALUE*scaling[0];
-        else if (varClass.equals (Float.TYPE)) 
+        else if (varClass.equals (Float.TYPE))
           maxValue = Float.MAX_VALUE*scaling[0];
         else if (varClass.equals (Double.TYPE)) 
           maxValue = Double.MAX_VALUE*scaling[0];
         digits = DataVariable.getDecimals (Double.toString (maxValue));
       } // else if
+      
+      // Use full precision for floating point types
+      // -------------------------------------------
+      if (digits == -1 && scaling == null) {
+        double maxValue = 0;
+        if (varClass.equals (Float.TYPE))
+          maxValue = Float.MAX_VALUE;
+        else if (varClass.equals (Double.TYPE)) 
+          maxValue = Double.MAX_VALUE;
+        digits = DataVariable.getDecimals (Double.toString (maxValue));
+      } // if
 
       // Set fractional digits
       // ---------------------
@@ -903,8 +1100,9 @@ public class CommonDataModelNCReader
     // ---------------
     String baseName = getBaseVariableName (variables[index]);
     Variable var = dataset.getReferencedFile().findVariable (baseName);
+    if (var == null) var = dataset.findCoordinateAxis (baseName);
     if (var == null)
-      throw new IOException ("Cannot access variable at index " + index);
+      throw new IOException ("Cannot access variable '" + baseName + "' at index " + index);
     VariableGroup group = groupMap.get (variables[index]);
 
     // Create tile cached grid

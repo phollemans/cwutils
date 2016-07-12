@@ -62,7 +62,7 @@ public class VariableEstimator
   /** Array of child partitions. */
   private EarthPartition[] parts;
 
-  /** Function index used for shared Earth partitions. */
+  /** Function index used for shared earth partitions. */
   private int shareIndex;
 
   ////////////////////////////////////////////////////////////
@@ -169,11 +169,11 @@ public class VariableEstimator
 
   /**
    * Constructs a variable estimator for the specified variable using
-   * the same Earth transform and partitioning as the specified
+   * the same earth transform and partitioning as the specified
    * variable estimator.
    * 
    * @param var the data variable for estimation.
-   * @param est the variable estimator to use for Earth partitioning
+   * @param est the variable estimator to use for earth partitioning
    * information.
    */
   public VariableEstimator (
@@ -189,14 +189,14 @@ public class VariableEstimator
 
   /**
    * Constructs a variable estimator for the specified variable and
-   * filter using the same Earth transform and partitioning as the
+   * filter using the same earth transform and partitioning as the
    * specified variable estimator.
    * 
    * @param var the data variable for estimation.
    * @param filter the data filtering function.  The filter is called
    * with the data value array for each partition prior to creating
    * the estimator object.
-   * @param est the variable estimator to use for Earth partitioning
+   * @param est the variable estimator to use for earth partitioning
    * information.
    */
   public VariableEstimator (
@@ -218,10 +218,10 @@ public class VariableEstimator
 
   /**
    * Constructs a variable estimator for the specified variable
-   * and Earth transform.
+   * and earth transform.
    * 
    * @param var the data variable for estimation.
-   * @param trans the Earth transform to use for partitioning.
+   * @param trans the earth transform to use for partitioning.
    * @param maxSize the maximum polynomial partition size in
    * kilometers.
    * @param maxDims the maximum partition size in any dimension
@@ -247,13 +247,13 @@ public class VariableEstimator
 
   /**
    * Constructs a variable estimator for the specified variable,
-   * filter, and Earth transform.
+   * filter, and earth transform.
    * 
    * @param var the data variable for estimation.
    * @param filter the data filtering function.  The filter is called
    * with the data value array for each partition prior to creating
    * the estimator object.
-   * @param trans the Earth transform to use for partitioning.
+   * @param trans the earth transform to use for partitioning.
    * @param maxSize the maximum polynomial partition size in
    * kilometers.
    * @param maxDims the maximum partition size in any dimension
@@ -322,11 +322,11 @@ public class VariableEstimator
 
   /**
    * Constructs a variable estimator from the specified encoding and
-   * the same Earth transform and partitioning as the specified
+   * the same earth transform and partitioning as the specified
    * variable estimator.
    * 
    * @param obj the variable estimator encoding.
-   * @param est the variable estimator to use for Earth partitioning
+   * @param est the variable estimator to use for earth partitioning
    * information.
    */
   public VariableEstimator (
@@ -395,7 +395,7 @@ public class VariableEstimator
    */
   public Object getEncoding () {
 
-    // Get Earth partition encoding
+    // Get earth partition encoding
     // ----------------------------
     Object[] obj = (Object[]) partition.getEncoding();
 
@@ -472,7 +472,7 @@ public class VariableEstimator
     List coefs = (List) Array.get (obj, 2);
     Array.set (obj, 2, data);
 
-    // Create Earth partition
+    // Create earth partition
     // ----------------------
     partition = new EarthPartition (obj);
     parts = partition.getPartitions ();

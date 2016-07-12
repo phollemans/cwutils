@@ -100,7 +100,7 @@ import noaa.coastwatch.util.trans.SwathProjection;
 
 /** 
  * The <code>EarthDataChooser</code> class allows the user to choose a
- * dataset and list of variables for opening Earth locatable data.
+ * dataset and list of variables for opening earth locatable data.
  * Data must be in a format recognizable by the {@link
  * noaa.coastwatch.io.EarthDataReaderFactory} class.  Property changes
  * are used to signal a change in reader or list of variables names.
@@ -142,7 +142,7 @@ public class EarthDataChooser
   /** The variable table. */
   private JTable variableTable;
 
-  /** The active Earth data reader. */
+  /** The active earth data reader. */
   private EarthDataReader reader;
 
   /** The dialog created by the showDialog() method. */
@@ -157,10 +157,10 @@ public class EarthDataChooser
   /** The preview panel. */
   private EarthDataViewPanel previewPanel;
 
-  /** The null preview Earth view. */
+  /** The null preview earth view. */
   private static EarthDataView nullView;
 
-  /** The coastline to use for the Earth view. */
+  /** The coastline to use for the earth view. */
   private static CoastOverlay coast;
 
   /** The tabbed pane with file and network choosers. */
@@ -265,7 +265,7 @@ public class EarthDataChooser
     variableTable.setPreferredScrollableViewportSize (
       new Dimension (colWidth*2, rowHeight*10));
 
-    // Create null Earth view
+    // Create null earth view
     // ----------------------
     if (nullView == null) {
       try { nullView = new SolidBackground (Color.BLACK); }

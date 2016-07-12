@@ -43,6 +43,8 @@ import org.nfunk.jep.SymbolTable;
  * left visible.  An <code>ExpressionMaskOverlay</code> is thus a more
  * general type of {@link BitmaskOverlay}.
  *
+ * @see noaa.coastwatch.tools.cwmath
+ *
  * @author Peter Hollemans
  * @since 3.2.1
  */

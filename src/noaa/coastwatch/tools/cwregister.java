@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: cwregister.java
-  PURPOSE: To register a number of Earth data variables to a master 
+  PURPOSE: To register a number of earth data variables to a master 
            projection.
    AUTHOR: Peter Hollemans
      DATE: 2002/11/11
@@ -16,9 +16,21 @@
            2007/04/19, PFH, added version printing
            2011/09/13, XL, modified to use ACSPOInverseGridResampler for ACSPO files
            2013/03/06, PFH, modified to make ACSPO resampler usage a method subtype
+           2015/11/05, PFH
+           - Changes: Removed usage of ACSPO-specific registration classes.
+           - Issue: In order to avoid duplicate changes/updates to
+             registration algorithms, we combined ACSPO and
+             regular registration classes into single classes.
+           2016/06/10, PFH
+           - Changes: Moved VIIRS bow-tie detection to new class.  Added options
+             for using an expression or filter to determine if a source pixel
+             should be used in registration.
+           - We had a request from Phil Keegstra to let the user supply a
+             data variable that contains a 1/0 flag for usability of the source
+             pixel data.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -38,8 +50,6 @@ import noaa.coastwatch.io.EarthDataReaderFactory;
 import noaa.coastwatch.io.HDFCachedGrid;
 import noaa.coastwatch.tools.CleanupHook;
 import noaa.coastwatch.tools.ToolServices;
-import noaa.coastwatch.util.ACSPOInverseGridResampler;
-import noaa.coastwatch.util.ACSPOMixedGridResampler;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.Grid;
@@ -47,16 +57,19 @@ import noaa.coastwatch.util.GridResampler;
 import noaa.coastwatch.util.InverseGridResampler;
 import noaa.coastwatch.util.MixedGridResampler;
 import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.LocationFilter;
+import noaa.coastwatch.util.VIIRSBowtieFilter;
+import noaa.coastwatch.util.ExpressionFilter;
 
 /**
- * <p>The registration tool resamples gridded Earth data to a master
+ * <p>The registration tool resamples gridded earth data to a master
  * projection.</p>
  * <!-- START MAN PAGE -->
  *
  * <h2>Name</h2>
  * <p>
  *   <!-- START NAME -->
- *   cwregister - resamples gridded Earth data to a master projection.
+ *   cwregister - resamples gridded earth data to a master projection.
  *   <!-- END NAME -->
  * </p>
  *
@@ -66,23 +79,25 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * <h3>Options:</h3>
  *
  * <p>
+ * -f, --srcfilter=TYPE <br>
  * -h, --help <br>
  * -m, --match=PATTERN <br>
  * -M, --method=TYPE <br>
  * -O, --overwrite=TYPE <br>
  * -p, --polysize=KILOMETERS <br>
  * -r, --rectsize=WIDTH/HEIGHT <br>
+ * -s, --srcexpr=EXPRESSION <br>
  * -v, --verbose <br>
  * --version <br>
  * </p>
  *
  * <h2>Description</h2>
- * <p> The register tool resamples gridded Earth data to
+ * <p> The register tool resamples gridded earth data to
  * a master projection.  A master projection specifies the translation
- * between grid row and column coordinates and Earth latitude and
+ * between grid row and column coordinates and earth latitude and
  * longitude coordinates.  The master projection file is any valid
- * Earth data file from which a set of row and column dimensions
- * and Earth transform parameters may be extracted.  This includes
+ * earth data file from which a set of row and column dimensions
+ * and earth transform parameters may be extracted.  This includes
  * standard CoastWatch product files as well as master files created
  * using the <b>cwmaster</b> tool. </p>
  *
@@ -95,7 +110,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   <dt>master</dt>
  *   <dd>The master projection file name.  Note that the master file
  *   is not altered in any way.  It is simply accessed in order to
- *   determine grid and Earth transform parameters.</dd>
+ *   determine grid and earth transform parameters.</dd>
  *
  *   <dt>input</dt>
  *   <dd>The input data file name.</dd>
@@ -112,6 +127,15 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   <dt>-h, --help</dt>
  *
  *   <dd>Prints a brief help message.</dd>
+ *
+ *   <dt>-f, --srcfilter=TYPE</dt>
+ *
+ *   <dd>Specifies a filter used to determine whether source pixels
+ *   at a given location should be used in registration.  The only filter 
+ *   type currently supported is 'viirs', which filters out pixels from the
+ *   VIIRS sensor that have been omitted due to bow-tie overlap.  By default 
+ *   all valid source pixels are used in registration.  See also the
+ *   <b>--srcexpr</b> option to filter using an expression.</dd>
  *
  *   <dt>-m, --match=PATTERN</dt>
  *
@@ -177,7 +201,18 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   dimensions of the resampling rectangles in the source.  The
  *   default polynomial rectangle size is 50/50, which introduces
  *   only a small error for AVHRR LAC data.</dd>
- * 
+ *
+ *   <dt>-s, --srcexpr=EXPRESSION</dt>
+ *   
+ *   <dd>Specifies that an expression should be used to
+ *   determine if pixels from the source should be used in
+ *   registration.  If the result of the expression is true (in the case of a
+ *   boolean result) or non-zero (in the case of a numerical
+ *   result), the source pixel at the given location is used, otherwise it is
+ *   ignored. The syntax for the expression is identical to the right-hand-side
+ *   of a <b>cwmath</b> expression (see the <b>cwmath</b> tool manual
+ *   page).  By default all valid source pixels are used in registration.</dd>
+ *
  *   <dt>-v, --verbose</dt>
  *
  *   <dd>Turns verbose mode on.  The current status of data
@@ -262,6 +297,8 @@ public final class cwregister {
     Option methodOpt = cmd.addStringOption ('M', "method");
     Option rectsizeOpt = cmd.addStringOption ('r', "rectsize");
     Option overwriteOpt = cmd.addStringOption ('O', "overwrite");
+    Option srcexprOpt = cmd.addStringOption ('s', "srcexpr");
+    Option srcfilterOpt = cmd.addStringOption ('f', "srcfilter");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -309,29 +346,12 @@ public final class cwregister {
     if (rectsize == null) rectsize = "50/50";
     String overwrite = (String) cmd.getOptionValue (overwriteOpt);
     if (overwrite == null) overwrite = "always";
-
-    // Detect method subtype
-    // ---------------------
-    /** 
-     * We do this primarily to support ACSPO resampling, which performs
-     * a slightly different algorithm.  In the case of inverse resampling,
-     * there is a greater tolerance for pixels at the edges of source 
-     * rectangles.  In the case of mixed resampling, the VIIRS bowtie overlap
-     * pixels are set to missing, and so are filled properly.  We currently 
-     * don't document the ACSPO method subtype, mainly because the 
-     * modifications for ACSPO data are a kludgy one-off aberration of nature 
-     * that no sane and regular user of cwregister should have to know about.
-     */
-    String[] methodArray = method.split ("-");
-    String methodSubtype = "";
-    if (methodArray.length == 2) {
-      method = methodArray[0];
-      methodSubtype = methodArray[1];
-    } // if
+    String srcexpr = (String) cmd.getOptionValue (srcexprOpt);
+    String srcfilter = (String) cmd.getOptionValue (srcfilterOpt);
 
     try {
 
-      // Get master Earth info
+      // Get master earth info
       // ---------------------
       if (verbose) System.out.println (PROG + ": Reading master " + master);
       EarthDataInfo masterInfo = null;
@@ -352,7 +372,7 @@ public final class cwregister {
         System.exit (2);
       } // catch
 
-      // Get input Earth info
+      // Get input earth info
       // --------------------
       if (verbose) System.out.println (PROG + ": Reading input " + input);
       if (method.equals ("mixed")) EarthDataReader.setDataProjection (true);
@@ -371,17 +391,16 @@ public final class cwregister {
       // ------------------------
       GridResampler resampler = null;
       if (method.equals ("inverse")) {
-    	if (methodSubtype.equals ("acspo"))
-          resampler = new ACSPOInverseGridResampler (inputInfo.getTransform(), 
-            masterTrans, polysize);
-    	else
-          resampler = new InverseGridResampler (inputInfo.getTransform(), 
-            masterTrans, polysize);
+        resampler = new InverseGridResampler (inputInfo.getTransform(),
+          masterTrans, polysize);
       } // if
 
       // Create mixed resampler
       // ----------------------
       else if (method.equals ("mixed")) {
+
+        // Get rectangle size
+        // ------------------
         String[] rectsizeArray = rectsize.split (ToolServices.SPLIT_REGEX);
         if (rectsizeArray.length != 2) {
           System.err.println (PROG + ": Invalid rectangle size '" + rectsize + 
@@ -390,15 +409,40 @@ public final class cwregister {
         } // if
         int rectWidth = Integer.parseInt (rectsizeArray[0]);
         int rectHeight = Integer.parseInt (rectsizeArray[1]);
-        MixedGridResampler mixed = null;
-        if (methodSubtype.equals ("acspo")) 
-          mixed = new ACSPOMixedGridResampler (inputInfo.getTransform(), 
-            masterTrans, rectWidth, rectHeight);
-    	else
-          mixed = new MixedGridResampler (inputInfo.getTransform(),
-            masterTrans, rectWidth, rectHeight);
+        
+        // Create resampler
+        // ----------------
+        MixedGridResampler mixed = new MixedGridResampler (inputInfo.getTransform(),
+          masterTrans, rectWidth, rectHeight);
+        resampler = mixed;
+
+        // Add location filter
+        // -------------------
+        if (srcexpr != null && srcfilter != null) {
+          System.err.println (PROG + ": Cannot specify *both* source filter and expression");
+          System.exit (2);
+        } // if
+
+        LocationFilter filter = null;
+        if (srcexpr != null) {
+          filter = new ExpressionFilter (reader, srcexpr);
+        } // if
+        else if (srcfilter != null) {
+          if (srcfilter.equals ("viirs")) {
+            filter = VIIRSBowtieFilter.getInstance();
+          } // if
+          else {
+            System.err.println (PROG + ": Invalid source filter");
+            System.exit (2);
+          } // else
+        } // else if
+
+        if (filter != null) mixed.setSourceFilter (filter);
+
+        // Set overwrite mode
+        // ------------------
         int overwriteMode = -1;
-        if (overwrite.equals ("always")) 
+        if (overwrite.equals ("always"))
           overwriteMode = MixedGridResampler.OVERWRITE_ALWAYS;
         else if (overwrite.equals ("never")) 
           overwriteMode = MixedGridResampler.OVERWRITE_NEVER;
@@ -409,7 +453,7 @@ public final class cwregister {
           System.exit (2);
         } // else
         mixed.setOverwriteMode (overwriteMode);
-        resampler = mixed;
+        
       } // else if
 
       // Invalid method
@@ -483,7 +527,7 @@ public final class cwregister {
 
     System.out.println (
 "Usage: cwregister [OPTIONS] master input output\n" +
-"Resamples gridded Earth data to a master projection.\n" +
+"Resamples gridded earth data to a master projection.\n" +
 "\n" +
 "Main parameters:\n" +
 "  master                     The master projection data file name.\n" +
@@ -491,6 +535,7 @@ public final class cwregister {
 "  output                     The output data file name.\n" +
 "\n" +
 "Options:\n" +
+"  -f, --srcfilter=TYPE       Filter the source pixels.  TYPE may be 'viirs'.\n" +
 "  -h, --help                 Show this help message.\n" +
 "  -m, --match=PATTERN        Register only variables matching the pattern.\n"+
 "  -M, --method=TYPE          Set resampling method.  TYPE may be\n" +
@@ -502,6 +547,7 @@ public final class cwregister {
 "  -r, --rectsize=WIDTH/HEIGHT\n" +
 "                             Set rectangle size in pixels for mixed\n" +
 "                              resampling.\n" +
+"  -s, --srcexpr=EXPRESSION   Use only source pixels matching an expression.\n" +
 "  -v, --verbose              Print verbose messages.\n" +
 "  --version                  Show version information.\n"
     );

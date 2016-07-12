@@ -94,13 +94,13 @@ import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.SwathProjection;
 
 /**
- * A NOAA 1b reader is an Earth data reader that reads NOAA 1b
+ * A NOAA 1b reader is an earth data reader that reads NOAA 1b
  * format GAC/LAC/HRPT data files available from the NOAA/NESDIS
  * Satellite Active Archive.  For file format details, see:
  * <blockquote>
  *   http://www.saa.noaa.gov
  * </blockquote>
- * The class may be used in a general way as an Earth data reader
+ * The class may be used in a general way as an earth data reader
  * to retrieve calibrated AVHRR variable data and dataset information,
  * or in a more specific way to retrieve raw scan line and header
  * information.  A selected subset of scan line and header attributes
@@ -748,11 +748,11 @@ public abstract class NOAA1bReader
   ////////////////////////////////////////////////////////////
 
   /**
-   * Reads the Earth transform information.  The projection metadata
+   * Reads the earth transform information.  The projection metadata
    * in the NOAA1b file is converted into the equivalent {@link
    * SwathProjection}.
    *
-   * @return an Earth transform based on the NOAA1b file data.
+   * @return an earth transform based on the NOAA1b file data.
    */
   private EarthTransform getTransform () {
 
@@ -776,12 +776,12 @@ public abstract class NOAA1bReader
     } // try
     catch (Exception e) {
       System.err.println (this.getClass() + 
-        ": Warning: Problems encountered using Earth location data");
+        ": Warning: Problems encountered using earth location data");
       e.printStackTrace();
       if (lat != null && lon != null) {
         System.err.println (this.getClass() + 
           ": Warning: Falling back on data-only projection, " +
-          "Earth location reverse lookup will not function");
+          "earth location reverse lookup will not function");
         trans = new DataProjection (lat, lon);
       } // if
     } // catch

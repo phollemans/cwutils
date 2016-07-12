@@ -68,7 +68,7 @@ import noaa.coastwatch.util.Line;
 import noaa.coastwatch.util.MetadataServices;
 
 /**
- * An HDF writer is an Earth data writer that writes HDF format
+ * An HDF writer is an earth data writer that writes HDF format
  * files using the HDF library class.  The HDF writer class is
  * abstract -- subclasses handle specific metadata variants.
  *
@@ -362,11 +362,11 @@ public abstract class HDFWriter
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new HDF file from the specified Earth data info and
+   * Creates a new HDF file from the specified earth data info and
    * file name.  The HDF file is created but initial global metadata
    * not written.  Chunking and compression are off by default.
    *
-   * @param info the Earth data info object.
+   * @param info the earth data info object.
    * @param file the new HDF file name.
    *
    * @throws HDFException if an error occurred in an HDF routine.
@@ -401,7 +401,7 @@ public abstract class HDFWriter
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Writes the Earth data info metadata.
+   * Writes the earth data info metadata.
    *
    * @throws HDFException if an error occurred in an HDF routine.
    * @throws IOException if an error occurred writing the file metadata.

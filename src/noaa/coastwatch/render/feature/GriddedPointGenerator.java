@@ -35,8 +35,8 @@ import noaa.coastwatch.util.trans.EarthTransform2D;
  * A <code>GriddedPointGenerator</code> creates point features from a
  * set of co-located <code>Grid</code> objects.  The user selects an
  * area of interest, and the generator converts all data values in
- * that area into point features whose Earth locations are derived
- * from the grids' Earth transform and whose attributes are the data
+ * that area into point features whose earth locations are derived
+ * from the grids' earth transform and whose attributes are the data
  * values at the grid point.
  *
  * @author Peter Hollemans
@@ -51,10 +51,10 @@ public class GriddedPointGenerator
   /** The array of grids to use for feature attribute data. */
   private Grid[] gridArray;
 
-  /** The Earth transform for the grid data. */
+  /** The earth transform for the grid data. */
   private EarthTransform2D trans;
   
-  /** The Earth area covered by the grids. */
+  /** The earth area covered by the grids. */
   private EarthArea gridArea;
 
   /** The grid dimensions as [rows, cols]. */
@@ -66,8 +66,8 @@ public class GriddedPointGenerator
    * Creates a new generator.
    * 
    * @param gridArray the array of grids to use for data, each of the
-   * same dimensions and Earth transform.
-   * @param trans the Earth transform for the grids.
+   * same dimensions and earth transform.
+   * @param trans the earth transform for the grids.
    */
   public GriddedPointGenerator (
     Grid[] gridArray,
@@ -177,7 +177,7 @@ public class GriddedPointGenerator
           dataLoc.set (Grid.COLS, j);
           if (!dataLoc.isContained (gridDims)) continue;
 
-          // Check Earth location
+          // Check earth location
           // --------------------
           EarthLocation pointLoc = trans.transformToPoint (dataLoc, null);
           if (!pointLoc.isValid()) continue;

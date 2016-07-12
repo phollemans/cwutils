@@ -88,7 +88,7 @@ public class LineSurvey
    * Creates a new line survey.
    * 
    * @param variable the survey variable.
-   * @param trans the survey variable Earth transform.
+   * @param trans the survey variable earth transform.
    * @param start the line starting location.
    * @param end the line ending location.
    */

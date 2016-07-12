@@ -35,15 +35,15 @@ import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
- * The Earth area class represents irregularly shaped areas on a
+ * The earth area class represents irregularly shaped areas on a
  * sphere.  In cases where simple north, south, east, and west bounds
- * are inadequate for describing an area, the Earth area class may be
- * used to set up and query if a certain Earth location is inside an
+ * are inadequate for describing an area, the earth area class may be
+ * used to set up and query if a certain earth location is inside an
  * irregular shape.  The area information is maintained using a set of
  * 1x1 degree grid squares covering the entire globe.  Each grid
  * square is referenced by its lower-left corner -- for example the
  * grid square (10, 20) covers the area between 10N to 11N and 20E to
- * 21E.  All Earth locations must have a latitude range of [-90..90]
+ * 21E.  All earth locations must have a latitude range of [-90..90]
  * and longitude range of [-180..180).
  *
  * @author Peter Hollemans
@@ -65,9 +65,9 @@ public class EarthArea
    * resulting area includes only grid squares which occur both in this
    * area and in the other area.
    *
-   * @param area the other Earth area to compute the intersection.
+   * @param area the other earth area to compute the intersection.
    *
-   * @return a new Earth area containing only grid squares in common.
+   * @return a new earth area containing only grid squares in common.
    */
   public EarthArea intersection (
     EarthArea area
@@ -81,14 +81,14 @@ public class EarthArea
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns true if this Earth area contains no grid squares. */
+  /** Returns true if this earth area contains no grid squares. */
   public boolean isEmpty () { return (bits.isEmpty()); }
 
   ////////////////////////////////////////////////////////////
 
   /**
-   * The Earth area iterator is used to loop over all grid squares in
-   * an Earth area.
+   * The earth area iterator is used to loop over all grid squares in
+   * an earth area.
    */
   public class EarthAreaIterator
     implements Iterator {
@@ -155,11 +155,11 @@ public class EarthArea
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Determines if an Earth location is contained in this area.
+   * Determines if an earth location is contained in this area.
    *
-   * @param loc the Earth location to search for.
+   * @param loc the earth location to search for.
    *
-   * @return true if Earth location is in this area, or false if not.
+   * @return true if earth location is in this area, or false if not.
    */
   public boolean contains (
     EarthLocation loc
@@ -193,9 +193,9 @@ public class EarthArea
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Adds an Earth location to this area.
+   * Adds an earth location to this area.
    *
-   * @param loc the Earth location to add.
+   * @param loc the earth location to add.
    */
   public void add (
     EarthLocation loc
@@ -210,7 +210,7 @@ public class EarthArea
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Adds all Earth locations to this area.
+   * Adds all earth locations to this area.
    */
   public void addAll () {
 
@@ -223,9 +223,9 @@ public class EarthArea
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Removes an Earth location from this area.
+   * Removes an earth location from this area.
    *
-   * @param loc the Earth location to remove.
+   * @param loc the earth location to remove.
    */
   public void remove (
     EarthLocation loc
@@ -262,11 +262,11 @@ public class EarthArea
   ////////////////////////////////////////////////////////////
 
   /**
-   * Computes an index based on an Earth location.
+   * Computes an index based on an earth location.
    *
-   * @param loc the Earth location to convert.
+   * @param loc the earth location to convert.
    *
-   * @return an index into the bit set or -1 if the Earth location is
+   * @return an index into the bit set or -1 if the earth location is
    * invalid.
    */
   private int getIndex (
@@ -283,12 +283,12 @@ public class EarthArea
   ////////////////////////////////////////////////////////////
 
   /**
-   * Computes an Earth location based on an index.  The Earth location
+   * Computes an earth location based on an index.  The earth location
    * is the center of the box represented by the index.
    *
    * @param index the index to convert.
    *
-   * @return the computed Earth location.
+   * @return the computed earth location.
    */
   private EarthLocation getLocation (
     int index
@@ -322,7 +322,7 @@ public class EarthArea
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates an empty Earth area with no locations. */
+  /** Creates an empty earth area with no locations. */
   public EarthArea () {
   
     bits = new BitSet();
@@ -379,17 +379,17 @@ public class EarthArea
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Explores within data location boundaries using an Earth transform
+   * Explores within data location boundaries using an earth transform
    * to find all locations within an area.  The new grid squares are
    * added to the area.  The exploration terminates when squares that
    * are already part of the area are encountered, the data location
-   * boundaries are hit, or the Earth transform returns an invalid
+   * boundaries are hit, or the earth transform returns an invalid
    * data location.
    * 
-   * @param trans an Earth transform to use for exploration.
+   * @param trans an earth transform to use for exploration.
    * @param min the minimum data location to explore.
    * @param max the maximum data location to explore.
-   * @param start the starting Earth location for exploration.
+   * @param start the starting earth location for exploration.
    */
   public void explore (
     EarthTransform trans,
@@ -470,13 +470,13 @@ public class EarthArea
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new Earth area from the specified parameters.  The
+   * Creates a new earth area from the specified parameters.  The
    * parameters are used to perform an exploration of the area to
-   * include all Earth locations.  The exploration is started at the
+   * include all earth locations.  The exploration is started at the
    * center of the data location boundaries.  After exploration, an
    * expansion of one grid square is performed.
    *
-   * @param trans an Earth transform to use for exploration.
+   * @param trans an earth transform to use for exploration.
    * @param min the minimum data location to explore.
    * @param max the maximum data location to explore.  
    */
@@ -496,9 +496,9 @@ public class EarthArea
       (min.get(1) + max.get(1))/2);
     EarthLocation start = trans.transform (center);
     if (getIndex (start) == -1) 
-      throw new RuntimeException ("Data center has no valid Earth location");
+      throw new RuntimeException ("Data center has no valid earth location");
 
-    // Explore Earth area and expand
+    // Explore earth area and expand
     // -----------------------------
     explore (trans, min, max, start);
     expand();
@@ -508,7 +508,7 @@ public class EarthArea
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the geographic extremes in this area.  If this Earth area
+   * Gets the geographic extremes in this area.  If this earth area
    * crosses the 180E/180W border, the east and west extremes are
    * adjusted so they both fall in the range [0..360].  Otherwise they
    * fall in the range [-180..180].

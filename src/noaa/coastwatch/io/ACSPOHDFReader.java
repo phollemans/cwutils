@@ -632,7 +632,7 @@ public class ACSPOHDFReader
   //////////////////////////////////////////////////////////////////////
 
   /**
-   * Reads the Earth transform information.  The projection
+   * Reads the earth transform information.  The projection
    * metadata and data in the HDF file is converted into the
    * equivalent {@link SwathProjection}.
    *
@@ -663,12 +663,12 @@ public class ACSPOHDFReader
     } // try
     catch (Exception e) {
       System.err.println (this.getClass() + 
-        ": Warning: Problems encountered using Earth location data");
+        ": Warning: Problems encountered using earth location data");
       e.printStackTrace();
       if (lat != null && lon != null) {
         System.err.println (this.getClass() + 
           ": Warning: Falling back on data-only projection, " +
-          "Earth location reverse lookup will not function");
+          "earth location reverse lookup will not function");
         trans = new DataProjection (lat, lon);
       } // if
     } // catch

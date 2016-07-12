@@ -76,7 +76,7 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.Line;
 
 /**
- * An HDF reader is an Earth data reader that reads HDF format
+ * An HDF reader is an earth data reader that reads HDF format
  * files using the HDF library class.  The HDF reader class is
  * abstract -- subclasses handle specific metadata variants.
  *
@@ -113,7 +113,7 @@ public abstract class HDFReader
    *
    * @throws HDFException if an error occurred in an HDF routine.
    * @throws IOException if an error occurred reading the file metadata.
-   * @throws NoninvertibleTransformException if the Earth transform object
+   * @throws NoninvertibleTransformException if the earth transform object
    * could not be initialized.
    * @throws ClassNotFoundException if the HDF attribute type is unknown.
    */
@@ -136,7 +136,7 @@ public abstract class HDFReader
     // ------------------
     variables = getVariableNames (sdid);
 
-    // Create Earth data info object
+    // Create earth data info object
     // -----------------------------
     info = getGlobalInfo();
     if (readAllMetadata()) getAttributes (sdid, info.getMetadataMap(), true);
@@ -181,7 +181,7 @@ public abstract class HDFReader
       // ------------------
       variables = getVariableNames (sdid);
       
-      // Create Earth data info object
+      // Create earth data info object
       // -----------------------------
       info = getGlobalInfo();
       if (readAllMetadata()) getAttributes (sdid, info.getMetadataMap(), true);
@@ -264,13 +264,13 @@ public abstract class HDFReader
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Reads the Earth data info metadata.
+   * Reads the earth data info metadata.
    *
-   * @return the Earth data info object.
+   * @return the earth data info object.
    *
    * @throws HDFException if an error occurred in an HDF routine.
    * @throws IOException if an error occurred reading the file metadata.
-   * @throws NoninvertibleTransformException if the Earth transform object
+   * @throws NoninvertibleTransformException if the earth transform object
    * could not be initialized.
    * @throws ClassNotFoundException if the HDF attribute type is unknown.
    */  

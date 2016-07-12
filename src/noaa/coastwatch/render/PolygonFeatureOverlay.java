@@ -30,7 +30,7 @@ import noaa.coastwatch.render.PolygonOverlay;
 
 /**
  * The <code>PolygonFeatureOverlay</code> class annotes a data view with
- * Earth polygons from an {@link PolygonFeatureSource}.
+ * earth polygons from an {@link PolygonFeatureSource}.
  *
  * @author Peter Hollemans
  * @since 3.1.9
@@ -40,7 +40,7 @@ public class PolygonFeatureOverlay
 
   // Variables
   // ---------
-  /** The Earth vector source. */
+  /** The earth vector source. */
   private PolygonFeatureSource source;
 
   ////////////////////////////////////////////////////////////

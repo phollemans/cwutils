@@ -12,9 +12,16 @@
              of objects for every iteration.  We suspect the loop would run 
              more efficiently without the overhead of creating new objects
              every time through.
+           2015/11/05, PFH
+           - Changes: Updated to extent the mapping of pixels to full edges.
+           - Issue: When time sequential swaths were being registered 
+             separately and then combined, we found single pixel gaps along
+             the seam between swaths.  By extending the source location
+             bounds test to include the 0.5 pixel border of the source grid,
+             this cleared up these gap lines.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -36,7 +43,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>InverseGridResampler</code> class performs generic data
- * resampling between 2D Earth transforms using an inverse location
+ * resampling between 2D earth transforms using an inverse location
  * lookup method.  The steps are as follows:
  * <ol>
  *
@@ -73,8 +80,8 @@ public class InverseGridResampler
    * Creates a new grid resampler from the specified source and
    * destination transforms.
    *
-   * @param sourceTrans the source Earth transform.
-   * @param destTrans the destination Earth transform.
+   * @param sourceTrans the source earth transform.
+   * @param destTrans the destination earth transform.
    * @param polySize the estimation polynomial size in kilometers.
    *
    * @see LocationEstimator
@@ -124,14 +131,26 @@ public class InverseGridResampler
     LocationEstimator estimator = new LocationEstimator (destTrans,
       destDims, sourceTrans, sourceDims, sourceNav, polySize);
 
+    // Set up source location bounds
+    // -----------------------------
+    DataLocation sourceLocMin = new DataLocation (-0.5, -0.5);
+    DataLocation sourceLocMax = new DataLocation (
+      sourceDims[Grid.ROWS]-0.5, sourceDims[Grid.COLS]-0.5);
+
     // Loop over each destination location
     // -----------------------------------
     DataLocation destLoc = new DataLocation (2);
     DataLocation sourceLoc = new DataLocation (2);
     EarthLocation earthLoc = new EarthLocation();
     for (int i = 0; i < destDims[Grid.ROWS]; i++) {
-      if (verbose && i%100 == 0)
-        System.out.println (this.getClass() + ": Working on output row " + i);
+
+      // Print progress
+      // --------------
+      if (verbose && (i+1)%(destDims[Grid.ROWS]/10) == 0) {
+        int percentComplete = (int) Math.round (((i+1)*100.0/destDims[Grid.ROWS]));
+        System.out.println (this.getClass() + ": " + percentComplete + "% complete");
+      } // if
+
       for (int j = 0; j < destDims[Grid.COLS]; j++) {
 
         // Get source location
@@ -143,7 +162,8 @@ public class InverseGridResampler
         boolean isSourceValid = false;
         if (isDestValid) {
           estimator.getLocation (destLoc, sourceLoc);
-          isSourceValid = (sourceLoc.isValid() && sourceLoc.isContained (sourceDims));
+          isSourceValid = (sourceLoc.isValid() &&
+            sourceLoc.isContained (sourceLocMin, sourceLocMax));
         } // if
 
         // Copy data value

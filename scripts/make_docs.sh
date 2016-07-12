@@ -4,10 +4,10 @@
 ## NOTE: This script must be run from the doc/ directory.
 ##
 
-awk=/usr/local/bin/gawk
-pdflatex=/usr/texbin/pdflatex
-bibtex=/usr/texbin/bibtex
-html2latex=/usr/local/bin/html2latex
+awk=/opt/local/bin/gawk
+pdflatex=/opt/local/bin/pdflatex
+bibtex=/opt/local/bin/bibtex
+html2latex=/opt/local/bin/html2latex
 saxon_jar=../scripts/saxon9he.jar
 saxon="java -cp ${saxon_jar} net.sf.saxon.Transform"
 

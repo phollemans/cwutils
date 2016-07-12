@@ -3,10 +3,11 @@
      FILE: TileCacheManager.java
    AUTHOR: Peter Hollemans
      DATE: 2014/07/01
-  CHANGES: n/a
+  CHANGES: 2016/01/19, PFH
+           - Changes: Updated to new logging API.
 
   CoastWatch Software Library and Utilities
-  Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2014-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -33,6 +34,9 @@ import noaa.coastwatch.io.tile.TileSource;
 import noaa.coastwatch.io.tile.TilingScheme;
 import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
 import noaa.coastwatch.io.tile.TilingScheme.Tile;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * The <code>TileCacheManager</code> class provides convenient access to the 
@@ -251,11 +255,14 @@ public class TileCacheManager {
    */
   public static void main (String[] argv) throws Exception {
 
-    System.out.print ("Testing getInstance, getCache ... ");
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (TileCacheManager.class);
+
+    logger.test ("getInstance, getCache");
     TileCacheManager manager = TileCacheManager.getInstance();
     assert (manager != null);
     assert (manager.getCache() != null);
-    System.out.println ("OK");
+    logger.passed();
 
     /*
      *     0    1    2    3    4
@@ -293,15 +300,15 @@ public class TileCacheManager {
     };
     final TilePosition pos = scheme.new TilePosition (2, 3);
 
-    System.out.print ("Testing getTile ... ");
+    logger.test ("getTile");
     Tile tile = manager.getTile (source, pos);
     assert (tile.getPosition().equals (pos));
     final TileCache cache = manager.getCache();
     assert (cache.containsKey (new TileCacheKey (source, pos)));
     assert (cache.containsValue (tile));
-    System.out.println ("OK");
+    logger.passed();
 
-    System.out.print ("Testing requestTiles ... ");
+    logger.test ("requestTiles");
     int[] start = new int[] {0, 0};
     int[] length = globalDims;
     final int[] tilesObserved = new int[] {0};
@@ -342,15 +349,15 @@ public class TileCacheManager {
     int tileCount = tileCounts[0]*tileCounts[1];
     assert (tilesObserved[0] == tileCount);
     for (boolean val : isCovered) assert (val);
-    System.out.println ("OK");
+    logger.passed();
 
-    System.out.print ("Testing removeTilesForSource ... ");
+    logger.test ("removeTilesForSource");
     assert (cache.size() == tileCount);
     assert (cache.getCacheSize() == globalDims[0]*globalDims[1]);
     manager.removeTilesForSource (source);
     assert (cache.size() == 0);
     assert (cache.getCacheSize() == 0);
-    System.out.println ("OK");
+    logger.passed();
   
   } // main
 

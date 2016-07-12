@@ -4,10 +4,15 @@
   PURPOSE: A class to write NetCDF 4/CF format files.
    AUTHOR: Peter Hollemans
      DATE: 2015/04/08
-  CHANGES: n/a
+  CHANGES: 2016/01/19, PFH
+           - Changes: Updated to new logging API.
+           2016/02/12, PFH
+           - Changes: Corrected "missing" in metadata writing to "missing_value".
+           - Issue: This was causing problems in output datasets, computing
+             statistics while ignoring missing values.
 
   CoastWatch Software Library and Utilities
-  Copyright 2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2015-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -61,6 +66,9 @@ import edu.ucar.ral.nujan.netcdf.NhException;
 import edu.ucar.ral.nujan.netcdf.NhFileWriter;
 import edu.ucar.ral.nujan.netcdf.NhGroup;
 import edu.ucar.ral.nujan.netcdf.NhVariable;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * <p>A CF NetCDF 4 writer creates NetCDF 4 format files with CF
@@ -1352,7 +1360,7 @@ public class CFNC4Writer
       missing,
       COMPRESSION_LEVEL
     );
-    ncVar.addAttribute ("missing", dataType, missing);
+    ncVar.addAttribute ("missing_value", dataType, missing);
 
     // Set packing info
     // ----------------
@@ -1390,6 +1398,10 @@ public class CFNC4Writer
 
     // Set coordinate info
     // -------------------
+    
+    // TODO: Should we add extra variables here?  eg: "time level x y lat lon" ?
+    
+    
     ncVar.addAttribute ("coordinates", NhVariable.TP_STRING_VAR, "lat lon");
 
 
@@ -1650,8 +1662,12 @@ public class CFNC4Writer
    */
   public static void main (String[] argv) throws Exception {
 
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (CFNC4Writer.class);
+
     // Create transforms
     // -----------------
+    logger.test ("Framework");
     List<EarthTransform> transforms = new ArrayList<EarthTransform>();
     transforms.add (MapProjectionFactory.getInstance().create (
       ProjectionConstants.MERCAT,
@@ -1719,7 +1735,13 @@ public class CFNC4Writer
       Short.MIN_VALUE
     );
 
+    logger.passed();
+
     for (EarthTransform trans : transforms) {
+
+      String ncFileName = "/tmp/test." + trans.getClass().getName() + ".nc4";
+      logger.test ("constructor, addVariable, flush, close (" +
+        ncFileName + ")");
 
       // Create info
       // -----------
@@ -1737,10 +1759,6 @@ public class CFNC4Writer
 
       // Write file
       // ----------
-      String ncFileName = "/tmp/test." + trans.getClass().getName() + ".nc4";
-      System.out.print ("Testing constructor, addVariable, flush, close (" +
-        ncFileName + ") ... ");
-    
       CFNC4Writer writer = new CFNC4Writer (
         info,
         ncFileName,
@@ -1757,7 +1775,7 @@ public class CFNC4Writer
   //    ncFile.delete();
   //    assert (!ncFile.exists());
 
-      System.out.println ("OK");
+      logger.passed();
       
     } // for
     

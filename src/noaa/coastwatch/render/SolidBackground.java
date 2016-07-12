@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: SolidBackground.java
-  PURPOSE: A class to view Earth data overlays against a plain background.
+  PURPOSE: A class to view earth data overlays against a plain background.
    AUTHOR: Peter Hollemans
      DATE: 2002/12/01
   CHANGES: 2003/04/19, PFH, added rendering progress mode
@@ -39,7 +39,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
 
 /**
- * The solid background class is an Earth data view that creates a
+ * The solid background class is an earth data view that creates a
  * solid image of color to help view overlay graphics.
  *
  * @author Peter Hollemans
@@ -154,7 +154,7 @@ public class SolidBackground
   /**
    * Constructs a new solid background with the specified color.
    * 
-   * @param trans the view Earth transform.
+   * @param trans the view earth transform.
    * @param dims the grid dimensions to use for this view.
    * @param color the background color.
    *

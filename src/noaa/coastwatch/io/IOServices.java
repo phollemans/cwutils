@@ -4,10 +4,13 @@
   PURPOSE: Performs various static IO-related functions.
    AUTHOR: Peter Hollemans
      DATE: 2003/12/28
-  CHANGES: n/a
+  CHANGES: 2016/02/22, PFH
+           - Changes: Added printing of XML documents.
+           - Issue: In some cases, I/O involves XML documents, and we wanted
+             to be able to print these for debugging purposes.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2003, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -26,6 +29,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.w3c.dom.Node;
+import org.w3c.dom.NamedNodeMap;
 
 /**
  * The IO services class defines various static methods relating
@@ -115,6 +120,86 @@ public class IOServices {
     return (newValue.toString());
 
   } // convertOctal
+
+  ////////////////////////////////////////////////////////////
+  
+  /**
+   * Prints a node and its children in XML syntax.
+   * 
+   * @param root the root of the node tree to print.
+   */
+  public static void printXML (
+    Node root
+  ) {
+  
+    printXML (root, 0);
+
+  } // printXML
+  
+  ////////////////////////////////////////////////////////////
+  
+  /**
+   * Gets an indent string.
+   *
+   * @param level the level of indent to get.
+   */
+  private static String getIndent (
+    int level
+  ) {
+
+    StringBuffer buffer = new StringBuffer();
+    String indent = "  ";
+    for (int i = 0; i < level; i++) buffer.append (indent);
+    return (buffer.toString());
+
+  } // getIndent
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Prints a node and its children in XML syntax.
+   * 
+   * @param node the root of the node tree to print.
+   * @param level the indext level for the tree.
+   */
+  private static void printXML (
+    Node node,
+    int level
+  ) {
+
+    // Print node start
+    // ----------------
+    String nodeName = node.getNodeName();
+    System.out.print (getIndent (level) + "<" + nodeName);
+
+    // Print attributes
+    // ----------------
+    NamedNodeMap attrMap = node.getAttributes();
+    if (attrMap != null) {
+      int length = attrMap.getLength();
+      for (int i = 0; i < length; i++) {
+        Node attr = attrMap.item(i);
+        System.out.print (" " + attr.getNodeName() + "=\"" + attr.getNodeValue() + "\"");
+      } // for
+    } // if
+
+    // Print leaf node end
+    // -------------------
+    Node child = node.getFirstChild();
+    if (child == null) System.out.println ("/>");
+
+    // Print children
+    // --------------
+    else {
+      System.out.println (">");
+      while (child != null) {
+        printXML (child, level+1);
+        child = child.getNextSibling();
+      } // while
+      System.out.println (getIndent (level) + "</" + nodeName + ">");
+    } // else
+    
+  } // printXML
 
   ////////////////////////////////////////////////////////////
 

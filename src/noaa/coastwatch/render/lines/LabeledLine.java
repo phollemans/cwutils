@@ -106,8 +106,8 @@ public class LabeledLine
    * locations are translated to image points, and only added
    * if the points are valid.
    *
-   * @param start the starting Earth location.
-   * @param end the ending Earth location.
+   * @param start the starting earth location.
+   * @param end the ending earth location.
    * @param trans the transform for converting from earth
    * location to image location.
    */

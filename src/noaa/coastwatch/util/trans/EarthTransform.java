@@ -49,7 +49,7 @@ import noaa.coastwatch.util.trans.DatumFactory;
 import noaa.coastwatch.util.trans.SpheroidConstants;
 
 /**
- * The Earth transform class translates between data coordinates and
+ * The earth transform class translates between data coordinates and
  * geographic coordinates in latitude and longitude degrees.
  *
  * @author Peter Hollemans
@@ -65,6 +65,24 @@ public abstract class EarthTransform
   /** The instance of WGS84. */
   private static final Datum WGS84 = 
     DatumFactory.create (SpheroidConstants.WGS84);
+
+/*
+  
+TODO - This is a possible location for a set of transform types, to be used
+in conjunction with whatever convention replaces instanceof calls for this
+class.
+
+public enum TransformType {
+  SWATH ("swath"),
+  MAPPED ("mapped"),
+  VECTOR ("vector"),
+  SENSOR ("sensor");
+  private String name;
+  private TransformType (String name) { this.name = name; }
+  public String toString () { return (name); }
+};
+
+*/
 
   // Variables
   // ---------
@@ -101,7 +119,7 @@ public abstract class EarthTransform
    *
    * @param dataLoc the data location.
    *
-   * @return the Earth location.  The Earth location may contain
+   * @return the earth location.  The earth location may contain
    * <code>Double.NaN</code> if no conversion is possible.
    *
    * @see #transform(DataLocation,EarthLocation)
@@ -120,11 +138,11 @@ public abstract class EarthTransform
    * Converts data coordinates to geographic coordinates.
    *
    * @param dataLoc the data location.
-   * @param earthLoc the Earth location or null.  If null, an object
+   * @param earthLoc the earth location or null.  If null, an object
    * is created and returned.  If non-null, the object is simply
    * modified.
    *
-   * @return the Earth location.  The Earth location may contain
+   * @return the earth location.  The earth location may contain
    * <code>Double.NaN</code> if no conversion is possible.
    *
    * @see #transform(DataLocation)
@@ -158,7 +176,7 @@ public abstract class EarthTransform
   /**
    * Converts geographic coordinates to data coordinates.
    *
-   * @param earthLoc the Earth location.
+   * @param earthLoc the earth location.
    *
    * @return the data location.  The data location may contain
    * <code>Double.NaN</code> if no conversion is possible.
@@ -178,7 +196,7 @@ public abstract class EarthTransform
   /**
    * Converts geographic coordinates to data coordinates.
    *
-   * @param earthLoc the Earth location.
+   * @param earthLoc the earth location.
    * @param dataLoc the data location or null.  If null, an object
    * is created and returned.  If non-null, the object is simply
    * modified.
@@ -217,7 +235,7 @@ public abstract class EarthTransform
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a string describing the Earth transform type. */
+  /** Gets a string describing the earth transform type. */
   public abstract String describe ();
 
   ////////////////////////////////////////////////////////////
@@ -247,7 +265,7 @@ public abstract class EarthTransform
    * Creates and returns a new subset transform.  The new transform is
    * arranged with the specified new origin and dimensions.  For
    * example, if the transform maps the data location (100,100) to
-   * Earth location (40N, 120W), and a translated transform is created
+   * earth location (40N, 120W), and a translated transform is created
    * with (100,100) as the new origin, then the new transform will map
    * (0,0) to (40N, 120W).  Note that not all transforms support
    * subsets.

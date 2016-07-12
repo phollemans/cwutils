@@ -43,7 +43,7 @@ public abstract class AbstractFeatureSource
   /** The currently selected list of features. */
   protected List<Feature> featureList;
 
-  /** The currently selected Earth area. */
+  /** The currently selected earth area. */
   protected EarthArea area;
 
   /** The list of attributes. */

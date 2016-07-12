@@ -59,7 +59,7 @@ public class WorldFileWriter {
   /** The output stream to write to. */
   private OutputStream output;
 
-  /** The Earth image transform for coordinate transform data. */
+  /** The earth image transform for coordinate transform data. */
   private EarthImageTransform trans;
 
   ////////////////////////////////////////////////////////////
@@ -68,9 +68,9 @@ public class WorldFileWriter {
    * Creates a new writer using the specified output stream.
    * 
    * @param output the output stream for writing.
-   * @param trans the Earth image transform for Earth location metadata.
+   * @param trans the earth image transform for earth location metadata.
    * 
-   * @throws IllegalArgumentException if the Earth transform is not a
+   * @throws IllegalArgumentException if the earth transform is not a
    * map projection.
    */
   public WorldFileWriter (

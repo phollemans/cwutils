@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: L2PProjection.java
-  PURPOSE: A class to perform L2P swath Earth transform calculations.
+  PURPOSE: A class to perform L2P swath earth transform calculations.
    AUTHOR: X. Liu
      DATE: 2011/06/15
   CHANGES: 2011/06/15, XL, initial version
@@ -36,7 +36,7 @@ import noaa.coastwatch.util.trans.EarthTransform2D;
 import noaa.coastwatch.util.trans.SwathProjection;
 
 /**
- * The <code>L2PProjection</code> class implements Earth transform
+ * The <code>L2PProjection</code> class implements earth transform
  * calculations for satellite swath (also called sensor scan) 2D
  * projections for L2P data. See also <code>SwathProjection</code>.
  *
@@ -76,11 +76,11 @@ public class L2PProjection
   private static boolean nullMode = false;
 
   /** 
-   * The last data coordinate from an Earth location to data location
+   * The last data coordinate from an earth location to data location
    * transform.  The idea here is to save the last coordinate
    * transform to use as a starting point for the next transform.
    * Generally, locations are transformed in polylines of Earth
-   * locations that are fairly close together both on the Earth and in
+   * locations that are fairly close together both on the earth and in
    * the data location space.
    */
   private DataLocation lastDataLoc = null;
@@ -158,7 +158,7 @@ public class L2PProjection
 
   ////////////////////////////////////////////////////////////
 
-  /** Resets the Earth area object. */
+  /** Resets the earth area object. */
   private void resetArea () {
 
     // Initialize area
@@ -218,7 +218,7 @@ public class L2PProjection
   /**
    * Constructs a swath projection from the specified latitude and
    * longitude data and desired polynomial size.  A default tolerance
-   * is initially set for Earth location to data location translation
+   * is initially set for earth location to data location translation
    * based on the resolution at the center of the projection.
    *
    * @param lat a data variable containing latitude data.
@@ -293,8 +293,8 @@ public class L2PProjection
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Sets the tolerance distance for Earth location transformations.
-   * The tolerance distance governs the accuracy of Earth location to
+   * Sets the tolerance distance for earth location transformations.
+   * The tolerance distance governs the accuracy of earth location to
    * data location translations.  Once set, a call to
    * <code>transform(EarthLocation)</code> returns an approximate data
    * location that is within the tolerance distance of the actual data
@@ -307,7 +307,7 @@ public class L2PProjection
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the tolerance distance for Earth location transformations.
+   * Gets the tolerance distance for earth location transformations.
    *
    * @return the tolerance distance in kilometres.
    *

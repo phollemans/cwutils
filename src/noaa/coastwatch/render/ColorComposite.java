@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: ColorComposite.java
-  PURPOSE: A class to set up a graphical view of Earth data using
+  PURPOSE: A class to set up a graphical view of earth data using
            red/green/blue combination of three data variables.
    AUTHOR: Peter Hollemans
      DATE: 2002/07/21
@@ -133,7 +133,7 @@ public class ColorComposite
   /**
    * Constructs a new color composite from the specified parameters.
    * 
-   * @param trans the view Earth transform.
+   * @param trans the view earth transform.
    * @param grids the grid variables to use for this composite as
    * [red, green, blue].  Note that the grids must all have the same
    * dimensions.

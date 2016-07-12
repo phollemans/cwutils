@@ -104,7 +104,7 @@ public class PolygonFeature
    * overridden {@link LineFeature#render} method.
    *
    * @param g the graphics context for drawing.
-   * @param trans the Earth image transform for converting Earth
+   * @param trans the earth image transform for converting Earth
    * locations to image points.
    */
   public void renderOutline (
@@ -122,7 +122,7 @@ public class PolygonFeature
    * Renders this polygon feature to a graphics context.
    *
    * @param g the graphics context for drawing.
-   * @param trans the Earth image transform for converting Earth
+   * @param trans the earth image transform for converting Earth
    * locations to image points.
    */
   public void render (

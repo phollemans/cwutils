@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: cwcomposite.java
-  PURPOSE: To combine Earth data files by variable.
+  PURPOSE: To combine earth data files by variable.
    AUTHOR: Peter Hollemans
      DATE: 2003/04/06
   CHANGES: 2004/09/28, PFH
@@ -14,10 +14,12 @@
            2005/03/15, PFH, reformatted documentation and usage note
            2006/07/10, PFH, added --coherent option
            2007/04/19, PFH, added version printing
-           2008/07/30, HG,  added computing geometric mean in computeComposite method
+           2008/07/30, HG, added computing geometric mean in computeComposite 
+             method
+           2016/06/09, PFH, updated documentation on method types
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -55,14 +57,14 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
- * <p>The composite tool combines a time series of Earth data.</p>
+ * <p>The composite tool combines a time series of earth data.</p>
  *
  * <!-- START MAN PAGE -->
  *
  * <h2>Name</h2>
  * <p>
  *   <!-- START NAME -->
- *   cwcomposite - combines a time series of Earth data.
+ *   cwcomposite - combines a time series of earth data.
  *   <!-- END NAME -->
  * </p>
  *
@@ -87,16 +89,16 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  * <h2>Description</h2>
  *
- * <p> The composite tool combines a time series of Earth data.
+ * <p> The composite tool combines a time series of earth data.
  * Data variables are combined on a pixel-by-pixel basis using
- * one of several statistical or temporal methods: mean, median,
+ * one of several statistical or temporal methods: mean, geometric mean, median,
  * minimum, maximum, explicit or latest.  The input files must have
- * matching Earth transforms but may have different dates.  The
+ * matching earth transforms but may have different dates.  The
  * composite tool may be used, for example, to combine a number
  * of sea-surface-temperature datasets into one in order to
  * obtain a mean SST for a certain region and help eliminate
  * cloud.  Another use is to combine datasets from different
- * regions that are registered to the same Earth transform to
+ * regions that are registered to the same earth transform to
  * create a mosaic.  The output dataset is constructed using
  * metadata from each input dataset so that it properly reflects
  * the different input dataset dates and other metadata. </p>
@@ -110,13 +112,13 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   <dt> input [input2 ...] </dt>
  *   <dd> The input data file names.  At least one input file is required,
  *   unless the <b>--inputs</b> option is used.  If multiple files
- *   are specified, they must have matching Earth transforms. </dd>
+ *   are specified, they must have matching earth transforms. </dd>
  *
  *   <dt> -i, --inputs=FILE </dt>
  *   <dd> The file name containing a list of input data files.  The file
  *   must be an ASCII text file containing input file names, one per
  *   line.  If multiple files are listed, they must have matching
- *   Earth transforms.  If the inputs file name is '-', input is read
+ *   earth transforms.  If the inputs file name is '-', input is read
  *   from standard input.</dd>
  *
  *   <dt> output </dt>
@@ -159,9 +161,31 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  *   <dt>-M, --method=TYPE</dt>
  *
- *   <dd>The composite method.  Valid methods are 'mean', 'median',
- *   'min', 'max', 'explicit' and 'latest'.  The default is to calculate the
- *   mean.</dd>
+ *   <dd>The composite method.  Valid methods are:
+ *   <ul>
+ *
+ *     <li>mean - Computes the arithmetic mean or average value (sum of
+ *     values over n)</li>
+ *
+ *     <li>geomean - Computes the geometric mean (nth root of product
+ *     of values)</li>
+ *
+ *     <li>median - Finds the median value (middle value of n values)</li>
+ *
+ *     <li>min - Finds the minimum value</li>
+ *
+ *     <li>max - Finds the maximum value</li>
+ *
+ *     <li>latest - Finds the most recent valid value (latest in time
+ *     according to the data time stamp)</li>
+ *
+ *     <li>explicit - Finds the last valid value in the set of input
+ *     files, according to the explicit order given on the command line.
+ *     This would yield the same results as the 'latest' method if the
+ *     files were listed in chronological order on the command line.</li>
+ *
+ *   </ul>
+ *   The default is to compute the mean value.</dd>
  *   
  *   <dt>-p, --pedantic</dt>
  *
@@ -197,7 +221,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   <li> Invalid command line option. </li>
  *   <li> Invalid input or output file names. </li>
  *   <li> Unsupported input file format. </li>
- *   <li> Input file Earth transforms do not match. </li>
+ *   <li> Input file earth transforms do not match. </li>
  *   <li> No matching variables found. </li>
  *   <li> Unsupported composite method. </li>
  * </ul>
@@ -564,7 +588,7 @@ public final class cwcomposite {
   ////////////////////////////////////////////////////////////
 
   /**
-   * A reader comparator compares two Earth data readers based on
+   * A reader comparator compares two earth data readers based on
    * date.  This is useful for sorting a set of readers into ascending
    * order by date.
    */
@@ -749,14 +773,14 @@ public final class cwcomposite {
     } // else if
 
     // Compute geometric mean
-    // ------------
+    // ----------------------
     else if (method.equals ("geomean")) {
       do {
         double sum = 0;
         int values = 0;
         for (int j = 0; j < inputVars.length; j++) {
           double val = inputVars[j].getValue (loc);
-          if (val>0) {
+          if (val > 0) {
             sum += Math.log(val);
             values++;
           } // if
@@ -809,7 +833,7 @@ public final class cwcomposite {
     System.out.println (
 "Usage: cwcomposite [OPTIONS] input [input2 ...] output\n" +
 "       cwcomposite [OPTIONS] {-i, --inputs=FILE} output\n" +
-"Combines a time series of Earth data.\n" +
+"Combines a time series of earth data.\n" +
 "\n" +
 "Main parameters:\n" +
 "  input [input2 ...]         The input data file name(s).\n" +

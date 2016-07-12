@@ -50,12 +50,12 @@ public class PointFeature
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth location point. */
+  /** Gets the earth location point. */
   public EarthLocation getPoint () { return (point); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the Earth location point. */
+  /** Sets the earth location point. */
   public void setPoint (EarthLocation point) { this.point = point; }
 
   ////////////////////////////////////////////////////////////

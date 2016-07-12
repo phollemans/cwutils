@@ -6,9 +6,10 @@
    AUTHOR: X. Liu
      DATE: 2012/04/25
   CHANGES: 2013/04/10, PFH, cleaned up and moved bowtie deletion detection
+           2015/11/05, PFH, deprecated
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -36,7 +37,11 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  * @author Xiaoming Liu
  * @since 3.3.0
+ *
+ * @deprecated As of 3.3.1, use {@link MixedGridResampler} with a location 
+ * filter of {@link ACSPOVIIRSBowtieDeletionFilter} to get the same results.
  */
+@Deprecated
 public class ACSPOMixedGridResampler
   extends MixedGridResampler {
 
@@ -52,8 +57,8 @@ public class ACSPOMixedGridResampler
    * Creates a new grid resampler from the specified source and
    * destination transforms.
    *
-   * @param sourceTrans the source Earth transform.
-   * @param destTrans the destination Earth transform.
+   * @param sourceTrans the source earth transform.
+   * @param destTrans the destination earth transform.
    * @param rectWidth the source rectangle width.
    * @param rectHeight the source rectangle height.
    */
@@ -80,6 +85,41 @@ public class ACSPOMixedGridResampler
     } // for
 
   } // ACSPOMixedGridResampler constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Computes the sign of the z component of the cross product between two
+   * vectors given by three points in XY space.  Given points p1, p2, and p3,
+   * the cross product p1p2 x p1p3 is computed, and the sign of its z component
+   * is the result.
+   *
+   * @param x the x coordinate values of the points.
+   * @param y the y coordinate values of the points.
+   * @param p1 the index into x and y of p1's coordinates.
+   * @param p2 the index into x and y of p2's coordinates.
+   * @param p3 the index into x and y of p3's coordinates.
+   *
+   * @return the sign of the z component of the cross product as 0 for 
+   * negative, 1 for positive.
+   */
+
+  private int crossProductSign (
+    double[] x,
+    double[] y,
+    int p1,
+    int p2,
+    int p3
+  ) {
+  
+    double v1x = x[p2] - x[p1];
+    double v1y = y[p2] - y[p1];
+    double v2x = x[p3] - x[p1];
+    double v2y = y[p3] - y[p1];
+    double zComp = v1x*v2y - v1y*v2x;
+    return (zComp < 0 ? 0 : 1);
+
+  } // crossProductSign
 
   ////////////////////////////////////////////////////////////
 
@@ -131,7 +171,10 @@ public class ACSPOMixedGridResampler
     double[] boxData = new double[8];
     double[] edgeSourceRows = new double[9];
     double[] edgeSourceCols = new double[9];
-
+    DataLocation sourceLoc = new DataLocation (2);
+    EarthLocation earthLoc = new EarthLocation();
+    DataLocation destLoc = new DataLocation (2);
+    
     // Loop over each source rectangle
     // -------------------------------
     int rectangles = 
@@ -151,28 +194,73 @@ public class ACSPOMixedGridResampler
 
         // Set source coordinate sampling points (center of pixels)
         // --------------------------------------------------------
+        /**
+         * Here we sample the rectangle in the source transform using a 3x3
+         * pattern from top-left to bottom-right as follows:
+         * 
+         *   0-----1-----2
+         *   |     |     |
+         *   |     |     |
+         *   3-----4-----5
+         *   |     |     |
+         *   |     |     |
+         *   6-----7-----8
+         *
+         */
         int rowMin = i;
         int rowMax = Math.min (i + rectHeight - 1, sourceDims[Grid.ROWS]-1);
         int colMin = j;
         int colMax = Math.min (j + rectWidth - 1, sourceDims[Grid.COLS]-1);
-        sourceRows[0] = rowMin; 
-        sourceCols[0] = colMin;
-        sourceRows[1] = sourceRows[0]; 
-        sourceCols[1] = (colMin+colMax)/2;
-        sourceRows[2] = sourceRows[0]; 
-        sourceCols[2] = colMax;
-        sourceRows[3] = (rowMin+rowMax)/2;
-        sourceCols[3] = sourceCols[0];
-        sourceRows[4] = sourceRows[3]; 
-        sourceCols[4] = sourceCols[1];
-        sourceRows[5] = sourceRows[3]; 
-        sourceCols[5] = sourceCols[2];
-        sourceRows[6] = rowMax; 
-        sourceCols[6] = sourceCols[0];
-        sourceRows[7] = sourceRows[6]; 
-        sourceCols[7] = sourceCols[1];
-        sourceRows[8] = sourceRows[6]; 
-        sourceCols[8] = sourceCols[2];
+
+        sourceRows[0] = sourceRows[1] = sourceRows[2] = rowMin;
+        sourceRows[3] = sourceRows[4] = sourceRows[5] = (rowMin+rowMax)/2;
+        sourceRows[6] = sourceRows[7] = sourceRows[8] = rowMax;
+
+        sourceCols[0] = sourceCols[3] = sourceCols[6] = colMin;
+        sourceCols[1] = sourceCols[4] = sourceCols[7] = (colMin+colMax)/2;;
+        sourceCols[2] = sourceCols[5] = sourceCols[8] = colMax;
+
+        // Generate corresponding source/destination data locations
+        // --------------------------------------------------------
+        for (int k = 0; k < 9; k++) {
+          sourceLoc.set (Grid.ROWS, sourceRows[k]);
+          sourceLoc.set (Grid.COLS, sourceCols[k]);
+          sourceTrans.transform (sourceLoc, earthLoc);
+          if (!earthLoc.isValid()) continue rectLoop;
+          destTrans.transform (earthLoc, destLoc);
+          if (!destLoc.isValid()) continue rectLoop;
+          destRows[k] = destLoc.get (Grid.ROWS);
+          destCols[k] = destLoc.get (Grid.COLS);
+        } // for
+
+        // Perform cross product test on destination locations
+        // ---------------------------------------------------
+        /**
+         * We perform a test here to determine if the source locations
+         * have been translated to destination locations that make sense.
+         * Given the rectangle sample points as shown above, we test that
+         * the z-component of the cross products of various point pairs
+         * all match in direction:
+         *
+         *   p0p1 x p0p3
+         *   p1p2 x p1p4
+         *   p3p4 x p3p6
+         *   p4p5 x p4p7
+         *   p8p7 x p8p5
+         *
+         * If the cross product vector directions do not match, we suspect
+         * that there was a discontinuity in mapping the source rectangle to
+         * destination and ignore this rectangle.
+         */
+        int sum =
+          crossProductSign (destRows, destCols, 0, 1, 3) +
+          crossProductSign (destRows, destCols, 1, 2, 4) +
+          crossProductSign (destRows, destCols, 3, 4, 6) +
+          crossProductSign (destRows, destCols, 4, 5, 7) +
+          crossProductSign (destRows, destCols, 8, 7, 5);
+        if (sum != 0 && sum != 5) {
+          continue rectLoop;
+        } // if
 
         // Create source polynomial estimators
         // -----------------------------------
@@ -181,16 +269,6 @@ public class ACSPOMixedGridResampler
          * to transform destination (row,col) coordinates back to the
          * source (row,col) coordinates.
          */
-        for (int k = 0; k < 9; k++) {
-          DataLocation sourceLoc = new DataLocation (sourceRows[k], 
-            sourceCols[k]);
-          EarthLocation earthLoc = sourceTrans.transform (sourceLoc);
-          if (!earthLoc.isValid()) continue rectLoop;
-          DataLocation destLoc = destTrans.transform (earthLoc);
-          if (!destLoc.isValid()) continue rectLoop;
-          destRows[k] = destLoc.get (Grid.ROWS);
-          destCols[k] = destLoc.get (Grid.COLS);
-        } // for
         BivariateEstimator[] sourceEst;
         try {
           sourceEst = new BivariateEstimator[] {
@@ -205,7 +283,7 @@ public class ACSPOMixedGridResampler
            * happens when the rectangle to convert is too small so
            * that the source data locations are repeated.  But it may
            * happen in other unknown cases as well, for example if the
-           * source transform gives us wonky Earth locations.  So it's
+           * source transform gives us wonky earth locations.  So it's
            * best to catch the error here and just ignore the
            * offending rectangle.
            */

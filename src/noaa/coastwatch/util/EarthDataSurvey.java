@@ -48,7 +48,7 @@ public abstract class EarthDataSurvey {
   /** The survey variable value formatter. */
   private NumberFormat format;
 
-  /** The Earth transform object for the variable. */
+  /** The earth transform object for the variable. */
   private EarthTransform trans;
 
   /** The survey statistics. */
@@ -74,7 +74,7 @@ public abstract class EarthDataSurvey {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the survey variable Earth transform. */
+  /** Gets the survey variable earth transform. */
   public EarthTransform getTransform () { return (trans); }
 
   ////////////////////////////////////////////////////////////
@@ -109,7 +109,7 @@ public abstract class EarthDataSurvey {
    * @param name the survey variable name.
    * @param units the survey variable units.
    * @param format the survey variable formatter.
-   * @param trans the survey variable Earth transform.
+   * @param trans the survey variable earth transform.
    * @param stats the survey statistics.
    * @param extents the survey extents as [start,end].
    */
@@ -139,7 +139,7 @@ public abstract class EarthDataSurvey {
    * @param name the survey variable name.
    * @param units the survey variable units.
    * @param format the survey variable formatter.
-   * @param trans the survey variable Earth transform.
+   * @param trans the survey variable earth transform.
    * @param stats the survey statistics.
    * @param extents the survey extents as [start,end].
    */

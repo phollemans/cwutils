@@ -296,7 +296,7 @@ public final class cwmaster
   /** The master dimensions. */
   private int[] dims;
 
-  /** The Earth data view panel. */
+  /** The earth data view panel. */
   private EarthDataViewPanel viewPanel;  
 
   /** The map projection chooser. */
@@ -357,7 +357,7 @@ public final class cwmaster
         (dims[Grid.COLS]-1)/2.0);
       EarthLocation earthLoc = proj.transform (dataLoc);
       if (!earthLoc.isValid())
-        throw new RuntimeException ("Data center has no valid Earth location");
+        throw new RuntimeException ("Data center has no valid earth location");
 
       // Create new view
       // ---------------

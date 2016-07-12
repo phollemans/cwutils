@@ -34,9 +34,9 @@ import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 
 /**
- * All Earth data writers obtain Earth data from Earth
+ * All earth data writers obtain earth data from Earth
  * data info and variable objects and format to a data destination.
- * A Earth data writer should do the following:
+ * A earth data writer should do the following:
  * <ul>
  *   <li> construct from some type of file or data stream, and a
  *        {@link noaa.coastwatch.util.EarthDataInfo} object </li>
@@ -138,7 +138,7 @@ public abstract class EarthDataWriter {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Constructs a new Earth data writer and initializes the
+   * Constructs a new earth data writer and initializes the
    * variables to an empty list.
    * 
    * @param destination the data destination.
@@ -154,7 +154,7 @@ public abstract class EarthDataWriter {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth data destination. */
+  /** Gets the earth data destination. */
   public String getDestination () { return (destination); }
 
   ////////////////////////////////////////////////////////////

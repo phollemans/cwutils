@@ -69,7 +69,7 @@ public class PointSurvey
    * Creates a new point survey.
    * 
    * @param variable the survey variable.
-   * @param trans the survey variable Earth transform.
+   * @param trans the survey variable earth transform.
    * @param loc the survey data location.
    */
   public PointSurvey (

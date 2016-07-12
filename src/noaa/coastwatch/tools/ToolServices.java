@@ -21,9 +21,16 @@
            - Issue: We would like a way to monitor the memory usage of the tools
              while they're running to check for issues such as the VM memory
              running out, without having to resort to a profiling tool.
+           2016/02/12, PFH
+           - Changes: Added the setSplitRegex() and getSplitRegex() methods.
+           - Issue: We had a case in cwrender where we needed to specify a
+             variable name with slashes in it plus extra optional parameters, 
+             so the default SPLIT_REGEX doesn't work.  A new command line option
+             specifies the splitting expression. Ultimately all the tools
+             should support this behaviour.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -72,11 +79,11 @@ public class ToolServices {
 
   /** The software copyright. */
   public static final String COPYRIGHT = 
-    "1998-2015 USDOC/NOAA/NESDIS CoastWatch";
+    "1998-2016 USDOC/NOAA/NESDIS CoastWatch";
 
   /** The software copyright (short version). */
   public static final String COPYRIGHT_SHORT = 
-    "1998-2015\nUSDOC/NOAA/NESDIS CoastWatch";
+    "1998-2016\nUSDOC/NOAA/NESDIS CoastWatch";
 
   /** The tool parameter splitting expression. */
   public static final String SPLIT_REGEX = "[,/]";
@@ -102,6 +109,9 @@ public class ToolServices {
 
   /** The package version number. */
   private static String version;
+  
+  /** The current splitting regular expression. */
+  private static String splitRegex = SPLIT_REGEX;
 
   ////////////////////////////////////////////////////////////
 
@@ -310,6 +320,24 @@ public class ToolServices {
     timer.schedule (task, 0, 5000);
   
   } // startMemoryMonitor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the current command line parameter splitting regular expression.
+   *
+   * @return the current splitting expression.
+   */
+  public static String getSplitRegex () { return (splitRegex); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the current command line parameter splitting regular expression.
+   *
+   * @param expr the new splitting expression.
+   */
+  public static void setSplitRegex (String expr) { splitRegex = expr; }
 
   ////////////////////////////////////////////////////////////
 

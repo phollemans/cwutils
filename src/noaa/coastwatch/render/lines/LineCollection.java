@@ -58,10 +58,10 @@ public class LineCollection
    *
    * @param textLabel the line text label, used as a key in the
    * collection.
-   * @param trans the Earth image transform used for
-   * translating Earth locations to image points.
-   * @param start the starting Earth location.
-   * @param end the ending Earth location.
+   * @param trans the earth image transform used for
+   * translating earth locations to image points.
+   * @param start the starting earth location.
+   * @param end the ending earth location.
    */
   public void addSegment (
     String textLabel,
@@ -96,7 +96,7 @@ public class LineCollection
    *
    * @param textLabel the line text label, used as a key in the
    * collection.
-   * @param trans the Earth image transform used for
+   * @param trans the earth image transform used for
    * translating data locations to image points.
    * @param start the starting data location.
    * @param end the ending Earthdata location.

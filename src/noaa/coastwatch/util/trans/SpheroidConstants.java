@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: SpheroidConstants.java
-  PURPOSE: Hold various Earth spheroid model constants.
+  PURPOSE: Hold various earth spheroid model constants.
    AUTHOR: Peter Hollemans
      DATE: 2006/05/26
   CHANGES: n/a
@@ -18,7 +18,7 @@ package noaa.coastwatch.util.trans;
 
 /** 
  * The <code>SpheroidConstants</code> class is an interface that
- * hold various Earth spheroid constants, including spheroid
+ * hold various earth spheroid constants, including spheroid
  * index, names, and semi-major / semi-minor axes sizes.
  *
  * @author Peter Hollemans

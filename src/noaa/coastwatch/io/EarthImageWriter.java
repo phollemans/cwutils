@@ -5,9 +5,15 @@
    AUTHOR: Peter Hollemans
      DATE: 2006/11/22
   CHANGES: 2007/06/19, PFH, modified to use ToolServices.getVersion()
-
+           2016/02/22, PFH
+           - Changes: Added writing of extra metadata to GIF, JPEG, PNG, GeoTIFF
+             and PDF files.
+           - Issue: We wanted to be able to tell which version of the software
+             was used to create a file, and the command line, in order to aid 
+             with diagnosing rendering issues.
+ 
   CoastWatch Software Library and Utilities
-  Copyright 2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2006-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -25,7 +31,9 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
+
 import edu.wlu.cs.levy.CG.KDTree;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -36,12 +44,25 @@ import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
+import javax.imageio.metadata.IIOMetadataNode;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.stream.FileImageOutputStream;
+
 import noaa.coastwatch.io.GIFWriter;
 import noaa.coastwatch.io.GeoTIFFWriter;
 import noaa.coastwatch.io.WorldFileWriter;
@@ -91,8 +112,8 @@ public class EarthImageWriter {
    * undesired, the view should be cloned prior to passing to this
    * routine.
    *
-   * @param view the Earth data view to write.
-   * @param info the Earth data information to use for the
+   * @param view the earth data view to write.
+   * @param info the earth data information to use for the
    * legends.
    * @param isVerbose the verbose flag, true to print verbose messages.
    * @param hasLegends the legends flag, true to draw color scale and
@@ -366,8 +387,10 @@ public class EarthImageWriter {
         // ------------------
         GeoTIFFWriter writer = new GeoTIFFWriter (
           new FileOutputStream (file), view.getTransform(), compress);
-        writer.setArtist (ToolServices.PACKAGE + " version " + 
-          ToolServices.getVersion());
+
+        writer.setArtist (System.getProperty ("user.name"));
+        writer.setSoftware (ToolServices.getToolVersion ("") + ToolServices.getCommandLine());
+        writer.setComputer (ToolServices.getJavaVersion());
 
         // Write the palette equation to the description
         // ---------------------------------------------
@@ -406,16 +429,74 @@ public class EarthImageWriter {
 
       } // if
 
-      // Write GIF file
-      // --------------
-      else if (format.equals ("gif")) {
-        GIFWriter writer = new GIFWriter (new FileOutputStream (file));
-        writer.encode (image);
-      } // else if
+      // Write JPEG, GIF or PNG file
+      // ---------------------------
+      else {
 
-      // Write JPEG or PNG file
-      // ----------------------
-      else ImageIO.write (image, format, file);
+        // Get default metadata
+        // --------------------
+        ImageWriter writer = ImageIO.getImageWritersByFormatName (format).next();
+        ImageTypeSpecifier imageType = ImageTypeSpecifier.createFromBufferedImageType (BufferedImage.TYPE_INT_RGB);
+        ImageWriteParam writeParam = writer.getDefaultWriteParam();
+        IIOMetadata metadata = writer.getDefaultImageMetadata (imageType, writeParam);
+
+        // Add metadata
+        // ------------
+        String metadataFormat = "javax_imageio_1.0";
+
+        /**
+         * Here we create a set of metadata keyword/value pairs whose keywords 
+         * are predefined for PNG files here:
+         *
+         * http://dev.exiv2.org/projects/exiv2/wiki/The_Metadata_in_PNG_files
+         *
+         * We use them for GIF and JPEG files as well.
+         */
+
+        Map<String, String> keyValueMap = new LinkedHashMap<String, String>();
+        keyValueMap.put ("Author", System.getProperty ("user.name"));
+        String dateTime =  new SimpleDateFormat ("yyyy/MM/dd HH:mm:ss z").format (new Date());
+        keyValueMap.put ("Creation Time", dateTime);
+        keyValueMap.put ("Software", ToolServices.PACKAGE + " version " +
+          ToolServices.getVersion());
+        keyValueMap.put ("Source", ToolServices.getJavaVersion());
+        keyValueMap.put ("Comment", "Command line was " + ToolServices.getCommandLine());
+
+        IIOMetadataNode root = new IIOMetadataNode (metadataFormat);
+        IIOMetadataNode textNode = new IIOMetadataNode ("Text");
+        root.appendChild (textNode);
+
+        boolean supportsKeywords = (format.equals ("png"));
+        for (String keyword : keyValueMap.keySet()) {
+          IIOMetadataNode entry = new IIOMetadataNode ("TextEntry");
+          if (supportsKeywords) {
+            entry.setAttribute ("keyword", keyword);
+            entry.setAttribute ("value", keyValueMap.get (keyword));
+          } // if
+          else {
+            entry.setAttribute ("value", keyword + ": " + keyValueMap.get (keyword));
+          } // else
+          textNode.appendChild (entry);
+        } // for
+
+        metadata.mergeTree (metadataFormat, root);
+        
+        // Quantize image for GIF encoding
+        // -------------------------------
+        if (format.equals ("gif")) {
+          if (GIFWriter.needsQuantization (image))
+            image = GIFWriter.getQuantizedImage (image);
+        } // if
+
+        // Write file
+        // ----------
+        FileImageOutputStream outputStream = new FileImageOutputStream (file);
+        writer.setOutput (outputStream);
+        IIOImage imageData = new IIOImage (image, null, metadata);
+        writer.write (metadata, imageData, writeParam);
+        outputStream.close();
+      
+      } // else
 
       // Write world file for PNG, GIF, JPEG
       // -----------------------------------
@@ -446,6 +527,11 @@ public class EarthImageWriter {
       catch (DocumentException e) {
         throw new IOException (e.getMessage());
       } // catch
+      
+      // Add metadata
+      // ------------
+      document.addAuthor (System.getProperty ("user.name"));
+      document.addCreator (ToolServices.getToolVersion ("") + ToolServices.getCommandLine());
       document.open();
 
       // Compute scale factor

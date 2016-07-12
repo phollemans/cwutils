@@ -1,13 +1,13 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: SwathProjection.java
-  PURPOSE: A class to perform swath Earth transform calculations.
+  PURPOSE: A class to perform swath earth transform calculations.
    AUTHOR: Peter Hollemans
      DATE: 2002/04/15
   CHANGES: 2002/06/04, PFH, added javadoc, package, implementation
            2002/07/11, PFH, added equals method
            2002/07/25, PFH, converted to location classes
-           2002/09/13, PFH, added Earth area, area.contains() calls,
+           2002/09/13, PFH, added earth area, area.contains() calls,
              and special longitude filtering
            2002/10/25, PFH, added null mode
            2002/11/07, PFH, fixed object encoding constructor
@@ -29,9 +29,16 @@
            2007/10/27, PFH, added seed list
            2007/11/15, PFH, fixed seed list initialization
            2007/12/14, PFH, added caching of seed earth locations
+           2016/03/03, PFH
+           - Changes: Added support in equals() method for two swaths created
+             in null mode.
+           - Issue: When swaths are created in null mode, we need to have some
+             way that the user can compare them without having to do some
+             complicated cast to SwathProjection, or adding another method in
+             EarthTransform.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -58,7 +65,7 @@ import noaa.coastwatch.util.trans.DataProjection;
 import noaa.coastwatch.util.trans.EarthTransform2D;
 
 /**
- * The <code>SwathProjection</code> class implements Earth transform
+ * The <code>SwathProjection</code> class implements earth transform
  * calculations for satellite swath (also called sensor scan) 2D
  * projections.  Swaths may be created by supplying a field of
  * latitude and longitude values -- one for each data value location.
@@ -100,11 +107,11 @@ public class SwathProjection
   private static boolean nullMode = false;
 
   /** 
-   * The last data coordinate from an Earth location to data location
+   * The last data coordinate from an earth location to data location
    * transform.  The idea here is to save the last coordinate
    * transform to use as a starting point for the next transform.
    * Generally, locations are transformed in polylines of Earth
-   * locations that are fairly close together both on the Earth and in
+   * locations that are fairly close together both on the earth and in
    * the data location space.
    */
   private DataLocation lastDataLoc = null;
@@ -179,7 +186,7 @@ public class SwathProjection
 
   ////////////////////////////////////////////////////////////
 
-  /** Resets the Earth area object. */
+  /** Resets the earth area object. */
   private void resetArea () {
 
     // Initialize area
@@ -239,7 +246,7 @@ public class SwathProjection
   /**
    * Constructs a swath projection from the specified latitude and
    * longitude data and desired polynomial size.  A default tolerance
-   * is initially set for Earth location to data location translation
+   * is initially set for earth location to data location translation
    * based on the resolution at the center of the projection.
    *
    * @param lat a data variable containing latitude data.
@@ -310,8 +317,8 @@ public class SwathProjection
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Sets the tolerance distance for Earth location transformations.
-   * The tolerance distance governs the accuracy of Earth location to
+   * Sets the tolerance distance for earth location transformations.
+   * The tolerance distance governs the accuracy of earth location to
    * data location translations.  Once set, a call to
    * <code>transform(EarthLocation)</code> returns an approximate data
    * location that is within the tolerance distance of the actual data
@@ -324,7 +331,7 @@ public class SwathProjection
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the tolerance distance for Earth location transformations.
+   * Gets the tolerance distance for earth location transformations.
    *
    * @return the tolerance distance in kilometres.
    *
@@ -634,7 +641,9 @@ public class SwathProjection
   /**
    * Compares the specified object with this swath projection for
    * equality.  The encodings of the two swath projections are
-   * compared value by value.
+   * compared value by value.  If both swath projections were created
+   * in null mode, then they are considered equal (although this may not
+   * actually be the case).
    *
    * @param obj the object to be compared for equality.
    *
@@ -648,6 +657,17 @@ public class SwathProjection
     // Check object instance
     // ---------------------
     if (!(obj instanceof SwathProjection)) return (false);
+
+    // Check for null mode used
+    // ------------------------
+    if (
+      this.latEst == null &&
+      this.lonEst == null &&
+      ((SwathProjection) obj).latEst == null &&
+      ((SwathProjection) obj).lonEst == null
+    ) {
+      return (true);
+    } // if
 
     // Get encodings
     // -------------

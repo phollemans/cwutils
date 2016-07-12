@@ -11,9 +11,23 @@
              DataVariable so rather than continuing its use, we decided
              to remove it and re-arrange the scaling and offset for CF
              conventions before passing into the Grid constructor.
+           2016/02/10, PFH
+           - Changes: Added more sophisticated detection of rows and columns
+             dimensions for map transforms.  Previously the code was hard
+             coded to detect a "latitude" variable.  Now it looks for the
+             first 2D variable and uses that.
+           - Issue: Files that had CoastWatch HDF-like metadata but no 
+             "latitude" variable were not having a correct transform being
+             created.
+           2016/03/16, PFH
+           - Changes: Updated getPreviewImpl method to read any rank of
+             data, assuming that the rows and cols dimensions are the last 
+             two.
+           - Issue: The CoastWatch THREDDS server contained files that have
+             a rank of 5, and this reader was balking at those variables.
   
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -69,7 +83,7 @@ public class CWCFNCReader
   // ---------
 
   /** The data format description. */
-  private static final String DATA_FORMAT = "CoastWatch NC4-CF";
+  private static final String DATA_FORMAT = "CoastWatch HDF/NC/CF";
 
   /** Number of milliseconds in a day. */
   private static final long MSEC_PER_DAY = (1000L * 3600L * 24L);
@@ -112,7 +126,7 @@ public class CWCFNCReader
 
   ////////////////////////////////////////////////////////////
   
-  /** Gets the Earth data info object. */
+  /** Gets the earth data info object. */
   private EarthDataInfo getGlobalInfo () {
 
     // Get simple attributes
@@ -183,7 +197,7 @@ public class CWCFNCReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the Earth transform information. */
+  /** Gets the earth transform information. */
   private EarthTransform getTransform () {
 
     // Get projection type
@@ -222,38 +236,37 @@ public class CWCFNCReader
         affine = new AffineTransform (newMatrix);
       } // else
 
-      // Get dimensions
-      // --------------
+      // Create transform
+      // ----------------
       EarthTransform2D trans = null;
-      int cols = 0;
-      int rows = 0;
       try {
-    	  DataVariable lat = getVariable ("latitude");
-          cols = lat.getDimensions()[Grid.COLS];
-          rows = lat.getDimensions()[Grid.ROWS];
-          if(rows != 0 && cols != 0){
-    		  trans = MapProjectionFactory.getInstance().create (system, zone, 
-    				  parameters, spheroid, new int[] {rows, cols}, affine);
-    	  }
-    	  else{
-    		  DataVariable lon = getVariable ("longitude");
-    		  trans = new DataProjection (lat, lon);
-    	  }
+      
+          // Search for the first variable with rank 2
+          // -----------------------------------------
+          DataVariable var = null;
+          int varCount = getVariables();
+          for (int i = 0; i < varCount && var == null; i++) {
+            DataVariable preview = getPreview (i);
+            if (preview.getRank() == 2) var = preview;
+          } // for
+          if (var == null)
+            throw new RuntimeException ("No prototype variable found for dimensions");
+
+          // Create a map projection
+          // -----------------------
+          int[] dims = var.getDimensions();
+	  trans = MapProjectionFactory.getInstance().create (system, zone,
+            parameters, spheroid, dims, affine);
+
         } // try
+      
         catch (Exception e) {
           System.err.println (this.getClass() + 
-            ": Warning: Problems encountered using Earth location data");
+            ": Warning: Problems encountered using earth location data");
           e.printStackTrace();
         } // catch
 
-      // Create map projection
-      // ---------------------
-
-      // Attach metadata
-      // ---------------
-      //      getAttributes (MAP_METADATA, trans.getMetadataMap());
-
-      return (trans);
+        return (trans);
 
     } // if
 
@@ -472,16 +485,11 @@ public class CWCFNCReader
       dataVar = new Line (name, longName, units, varDims[0], data, format,
         scaling, missing);
     } // if
-    else if (rank == 2) {
-      dataVar = new Grid (name, longName, units, varDims[0], varDims[1], 
+    else if (rank >= 2) {
+      dataVar = new Grid (name, longName, units, varDims[rank-2], varDims[rank-1],
         data, format, scaling, missing);
       if (nav != null) ((Grid) dataVar).setNavigation (nav);
-    } // else if 
-    else if (rank == 4) {
-        dataVar = new Grid (name, longName, units, varDims[2], varDims[3], 
-          data, format, scaling, missing);
-        if (nav != null) ((Grid) dataVar).setNavigation (nav);
-      } // else if
+    } // else if
     else {
       throw new UnsupportedEncodingException ("Unsupported rank = " + rank +
         " for " + name);

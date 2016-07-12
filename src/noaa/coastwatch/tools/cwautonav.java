@@ -52,7 +52,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * <p>The autonavigation tool automatically determines a navigation
- * correction based on Earth image data.</p>
+ * correction based on earth image data.</p>
  *
  * <!-- START MAN PAGE -->
  *
@@ -60,7 +60,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * <p>
  *   <!-- START NAME -->
  *   cwautonav - automatically determines a navigation correction based on 
- *   Earth image data.
+ *   earth image data.
  *   <!-- END NAME -->
  * </p>
  *
@@ -87,14 +87,14 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  * <h2>Description</h2>
  * <p>The autonavigation tool automatically determines a navigation
- * correction based on Earth image data.  The algorithm is as
+ * correction based on earth image data.  The algorithm is as
  * follows:</p>
  * <ul>
  *
  *   <li><b>Step 1</b> - The user supplies a number of boxes of
  *   coastal data to use for navigation.  The boxes are specified
  *   by the latitude and longitude of each box center in a text file
- *   separate from the Earth data file.  The box dimensions are
+ *   separate from the earth data file.  The box dimensions are
  *   controlled by command line options.</li>
  * 
  *   <li><b>Step 2</b> - Each box is run through an offset estimation
@@ -730,7 +730,7 @@ public final class cwautonav {
 
     System.out.println (
 "Usage: cwautonav [OPTIONS] locations-file variable input\n" +
-"Automatically determines a navigation correction based on Earth image\n" +
+"Automatically determines a navigation correction based on earth image\n" +
 "data.\n" +
 "\n" +
 "Main parameters:\n" +

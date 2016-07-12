@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthDataAnalysisPanel.java
-  PURPOSE: Groups together related Earth data view and chooser
+  PURPOSE: Groups together related earth data view and chooser
            components in one panel.
    AUTHOR: Peter Hollemans
      DATE: 2004/02/17
@@ -79,7 +79,7 @@ import noaa.coastwatch.render.Palette;
 
 /**
  * The <code>EarthDataAnalysisPanel</code> groups together a variety
- * of Earth data view and chooser components into one main panel that
+ * of earth data view and chooser components into one main panel that
  * may be used to display the contents of a
  * <code>EarthDataReader</code> object.  The grouped components
  * are:
@@ -124,6 +124,9 @@ public class EarthDataAnalysisPanel
 
   /** The icon for each tab. */
   private static final Icon TAB_ICON = GUIServices.getIcon ("analysis.tab");
+
+  /** The maximum length of the tab title. */
+  private static final int MAX_TITLE_LENGTH = 20;
 
   // Variables
   // ---------
@@ -207,7 +210,7 @@ public class EarthDataAnalysisPanel
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the Earth data view from the view panel.
+   * Gets the earth data view from the view panel.
    *
    * @return the data view.
    */
@@ -396,17 +399,43 @@ public class EarthDataAnalysisPanel
   ////////////////////////////////////////////////////////////
 
   @Override
-  public Icon getIcon () { return (TAB_ICON); }
+  public Icon getIcon () { return (null); }
 
   ////////////////////////////////////////////////////////////
 
   @Override
-  public String getToolTip () { return (null); }
+  public String getToolTip () {
+
+    String tip = new File (reader.getSource()).getName();
+    return (tip);
+  
+  } // getToolTip
 
   ////////////////////////////////////////////////////////////
 
   @Override
-  public String getTitle () { return (new File (reader.getSource()).getName()); }
+  public String getTitle () {
+  
+    String title = new File (reader.getSource()).getName();
+
+/*
+ * We're experimenting here with smaller tab titles.  In reality what would
+ * be really great is if the tabs would alter size according to how many
+ * tabs exist, and each tab would get an equal amount of space.  Then their
+ * titles would be some truncated version of the file name.
+ */
+ 
+    int length = title.length();
+    if (length > MAX_TITLE_LENGTH) {
+      String head = title.substring (0, MAX_TITLE_LENGTH/2-2);
+      String tail = title.substring (length - MAX_TITLE_LENGTH/2-1, length);
+      title = head + "..." + tail;
+    } // if
+    
+
+    return (title);
+    
+  } // getTitle
   
   ////////////////////////////////////////////////////////////
 

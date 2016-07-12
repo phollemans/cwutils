@@ -51,7 +51,7 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.trans.MapProjection;
 
 /**
- * A topography overlay annotates an Earth data view with topography
+ * A topography overlay annotates an earth data view with topography
  * lines.  The topography lines are rendered from ETOP05 elevation
  * data using the {@link noaa.coastwatch.render.ContourGenerator}
  * class.  ETOP05 data has a spatial resolution of 5 minutes and a

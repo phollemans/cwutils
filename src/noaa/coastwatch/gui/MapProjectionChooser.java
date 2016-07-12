@@ -396,7 +396,7 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current center Earth location. */
+  /** Gets the current center earth location. */
   public EarthLocation getCenter () throws NumberFormatException { 
 
     EarthLocation center = new EarthLocation (
@@ -410,7 +410,7 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the projection center Earth location. */
+  /** Sets the projection center earth location. */
   public void setCenter (
     EarthLocation center
   ) {

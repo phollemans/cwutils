@@ -15,9 +15,11 @@
            - Issue: We needed a way to easily loop over each tile in the
              tiling scheme and do something, and the getStart() method 
              helped to do that.
- 
+           2016/01/19, PFH
+           - Changes: Updated to new logging API.
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -30,6 +32,9 @@ package noaa.coastwatch.io.tile;
 // -------
 import java.awt.Rectangle;
 import java.util.Arrays;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * The tiling scheme class helps support the tiling of 2D data.  A
@@ -573,6 +578,9 @@ public class TilingScheme {
    */
   public static void main (String[] argv) throws Exception {
 
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (TilingScheme.class);
+
     /*
      *     0    1    2    3    4
      *   +----+----+----+----+----+  \
@@ -589,7 +597,7 @@ public class TilingScheme {
      *     40   40   40   40   40
      */
     
-    System.out.print ("Testing TilingScheme ... ");
+    logger.test ("TilingScheme");
 
     int[] globalDims = new int[] {100, 200};
     int[] tileDims = new int[] {40, 40};
@@ -617,9 +625,9 @@ public class TilingScheme {
     catch (IndexOutOfBoundsException e) { isException0 = true; }
     assert (isException0);
 
-    System.out.println ("OK");
+    logger.passed();
 
-    System.out.print ("Testing TilePosition ... ");
+    logger.test ("TilePosition");
 
     TilePosition pos1 = scheme.new TilePosition (1, 2);
     int[] pos1Coords = pos1.getCoords();
@@ -658,9 +666,9 @@ public class TilingScheme {
     catch (IndexOutOfBoundsException e) { isException = true; }
     assert (isException);
 
-    System.out.println ("OK");
+    logger.passed();
     
-    System.out.print ("Testing Tile ... ");
+    logger.test ("Tile");
     
     Object data = new Integer (38);
     Tile tile = scheme.new Tile (pos, data);
@@ -709,7 +717,7 @@ public class TilingScheme {
     
     assert (tile.getScheme() == scheme);
     
-    System.out.println ("OK");
+    logger.passed();
   
   } // main
 

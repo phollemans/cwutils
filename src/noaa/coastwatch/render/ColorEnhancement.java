@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: ColorEnhancement.java
-  PURPOSE: A class to set up a graphical view of Earth data using a
+  PURPOSE: A class to set up a graphical view of earth data using a
            color palette.
    AUTHOR: Peter Hollemans
      DATE: 2002/07/21
@@ -64,7 +64,7 @@ import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
- * A color enhancement is an Earth data view that creates an image
+ * A color enhancement is an earth data view that creates an image
  * based on a grid variable, color palette, and enhancement function.
  * The variable data is mapped to a normalized range of [0..1] using
  * the enhancement function, then the color palette is applied.  For
@@ -268,7 +268,7 @@ public class ColorEnhancement
   /**
    * Constructs a new color enhancement from the specified parameters.
    * 
-   * @param trans the view Earth transform.
+   * @param trans the view earth transform.
    * @param grid the grid variable to use for this enhancement.
    * @param pal the indexed color palette for color enhancement.
    * @param func the enhancement function.

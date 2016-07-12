@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthPlotInfo.java
-  PURPOSE: A class to render an Earth plot information legend.
+  PURPOSE: A class to render an earth plot information legend.
    AUTHOR: Peter Hollemans
      DATE: 2002/10/03
   CHANGES: 2002/11/12, PFH, replaced pass type with scene time
@@ -15,9 +15,18 @@
            2005/02/14, PFH, added data courtesy notice
            2005/03/07, PFH, modified courtesy notice to use lineWrap()
            2006/11/20, PFH, modified to use GraphicsServices.drawRect()
+           2016/02/10, PFH
+           - Changes: Added the wrapTruncateValue() method and modified
+             the constructor to call it.
+           - Issue: There were instances when very long string values for 
+             the satellite, sensor, and data source were causing the width 
+             of to plot legends to be unreasonably large.  We should really
+             be protecting against these cases, especiially when reading files
+             like NetCDF with CF metadata that users can specify much longer
+             strings than needed or anticipated.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -40,7 +49,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
 import java.util.Date;
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.render.EarthContextElement;
 import noaa.coastwatch.render.GraphicsServices;
@@ -59,9 +70,9 @@ import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.tools.cwinfo;
 
 /**
- * A Earth plot information legend annotates an Earth data view with
+ * An earth plot information legend annotates an earth data view with
  * information about the data source, date, time, projection, and
- * Earth location.
+ * earth location.
  *
  * @author Peter Hollemans
  * @since 3.1.1
@@ -88,24 +99,24 @@ public class EarthPlotInfo
   /** The icon element for the top of the legend. */
   private IconElement icon;
 
-  /** The Earth data information for legend text. */
+  /** The earth data information for legend text. */
   private String[] labels;
 
-  /** The Earth context element for the bottom of the legend. */
+  /** The earth context element for the bottom of the legend. */
   private EarthContextElement context;
 
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates an Earth plot information legend from the specified
+   * Creates an earth plot information legend from the specified
    * parameters.  The font is set to the default font face, plain
    * style, 12 point, the preferred size to none, the foreground color
    * is set to black, and the background color to none.
    *
    * @param icon the icon element to use for the top of the legend.
-   * @param info the Earth data information for text annotations.
-   * @param area the Earth area for geographic bounds.
-   * @param context the Earth context for the bottom of the legend.
+   * @param info the earth data information for text annotations.
+   * @param area the earth area for geographic bounds.
+   * @param context the earth context for the bottom of the legend.
    */
   public EarthPlotInfo (
     IconElement icon,
@@ -122,14 +133,74 @@ public class EarthPlotInfo
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates an Earth plot information legend from the specified
+   * Wraps and truncates a string value to fit on a specific number of lines
+   * and line width.
+   *
+   * @param input the input string to work on.
+   * @param indent the number of spaces of indent at the start of each line,
+   * or 0 for no indenting.
+   * @param maxLength the maximum length of each line.
+   * @param maxLines the maximum number of lines in the output array.
+   *
+   * @return the output list of lines.
+   */
+  private static List<String> wrapTruncateValue (
+    String input,
+    int indent,
+    int maxLength,
+    int maxLines
+  ) {
+
+    // Create initial wrapped version of output
+    // ----------------------------------------
+    List<String> outputLines = new ArrayList<String>();
+    outputLines.addAll (Arrays.asList (GUIServices.lineWrap (input, maxLength-indent).split ("\n")));
+
+    // Truncate the number of lines
+    // ----------------------------
+    if (outputLines.size() > maxLines) {
+      outputLines = outputLines.subList (0, maxLines);
+      String lastLine = outputLines.get (outputLines.size()-1);
+      if (lastLine.length() > maxLength-3) lastLine = lastLine.substring (0, maxLength-3);
+      lastLine = lastLine + "...";
+      outputLines.set (outputLines.size()-1, lastLine);
+    } // if
+
+    // Indent the lines
+    // ----------------
+    if (indent > 0) {
+      String indentStr = "";
+      for (int i = 0; i < indent; i++) indentStr += " ";
+      for (int i = 0; i < outputLines.size(); i++)
+        outputLines.set (i, indentStr + outputLines.get (i));
+    } // if
+
+    // Truncate each line in the middle
+    // --------------------------------
+    for (int i = 0; i < outputLines.size(); i++) {
+      String line = outputLines.get (i);
+      if (line.length() > maxLength) {
+        line = line.substring (0, maxLength/2-2) + "..." +
+          line.substring (line.length()-(maxLength/2-1), line.length());
+        outputLines.set (i, line);
+      } // if
+    } // for
+
+    return (outputLines);
+
+  } // wrapTruncateValue
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates an earth plot information legend from the specified
    * parameters.
    *
    * @param icon the icon element to use for the top of the legend.
-   * @param info the Earth data information for text annotations.
-   * @param area the Earth area for geographic bounds.
-   * @param context the Earth context for the bottom of the legend.
-   * @param center the Earth location of the plot center.
+   * @param info the earth data information for text annotations.
+   * @param area the earth area for geographic bounds.
+   * @param context the earth context for the bottom of the legend.
+   * @param center the earth location of the plot center.
    * @param dim the preferred scale dimensions, or null for none.
    * @param font the font for variable name, units, and scale values, or 
    * null for the default font face, plain style, 12 point.
@@ -156,14 +227,14 @@ public class EarthPlotInfo
 
     // Create strings
     // --------------
-    Vector strings = new Vector();
+    List<String> strings = new ArrayList<String>();
 
     // Add origin
     // ----------
     strings.add ("Data courtesy of:");
     String origin = MetadataServices.format (info.getOrigin(), " ");
     String[] originArray = GUIServices.lineWrap (origin, 20).split ("\n");
-    for (int i = 0; i < originArray.length; i++) strings.add (originArray[i]);
+    strings.addAll (Arrays.asList (originArray));
     strings.add (" ");
 
     // Add data source
@@ -171,16 +242,16 @@ public class EarthPlotInfo
     if (info instanceof SatelliteDataInfo) {
       SatelliteDataInfo satInfo = (SatelliteDataInfo) info;
       strings.add ("Satellite:");
-      strings.add ("  " + 
-        MetadataServices.format (satInfo.getSatellite().toUpperCase(), ", "));
+      String sat = satInfo.getSatellite().toUpperCase();
+      strings.addAll (wrapTruncateValue (MetadataServices.format (sat, ", "), 2, 20, 3));
       strings.add ("Sensor:");
-      strings.add ("  " + 
-        MetadataServices.format (satInfo.getSensor().toUpperCase(), ", "));
+      String sensor = satInfo.getSensor().toUpperCase();
+      strings.addAll (wrapTruncateValue (MetadataServices.format (sensor, ", "), 2, 20, 3));
     } // if
     else {
       strings.add ("Data source:");
-      strings.add ("  " + 
-        MetadataServices.format (info.getSource().toUpperCase(), ", "));
+      String source = info.getSource().toUpperCase();
+      strings.addAll (wrapTruncateValue (MetadataServices.format (source, ", "), 2, 20, 3));
     } // else
 
     // Add single time info

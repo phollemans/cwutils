@@ -219,7 +219,7 @@ public abstract class MapProjection
    * Sets the affines for this projection based on center and pixel
    * dimensions.
    *
-   * @param centerLoc the Earth location at the map center.
+   * @param centerLoc the earth location at the map center.
    * @param pixelDims the pixel dimensions in meters at the projection
    * reference point as <code>[height, width]</code>.
    *

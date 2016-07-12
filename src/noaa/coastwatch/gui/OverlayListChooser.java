@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: OverlayListChooser.java
-  PURPOSE: Allows the user to manipulate a list of Earth data overlays.
+  PURPOSE: Allows the user to manipulate a list of earth data overlays.
    AUTHOR: Peter Hollemans
      DATE: 2004/02/21
   CHANGES: 2004/05/22, PFH, modified to use GUIServices.getIcon()

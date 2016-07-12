@@ -7,7 +7,7 @@
      DATE: 2002/11/11
   CHANGES: 2002/12/19, PFH, modified verbose message
            2002/12/20, PFH, added check for valid destination 
-             Earth location
+             earth location
            2004/03/23, PFH, modified to use ArrayList rather than Vector
            2005/01/26, PFH, moved main funtionality to child class
 
@@ -30,9 +30,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>GridResampler</code> class performs generic data
- * resampling between 2D Earth transforms.  The method that actually
+ * resampling between 2D earth transforms.  The method that actually
  * performs the resampling is left to the child class.  The user must
- * provide source and destination Earth transforms, and pairs of
+ * provide source and destination earth transforms, and pairs of
  * source/destination grids (possibly more than one pair).  The
  * resampling is performed on all source / destination grid pairs
  * simultaneously.  Note that all source grids must have the same
@@ -47,10 +47,10 @@ public abstract class GridResampler {
   // Variables
   // ---------
 
-  /** The source Earth transform. */
+  /** The source earth transform. */
   protected EarthTransform sourceTrans;
 
-  /** The destination Earth transform. */
+  /** The destination earth transform. */
   protected EarthTransform destTrans;
 
   /** The list of source grids. */
@@ -65,8 +65,8 @@ public abstract class GridResampler {
    * Creates a new grid resampler from the specified source and
    * destination transforms.
    *
-   * @param sourceTrans the source Earth transform.
-   * @param destTrans the destination Earth transform.
+   * @param sourceTrans the source earth transform.
+   * @param destTrans the destination earth transform.
    */
   public GridResampler (
     EarthTransform sourceTrans,

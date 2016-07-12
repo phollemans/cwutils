@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: cwcoverage.java
-  PURPOSE: To render Earth data and station coverage maps.
+  PURPOSE: To render earth data and station coverage maps.
    AUTHOR: Peter Hollemans
      DATE: 2003/11/15
   CHANGES: 2004/01/23, PFH, modified to use SPLIT_REGEX and updated docs
@@ -56,14 +56,14 @@ import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.SpheroidConstants;
 
 /**
- * <p>The coverage tool creates an Earth data coverage map.</p>
+ * <p>The coverage tool creates an earth data coverage map.</p>
  *
  * <!-- START MAN PAGE -->
  *
  * <h2>Name</h2>
  * <p> 
  *   <!-- START NAME -->          
- *   cwcoverage - creates an Earth data coverage map.
+ *   cwcoverage - creates an earth data coverage map.
  *   <!-- END NAME -->
  * </p>
  *
@@ -112,8 +112,8 @@ import noaa.coastwatch.util.trans.SpheroidConstants;
  *
  * <h2>Description</h2>
  * <p>
- * The coverage tool creates an Earth data coverage map by accessing a
- * number of user-specified Earth data sets and tracing the boundaries
+ * The coverage tool creates an earth data coverage map by accessing a
+ * number of user-specified earth data sets and tracing the boundaries
  * onto an orthographic map projection.  The map is output as a PNG
  * graphics file.  Approximate satellite ground station coverage
  * boundaries may also be added to the map.
@@ -238,7 +238,7 @@ import noaa.coastwatch.util.trans.SpheroidConstants;
  *
  *   <dt> -E, --height=KILOMETERS </dt>
  *   <dd> The orbital height of the theoretical satellite above the
- *   Earth surface in kilometers.  This option is only used in
+ *   earth surface in kilometers.  This option is only used in
  *   conjunction with the <b>--stations</b> option.  By default, the
  *   satellite orbital height is set to 846.5 km which approximates a
  *   NOAA polar orbiter.</dd>
@@ -327,10 +327,10 @@ public class cwcoverage {
   /**
    * Calculates the angle of visibility for a satellite capture station.
    * The visibility angle is the angle between a line from the center of
-   * the Earth to the ground station and a line from the center of the
-   * Earth to the satellite.
+   * the earth to the ground station and a line from the center of the
+   * earth to the satellite.
    *
-   * @param radius the radius of the Earth in kilometers.
+   * @param radius the radius of the earth in kilometers.
    * @param height the height of the satellite above the surface in kilometers.
    * @param elev the elevation for the satellite receiver above the horizon
    * in degrees.
@@ -352,7 +352,7 @@ public class cwcoverage {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a circle of Earth locations centered at the
+   * Creates a circle of earth locations centered at the
    * specified location.
    *
    * @param center the center location.
@@ -361,7 +361,7 @@ public class cwcoverage {
    * circle and the radial points.
    * @param segments the number of segments around the circle.
    *
-   * @return an Earth vector specifying the circle points.
+   * @return an earth vector specifying the circle points.
    */
   public static LineFeature getCircle (
     EarthLocation center,
@@ -493,7 +493,7 @@ public class cwcoverage {
     double visAngle = getVisibility (SpheroidConstants.STD_RADIUS, height, 
       elevation); 
 
-    // Create Earth area for context map
+    // Create earth area for context map
     // ---------------------------------
     EarthArea area = new EarthArea();
 
@@ -604,7 +604,7 @@ public class cwcoverage {
         String label = (labelsArray != null ? labelsArray[i] : null);
         element.addBoundingBox (trans, min, max, thisBoxColor, label);
 
-        // Add to Earth area
+        // Add to earth area
         // -----------------
         if (center == null) {
           area.explore (trans, min, max, trans.transform (min));
@@ -725,7 +725,7 @@ public class cwcoverage {
     System.out.println (
 "Usage: cwcoverage [OPTIONS] input1 [input2 ...] output\n" +
 "       cwcoverage [OPTIONS] output\n" +
-"Creates an Earth data coverage map from Earth data sets and ground\n" +
+"Creates an earth data coverage map from earth data sets and ground\n" +
 "stations." +
 "\n" +
 "Main parameters:\n" +

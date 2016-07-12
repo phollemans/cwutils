@@ -52,7 +52,7 @@ import noaa.coastwatch.gui.TabComponent;
 
 /**
  * The <code>NavigationChooser</code> class allows the user to modify
- * the navigation affine transform for a set of Earth data
+ * the navigation affine transform for a set of earth data
  * variables.  The user may use a visual correction mode, or a manual
  * correction mode.<p>
  *

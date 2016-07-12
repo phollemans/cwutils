@@ -68,7 +68,7 @@ import noaa.coastwatch.util.Grid;
 
 /** 
  * The <code>EarthDataExporter</code> class allows the user to
- * choose a file name and parameters for saving Earth locatable data.
+ * choose a file name and parameters for saving earth locatable data.
  * The data may be saved in the form of a rendered image in a PNG,
  * GIF, JPEG, GeoTIFF, of PDF file, or as exported data in a CoastWatch
  * HDF, binary raster, text, or ArcGIS binary grid file.
@@ -115,10 +115,10 @@ public class EarthDataExporter
   // Variables
   // ---------
 
-  /** The Earth data view for rendered images. */
+  /** The earth data view for rendered images. */
   private EarthDataView view;
 
-  /** The Earth data information to use for legends. */
+  /** The earth data information to use for legends. */
   private EarthDataInfo info;
 
   /** The data reader for exported data. */
@@ -254,11 +254,11 @@ public class EarthDataExporter
   /** 
    * Creates a new exporter panel.
    *
-   * @param view the Earth data view to save.  The view will be used
+   * @param view the earth data view to save.  The view will be used
    * to render an image if the user selects an image type save, or
    * will be used for its bounding rectangle if the user chooses to
    * export data.
-   * @param info the Earth data information to use for the
+   * @param info the earth data information to use for the
    * legends.
    * @param reader the data reader to use for exporting data.  The
    * reader is also used to generate an initial file name based on the

@@ -85,7 +85,7 @@ public class SatelliteDataInfo
    * @param date the data recording date.  It is assumed that the data
    * was recorded on the specified date and time, with essentially no
    * time duration.
-   * @param trans the Earth transform.  The transform specifies the
+   * @param trans the earth transform.  The transform specifies the
    * translation between data array coordinates and geographic
    * coordinates.  The parameter is null if no transform is known.
    * @param origin the original data producer.  The origin should be
@@ -126,7 +126,7 @@ public class SatelliteDataInfo
    * acronym for the instrument on the satellite that recorded the
    * data, for example <code>avhrr</code> or <code>seawifs</code>.
    * @param periodList the list of data recording time periods.
-   * @param trans the Earth transform.  The transform specifies the
+   * @param trans the earth transform.  The transform specifies the
    * translation between data array coordinates and geographic
    * coordinates.  The parameter is null if no transform is known.
    * @param origin the original data producer.  The origin should be

@@ -30,7 +30,7 @@ import noaa.coastwatch.render.feature.LineFeature;
 
 /**
  * The <code>LineFeatureSource</code> class supplies methods that read
- * or generate vector-specified Earth data such as coast lines,
+ * or generate vector-specified earth data such as coast lines,
  * political boundaries, bathymetry, and so on.  A source must have
  * the capability to select data from the data source and supply it as
  * a list of {@link LineFeature} objects.
@@ -47,7 +47,7 @@ public abstract class LineFeatureSource
    * Renders the selected line feature data to a graphics context.
    *
    * @param g the graphics context for drawing.
-   * @param trans the Earth image transform for converting Earth
+   * @param trans the earth image transform for converting Earth
    * locations to image points.
    */
   public void render (

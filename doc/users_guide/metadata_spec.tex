@@ -4,7 +4,7 @@
 \section{Overview}
 
 CoastWatch HDF format may be used to store almost any scientific data
-that has an associated set of Earth locations, including satellite
+that has an associated set of earth locations, including satellite
 data and output from numerical models. The term {\em metadata} refers
 to information describing data.  HDF stores metadata as a set of
 attribute name and value pairs. For example, if a dataset is derived
@@ -23,7 +23,7 @@ HDF files. A number of overall conventions are used for storing data:
   contains data for one region only.
 
   \item A standard set of global attributes is encoded with the data,
-  describing the date and time, Earth locations, data source or
+  describing the date and time, earth locations, data source or
   satellite/ sensor, and so on from which the data originated.
 
   \item A standard set of variable attributes is encoded with each
@@ -165,7 +165,7 @@ data\_source} are required, but not both.
 \section{Earth Location Metadata}
 
 In addition to the standard global attributes listed above, a number
-of Earth location attributes are also present. Prior to version 3.1,
+of earth location attributes are also present. Prior to version 3.1,
 only mapped data was supported. For mapped data, all map projection
 calculations are performed using the
 \href{http://edcwww.cr.usgs.gov/pub/software/gctpc}{General
@@ -173,7 +173,7 @@ Cartographic Transformation Package} (GCTP) from the USGS National
 Mapping Division. A number of global attributes are dedicated to
 storing GCTP related parameters. For documentation on the allowed
 values of GCTP parameters, see \autoref{gctp}.  The table below lists
-the standard set of global attributes for Earth location metadata:
+the standard set of global attributes for earth location metadata:
 
 \begin{tabular}{|l|l|p{7.5cm}|l|}
 
@@ -185,11 +185,11 @@ the standard set of global attributes for Earth location metadata:
   mapped}, {\tt swath}, or {\tt sensor\_scan}. Mapped data is
   formatted to a well-known map projection and accompanied by GCTP map
   projection parameters. Swath data is data that is not in a standard
-  map projection, but is accompanied by Earth location data for each
+  map projection, but is accompanied by earth location data for each
   pixel (see \autoref{swath} on swath data). Sensor scan data is similar
   to swath in that it cannot be described by a set of map projection
   parameters, but it can be described by a set of sensor-specific
-  parameters and does not require Earth locations to be stored for
+  parameters and does not require earth locations to be stored for
   each pixel. & 3.1 \\ \hline
 
   {\tt projection}$^{\ddagger}$ & CHAR8 & For mapped data, a
@@ -279,7 +279,7 @@ The {\tt et\_affine} attribute is used by CoastWatch software to
 translate between map (x,y) coordinates in meters and image (row,col)
 coordinates. GCTP is used to translate between (lat,lon) in degrees
 and map (x,y) in meters. With this two-step process, the translation
-between image (row,col) and Earth location (lat,lon) is very flexible
+between image (row,col) and earth location (lat,lon) is very flexible
 and can be expressed partly as a linear coordinate transform. The six
 affine transform parameters are used in a matrix equation as follows.
 Let $a..f$ be the {\tt et\_affine} attribute array values $0..5$,
@@ -549,7 +549,7 @@ value for $(R,C)$ may be found.
 \section{Swath Earth Location Encoding}
 \label{swath}
 
-There are currently two methods for specifying Earth location data for
+There are currently two methods for specifying earth location data for
 CoastWatch HDF swath files: 
 \begin{enumerate}
 
@@ -558,7 +558,7 @@ CoastWatch HDF swath files:
   file. Each variable must be accompanied with appropriate metadata as
   outlined above. The latitude and longitude data must not have any
   values set to the missing or fill value, or problems may occur in
-  performing Earth coordinate transformations.
+  performing earth coordinate transformations.
 
   \item \textbf{Polynomial encoding:} A number of 1D HDF SDS variables
   named {\em swath\_struct}, {\em swath\_bounds}, {\em swath\_lat},
@@ -572,7 +572,7 @@ The polynomial encoding option is described in this section. The
 polynomial approximation scheme is given, along with details on the
 required HDF variables.
 
-The easiest approach to swath Earth location encoding is to simply
+The easiest approach to swath earth location encoding is to simply
 record latitude and longitude values for every data value in the
 swath. For a typical AVHRR swath size of 2048$\times$5000, this can
 add about 80 Mb of extra data to a file using 32-bit floating point
@@ -580,12 +580,12 @@ values. To convert a data (row,col) coordinate to geographic (lat,lon)
 coordinate, an application simply reads the (lat,lon) data at the
 specified coordinate from the file. This method requires either a
 large amount of file I/O or a large amount of memory, depending on how
-much of the Earth location data is read at once. It also does not lend
+much of the earth location data is read at once. It also does not lend
 itself to an efficient reverse lookup algorithm for converting an
 arbitrary (lat,lon) back to (row,col).
 
 In order to support swath data in CoastWatch HDF files but avoid the
-overhead of storing the Earth locations, a polynomial approximation
+overhead of storing the earth locations, a polynomial approximation
 scheme is used. The approximation scheme also lends itself to an
 efficient reverse lookup algorithm. The approximation divides the data
 into a number of rectangular partitions of varying size in rows and
@@ -614,7 +614,7 @@ coordinate using the polynomial coefficients. By bounding the physical
 size of each partition, it is possible to bound the error in latitude
 and longitude estimation. For a typical AVHRR pass, it has been found
 that a 100 km maximum partition size yields a maximum error of
-approximately 50 m in Earth location.
+approximately 50 m in earth location.
 
 The polynomial approximation scheme used is as follows. For each
 partition, nine latitude and longitude values are sampled in a

@@ -5,9 +5,16 @@
    AUTHOR: Peter Hollemans
      DATE: 2006/05/25
   CHANGES: 2008/02/18, PFH, modified to use opendap.dap classes
+           2016/03/16, PFH
+           - Changes: Updated to use new opendap.dap.DConnect2 class and call
+             DArray.getClearName().
+           - Issue: The Java NetCDF library uses the newer OPeNDAP Java
+             classes and they were conflicting with the older API that we were
+             using, so we had to remove the old dap2 jar and conform to the 
+             API found in the classes in the latest toolsUI jar file.
 
   CoastWatch Software Library and Utilities
-  Copyright 2006-2008, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2006-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -23,7 +30,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.Grid;
-import opendap.dap.DConnect;
+import opendap.dap.DConnect2;
 import opendap.dap.DVector;
 import opendap.dap.DataDDS;
 import opendap.dap.PrimitiveVector;
@@ -44,7 +51,7 @@ public class OpendapGrid
   // ---------
 
   /** The OPeNDAP connection used for data. */
-  private DConnect connect;
+  private DConnect2 connect;
 
   /** The starting data coordinate from the last access hint. */
   private int[] start;
@@ -77,7 +84,7 @@ public class OpendapGrid
     // Initialize
     // ----------
     super (grid);
-    connect = new DConnect (url, true);
+    connect = new DConnect2 (url, true);
 
     // Create zero size start and end
     // ------------------------------

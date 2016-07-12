@@ -148,7 +148,7 @@ public class SatellitePassInfo
     // --------------
     else {
 
-      // Create Earth locations
+      // Create earth locations
       // ----------------------
       gcpLats = gcpLats.replaceAll ("[\\{\\}]", "");
       gcpLons = gcpLons.replaceAll ("[\\{\\}]", "");

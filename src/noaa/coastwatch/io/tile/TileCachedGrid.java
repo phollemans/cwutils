@@ -15,9 +15,11 @@
           - Changes: Changed to use weak references for last tile.
           - Issue: Holding onto strong references for the last tile was causing
             problems with memory management.
- 
+          2016/01/19, PFH
+           - Changes: Updated to new logging API.
+
   CoastWatch Software Library and Utilities
-  Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2014-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -43,6 +45,9 @@ import noaa.coastwatch.io.tile.TilingScheme;
 import noaa.coastwatch.io.tile.TilingScheme.Tile;
 import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
 import noaa.coastwatch.util.Grid;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * The <code>TileCachedGrid</code> class is a <code>Grid</code> whose data 
@@ -258,6 +263,9 @@ public class TileCachedGrid
    */
   public static void main (String[] argv) throws Exception {
 
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (TileCachedGrid.class);
+
     /*
      *     0    1    2
      *   +-----+-----+---  \
@@ -273,7 +281,9 @@ public class TileCachedGrid
      *   \-----X-----X--/
      *     15   15   5
      */
-     
+    
+    logger.test ("Framework");
+    
     int[] globalDims = new int[] {40, 40};
     int[] tileDims = new int[] {15, 15};
     final TilingScheme scheme = new TilingScheme (globalDims, tileDims);
@@ -310,13 +320,15 @@ public class TileCachedGrid
       null);
     grid.setUnsigned (true);
 
-    System.out.print ("Testing constructor, getDataClass() ... ");
+    logger.passed();
+
+    logger.test ("constructor, getDataClass");
     TileCachedGrid cachedGrid = new TileCachedGrid (grid, source);
     assert (cachedGrid.getDataClass() == Byte.TYPE);
     assert (cachedGrid.getUnsigned());
-    System.out.println ("OK");
+    logger.passed();
     
-    System.out.print ("Testing getValue() ... ");
+    logger.test ("getValue");
     throwError[0] = true;
     try {
       cachedGrid.getValue (0, 0);
@@ -335,17 +347,17 @@ public class TileCachedGrid
     assert (cachedGrid.getValue (30, 30) == 8);
     assert (Double.isNaN (cachedGrid.getValue (0, 40)));
     assert (Double.isNaN (cachedGrid.getValue (-1, -1)));
-    System.out.println ("OK");
+    logger.passed();
     
-    System.out.print ("Testing setValue() ... ");
+    logger.test ("setValue");
     try {
       cachedGrid.setValue (0, 0, 0);
       assert (false);
     } // try
     catch (UnsupportedOperationException e) { }
-    System.out.println ("OK");
+    logger.passed();
 
-    System.out.print ("Testing getData() ... ");
+    logger.test ("getData");
     byte[] data;
     try {
       cachedGrid.getData (new int[] {-1, 0}, new int[] {40, 40});
@@ -365,13 +377,13 @@ public class TileCachedGrid
         assert (data[i*40 + j] == tileRow*3 + tileCol);
       } // for
     } // for
-    System.out.println ("OK");
+    logger.passed();
     
-    System.out.print ("Testing dispose() ... ");
+    logger.test ("dispose");
     assert (TileCacheManager.getInstance().getCache().getCacheSize() != 0);
     cachedGrid.dispose();
     assert (TileCacheManager.getInstance().getCache().getCacheSize() == 0);
-    System.out.println ("OK");
+    logger.passed();
 
   } // main
 

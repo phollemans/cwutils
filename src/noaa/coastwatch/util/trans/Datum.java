@@ -150,16 +150,16 @@ public class Datum
   ////////////////////////////////////////////////////////////
 
   /**
-   * Transforms an Earth location from one datum to another.
+   * Transforms an earth location from one datum to another.
    *
-   * @param from the Earth location to transform.
+   * @param from the earth location to transform.
    * @param toDatum the new datum to transform to.
-   * @param to the Earth location to modify, or null to create a new
-   * transformed Earth location.  The <code>to</code> and
+   * @param to the earth location to modify, or null to create a new
+   * transformed earth location.  The <code>to</code> and
    * <code>from</code> locations may be the same, in which case the
    * location is modified in-place.
    *
-   * @return the new or modified Earth location.
+   * @return the new or modified earth location.
    */
   public static EarthLocation transform (
     EarthLocation from,

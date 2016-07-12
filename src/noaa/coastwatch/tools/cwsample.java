@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: cwsample.java
-  PURPOSE: To perform sampling of Earth data at discrete Earth 
+  PURPOSE: To perform sampling of earth data at discrete earth 
            locations.
    AUTHOR: Peter Hollemans
      DATE: 2002/01/26
@@ -11,7 +11,7 @@
            2005/02/15, PFH, added --imagecoords options
            2005/03/14, PFH, reformatted documentation and usage note
            2005/04/23, PFH, added ToolServices.setCommandLine()
-           2005/05/19, PFH, modified to use reader datum for Earth locations
+           2005/05/19, PFH, modified to use reader datum for earth locations
            2006/01/12, PFH, added --variable option
            2007/04/19, PFH, added version printing
 
@@ -62,7 +62,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * <h2>Name</h2>
  * <p> 
  *   <!-- START NAME -->          
- *   cwsample - extracts data values at specified Earth locations.
+ *   cwsample - extracts data values at specified earth locations.
  *   <!-- END NAME -->
  * </p>
  *
@@ -108,7 +108,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  *   <dt> -s, --sample=LATITUDE/LONGITUDE </dt>
  *   <dd> The sample point for a single sampling operation.  The point
- *   is specified in terms of Earth location latitude and longitude in
+ *   is specified in terms of earth location latitude and longitude in
  *   the range [-90..90] and [-180..180]. </dd>
  *
  *   <dt> -S, --samples=FILE </dt>
@@ -116,7 +116,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   performing multiple sampling operations.  The file must be an
  *   ASCII text file containing sample points as latitude / longitude
  *   pairs, one line per pair, with values separated by spaces or
- *   tabs.  The points are specified in terms of Earth location
+ *   tabs.  The points are specified in terms of earth location
  *   latitude and longitude in the range [-90..90] and
  *   [-180..180]. </dd>
  *
@@ -125,7 +125,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  *   <dt> output </dt>
  *   <dd> The output text file name.  If the output file name is '-',
- *   output is sent to standard output (normally the terminal). </dd>
+ *   output is sent to standard output (normally the terminal).  In this case,
+ *   the end of the options must be indicated with a lone '--' (see the
+ *   examples) or the '-' output file name will be interpreted as an option. </dd>
  *
  * </dl>
  *
@@ -224,7 +226,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * this line with output to the terminal screen:</p>
  * <pre>
  *   phollema$ cwsample --header --match '(sst|cloud)' --samples sample_locs.txt
- *     2002_325_1546_n17_mr.hdf -
+ *     -- 2002_325_1546_n17_mr.hdf -
  *
  *   latitude longitude sst cloud
  *   28 -93 25.24 0
@@ -243,7 +245,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * of comparison with a single buoy measurement with output to the
  * terminal screen:</p>
  * <pre>
- *   phollema$ cwsample --header --match sst --sample 28.8/-93 2002_325_1546_n17_mr.hdf -
+ *   phollema$ cwsample --header --match sst --sample 28.8/-93 -- 2002_325_1546_n17_mr.hdf -
  *
  *   latitude longitude sst
  *   28.8 -93 22.72
@@ -470,7 +472,7 @@ public class cwsample {
       // -----------------------
       for (Iterator iter = locations.iterator(); iter.hasNext(); ) {
 
-        // Print Earth location
+        // Print earth location
         // --------------------
         EarthLocation geoLoc = (EarthLocation) iter.next();
         if (!nocoords) {
@@ -527,12 +529,12 @@ public class cwsample {
     System.out.println (
 "Usage: cwsample {-s, --sample=LATITUDE/LONGITUDE} [OPTIONS] input output\n" +
 "       cwsample {-S, --samples=FILE} [OPTIONS] input output\n" +
-"Extracts data values at specified Earth locations from 2D data variables.\n" +
+"Extracts data values at specified earth locations from 2D data variables.\n" +
 "\n" +
 "Main parameters:\n" +
 "  -s, --sample=LATITUDE/LONGITUDE\n" +
-"                             Sample at single Earth location.\n" +
-"  -S, --samples=FILE         Sample at multiple Earth locations.\n" +
+"                             Sample at single earth location.\n" +
+"  -S, --samples=FILE         Sample at multiple earth locations.\n" +
 "  input                      The input data file name.\n" +
 "  output                     The output text file name or '-' for stdout.\n" +
 "\n" +

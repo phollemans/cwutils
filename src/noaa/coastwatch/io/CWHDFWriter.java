@@ -51,6 +51,14 @@
            - Issue: The HDF library was crashing the VM due to multiple threads
              calling the library simultaneously and the library is not
              threadsafe.
+           2015/09/03, PFH
+           - Changes: Added an extra test if missing data value is set for
+             a variable when writing data.
+           - Issue: If a data provider of swath data doesn't see a need for
+             a missing value, and then the data is reprojected, then we have a
+             problem for pixels that fall outside the swath in the
+             master region.  So we added some reasonable guesses for good 
+             missing values on IEEE floating point types.
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
@@ -98,7 +106,7 @@ import noaa.coastwatch.util.trans.SensorScanProjection;
 import noaa.coastwatch.util.trans.SwathProjection;
 
 /**
- * A CoastWatch HDF writer is an Earth data writer that writes
+ * A CoastWatch HDF writer is an earth data writer that writes
  * CoastWatch HDF format files using the HDF library class.
  *
  * @author Peter Hollemans
@@ -263,7 +271,7 @@ public class CWHDFWriter
    * writer settings are determined from the system properties and
    * defaults constants.
    * 
-   * @param info the Earth data info object.
+   * @param info the earth data info object.
    * @param file the new HDF file name.
    *
    * @throws HDFException if an error occurred in an HDF routine.
@@ -289,7 +297,7 @@ public class CWHDFWriter
    * writer settings are determined from the system properties and
    * defaults constants, except for the metadata version.
    * 
-   * @param info the Earth data info object.
+   * @param info the earth data info object.
    * @param version the metadata version.
    * @param file the new HDF file name.
    *
@@ -430,11 +438,11 @@ public class CWHDFWriter
   ////////////////////////////////////////////////////////////
 
   /**
-   * Writes the Earth transform information.  The projection metadata
+   * Writes the earth transform information.  The projection metadata
    * in the HDF file is converted from the equivalent {@link
    * EarthTransform}.
    *
-   * @param trans the Earth transform to write.
+   * @param trans the earth transform to write.
    *
    * @throws HDFException if there were errors writing the HDF metadata.
    * @throws ClassNotFoundException if the HDF attribute type is unknown.
@@ -566,7 +574,7 @@ public class CWHDFWriter
     // ---------------------
     else
       throw new UnsupportedEncodingException (
-        "Unsupported Earth transform");
+        "Unsupported earth transform");
 
     // Write transform dimensions
     // --------------------------
@@ -574,7 +582,7 @@ public class CWHDFWriter
     setAttribute (sdid, "rows", new Integer (dims[0]));
     setAttribute (sdid, "cols", new Integer (dims[1]));
 
-    // Write Earth polygon data
+    // Write earth polygon data
     // ------------------------
     DataLocation min = new DataLocation (0, 0);
     DataLocation max = new DataLocation (dims[Grid.ROWS]-1, 
@@ -652,7 +660,21 @@ public class CWHDFWriter
 
     // Set fill value
     // --------------
-    Object missing = var.getMissing ();
+    Object missing = var.getMissing();
+    /**
+     * We set up a reasonable missing value here for variables that don't
+     * have it.  It may be that the data provider didn't see a need for a
+     * missing value because all values were going to be written, but consider
+     * the case of a reprojection, where some of the destination points
+     * are not going to be populated, then they need to have a default value.
+     */
+    if (missing == null) {
+      Class dataClass = var.getDataClass();
+      if (dataClass.equals (Float.TYPE))
+        missing = new Float (Float.NaN);
+      else if (dataClass.equals (Double.TYPE))
+        missing = new Double (Double.NaN);
+    } // if
     if (missing != null) {
       Object fillValue = MetadataServices.toArray (missing);
       if (!HDFLib.getInstance().SDsetfillvalue (sdsid, fillValue))

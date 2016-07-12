@@ -96,13 +96,13 @@ public abstract class DataVariable
   /** The unsigned type code for byte values. */
   private static final int UNSIGNED_BYTE = 0;
 
-  /** The unsigned type code for byte values. */
+  /** The unsigned type code for short values. */
   private static final int UNSIGNED_SHORT = 1;
 
-  /** The unsigned type code for byte values. */
+  /** The unsigned type code for int values. */
   private static final int UNSIGNED_INT = 2;
 
-  /** The unsigned type code for byte values. */
+  /** The unsigned type code for long values. */
   private static final int UNSIGNED_LONG = 3;
 
   // Variables

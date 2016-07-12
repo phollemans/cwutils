@@ -8,9 +8,14 @@
            2004/03/23, PFH, modified to use ArrayList rather than Vector
            2005/05/18, PFH, changed "datum" to "spheroid"
            2006/01/19, PFH, added compression
+           2016/02/22, PFH
+           - Changes: Added writing of extra metadata tags.
+           - Issue: We wanted to be able to tell which version of the software
+             was used to create a file, and the command line, in order to aid 
+             with diagnosing rendering issues.
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -46,7 +51,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.MapProjection;
 
 /**
- * A GeoTIFF writer uses an Earth image transform and rendered image
+ * A GeoTIFF writer uses an earth image transform and rendered image
  * to create a TIFF file with extra TIFF tags decribing the Earth
  * location of the image data.  The GeoTIFF content conforms to the
  * GeoTIFF specification version 1.8.2 as obtained from the <a
@@ -60,7 +65,7 @@ public class GeoTIFFWriter {
 
   // Constants
   // ---------
-  /** The GeoTIFF Earth transform translations file. */
+  /** The GeoTIFF earth transform translations file. */
   private static final String PROPERTIES_FILE = "geotiff.properties";
 
   /** The GCTP spheroid citation. */
@@ -75,17 +80,38 @@ public class GeoTIFFWriter {
   /** The GeoTIFF key minor revision. */
   private static final int MINOR_REVISION = 0;
 
+  /**
+   * We use the following tags to describe the TIFF file data,
+   * baseline TIFF tags detailed on this site:
+   *
+   * http://www.awaresystems.be/imaging/tiff/tifftags/baseline.html
+   *
+   * Artist               Person who created the image.
+   * DateTime             Date and time of image creation (YYYY:MM:DD HH:MM:SS).
+   * ImageDescription     A string that describes the subject of the image.
+   * Software             Name and version number of the software package(s)
+   *                      used to create the image.
+   * HostComputer         The computer and/or operating system in use
+   *                      at the time of image creation.
+   */
+
   /** The TIFF Artist tag value. */
   private static final int TIFFTAG_ARTIST = 315; 
 
   /** The TIFF DateTime tag value. */
-  private static final int TIFFTAG_DATETIME = 306; 
+  private static final int TIFFTAG_DATE_TIME = 306;
 
   /** The TIFF DateTime field format. */
-  private static final String TIFF_DATETIME_FMT = "yyyy:MM:dd HH:mm:ss";
+  private static final String TIFF_DATE_TIME_FMT = "yyyy:MM:dd HH:mm:ss";
 
   /** The TIFF ImageDescription tag value. */
-  private static final int TIFFTAG_IMAGEDESCRIPTION = 270;
+  private static final int TIFFTAG_IMAGE_DESCRIPTION = 270;
+
+  /** The TIFF Software tag value. */
+  private static final int TIFFTAG_SOFTWARE = 305;
+
+  /** The TIFF HostComputer tag value. */
+  private static final int TIFFTAG_HOST_COMPUTER = 316;
 
   /** The TIFF none compression type. */
   public static final int COMP_NONE = TIFFEncodeParam.COMPRESSION_NONE;
@@ -463,10 +489,10 @@ public class GeoTIFFWriter {
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the GeoTIFF fields representing the specified Earth image
+   * Gets the GeoTIFF fields representing the specified earth image
    * transform.
    * 
-   * @param trans the Earth image transform for encoding.
+   * @param trans the earth image transform for encoding.
    *
    * @return the TIFF fields to use as extra fields.
    *
@@ -566,10 +592,10 @@ public class GeoTIFFWriter {
 
   /**
    * Creates a new GeoTIFF writer using the specified output stream,
-   * Earth image transform, and no TIFF compression.
+   * earth image transform, and no TIFF compression.
    * 
    * @param output the output stream for writing.
-   * @param trans the Earth image transform for Earth location metadata.
+   * @param trans the earth image transform for earth location metadata.
    *
    * @throws IOException if an error occurred writing to the output
    * stream.
@@ -587,10 +613,10 @@ public class GeoTIFFWriter {
 
   /**
    * Creates a new GeoTIFF writer using the specified output stream,
-   * Earth image transform, and compression.
+   * earth image transform, and compression.
    * 
    * @param output the output stream for writing.
-   * @param trans the Earth image transform for Earth location metadata.
+   * @param trans the earth image transform for earth location metadata.
    * @param compress the TIFF compression type.
    *
    * @throws IOException if an error occurred writing to the output
@@ -626,9 +652,9 @@ public class GeoTIFFWriter {
 
     // Set encoding date/time
     // ----------------------
-    String dateTime =  new SimpleDateFormat (TIFF_DATETIME_FMT).format (
+    String dateTime =  new SimpleDateFormat (TIFF_DATE_TIME_FMT).format (
       new Date());
-    addField (new TIFFField (TIFFTAG_DATETIME, TIFFField.TIFF_ASCII, 
+    addField (new TIFFField (TIFFTAG_DATE_TIME, TIFFField.TIFF_ASCII,
       1, new String[] {dateTime}));
 
   } // GeoTIFFWriter
@@ -674,7 +700,7 @@ public class GeoTIFFWriter {
     String description
   ) {
 
-    addField (new TIFFField (TIFFTAG_IMAGEDESCRIPTION,
+    addField (new TIFFField (TIFFTAG_IMAGE_DESCRIPTION,
       TIFFField.TIFF_ASCII, 1, new String[] {description}));
 
   } // setDescription
@@ -684,7 +710,7 @@ public class GeoTIFFWriter {
   /** 
    * Sets the Artist TIFF field.
    *
-   * @param artist the artist who created the image.
+   * @param artist the person who created the image.
    */
   public void setArtist (
     String artist
@@ -694,6 +720,40 @@ public class GeoTIFFWriter {
       TIFFField.TIFF_ASCII, 1, new String[] {artist}));
 
   } // setArtist
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Sets the Software TIFF field.
+   *
+   * @param software the name and version number of the software package(s)
+   * used to create the image.
+   */
+  public void setSoftware (
+    String software
+  ) {
+
+    addField (new TIFFField (TIFFTAG_SOFTWARE,
+      TIFFField.TIFF_ASCII, 1, new String[] {software}));
+
+  } // setSoftware
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Sets the HostComputer TIFF field.
+   *
+   * @param computer the computer and/or operating system in use
+   * at the time of image creation.
+   */
+  public void setComputer (
+    String computer
+  ) {
+
+    addField (new TIFFField (TIFFTAG_HOST_COMPUTER,
+      TIFFField.TIFF_ASCII, 1, new String[] {computer}));
+
+  } // setComputer
 
   ////////////////////////////////////////////////////////////
 

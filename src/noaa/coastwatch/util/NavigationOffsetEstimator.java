@@ -249,7 +249,7 @@ public class NavigationOffsetEstimator {
   /**
    * Gets the specified land data from the landmask database.
    *
-   * @param trans the Earth transform for data coordinates.
+   * @param trans the earth transform for data coordinates.
    * @param min the top-left data coordinates.
    * @param landHeight the land box height in data dimensions.
    * @param landWidth the land box width in data dimensions.
@@ -488,10 +488,10 @@ public class NavigationOffsetEstimator {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the offset estimate for the specified Earth location.
+   * Gets the offset estimate for the specified earth location.
    *
    * @param grid the grid to use for data values.
-   * @param trans the Earth transform for the data grid.
+   * @param trans the earth transform for the data grid.
    * @param earthLoc the center location for the navigation box.
    * @param boxHeight the navigation box height in data dimensions.
    * @param boxWidth the navigation box width in data dimensions.

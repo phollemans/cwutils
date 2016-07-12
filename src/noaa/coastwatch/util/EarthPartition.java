@@ -37,9 +37,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
  * The <code>EarthPartition</code> class sets up a partitioning of
- * Earth data such that no individual partition has physical size
+ * earth data such that no individual partition has physical size
  * exceeding a user-specified tolerance.  The physical size along each
- * dimension is measured in terms of the Earth transform
+ * dimension is measured in terms of the earth transform
  * <code>distance()</code> metric.  After construction, child
  * partitions may be retrieved and manipulated.
  *
@@ -90,7 +90,7 @@ public class EarthPartition
   /** Gets the partition maximum bounds. */
   public DataLocation getMax () { return ((DataLocation) max.clone()); }
 
-  /** Constructs an empty Earth partition. */
+  /** Constructs an empty earth partition. */
   private EarthPartition () { }
 
   ////////////////////////////////////////////////////////////
@@ -296,7 +296,7 @@ public class EarthPartition
         DataLocation dimMax = (DataLocation) min.clone();
         dimMax.set (i, max.get(i));
 
-        // Get Earth locations
+        // Get earth locations
         // -------------------
         EarthLocation minLoc = trans.transform (min);
         EarthLocation maxLoc = trans.transform (dimMax);
@@ -365,7 +365,7 @@ public class EarthPartition
   ////////////////////////////////////////////////////////////
 
   /**
-   * Constructs an Earth partitioning from the specified encoding.
+   * Constructs an earth partitioning from the specified encoding.
    * The encoding must be a valid encoding of a partitioning as
    * created by <code>getEncoding</code>.
    *
@@ -384,7 +384,7 @@ public class EarthPartition
   ////////////////////////////////////////////////////////////
 
   /**
-   * Constructs an Earth partitioning from the specified encoding.
+   * Constructs an earth partitioning from the specified encoding.
    * The encoding must be a valid encoding of a partitioning as
    * created by <code>getEncoding</code>.
    *
@@ -491,7 +491,7 @@ public class EarthPartition
   /**
    * Creates an encoding of the partition information.  The encoding
    * may later be used to recreate the partitioning without using the
-   * original Earth transform data.
+   * original earth transform data.
    *
    * @return obj the object encoding.  The encoding object is an
    * <code>Object[3]</code> array containing:
@@ -614,7 +614,7 @@ public class EarthPartition
    *
    * @param loc the data location for searching.
    * 
-   * @return the Earth partition containing the data location, or
+   * @return the earth partition containing the data location, or
    * <code>null</code> if one cannot be found.
    */
   public EarthPartition findPartition (

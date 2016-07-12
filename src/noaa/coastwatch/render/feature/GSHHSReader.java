@@ -154,7 +154,7 @@ public class GSHHSReader
 
   /**
    * Sets the polygon cache size.  The cache size is measured in terms
-   * of the number of polygon Earth location points.
+   * of the number of polygon earth location points.
    *
    * @param cacheSize the cache size in bytes.
    */
@@ -418,7 +418,7 @@ public class GSHHSReader
   /**
    * Reads the GSHHS database offsets for the specified area.
    *
-   * @param area the Earth area for polygon selection.
+   * @param area the earth area for polygon selection.
    * @param index the index file for reading.
    *
    * @return a set of sorted offsets as <code>Integer</code> objects.
@@ -502,7 +502,7 @@ public class GSHHSReader
    * @param in the data input.  The polygon is constructed by reading
    * at the current input position.
    *
-   * @return a new polygon as a vector of Earth locations.
+   * @return a new polygon as a vector of earth locations.
    * 
    * @throws IOException if an error occurred reading the data file.
    */

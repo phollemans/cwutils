@@ -20,9 +20,11 @@
              new affine.  The documentation for the scale factor had to be
              updated as well, since its desciption was inverse of the actual
              usage.
+           2016/01/19, PFH
+           - Changes: Updated to new logging API.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -40,6 +42,9 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.Grid;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * The ImageTransform class translates between 2D data coordinates
@@ -374,7 +379,10 @@ public class ImageTransform {
    */
   public static void main (String argv[]) throws Exception {
 
-    System.out.print ("Testing constructors ... ");
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (ImageTransform.class);
+
+    logger.test ("constructors");
 
     int rows = 100;
     int cols = 200;
@@ -424,7 +432,7 @@ public class ImageTransform {
     assert (Math.abs (lowerRightLoc.get (Grid.ROWS) - (-0.5)) < epsilon);
     assert (Math.abs (lowerRightLoc.get (Grid.COLS) - (-0.5)) < epsilon);
 
-    System.out.println ("OK");
+    logger.passed();
 
 /*
     double[] coefficients = new double[6];

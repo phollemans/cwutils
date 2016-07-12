@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: EarthDataPlot.java
-  PURPOSE: A class to set up a plot of Earth data with legends.
+  PURPOSE: A class to set up a plot of earth data with legends.
    AUTHOR: Peter Hollemans
      DATE: 2002/10/04
   CHANGES: 2002/10/14, PFH, added Renderable interface
@@ -45,10 +45,10 @@ import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
- * The Earth data plot class is used for rendering Earth data
- * with legends.  The plot uses an Earth data view and Earth data
+ * The earth data plot class is used for rendering earth data
+ * with legends.  The plot uses an earth data view and earth data
  * information object to render a data plot showing the view, its
- * associated view legend (if any), and an Earth data information
+ * associated view legend (if any), and an earth data information
  * legend with icon and context map.  The plot is laid out as follows:
  * <pre>
  *   +------------------------------------+
@@ -82,13 +82,13 @@ public class EarthDataPlot
 
   // Variables
   // ---------
-  /** The Earth data view for rendering. */
+  /** The earth data view for rendering. */
   private EarthDataView view;
 
   /** The view legend, or null for none. */
   private Legend viewLegend;
 
-  /** The Earth plot information legend, or null for none. */
+  /** The earth plot information legend, or null for none. */
   private EarthPlotInfo infoLegend;
 
   /** The foreground drawing color. */
@@ -97,10 +97,10 @@ public class EarthDataPlot
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Creates a new Earth data plot from the specified parameters.
+   * Creates a new earth data plot from the specified parameters.
    *
    * @param view the data view for rendering in the main plot area.
-   * @param info the info for the Earth data information legend.
+   * @param info the info for the earth data information legend.
    * If null, no info legend is drawn.
    * @param icon the icon for the the info legend.  This parameter can
    * be null if info is null.
