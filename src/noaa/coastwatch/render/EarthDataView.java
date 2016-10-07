@@ -228,7 +228,7 @@ public abstract class EarthDataView
    * A number of data overlays.  The overlays are rendered in the view
    * image after sorting according to level.
    */
-  protected LinkedList overlays;
+  protected LinkedList<EarthDataOverlay> overlays;
 
   /** 
    * The view area.  At any one time, the view shows some area of the
@@ -427,7 +427,7 @@ public abstract class EarthDataView
   ////////////////////////////////////////////////////////////
 
   /** Gets the current list of overlays. */
-  public List getOverlays () { return ((List) overlays.clone()); }
+  public List<EarthDataOverlay> getOverlays () { return ((List<EarthDataOverlay>) overlays.clone()); }
 
   ////////////////////////////////////////////////////////////
 

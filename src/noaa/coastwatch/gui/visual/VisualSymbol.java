@@ -26,6 +26,7 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import noaa.coastwatch.gui.visual.AbstractVisualObject;
 import noaa.coastwatch.render.PlotSymbolFactory;
@@ -44,7 +45,7 @@ public class VisualSymbol
   // ---------
 
   /** The size of the symbol icon. */
-  private static final int ICON_SIZE = 16;
+  private static final int ICON_SIZE = 14;
 
   // Variables
   // ---------
@@ -62,8 +63,7 @@ public class VisualSymbol
     // Create array of plot symbols
     // ----------------------------
     symbolList = new ArrayList<PlotSymbol>();
-    for (Iterator<String> iter = PlotSymbolFactory.getSymbolNames();
-      iter.hasNext();) {
+    for (Iterator<String> iter = PlotSymbolFactory.getSymbolNames(); iter.hasNext();) {
       symbolList.add (PlotSymbolFactory.create (iter.next()));
     } // for
 
@@ -103,7 +103,7 @@ public class VisualSymbol
 
     ////////////////////////////////////////////////////////
 
-    /** Sets this label to show a stroke swatch icon. */
+    /** Sets this label to show a symbol swatch icon. */
     public Component getListCellRendererComponent (
       JList list,
       Object value,
@@ -112,10 +112,7 @@ public class VisualSymbol
       boolean cellHasFocus
     ) {
 
-      /*
-      setIcon (new SymbolSwatch (getBasicStroke (2, (float[]) value),
-        SWATCH_SIZE*3, SWATCH_SIZE));
-      */
+      setIcon (new SymbolSwatch ((PlotSymbol) value, ICON_SIZE));
       if (isSelected) {
         setBackground (list.getSelectionBackground());
         setForeground (list.getSelectionForeground());
@@ -151,14 +148,11 @@ public class VisualSymbol
    */
   public static void main (String argv[]) {
   
-    /*
     JPanel panel = new JPanel();
-    Stroke stroke = StrokeChooser.getBasicStroke (2, 
-      StrokeChooser.DASH_PATTERNS[1]);
-    Component comp =  new VisualSymbol (stroke).getComponent();
+    PlotSymbol symbol = symbolList.get (0);
+    Component comp =  new VisualSymbol (symbol).getComponent();
     panel.add (comp);
     noaa.coastwatch.gui.TestContainer.showFrame (panel);
-    */
 
   } // main
 

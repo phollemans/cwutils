@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TextRule.java
-  PURPOSE: Selects features based on a text attribute value.
+     FILE: NumberRule.java
+  PURPOSE: Selects features based on a numerical attribute value.
    AUTHOR: Peter Hollemans
-     DATE: 2016/07/07
+     DATE: 2016/07/12
   CHANGES: n/a
 
   CoastWatch Software Library and Utilities
@@ -32,14 +32,14 @@ import noaa.coastwatch.util.EarthLocation;
 import java.util.List;
 
 /**
- * A <code>TextRule</code> provides a selection mechanism for
- * features based on the string value of one of the attributes.
+ * A <code>NumberRule</code> provides a selection mechanism for
+ * features based on the numercial value of one of the attributes.
  *
  * @author Peter Hollemans
  * @since 3.3.2
  */
 @noaa.coastwatch.test.Testable
-public class TextRule
+public class NumberRule
   extends AttributeRule {
 
   // Constants
@@ -47,32 +47,31 @@ public class TextRule
   
   /** The operators for this class of rule. */
   public enum Operator {
-    CONTAINS,
-    DOES_NOT_CONTAIN,
-    BEGINS_WITH,
-    ENDS_WITH,
-    IS_EQUAL_TO
+    IS_GREATER_THAN,
+    IS_LESS_THAN,
+    IS_EQUAL_TO,
+    IS_NOT_EQUAL_TO
   } // Operator
 
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new text rule.
+   * Creates a new number rule.
    *
    * @param attName the attribute name to use for matching.
    * @param nameMap the name to index mapping.
-   * @param textValue the text value to use for matching.
+   * @param numberValue the number value to use for matching.
    */
-  public TextRule (
+  public NumberRule (
     String attName,
     Map<String, Integer> nameMap,
-    String textValue
+    Number numberValue
   ) {
 
-    super (attName, nameMap, textValue);
-    setOperator (Operator.CONTAINS);
+    super (attName, nameMap, numberValue);
+    setOperator (Operator.IS_GREATER_THAN);
 
-  } // TextRule
+  } // NumberRule
 
   ////////////////////////////////////////////////////////////
 
@@ -87,29 +86,26 @@ public class TextRule
     // Get feature attribute value
     // ---------------------------
     int attIndex = nameMap.get (matchAttName);
-    String featureAttValue = (String) feature.getAttribute (attIndex);
-  
+    Comparable featureAttValue = (Comparable) feature.getAttribute (attIndex);
+
     // Compare to match value
     // ----------------------
     boolean isMatch = false;
     if (featureAttValue != null) {
-      Operator textOp = (Operator) operator;
-      String textValue = (String) matchAttValue;
-      switch (textOp) {
-      case CONTAINS:
-        isMatch = (featureAttValue.indexOf (textValue) != -1);
+      Operator numberOp = (Operator) operator;
+      Comparable numberValue = (Comparable) matchAttValue;
+      switch (numberOp) {
+      case IS_GREATER_THAN:
+        isMatch = (featureAttValue.compareTo (numberValue) > 0);
         break;
-      case DOES_NOT_CONTAIN:
-        isMatch = (featureAttValue.indexOf (textValue) == -1);
-        break;
-      case BEGINS_WITH:
-        isMatch = featureAttValue.startsWith (textValue);
-        break;
-      case ENDS_WITH:
-        isMatch = featureAttValue.endsWith (textValue);
+      case IS_LESS_THAN:
+        isMatch = (featureAttValue.compareTo (numberValue) < 0);
         break;
       case IS_EQUAL_TO:
-        isMatch = featureAttValue.equals (textValue);
+        isMatch = (featureAttValue.compareTo (numberValue) == 0);
+        break;
+      case IS_NOT_EQUAL_TO:
+        isMatch = (featureAttValue.compareTo (numberValue) != 0);
         break;
       default:
       } // switch
@@ -129,8 +125,8 @@ public class TextRule
   public static void main (String argv[]) throws Exception {
 
     TestLogger logger = TestLogger.getInstance();
-    logger.startClass (TextRule.class);
-
+    logger.startClass (NumberRule.class);
+    
     logger.test ("Framework");
     Map<String, Integer> nameMap = new HashMap<String, Integer>();
     nameMap.put ("attribute1", 0);
@@ -141,79 +137,70 @@ public class TextRule
     assert (nameMap.containsKey ("attribute3"));
     Feature feature = new PointFeature (
       new EarthLocation (0, 0),
-      new Object[] {"abcdef", "abc", null}
+      new Object[] {1, 2, null}
     );
-    assert (feature.getAttribute (0).equals ("abcdef"));
+    assert (feature.getAttribute (0).equals (1));
     logger.passed();
     
     logger.test ("constructor");
-    TextRule rule = new TextRule ("attribute1", nameMap, "abc");
-    assert (rule.getOperator().equals (Operator.CONTAINS));
+    NumberRule rule = new NumberRule ("attribute1", nameMap, 1);
+    assert (rule.getOperator().equals (Operator.IS_GREATER_THAN));
     assert (rule.getAttribute().equals ("attribute1"));
-    assert (rule.getValue().equals ("abc"));
+    assert (rule.getValue().equals (1));
     logger.passed();
 
     logger.test ("operators");
     List<Enum> operatorList = Arrays.asList (rule.operators());
-    assert (operatorList.contains (Operator.CONTAINS));
-    assert (operatorList.contains (Operator.DOES_NOT_CONTAIN));
-    assert (operatorList.contains (Operator.BEGINS_WITH));
-    assert (operatorList.contains (Operator.ENDS_WITH));
+    assert (operatorList.contains (Operator.IS_GREATER_THAN));
+    assert (operatorList.contains (Operator.IS_LESS_THAN));
     assert (operatorList.contains (Operator.IS_EQUAL_TO));
-    assert (operatorList.size() == 5);
+    assert (operatorList.contains (Operator.IS_NOT_EQUAL_TO));
+    assert (operatorList.size() == 4);
     logger.passed();
 
     logger.test ("matches");
 
-    // Testing: attribute1 contains "abc" etc.
-    rule.setOperator (Operator.CONTAINS);
-    assert (rule.matches (feature));
-    rule.setOperator (Operator.DOES_NOT_CONTAIN);
+    // Testing: attribute1 is greater than 1 etc.
+    rule.setOperator (Operator.IS_GREATER_THAN);
     assert (!rule.matches (feature));
-    rule.setOperator (Operator.BEGINS_WITH);
-    assert (rule.matches (feature));
-    rule.setOperator (Operator.ENDS_WITH);
+    rule.setOperator (Operator.IS_LESS_THAN);
     assert (!rule.matches (feature));
     rule.setOperator (Operator.IS_EQUAL_TO);
+    assert (rule.matches (feature));
+    rule.setOperator (Operator.IS_NOT_EQUAL_TO);
     assert (!rule.matches (feature));
 
-    // Testing: attribute1 contains "def" etc.
-    rule.setValue ("def");
-    rule.setOperator (Operator.CONTAINS);
-    assert (rule.matches (feature));
-    rule.setOperator (Operator.DOES_NOT_CONTAIN);
+    // Testing: attribute1 is greater than 2 etc.
+    rule.setValue (2);
+    rule.setOperator (Operator.IS_GREATER_THAN);
     assert (!rule.matches (feature));
-    rule.setOperator (Operator.BEGINS_WITH);
-    assert (!rule.matches (feature));
-    rule.setOperator (Operator.ENDS_WITH);
+    rule.setOperator (Operator.IS_LESS_THAN);
     assert (rule.matches (feature));
     rule.setOperator (Operator.IS_EQUAL_TO);
     assert (!rule.matches (feature));
+    rule.setOperator (Operator.IS_NOT_EQUAL_TO);
+    assert (rule.matches (feature));
 
-    // Testing: attribute1 contains "abcdef" etc.
-    rule.setValue ("abcdef");
-    rule.setOperator (Operator.CONTAINS);
+    // Testing: attribute1 is greater than 0 etc.
+    rule.setValue (0);
+    rule.setOperator (Operator.IS_GREATER_THAN);
     assert (rule.matches (feature));
-    rule.setOperator (Operator.DOES_NOT_CONTAIN);
+    rule.setOperator (Operator.IS_LESS_THAN);
     assert (!rule.matches (feature));
-    rule.setOperator (Operator.BEGINS_WITH);
-    assert (rule.matches (feature));
-    rule.setOperator (Operator.ENDS_WITH);
-    assert (rule.matches (feature));
     rule.setOperator (Operator.IS_EQUAL_TO);
+    assert (!rule.matches (feature));
+    rule.setOperator (Operator.IS_NOT_EQUAL_TO);
     assert (rule.matches (feature));
-    
-    // Testing: attribute3 contains "abcdef" etc. (null test)
+
+    // Testing: attribute3 is greater than 0 etc. (null test)
     rule.setAttribute ("attribute3");
-    rule.setOperator (Operator.CONTAINS);
+    rule.setOperator (Operator.IS_GREATER_THAN);
     assert (!rule.matches (feature));
-    rule.setOperator (Operator.DOES_NOT_CONTAIN);
-    assert (!rule.matches (feature));
-    rule.setOperator (Operator.BEGINS_WITH);
-    assert (!rule.matches (feature));
-    rule.setOperator (Operator.ENDS_WITH);
+    rule.setOperator (Operator.IS_LESS_THAN);
     assert (!rule.matches (feature));
     rule.setOperator (Operator.IS_EQUAL_TO);
+    assert (!rule.matches (feature));
+    rule.setOperator (Operator.IS_NOT_EQUAL_TO);
     assert (!rule.matches (feature));
     
     logger.passed();
@@ -228,14 +215,14 @@ public class TextRule
     catch (Exception e) { isError = true; }
     assert (isError);
     assert (rule.getAttribute().equals ("attribute2"));
-    rule.setValue ("hello");
-    assert (rule.getValue().equals ("hello"));
+    rule.setValue (38);
+    assert (rule.getValue().equals (38));
     logger.passed();
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-} // TextRule class
+} // NumberRule class
 
 ////////////////////////////////////////////////////////////////////////

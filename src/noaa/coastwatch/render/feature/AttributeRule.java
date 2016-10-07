@@ -26,8 +26,9 @@ import java.util.Map;
  * An <code>AttributeRule</code> provides a selection mechanism for
  * features based on the value of one of the attributes.  If a feature has an
  * attribute value that matches, it is considered a matching
- * feature.  The actual matching operation is left to the subclass depending
- * on the attribute type.
+ * feature.  If the feature attribute value is null, the feature is 
+ * non-matching no matter what operator is used.  The actual matching 
+ * operation is left to the subclass depending on the attribute type.
  *
  * @author Peter Hollemans
  * @since 3.3.2
@@ -39,7 +40,10 @@ public abstract class AttributeRule
   // ---------
   
   /** The attribute to use for matching. */
-  protected String attName;
+  protected String matchAttName;
+  
+  /** The attribute value to use for matching. */
+  protected Object matchAttValue;
   
   /** The map to use to translate name to index for attributes. */
   protected Map<String, Integer> nameMap;
@@ -54,14 +58,20 @@ public abstract class AttributeRule
    *
    * @param attName the attribute name to use for matching.
    * @param nameMap the name to index mapping for attributes.
+   * @param attValue the attribute value to use for matching.
+   *
+   * @throws RuntimeException if the attribute name has no valid mapping
+   * to an index.
    */
   protected AttributeRule (
     String attName,
-    Map<String, Integer> nameMap
+    Map<String, Integer> nameMap,
+    Object attValue
   ) {
 
-    this.attName = attName;
     this.nameMap = nameMap;
+    setAttribute (attName);
+    setValue (attValue);
 
   } // AttributeRule
 
@@ -72,7 +82,44 @@ public abstract class AttributeRule
    *
    * @return the attribute name used by this rule for matching.
    */
-  public String getAttribute() { return (attName); }
+  public String getAttribute() { return (matchAttName); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the attribute name for this rule.
+   *
+   * @param attName the attribute name to use for matching.
+   *
+   * @throws RuntimeException if the attribute name has no valid mapping
+   * to an index.
+   */
+  public void setAttribute (String attName) {
+  
+    if (!nameMap.containsKey (attName))
+      throw new RuntimeException ("Unknown index for attribute '" + attName + "'");
+
+    this.matchAttName = attName;
+    
+  } // setAttribute
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the attribute value for this rule.
+   *
+   * @return the attribute value used by this rule for matching.
+   */
+  public Object getValue() { return (matchAttValue); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the attribute value for this rule.
+   *
+   * @param attValue the attribute value to use for matching.
+   */
+  public void setValue (Object attValue) { this.matchAttValue = attValue; }
 
   ////////////////////////////////////////////////////////////
 

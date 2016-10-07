@@ -87,6 +87,7 @@ public class TestableTester {
     TestLogger logger = TestLogger.getInstance();
     Class[] parameterArray = new Class[1];
     parameterArray[0] = String[].class;
+    boolean allTestsPassed = true;
     for (Class testableClass : testableClassMap.values()) {
       Method mainMethod = testableClass.getMethod ("main", parameterArray);
       try { mainMethod.invoke (null, (Object) null); }
@@ -97,6 +98,7 @@ public class TestableTester {
         for (StackTraceElement element : cause.getStackTrace()) {
           logger.error ("  at " + element);
         } // for
+        allTestsPassed = false;
       } // catch
       catch (Exception e) {
         System.out.println ("Got an Exception while testing");
@@ -104,6 +106,17 @@ public class TestableTester {
       } // catch
       System.out.println();
     } // for
+
+    // Print final conclusion
+    // ----------------------
+    if (allTestsPassed) {
+      System.out.print ("All tests passed ");
+      logger.passed();
+    } // if
+    else {
+      System.out.print ("One or more tests ");
+      logger.failed();
+    } // else
 
   } // main
 

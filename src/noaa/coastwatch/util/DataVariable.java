@@ -460,6 +460,56 @@ public abstract class DataVariable
   } // getValues
 
   ////////////////////////////////////////////////////////////
+  
+  /**
+   * Gets a value from an array.  This is needed to help speed up array
+   * access because the java.util.Array.get() method is know to be slower.
+   *
+   * @param array the array to get a data value from.
+   * @param index the index of the element to get.
+   *
+   * @return the element in the array.
+   */
+  private static Object getFromArray (
+    Object array,
+    int index
+  ) {
+
+    Object returnValue;
+    Class arrayClass = array.getClass();
+
+    if (arrayClass == boolean[].class)
+      returnValue = ((boolean[]) array)[index];
+
+    else if (arrayClass == byte[].class)
+      returnValue = ((byte[]) array)[index];
+
+    else if (arrayClass == char[].class)
+      returnValue = ((char[]) array)[index];
+
+    else if (arrayClass == short[].class)
+      returnValue = ((short[]) array)[index];
+
+    else if (arrayClass == int[].class)
+      returnValue = ((int[]) array)[index];
+
+    else if (arrayClass == long[].class)
+      returnValue = ((long[]) array)[index];
+
+    else if (arrayClass == float[].class)
+      returnValue = ((float[]) array)[index];
+
+    else if (arrayClass == double[].class)
+      returnValue = ((double[]) array)[index];
+
+    else
+      returnValue = Array.get (array, index);
+
+    return (returnValue);
+    
+  } // getFromArray
+
+  ////////////////////////////////////////////////////////////
 
   /**
    * Reads a scaled data value.
@@ -478,7 +528,7 @@ public abstract class DataVariable
 
     // Check for missing
     // -----------------
-    Object ob = Array.get (data, index);
+    Object ob = getFromArray (data, index);
     if (missing != null && ob.equals (missing)) 
       return (Double.NaN);
 

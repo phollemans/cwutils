@@ -96,7 +96,9 @@ public class PolygonFeatureOverlay
     // Select data from the source
     // ---------------------------
     try { source.select (view.getArea()); }
-    catch (IOException e) { return; }
+    catch (IOException e) {
+      throw new RuntimeException (e);
+    } // catch
 
   } // prepare
 

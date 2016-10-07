@@ -53,21 +53,6 @@ public interface FeatureSource
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Selects a set of features from the data source based on the
-   * list of selection rules.
-   *
-   * @param selectionRuleList the selection rules that the features must
-   * satisfy.
-   *
-   * @throws IOException if an error occurred accessing the data source.
-   */
-  public void select (
-    List<SelectionRule> selectionRuleList
-  ) throws IOException;
-
-  ////////////////////////////////////////////////////////////
-
   /** Gets the currently selected Earth area. */
   public EarthArea getArea();
 

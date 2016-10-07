@@ -74,7 +74,7 @@ public class OverlayPropertyChooserFactory {
     // ----------------------
     else {
       try { chooser = new GenericOverlayPropertyChooser (overlay); }
-      catch (Exception e) { }
+      catch (Exception e) { e.printStackTrace(); }
     } // try
 
     // Check for unsupported overlay

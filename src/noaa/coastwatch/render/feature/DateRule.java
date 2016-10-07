@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TextRule.java
-  PURPOSE: Selects features based on a text attribute value.
+     FILE: DateRule.java
+  PURPOSE: Selects features based on a date attribute value.
    AUTHOR: Peter Hollemans
-     DATE: 2016/07/07
+     DATE: 2016/07/17
   CHANGES: n/a
 
   CoastWatch Software Library and Utilities
@@ -20,6 +20,7 @@ package noaa.coastwatch.render.feature;
 // -------
 import noaa.coastwatch.render.feature.AttributeRule;
 import java.util.Map;
+import java.util.Date;
 
 // Testing
 // -------
@@ -32,14 +33,14 @@ import noaa.coastwatch.util.EarthLocation;
 import java.util.List;
 
 /**
- * A <code>TextRule</code> provides a selection mechanism for
- * features based on the string value of one of the attributes.
+ * A <code>DateRule</code> provides a selection mechanism for
+ * features based on a date value of one of the attributes.
  *
  * @author Peter Hollemans
  * @since 3.3.2
  */
 @noaa.coastwatch.test.Testable
-public class TextRule
+public class DateRule
   extends AttributeRule {
 
   // Constants
@@ -47,32 +48,29 @@ public class TextRule
   
   /** The operators for this class of rule. */
   public enum Operator {
-    CONTAINS,
-    DOES_NOT_CONTAIN,
-    BEGINS_WITH,
-    ENDS_WITH,
-    IS_EQUAL_TO
+    IS_BEFORE,
+    IS_AFTER
   } // Operator
-
+  
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new text rule.
+   * Creates a new date rule.
    *
    * @param attName the attribute name to use for matching.
    * @param nameMap the name to index mapping.
-   * @param textValue the text value to use for matching.
+   * @param dateValue the date value to use for matching.
    */
-  public TextRule (
+  public DateRule (
     String attName,
     Map<String, Integer> nameMap,
-    String textValue
+    Date dateValue
   ) {
 
-    super (attName, nameMap, textValue);
-    setOperator (Operator.CONTAINS);
+    super (attName, nameMap, dateValue);
+    setOperator (Operator.IS_BEFORE);
 
-  } // TextRule
+  } // DateRule
 
   ////////////////////////////////////////////////////////////
 
@@ -87,29 +85,20 @@ public class TextRule
     // Get feature attribute value
     // ---------------------------
     int attIndex = nameMap.get (matchAttName);
-    String featureAttValue = (String) feature.getAttribute (attIndex);
-  
+    Date featureAttValue = (Date) feature.getAttribute (attIndex);
+
     // Compare to match value
     // ----------------------
     boolean isMatch = false;
     if (featureAttValue != null) {
-      Operator textOp = (Operator) operator;
-      String textValue = (String) matchAttValue;
-      switch (textOp) {
-      case CONTAINS:
-        isMatch = (featureAttValue.indexOf (textValue) != -1);
+      Operator dateOp = (Operator) operator;
+      Date dateValue = (Date) matchAttValue;
+      switch (dateOp) {
+      case IS_BEFORE:
+        isMatch = featureAttValue.before (dateValue);
         break;
-      case DOES_NOT_CONTAIN:
-        isMatch = (featureAttValue.indexOf (textValue) == -1);
-        break;
-      case BEGINS_WITH:
-        isMatch = featureAttValue.startsWith (textValue);
-        break;
-      case ENDS_WITH:
-        isMatch = featureAttValue.endsWith (textValue);
-        break;
-      case IS_EQUAL_TO:
-        isMatch = featureAttValue.equals (textValue);
+      case IS_AFTER:
+        isMatch = featureAttValue.after (dateValue);
         break;
       default:
       } // switch
@@ -129,8 +118,8 @@ public class TextRule
   public static void main (String argv[]) throws Exception {
 
     TestLogger logger = TestLogger.getInstance();
-    logger.startClass (TextRule.class);
-
+    logger.startClass (DateRule.class);
+    
     logger.test ("Framework");
     Map<String, Integer> nameMap = new HashMap<String, Integer>();
     nameMap.put ("attribute1", 0);
@@ -139,83 +128,67 @@ public class TextRule
     assert (nameMap.containsKey ("attribute1"));
     assert (nameMap.containsKey ("attribute2"));
     assert (nameMap.containsKey ("attribute3"));
+    Date date1 = new Date (10000);
+    Date date2 = new Date (20000);
     Feature feature = new PointFeature (
       new EarthLocation (0, 0),
-      new Object[] {"abcdef", "abc", null}
+      new Object[] {date1, date2, null}
     );
-    assert (feature.getAttribute (0).equals ("abcdef"));
+    assert (feature.getAttribute (0).equals (date1));
+    assert (feature.getAttribute (1).equals (date2));
+    assert (feature.getAttribute (2) == null);
     logger.passed();
     
     logger.test ("constructor");
-    TextRule rule = new TextRule ("attribute1", nameMap, "abc");
-    assert (rule.getOperator().equals (Operator.CONTAINS));
+    Date date0 = new Date (0);
+    DateRule rule = new DateRule ("attribute1", nameMap, date0);
+    assert (rule.getOperator().equals (Operator.IS_BEFORE));
     assert (rule.getAttribute().equals ("attribute1"));
-    assert (rule.getValue().equals ("abc"));
+    assert (rule.getValue().equals (date0));
     logger.passed();
 
     logger.test ("operators");
     List<Enum> operatorList = Arrays.asList (rule.operators());
-    assert (operatorList.contains (Operator.CONTAINS));
-    assert (operatorList.contains (Operator.DOES_NOT_CONTAIN));
-    assert (operatorList.contains (Operator.BEGINS_WITH));
-    assert (operatorList.contains (Operator.ENDS_WITH));
-    assert (operatorList.contains (Operator.IS_EQUAL_TO));
-    assert (operatorList.size() == 5);
+    assert (operatorList.contains (Operator.IS_BEFORE));
+    assert (operatorList.contains (Operator.IS_AFTER));
+    assert (operatorList.size() == 2);
     logger.passed();
 
     logger.test ("matches");
 
-    // Testing: attribute1 contains "abc" etc.
-    rule.setOperator (Operator.CONTAINS);
-    assert (rule.matches (feature));
-    rule.setOperator (Operator.DOES_NOT_CONTAIN);
+    // Testing: attribute1 is before date0 etc.
+    rule.setOperator (Operator.IS_BEFORE);
     assert (!rule.matches (feature));
-    rule.setOperator (Operator.BEGINS_WITH);
+    rule.setOperator (Operator.IS_AFTER);
     assert (rule.matches (feature));
-    rule.setOperator (Operator.ENDS_WITH);
+
+    // Testing: attribute1 is before date0 etc.
+    rule.setOperator (Operator.IS_BEFORE);
     assert (!rule.matches (feature));
-    rule.setOperator (Operator.IS_EQUAL_TO);
+    rule.setOperator (Operator.IS_AFTER);
+    assert (rule.matches (feature));
+
+    // Testing: attribute1 is before date1 etc.
+    rule.setValue (date1);
+    rule.setOperator (Operator.IS_BEFORE);
+    assert (!rule.matches (feature));
+    rule.setOperator (Operator.IS_AFTER);
     assert (!rule.matches (feature));
 
-    // Testing: attribute1 contains "def" etc.
-    rule.setValue ("def");
-    rule.setOperator (Operator.CONTAINS);
+    // Testing: attribute1 is before date2 etc.
+    rule.setValue (date2);
+    rule.setOperator (Operator.IS_BEFORE);
     assert (rule.matches (feature));
-    rule.setOperator (Operator.DOES_NOT_CONTAIN);
-    assert (!rule.matches (feature));
-    rule.setOperator (Operator.BEGINS_WITH);
-    assert (!rule.matches (feature));
-    rule.setOperator (Operator.ENDS_WITH);
-    assert (rule.matches (feature));
-    rule.setOperator (Operator.IS_EQUAL_TO);
+    rule.setOperator (Operator.IS_AFTER);
     assert (!rule.matches (feature));
 
-    // Testing: attribute1 contains "abcdef" etc.
-    rule.setValue ("abcdef");
-    rule.setOperator (Operator.CONTAINS);
-    assert (rule.matches (feature));
-    rule.setOperator (Operator.DOES_NOT_CONTAIN);
-    assert (!rule.matches (feature));
-    rule.setOperator (Operator.BEGINS_WITH);
-    assert (rule.matches (feature));
-    rule.setOperator (Operator.ENDS_WITH);
-    assert (rule.matches (feature));
-    rule.setOperator (Operator.IS_EQUAL_TO);
-    assert (rule.matches (feature));
-    
-    // Testing: attribute3 contains "abcdef" etc. (null test)
+    // Testing: attribute3 is before date2 etc. (null test)
     rule.setAttribute ("attribute3");
-    rule.setOperator (Operator.CONTAINS);
+    rule.setOperator (Operator.IS_BEFORE);
     assert (!rule.matches (feature));
-    rule.setOperator (Operator.DOES_NOT_CONTAIN);
+    rule.setOperator (Operator.IS_AFTER);
     assert (!rule.matches (feature));
-    rule.setOperator (Operator.BEGINS_WITH);
-    assert (!rule.matches (feature));
-    rule.setOperator (Operator.ENDS_WITH);
-    assert (!rule.matches (feature));
-    rule.setOperator (Operator.IS_EQUAL_TO);
-    assert (!rule.matches (feature));
-    
+
     logger.passed();
     
     logger.test ("setAttribute, setValue");
@@ -228,14 +201,14 @@ public class TextRule
     catch (Exception e) { isError = true; }
     assert (isError);
     assert (rule.getAttribute().equals ("attribute2"));
-    rule.setValue ("hello");
-    assert (rule.getValue().equals ("hello"));
+    rule.setValue (new Date (38));
+    assert (rule.getValue().equals (new Date (38)));
     logger.passed();
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-} // TextRule class
+} // DateRule class
 
 ////////////////////////////////////////////////////////////////////////

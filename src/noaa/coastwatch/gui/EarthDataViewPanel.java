@@ -54,6 +54,7 @@ package noaa.coastwatch.gui;
 // Imports
 // -------
 import java.awt.Cursor;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -69,6 +70,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.awt.Font;
+
+import java.util.Map;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -76,13 +81,21 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
+import javax.swing.BorderFactory;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.Timer;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+
 import noaa.coastwatch.gui.DelayedRenderingComponent;
 import noaa.coastwatch.gui.TransformableImageComponent;
 import noaa.coastwatch.render.ColorEnhancement;
 import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.render.ImageTransform;
+import noaa.coastwatch.render.EarthDataOverlay;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthLocation;
@@ -660,7 +673,177 @@ public class EarthDataViewPanel
         } // hierarchyChanged
       });
 
+    // Add overlay metadata display
+    // ----------------------------
+    MouseInputAdapter handler = new OverlayMetadataMouseHandler();
+    addMouseListener (handler);
+    addMouseMotionListener (handler);
+
   } // EarthDataViewPanel constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /** Handles mouse events for showing overlay metadata. */
+  private class OverlayMetadataMouseHandler extends MouseInputAdapter {
+
+    /** The timer for the metadata popup. */
+    private Timer popupTimer;
+
+    /** The popup that shows metadata from an overlay layer. */
+    private Popup metadataPopup;
+    
+    /** The metadata showing in the popup. */
+    private Map<String, Object> lastMetadataMap;
+
+    ////////////////////////////////////////////////////////
+
+    /**
+     * Hides the metadata display if the popup is showing.
+     */
+    public void hideMetadata() {
+
+      if (popupTimer != null && popupTimer.isRunning())
+        popupTimer.stop();
+      else if (metadataPopup != null) {
+        metadataPopup.hide();
+        metadataPopup = null;
+        lastMetadataMap = null;
+      } // if
+    
+    } // hideMetadata
+
+    ////////////////////////////////////////////////////////
+
+    /**
+     * Shows the metadata popup if the cursor is over a point with metadata.
+     * If not, then any showing metadata popup is hidden.
+     *
+     * @param point the point to query the view overlays for metadata.
+     */
+    public void showMetadata (
+      Point point
+    ) {
+    
+      // Check for rendering
+      // -------------------
+      if (isRendering()) {
+        hideMetadata();
+      } // if
+
+      // Check origin exists
+      // -------------------
+      else if (origin != null) {
+
+        // Get transforms
+        // --------------
+        EarthImageTransform trans = view.getTransform();
+        ImageTransform imageTrans = trans.getImageTransform();
+        EarthTransform earthTrans = trans.getEarthTransform();
+
+        // Check point is in image bounds
+        // ------------------------------
+        final Point screenPoint = (Point) point.clone();
+        point.translate (-origin.x, -origin.y);
+        boolean isInBounds = new Rectangle (view.getSize (null)).contains (point);
+
+        // If out of bounds, hide metadata
+        // -------------------------------
+        if (!isInBounds) {
+          hideMetadata();
+        } // if
+
+        // Otherwise show metadata
+        // -----------------------
+        else {
+
+          // Search for metadata to show
+          // ---------------------------
+          Map<String, Object> metadataMap = null;
+          for (EarthDataOverlay overlay : view.getOverlays()) {
+            if (overlay.hasMetadata()) {
+              metadataMap = overlay.getMetadataAtPoint (point);
+              if (metadataMap != null) break;
+            } // if
+          } // for
+          
+          // Check if metadata found
+          // -----------------------
+          if (metadataMap == null) {
+            hideMetadata();
+          } // if
+          
+          // Create popup if not the same metadata
+          // -------------------------------------
+          else if (!metadataMap.equals (lastMetadataMap)) {
+          
+            // Create popup action
+            // -------------------
+            final Map<String, Object> thisMetadataMap = metadataMap;
+            Action showPopupAction = new AbstractAction() {
+              public void actionPerformed (ActionEvent e) {
+
+                // Format metadata
+                // ---------------
+                StringBuilder buffer = new StringBuilder ("<html>");
+                for (String name : thisMetadataMap.keySet()) {
+                  buffer.append (name + " = " + thisMetadataMap.get (name) + "<br>");
+                } // for
+                buffer.append ("</html>");
+
+                // Show popup
+                // ----------
+                JLabel label = new JLabel (buffer.toString());
+                Font labelFont = label.getFont();
+                label.setFont (labelFont.deriveFont (labelFont.getSize2D() - 4));
+                label.setBorder (BorderFactory.createEmptyBorder (10, 10, 10, 10));
+                Component parent = EarthDataViewPanel.this;
+                Point topLeft = parent.getLocationOnScreen();
+                hideMetadata();
+                metadataPopup = PopupFactory.getSharedInstance().getPopup (parent,
+                  label, topLeft.x + screenPoint.x + 10, topLeft.y + screenPoint.y + 10);
+                metadataPopup.show();
+                
+                // Save metadata
+                // -------------
+                lastMetadataMap = thisMetadataMap;
+                
+              } // actionPerformed
+            };
+          
+            // Start new popup timer
+            // ---------------------
+            if (popupTimer != null && popupTimer.isRunning())
+              popupTimer.stop();
+            popupTimer = new Timer (500, showPopupAction);
+            popupTimer.setRepeats (false);
+            popupTimer.start();
+          
+          } // else if
+        
+        } // else
+
+      } // else if
+    
+    } // showMetadata
+
+    ////////////////////////////////////////////////////////
+
+    @Override
+    public void mouseExited (MouseEvent e) { hideMetadata(); }
+
+    ////////////////////////////////////////////////////////
+    
+    @Override
+    public void mouseMoved (MouseEvent e) { showMetadata (e.getPoint()); }
+
+    ////////////////////////////////////////////////////////
+    
+/*
+    @Override
+    public void mouseDragged (MouseEvent e) { showMetadata (e.getPoint()); }
+*/
+
+  } // OverlayMetadataMouseHandler class
 
   ////////////////////////////////////////////////////////////
 

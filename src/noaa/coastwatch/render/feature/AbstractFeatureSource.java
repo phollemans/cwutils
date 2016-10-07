@@ -113,17 +113,6 @@ public abstract class AbstractFeatureSource
   } // setAttributes
 
   ////////////////////////////////////////////////////////////
-  
-  @Override
-  public void select (
-    List<SelectionRule> selectionRuleList
-  ) throws IOException {
-
-    throw new UnsupportedOperationException();
-
-  } // select
-  
-  ////////////////////////////////////////////////////////////
 
 } // AbstractFeatureSource class
 

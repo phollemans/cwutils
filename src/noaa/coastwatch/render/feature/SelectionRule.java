@@ -30,7 +30,7 @@ import noaa.coastwatch.render.feature.Feature;
 public interface SelectionRule {
 
   /** 
-   * Determines if a features mathes the rule.
+   * Determines if a feature matches the rule.
    *
    * @param feature the feature to check.
    *

@@ -20,6 +20,10 @@ package noaa.coastwatch.gui.visual;
 // -------
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.BasicStroke;
+import java.awt.Stroke;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import javax.swing.Icon;
 import jahuwaldt.plot.PlotSymbol;
 
@@ -32,6 +36,12 @@ import jahuwaldt.plot.PlotSymbol;
  */
 public class SymbolSwatch 
   implements Icon { 
+
+  // Constants
+  // ---------
+  
+  /** The size of the border around the icon. */
+  private static final int BORDER_SIZE = 3;
 
   // Variables
   // ---------
@@ -75,12 +85,20 @@ public class SymbolSwatch
   /** Paints the icon to the specified graphics context. */
   public void paintIcon (Component c, Graphics g, int x, int y) { 
 
-    // Draw line
-    // ---------
-    g.setColor (c.getForeground());
-    symbol.setSize (size);
-    symbol.draw (g, x+size/2, y+size/2);
-    
+    // Draw symbol
+    // -----------
+    Graphics2D g2d = (Graphics2D) g;
+    Stroke saved = g2d.getStroke();
+
+    g2d.setStroke (new BasicStroke (1.2f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL));
+    g2d.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    symbol.setSize (size - BORDER_SIZE*2);
+    symbol.setBorderColor (c.getForeground());
+    symbol.setFillColor (null);
+    symbol.draw (g2d, x+size/2, y+size/2);
+
+    g2d.setStroke (saved);
+
   } // paintIcon
 
   ////////////////////////////////////////////////////////////

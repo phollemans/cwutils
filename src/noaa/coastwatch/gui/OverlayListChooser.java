@@ -58,6 +58,7 @@ import noaa.coastwatch.render.BitmaskOverlay;
 import noaa.coastwatch.render.CoastOverlay;
 import noaa.coastwatch.render.DataReferenceOverlay;
 import noaa.coastwatch.render.feature.ESRIShapefileReader;
+import noaa.coastwatch.render.feature.IQuamNCReader;
 import noaa.coastwatch.render.EarthDataOverlay;
 import noaa.coastwatch.render.ExpressionMaskOverlay;
 import noaa.coastwatch.render.GridContainerOverlay;
@@ -67,7 +68,6 @@ import noaa.coastwatch.render.PoliticalOverlay;
 import noaa.coastwatch.render.PolygonOverlay;
 import noaa.coastwatch.render.TopographyOverlay;
 
-import java.util.List;
 /**
  * The <code>OverlayListChooser</code> class is a panel that
  * allows the user to manipulate a list of {@link
@@ -344,13 +344,18 @@ public class OverlayListChooser
     /** 
      * Adds a new overlay to the list panel and sets the overlay name
      * appropriately. 
+     * 
+     * @param overlay the overlay to add to the panel.
+     * @param name the name of the overlay to use (a number will be added
+     * if there are more than one overlay with the same name) or null to
+     * use the existing overlay name.
      */
     private void addNewOverlay (
       EarthDataOverlay overlay,
       String name
     ) {
 
-      overlay.setName (name + listPanel.getOverlayCount (name));
+      if (name != null) overlay.setName (name + listPanel.getOverlayCount (name));
       listPanel.addOverlay (overlay);
 
     } // addNewOverlay
@@ -407,16 +412,17 @@ public class OverlayListChooser
           else if (command.equals (EXPRMASK_COMMAND)) {
             OverlayPropertyChooser chooserPanel =
               OverlayPropertyChooserFactory.create (
-                new ExpressionMaskOverlay (Color.GRAY, reader, variableList, 
-                  ""));
+                new ExpressionMaskOverlay (Color.GRAY, reader, variableList, ""));
             showDialog (chooserPanel, command);
           } // else if
 
           // Create shape overlay
           // --------------------
           else if (command.equals (SHAPE_COMMAND)) {
-            EarthDataOverlay overlay = createShapeOverlay();
-            if (overlay != null) addNewOverlay (overlay, command);
+            List<EarthDataOverlay> overlayList = createShapeOverlays();
+            String name = (overlayList.size() == 1 ? command : null);
+            for (EarthDataOverlay overlay : overlayList)
+              addNewOverlay (overlay, name);
           } // else if
 
         } // if
@@ -502,15 +508,22 @@ public class OverlayListChooser
 
     ////////////////////////////////////////////////////////
 
-    /** Creates a new shape overlay. */
-    private EarthDataOverlay createShapeOverlay () {
+    /** 
+     * Creates a new set of shape overlays. 
+     * 
+     * @return the new set of overlays, possibly empty.
+     */
+    private List<EarthDataOverlay> createShapeOverlays () {
 
       // Show file chooser
       // -----------------
       JFileChooser fileChooser = GUIServices.getFileChooser();
-      SimpleFileFilter filter = new SimpleFileFilter (
+      SimpleFileFilter shapefileFilter = new SimpleFileFilter (
         new String[] {"shp"}, "ESRI shapefile data");
-      fileChooser.addChoosableFileFilter (filter);
+      fileChooser.addChoosableFileFilter (shapefileFilter);
+      SimpleFileFilter iquamFilter = new SimpleFileFilter (
+        new String[] {"nc"}, "iQuam in-situ point data");
+      fileChooser.addChoosableFileFilter (iquamFilter);
       fileChooser.setDialogType (JFileChooser.OPEN_DIALOG);
       final Frame frame = 
         JOptionPane.getFrameForComponent (OverlayListChooser.this);
@@ -518,29 +531,47 @@ public class OverlayListChooser
 
       // Open selected file
       // ------------------
-      EarthDataOverlay overlay = null;
+      List<EarthDataOverlay> overlayList = new LinkedList<EarthDataOverlay>();
       if (returnVal == JFileChooser.APPROVE_OPTION) {
         File file = fileChooser.getSelectedFile();
+
+        // Try reading as shapefile
+        // ------------------------
         try {
           ESRIShapefileReader reader = new ESRIShapefileReader (file.toURI().toURL());
-          overlay = reader.getOverlay();
+          EarthDataOverlay overlay = reader.getOverlay();
           if (overlay instanceof PolygonOverlay)
             ((PolygonOverlay) overlay).setFillColor (null);
           overlay.setColor (Color.WHITE);
+          overlayList.add (overlay);
         } // try
-        catch (IOException e) {
-          String errorMessage = 
-            "An error occurred creating the shape overlay:\n" +
-            e.toString() + "\n" + 
+        catch (IOException e) { }
+        
+        // Try reading as iQuam file
+        // -------------------------
+        if (overlayList.size() == 0) {
+          try {
+            IQuamNCReader iquamReader = new IQuamNCReader (file.getAbsolutePath());
+            overlayList.addAll (iquamReader.getStandardOverlays (reader.getInfo().getDate()));
+          } // try
+          catch (IOException e) { }
+        } // if
+        
+        // Show error message
+        // ------------------
+        if (overlayList.size() == 0) {
+          String errorMessage =
+            "An error occurred creating the shape overlay.\n" +
             "Please choose another shape data file and try again.";
           JOptionPane.showMessageDialog (frame, errorMessage,
             "Error", JOptionPane.ERROR_MESSAGE);
-        } // catch
+        } // if
+
       } // if
 
-      return (overlay);
+      return (overlayList);
 
-    } // createShapeOverlay
+    } // createShapeOverlays
 
     ////////////////////////////////////////////////////////
 

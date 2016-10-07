@@ -35,12 +35,14 @@ package noaa.coastwatch.render;
 // Imports
 // -------
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.Graphics2D;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.EarthImageTransform;
 
@@ -446,6 +448,44 @@ public abstract class EarthDataOverlay
     return (colorList);
 
   } // getColors
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the metadata flag, true if the overlay has metadata associated
+   * with its rendered graphics, false if not.  If true, 
+   * the {@link #getMetadataAtPoint} may be used.  By default this method returns
+   * false unless overridden by the child class.
+   *
+   * @return the metadata flag, true if supported or false if not.
+   *
+   * @see #getMetadataAtPoint
+   */
+  public boolean hasMetadata () {
+  
+    return (false);
+    
+  } // hasMetadata
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the metadata at the specified point.
+   *
+   * @param point the point to get metadata for.
+   *
+   * @return the metadata at the specified point, or null if none is available.
+   *
+   * @throws UnsupportedOperationException if this class doesn't support
+   * metadata.
+   */
+  public Map<String, Object> getMetadataAtPoint (
+    Point point
+  ) {
+   
+    throw new UnsupportedOperationException();
+
+  } // getMetadataAtPoint
 
   ////////////////////////////////////////////////////////////
 

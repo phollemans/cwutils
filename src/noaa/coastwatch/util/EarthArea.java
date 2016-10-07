@@ -50,7 +50,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * @since 3.1.1
  */
 public class EarthArea
-  implements Cloneable {
+  implements Cloneable, Iterable<int[]> {
 
   // Variables
   // ---------
@@ -91,7 +91,7 @@ public class EarthArea
    * an earth area.
    */
   public class EarthAreaIterator
-    implements Iterator {
+    implements Iterator<int[]> {
 
     // Variables
     // ---------
@@ -117,11 +117,11 @@ public class EarthArea
     //////////////////////////////////////////////////////////
 
     /** Returns the next grid square coordinates as [lat, lon]. */
-    public Object next() { 
+    public int[] next() {
 
       if (nextIndex == -1) throw new NoSuchElementException();
       index = nextIndex;
-      nextIndex = bits.nextSetBit(index+1);
+      nextIndex = bits.nextSetBit (index+1);
       return (getSquare (index));
 
     } // next
@@ -146,11 +146,24 @@ public class EarthArea
    * returned by the iterator contains the lower-left
    * <code>int[]</code> coordinates of the grid square as [lat, lon].
    */
-  public Iterator getIterator () {
+  public Iterator<int[]> getIterator () {
 
     return (new EarthAreaIterator ());
 
   } // getIterator
+
+  ////////////////////////////////////////////////////////////
+
+  /*
+   * We provide this method to comply with the Iterable interface, and
+   * also keep the one above so as not to break existing code.
+   */
+  @Override
+  public Iterator<int[]> iterator () {
+
+    return (new EarthAreaIterator ());
+
+  } // iterator
 
   ////////////////////////////////////////////////////////////
 
@@ -240,15 +253,15 @@ public class EarthArea
   ////////////////////////////////////////////////////////////
 
   /**
-   * Computes an index based on a grid square.
+   * Computes a square index based on a grid square.
    *
-   * @param lat the grid square lower-left corner latitude.
-   * @param lon the grid square lower-left corner longitude.
+   * @param lat the grid square lower-left corner latitude in the range [-90,89].
+   * @param lon the grid square lower-left corner longitude in the range [-180,179].
    *
-   * @return an index into the bit set or -1 if the grid square is
+   * @return the index for the square or -1 if the grid square is
    * invalid.
    */
-  private int getIndex (
+  public int getIndex (
     int lat,
     int lon
   ) {
@@ -262,14 +275,14 @@ public class EarthArea
   ////////////////////////////////////////////////////////////
 
   /**
-   * Computes an index based on an earth location.
+   * Computes a square index based on an earth location.
    *
    * @param loc the earth location to convert.
    *
-   * @return an index into the bit set or -1 if the earth location is
+   * @return the index for the square or -1 if the earth location is
    * invalid.
    */
-  private int getIndex (
+  public int getIndex (
     EarthLocation loc
   ) {
 

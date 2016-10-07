@@ -77,7 +77,6 @@ import noaa.coastwatch.gui.TransformableImageComponent;
 import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.util.DataLocation;
 
-import java.io.IOException;
 /**
  * A <code>LightTable</code> is a container that places an
  * invisible drawing table on top of another component and allows

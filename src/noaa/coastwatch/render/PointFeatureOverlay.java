@@ -20,12 +20,21 @@ package noaa.coastwatch.render;
 // -------
 import java.awt.Graphics2D;
 import java.awt.Stroke;
+import java.awt.Point;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Date;
+
 import noaa.coastwatch.render.EarthDataView;
+import noaa.coastwatch.render.feature.Attribute;
 import noaa.coastwatch.render.feature.PointFeatureSource;
+import noaa.coastwatch.render.feature.PointFeature;
 import noaa.coastwatch.render.PointFeatureSymbol;
 import noaa.coastwatch.render.PolygonOverlay;
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.DateFormatter;
 
 /**
  * The <code>PointFeatureOverlay</code> class annotes a data view with
@@ -36,6 +45,12 @@ import noaa.coastwatch.render.PolygonOverlay;
  */
 public class PointFeatureOverlay 
   extends PolygonOverlay {
+
+  // Constants
+  // ---------
+  
+  /** The date format for metadata info. */
+  private static final String DATE_TIME_FMT = "yyyy/MM/dd HH:mm:ss 'UTC'";
 
   // Variables
   // ---------
@@ -116,6 +131,7 @@ public class PointFeatureOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void prepare (
     Graphics2D g,
     EarthDataView view
@@ -123,13 +139,19 @@ public class PointFeatureOverlay
 
     // Select data from the source
     // ---------------------------
-    try { source.select (view.getArea()); }
-    catch (IOException e) { return; }
+    EarthArea viewArea = view.getArea();
+    if (!viewArea.equals (source.getArea())) {
+      try { source.select (viewArea); }
+      catch (IOException e) {
+        throw new RuntimeException (e);
+      } // catch
+    } // if
 
   } // prepare
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void draw (
     Graphics2D g,
     EarthDataView view
@@ -144,6 +166,7 @@ public class PointFeatureOverlay
 
     // Draw labels
     // -----------
+/*
     if (attList != null) {
       for (Integer attIndex : attList) {
       
@@ -154,8 +177,55 @@ public class PointFeatureOverlay
 
       } // for
     } // if
+*/
+
 
   } // draw
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean hasMetadata () { return (true); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public Map<String, Object> getMetadataAtPoint (
+    Point point
+  ) {
+   
+    Map<String, Object> metadataMap = null;
+    PointFeature feature = source.getFeatureAtPoint (point);
+    if (feature != null) {
+
+      // Create metadata map
+      // -------------------
+      metadataMap = new LinkedHashMap<String, Object>();
+      List<Attribute> attList = source.getAttributes();
+
+      // Loop over each attribute and add value if non-null
+      // --------------------------------------------------
+      for (int attIndex = 0; attIndex < attList.size(); attIndex++) {
+        Object attValue = feature.getAttribute (attIndex);
+        if (attValue != null) {
+          String attName = attList.get (attIndex).getName();
+          String attUnits = attList.get (attIndex).getUnits();
+          StringBuilder valueStr = new StringBuilder();
+          if (attValue instanceof Date)
+            valueStr.append (DateFormatter.formatDate ((Date) attValue, DATE_TIME_FMT));
+          else
+            valueStr.append (attValue.toString());
+          if (attUnits != null)
+            valueStr.append (" (" + attUnits + ")");
+          metadataMap.put (attName, valueStr.toString());
+        } // if
+      } // for
+    
+    } // if
+
+    return (metadataMap);
+
+  } // getMetadataAtPoint
 
   ////////////////////////////////////////////////////////////
 
