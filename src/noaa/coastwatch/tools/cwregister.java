@@ -25,9 +25,14 @@
            - Changes: Moved VIIRS bow-tie detection to new class.  Added options
              for using an expression or filter to determine if a source pixel
              should be used in registration.
-           - We had a request from Phil Keegstra to let the user supply a
+           - Issue: We had a request from Phil Keegstra to let the user supply a
              data variable that contains a 1/0 flag for usability of the source
              pixel data.
+           2016/10/13, PFH
+           - Changes: Re-added 'mixed-acspo' registration type to help with
+             backwards compatibility.
+           - Issue: Scripts that call the new version of cwregister were 
+             failing.
 
   CoastWatch Software Library and Utilities
   Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
@@ -349,6 +354,21 @@ public final class cwregister {
     String srcexpr = (String) cmd.getOptionValue (srcexprOpt);
     String srcfilter = (String) cmd.getOptionValue (srcfilterOpt);
 
+    // Detect method subtype
+    // ---------------------
+    /** 
+     * We do this primarily to support ACSPO VIIRS mixed mode resampling, in
+     * which the VIIRS bowtie overlap pixels are set to missing, and so are 
+     * detected and filled properly.  We currently don't document the ACSPO 
+     * method subtype, as it's for NOAA users who know that the option exists.
+     */
+    String[] methodArray = method.split ("-");
+    String methodSubtype = "";
+    if (methodArray.length == 2) {
+      method = methodArray[0];
+      methodSubtype = methodArray[1];
+    } // if
+
     try {
 
       // Get master earth info
@@ -415,9 +435,15 @@ public final class cwregister {
         MixedGridResampler mixed = new MixedGridResampler (inputInfo.getTransform(),
           masterTrans, rectWidth, rectHeight);
         resampler = mixed;
-
+        
         // Add location filter
         // -------------------
+        if (methodSubtype.equals ("acspo")) {
+          srcfilter = "viirs";
+          System.out.println ("Detected deprecated method subtype 'acspo', activating source filter 'viirs'.");
+          System.out.println ("In the future, use --srcfilter viirs to avoid this warning.");
+        } // if
+        
         if (srcexpr != null && srcfilter != null) {
           System.err.println (PROG + ": Cannot specify *both* source filter and expression");
           System.exit (2);
