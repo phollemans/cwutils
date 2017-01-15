@@ -32,8 +32,9 @@ package noaa.coastwatch.io;
 // -------
 import java.io.IOException;
 import java.lang.reflect.Array;
-import ncsa.hdf.hdflib.HDFConstants;
-import ncsa.hdf.hdflib.HDFException;
+import java.util.Arrays;
+import hdf.hdflib.HDFConstants;
+import hdf.hdflib.HDFException;
 import noaa.coastwatch.io.HDFLib;
 import noaa.coastwatch.io.CachedGrid;
 import noaa.coastwatch.io.HDFReader;

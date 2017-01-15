@@ -6,7 +6,7 @@
   CHANGES: 2014/09/09, PFH
            - Changes: Updated to use FileFormat.createInstance (String, int).
            - Issue: A user reported an issue on opening read-only files:
-               "ncsa.hdf.hdf5lib.exceptions.HDF5Exception: Cannot write file,
+               "hdf.hdf5lib.exceptions.HDF5Exception: Cannot write file,
                try open as read-only"
              This was because we were using getInstance (String) followed by 
              open(), rather than createInstance.  getInstance defaults to
@@ -40,8 +40,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import ncsa.hdf.object.Dataset;
-import ncsa.hdf.object.FileFormat;
+import hdf.object.Dataset;
+import hdf.object.FileFormat;
 import ucar.ma2.ArrayDouble;
 import ucar.ma2.DataType;
 import ucar.ma2.Index;

@@ -57,7 +57,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.TimeZone;
-import ncsa.hdf.hdflib.HDFException;
+import hdf.hdflib.HDFException;
 import noaa.coastwatch.io.HDFLib;
 import noaa.coastwatch.io.CachedGrid;
 import noaa.coastwatch.io.HDFReader;

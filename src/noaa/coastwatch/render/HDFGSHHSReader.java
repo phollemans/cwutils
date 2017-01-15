@@ -27,8 +27,8 @@ package noaa.coastwatch.render;
 // Imports
 // -------
 import java.io.IOException;
-import ncsa.hdf.hdflib.HDFConstants;
-import ncsa.hdf.hdflib.HDFException;
+import hdf.hdflib.HDFConstants;
+import hdf.hdflib.HDFException;
 import noaa.coastwatch.io.HDFLib;
 import noaa.coastwatch.io.IOServices;
 import noaa.coastwatch.render.BinnedGSHHSReader;

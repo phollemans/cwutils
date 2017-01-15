@@ -14,9 +14,21 @@
            2004/06/10, PFH, changed resetCache() to protected access
            2004/07/10, PFH, added setOptimizedCacheSize()
            2013/02/12, PFH, added getMaxTiles()
+           2017/01/14, PFH
+           - Changes: Updated setOptimizedCacheSize method to handle
+             larger number of tiles.
+           - Issue: In some cases, read and write caching during registration
+             was taking an abnormally long time.  This was because tiles 
+             were being removed from the cache before finishing the end of each
+             registered row in a destination grid.  The access order of
+             tiles was drawing a ragged line across the source input grid.
+             Therefore, we need to have a cache size that at least holds
+             a ragged line in either the rows or columns dimensions.  So we use
+             the approximate value of 1.5 times the number of tiles needed
+             to span a row or column of the grid, whichever is larger.
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2017, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -114,10 +126,20 @@ public abstract class CachedGrid
     int cacheSize
   ) {
 
+    // Compute tiles that fit into the cache
+    // -------------------------------------
     int[] tileDims = tiling.getTileDimensions();
     int newMaxTiles = cacheSize / getTileSize (tileDims, this);
-    if (tileDims[COLS] * newMaxTiles < dims[COLS])
-      newMaxTiles = (int) Math.ceil ((double) dims[COLS] / tileDims[COLS]);
+
+    // Compute tiles needed to span a diagonal line through the dataset
+    // ----------------------------------------------------------------
+    if (tileDims[ROWS] < dims[ROWS] && tileDims[COLS] < dims[COLS]) {
+      int[] tileCounts = tiling.getTileCounts();
+      int maxTileCount = Math.max (tileCounts[ROWS], tileCounts[COLS]);
+      int spanningTiles = (int) Math.ceil (maxTileCount * 1.5);
+      if (newMaxTiles < spanningTiles) newMaxTiles = spanningTiles;
+    } // if
+
     setMaxTiles (newMaxTiles);
 
   } // setOptimizedCacheSize
@@ -410,7 +432,7 @@ public abstract class CachedGrid
       throw new RuntimeException (e.getMessage());
     } // catch
     cache.put (pos, tile);
- 
+
   } // cacheMiss
 
   ////////////////////////////////////////////////////////////

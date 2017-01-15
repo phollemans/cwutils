@@ -82,7 +82,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import ncsa.hdf.hdflib.HDFException;
+import hdf.hdflib.HDFException;
 import noaa.coastwatch.io.HDFLib;
 import noaa.coastwatch.io.CWHDFReader;
 import noaa.coastwatch.io.HDFReader;

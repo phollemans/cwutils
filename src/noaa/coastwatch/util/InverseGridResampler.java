@@ -19,9 +19,11 @@
              the seam between swaths.  By extending the source location
              bounds test to include the 0.5 pixel border of the source grid,
              this cleared up these gap lines.
+           2017/01/14, PFH
+           - Changes: Aded extra informtation printing in verbose mode.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -127,9 +129,11 @@ public class InverseGridResampler
     AffineTransform sourceNav = sourceArray[0].getNavigation();
     if (sourceNav.isIdentity()) sourceNav = null;
     if (verbose) 
-      System.out.println (this.getClass() + ": Creating location estimators");
+      System.out.println (this.getClass() + ": Creating location estimators with poly size " + polySize + " km");
     LocationEstimator estimator = new LocationEstimator (destTrans,
       destDims, sourceTrans, sourceDims, sourceNav, polySize);
+    if (verbose) 
+      System.out.println (this.getClass() + ": Location estimators complete, starting resampling");
 
     // Set up source location bounds
     // -----------------------------
@@ -142,6 +146,15 @@ public class InverseGridResampler
     DataLocation destLoc = new DataLocation (2);
     DataLocation sourceLoc = new DataLocation (2);
     EarthLocation earthLoc = new EarthLocation();
+    
+    // TODO: In order to see how to improve the runtime of this routine,
+    // we did a timing experiment and in one case, found that 40% of the
+    // loop time was used for the source location calculation, and
+    // 60% for copying the data values over to the new grids, when registering
+    // 20 grids.  We could reduce these times by speeding up the location
+    // estimator, using parallel computing, or by operating on tiles of data
+    // so as to reduce the number of I/O calls.
+
     for (int i = 0; i < destDims[Grid.ROWS]; i++) {
 
       // Print progress
@@ -169,7 +182,7 @@ public class InverseGridResampler
         // Copy data value
         // ---------------
         if (isSourceValid) {
- 
+
           // Get nearest neighbour source coordinate
           // ---------------------------------------
           int sourceRow = (int) Math.round (sourceLoc.get (Grid.ROWS));

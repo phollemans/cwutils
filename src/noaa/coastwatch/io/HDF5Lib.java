@@ -4,10 +4,13 @@
   PURPOSE: Provides a singleton access point for the HDF 5 library.
    AUTHOR: Peter Hollemans
      DATE: 2015/05/08
+  CHANGES: 2017/01/14, PFH
+           - Changes: Updated the HDF class path (removing the ncsa).
+           - Issue: We updated the Java HDF to version 3.2.1.
   CHANGES: n/a
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -21,23 +24,31 @@ package noaa.coastwatch.io;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.annotation.Annotation;
-import ncsa.hdf.hdf5lib.H5;
-import ncsa.hdf.hdf5lib.HDF5GroupInfo;
-import ncsa.hdf.hdf5lib.callbacks.H5D_iterate_cb;
-import ncsa.hdf.hdf5lib.callbacks.H5D_iterate_t;
-import ncsa.hdf.hdf5lib.callbacks.H5L_iterate_cb;
-import ncsa.hdf.hdf5lib.callbacks.H5L_iterate_t;
-import ncsa.hdf.hdf5lib.callbacks.H5O_iterate_cb;
-import ncsa.hdf.hdf5lib.callbacks.H5O_iterate_t;
-import ncsa.hdf.hdf5lib.exceptions.HDF5Exception;
-import ncsa.hdf.hdf5lib.exceptions.HDF5LibraryException;
-import ncsa.hdf.hdf5lib.structs.H5_ih_info_t;
-import ncsa.hdf.hdf5lib.structs.H5A_info_t;
-import ncsa.hdf.hdf5lib.structs.H5G_info_t;
-import ncsa.hdf.hdf5lib.structs.H5L_info_t;
-import ncsa.hdf.hdf5lib.structs.H5O_hdr_info_t;
-import ncsa.hdf.hdf5lib.structs.H5O_info_t;
-import ncsa.hdf.hdf5lib.structs.H5AC_cache_config_t;
+import java.util.Collection;
+import hdf.hdf5lib.H5;
+import hdf.hdf5lib.HDF5GroupInfo;
+import hdf.hdf5lib.callbacks.H5A_iterate_cb;
+import hdf.hdf5lib.callbacks.H5A_iterate_t;
+import hdf.hdf5lib.callbacks.H5D_iterate_cb;
+import hdf.hdf5lib.callbacks.H5D_iterate_t;
+import hdf.hdf5lib.callbacks.H5L_iterate_cb;
+import hdf.hdf5lib.callbacks.H5L_iterate_t;
+import hdf.hdf5lib.callbacks.H5P_iterate_cb;
+import hdf.hdf5lib.callbacks.H5P_iterate_t;
+import hdf.hdf5lib.callbacks.H5O_iterate_cb;
+import hdf.hdf5lib.callbacks.H5O_iterate_t;
+import hdf.hdf5lib.callbacks.H5E_walk_cb;
+import hdf.hdf5lib.callbacks.H5E_walk_t;
+import hdf.hdf5lib.exceptions.HDF5Exception;
+import hdf.hdf5lib.exceptions.HDF5LibraryException;
+import hdf.hdf5lib.structs.H5_ih_info_t;
+import hdf.hdf5lib.structs.H5A_info_t;
+import hdf.hdf5lib.structs.H5F_info_t;
+import hdf.hdf5lib.structs.H5G_info_t;
+import hdf.hdf5lib.structs.H5L_info_t;
+import hdf.hdf5lib.structs.H5O_hdr_info_t;
+import hdf.hdf5lib.structs.H5O_info_t;
+import hdf.hdf5lib.structs.H5AC_cache_config_t;
 
 /**
  * The <code>HDF5Lib</code> object provides a singleton interface for accessing
@@ -90,1803 +101,1907 @@ public class HDF5Lib {
   public synchronized int H5open () throws HDF5LibraryException {
     return (H5.H5open ());
   } // H5open
-
-  public synchronized int H5close () throws HDF5LibraryException {
-    return (H5.H5close ());
-  } // H5close
-
-  public synchronized void loadH5Lib () {
-    H5.loadH5Lib ();
-  } // loadH5Lib
-
-  public synchronized int getOpenIDCount () {
-    return (H5.getOpenIDCount ());
-  } // getOpenIDCount
-
-  public synchronized int getOpenID (int arg0) {
-    return (H5.getOpenID (arg0));
-  } // getOpenID
-
-  public synchronized int H5check_version (int arg0, int arg1, int arg2) {
-    return (H5.H5check_version (arg0, arg1, arg2));
-  } // H5check_version
-
-  public synchronized int H5error_off () {
-    return (H5.H5error_off ());
-  } // H5error_off
-
-  public synchronized int H5garbage_collect () throws HDF5LibraryException {
-    return (H5.H5garbage_collect ());
-  } // H5garbage_collect
-
-  public synchronized int H5get_libversion (int[] arg0) throws HDF5LibraryException {
-    return (H5.H5get_libversion (arg0));
-  } // H5get_libversion
-
-  public synchronized int H5set_free_list_limits (int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) throws HDF5LibraryException {
-    return (H5.H5set_free_list_limits (arg0, arg1, arg2, arg3, arg4, arg5));
-  } // H5set_free_list_limits
-
-  public synchronized int H5Aclose (int arg0) throws HDF5LibraryException {
-    return (H5.H5Aclose (arg0));
-  } // H5Aclose
-
+  
   public synchronized int H5Acopy (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Acopy (arg0, arg1));
   } // H5Acopy
-
+  
+  public synchronized int H5Aclose (int arg0) throws HDF5LibraryException {
+    return (H5.H5Aclose (arg0));
+  } // H5Aclose
+  
+  public synchronized int H5close () throws HDF5LibraryException {
+    return (H5.H5close ());
+  } // H5close
+  
+  public synchronized void loadH5Lib () {
+    H5.loadH5Lib ();
+  } // loadH5Lib
+  
+  public synchronized int getOpenIDCount () {
+    return (H5.getOpenIDCount ());
+  } // getOpenIDCount
+  
+  public synchronized Collection getOpenIDs () {
+    return (H5.getOpenIDs ());
+  } // getOpenIDs
+  
+  public synchronized int H5check_version (int arg0, int arg1, int arg2) {
+    return (H5.H5check_version (arg0, arg1, arg2));
+  } // H5check_version
+  
+  public synchronized int H5error_off () {
+    return (H5.H5error_off ());
+  } // H5error_off
+  
+  public synchronized int H5garbage_collect () throws HDF5LibraryException {
+    return (H5.H5garbage_collect ());
+  } // H5garbage_collect
+  
+  public synchronized int H5get_libversion (int[] arg0) throws HDF5LibraryException {
+    return (H5.H5get_libversion (arg0));
+  } // H5get_libversion
+  
+  public synchronized int H5set_free_list_limits (int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) throws HDF5LibraryException {
+    return (H5.H5set_free_list_limits (arg0, arg1, arg2, arg3, arg4, arg5));
+  } // H5set_free_list_limits
+  
+  public synchronized void H5export_dataset (String arg0, String arg1, String arg2, int arg3) throws HDF5LibraryException {
+    H5.H5export_dataset (arg0, arg1, arg2, arg3);
+  } // H5export_dataset
+  
   public synchronized int H5Acreate (int arg0, String arg1, int arg2, int arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Acreate (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Acreate
-
+  
   public synchronized int H5Acreate_by_name (int arg0, String arg1, String arg2, int arg3, int arg4, int arg5, int arg6, int arg7) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Acreate_by_name (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
   } // H5Acreate_by_name
-
+  
   public synchronized int H5Adelete (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Adelete (arg0, arg1));
   } // H5Adelete
-
+  
   public synchronized void H5Adelete_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Adelete_by_idx (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Adelete_by_idx
-
+  
   public synchronized int H5Adelete_by_name (int arg0, String arg1, String arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Adelete_by_name (arg0, arg1, arg2, arg3));
   } // H5Adelete_by_name
-
+  
   public synchronized boolean H5Aexists (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aexists (arg0, arg1));
   } // H5Aexists
-
+  
   public synchronized boolean H5Aexists_by_name (int arg0, String arg1, String arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aexists_by_name (arg0, arg1, arg2, arg3));
   } // H5Aexists_by_name
-
+  
   public synchronized H5A_info_t H5Aget_info (int arg0) throws HDF5LibraryException {
     return (H5.H5Aget_info (arg0));
   } // H5Aget_info
-
+  
   public synchronized H5A_info_t H5Aget_info_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aget_info_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Aget_info_by_idx
-
+  
   public synchronized H5A_info_t H5Aget_info_by_name (int arg0, String arg1, String arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aget_info_by_name (arg0, arg1, arg2, arg3));
   } // H5Aget_info_by_name
-
-  public synchronized long H5Aget_name (int arg0, long arg1, String[] arg2) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException, IllegalArgumentException {
-    return (H5.H5Aget_name (arg0, arg1, arg2));
-  } // H5Aget_name
-
+  
   public synchronized long H5Aget_name (int arg0, String[] arg1) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Aget_name (arg0, arg1));
   } // H5Aget_name
-
+  
+  public synchronized long H5Aget_name (int arg0, long arg1, String[] arg2) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException, IllegalArgumentException {
+    return (H5.H5Aget_name (arg0, arg1, arg2));
+  } // H5Aget_name
+  
   public synchronized String H5Aget_name_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aget_name_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Aget_name_by_idx
-
+  
   public synchronized int H5Aget_space (int arg0) throws HDF5LibraryException {
     return (H5.H5Aget_space (arg0));
   } // H5Aget_space
-
+  
   public synchronized long H5Aget_storage_size (int arg0) throws HDF5LibraryException {
     return (H5.H5Aget_storage_size (arg0));
   } // H5Aget_storage_size
-
+  
   public synchronized int H5Aget_type (int arg0) throws HDF5LibraryException {
     return (H5.H5Aget_type (arg0));
   } // H5Aget_type
-
+  
   public synchronized int H5Aopen (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aopen (arg0, arg1, arg2));
   } // H5Aopen
-
+  
   public synchronized int H5Aopen_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5, int arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aopen_by_idx (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Aopen_by_idx
-
+  
   public synchronized int H5Aopen_by_name (int arg0, String arg1, String arg2, int arg3, int arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aopen_by_name (arg0, arg1, arg2, arg3, arg4));
   } // H5Aopen_by_name
-
-  public synchronized int H5Aread (int arg0, int arg1, Object arg2) throws HDF5Exception, NullPointerException {
-    return (H5.H5Aread (arg0, arg1, arg2));
-  } // H5Aread
-
+  
   public synchronized int H5Aread (int arg0, int arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aread (arg0, arg1, arg2));
   } // H5Aread
-
+  
+  public synchronized int H5Aread (int arg0, int arg1, Object arg2) throws HDF5Exception, NullPointerException {
+    return (H5.H5Aread (arg0, arg1, arg2));
+  } // H5Aread
+  
   public synchronized int H5AreadVL (int arg0, int arg1, String[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5AreadVL (arg0, arg1, arg2));
   } // H5AreadVL
-
+  
+  public synchronized int H5AreadComplex (int arg0, int arg1, String[] arg2) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5AreadComplex (arg0, arg1, arg2));
+  } // H5AreadComplex
+  
   public synchronized int H5Arename (int arg0, String arg1, String arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Arename (arg0, arg1, arg2));
   } // H5Arename
-
+  
   public synchronized int H5Arename_by_name (int arg0, String arg1, String arg2, String arg3, int arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Arename_by_name (arg0, arg1, arg2, arg3, arg4));
   } // H5Arename_by_name
-
+  
   public synchronized int H5Awrite (int arg0, int arg1, Object arg2) throws HDF5Exception, NullPointerException {
     return (H5.H5Awrite (arg0, arg1, arg2));
   } // H5Awrite
-
+  
   public synchronized int H5Awrite (int arg0, int arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Awrite (arg0, arg1, arg2));
   } // H5Awrite
-
-  public synchronized int H5Dchdir_ext (String arg0) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Dchdir_ext (arg0));
-  } // H5Dchdir_ext
-
-  public synchronized int H5Dclose (int arg0) throws HDF5LibraryException {
-    return (H5.H5Dclose (arg0));
-  } // H5Dclose
-
+  
+  public synchronized int H5AwriteVL (int arg0, int arg1, String[] arg2) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5AwriteVL (arg0, arg1, arg2));
+  } // H5AwriteVL
+  
+  public synchronized int H5Aget_create_plist (int arg0) throws HDF5LibraryException {
+    return (H5.H5Aget_create_plist (arg0));
+  } // H5Aget_create_plist
+  
+  public synchronized int H5Aiterate (int arg0, int arg1, int arg2, long arg3, H5A_iterate_cb arg4, H5A_iterate_t arg5) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Aiterate (arg0, arg1, arg2, arg3, arg4, arg5));
+  } // H5Aiterate
+  
+  public synchronized int H5Aiterate_by_name (int arg0, String arg1, int arg2, int arg3, long arg4, H5A_iterate_cb arg5, H5A_iterate_t arg6, int arg7) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Aiterate_by_name (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
+  } // H5Aiterate_by_name
+  
   public synchronized int H5Dcopy (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Dcopy (arg0, arg1));
   } // H5Dcopy
-
+  
+  public synchronized int H5Dclose (int arg0) throws HDF5LibraryException {
+    return (H5.H5Dclose (arg0));
+  } // H5Dclose
+  
   public synchronized int H5Dcreate (int arg0, String arg1, int arg2, int arg3, int arg4, int arg5, int arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dcreate (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dcreate
-
+  
   public synchronized int H5Dcreate_anon (int arg0, int arg1, int arg2, int arg3, int arg4) throws HDF5LibraryException {
     return (H5.H5Dcreate_anon (arg0, arg1, arg2, arg3, arg4));
   } // H5Dcreate_anon
-
+  
   public synchronized void H5Dfill (byte[] arg0, int arg1, byte[] arg2, int arg3, int arg4) throws HDF5LibraryException, NullPointerException {
     H5.H5Dfill (arg0, arg1, arg2, arg3, arg4);
   } // H5Dfill
-
+  
   public synchronized int H5Dget_access_plist (int arg0) throws HDF5LibraryException {
     return (H5.H5Dget_access_plist (arg0));
   } // H5Dget_access_plist
-
+  
   public synchronized int H5Dget_create_plist (int arg0) throws HDF5LibraryException {
     return (H5.H5Dget_create_plist (arg0));
   } // H5Dget_create_plist
-
+  
   public synchronized long H5Dget_offset (int arg0) throws HDF5LibraryException {
     return (H5.H5Dget_offset (arg0));
   } // H5Dget_offset
-
+  
   public synchronized int H5Dget_space (int arg0) throws HDF5LibraryException {
     return (H5.H5Dget_space (arg0));
   } // H5Dget_space
-
+  
   public synchronized int H5Dget_space_status (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dget_space_status (arg0, arg1));
   } // H5Dget_space_status
-
+  
   public synchronized int H5Dget_space_status (int arg0) throws HDF5LibraryException {
     return (H5.H5Dget_space_status (arg0));
   } // H5Dget_space_status
-
+  
   public synchronized long H5Dget_storage_size (int arg0) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Dget_storage_size (arg0));
   } // H5Dget_storage_size
-
+  
   public synchronized int H5Dget_type (int arg0) throws HDF5LibraryException {
     return (H5.H5Dget_type (arg0));
   } // H5Dget_type
-
-  public synchronized int H5Dgetdir_ext (String[] arg0, int arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Dgetdir_ext (arg0, arg1));
-  } // H5Dgetdir_ext
-
+  
   public synchronized int H5Diterate (byte[] arg0, int arg1, int arg2, H5D_iterate_cb arg3, H5D_iterate_t arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Diterate (arg0, arg1, arg2, arg3, arg4));
   } // H5Diterate
-
+  
   public synchronized int H5Dopen (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dopen (arg0, arg1, arg2));
   } // H5Dopen
-
-  public synchronized int H5Dread (int arg0, int arg1, int arg2, int arg3, int arg4, byte[] arg5) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Dread (arg0, arg1, arg2, arg3, arg4, arg5));
-  } // H5Dread
-
+  
   public synchronized int H5Dread (int arg0, int arg1, int arg2, int arg3, int arg4, Object arg5) throws HDF5Exception, HDF5LibraryException, NullPointerException {
     return (H5.H5Dread (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread
-
-  public synchronized int H5Dread (int arg0, int arg1, int arg2, int arg3, int arg4, byte[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Dread (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
-  } // H5Dread
-
+  
   public synchronized int H5Dread (int arg0, int arg1, int arg2, int arg3, int arg4, Object arg5, boolean arg6) throws HDF5Exception, HDF5LibraryException, NullPointerException {
     return (H5.H5Dread (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dread
-
+  
+  public synchronized int H5Dread (int arg0, int arg1, int arg2, int arg3, int arg4, byte[] arg5) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Dread (arg0, arg1, arg2, arg3, arg4, arg5));
+  } // H5Dread
+  
+  public synchronized int H5Dread (int arg0, int arg1, int arg2, int arg3, int arg4, byte[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Dread (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
+  } // H5Dread
+  
   public synchronized int H5Dread_double (int arg0, int arg1, int arg2, int arg3, int arg4, double[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_double (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_double
-
+  
   public synchronized int H5Dread_double (int arg0, int arg1, int arg2, int arg3, int arg4, double[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_double (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dread_double
-
-  public synchronized int H5Dread_float (int arg0, int arg1, int arg2, int arg3, int arg4, float[] arg5) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Dread_float (arg0, arg1, arg2, arg3, arg4, arg5));
-  } // H5Dread_float
-
+  
   public synchronized int H5Dread_float (int arg0, int arg1, int arg2, int arg3, int arg4, float[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_float (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dread_float
-
-  public synchronized int H5Dread_int (int arg0, int arg1, int arg2, int arg3, int arg4, int[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Dread_int (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
-  } // H5Dread_int
-
+  
+  public synchronized int H5Dread_float (int arg0, int arg1, int arg2, int arg3, int arg4, float[] arg5) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Dread_float (arg0, arg1, arg2, arg3, arg4, arg5));
+  } // H5Dread_float
+  
   public synchronized int H5Dread_int (int arg0, int arg1, int arg2, int arg3, int arg4, int[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_int (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_int
-
+  
+  public synchronized int H5Dread_int (int arg0, int arg1, int arg2, int arg3, int arg4, int[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Dread_int (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
+  } // H5Dread_int
+  
   public synchronized int H5Dread_long (int arg0, int arg1, int arg2, int arg3, int arg4, long[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_long (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_long
-
+  
   public synchronized int H5Dread_long (int arg0, int arg1, int arg2, int arg3, int arg4, long[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_long (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dread_long
-
+  
   public synchronized int H5Dread_reg_ref (int arg0, int arg1, int arg2, int arg3, int arg4, String[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_reg_ref (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_reg_ref
-
-  public synchronized int H5Dread_short (int arg0, int arg1, int arg2, int arg3, int arg4, short[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Dread_short (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
-  } // H5Dread_short
-
+  
+  public synchronized int H5Dread_reg_ref_data (int arg0, int arg1, int arg2, int arg3, int arg4, String[] arg5) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Dread_reg_ref_data (arg0, arg1, arg2, arg3, arg4, arg5));
+  } // H5Dread_reg_ref_data
+  
   public synchronized int H5Dread_short (int arg0, int arg1, int arg2, int arg3, int arg4, short[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_short (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_short
-
+  
+  public synchronized int H5Dread_short (int arg0, int arg1, int arg2, int arg3, int arg4, short[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Dread_short (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
+  } // H5Dread_short
+  
   public synchronized int H5Dread_string (int arg0, int arg1, int arg2, int arg3, int arg4, String[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_string (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_string
-
+  
   public synchronized int H5DreadVL (int arg0, int arg1, int arg2, int arg3, int arg4, Object[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5DreadVL (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5DreadVL
-
+  
   public synchronized void H5Dset_extent (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
     H5.H5Dset_extent (arg0, arg1);
   } // H5Dset_extent
-
+  
   public synchronized int H5Dvlen_get_buf_size (int arg0, int arg1, int arg2, int[] arg3) throws HDF5LibraryException {
     return (H5.H5Dvlen_get_buf_size (arg0, arg1, arg2, arg3));
   } // H5Dvlen_get_buf_size
-
+  
   public synchronized long H5Dvlen_get_buf_size_long (int arg0, int arg1, int arg2) throws HDF5LibraryException {
     return (H5.H5Dvlen_get_buf_size_long (arg0, arg1, arg2));
   } // H5Dvlen_get_buf_size_long
-
+  
   public synchronized int H5Dvlen_reclaim (int arg0, int arg1, int arg2, byte[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dvlen_reclaim (arg0, arg1, arg2, arg3));
   } // H5Dvlen_reclaim
-
-  public synchronized int H5Dwrite (int arg0, int arg1, int arg2, int arg3, int arg4, Object arg5, boolean arg6) throws HDF5Exception, HDF5LibraryException, NullPointerException {
-    return (H5.H5Dwrite (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
-  } // H5Dwrite
-
-  public synchronized int H5Dwrite (int arg0, int arg1, int arg2, int arg3, int arg4, Object arg5) throws HDF5Exception, HDF5LibraryException, NullPointerException {
-    return (H5.H5Dwrite (arg0, arg1, arg2, arg3, arg4, arg5));
-  } // H5Dwrite
-
+  
   public synchronized int H5Dwrite (int arg0, int arg1, int arg2, int arg3, int arg4, byte[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dwrite
-
+  
+  public synchronized int H5Dwrite (int arg0, int arg1, int arg2, int arg3, int arg4, Object arg5, boolean arg6) throws HDF5Exception, HDF5LibraryException, NullPointerException {
+    return (H5.H5Dwrite (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
+  } // H5Dwrite
+  
+  public synchronized int H5Dwrite (int arg0, int arg1, int arg2, int arg3, int arg4, Object arg5) throws HDF5Exception, HDF5LibraryException, NullPointerException {
+    return (H5.H5Dwrite (arg0, arg1, arg2, arg3, arg4, arg5));
+  } // H5Dwrite
+  
   public synchronized int H5Dwrite (int arg0, int arg1, int arg2, int arg3, int arg4, byte[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dwrite
-
+  
   public synchronized int H5Dwrite_double (int arg0, int arg1, int arg2, int arg3, int arg4, double[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_double (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dwrite_double
-
+  
   public synchronized int H5Dwrite_double (int arg0, int arg1, int arg2, int arg3, int arg4, double[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_double (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dwrite_double
-
-  public synchronized int H5Dwrite_float (int arg0, int arg1, int arg2, int arg3, int arg4, float[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Dwrite_float (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
-  } // H5Dwrite_float
-
+  
   public synchronized int H5Dwrite_float (int arg0, int arg1, int arg2, int arg3, int arg4, float[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_float (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dwrite_float
-
-  public synchronized int H5Dwrite_int (int arg0, int arg1, int arg2, int arg3, int arg4, int[] arg5) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Dwrite_int (arg0, arg1, arg2, arg3, arg4, arg5));
-  } // H5Dwrite_int
-
+  
+  public synchronized int H5Dwrite_float (int arg0, int arg1, int arg2, int arg3, int arg4, float[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Dwrite_float (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
+  } // H5Dwrite_float
+  
   public synchronized int H5Dwrite_int (int arg0, int arg1, int arg2, int arg3, int arg4, int[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_int (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dwrite_int
-
-  public synchronized int H5Dwrite_long (int arg0, int arg1, int arg2, int arg3, int arg4, long[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Dwrite_long (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
-  } // H5Dwrite_long
-
+  
+  public synchronized int H5Dwrite_int (int arg0, int arg1, int arg2, int arg3, int arg4, int[] arg5) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Dwrite_int (arg0, arg1, arg2, arg3, arg4, arg5));
+  } // H5Dwrite_int
+  
   public synchronized int H5Dwrite_long (int arg0, int arg1, int arg2, int arg3, int arg4, long[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_long (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dwrite_long
-
-  public synchronized int H5Dwrite_short (int arg0, int arg1, int arg2, int arg3, int arg4, short[] arg5) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Dwrite_short (arg0, arg1, arg2, arg3, arg4, arg5));
-  } // H5Dwrite_short
-
+  
+  public synchronized int H5Dwrite_long (int arg0, int arg1, int arg2, int arg3, int arg4, long[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Dwrite_long (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
+  } // H5Dwrite_long
+  
   public synchronized int H5Dwrite_short (int arg0, int arg1, int arg2, int arg3, int arg4, short[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_short (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dwrite_short
-
+  
+  public synchronized int H5Dwrite_short (int arg0, int arg1, int arg2, int arg3, int arg4, short[] arg5) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Dwrite_short (arg0, arg1, arg2, arg3, arg4, arg5));
+  } // H5Dwrite_short
+  
   public synchronized int H5DwriteString (int arg0, int arg1, int arg2, int arg3, int arg4, String[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5DwriteString (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5DwriteString
-
+  
   public synchronized boolean H5Eauto_is_v2 (int arg0) throws HDF5LibraryException {
     return (H5.H5Eauto_is_v2 (arg0));
   } // H5Eauto_is_v2
-
-  public synchronized int H5Eclear () throws HDF5LibraryException {
-    return (H5.H5Eclear ());
-  } // H5Eclear
-
+  
   public synchronized void H5Eclear (int arg0) throws HDF5LibraryException {
     H5.H5Eclear (arg0);
   } // H5Eclear
-
+  
+  public synchronized int H5Eclear () throws HDF5LibraryException {
+    return (H5.H5Eclear ());
+  } // H5Eclear
+  
   public synchronized void H5Eclear2 (int arg0) throws HDF5LibraryException {
     H5.H5Eclear2 (arg0);
   } // H5Eclear2
-
+  
   public synchronized void H5Eclose_msg (int arg0) throws HDF5LibraryException {
     H5.H5Eclose_msg (arg0);
   } // H5Eclose_msg
-
+  
   public synchronized void H5Eclose_stack (int arg0) throws HDF5LibraryException {
     H5.H5Eclose_stack (arg0);
   } // H5Eclose_stack
-
+  
   public synchronized int H5Ecreate_msg (int arg0, int arg1, String arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Ecreate_msg (arg0, arg1, arg2));
   } // H5Ecreate_msg
-
+  
   public synchronized int H5Ecreate_stack () throws HDF5LibraryException {
     return (H5.H5Ecreate_stack ());
   } // H5Ecreate_stack
-
+  
   public synchronized String H5Eget_class_name (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Eget_class_name (arg0));
   } // H5Eget_class_name
-
+  
   public synchronized int H5Eget_current_stack () throws HDF5LibraryException {
     return (H5.H5Eget_current_stack ());
   } // H5Eget_current_stack
-
+  
   public synchronized void H5Eset_current_stack (int arg0) throws HDF5LibraryException {
     H5.H5Eset_current_stack (arg0);
   } // H5Eset_current_stack
-
+  
   public synchronized String H5Eget_msg (int arg0, int[] arg1) throws HDF5LibraryException {
     return (H5.H5Eget_msg (arg0, arg1));
   } // H5Eget_msg
-
+  
   public synchronized long H5Eget_num (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Eget_num (arg0));
   } // H5Eget_num
-
+  
   public synchronized void H5Eprint2 (int arg0, Object arg1) throws HDF5LibraryException {
     H5.H5Eprint2 (arg0, arg1);
   } // H5Eprint2
-
+  
   public synchronized void H5Epop (int arg0, long arg1) throws HDF5LibraryException {
     H5.H5Epop (arg0, arg1);
   } // H5Epop
-
+  
+  public synchronized void H5Epush (int arg0, String arg1, String arg2, int arg3, int arg4, int arg5, int arg6, String arg7) throws HDF5LibraryException, NullPointerException {
+    H5.H5Epush (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+  } // H5Epush
+  
+  public synchronized void H5Epush2 (int arg0, String arg1, String arg2, int arg3, int arg4, int arg5, int arg6, String arg7) throws HDF5LibraryException, NullPointerException {
+    H5.H5Epush2 (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
+  } // H5Epush2
+  
   public synchronized int H5Eregister_class (String arg0, String arg1, String arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Eregister_class (arg0, arg1, arg2));
   } // H5Eregister_class
-
+  
   public synchronized void H5Eunregister_class (int arg0) throws HDF5LibraryException {
     H5.H5Eunregister_class (arg0);
   } // H5Eunregister_class
-
+  
+  public synchronized void H5Ewalk (int arg0, int arg1, H5E_walk_cb arg2, H5E_walk_t arg3) throws HDF5LibraryException, NullPointerException {
+    H5.H5Ewalk (arg0, arg1, arg2, arg3);
+  } // H5Ewalk
+  
+  public synchronized void H5Ewalk2 (int arg0, int arg1, H5E_walk_cb arg2, H5E_walk_t arg3) throws HDF5LibraryException, NullPointerException {
+    H5.H5Ewalk2 (arg0, arg1, arg2, arg3);
+  } // H5Ewalk2
+  
   public synchronized int H5Fclose (int arg0) throws HDF5LibraryException {
     return (H5.H5Fclose (arg0));
   } // H5Fclose
-
+  
   public synchronized int H5Fopen (String arg0, int arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Fopen (arg0, arg1, arg2));
   } // H5Fopen
-
+  
   public synchronized int H5Freopen (int arg0) throws HDF5LibraryException {
     return (H5.H5Freopen (arg0));
   } // H5Freopen
-
+  
   public synchronized int H5Fcreate (String arg0, int arg1, int arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Fcreate (arg0, arg1, arg2, arg3));
   } // H5Fcreate
-
+  
   public synchronized int H5Fflush (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Fflush (arg0, arg1));
   } // H5Fflush
-
+  
   public synchronized int H5Fget_access_plist (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_access_plist (arg0));
   } // H5Fget_access_plist
-
+  
   public synchronized int H5Fget_create_plist (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_create_plist (arg0));
   } // H5Fget_create_plist
-
+  
   public synchronized long H5Fget_filesize (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_filesize (arg0));
   } // H5Fget_filesize
-
+  
   public synchronized long H5Fget_freespace (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_freespace (arg0));
   } // H5Fget_freespace
-
+  
   public synchronized int H5Fget_intent (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_intent (arg0));
   } // H5Fget_intent
-
+  
   public synchronized double H5Fget_mdc_hit_rate (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_mdc_hit_rate (arg0));
   } // H5Fget_mdc_hit_rate
-
+  
   public synchronized int H5Fget_mdc_size (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Fget_mdc_size (arg0, arg1));
   } // H5Fget_mdc_size
-
+  
   public synchronized String H5Fget_name (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Fget_name (arg0, arg1));
   } // H5Fget_name
-
+  
   public synchronized String H5Fget_name (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_name (arg0));
   } // H5Fget_name
-
+  
   public synchronized int H5Fget_obj_count (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Fget_obj_count (arg0, arg1));
   } // H5Fget_obj_count
-
+  
   public synchronized long H5Fget_obj_count_long (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Fget_obj_count_long (arg0, arg1));
   } // H5Fget_obj_count_long
-
+  
   public synchronized int H5Fget_obj_ids (int arg0, int arg1, int arg2, int[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Fget_obj_ids (arg0, arg1, arg2, arg3));
   } // H5Fget_obj_ids
-
+  
   public synchronized long H5Fget_obj_ids_long (int arg0, int arg1, long arg2, int[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Fget_obj_ids_long (arg0, arg1, arg2, arg3));
   } // H5Fget_obj_ids_long
-
+  
   public synchronized boolean H5Fis_hdf5 (String arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Fis_hdf5 (arg0));
   } // H5Fis_hdf5
-
+  
   public synchronized int H5Fmount (int arg0, String arg1, int arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Fmount (arg0, arg1, arg2, arg3));
   } // H5Fmount
-
+  
   public synchronized int H5Funmount (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Funmount (arg0, arg1));
   } // H5Funmount
-
+  
   public synchronized void H5Freset_mdc_hit_rate_stats (int arg0) throws HDF5LibraryException {
     H5.H5Freset_mdc_hit_rate_stats (arg0);
   } // H5Freset_mdc_hit_rate_stats
-
+  
+  public synchronized H5F_info_t H5Fget_info (int arg0) throws HDF5LibraryException {
+    return (H5.H5Fget_info (arg0));
+  } // H5Fget_info
+  
+  public synchronized void H5Fclear_elink_file_cache (int arg0) throws HDF5LibraryException {
+    H5.H5Fclear_elink_file_cache (arg0);
+  } // H5Fclear_elink_file_cache
+  
   public synchronized int H5Gclose (int arg0) throws HDF5LibraryException {
     return (H5.H5Gclose (arg0));
   } // H5Gclose
-
+  
   public synchronized int H5Gcreate (int arg0, String arg1, int arg2, int arg3, int arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gcreate (arg0, arg1, arg2, arg3, arg4));
   } // H5Gcreate
-
+  
   public synchronized int H5Gcreate_anon (int arg0, int arg1, int arg2) throws HDF5LibraryException {
     return (H5.H5Gcreate_anon (arg0, arg1, arg2));
   } // H5Gcreate_anon
-
+  
   public synchronized int H5Gget_create_plist (int arg0) throws HDF5LibraryException {
     return (H5.H5Gget_create_plist (arg0));
   } // H5Gget_create_plist
-
+  
   public synchronized H5G_info_t H5Gget_info (int arg0) throws HDF5LibraryException {
     return (H5.H5Gget_info (arg0));
   } // H5Gget_info
-
+  
   public synchronized H5G_info_t H5Gget_info_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_info_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Gget_info_by_idx
-
+  
   public synchronized H5G_info_t H5Gget_info_by_name (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_info_by_name (arg0, arg1, arg2));
   } // H5Gget_info_by_name
-
+  
   public synchronized int H5Gget_obj_info_all (int arg0, String arg1, String[] arg2, int[] arg3, int[] arg4, long[] arg5, long[] arg6, int arg7) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_obj_info_all (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
   } // H5Gget_obj_info_all
-
+  
   public synchronized int H5Gget_obj_info_all (int arg0, String arg1, String[] arg2, int[] arg3, int[] arg4, long[] arg5, int arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_obj_info_all (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Gget_obj_info_all
-
+  
   public synchronized int H5Gget_obj_info_all (int arg0, String arg1, String[] arg2, int[] arg3, long[] arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_obj_info_all (arg0, arg1, arg2, arg3, arg4));
   } // H5Gget_obj_info_all
-
+  
   public synchronized int H5Gget_obj_info_full (int arg0, String arg1, String[] arg2, int[] arg3, int[] arg4, long[] arg5, long[] arg6, int arg7, int arg8) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_obj_info_full (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8));
   } // H5Gget_obj_info_full
-
+  
   public synchronized int H5Gget_obj_info_idx (int arg0, String arg1, int arg2, String[] arg3, int[] arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_obj_info_idx (arg0, arg1, arg2, arg3, arg4));
   } // H5Gget_obj_info_idx
-
+  
   public synchronized int H5Gget_obj_info_max (int arg0, String[] arg1, int[] arg2, int[] arg3, long[] arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_obj_info_max (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Gget_obj_info_max
-
+  
   public synchronized long H5Gn_members_long (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gn_members_long (arg0, arg1));
   } // H5Gn_members_long
-
+  
   public synchronized int H5Gn_members (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gn_members (arg0, arg1));
   } // H5Gn_members
-
+  
   public synchronized int H5Gopen (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gopen (arg0, arg1, arg2));
   } // H5Gopen
-
+  
   public synchronized int H5Iget_file_id (int arg0) throws HDF5LibraryException {
     return (H5.H5Iget_file_id (arg0));
   } // H5Iget_file_id
-
+  
   public synchronized long H5Iget_name (int arg0, String[] arg1, long arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Iget_name (arg0, arg1, arg2));
   } // H5Iget_name
-
+  
   public synchronized int H5Iget_ref (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Iget_ref (arg0));
   } // H5Iget_ref
-
+  
   public synchronized int H5Idec_ref (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Idec_ref (arg0));
   } // H5Idec_ref
-
+  
   public synchronized int H5Iinc_ref (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Iinc_ref (arg0));
   } // H5Iinc_ref
-
+  
   public synchronized int H5Iget_type (int arg0) throws HDF5LibraryException {
     return (H5.H5Iget_type (arg0));
   } // H5Iget_type
-
+  
   public synchronized int H5Iget_type_ref (int arg0) throws HDF5LibraryException {
     return (H5.H5Iget_type_ref (arg0));
   } // H5Iget_type_ref
-
+  
+  public synchronized int H5Idec_type_ref (int arg0) throws HDF5LibraryException {
+    return (H5.H5Idec_type_ref (arg0));
+  } // H5Idec_type_ref
+  
+  public synchronized int H5Iinc_type_ref (int arg0) throws HDF5LibraryException {
+    return (H5.H5Iinc_type_ref (arg0));
+  } // H5Iinc_type_ref
+  
   public synchronized int H5Inmembers (int arg0) throws HDF5LibraryException {
     return (H5.H5Inmembers (arg0));
   } // H5Inmembers
-
-  public synchronized int H5INcreate (String arg0, int arg1, int arg2, int arg3, String arg4, String arg5, long arg6) {
-    return (H5.H5INcreate (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
-  } // H5INcreate
-
-  public synchronized int H5INquery (int arg0, String[] arg1, Object arg2, Object arg3, int arg4) {
-    return (H5.H5INquery (arg0, arg1, arg2, arg3, arg4));
-  } // H5INquery
-
+  
+  public synchronized boolean H5Iis_valid (int arg0) throws HDF5LibraryException {
+    return (H5.H5Iis_valid (arg0));
+  } // H5Iis_valid
+  
+  public synchronized boolean H5Itype_exists (int arg0) throws HDF5LibraryException {
+    return (H5.H5Itype_exists (arg0));
+  } // H5Itype_exists
+  
+  public synchronized void H5Iclear_type (int arg0, boolean arg1) throws HDF5LibraryException {
+    H5.H5Iclear_type (arg0, arg1);
+  } // H5Iclear_type
+  
+  public synchronized void H5Idestroy_type (int arg0) throws HDF5LibraryException {
+    H5.H5Idestroy_type (arg0);
+  } // H5Idestroy_type
+  
   public synchronized void H5Lcopy (int arg0, String arg1, int arg2, String arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Lcopy (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Lcopy
-
+  
   public synchronized void H5Lcreate_external (String arg0, String arg1, int arg2, String arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Lcreate_external (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Lcreate_external
-
+  
   public synchronized void H5Lcreate_hard (int arg0, String arg1, int arg2, String arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Lcreate_hard (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Lcreate_hard
-
+  
   public synchronized void H5Lcreate_soft (String arg0, int arg1, String arg2, int arg3, int arg4) throws HDF5LibraryException, NullPointerException {
     H5.H5Lcreate_soft (arg0, arg1, arg2, arg3, arg4);
   } // H5Lcreate_soft
-
+  
   public synchronized void H5Ldelete (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     H5.H5Ldelete (arg0, arg1, arg2);
   } // H5Ldelete
-
+  
   public synchronized void H5Ldelete_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Ldelete_by_idx (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Ldelete_by_idx
-
+  
   public synchronized boolean H5Lexists (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lexists (arg0, arg1, arg2));
   } // H5Lexists
-
+  
   public synchronized H5L_info_t H5Lget_info (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lget_info (arg0, arg1, arg2));
   } // H5Lget_info
-
+  
   public synchronized H5L_info_t H5Lget_info_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lget_info_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Lget_info_by_idx
-
+  
   public synchronized String H5Lget_name_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lget_name_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Lget_name_by_idx
-
+  
   public synchronized int H5Lget_val (int arg0, String arg1, String[] arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lget_val (arg0, arg1, arg2, arg3));
   } // H5Lget_val
-
+  
   public synchronized int H5Lget_val_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, String[] arg5, int arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lget_val_by_idx (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Lget_val_by_idx
-
+  
   public synchronized int H5Literate (int arg0, int arg1, int arg2, long arg3, H5L_iterate_cb arg4, H5L_iterate_t arg5) throws HDF5LibraryException {
     return (H5.H5Literate (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Literate
-
+  
   public synchronized int H5Literate_by_name (int arg0, String arg1, int arg2, int arg3, long arg4, H5L_iterate_cb arg5, H5L_iterate_t arg6, int arg7) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Literate_by_name (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
   } // H5Literate_by_name
-
+  
   public synchronized void H5Lmove (int arg0, String arg1, int arg2, String arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Lmove (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Lmove
-
+  
   public synchronized int H5Lvisit (int arg0, int arg1, int arg2, H5L_iterate_cb arg3, H5L_iterate_t arg4) throws HDF5LibraryException {
     return (H5.H5Lvisit (arg0, arg1, arg2, arg3, arg4));
   } // H5Lvisit
-
+  
   public synchronized int H5Lvisit_by_name (int arg0, String arg1, int arg2, int arg3, H5L_iterate_cb arg4, H5L_iterate_t arg5, int arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lvisit_by_name (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Lvisit_by_name
-
+  
+  public synchronized int H5Lis_registered (int arg0) throws HDF5LibraryException {
+    return (H5.H5Lis_registered (arg0));
+  } // H5Lis_registered
+  
+  public synchronized void H5Lunregister (int arg0) throws HDF5LibraryException {
+    H5.H5Lunregister (arg0);
+  } // H5Lunregister
+  
   public synchronized int H5Oclose (int arg0) throws HDF5LibraryException {
     return (H5.H5Oclose (arg0));
   } // H5Oclose
-
+  
   public synchronized void H5Ocopy (int arg0, String arg1, int arg2, String arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Ocopy (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Ocopy
-
+  
   public synchronized String H5Oget_comment (int arg0) throws HDF5LibraryException {
     return (H5.H5Oget_comment (arg0));
   } // H5Oget_comment
-
-  public synchronized void H5Oset_comment (int arg0, String arg1) throws HDF5LibraryException {
-    H5.H5Oset_comment (arg0, arg1);
-  } // H5Oset_comment
-
+  
   public synchronized String H5Oget_comment_by_name (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Oget_comment_by_name (arg0, arg1, arg2));
   } // H5Oget_comment_by_name
-
-  public synchronized void H5Oset_comment_by_name (int arg0, String arg1, String arg2, int arg3) throws HDF5LibraryException, NullPointerException {
-    H5.H5Oset_comment_by_name (arg0, arg1, arg2, arg3);
-  } // H5Oset_comment_by_name
-
+  
   public synchronized H5O_info_t H5Oget_info (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Oget_info (arg0));
   } // H5Oget_info
-
+  
   public synchronized H5O_info_t H5Oget_info_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Oget_info_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Oget_info_by_idx
-
+  
   public synchronized H5O_info_t H5Oget_info_by_name (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Oget_info_by_name (arg0, arg1, arg2));
   } // H5Oget_info_by_name
-
+  
   public synchronized void H5Olink (int arg0, int arg1, String arg2, int arg3, int arg4) throws HDF5LibraryException, NullPointerException {
     H5.H5Olink (arg0, arg1, arg2, arg3, arg4);
   } // H5Olink
-
+  
   public synchronized int H5Oopen (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Oopen (arg0, arg1, arg2));
   } // H5Oopen
-
+  
   public synchronized int H5Ovisit (int arg0, int arg1, int arg2, H5O_iterate_cb arg3, H5O_iterate_t arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Ovisit (arg0, arg1, arg2, arg3, arg4));
   } // H5Ovisit
-
+  
   public synchronized int H5Ovisit_by_name (int arg0, String arg1, int arg2, int arg3, H5O_iterate_cb arg4, H5O_iterate_t arg5, int arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Ovisit_by_name (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Ovisit_by_name
-
-  public synchronized boolean H5Pall_filters_avail (int arg0) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pall_filters_avail (arg0));
-  } // H5Pall_filters_avail
-
-  public synchronized int H5Pclose (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pclose (arg0));
-  } // H5Pclose
-
-  public synchronized int H5Pclose_class (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pclose_class (arg0));
-  } // H5Pclose_class
-
-  public synchronized int H5Pcopy (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pcopy (arg0));
-  } // H5Pcopy
-
-  public synchronized int H5Pcopy_prop (int arg0, int arg1, String arg2) throws HDF5LibraryException {
-    return (H5.H5Pcopy_prop (arg0, arg1, arg2));
-  } // H5Pcopy_prop
-
-  public synchronized int H5Pcreate (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pcreate (arg0));
-  } // H5Pcreate
-
-  public synchronized int H5Pequal (int arg0, int arg1) throws HDF5LibraryException {
-    return (H5.H5Pequal (arg0, arg1));
-  } // H5Pequal
-
-  public synchronized boolean H5P_equal (int arg0, int arg1) throws HDF5LibraryException {
-    return (H5.H5P_equal (arg0, arg1));
-  } // H5P_equal
-
-  public synchronized int H5Pexist (int arg0, String arg1) throws HDF5LibraryException {
-    return (H5.H5Pexist (arg0, arg1));
-  } // H5Pexist
-
-  public synchronized int H5Pfill_value_defined (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pfill_value_defined (arg0, arg1));
-  } // H5Pfill_value_defined
-
-  public synchronized int H5Pget (int arg0, String arg1) throws HDF5LibraryException {
-    return (H5.H5Pget (arg0, arg1));
-  } // H5Pget
-
-  public synchronized int H5Pset (int arg0, String arg1, int arg2) throws HDF5LibraryException {
-    return (H5.H5Pset (arg0, arg1, arg2));
-  } // H5Pset
-
-  public synchronized int H5Pget_alignment (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
-    return (H5.H5Pget_alignment (arg0, arg1));
-  } // H5Pget_alignment
-
-  public synchronized int H5Pset_alignment (int arg0, long arg1, long arg2) throws HDF5LibraryException {
-    return (H5.H5Pset_alignment (arg0, arg1, arg2));
-  } // H5Pset_alignment
-
-  public synchronized int H5Pget_alloc_time (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_alloc_time (arg0, arg1));
-  } // H5Pget_alloc_time
-
-  public synchronized int H5Pset_alloc_time (int arg0, int arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_alloc_time (arg0, arg1));
-  } // H5Pset_alloc_time
-
-  public synchronized int H5Pget_attr_creation_order (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_attr_creation_order (arg0));
-  } // H5Pget_attr_creation_order
-
-  public synchronized int H5Pset_attr_creation_order (int arg0, int arg1) throws HDF5LibraryException {
-    return (H5.H5Pset_attr_creation_order (arg0, arg1));
-  } // H5Pset_attr_creation_order
-
-  public synchronized int H5Pget_attr_phase_change (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_attr_phase_change (arg0, arg1));
-  } // H5Pget_attr_phase_change
-
-  public synchronized int H5Pget_btree_ratios (int arg0, double[] arg1, double[] arg2, double[] arg3) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_btree_ratios (arg0, arg1, arg2, arg3));
-  } // H5Pget_btree_ratios
-
-  public synchronized int H5Pset_btree_ratios (int arg0, double arg1, double arg2, double arg3) throws HDF5LibraryException {
-    return (H5.H5Pset_btree_ratios (arg0, arg1, arg2, arg3));
-  } // H5Pset_btree_ratios
-
-  public synchronized int H5Pget_buffer (int arg0, byte[] arg1, byte[] arg2) throws HDF5LibraryException, IllegalArgumentException {
-    return (H5.H5Pget_buffer (arg0, arg1, arg2));
-  } // H5Pget_buffer
-
-  public synchronized long H5Pget_buffer_size (int arg0) throws HDF5LibraryException, IllegalArgumentException {
-    return (H5.H5Pget_buffer_size (arg0));
-  } // H5Pget_buffer_size
-
-  public synchronized void H5Pset_buffer_size (int arg0, long arg1) throws HDF5LibraryException, IllegalArgumentException {
-    H5.H5Pset_buffer_size (arg0, arg1);
-  } // H5Pset_buffer_size
-
-  public synchronized int H5Pget_cache (int arg0, int[] arg1, long[] arg2, long[] arg3, double[] arg4) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_cache (arg0, arg1, arg2, arg3, arg4));
-  } // H5Pget_cache
-
-  public synchronized int H5Pset_cache (int arg0, int arg1, long arg2, long arg3, double arg4) throws HDF5LibraryException {
-    return (H5.H5Pset_cache (arg0, arg1, arg2, arg3, arg4));
-  } // H5Pset_cache
-
-  public synchronized int H5Pget_char_encoding (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_char_encoding (arg0));
-  } // H5Pget_char_encoding
-
-  public synchronized void H5Pset_char_encoding (int arg0, int arg1) throws HDF5LibraryException {
-    H5.H5Pset_char_encoding (arg0, arg1);
-  } // H5Pset_char_encoding
-
-  public synchronized int H5Pget_chunk (int arg0, int arg1, long[] arg2) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
-    return (H5.H5Pget_chunk (arg0, arg1, arg2));
-  } // H5Pget_chunk
-
-  public synchronized int H5Pset_chunk (int arg0, int arg1, long[] arg2) throws HDF5Exception, NullPointerException, IllegalArgumentException {
-    return (H5.H5Pset_chunk (arg0, arg1, arg2));
-  } // H5Pset_chunk
-
-  public synchronized int H5Pset_chunk (int arg0, int arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
-    return (H5.H5Pset_chunk (arg0, arg1, arg2));
-  } // H5Pset_chunk
-
-  public synchronized void H5Pget_chunk_cache (int arg0, long[] arg1, long[] arg2, double[] arg3) throws HDF5LibraryException, NullPointerException {
-    H5.H5Pget_chunk_cache (arg0, arg1, arg2, arg3);
-  } // H5Pget_chunk_cache
-
-  public synchronized void H5Pset_chunk_cache (int arg0, long arg1, long arg2, double arg3) throws HDF5LibraryException {
-    H5.H5Pset_chunk_cache (arg0, arg1, arg2, arg3);
-  } // H5Pset_chunk_cache
-
-  public synchronized int H5Pget_class (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_class (arg0));
-  } // H5Pget_class
-
+  
+  public synchronized boolean H5Oexists_by_name (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Oexists_by_name (arg0, arg1, arg2));
+  } // H5Oexists_by_name
+  
+  public synchronized void H5Odecr_refcount (int arg0) throws HDF5LibraryException {
+    H5.H5Odecr_refcount (arg0);
+  } // H5Odecr_refcount
+  
+  public synchronized void H5Oincr_refcount (int arg0) throws HDF5LibraryException {
+    H5.H5Oincr_refcount (arg0);
+  } // H5Oincr_refcount
+  
+  public synchronized int H5Oopen_by_addr (int arg0, long arg1) throws HDF5LibraryException {
+    return (H5.H5Oopen_by_addr (arg0, arg1));
+  } // H5Oopen_by_addr
+  
+  public synchronized int H5Oopen_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Oopen_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
+  } // H5Oopen_by_idx
+  
+  public synchronized int _H5Oopen_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
+    return (H5._H5Oopen_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
+  } // _H5Oopen_by_idx
+  
   public synchronized String H5Pget_class_name (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_class_name (arg0));
   } // H5Pget_class_name
-
-  public synchronized int H5Pget_class_parent (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_class_parent (arg0));
-  } // H5Pget_class_parent
-
-  public synchronized int H5Pget_copy_object (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_copy_object (arg0));
-  } // H5Pget_copy_object
-
-  public synchronized void H5Pset_copy_object (int arg0, int arg1) throws HDF5LibraryException {
-    H5.H5Pset_copy_object (arg0, arg1);
-  } // H5Pset_copy_object
-
-  public synchronized boolean H5Pget_create_intermediate_group (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_create_intermediate_group (arg0));
-  } // H5Pget_create_intermediate_group
-
-  public synchronized int H5Pset_create_intermediate_group (int arg0, boolean arg1) throws HDF5LibraryException {
-    return (H5.H5Pset_create_intermediate_group (arg0, arg1));
-  } // H5Pset_create_intermediate_group
-
-  public synchronized long H5Pget_data_transform (int arg0, String[] arg1, long arg2) throws HDF5LibraryException, IllegalArgumentException {
-    return (H5.H5Pget_data_transform (arg0, arg1, arg2));
-  } // H5Pget_data_transform
-
-  public synchronized int H5Pset_data_transform (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_data_transform (arg0, arg1));
-  } // H5Pset_data_transform
-
-  public synchronized int H5Pget_driver (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_driver (arg0));
-  } // H5Pget_driver
-
-  public synchronized void H5Pget_dxpl_multi (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
-    H5.H5Pget_dxpl_multi (arg0, arg1);
-  } // H5Pget_dxpl_multi
-
-  public synchronized void H5Pset_dxpl_multi (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
-    H5.H5Pset_dxpl_multi (arg0, arg1);
-  } // H5Pset_dxpl_multi
-
-  public synchronized int H5Pget_edc_check (int arg0) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_edc_check (arg0));
-  } // H5Pget_edc_check
-
-  public synchronized int H5Pset_edc_check (int arg0, int arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_edc_check (arg0, arg1));
-  } // H5Pset_edc_check
-
-  public synchronized int H5Pget_elink_acc_flags (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_elink_acc_flags (arg0));
-  } // H5Pget_elink_acc_flags
-
-  public synchronized int H5Pset_elink_acc_flags (int arg0, int arg1) throws HDF5LibraryException, IllegalArgumentException {
-    return (H5.H5Pset_elink_acc_flags (arg0, arg1));
-  } // H5Pset_elink_acc_flags
-
-  public synchronized int H5Pget_elink_fapl (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_elink_fapl (arg0));
-  } // H5Pget_elink_fapl
-
-  public synchronized int H5Pset_elink_fapl (int arg0, int arg1) throws HDF5LibraryException {
-    return (H5.H5Pset_elink_fapl (arg0, arg1));
-  } // H5Pset_elink_fapl
-
-  public synchronized int H5Pget_elink_file_cache_size (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_elink_file_cache_size (arg0));
-  } // H5Pget_elink_file_cache_size
-
-  public synchronized void H5Pset_elink_file_cache_size (int arg0, int arg1) throws HDF5LibraryException {
-    H5.H5Pset_elink_file_cache_size (arg0, arg1);
-  } // H5Pset_elink_file_cache_size
-
-  public synchronized long H5Pget_elink_prefix (int arg0, String[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_elink_prefix (arg0, arg1));
-  } // H5Pget_elink_prefix
-
-  public synchronized int H5Pset_elink_prefix (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_elink_prefix (arg0, arg1));
-  } // H5Pset_elink_prefix
-
-  public synchronized int H5Pget_est_link_info (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_est_link_info (arg0, arg1));
-  } // H5Pget_est_link_info
-
-  public synchronized int H5Pset_est_link_info (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
-    return (H5.H5Pset_est_link_info (arg0, arg1, arg2));
-  } // H5Pset_est_link_info
-
-  public synchronized int H5Pget_external (int arg0, int arg1, long arg2, String[] arg3, long[] arg4) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException, IllegalArgumentException {
-    return (H5.H5Pget_external (arg0, arg1, arg2, arg3, arg4));
-  } // H5Pget_external
-
-  public synchronized int H5Pset_external (int arg0, String arg1, long arg2, long arg3) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_external (arg0, arg1, arg2, arg3));
-  } // H5Pset_external
-
-  public synchronized int H5Pget_external_count (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_external_count (arg0));
-  } // H5Pget_external_count
-
-  public synchronized long H5Pget_family_offset (int arg0) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_family_offset (arg0));
-  } // H5Pget_family_offset
-
-  public synchronized int H5Pset_family_offset (int arg0, long arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_family_offset (arg0, arg1));
-  } // H5Pset_family_offset
-
-  public synchronized void H5Pget_fapl_core (int arg0, long[] arg1, boolean[] arg2) throws HDF5LibraryException, NullPointerException {
-    H5.H5Pget_fapl_core (arg0, arg1, arg2);
-  } // H5Pget_fapl_core
-
-  public synchronized int H5Pset_fapl_core (int arg0, long arg1, boolean arg2) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_fapl_core (arg0, arg1, arg2));
-  } // H5Pset_fapl_core
-
-  public synchronized int H5Pget_fapl_direct (int arg0, long[] arg1) throws HDF5LibraryException {
-    return (H5.H5Pget_fapl_direct (arg0, arg1));
-  } // H5Pget_fapl_direct
-
-  public synchronized int H5Pset_fapl_direct (int arg0, long arg1, long arg2, long arg3) throws HDF5LibraryException {
-    return (H5.H5Pset_fapl_direct (arg0, arg1, arg2, arg3));
-  } // H5Pset_fapl_direct
-
-  public synchronized int H5Pget_fapl_family (int arg0, long[] arg1, int[] arg2) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_fapl_family (arg0, arg1, arg2));
-  } // H5Pget_fapl_family
-
-  public synchronized int H5Pset_fapl_family (int arg0, long arg1, int arg2) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_fapl_family (arg0, arg1, arg2));
-  } // H5Pset_fapl_family
-
-  public synchronized boolean H5Pget_fapl_multi (int arg0, int[] arg1, int[] arg2, String[] arg3, long[] arg4) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_fapl_multi (arg0, arg1, arg2, arg3, arg4));
-  } // H5Pget_fapl_multi
-
-  public synchronized void H5Pset_fapl_multi (int arg0, int[] arg1, int[] arg2, String[] arg3, long[] arg4, boolean arg5) throws HDF5LibraryException, NullPointerException {
-    H5.H5Pset_fapl_multi (arg0, arg1, arg2, arg3, arg4, arg5);
-  } // H5Pset_fapl_multi
-
-  public synchronized int H5Pget_fclose_degree (int arg0) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_fclose_degree (arg0));
-  } // H5Pget_fclose_degree
-
-  public synchronized int H5Pset_fclose_degree (int arg0, int arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_fclose_degree (arg0, arg1));
-  } // H5Pset_fclose_degree
-
-  public synchronized int H5Pget_fill_time (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_fill_time (arg0, arg1));
-  } // H5Pget_fill_time
-
-  public synchronized int H5Pset_fill_time (int arg0, int arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_fill_time (arg0, arg1));
-  } // H5Pset_fill_time
-
-  public synchronized int H5Pget_fill_value (int arg0, int arg1, byte[] arg2) throws HDF5Exception {
-    return (H5.H5Pget_fill_value (arg0, arg1, arg2));
-  } // H5Pget_fill_value
-
-  public synchronized int H5Pget_fill_value (int arg0, int arg1, Object arg2) throws HDF5Exception {
-    return (H5.H5Pget_fill_value (arg0, arg1, arg2));
-  } // H5Pget_fill_value
-
-  public synchronized int H5Pset_fill_value (int arg0, int arg1, byte[] arg2) throws HDF5Exception {
-    return (H5.H5Pset_fill_value (arg0, arg1, arg2));
-  } // H5Pset_fill_value
-
-  public synchronized int H5Pset_fill_value (int arg0, int arg1, Object arg2) throws HDF5Exception {
-    return (H5.H5Pset_fill_value (arg0, arg1, arg2));
-  } // H5Pset_fill_value
-
-  public synchronized int H5Pget_filter (int arg0, int arg1, int[] arg2, long[] arg3, int[] arg4, long arg5, String[] arg6, int[] arg7) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_filter (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
-  } // H5Pget_filter
-
-  public synchronized int H5Pset_filter (int arg0, int arg1, int arg2, long arg3, int[] arg4) throws HDF5LibraryException {
-    return (H5.H5Pset_filter (arg0, arg1, arg2, arg3, arg4));
-  } // H5Pset_filter
-
-  public synchronized int H5Pget_filter_by_id (int arg0, int arg1, int[] arg2, long[] arg3, int[] arg4, long arg5, String[] arg6, int[] arg7) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_filter_by_id (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
-  } // H5Pget_filter_by_id
-
-  public synchronized int H5Pget_filter_by_id2 (int arg0, int arg1, int[] arg2, long[] arg3, int[] arg4, long arg5, String[] arg6, int[] arg7) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_filter_by_id2 (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
-  } // H5Pget_filter_by_id2
-
-  public synchronized int H5Pget_gc_references (int arg0, boolean[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_gc_references (arg0, arg1));
-  } // H5Pget_gc_references
-
-  public synchronized boolean H5Pget_gcreferences (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_gcreferences (arg0));
-  } // H5Pget_gcreferences
-
-  public synchronized int H5Pget_gc_reference (int arg0, boolean[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_gc_reference (arg0, arg1));
-  } // H5Pget_gc_reference
-
-  public synchronized int H5Pset_gc_references (int arg0, boolean arg1) throws HDF5LibraryException {
-    return (H5.H5Pset_gc_references (arg0, arg1));
-  } // H5Pset_gc_references
-
-  public synchronized int H5Pget_hyper_vector_size (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_hyper_vector_size (arg0, arg1));
-  } // H5Pget_hyper_vector_size
-
-  public synchronized int H5Pset_hyper_vector_size (int arg0, long arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_hyper_vector_size (arg0, arg1));
-  } // H5Pset_hyper_vector_size
-
-  public synchronized int H5Pget_istore_k (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_istore_k (arg0, arg1));
-  } // H5Pget_istore_k
-
-  public synchronized int H5Pset_istore_k (int arg0, int arg1) throws HDF5LibraryException {
-    return (H5.H5Pset_istore_k (arg0, arg1));
-  } // H5Pset_istore_k
-
-  public synchronized int H5Pget_layout (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_layout (arg0));
-  } // H5Pget_layout
-
-  public synchronized int H5Pset_layout (int arg0, int arg1) throws HDF5LibraryException {
-    return (H5.H5Pset_layout (arg0, arg1));
-  } // H5Pset_layout
-
-  public synchronized int H5Pget_libver_bounds (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_libver_bounds (arg0, arg1));
-  } // H5Pget_libver_bounds
-
-  public synchronized int H5Pset_libver_bounds (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
-    return (H5.H5Pset_libver_bounds (arg0, arg1, arg2));
-  } // H5Pset_libver_bounds
-
-  public synchronized int H5Pget_link_creation_order (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_link_creation_order (arg0));
-  } // H5Pget_link_creation_order
-
-  public synchronized int H5Pset_link_creation_order (int arg0, int arg1) throws HDF5LibraryException {
-    return (H5.H5Pset_link_creation_order (arg0, arg1));
-  } // H5Pset_link_creation_order
-
-  public synchronized int H5Pget_link_phase_change (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_link_phase_change (arg0, arg1));
-  } // H5Pget_link_phase_change
-
-  public synchronized int H5Pset_link_phase_change (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
-    return (H5.H5Pset_link_phase_change (arg0, arg1, arg2));
-  } // H5Pset_link_phase_change
-
-  public synchronized long H5Pget_local_heap_size_hint (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_local_heap_size_hint (arg0));
-  } // H5Pget_local_heap_size_hint
-
-  public synchronized int H5Pset_local_heap_size_hint (int arg0, long arg1) throws HDF5LibraryException {
-    return (H5.H5Pset_local_heap_size_hint (arg0, arg1));
-  } // H5Pset_local_heap_size_hint
-
-  public synchronized H5AC_cache_config_t H5Pget_mdc_config (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_mdc_config (arg0));
-  } // H5Pget_mdc_config
-
-  public synchronized void H5Pset_mdc_config (int arg0, H5AC_cache_config_t arg1) throws HDF5LibraryException {
-    H5.H5Pset_mdc_config (arg0, arg1);
-  } // H5Pset_mdc_config
-
-  public synchronized long H5Pget_meta_block_size (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_meta_block_size (arg0));
-  } // H5Pget_meta_block_size
-
-  public synchronized void H5Pset_meta_block_size (int arg0, long arg1) throws HDF5LibraryException {
-    H5.H5Pset_meta_block_size (arg0, arg1);
-  } // H5Pset_meta_block_size
-
-  public synchronized int H5Pget_nfilters (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_nfilters (arg0));
-  } // H5Pget_nfilters
-
-  public synchronized long H5Pget_nlinks (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_nlinks (arg0));
-  } // H5Pget_nlinks
-
-  public synchronized int H5Pset_nlinks (int arg0, long arg1) throws HDF5LibraryException, IllegalArgumentException {
-    return (H5.H5Pset_nlinks (arg0, arg1));
-  } // H5Pset_nlinks
-
-  public synchronized long H5Pget_nprops (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_nprops (arg0));
-  } // H5Pget_nprops
-
-  public synchronized boolean H5Pget_obj_track_times (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_obj_track_times (arg0));
-  } // H5Pget_obj_track_times
-
-  public synchronized void H5Pset_obj_track_times (int arg0, boolean arg1) throws HDF5LibraryException {
-    H5.H5Pset_obj_track_times (arg0, arg1);
-  } // H5Pset_obj_track_times
-
-  public synchronized int H5Pget_shared_mesg_index (int arg0, int arg1, int[] arg2) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
-    return (H5.H5Pget_shared_mesg_index (arg0, arg1, arg2));
-  } // H5Pget_shared_mesg_index
-
-  public synchronized int H5Pset_shared_mesg_index (int arg0, int arg1, int arg2, int arg3) throws HDF5LibraryException, IllegalArgumentException {
-    return (H5.H5Pset_shared_mesg_index (arg0, arg1, arg2, arg3));
-  } // H5Pset_shared_mesg_index
-
-  public synchronized int H5Pget_shared_mesg_nindexes (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_shared_mesg_nindexes (arg0));
-  } // H5Pget_shared_mesg_nindexes
-
-  public synchronized int H5Pset_shared_mesg_nindexes (int arg0, int arg1) throws HDF5LibraryException, IllegalArgumentException {
-    return (H5.H5Pset_shared_mesg_nindexes (arg0, arg1));
-  } // H5Pset_shared_mesg_nindexes
-
-  public synchronized int H5Pget_shared_mesg_phase_change (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_shared_mesg_phase_change (arg0, arg1));
-  } // H5Pget_shared_mesg_phase_change
-
-  public synchronized int H5Pset_shared_mesg_phase_change (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
-    return (H5.H5Pset_shared_mesg_phase_change (arg0, arg1, arg2));
-  } // H5Pset_shared_mesg_phase_change
-
-  public synchronized long H5Pget_sieve_buf_size (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_sieve_buf_size (arg0));
-  } // H5Pget_sieve_buf_size
-
-  public synchronized void H5Pset_sieve_buf_size (int arg0, long arg1) throws HDF5LibraryException {
-    H5.H5Pset_sieve_buf_size (arg0, arg1);
-  } // H5Pset_sieve_buf_size
-
+  
+  public synchronized int H5Pcreate (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pcreate (arg0));
+  } // H5Pcreate
+  
+  public synchronized int H5Pget (int arg0, String arg1) throws HDF5LibraryException {
+    return (H5.H5Pget (arg0, arg1));
+  } // H5Pget
+  
+  public synchronized int H5Pset (int arg0, String arg1, int arg2) throws HDF5LibraryException {
+    return (H5.H5Pset (arg0, arg1, arg2));
+  } // H5Pset
+  
+  public synchronized int H5Pexist (int arg0, String arg1) throws HDF5LibraryException {
+    return (H5.H5Pexist (arg0, arg1));
+  } // H5Pexist
+  
   public synchronized long H5Pget_size (int arg0, String arg1) throws HDF5LibraryException {
     return (H5.H5Pget_size (arg0, arg1));
   } // H5Pget_size
-
-  public synchronized int H5Pget_sizes (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
-    return (H5.H5Pget_sizes (arg0, arg1));
-  } // H5Pget_sizes
-
-  public synchronized int H5Pset_sizes (int arg0, int arg1, int arg2) throws HDF5LibraryException {
-    return (H5.H5Pset_sizes (arg0, arg1, arg2));
-  } // H5Pset_sizes
-
-  public synchronized int H5Pget_small_data_block_size (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_small_data_block_size (arg0, arg1));
-  } // H5Pget_small_data_block_size
-
-  public synchronized long H5Pget_small_data_block_size_long (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pget_small_data_block_size_long (arg0));
-  } // H5Pget_small_data_block_size_long
-
-  public synchronized int H5Pset_small_data_block_size (int arg0, long arg1) throws HDF5LibraryException {
-    return (H5.H5Pset_small_data_block_size (arg0, arg1));
-  } // H5Pset_small_data_block_size
-
-  public synchronized int H5Pget_sym_k (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
-    return (H5.H5Pget_sym_k (arg0, arg1));
-  } // H5Pget_sym_k
-
-  public synchronized int H5Pset_sym_k (int arg0, int arg1, int arg2) throws HDF5LibraryException {
-    return (H5.H5Pset_sym_k (arg0, arg1, arg2));
-  } // H5Pset_sym_k
-
-  public synchronized int H5Pget_userblock (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pget_userblock (arg0, arg1));
-  } // H5Pget_userblock
-
-  public synchronized int H5Pset_userblock (int arg0, long arg1) throws HDF5LibraryException {
-    return (H5.H5Pset_userblock (arg0, arg1));
-  } // H5Pset_userblock
-
-  public synchronized int H5Pget_version (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
-    return (H5.H5Pget_version (arg0, arg1));
-  } // H5Pget_version
-
+  
+  public synchronized long H5Pget_nprops (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_nprops (arg0));
+  } // H5Pget_nprops
+  
+  public synchronized int H5Pget_class (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_class (arg0));
+  } // H5Pget_class
+  
+  public synchronized int H5Pget_class_parent (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_class_parent (arg0));
+  } // H5Pget_class_parent
+  
+  public synchronized int H5Pequal (int arg0, int arg1) throws HDF5LibraryException {
+    return (H5.H5Pequal (arg0, arg1));
+  } // H5Pequal
+  
+  public synchronized boolean H5P_equal (int arg0, int arg1) throws HDF5LibraryException {
+    return (H5.H5P_equal (arg0, arg1));
+  } // H5P_equal
+  
   public synchronized int H5Pisa_class (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Pisa_class (arg0, arg1));
   } // H5Pisa_class
-
-  public synchronized int H5Pmodify_filter (int arg0, int arg1, int arg2, long arg3, int[] arg4) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pmodify_filter (arg0, arg1, arg2, arg3, arg4));
-  } // H5Pmodify_filter
-
-  public synchronized int H5Punregister (int arg0, String arg1) throws HDF5LibraryException {
-    return (H5.H5Punregister (arg0, arg1));
-  } // H5Punregister
-
+  
+  public synchronized int H5Pcopy_prop (int arg0, int arg1, String arg2) throws HDF5LibraryException {
+    return (H5.H5Pcopy_prop (arg0, arg1, arg2));
+  } // H5Pcopy_prop
+  
   public synchronized int H5Premove (int arg0, String arg1) throws HDF5LibraryException {
     return (H5.H5Premove (arg0, arg1));
   } // H5Premove
-
+  
+  public synchronized int H5Punregister (int arg0, String arg1) throws HDF5LibraryException {
+    return (H5.H5Punregister (arg0, arg1));
+  } // H5Punregister
+  
+  public synchronized int H5Pclose_class (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pclose_class (arg0));
+  } // H5Pclose_class
+  
+  public synchronized int _H5Pclose_class (int arg0) throws HDF5LibraryException {
+    return (H5._H5Pclose_class (arg0));
+  } // _H5Pclose_class
+  
+  public synchronized int H5Pclose (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pclose (arg0));
+  } // H5Pclose
+  
+  public synchronized int H5Pcopy (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pcopy (arg0));
+  } // H5Pcopy
+  
+  public synchronized int H5Pcreate_class_nocb (int arg0, String arg1) throws HDF5LibraryException {
+    return (H5.H5Pcreate_class_nocb (arg0, arg1));
+  } // H5Pcreate_class_nocb
+  
+  public synchronized void H5Pregister2_nocb (int arg0, String arg1, long arg2, byte[] arg3) throws HDF5LibraryException {
+    H5.H5Pregister2_nocb (arg0, arg1, arg2, arg3);
+  } // H5Pregister2_nocb
+  
+  public synchronized void H5Pinsert2_nocb (int arg0, String arg1, long arg2, byte[] arg3) throws HDF5LibraryException {
+    H5.H5Pinsert2_nocb (arg0, arg1, arg2, arg3);
+  } // H5Pinsert2_nocb
+  
+  public synchronized int H5Piterate (int arg0, int[] arg1, H5P_iterate_cb arg2, H5P_iterate_t arg3) throws HDF5LibraryException {
+    return (H5.H5Piterate (arg0, arg1, arg2, arg3));
+  } // H5Piterate
+  
+  public synchronized int H5Pget_attr_phase_change (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_attr_phase_change (arg0, arg1));
+  } // H5Pget_attr_phase_change
+  
+  public synchronized void H5Pset_attr_phase_change (int arg0, int arg1, int arg2) throws HDF5LibraryException {
+    H5.H5Pset_attr_phase_change (arg0, arg1, arg2);
+  } // H5Pset_attr_phase_change
+  
+  public synchronized int H5Pget_attr_creation_order (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_attr_creation_order (arg0));
+  } // H5Pget_attr_creation_order
+  
+  public synchronized int H5Pset_attr_creation_order (int arg0, int arg1) throws HDF5LibraryException {
+    return (H5.H5Pset_attr_creation_order (arg0, arg1));
+  } // H5Pset_attr_creation_order
+  
+  public synchronized boolean H5Pget_obj_track_times (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_obj_track_times (arg0));
+  } // H5Pget_obj_track_times
+  
+  public synchronized void H5Pset_obj_track_times (int arg0, boolean arg1) throws HDF5LibraryException {
+    H5.H5Pset_obj_track_times (arg0, arg1);
+  } // H5Pset_obj_track_times
+  
+  public synchronized int H5Pmodify_filter (int arg0, int arg1, int arg2, long arg3, int[] arg4) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pmodify_filter (arg0, arg1, arg2, arg3, arg4));
+  } // H5Pmodify_filter
+  
+  public synchronized int H5Pset_filter (int arg0, int arg1, int arg2, long arg3, int[] arg4) throws HDF5LibraryException {
+    return (H5.H5Pset_filter (arg0, arg1, arg2, arg3, arg4));
+  } // H5Pset_filter
+  
+  public synchronized int H5Pget_nfilters (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_nfilters (arg0));
+  } // H5Pget_nfilters
+  
+  public synchronized int H5Pget_filter (int arg0, int arg1, int[] arg2, long[] arg3, int[] arg4, long arg5, String[] arg6, int[] arg7) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_filter (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
+  } // H5Pget_filter
+  
+  public synchronized int H5Pget_filter_by_id (int arg0, int arg1, int[] arg2, long[] arg3, int[] arg4, long arg5, String[] arg6, int[] arg7) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_filter_by_id (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
+  } // H5Pget_filter_by_id
+  
+  public synchronized int H5Pget_filter_by_id2 (int arg0, int arg1, int[] arg2, long[] arg3, int[] arg4, long arg5, String[] arg6, int[] arg7) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_filter_by_id2 (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
+  } // H5Pget_filter_by_id2
+  
+  public synchronized boolean H5Pall_filters_avail (int arg0) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pall_filters_avail (arg0));
+  } // H5Pall_filters_avail
+  
   public synchronized int H5Premove_filter (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Premove_filter (arg0, arg1));
   } // H5Premove_filter
-
+  
   public synchronized int H5Pset_deflate (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Pset_deflate (arg0, arg1));
   } // H5Pset_deflate
-
-  public synchronized void H5Pset_fapl_log (int arg0, String arg1, long arg2, long arg3) throws HDF5LibraryException, NullPointerException {
-    H5.H5Pset_fapl_log (arg0, arg1, arg2, arg3);
-  } // H5Pset_fapl_log
-
-  public synchronized int H5Pset_fapl_sec2 (int arg0) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_fapl_sec2 (arg0));
-  } // H5Pset_fapl_sec2
-
-  public synchronized void H5Pset_fapl_split (int arg0, String arg1, int arg2, String arg3, int arg4) throws HDF5LibraryException, NullPointerException {
-    H5.H5Pset_fapl_split (arg0, arg1, arg2, arg3, arg4);
-  } // H5Pset_fapl_split
-
-  public synchronized int H5Pset_fapl_stdio (int arg0) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_fapl_stdio (arg0));
-  } // H5Pset_fapl_stdio
-
-  public synchronized int H5Pset_fapl_windows (int arg0) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_fapl_windows (arg0));
-  } // H5Pset_fapl_windows
-
+  
   public synchronized int H5Pset_fletcher32 (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_fletcher32 (arg0));
   } // H5Pset_fletcher32
-
-  public synchronized int H5Pset_nbit (int arg0) throws HDF5LibraryException {
-    return (H5.H5Pset_nbit (arg0));
-  } // H5Pset_nbit
-
-  public synchronized int H5Pset_scaleoffset (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
-    return (H5.H5Pset_scaleoffset (arg0, arg1, arg2));
-  } // H5Pset_scaleoffset
-
-  public synchronized int H5Pset_shuffle (int arg0) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Pset_shuffle (arg0));
-  } // H5Pset_shuffle
-
+  
+  public synchronized int H5Pget_userblock (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_userblock (arg0, arg1));
+  } // H5Pget_userblock
+  
+  public synchronized int H5Pset_userblock (int arg0, long arg1) throws HDF5LibraryException {
+    return (H5.H5Pset_userblock (arg0, arg1));
+  } // H5Pset_userblock
+  
+  public synchronized int H5Pget_sizes (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
+    return (H5.H5Pget_sizes (arg0, arg1));
+  } // H5Pget_sizes
+  
+  public synchronized int H5Pset_sizes (int arg0, int arg1, int arg2) throws HDF5LibraryException {
+    return (H5.H5Pset_sizes (arg0, arg1, arg2));
+  } // H5Pset_sizes
+  
+  public synchronized int H5Pget_sym_k (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
+    return (H5.H5Pget_sym_k (arg0, arg1));
+  } // H5Pget_sym_k
+  
+  public synchronized int H5Pset_sym_k (int arg0, int arg1, int arg2) throws HDF5LibraryException {
+    return (H5.H5Pset_sym_k (arg0, arg1, arg2));
+  } // H5Pset_sym_k
+  
+  public synchronized int H5Pget_istore_k (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_istore_k (arg0, arg1));
+  } // H5Pget_istore_k
+  
+  public synchronized int H5Pset_istore_k (int arg0, int arg1) throws HDF5LibraryException {
+    return (H5.H5Pset_istore_k (arg0, arg1));
+  } // H5Pset_istore_k
+  
+  public synchronized int H5Pget_shared_mesg_nindexes (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_shared_mesg_nindexes (arg0));
+  } // H5Pget_shared_mesg_nindexes
+  
+  public synchronized int H5Pset_shared_mesg_nindexes (int arg0, int arg1) throws HDF5LibraryException, IllegalArgumentException {
+    return (H5.H5Pset_shared_mesg_nindexes (arg0, arg1));
+  } // H5Pset_shared_mesg_nindexes
+  
+  public synchronized int H5Pget_shared_mesg_index (int arg0, int arg1, int[] arg2) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
+    return (H5.H5Pget_shared_mesg_index (arg0, arg1, arg2));
+  } // H5Pget_shared_mesg_index
+  
+  public synchronized int H5Pset_shared_mesg_index (int arg0, int arg1, int arg2, int arg3) throws HDF5LibraryException, IllegalArgumentException {
+    return (H5.H5Pset_shared_mesg_index (arg0, arg1, arg2, arg3));
+  } // H5Pset_shared_mesg_index
+  
+  public synchronized int H5Pget_shared_mesg_phase_change (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_shared_mesg_phase_change (arg0, arg1));
+  } // H5Pget_shared_mesg_phase_change
+  
+  public synchronized int H5Pset_shared_mesg_phase_change (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
+    return (H5.H5Pset_shared_mesg_phase_change (arg0, arg1, arg2));
+  } // H5Pset_shared_mesg_phase_change
+  
+  public synchronized int H5Pget_alignment (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
+    return (H5.H5Pget_alignment (arg0, arg1));
+  } // H5Pget_alignment
+  
+  public synchronized int H5Pset_alignment (int arg0, long arg1, long arg2) throws HDF5LibraryException {
+    return (H5.H5Pset_alignment (arg0, arg1, arg2));
+  } // H5Pset_alignment
+  
+  public synchronized int H5Pget_driver (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_driver (arg0));
+  } // H5Pget_driver
+  
+  public synchronized long H5Pget_family_offset (int arg0) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_family_offset (arg0));
+  } // H5Pget_family_offset
+  
+  public synchronized int H5Pset_family_offset (int arg0, long arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_family_offset (arg0, arg1));
+  } // H5Pset_family_offset
+  
+  public synchronized int H5Pget_cache (int arg0, int[] arg1, long[] arg2, long[] arg3, double[] arg4) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_cache (arg0, arg1, arg2, arg3, arg4));
+  } // H5Pget_cache
+  
+  public synchronized int H5Pset_cache (int arg0, int arg1, long arg2, long arg3, double arg4) throws HDF5LibraryException {
+    return (H5.H5Pset_cache (arg0, arg1, arg2, arg3, arg4));
+  } // H5Pset_cache
+  
+  public synchronized H5AC_cache_config_t H5Pget_mdc_config (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_mdc_config (arg0));
+  } // H5Pget_mdc_config
+  
+  public synchronized void H5Pset_mdc_config (int arg0, H5AC_cache_config_t arg1) throws HDF5LibraryException {
+    H5.H5Pset_mdc_config (arg0, arg1);
+  } // H5Pset_mdc_config
+  
+  public synchronized int H5Pget_gc_references (int arg0, boolean[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_gc_references (arg0, arg1));
+  } // H5Pget_gc_references
+  
+  public synchronized boolean H5Pget_gcreferences (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_gcreferences (arg0));
+  } // H5Pget_gcreferences
+  
+  public synchronized int H5Pget_gc_reference (int arg0, boolean[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_gc_reference (arg0, arg1));
+  } // H5Pget_gc_reference
+  
+  public synchronized int H5Pset_gc_references (int arg0, boolean arg1) throws HDF5LibraryException {
+    return (H5.H5Pset_gc_references (arg0, arg1));
+  } // H5Pset_gc_references
+  
+  public synchronized int H5Pget_fclose_degree (int arg0) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_fclose_degree (arg0));
+  } // H5Pget_fclose_degree
+  
+  public synchronized int H5Pset_fclose_degree (int arg0, int arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_fclose_degree (arg0, arg1));
+  } // H5Pset_fclose_degree
+  
+  public synchronized long H5Pget_meta_block_size (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_meta_block_size (arg0));
+  } // H5Pget_meta_block_size
+  
+  public synchronized void H5Pset_meta_block_size (int arg0, long arg1) throws HDF5LibraryException {
+    H5.H5Pset_meta_block_size (arg0, arg1);
+  } // H5Pset_meta_block_size
+  
+  public synchronized long H5Pget_sieve_buf_size (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_sieve_buf_size (arg0));
+  } // H5Pget_sieve_buf_size
+  
+  public synchronized void H5Pset_sieve_buf_size (int arg0, long arg1) throws HDF5LibraryException {
+    H5.H5Pset_sieve_buf_size (arg0, arg1);
+  } // H5Pset_sieve_buf_size
+  
+  public synchronized int H5Pget_small_data_block_size (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_small_data_block_size (arg0, arg1));
+  } // H5Pget_small_data_block_size
+  
+  public synchronized long H5Pget_small_data_block_size_long (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_small_data_block_size_long (arg0));
+  } // H5Pget_small_data_block_size_long
+  
+  public synchronized int H5Pset_small_data_block_size (int arg0, long arg1) throws HDF5LibraryException {
+    return (H5.H5Pset_small_data_block_size (arg0, arg1));
+  } // H5Pset_small_data_block_size
+  
+  public synchronized int H5Pget_libver_bounds (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_libver_bounds (arg0, arg1));
+  } // H5Pget_libver_bounds
+  
+  public synchronized int H5Pset_libver_bounds (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
+    return (H5.H5Pset_libver_bounds (arg0, arg1, arg2));
+  } // H5Pset_libver_bounds
+  
+  public synchronized int H5Pget_elink_file_cache_size (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_elink_file_cache_size (arg0));
+  } // H5Pget_elink_file_cache_size
+  
+  public synchronized void H5Pset_elink_file_cache_size (int arg0, int arg1) throws HDF5LibraryException {
+    H5.H5Pset_elink_file_cache_size (arg0, arg1);
+  } // H5Pset_elink_file_cache_size
+  
+  public synchronized int H5Pget_layout (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_layout (arg0));
+  } // H5Pget_layout
+  
+  public synchronized int H5Pset_layout (int arg0, int arg1) throws HDF5LibraryException {
+    return (H5.H5Pset_layout (arg0, arg1));
+  } // H5Pset_layout
+  
+  public synchronized int H5Pget_chunk (int arg0, int arg1, long[] arg2) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
+    return (H5.H5Pget_chunk (arg0, arg1, arg2));
+  } // H5Pget_chunk
+  
+  public synchronized int H5Pset_chunk (int arg0, int arg1, long[] arg2) throws HDF5Exception, NullPointerException, IllegalArgumentException {
+    return (H5.H5Pset_chunk (arg0, arg1, arg2));
+  } // H5Pset_chunk
+  
+  public synchronized int H5Pset_chunk (int arg0, int arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
+    return (H5.H5Pset_chunk (arg0, arg1, arg2));
+  } // H5Pset_chunk
+  
+  public synchronized int H5Pget_external (int arg0, int arg1, long arg2, String[] arg3, long[] arg4) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException, IllegalArgumentException {
+    return (H5.H5Pget_external (arg0, arg1, arg2, arg3, arg4));
+  } // H5Pget_external
+  
+  public synchronized int H5Pset_external (int arg0, String arg1, long arg2, long arg3) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_external (arg0, arg1, arg2, arg3));
+  } // H5Pset_external
+  
+  public synchronized int H5Pget_external_count (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_external_count (arg0));
+  } // H5Pget_external_count
+  
   public synchronized int H5Pset_szip (int arg0, int arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_szip (arg0, arg1, arg2));
   } // H5Pset_szip
-
+  
+  public synchronized int H5Pset_shuffle (int arg0) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_shuffle (arg0));
+  } // H5Pset_shuffle
+  
+  public synchronized int H5Pset_nbit (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pset_nbit (arg0));
+  } // H5Pset_nbit
+  
+  public synchronized int H5Pset_scaleoffset (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
+    return (H5.H5Pset_scaleoffset (arg0, arg1, arg2));
+  } // H5Pset_scaleoffset
+  
+  public synchronized int H5Pget_fill_value (int arg0, int arg1, Object arg2) throws HDF5Exception {
+    return (H5.H5Pget_fill_value (arg0, arg1, arg2));
+  } // H5Pget_fill_value
+  
+  public synchronized int H5Pget_fill_value (int arg0, int arg1, byte[] arg2) throws HDF5Exception {
+    return (H5.H5Pget_fill_value (arg0, arg1, arg2));
+  } // H5Pget_fill_value
+  
+  public synchronized int H5Pset_fill_value (int arg0, int arg1, byte[] arg2) throws HDF5Exception {
+    return (H5.H5Pset_fill_value (arg0, arg1, arg2));
+  } // H5Pset_fill_value
+  
+  public synchronized int H5Pset_fill_value (int arg0, int arg1, Object arg2) throws HDF5Exception {
+    return (H5.H5Pset_fill_value (arg0, arg1, arg2));
+  } // H5Pset_fill_value
+  
+  public synchronized int H5Pfill_value_defined (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pfill_value_defined (arg0, arg1));
+  } // H5Pfill_value_defined
+  
+  public synchronized int H5Pget_alloc_time (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_alloc_time (arg0, arg1));
+  } // H5Pget_alloc_time
+  
+  public synchronized int H5Pset_alloc_time (int arg0, int arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_alloc_time (arg0, arg1));
+  } // H5Pset_alloc_time
+  
+  public synchronized int H5Pget_fill_time (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_fill_time (arg0, arg1));
+  } // H5Pget_fill_time
+  
+  public synchronized int H5Pset_fill_time (int arg0, int arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_fill_time (arg0, arg1));
+  } // H5Pset_fill_time
+  
+  public synchronized void H5Pget_chunk_cache (int arg0, long[] arg1, long[] arg2, double[] arg3) throws HDF5LibraryException, NullPointerException {
+    H5.H5Pget_chunk_cache (arg0, arg1, arg2, arg3);
+  } // H5Pget_chunk_cache
+  
+  public synchronized void H5Pset_chunk_cache (int arg0, long arg1, long arg2, double arg3) throws HDF5LibraryException {
+    H5.H5Pset_chunk_cache (arg0, arg1, arg2, arg3);
+  } // H5Pset_chunk_cache
+  
+  public synchronized long H5Pget_data_transform (int arg0, String[] arg1, long arg2) throws HDF5LibraryException, IllegalArgumentException {
+    return (H5.H5Pget_data_transform (arg0, arg1, arg2));
+  } // H5Pget_data_transform
+  
+  public synchronized int H5Pset_data_transform (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_data_transform (arg0, arg1));
+  } // H5Pset_data_transform
+  
+  public synchronized int H5Pget_buffer (int arg0, byte[] arg1, byte[] arg2) throws HDF5LibraryException, IllegalArgumentException {
+    return (H5.H5Pget_buffer (arg0, arg1, arg2));
+  } // H5Pget_buffer
+  
+  public synchronized long H5Pget_buffer_size (int arg0) throws HDF5LibraryException, IllegalArgumentException {
+    return (H5.H5Pget_buffer_size (arg0));
+  } // H5Pget_buffer_size
+  
+  public synchronized void H5Pset_buffer_size (int arg0, long arg1) throws HDF5LibraryException, IllegalArgumentException {
+    H5.H5Pset_buffer_size (arg0, arg1);
+  } // H5Pset_buffer_size
+  
+  public synchronized int H5Pget_edc_check (int arg0) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_edc_check (arg0));
+  } // H5Pget_edc_check
+  
+  public synchronized int H5Pset_edc_check (int arg0, int arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_edc_check (arg0, arg1));
+  } // H5Pset_edc_check
+  
+  public synchronized int H5Pget_btree_ratios (int arg0, double[] arg1, double[] arg2, double[] arg3) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_btree_ratios (arg0, arg1, arg2, arg3));
+  } // H5Pget_btree_ratios
+  
+  public synchronized int H5Pset_btree_ratios (int arg0, double arg1, double arg2, double arg3) throws HDF5LibraryException {
+    return (H5.H5Pset_btree_ratios (arg0, arg1, arg2, arg3));
+  } // H5Pset_btree_ratios
+  
+  public synchronized int H5Pget_hyper_vector_size (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_hyper_vector_size (arg0, arg1));
+  } // H5Pget_hyper_vector_size
+  
+  public synchronized int H5Pset_hyper_vector_size (int arg0, long arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_hyper_vector_size (arg0, arg1));
+  } // H5Pset_hyper_vector_size
+  
+  public synchronized boolean H5Pget_create_intermediate_group (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_create_intermediate_group (arg0));
+  } // H5Pget_create_intermediate_group
+  
+  public synchronized int H5Pset_create_intermediate_group (int arg0, boolean arg1) throws HDF5LibraryException {
+    return (H5.H5Pset_create_intermediate_group (arg0, arg1));
+  } // H5Pset_create_intermediate_group
+  
+  public synchronized long H5Pget_local_heap_size_hint (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_local_heap_size_hint (arg0));
+  } // H5Pget_local_heap_size_hint
+  
+  public synchronized int H5Pset_local_heap_size_hint (int arg0, long arg1) throws HDF5LibraryException {
+    return (H5.H5Pset_local_heap_size_hint (arg0, arg1));
+  } // H5Pset_local_heap_size_hint
+  
+  public synchronized int H5Pget_link_phase_change (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_link_phase_change (arg0, arg1));
+  } // H5Pget_link_phase_change
+  
+  public synchronized int H5Pset_link_phase_change (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
+    return (H5.H5Pset_link_phase_change (arg0, arg1, arg2));
+  } // H5Pset_link_phase_change
+  
+  public synchronized int H5Pget_est_link_info (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_est_link_info (arg0, arg1));
+  } // H5Pget_est_link_info
+  
+  public synchronized int H5Pset_est_link_info (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
+    return (H5.H5Pset_est_link_info (arg0, arg1, arg2));
+  } // H5Pset_est_link_info
+  
+  public synchronized int H5Pget_link_creation_order (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_link_creation_order (arg0));
+  } // H5Pget_link_creation_order
+  
+  public synchronized int H5Pset_link_creation_order (int arg0, int arg1) throws HDF5LibraryException {
+    return (H5.H5Pset_link_creation_order (arg0, arg1));
+  } // H5Pset_link_creation_order
+  
+  public synchronized int H5Pget_char_encoding (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_char_encoding (arg0));
+  } // H5Pget_char_encoding
+  
+  public synchronized void H5Pset_char_encoding (int arg0, int arg1) throws HDF5LibraryException {
+    H5.H5Pset_char_encoding (arg0, arg1);
+  } // H5Pset_char_encoding
+  
+  public synchronized long H5Pget_nlinks (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_nlinks (arg0));
+  } // H5Pget_nlinks
+  
+  public synchronized int H5Pset_nlinks (int arg0, long arg1) throws HDF5LibraryException, IllegalArgumentException {
+    return (H5.H5Pset_nlinks (arg0, arg1));
+  } // H5Pset_nlinks
+  
+  public synchronized long H5Pget_elink_prefix (int arg0, String[] arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_elink_prefix (arg0, arg1));
+  } // H5Pget_elink_prefix
+  
+  public synchronized int H5Pset_elink_prefix (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_elink_prefix (arg0, arg1));
+  } // H5Pset_elink_prefix
+  
+  public synchronized int H5Pget_elink_fapl (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_elink_fapl (arg0));
+  } // H5Pget_elink_fapl
+  
+  public synchronized int H5Pset_elink_fapl (int arg0, int arg1) throws HDF5LibraryException {
+    return (H5.H5Pset_elink_fapl (arg0, arg1));
+  } // H5Pset_elink_fapl
+  
+  public synchronized int H5Pget_elink_acc_flags (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_elink_acc_flags (arg0));
+  } // H5Pget_elink_acc_flags
+  
+  public synchronized int H5Pset_elink_acc_flags (int arg0, int arg1) throws HDF5LibraryException, IllegalArgumentException {
+    return (H5.H5Pset_elink_acc_flags (arg0, arg1));
+  } // H5Pset_elink_acc_flags
+  
+  public synchronized int H5Pget_copy_object (int arg0) throws HDF5LibraryException {
+    return (H5.H5Pget_copy_object (arg0));
+  } // H5Pget_copy_object
+  
+  public synchronized void H5Pset_copy_object (int arg0, int arg1) throws HDF5LibraryException {
+    H5.H5Pset_copy_object (arg0, arg1);
+  } // H5Pset_copy_object
+  
+  public synchronized int H5Pget_version (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
+    return (H5.H5Pget_version (arg0, arg1));
+  } // H5Pget_version
+  
+  public synchronized void H5Pget_fapl_core (int arg0, long[] arg1, boolean[] arg2) throws HDF5LibraryException, NullPointerException {
+    H5.H5Pget_fapl_core (arg0, arg1, arg2);
+  } // H5Pget_fapl_core
+  
+  public synchronized int H5Pset_fapl_core (int arg0, long arg1, boolean arg2) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_fapl_core (arg0, arg1, arg2));
+  } // H5Pset_fapl_core
+  
+  public synchronized int H5Pget_fapl_direct (int arg0, long[] arg1) throws HDF5LibraryException {
+    return (H5.H5Pget_fapl_direct (arg0, arg1));
+  } // H5Pget_fapl_direct
+  
+  public synchronized int H5Pset_fapl_direct (int arg0, long arg1, long arg2, long arg3) throws HDF5LibraryException {
+    return (H5.H5Pset_fapl_direct (arg0, arg1, arg2, arg3));
+  } // H5Pset_fapl_direct
+  
+  public synchronized int H5Pget_fapl_family (int arg0, long[] arg1, int[] arg2) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_fapl_family (arg0, arg1, arg2));
+  } // H5Pget_fapl_family
+  
+  public synchronized int H5Pset_fapl_family (int arg0, long arg1, int arg2) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_fapl_family (arg0, arg1, arg2));
+  } // H5Pset_fapl_family
+  
+  public synchronized boolean H5Pget_fapl_multi (int arg0, int[] arg1, int[] arg2, String[] arg3, long[] arg4) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pget_fapl_multi (arg0, arg1, arg2, arg3, arg4));
+  } // H5Pget_fapl_multi
+  
+  public synchronized void H5Pset_fapl_multi (int arg0, int[] arg1, int[] arg2, String[] arg3, long[] arg4, boolean arg5) throws HDF5LibraryException, NullPointerException {
+    H5.H5Pset_fapl_multi (arg0, arg1, arg2, arg3, arg4, arg5);
+  } // H5Pset_fapl_multi
+  
+  public synchronized void H5Pset_fapl_log (int arg0, String arg1, long arg2, long arg3) throws HDF5LibraryException, NullPointerException {
+    H5.H5Pset_fapl_log (arg0, arg1, arg2, arg3);
+  } // H5Pset_fapl_log
+  
+  public synchronized int H5Pset_fapl_sec2 (int arg0) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_fapl_sec2 (arg0));
+  } // H5Pset_fapl_sec2
+  
+  public synchronized void H5Pset_fapl_split (int arg0, String arg1, int arg2, String arg3, int arg4) throws HDF5LibraryException, NullPointerException {
+    H5.H5Pset_fapl_split (arg0, arg1, arg2, arg3, arg4);
+  } // H5Pset_fapl_split
+  
+  public synchronized int H5Pset_fapl_stdio (int arg0) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_fapl_stdio (arg0));
+  } // H5Pset_fapl_stdio
+  
+  public synchronized int H5Pset_fapl_windows (int arg0) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Pset_fapl_windows (arg0));
+  } // H5Pset_fapl_windows
+  
+  public synchronized void H5PLset_loading_state (int arg0) throws HDF5LibraryException {
+    H5.H5PLset_loading_state (arg0);
+  } // H5PLset_loading_state
+  
+  public synchronized int H5PLget_loading_state () throws HDF5LibraryException {
+    return (H5.H5PLget_loading_state ());
+  } // H5PLget_loading_state
+  
   public synchronized byte[] H5Rcreate (int arg0, String arg1, int arg2, int arg3) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Rcreate (arg0, arg1, arg2, arg3));
   } // H5Rcreate
-
+  
   public synchronized int H5Rdereference (int arg0, int arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Rdereference (arg0, arg1, arg2));
   } // H5Rdereference
-
+  
   public synchronized long H5Rget_name (int arg0, int arg1, byte[] arg2, String[] arg3, long arg4) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Rget_name (arg0, arg1, arg2, arg3, arg4));
   } // H5Rget_name
-
+  
   public synchronized int H5Rget_obj_type (int arg0, int arg1, byte[] arg2, int[] arg3) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Rget_obj_type (arg0, arg1, arg2, arg3));
   } // H5Rget_obj_type
-
+  
   public synchronized int H5Rget_region (int arg0, int arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Rget_region (arg0, arg1, arg2));
   } // H5Rget_region
-
+  
   public synchronized int H5Sclose (int arg0) throws HDF5LibraryException {
     return (H5.H5Sclose (arg0));
   } // H5Sclose
-
+  
   public synchronized int H5Scopy (int arg0) throws HDF5LibraryException {
     return (H5.H5Scopy (arg0));
   } // H5Scopy
-
+  
   public synchronized int H5Screate (int arg0) throws HDF5LibraryException {
     return (H5.H5Screate (arg0));
   } // H5Screate
-
+  
   public synchronized int H5Screate_simple (int arg0, long[] arg1, long[] arg2) throws HDF5Exception, NullPointerException {
     return (H5.H5Screate_simple (arg0, arg1, arg2));
   } // H5Screate_simple
-
+  
   public synchronized int H5Sdecode (byte[] arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sdecode (arg0));
   } // H5Sdecode
-
+  
   public synchronized byte[] H5Sencode (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sencode (arg0));
   } // H5Sencode
-
+  
   public synchronized int H5Sextent_copy (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Sextent_copy (arg0, arg1));
   } // H5Sextent_copy
-
+  
   public synchronized boolean H5Sextent_equal (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Sextent_equal (arg0, arg1));
   } // H5Sextent_equal
-
+  
   public synchronized int H5Sget_select_bounds (int arg0, long[] arg1, long[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sget_select_bounds (arg0, arg1, arg2));
   } // H5Sget_select_bounds
-
+  
   public synchronized long H5Sget_select_elem_npoints (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_select_elem_npoints (arg0));
   } // H5Sget_select_elem_npoints
-
+  
   public synchronized int H5Sget_select_elem_pointlist (int arg0, long arg1, long arg2, long[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sget_select_elem_pointlist (arg0, arg1, arg2, arg3));
   } // H5Sget_select_elem_pointlist
-
+  
   public synchronized int H5Sget_select_hyper_blocklist (int arg0, long arg1, long arg2, long[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sget_select_hyper_blocklist (arg0, arg1, arg2, arg3));
   } // H5Sget_select_hyper_blocklist
-
+  
   public synchronized long H5Sget_select_hyper_nblocks (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_select_hyper_nblocks (arg0));
   } // H5Sget_select_hyper_nblocks
-
+  
   public synchronized long H5Sget_select_npoints (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_select_npoints (arg0));
   } // H5Sget_select_npoints
-
+  
   public synchronized int H5Sget_select_type (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_select_type (arg0));
   } // H5Sget_select_type
-
+  
   public synchronized int H5Sget_simple_extent_dims (int arg0, long[] arg1, long[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sget_simple_extent_dims (arg0, arg1, arg2));
   } // H5Sget_simple_extent_dims
-
+  
   public synchronized int H5Sget_simple_extent_ndims (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_simple_extent_ndims (arg0));
   } // H5Sget_simple_extent_ndims
-
+  
   public synchronized long H5Sget_simple_extent_npoints (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_simple_extent_npoints (arg0));
   } // H5Sget_simple_extent_npoints
-
+  
   public synchronized int H5Sget_simple_extent_type (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_simple_extent_type (arg0));
   } // H5Sget_simple_extent_type
-
+  
   public synchronized boolean H5Sis_simple (int arg0) throws HDF5LibraryException {
     return (H5.H5Sis_simple (arg0));
   } // H5Sis_simple
-
-  public synchronized int H5Soffset_simple (int arg0, long[] arg1) throws HDF5Exception, NullPointerException {
-    return (H5.H5Soffset_simple (arg0, arg1));
-  } // H5Soffset_simple
-
+  
   public synchronized int H5Soffset_simple (int arg0, byte[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Soffset_simple (arg0, arg1));
   } // H5Soffset_simple
-
+  
+  public synchronized int H5Soffset_simple (int arg0, long[] arg1) throws HDF5Exception, NullPointerException {
+    return (H5.H5Soffset_simple (arg0, arg1));
+  } // H5Soffset_simple
+  
   public synchronized int H5Sselect_all (int arg0) throws HDF5LibraryException {
     return (H5.H5Sselect_all (arg0));
   } // H5Sselect_all
-
+  
   public synchronized int H5Sselect_elements (int arg0, int arg1, int arg2, long[][] arg3) throws HDF5Exception, HDF5LibraryException, NullPointerException {
     return (H5.H5Sselect_elements (arg0, arg1, arg2, arg3));
   } // H5Sselect_elements
-
+  
   public synchronized int H5Sselect_hyperslab (int arg0, int arg1, long[] arg2, long[] arg3, long[] arg4, long[] arg5) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Sselect_hyperslab (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Sselect_hyperslab
-
+  
   public synchronized int H5Sselect_hyperslab (int arg0, int arg1, byte[] arg2, byte[] arg3, byte[] arg4, byte[] arg5) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Sselect_hyperslab (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Sselect_hyperslab
-
+  
   public synchronized int H5Sselect_none (int arg0) throws HDF5LibraryException {
     return (H5.H5Sselect_none (arg0));
   } // H5Sselect_none
-
+  
   public synchronized boolean H5Sselect_valid (int arg0) throws HDF5LibraryException {
     return (H5.H5Sselect_valid (arg0));
   } // H5Sselect_valid
-
+  
   public synchronized int H5Sset_extent_none (int arg0) throws HDF5LibraryException {
     return (H5.H5Sset_extent_none (arg0));
   } // H5Sset_extent_none
-
+  
   public synchronized int H5Sset_extent_simple (int arg0, int arg1, long[] arg2, long[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sset_extent_simple (arg0, arg1, arg2, arg3));
   } // H5Sset_extent_simple
-
+  
   public synchronized int H5Sset_extent_simple (int arg0, int arg1, byte[] arg2, byte[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sset_extent_simple (arg0, arg1, arg2, arg3));
   } // H5Sset_extent_simple
-
+  
   public synchronized int H5Tarray_create (int arg0, int arg1, long[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tarray_create (arg0, arg1, arg2));
   } // H5Tarray_create
-
+  
   public synchronized int H5Tclose (int arg0) throws HDF5LibraryException {
     return (H5.H5Tclose (arg0));
   } // H5Tclose
-
+  
   public synchronized void H5Tcommit (int arg0, String arg1, int arg2, int arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Tcommit (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Tcommit
-
-  public synchronized int H5Tcommit1 (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Tcommit1 (arg0, arg1, arg2));
-  } // H5Tcommit1
-
+  
   public synchronized void H5Tcommit_anon (int arg0, int arg1, int arg2, int arg3) throws HDF5LibraryException {
     H5.H5Tcommit_anon (arg0, arg1, arg2, arg3);
   } // H5Tcommit_anon
-
+  
   public synchronized boolean H5Tcommitted (int arg0) throws HDF5LibraryException {
     return (H5.H5Tcommitted (arg0));
   } // H5Tcommitted
-
+  
   public synchronized void H5Tcompiler_conv (int arg0, int arg1) throws HDF5LibraryException {
     H5.H5Tcompiler_conv (arg0, arg1);
   } // H5Tcompiler_conv
-
+  
   public synchronized void H5Tconvert (int arg0, int arg1, long arg2, byte[] arg3, byte[] arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Tconvert (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Tconvert
-
+  
   public synchronized int H5Tcopy (int arg0) throws HDF5LibraryException {
     return (H5.H5Tcopy (arg0));
   } // H5Tcopy
-
+  
   public synchronized int H5Tcreate (int arg0, long arg1) throws HDF5LibraryException {
     return (H5.H5Tcreate (arg0, arg1));
   } // H5Tcreate
-
+  
   public synchronized int H5Tcreate (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tcreate (arg0, arg1));
   } // H5Tcreate
-
+  
   public synchronized int H5Tdecode (byte[] arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tdecode (arg0));
   } // H5Tdecode
-
+  
   public synchronized boolean H5Tdetect_class (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tdetect_class (arg0, arg1));
   } // H5Tdetect_class
-
+  
   public synchronized int H5Tencode (int arg0, byte[] arg1, long arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tencode (arg0, arg1, arg2));
   } // H5Tencode
-
+  
   public synchronized int H5Tenum_create (int arg0) throws HDF5LibraryException {
     return (H5.H5Tenum_create (arg0));
   } // H5Tenum_create
-
-  public synchronized void H5Tenum_insert (int arg0, String arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException {
-    H5.H5Tenum_insert (arg0, arg1, arg2);
-  } // H5Tenum_insert
-
+  
   public synchronized int H5Tenum_insert (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tenum_insert (arg0, arg1, arg2));
   } // H5Tenum_insert
-
+  
+  public synchronized void H5Tenum_insert (int arg0, String arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException {
+    H5.H5Tenum_insert (arg0, arg1, arg2);
+  } // H5Tenum_insert
+  
   public synchronized int H5Tenum_insert (int arg0, String arg1, int[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tenum_insert (arg0, arg1, arg2));
   } // H5Tenum_insert
-
-  public synchronized String H5Tenum_nameof (int arg0, byte[] arg1, long arg2) throws HDF5LibraryException, NullPointerException {
-    return (H5.H5Tenum_nameof (arg0, arg1, arg2));
-  } // H5Tenum_nameof
-
+  
   public synchronized int H5Tenum_nameof (int arg0, int[] arg1, String[] arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tenum_nameof (arg0, arg1, arg2, arg3));
   } // H5Tenum_nameof
-
+  
+  public synchronized String H5Tenum_nameof (int arg0, byte[] arg1, long arg2) throws HDF5LibraryException, NullPointerException {
+    return (H5.H5Tenum_nameof (arg0, arg1, arg2));
+  } // H5Tenum_nameof
+  
   public synchronized int H5Tenum_valueof (int arg0, String arg1, int[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tenum_valueof (arg0, arg1, arg2));
   } // H5Tenum_valueof
-
+  
   public synchronized void H5Tenum_valueof (int arg0, String arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException {
     H5.H5Tenum_valueof (arg0, arg1, arg2);
   } // H5Tenum_valueof
-
+  
   public synchronized boolean H5Tequal (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tequal (arg0, arg1));
   } // H5Tequal
-
+  
   public synchronized int H5Tget_array_dims (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tget_array_dims (arg0, arg1));
   } // H5Tget_array_dims
-
+  
   public synchronized int H5Tget_array_dims2 (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tget_array_dims2 (arg0, arg1));
   } // H5Tget_array_dims2
-
+  
   public synchronized int H5Tget_array_ndims (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_array_ndims (arg0));
   } // H5Tget_array_ndims
-
+  
   public synchronized int H5Tget_class (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_class (arg0));
   } // H5Tget_class
-
+  
   public synchronized String H5Tget_class_name (int arg0) {
     return (H5.H5Tget_class_name (arg0));
   } // H5Tget_class_name
-
+  
   public synchronized int H5Tget_create_plist (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_create_plist (arg0));
   } // H5Tget_create_plist
-
+  
   public synchronized int H5Tget_cset (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_cset (arg0));
   } // H5Tget_cset
-
+  
   public synchronized int H5Tset_cset (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_cset (arg0, arg1));
   } // H5Tset_cset
-
+  
   public synchronized int H5Tget_ebias (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_ebias (arg0));
   } // H5Tget_ebias
-
+  
   public synchronized void H5Tset_ebias (int arg0, long arg1) throws HDF5LibraryException {
     H5.H5Tset_ebias (arg0, arg1);
   } // H5Tset_ebias
-
+  
   public synchronized int H5Tset_ebias (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_ebias (arg0, arg1));
   } // H5Tset_ebias
-
+  
   public synchronized long H5Tget_ebias_long (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_ebias_long (arg0));
   } // H5Tget_ebias_long
-
-  public synchronized int H5Tget_fields (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
-    return (H5.H5Tget_fields (arg0, arg1));
-  } // H5Tget_fields
-
+  
   public synchronized void H5Tget_fields (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     H5.H5Tget_fields (arg0, arg1);
   } // H5Tget_fields
-
-  public synchronized int H5Tset_fields (int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) throws HDF5LibraryException {
-    return (H5.H5Tset_fields (arg0, arg1, arg2, arg3, arg4, arg5));
-  } // H5Tset_fields
-
+  
+  public synchronized int H5Tget_fields (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
+    return (H5.H5Tget_fields (arg0, arg1));
+  } // H5Tget_fields
+  
   public synchronized void H5Tset_fields (int arg0, long arg1, long arg2, long arg3, long arg4, long arg5) throws HDF5LibraryException {
     H5.H5Tset_fields (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Tset_fields
-
+  
+  public synchronized int H5Tset_fields (int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) throws HDF5LibraryException {
+    return (H5.H5Tset_fields (arg0, arg1, arg2, arg3, arg4, arg5));
+  } // H5Tset_fields
+  
   public synchronized int H5Tget_inpad (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_inpad (arg0));
   } // H5Tget_inpad
-
+  
   public synchronized int H5Tset_inpad (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_inpad (arg0, arg1));
   } // H5Tset_inpad
-
+  
   public synchronized int H5Tget_member_class (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tget_member_class (arg0, arg1));
   } // H5Tget_member_class
-
+  
   public synchronized int H5Tget_member_index (int arg0, String arg1) {
     return (H5.H5Tget_member_index (arg0, arg1));
   } // H5Tget_member_index
-
+  
   public synchronized String H5Tget_member_name (int arg0, int arg1) {
     return (H5.H5Tget_member_name (arg0, arg1));
   } // H5Tget_member_name
-
+  
   public synchronized long H5Tget_member_offset (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tget_member_offset (arg0, arg1));
   } // H5Tget_member_offset
-
+  
   public synchronized int H5Tget_member_type (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tget_member_type (arg0, arg1));
   } // H5Tget_member_type
-
+  
   public synchronized int H5Tget_member_value (int arg0, int arg1, int[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tget_member_value (arg0, arg1, arg2));
   } // H5Tget_member_value
-
+  
   public synchronized void H5Tget_member_value (int arg0, int arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException {
     H5.H5Tget_member_value (arg0, arg1, arg2);
   } // H5Tget_member_value
-
+  
   public synchronized int H5Tget_native_type (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_native_type (arg0));
   } // H5Tget_native_type
-
+  
   public synchronized int H5Tget_native_type (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tget_native_type (arg0, arg1));
   } // H5Tget_native_type
-
+  
   public synchronized int H5Tget_nmembers (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_nmembers (arg0));
   } // H5Tget_nmembers
-
+  
   public synchronized int H5Tget_norm (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_norm (arg0));
   } // H5Tget_norm
-
+  
   public synchronized int H5Tset_norm (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_norm (arg0, arg1));
   } // H5Tset_norm
-
+  
   public synchronized int H5Tget_offset (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_offset (arg0));
   } // H5Tget_offset
-
+  
   public synchronized void H5Tset_offset (int arg0, long arg1) throws HDF5LibraryException {
     H5.H5Tset_offset (arg0, arg1);
   } // H5Tset_offset
-
+  
   public synchronized int H5Tset_offset (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_offset (arg0, arg1));
   } // H5Tset_offset
-
+  
   public synchronized int H5Tget_order (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_order (arg0));
   } // H5Tget_order
-
+  
   public synchronized int H5Tset_order (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_order (arg0, arg1));
   } // H5Tset_order
-
+  
   public synchronized int H5Tget_pad (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tget_pad (arg0, arg1));
   } // H5Tget_pad
-
+  
   public synchronized int H5Tset_pad (int arg0, int arg1, int arg2) throws HDF5LibraryException {
     return (H5.H5Tset_pad (arg0, arg1, arg2));
   } // H5Tset_pad
-
+  
   public synchronized int H5Tget_precision (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_precision (arg0));
   } // H5Tget_precision
-
+  
   public synchronized void H5Tset_precision (int arg0, long arg1) throws HDF5LibraryException {
     H5.H5Tset_precision (arg0, arg1);
   } // H5Tset_precision
-
+  
   public synchronized int H5Tset_precision (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_precision (arg0, arg1));
   } // H5Tset_precision
-
+  
   public synchronized long H5Tget_precision_long (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_precision_long (arg0));
   } // H5Tget_precision_long
-
+  
   public synchronized int H5Tget_sign (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_sign (arg0));
   } // H5Tget_sign
-
+  
   public synchronized int H5Tset_sign (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_sign (arg0, arg1));
   } // H5Tset_sign
-
+  
   public synchronized int H5Tget_size (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_size (arg0));
   } // H5Tget_size
-
+  
   public synchronized int H5Tset_size (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_size (arg0, arg1));
   } // H5Tset_size
-
+  
   public synchronized void H5Tset_size (int arg0, long arg1) throws HDF5LibraryException {
     H5.H5Tset_size (arg0, arg1);
   } // H5Tset_size
-
+  
   public synchronized long H5Tget_size_long (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_size_long (arg0));
   } // H5Tget_size_long
-
+  
   public synchronized int H5Tget_strpad (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_strpad (arg0));
   } // H5Tget_strpad
-
+  
   public synchronized int H5Tset_strpad (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_strpad (arg0, arg1));
   } // H5Tset_strpad
-
+  
   public synchronized int H5Tget_super (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_super (arg0));
   } // H5Tget_super
-
+  
   public synchronized String H5Tget_tag (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_tag (arg0));
   } // H5Tget_tag
-
+  
   public synchronized int H5Tset_tag (int arg0, String arg1) throws HDF5LibraryException {
     return (H5.H5Tset_tag (arg0, arg1));
   } // H5Tset_tag
-
+  
   public synchronized int H5Tinsert (int arg0, String arg1, long arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tinsert (arg0, arg1, arg2, arg3));
   } // H5Tinsert
-
+  
   public synchronized boolean H5Tis_variable_str (int arg0) throws HDF5LibraryException {
     return (H5.H5Tis_variable_str (arg0));
   } // H5Tis_variable_str
-
+  
   public synchronized int H5Tlock (int arg0) throws HDF5LibraryException {
     return (H5.H5Tlock (arg0));
   } // H5Tlock
-
+  
   public synchronized int H5Topen (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Topen (arg0, arg1, arg2));
   } // H5Topen
-
+  
   public synchronized int H5Tpack (int arg0) throws HDF5LibraryException {
     return (H5.H5Tpack (arg0));
   } // H5Tpack
-
+  
   public synchronized int H5Tvlen_create (int arg0) throws HDF5LibraryException {
     return (H5.H5Tvlen_create (arg0));
   } // H5Tvlen_create
-
+  
   public synchronized int H5Zfilter_avail (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Zfilter_avail (arg0));
   } // H5Zfilter_avail
-
+  
   public synchronized int H5Zget_filter_info (int arg0) throws HDF5LibraryException {
     return (H5.H5Zget_filter_info (arg0));
   } // H5Zget_filter_info
-
+  
   public synchronized int H5Zunregister (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Zunregister (arg0));
   } // H5Zunregister
@@ -1904,10 +2019,10 @@ public class HDF5Lib {
 
     String name = classValue.getSimpleName();
     name = name.replaceFirst ("java.lang.", "");
-    name = name.replaceFirst ("ncsa.hdf.hdf5lib.callbacks.", "");
-    name = name.replaceFirst ("ncsa.hdf.hdf5lib.exceptions.", "");
-    name = name.replaceFirst ("ncsa.hdf.hdf5lib.structs.", "");
-    name = name.replaceFirst ("ncsa.hdf.hdf5lib.", "");
+    name = name.replaceFirst ("hdf.hdf5lib.callbacks.", "");
+    name = name.replaceFirst ("hdf.hdf5lib.exceptions.", "");
+    name = name.replaceFirst ("hdf.hdf5lib.structs.", "");
+    name = name.replaceFirst ("hdf.hdf5lib.", "");
 
     return (name);
   

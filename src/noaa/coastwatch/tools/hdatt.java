@@ -39,7 +39,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import ncsa.hdf.hdflib.HDFConstants;
+import hdf.hdflib.HDFConstants;
 import noaa.coastwatch.io.HDFLib;
 import noaa.coastwatch.io.HDFReader;
 import noaa.coastwatch.io.HDFWriter;
