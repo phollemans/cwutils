@@ -57,14 +57,6 @@
 		E96D87B8161661420009B833 /* build.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = build.xml; sourceTree = "<group>"; };
 		E96D87B9161661420009B833 /* cwf.install4j */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = cwf.install4j; sourceTree = "<group>"; };
 		E96D87BA161661420009B833 /* cwf.properties */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cwf.properties; sourceTree = "<group>"; };
-		E96D87BF161661420009B833 /* binned_border_c.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_border_c.hdf; sourceTree = "<group>"; };
-		E96D87C0161661420009B833 /* binned_border_h.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_border_h.hdf; sourceTree = "<group>"; };
-		E96D87C1161661420009B833 /* binned_border_i.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_border_i.hdf; sourceTree = "<group>"; };
-		E96D87C2161661420009B833 /* binned_border_l.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_border_l.hdf; sourceTree = "<group>"; };
-		E96D87C3161661420009B833 /* binned_GSHHS_c.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_GSHHS_c.hdf; sourceTree = "<group>"; };
-		E96D87C4161661420009B833 /* binned_GSHHS_h.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_GSHHS_h.hdf; sourceTree = "<group>"; };
-		E96D87C5161661420009B833 /* binned_GSHHS_i.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_GSHHS_i.hdf; sourceTree = "<group>"; };
-		E96D87C6161661420009B833 /* binned_GSHHS_l.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_GSHHS_l.hdf; sourceTree = "<group>"; };
 		E96D87C7161661420009B833 /* etopo5.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = etopo5.hdf; sourceTree = "<group>"; };
 		E96D87CA161661420009B833 /* 2009_045_0958_n18_wj.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2009_045_0958_n18_wj.hdf; sourceTree = "<group>"; };
 		E96D87CB161661420009B833 /* 2009_054_1004_n18_wj.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2009_054_1004_n18_wj.hdf; sourceTree = "<group>"; };
@@ -1028,6 +1020,14 @@
 		E9D3A73E1B06D3C10027AA5F /* saxon9he.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = saxon9he.jar; path = scripts/saxon9he.jar; sourceTree = "<group>"; };
 		E9DD13B6184D6E1200139E22 /* areadirblock.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = areadirblock.xml; path = mcidas/areadirblock.xml; sourceTree = "<group>"; };
 		E9DEDF7E19C278320028193C /* SplashScreenManager.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = SplashScreenManager.java; sourceTree = "<group>"; };
+		E9E41A851E2B0B6B00426F4F /* binned_border_c.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_border_c.hdf; sourceTree = "<group>"; };
+		E9E41A861E2B0B6B00426F4F /* binned_border_h.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_border_h.hdf; sourceTree = "<group>"; };
+		E9E41A871E2B0B6B00426F4F /* binned_border_i.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_border_i.hdf; sourceTree = "<group>"; };
+		E9E41A881E2B0B6B00426F4F /* binned_border_l.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_border_l.hdf; sourceTree = "<group>"; };
+		E9E41A891E2B0B6B00426F4F /* binned_GSHHS_c.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_GSHHS_c.hdf; sourceTree = "<group>"; };
+		E9E41A8A1E2B0B6B00426F4F /* binned_GSHHS_h.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_GSHHS_h.hdf; sourceTree = "<group>"; };
+		E9E41A8B1E2B0B6B00426F4F /* binned_GSHHS_i.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_GSHHS_i.hdf; sourceTree = "<group>"; };
+		E9E41A8C1E2B0B6B00426F4F /* binned_GSHHS_l.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_GSHHS_l.hdf; sourceTree = "<group>"; };
 		E9E9BCC91976110200B85B5E /* TileCacheKey.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileCacheKey.java; path = io/tile/TileCacheKey.java; sourceTree = "<group>"; };
 		E9E9BCCA1989F37300B85B5E /* NCTileSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = NCTileSource.java; path = io/tile/NCTileSource.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9E9BCD1198C9AFC00B85B5E /* TileCachedGrid.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileCachedGrid.java; path = io/tile/TileCachedGrid.java; sourceTree = "<group>"; };
@@ -1163,14 +1163,7 @@
 		E96D87BE161661420009B833 /* render */ = {
 			isa = PBXGroup;
 			children = (
-				E96D87BF161661420009B833 /* binned_border_c.hdf */,
-				E96D87C0161661420009B833 /* binned_border_h.hdf */,
-				E96D87C1161661420009B833 /* binned_border_i.hdf */,
-				E96D87C2161661420009B833 /* binned_border_l.hdf */,
-				E96D87C3161661420009B833 /* binned_GSHHS_c.hdf */,
-				E96D87C4161661420009B833 /* binned_GSHHS_h.hdf */,
-				E96D87C5161661420009B833 /* binned_GSHHS_i.hdf */,
-				E96D87C6161661420009B833 /* binned_GSHHS_l.hdf */,
+				E9E41A841E2B0B6B00426F4F /* feature */,
 				E96D87C7161661420009B833 /* etopo5.hdf */,
 			);
 			path = render;
@@ -2527,6 +2520,21 @@
 				E9DD13B6184D6E1200139E22 /* areadirblock.xml */,
 			);
 			name = mcidas;
+			sourceTree = "<group>";
+		};
+		E9E41A841E2B0B6B00426F4F /* feature */ = {
+			isa = PBXGroup;
+			children = (
+				E9E41A851E2B0B6B00426F4F /* binned_border_c.hdf */,
+				E9E41A861E2B0B6B00426F4F /* binned_border_h.hdf */,
+				E9E41A871E2B0B6B00426F4F /* binned_border_i.hdf */,
+				E9E41A881E2B0B6B00426F4F /* binned_border_l.hdf */,
+				E9E41A891E2B0B6B00426F4F /* binned_GSHHS_c.hdf */,
+				E9E41A8A1E2B0B6B00426F4F /* binned_GSHHS_h.hdf */,
+				E9E41A8B1E2B0B6B00426F4F /* binned_GSHHS_i.hdf */,
+				E9E41A8C1E2B0B6B00426F4F /* binned_GSHHS_l.hdf */,
+			);
+			path = feature;
 			sourceTree = "<group>";
 		};
 		E9EA4322164A16EE006AD294 /* trans */ = {
