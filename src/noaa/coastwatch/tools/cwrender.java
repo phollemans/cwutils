@@ -76,9 +76,13 @@
            - Issue: We needed an alternative to the slash character for 
              splitting command line arguments, because sometimes variable names
              can contain a slash.
+           2017/01/18, PFH
+          - Changes: Added a --date option.
+          - Issue: We needed a way to override the date displayed in plot
+            legends, because sometimes the time-related metadata is incorrect.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -102,8 +106,11 @@ import java.awt.image.IndexColorModel;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
@@ -144,9 +151,11 @@ import noaa.coastwatch.render.WindBarbSymbol;
 import noaa.coastwatch.tools.ResourceManager;
 import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DateFormatter;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.TimePeriod;
 import noaa.coastwatch.util.UnitFactory;
 import noaa.coastwatch.util.trans.EarthTransform2D;
 import ucar.units.Unit;
@@ -183,6 +192,7 @@ import ucar.units.Unit;
  *
  * <p>
  * -a, --noantialias <br>
+ * -D, --date=STARTDATE[/ENDDATE] <br>
  * -f, --format=TYPE <br>
  * -i, --indexed <br>
  * -I, --imagecolors=NUMBER <br>
@@ -414,6 +424,17 @@ import ucar.units.Unit;
  *   graphics, such as in the case of very small fonts.  This option
  *   only effects raster image output formats such as PNG, GIF and
  *   JPEG.</dd>
+ *
+ *   <dt>-D, --date=STARTDATE[/ENDDATE]</dt>
+ *
+ *   <dd>Specifies that the plot legend should be rendered with the
+ *   given date(s).  By default the date is automatically detected
+ *   from the input file metadata.  In some cases the metadata is incorrect
+ *   or the date and time information is not available.  In these cases,
+ *   the data start and end date can be manually specified by this option, in 
+ *   ISO date/time format 'yyyy-mm-ddThh:mm:ssZ'.  For example, 
+ *   Dec 19, 2013 at 11 pm UTC would be specified as '2013-12-19T23:00:00Z'.
+ *   If the data has no known end date, the end date value may be omitted.</dd>
  *
  *   <dt>-f, --format=TYPE</dt>
  *
@@ -1035,6 +1056,9 @@ public class cwrender {
 
   /** The standard deviation units for normalization windows. */
   private static final double STDEV_UNITS = 1.5;
+  
+  /** ISO date format. */
+  private static final String ISO_DATE_FMT = "yyyy-MM-dd'T'HH:mm:ssX";
 
   /** Name of program. */
   private static final String PROG = "cwrender";
@@ -1100,6 +1124,7 @@ public class cwrender {
     Option ticklabelsOpt = cmd.addStringOption ("ticklabels");
     Option versionOpt = cmd.addBooleanOption ("version");
     Option splitOpt = cmd.addStringOption ("split");
+    Option dateOpt = cmd.addStringOption ('D', "date");    
     try { cmd.parse (argv); }
     catch (OptionException e) {
       System.err.println (PROG + ": " + e.getMessage());
@@ -1231,6 +1256,7 @@ public class cwrender {
     String watermark = (String) cmd.getOptionValue (watermarkOpt);
     boolean watermarkshadow = (cmd.getOptionValue (watermarkshadowOpt) != null);
     String ticklabels = (String) cmd.getOptionValue (ticklabelsOpt);
+    String date = (String) cmd.getOptionValue (dateOpt);
     
     try {
 
@@ -1839,6 +1865,28 @@ public class cwrender {
       IconElement logoIcon = null;
       if (!nolegends) logoIcon = IconElementFactory.create (logo);
 
+      // Set custom start/end date
+      // -------------------------
+      if (date != null) {
+        String[] dateArray = date.split (ToolServices.getSplitRegex());
+        ArrayList<TimePeriod> periodList = new ArrayList<TimePeriod>();
+        if (dateArray.length > 2) {
+          System.err.println (PROG + ": Invalid start/end date specification: " + date);
+          System.exit (2);
+        } // if
+        for (String dateStr : dateArray) {
+          Date dateValue = null;
+          try { dateValue = DateFormatter.parseDate (dateStr, ISO_DATE_FMT); }
+          catch (ParseException e) { }
+          if (dateValue == null) {
+            System.err.println (PROG + ": Error parsing date: " + dateStr);
+            System.exit (2);
+          } // if
+          periodList.add (new TimePeriod (dateValue, 0));
+        } // for
+        info.setTimePeriods (periodList);
+      } // if
+
       // Write image
       // -----------
       final Renderable renderable = EarthImageWriter.write (view, 
@@ -1885,10 +1933,13 @@ public class cwrender {
 "  -v, --verbose              Print verbose messages.\n" +
 "  --version                  Show version information.\n" +
 "  --split=EXPRESSION         Set the command line parameter split expression.\n" +
-"                               EXPRESSION may be any regular expression.\n" +
+"                              EXPRESSION may be any regular expression.\n" +
 "\n" +
 "Output content and format options:\n" +
 "  -a, --noantialias          Do not smooth lines and fonts.\n" +
+"  -D, --date=STARTDATE[/ENDDATE]\n" +
+"                             Set the plot legend start and end date in ISO\n" +
+"                              format 'yyyy-mm-ddThh:mm:ssZ'\n" +
 "  -f, --format=TYPE          Set the output format.  TYPE may be\n" +
 "                              'png', 'gif', 'jpg', 'tif', 'pdf', or\n" +
 "                              'auto'.\n" +

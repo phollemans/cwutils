@@ -4,10 +4,14 @@
   PURPOSE: Geographic vector based projection.
    AUTHOR: Peter Hollemans
      DATE: 2005/08/05
-  CHANGES: n/a
+  CHANGES: 2017/01/18, PFH
+           - Changes: Added setting of dims protected variable in constructor.
+           - Issue: We were getting a null pointer exception when 
+             EarthTransform.transform() was running because it uses dims.length
+             to create a DataLocation object.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -91,6 +95,9 @@ public class GeoVectorProjection
     this.lonArray = (double[]) lonArray.clone();
     this.latLocIndex = latLocIndex;
     this.lonLocIndex = lonLocIndex;
+    this.dims = new int[2];
+    dims[latLocIndex] = latArray.length;
+    dims[lonLocIndex] = lonArray.length;
 
   } // GeoVectorProjection constructor
 

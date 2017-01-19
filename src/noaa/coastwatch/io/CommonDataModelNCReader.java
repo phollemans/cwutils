@@ -85,9 +85,14 @@
            - Changes: Updates attribute names for geostationary projection data.
            - Issue: The attribute names were changed from mixed case to all
              lower case.
+           2017/01/18, PFH
+           - Changes: Added detection of non-regularly spaced cylindrical 
+             projections.
+           - Issue: Non-regularly spaced product set projections were being 
+             treated as regularly spaced geographic projections.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -131,11 +136,10 @@ import noaa.coastwatch.util.TimePeriod;
 import noaa.coastwatch.util.trans.CDMGridMappedProjection;
 import noaa.coastwatch.util.trans.DataProjection;
 import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.GeoVectorProjection;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
 import noaa.coastwatch.util.trans.SwathProjection;
-
 import noaa.coastwatch.util.trans.EllipsoidPerspectiveProjection;
-
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Attribute;
@@ -487,31 +491,49 @@ utilities when:
       // --------------------------------
       if (coordSystem.isProductSet()) {
 
-        // Get latitude and longitude spacing and center
+        // Check for regular spacing
+        // -------------------------
+        CoordinateAxis1D latAxis1D = (CoordinateAxis1D) latAxis;
+        CoordinateAxis1D lonAxis1D = (CoordinateAxis1D) lonAxis;
+        double[] latValues = latAxis1D.getCoordValues();
+        double[] lonValues = lonAxis1D.getCoordValues();
+        boolean isRegular = (latAxis1D.isRegular() && lonAxis1D.isRegular());
+
+        // Create regularly spaced geographic projection
         // ---------------------------------------------
-        double[] latValues = ((CoordinateAxis1D) latAxis).getCoordValues();
-        double[] lonValues = ((CoordinateAxis1D) lonAxis).getCoordValues();
-        int[] dims = new int[] {latValues.length, lonValues.length};
-        double[] pixelDims = new double[] {
-          (latValues[0] - latValues[latValues.length-1]) / (latValues.length-1),
-          (lonValues[lonValues.length-1] - lonValues[0]) / (lonValues.length-1)
-        };
-        EarthLocation center = new EarthLocation (
-          (latAxis.getMinValue() + latAxis.getMaxValue())/2,
-          (lonAxis.getMinValue() + lonAxis.getMaxValue())/2
-        );
+        if (isRegular) {
 
-        // Create GEO projection
-        // ---------------------
-        try {
-          trans = MapProjectionFactory.getInstance().create (GCTP.GEO, 0,
-            new double[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, GCTP.WGS84,
-            dims, center, pixelDims);
-        } // try
-        catch (NoninvertibleTransformException e) {
-          throw new RuntimeException ("Got non-invertible transform creating geographic projection");
-        } // catch
+          // Get latitude and longitude spacing and center
+          // ---------------------------------------------
+          int[] dims = new int[] {latValues.length, lonValues.length};
+          double[] pixelDims = new double[] {
+            (latValues[0] - latValues[latValues.length-1]) / (latValues.length-1),
+            (lonValues[lonValues.length-1] - lonValues[0]) / (lonValues.length-1)
+          };
+          EarthLocation center = new EarthLocation (
+            (latAxis.getMinValue() + latAxis.getMaxValue())/2,
+            (lonAxis.getMinValue() + lonAxis.getMaxValue())/2
+          );
 
+          // Create GEO projection
+          // ---------------------
+          try {
+            trans = MapProjectionFactory.getInstance().create (GCTP.GEO, 0,
+              new double[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, GCTP.WGS84,
+              dims, center, pixelDims);
+          } // try
+          catch (NoninvertibleTransformException e) {
+            throw new RuntimeException ("Got non-invertible transform creating geographic projection");
+          } // catch
+
+        } // if
+
+        // Create generic cylindrical projection
+        // -------------------------------------
+        else {
+          trans = new GeoVectorProjection (latValues, lonValues, Grid.ROWS, Grid.COLS);
+        } // else
+      
       } // if
     
       // Create swath projection

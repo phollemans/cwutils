@@ -14,9 +14,14 @@
            2004/10/01, PFH, added composite attribute to append()
            2004/10/05, PFH, modified to extend MetadataContainer
            2010/02/22, PFH, modified getStartDate/getEndDate to use min/max
+           2017/01/18, PFH
+           - Changes: Added setTimePeriods() method.
+           - Issue: We needed an easy way to modify the time periods of an
+             existing info object without the complications of copying or 
+             cloning.
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2004-2017, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -200,13 +205,33 @@ public class EarthDataInfo
   /**
    * Gets the list of time periods for data recording.
    *
+   * @return the list of time periods.
+   *
    * @see #getDate
+   * @see #setTimePeriods
    */
-  public List getTimePeriods () {
+  public List<TimePeriod> getTimePeriods () {
 
-    return ((List) periodList.clone());
+    return ((List<TimePeriod>) periodList.clone());
 
   } // getTimePeriods
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the list of time periods for data recording.
+   *
+   * @param periodList the new list of time periods.
+   *
+   * @see #getTimePeriods
+   */
+  public void setTimePeriods (
+    List<TimePeriod> periodList
+  ) {
+
+    this.periodList = new ArrayList<TimePeriod> (periodList);
+
+  } // setTimePeriods
 
   ////////////////////////////////////////////////////////////
 

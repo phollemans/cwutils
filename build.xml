@@ -134,6 +134,13 @@
     </exec>
   </target>
 
+  <target name="test-man" depends="doc"
+    description="Copies the CWF man pages into the install directory">
+    <copy todir="${install.dir}/doc/man">
+      <fileset dir="doc/man"/>
+    </copy>
+  </target>
+
   <target name="api-zip"
     description="Creates Java API ZIP file in doc/">
     <zip destfile="doc/api.zip">
@@ -247,6 +254,7 @@
   <target name="upload"
     description="Uploads the latest packages to the Terrenus server">
     <exec executable="${pkg.dir}/send.sh" dir="${pkg.dir}"/>
+    <exec executable="${pkg.dir}/check.sh" dir="${pkg.dir}"/>
   </target>
 
   <!-- Define cleanup targets -->
