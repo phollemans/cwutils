@@ -33,9 +33,15 @@
              backwards compatibility.
            - Issue: Scripts that call the new version of cwregister were 
              failing.
+           2017/01/19, PFH
+           - Changes: Added a method called "direct".
+           - Issue: We want to have some way of comparing the accuracy of 
+             remapping methods to the ultimate direct mapping approach which
+             may be slow but very accurate.  So we now have a "direct" method
+             of remapping to compare the results to other methods.
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -61,6 +67,7 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.GridResampler;
 import noaa.coastwatch.util.InverseGridResampler;
 import noaa.coastwatch.util.MixedGridResampler;
+import noaa.coastwatch.util.DirectGridResampler;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.LocationFilter;
 import noaa.coastwatch.util.VIIRSBowtieFilter;
@@ -153,22 +160,42 @@ import noaa.coastwatch.util.ExpressionFilter;
  *   <dt>-M, --method=TYPE</dt>
  *
  *   <dd>The registration resampling method.  Valid methods are
- *   'inverse' and 'mixed'.  The inverse resampling method
- *   divides the destination into rectangles of bounded physical
- *   size (see the <b>--polysize</b> option), and computes
- *   polynomial approximations for the coordinate transforms on
- *   each rectangle in order to determine a source coordinate for
- *   each destination coordinate.  This is the default method and
- *   recommended when the source coordinate transform is smooth
- *   and continuous in the destination coordinate space such as
- *   with AVHRR LAC swath data.  The mixed resampling method
- *   divides the source into rectangles of certain dimensions
- *   (see the <b>--rectsize</b> option), computes polynomials on
- *   each rectangle similar to the inverse method, and follows
- *   with a single pixel interpolation.  This method is
- *   recommended when the source coordinate transform is
- *   discontinuous at regular intervals in the destination
- *   coordinate space, such as with MODIS swath data.</dd>
+ *   'inverse', 'mixed', and 'direct':
+ *   <ul>
+ *
+ *     <li> <b>Inverse</b> - This method divides the destination grid into a
+ *     series of rectangles of physical size no larger than that specified by
+ *     the <b>--polysize</b> option (100 km by default), and computes polynomial
+ *     coefficients for approximating the coordinate transform within each
+ *     rectangle.  Each polynomial approximation computes a source coordinate
+ *     in the source grid for each destination coordinate in the destination
+ *     grid rectangle.  This is the default method of registration and is
+ *     recommended when the source earth location data is smooth and continuous
+ *     such as with AVHRR LAC swath data.</li>
+ *
+ *     <li> <b>Mixed</b> - This method divides the source grid into rectangles
+ *     of a size specified by the  <b>--rectsize</b> option (50x50 pixels by
+ *     default), and computes polynomial coefficients on each rectangle that
+ *     are used to approximate a source coordinate in the source grid rectangle
+ *     for each destination coordinate in the corresponding destination grid
+ *     rectangle.  The method follows up with a single pixel interpolation to
+ *     fill in pixels that fell between destination rectangles bounds.  This
+ *     method is recommended when the source earth location data is
+ *     discontinuous at regular intervals, such as with MODIS swath data.  In
+ *     this case, the <b>--rectsize</b> option must be used to specify rectangles
+ *     that are compatible with the discontinuity.  For example if the source
+ *     earth location data is discontinuous at 16 pixel intervals along the
+ *     row direction, then the rectangle size should be set to 16x16.</li>
+ *
+ *     <li> <b>Direct</b> - This method is the simplest and performs a direct
+ *     lookup of the source coordinate in the source grid for each destination
+ *     coordinate in the destination grid.  This method is available mainly
+ *     as a comparison for testing the accuracy and speed of the other methods,
+ *     since it is expected to run more slowly but have the highest accuracy.
+ *     Note that the direct method cannot currently be used if the source grid
+ *     contains discontinuous earth location data (such as MODIS swath data).</li>
+ *
+ *   </ul></dd>
  *
  *   <dt>-O, --overwrite=TYPE</dt>
  *
@@ -482,6 +509,18 @@ public final class cwregister {
         
       } // else if
 
+
+      // TODO: We should move the creation of the specific resampler into
+      // a factory.
+
+
+      // Create direct resampler
+      // -----------------------
+      else if (method.equals ("direct")) {
+        resampler = new DirectGridResampler (inputInfo.getTransform(),
+          masterTrans);
+      } // else if
+
       // Invalid method
       // --------------
       else {
@@ -565,7 +604,7 @@ public final class cwregister {
 "  -h, --help                 Show this help message.\n" +
 "  -m, --match=PATTERN        Register only variables matching the pattern.\n"+
 "  -M, --method=TYPE          Set resampling method.  TYPE may be\n" +
-"                              'inverse', or 'mixed'.\n" +
+"                              'inverse', 'mixed', or 'direct'.\n" +
 "  -O, --overwrite=TYPE       Set overwrite method.  TYPE may be 'always',\n" +
 "                              'never', or 'closer' (advanced users).\n" +
 "  -p, --polysize=KILOMETERS  Set polynomial rectangle width and height\n" +

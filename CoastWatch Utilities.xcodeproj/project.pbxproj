@@ -1014,6 +1014,7 @@
 		E9A91443196E33A700ABC12D /* LRUTileCache.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = LRUTileCache.java; path = io/tile/LRUTileCache.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9AF25A51BE43D6E00A2E69F /* LocationFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = LocationFilter.java; sourceTree = "<group>"; };
 		E9B50A141652F29C00D997D5 /* GeographicProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GeographicProjection.java; sourceTree = "<group>"; };
+		E9BCD1871E31995600984958 /* DirectGridResampler.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DirectGridResampler.java; sourceTree = "<group>"; };
 		E9CA7C6D1AD5DD2800C2C96C /* CFNC4Writer.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CFNC4Writer.java; sourceTree = "<group>"; };
 		E9D2E0671D063B790079783B /* ExpressionFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ExpressionFilter.java; sourceTree = "<group>"; };
 		E9D2E0681D07A04A0079783B /* VIIRSBowtieFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = VIIRSBowtieFilter.java; sourceTree = "<group>"; };
@@ -2414,6 +2415,7 @@
 				E96D8C33161661420009B833 /* DataVariable.java */,
 				E96D8C34161661420009B833 /* DataVariableIterator.java */,
 				E96D8C35161661420009B833 /* DateFormatter.java */,
+				E9BCD1871E31995600984958 /* DirectGridResampler.java */,
 				E96D8C36161661420009B833 /* DoubleIterator.java */,
 				E96D8C37161661420009B833 /* EarthArea.java */,
 				E96D8C38161661420009B833 /* EarthDataInfo.java */,
