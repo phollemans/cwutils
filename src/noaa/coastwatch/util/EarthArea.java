@@ -1,22 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthArea.java
-  PURPOSE: A class to work with areas on a sphere.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/09/10
-  CHANGES: 2002/10/02, PFH, added addAll
-           2002/10/03, PFH, added getExtremes
-           2002/11/28, PFH, added equals method
-           2002/12/06, PFH, added Cloneable interface
-           2002/12/10, PFH, modified explore for iterative algorithm,
-             added check for valid center location in constructor
-           2002/12/17, PFH, fixed problem in singular center explore
-           2003/11/16, PFH, added more documentation to getExtremes()
-           2004/03/20, PFH, modified explore() to include start surroundings
-           2005/05/27, PFH, added intersection() and isEmpty()
+
+     File: EarthArea.java
+   Author: Peter Hollemans
+     Date: 2002/09/10
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: Legend.java
-  PURPOSE: A class to set up the functionality of legend classes.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/09/26
-  CHANGES: 2004/10/08, PFH, added DEFAULT_STROKE 
+
+     File: Legend.java
+   Author: Peter Hollemans
+     Date: 2002/09/26
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,20 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwangles.java
-  PURPOSE: To compute various angle parameters for an earth data file.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/12/23
-  CHANGES: 2003/01/16, PFH, modified for solar zenith class
-           2004/01/23, PFH, modified to use SPLIT_REGEX and updated docs
-           2004/07/02, PFH, modified for new info object
-           2004/10/05, PFH, modified to use EarthTransform.getDimensions()
-           2005/03/15, PFH, reformatted documentation and usage note
-           2005/04/23, PFH, added ToolServices.setCommandLine()
-           2007/04/19, PFH, added version printing
-           2010/03/25, PFH, added extra writer.close() on abnormal exit
+
+     File: cwangles.java
+   Author: Peter Hollemans
+     Date: 2002/12/23
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

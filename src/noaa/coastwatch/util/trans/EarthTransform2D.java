@@ -1,23 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthTransform2D.java
-  PURPOSE: Performs two-dimensional earth transform computations.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/05/30
-  CHANGES: 2014/03/05, PFH
-           - Changes: Added getWorldAxes(), isOrientable() and private norm() 
-             methods with test code.
-           - Issue: We needed a way to detect at the EarthTransform level
-             the orientation of north and east vectors in order to create
-             an orientation affine transform for display.  This seems like
-             the logical place to put that code.  Also, the isOrientable() 
-             method provides a hint to users of whether or not the transform
-             should be oriented differently for display.
-           2016/01/19, PFH
-           - Changes: Updated to new logging API.
+
+     File: EarthTransform2D.java
+   Author: Peter Hollemans
+     Date: 2005/05/30
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

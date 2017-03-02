@@ -1,25 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EnhancementChooser.java
-  PURPOSE: To select a data enhancement.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/09/07
-  CHANGES: 2004/01/15, PFH, updated Javadocs
-           2004/02/17, PFH
-             - changed enhancement property to function
-             - added TabComponent interface
-             - removed explicit property change support
-           2004/02/19, PFH
-             - added getRange()
-             - fixed normalization out of slider range problem
-           2004/05/22, PFH, modified to use GUIServices.getIcon()
-           2005/02/02, PFH, modified to allow non-integer range bounds
-           2005/02/08, PFH, corrected problems when min>max in setRange()
-           2005/05/18, PFH, fixed normalize problem when no valid stdev
-           2006/01/12, PFH, disabled norm button for log enhancements
+
+     File: EnhancementChooser.java
+   Author: Peter Hollemans
+     Date: 2003/09/07
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

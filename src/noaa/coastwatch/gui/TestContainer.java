@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TestContainer.java
-  PURPOSE: A class to test Java GUI containers.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/12/02
-  CHANGES: 2004/02/23, PFH, added showFrame()
+
+     File: TestContainer.java
+   Author: Peter Hollemans
+     Date: 2002/12/02
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2002, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

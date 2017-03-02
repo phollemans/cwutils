@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: FullScreenWindow.java
-  PURPOSE: Displays a full screen panel and menu.
-   AUTHOR: Peter Hollemans
-     DATE: 2007/07/20
-  CHANGES: n/a
+
+     File: FullScreenWindow.java
+   Author: Peter Hollemans
+     Date: 2007/07/20
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2007, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2007 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

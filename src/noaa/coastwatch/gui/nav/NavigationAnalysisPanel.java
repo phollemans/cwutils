@@ -1,23 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: NavigationAnalysisPanel.java
-  PURPOSE: Allows users to perform analysis on image navigation quality.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/12/11
-  CHANGES: 2007/07/30, PFH, changed DrawingProxy to LightTable
-           2014/03/31, PFH
-           - Changes: Updated to use new SolidBackground constructor
-           - Issue: The constructor for SolidBackground was throwing a
-             NullPointerException on construction.
-           2015/02/27, PFH
-           - Changes: Replaced deprecated dataView.getUpsideDown() call
-             with dataView.getOrientationAffine().getType().
-           - Issue: We created a more sophisticted way of flexibly orienting the
-             data view, so the old method was deprecated.  TODO: This change
-             needs to be tested!
- 
+
+     File: NavigationAnalysisPanel.java
+   Author: Peter Hollemans
+     Date: 2006/12/11
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

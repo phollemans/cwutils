@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ImageViewPanel.java
-  PURPOSE: A class to display an image and allow manipulation.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/01/18
-  CHANGES: 2007/07/27, PFH, changed DrawingProxy to LightTable
+
+     File: ImageViewPanel.java
+   Author: Peter Hollemans
+     Date: 2003/01/18
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2003, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

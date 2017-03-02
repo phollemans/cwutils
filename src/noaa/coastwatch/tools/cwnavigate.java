@@ -1,20 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwnavigate.java
-  PURPOSE: To add navigation corrections to CoastWatch HDF files.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/11/21
-  CHANGES: 2004/01/23, PFH, modified to use SPLIT_REGEX and updated docs
-           2004/06/09, PFH, modified to use new reader-based nav update
-           2004/10/05, PFH, modified to use EarthTransform.getDimensions()
-           2005/03/15, PFH, reformatted documentation and usage note
-           2005/04/23, PFH, added ToolServices.setCommandLine()
-           2005/09/19, PFH, added extra verbose output
-           2007/04/19, PFH, added version printing
-           2012/12/04, PFH, added call to canUpdateNavigation for reader
+
+     File: cwnavigate.java
+   Author: Peter Hollemans
+     Date: 2002/11/21
 
   CoastWatch Software Library and Utilities
-  Copyright 2002-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

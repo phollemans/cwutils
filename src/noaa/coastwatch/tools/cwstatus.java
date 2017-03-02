@@ -1,35 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwstatus.java
-  PURPOSE: To show the CoastWatch data processing server status.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/01/21
-  CHANGES: 2003/03/17, PFH, fixed selected pass / async update problem
-           2003/07/28, PFH, added --operator option
-           2003/10/31, PFH, added split pane
-           2004/01/10, PFH, added splash window
-           2004/04/06, PFH, added --nosplash option
-           2004/06/01, PFH, updated to handle no-argument command line
-           2004/06/18, PFH, added update agent
-           2005/02/01, PFH, added error dialog to replace standard error
-           2005/03/16, PFH, reformatted documentation and usage note
-           2005/04/04, PFH, added menu item icons
-           2005/04/06, PFH, modified help dialog size
-           2005/04/23, PFH, added ToolServices.setCommandLine()
-           2005/06/20, PFH, added minimized window icon
-           2006/03/11, PFH, modified menu keymask for better Mac integration
-           2006/03/19, PFH, modified default panel sizes for small screens
-           2006/06/23, PFH, changed --nosplash to --splash command line option
-           2006/11/04, PFH, changed to use LONG_NAME for GUI components
-           2007/04/23, PFH, added version printing
-           2014/09/15, PFH
-           - Changes: Removed splash screen options and replaced splash
-             functionality with JRE builtin capability.
-           - Issues: In some cases we were getting a slow startup, so we want
-             to make sure the user knows there is something happening.
+
+     File: cwstatus.java
+   Author: Peter Hollemans
+     Date: 2003/01/21
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

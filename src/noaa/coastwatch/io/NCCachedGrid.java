@@ -1,20 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: NCCachedGrid.java
-  PURPOSE: A subclass of CachedGrid that works with NetCDF files.
-   AUTHOR: Peter Hollemans
-     DATE: 2013/02/06
-  CHANGES: 2013/04/15, PFH, extended to handle rank>2 datasets
-           2014/04/15, PFH
-           - Changes: Added new constructor with NetCDF variable name
-             and private NetCDF variable name string.
-           - Issue: We needed to be able to use a grid as a prototype
-             with a NetCDF variable name that doesn't match the variable
-             accessed in the file.  So, we store the name of the variable
-             to access separately, possibly distinct from the grid name.
+
+     File: NCCachedGrid.java
+   Author: Peter Hollemans
+     Date: 2013/02/06
 
   CoastWatch Software Library and Utilities
-  Copyright 2013-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2013 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

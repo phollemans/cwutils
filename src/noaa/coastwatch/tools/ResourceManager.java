@@ -1,27 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ResourceManager.java
-  PURPOSE: To manage user-specific resources.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/18
-  CHANGES: 2005/07/07, PFH, added checkResources()
-           2006/02/28, PFH, added Coral Reef Watch overlays
-           2006/10/27, PFH, modified base resource directory to be OS-specific
-           2006/12/29, PFH, made overlay manager non-static
-           2007/08/03, PFH, made feedback from checkResources() more verbose
-           2007/12/19, PFH, modified comments for getOverlayManager()
-           2015/05/15, PFH
-           - Changes: Updated to write the VM options file, and to use a
-             more dependable location for preferences files under Windows.
-           - Issue: We needed to write the VM options file based on user
-             preferences being set so that tools that run with the VM options
-             startup using them.  At the same time, there were reports on
-             Windows of the preferences directory being inaccessible, and
-             we discovered that the directory is in a new location, best
-             accessible using the APPDATA environment variable.
-           
+
+     File: ResourceManager.java
+   Author: Peter Hollemans
+     Date: 2004/05/18
+
   CoastWatch Software Library and Utilities
-  Copyright 2004-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

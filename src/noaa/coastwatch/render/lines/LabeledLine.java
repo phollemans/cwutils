@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: LabeledLine.java
-  PURPOSE: Holds line label and segment information.
-   AUTHOR: Peter Hollemans
-     DATE: 2015/06/15
-  CHANGES: n/a
+
+     File: LabeledLine.java
+   Author: Peter Hollemans
+     Date: 2015/06/15
 
   CoastWatch Software Library and Utilities
-  Copyright 2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2015 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

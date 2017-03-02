@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: SavePanel.java
-  PURPOSE: Defines the abstract save panel methods.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/03
-  CHANGES: 2006/11/09, PFH, changed write() to write(File)
+
+     File: SavePanel.java
+   Author: Peter Hollemans
+     Date: 2004/05/03
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

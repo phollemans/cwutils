@@ -1,12 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: PlotSymbolFactory.java
-  PURPOSE: To manage a set of predefined plot symbols.
-   AUTHOR: Peter Hollemans
-     DATE: 2008/06/16
+
+     File: PlotSymbolFactory.java
+   Author: Peter Hollemans
+     Date: 2008/06/16
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2008, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2008 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

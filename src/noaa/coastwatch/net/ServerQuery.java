@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ServerQuery.java
-  PURPOSE: To perform queries to a CoastWatch data server.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/01/18
-  CHANGES: 2002/05/08, PFH, added javadoc, package, and reformatted
-           2003/01/13, PFH, added getURL
-           2003/03/24, PFH, modified to return multiple result lines
-           2003/04/29, PFH, added URL data encoding using UTF-8
-           2004/06/01, PFH, added getHost() method
+
+     File: ServerQuery.java
+   Author: Peter Hollemans
+     Date: 2002/01/18
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

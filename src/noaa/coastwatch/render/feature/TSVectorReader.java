@@ -1,22 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TSVectorReader.java
-  PURPOSE: To provide TeraScan format vector data.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/09/22
-  CHANGES: 2002/09/30, PFH, added file constructor
-           2002/10/11, PFH, moved to render package
-           2002/12/05, PFH, added coast and inland databases
-           2002/12/06, PFH, modified select for new stored area
-           2002/12/29, PFH, renamed data files to end in ".tsv"
-           2003/05/11, PFH, changed internal variable list to vectorList
-           2003/12/10, PFH, changed LineFeatureReader to LineFeatureSource
-           2004/05/21, PFH, fixed URL to path conversion problem on Win32
-           2005/05/26, PFH, changed vectorList to featureList
-           2006/06/27, PFH, deprecated
+
+     File: TSVectorReader.java
+   Author: Peter Hollemans
+     Date: 2002/09/22
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

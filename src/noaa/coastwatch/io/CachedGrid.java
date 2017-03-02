@@ -1,34 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CachedGrid.java
-  PURPOSE: A subclass of Grid that employs caching.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/06/17
-  CHANGES: 2002/07/20, PFH, added navigation copy to constructor
-           2002/07/22, PFH, modified getRows for performance improvement
-           2002/10/21, PFH, added getValue(int,int)
-           2002/10/31, PFH, modified for tile and read/write caching
-           2002/11/12, PFH, modified protected constructor
-           2002/11/14, PFH, added getDataStream
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2004/06/10, PFH, changed resetCache() to protected access
-           2004/07/10, PFH, added setOptimizedCacheSize()
-           2013/02/12, PFH, added getMaxTiles()
-           2017/01/14, PFH
-           - Changes: Updated setOptimizedCacheSize method to handle
-             larger number of tiles.
-           - Issue: In some cases, read and write caching during registration
-             was taking an abnormally long time.  This was because tiles 
-             were being removed from the cache before finishing the end of each
-             registered row in a destination grid.  The access order of
-             tiles was drawing a ragged line across the source input grid.
-             Therefore, we need to have a cache size that at least holds
-             a ragged line in either the rows or columns dimensions.  So we use
-             the approximate value of 1.5 times the number of tiles needed
-             to span a row or column of the grid, whichever is larger.
+
+     File: CachedGrid.java
+   Author: Peter Hollemans
+     Date: 2002/06/17
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2017, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

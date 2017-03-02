@@ -1,20 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ImageSavePanel.java
-  PURPOSE: Allows the user to choose save options for rendered images.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/03
-  CHANGES: 2005/01/30, PFH, modified write() method to catch more exceptions
-           2005/02/14, PFH, modified to handle different logos
-           2005/03/26, PFH, modified to clone view before writing with legends
-           2005/03/28, PFH, added GIF saving
-           2005/05/30, PFH, modified for world files
-           2006/07/07, PFH, modified for image colors
-           2006/11/14, PFH, updated write() to handle more options
-           2006/11/16, PFH, added isIndexable
+
+     File: ImageSavePanel.java
+   Author: Peter Hollemans
+     Date: 2004/05/03
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

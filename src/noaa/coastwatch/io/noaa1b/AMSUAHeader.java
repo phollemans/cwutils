@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: AMSUAHeader.java
-  PURPOSE: Reads NOAA 1b format AMSU-A data header records.
-   AUTHOR: Peter Hollemans
-     DATE: 2007/11/16
-  CHANGES: n/a
+
+     File: AMSUAHeader.java
+   Author: Peter Hollemans
+     Date: 2007/11/16
 
   CoastWatch Software Library and Utilities
-  Copyright 2007, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2007 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

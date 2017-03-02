@@ -1,16 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: StepEnhancement.java
-  PURPOSE: A class to implement step data enhancements.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/07/21
-  CHANGES: 2002/10/10, PFH, added reverse
-           2003/09/14, PFH, added getSteps
-           2004/02/17, PFH, added equals()
-           2005/02/05, PFH, added describe()
+
+     File: StepEnhancement.java
+   Author: Peter Hollemans
+     Date: 2002/07/21
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

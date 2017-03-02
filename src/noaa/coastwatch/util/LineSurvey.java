@@ -1,14 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: LineSurvey.java
-  PURPOSE: Data survey for a line between two points.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/03/26
-  CHANGES: 2005/02/07, PFH, modified to use default EarthLocation formatting
-           2005/02/13, PFH, modified result formatting
+
+     File: LineSurvey.java
+   Author: Peter Hollemans
+     Date: 2004/03/26
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

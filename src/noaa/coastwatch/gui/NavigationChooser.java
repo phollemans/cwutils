@@ -1,15 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: NavigationChooser.java
-  PURPOSE: Allows the modification of navigation corrections.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/06/07
-  CHANGES: 2006/03/15, PFH, modified to use GUIServices.getIconToggle() and
-             JToolBar for the navigation mode buttons
-           2012/12/04, PFH, updated to use getSelectedValuesList()
+
+     File: NavigationChooser.java
+   Author: Peter Hollemans
+     Date: 2004/06/07
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

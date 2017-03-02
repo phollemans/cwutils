@@ -1,16 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: PoliticalOverlay.java
-  PURPOSE: An overlay for political lines.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/03/26
-  CHANGES: 2004/04/04, PFH, added serialization
-           2005/03/22, PFH, added transparency handling
-           2006/01/13, PFH, added check for null color
-           2006/06/27, PFH, modified to use binned GSHHS data
+
+     File: PoliticalOverlay.java
+   Author: Peter Hollemans
+     Date: 2004/03/26
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

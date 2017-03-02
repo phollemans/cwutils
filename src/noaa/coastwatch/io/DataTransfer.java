@@ -1,15 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: DataTransfer.java
-  PURPOSE: To perform data transfers between input and output streams.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/02/16
-  CHANGES: 2003/10/26, PFH, added to the Coastwatch package
-           2004/10/10, PFH, added setupIO(), modified to use ArrayList
-           2006/01/13, PFH, updated close() to check for null references
+
+     File: DataTransfer.java
+   Author: Peter Hollemans
+     Date: 2002/02/16
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

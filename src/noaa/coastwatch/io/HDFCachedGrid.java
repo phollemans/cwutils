@@ -1,25 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: HDFCachedGrid.java
-  PURPOSE: A subclass of CachedGrid that works with HDF files.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/06/18
-  CHANGES: 2002/07/22, PFH, modified getRows for performance improvement
-           2002/07/23, PFH, added new native calls for chunk lengths
-           2002/10/31, PFH, added tile and read/write support
-           2002/11/14, PFH, added getDataStream
-           2004/02/16, PFH, added unsigned type handling
-           2004/10/07, PFH, modified to use setOptimizedCacheSize()
-           2005/12/20, PFH, added test for chunk length error in netCDF files
-           2007/07/11, PFH, changed chunked flag from private to protected
-           2015/04/17, PFH
-           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
-           - Issue: The HDF library was crashing the VM due to multiple threads
-             calling the library simultaneously and the library is not
-             threadsafe.
+
+     File: HDFCachedGrid.java
+   Author: Peter Hollemans
+     Date: 2002/06/18
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

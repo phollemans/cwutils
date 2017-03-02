@@ -1,16 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: VisualArray.java
-  PURPOSE: Defines a visual interface for an array of values.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/02/29
-  CHANGES: 2006/03/15, PFH, modified to use GUIServices.getIconButton()
-           2006/11/01, PFH, modified layout of text field and buttons
-           2006/12/24, PFH, limited visible array rows
-           2012/12/04, PFH, updated to use getSelectedValuesList()
-           
+
+     File: VisualArray.java
+   Author: Peter Hollemans
+     Date: 2004/02/29
+
   CoastWatch Software Library and Utilities
-  Copyright 2004-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

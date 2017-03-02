@@ -1,24 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: hdatt.java
-  PURPOSE: Gets and sets HDF file attributes.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/04/11
-  CHANGES: 2005/04/23, PFH, added ToolServices.setCommandLine()
-           2005/06/23, PFH, modified to use MetadataServices.toString()
-           2007/04/23, PFH, added version printing
-           2015/04/17, PFH
-           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
-           - Issue: The HDF library was crashing the VM due to multiple threads
-             calling the library simultaneously and the library is not
-             threadsafe.
-           2015/05/23, PFH
-           - Changes: Updated documentation.
-           - Issue: We created Unix man pages and the documentation needed
-             a few changes.
+
+     File: hdatt.java
+   Author: Peter Hollemans
+     Date: 2005/04/11
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,55 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwinfo.java
-  PURPOSE: To display earth data file information.
-   AUTHOR: Mark Robinson
-     DATE: 2002/04/15
-  CHANGES: 2002/05/25, PFH, added javadoc, package, reformatted
-           2002/06/06, PFH, added multiple earth transforms
-           2002/07/16, PFH, added man page
-           2002/10/25, PFH, added null mode for swath projections
-           2002/11/12, PFH, replaced pass type with scene time, removed 
-             null mode
-           2002/11/16, PFH, modified verbose messages
-           2002/12/03, PFH, modified for map projection changes
-           2003/01/10, PFH, modified date format to zero-pad Julian day
-           2003/03/12, PFH, added datum name
-           2004/02/11, PFH, added verbose option
-           2004/02/15, PFH, added printInfo() method
-           2004/02/16, PFH, added unsigned type handling
-           2004/09/09, PFH
-            - added handling for non-satellite sources and composite
-              data sets
-            - modified to use printf()
-           2004/09/15, PFH, added handling for date ranges
-           2004/09/20, PFH, added --transform option
-           2004/09/27, PFH, added handling for composite data origins
-           2004/10/05, PFH, modified to use EarthTransform.getDimensions()
-           2005/02/07, PFH, modified to use default EarthLocation formatting
-           2005/02/18, PFH, modified newline insertion points
-           2005/03/14, PFH, reformatted documentation and usage note
-           2005/04/23, PFH, added ToolServices.setCommandLine()
-           2005/05/18, PFH, changed "datum" to "spheroid"
-           2007/04/19, PFH, added version printing
-           2010/03/15, PFH, added coordinate system printing
-           2014/11/11, PFH
-           - Changes: Added printing of reading module used to recognize file
-             format.  Also added better handling of long variable names.
-           - Issues: We used to have to rely on the -v options to print verbose
-             messages to find out which reading module eventually matched the
-             file format.  Now the reader identification is printed explicitly.
-             Also, long variable names were preventing the output from lining
-             up in columns and being readable.  So we buffer the variable names
-             and then print in a reliable columns.
-           2016/03/06, PFH
-           - Changes: Updated to recognize invalid locations with -t option.
-           - Issues: When an earth transform was having its corner points
-             printed, if the transform had no valid locations at the edges
-             (such as a geostationary satellite view) then the locations
-             printed with strange ? like characters.
-           
+
+     File: cwinfo.java
+   Author: Mark Robinson
+     Date: 2002/04/15
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

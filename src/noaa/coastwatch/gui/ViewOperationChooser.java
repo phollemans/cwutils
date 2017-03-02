@@ -1,15 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ViewOperationChooser.java
-  PURPOSE: Allows the selection of a view transform operation.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/02/19
-  CHANGES: 2005/05/22, PFH, added 1:1 button
-           2007/07/17, PFH, added fullscreen toolbar
-           2013/02/22, PFH, added special Aqua handling
-           
+
+     File: ViewOperationChooser.java
+   Author: Peter Hollemans
+     Date: 2004/02/19
+
   CoastWatch Software Library and Utilities
-  Copyright 2004-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

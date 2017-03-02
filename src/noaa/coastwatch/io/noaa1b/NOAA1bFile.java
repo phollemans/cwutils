@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: NOAA1bFile.java
-  PURPOSE: To read NOAA1b data format.
-   AUTHOR: Peter Hollemans
-     DATE: 2007/08/25
-  CHANGES: 2007/12/11, PFH, fixed problem reading headerless data files
+
+     File: NOAA1bFile.java
+   Author: Peter Hollemans
+     Date: 2007/08/25
 
   CoastWatch Software Library and Utilities
-  Copyright 2007, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2007 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

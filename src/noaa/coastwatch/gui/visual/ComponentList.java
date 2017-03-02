@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ComponentList.java
-  PURPOSE: Shows a list of components similar to a JList.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/03/02
-  CHANGES: 2006/03/11, PFH, modified for Mac Command key
-           
+
+     File: ComponentList.java
+   Author: Peter Hollemans
+     Date: 2004/03/02
+
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

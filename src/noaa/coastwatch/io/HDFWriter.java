@@ -1,40 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: HDFWriter.java
-  PURPOSE: A class to write HDF format files using the JNI interface 
-           to the HDF library.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/04/15
-  CHANGES: 2002/06/25, PFH, added package, javadoc, implementation
-           2002/07/12, PFH, added closed test
-           2002/07/23, PFH, added new chunking/compression native calls
-           2002/11/04, PFH, modified for tiling support
-           2002/11/07, PFH, added HDFSD interface
-           2002/11/08, PFH, added getChunked/getCompressed
-           2002/12/24, PFH, added updating writer constructor
-           2003/04/21, PFH, added getFilename
-           2003/11/22, PFH, fixed Javadoc comments
-           2004/02/15, PFH, added super() call in constructor
-           2004/02/16, PFH, added unsigned type handling
-           2004/05/06, PFH, added tracking of flush progress
-           2004/09/22, PFH, modified setAttributes() for overwrite selection
-           2004/09/27, PFH, moved toArray() to MetadataServices
-           2004/09/28, PFH, changed closed flag to protected
-           2005/02/08, PFH, added attribute length check
-           2012/12/02, PFH, replaced native method setChunkCompress
-           2014/01/23, PFH
-           - Changes: created MAX_VAR_DIMS size copy of chunk lengths before
-             passing to HDF library
-           - Issue: getting seg fault issues on calling HDFLibrary.SDsetchunk
-             with chunk length arrays of rank matching the actual data array
-           2015/04/17, PFH
-           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
-           - Issue: The HDF library was crashing the VM due to multiple threads
-             calling the library simultaneously and the library is not
-             threadsafe.
+
+     File: HDFWriter.java
+   Author: Peter Hollemans
+     Date: 2002/04/15
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

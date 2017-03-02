@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: VisualServices.java
-  PURPOSE: Performs various static services related to visual objects.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/03/07
-  CHANGES: n/a
-           
+
+     File: VisualServices.java
+   Author: Peter Hollemans
+     Date: 2004/03/07
+
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ExpressionFilter.java
-  PURPOSE: Filters locations based on a variable value expression.
-   AUTHOR: Peter Hollemans
-     DATE: 2016/06/06
-  CHANGES: n/a
+
+     File: ExpressionFilter.java
+   Author: Peter Hollemans
+     Date: 2016/06/06
 
   CoastWatch Software Library and Utilities
-  Copyright 2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2016 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

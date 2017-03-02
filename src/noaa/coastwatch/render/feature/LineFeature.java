@@ -1,28 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: LineFeature.java
-  PURPOSE: A class for holding vectors of Eath location data.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/10/11
-  CHANGES: 2002/11/29, PFH, optimized render for same transform
-           2002/11/30, PFH, added filter method
-           2002/12/10, PFH, corrected zero length bug in transform
-           2002/12/11, PFH, removed clip bounds from transform
-           2002/12/12, PFH, modified transform to handle projection 
-             discontinuities
-           2003/01/15, PFH, added fast rendering mode
-           2003/05/09, PFH, changed to protected variables
-           2003/05/11, PFH, added getPath
-           2003/05/22, PFH, added isDisjoint
-           2004/03/23, PFH, modified to extend ArrayList
-           2005/04/29, PFH, modified to extend AbstractFeature
-           2005/05/27, PFH
-           - changed disjoint to discontinuous
-           - added getFastMode()
-           - changed isDiscontinuous() to always return false in fast mode
+
+     File: LineFeature.java
+   Author: Peter Hollemans
+     Date: 2002/10/11
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

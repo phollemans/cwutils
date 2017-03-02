@@ -1,18 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CWNCReader.java
-  PURPOSE: Reads CoastWatch-style data through the NetCDF interface.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/07/04
-  CHANGES: 2006/02/16, PFH, moved coordinate variable check to constructor
-           2006/05/28, PFH, modified to use MapProjectionFactory
-           2006/06/14, PFH, modified to ignore grids with odd sizes
-           2006/11/03, PFH, changed getPreview(int) to getPreviewImpl(int)
-           2010/02/14, PFH, modified to use new Java netCDF 4.1 library
-           2013/06/21, PFH, updated to use Variable.getShortName()
- 
+
+     File: CWNCReader.java
+   Author: Peter Hollemans
+     Date: 2005/07/04
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

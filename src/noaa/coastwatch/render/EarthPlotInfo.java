@@ -1,32 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthPlotInfo.java
-  PURPOSE: A class to render an earth plot information legend.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/10/03
-  CHANGES: 2002/11/12, PFH, replaced pass type with scene time
-           2002/12/03, PFH, modified for map projection changes
-           2004/09/09, PFH, changed SatellitePlotInfo to EarthPlotInfo
-           2004/09/15, PFH, modified to handle date ranges
-           2004/09/27, PFH, added handling for composite data origins
-           2004/10/08, PFH, fixed to initialize stroke before drawing
-           2005/01/20, PFH, added border around context area
-           2005/02/07, PFH, modified to use EarthLocation.formatSingle()
-           2005/02/14, PFH, added data courtesy notice
-           2005/03/07, PFH, modified courtesy notice to use lineWrap()
-           2006/11/20, PFH, modified to use GraphicsServices.drawRect()
-           2016/02/10, PFH
-           - Changes: Added the wrapTruncateValue() method and modified
-             the constructor to call it.
-           - Issue: There were instances when very long string values for 
-             the satellite, sensor, and data source were causing the width 
-             of to plot legends to be unreasonably large.  We should really
-             be protecting against these cases, especiially when reading files
-             like NetCDF with CF metadata that users can specify much longer
-             strings than needed or anticipated.
+
+     File: EarthPlotInfo.java
+   Author: Peter Hollemans
+     Date: 2002/10/03
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

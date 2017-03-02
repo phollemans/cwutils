@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TestLogger.java
-  PURPOSE: Provides a singleton access point for test message printing.
-   AUTHOR: Peter Hollemans
-     DATE: 2016/01/01
-  CHANGES: n/a
+
+     File: TestLogger.java
+   Author: Peter Hollemans
+     Date: 2016/01/01
 
   CoastWatch Software Library and Utilities
-  Copyright 2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2016 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

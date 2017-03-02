@@ -1,28 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: SatelliteDataInfo.java
-  PURPOSE: A class to hold all the essential global satellite
-           information, along with additional attributes if needed.
-           The hash map acts as a catch-all container for attribute
-           key/value pairs.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/04/15
-  CHANGES: 2002/05/14, PFH, added javadoc, package
-           2002/05/17, PFH, added extra metadata
-           2002/10/04, PFH, added dateFormat with time zone option
-           2002/10/29, PFH, added solar zenith calculations
-           2002/11/12, PFH, replaced pass type with scene time, added
-             new constructor
-           2002/11/28, PFH, added check for null transform in getSceneTime
-           2003/01/13, PFH, added initialize for sub-classes
-           2003/01/15, PFH, moved solar zenith calculations to another class
-           2004/05/05, PFH, added clone() method
-           2004/07/02, PFH, moved main functionality to parent class
-           2004/09/14, PFH, removed constructor accepting transform
-           2004/09/27, PFH, added append() to override parent
+
+     File: SatelliteDataInfo.java
+   Author: Peter Hollemans
+     Date: 2002/04/15
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

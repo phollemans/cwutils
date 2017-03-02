@@ -1,14 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: PolygonFeatureOverlay.java
-  PURPOSE: An overlay for vector polygon data.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/03/19
-  CHANGES: 2005/03/22, PFH, added transparency handling
-           2006/01/18, PFH, added check for null color
+
+     File: PolygonFeatureOverlay.java
+   Author: Peter Hollemans
+     Date: 2005/03/19
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

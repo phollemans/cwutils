@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: NOAA1bV4Reader.java
-  PURPOSE: Reads NOAA 1b format version 4 files.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/01/27
-  CHANGES: 2006/10/25, PFH, added Metop support
+
+     File: NOAA1bV4Reader.java
+   Author: Peter Hollemans
+     Date: 2006/01/27
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

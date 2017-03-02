@@ -1,16 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: BinaryWriter.java
-  PURPOSE: A class to write binary format files.
-   AUTHOR: Peter Hollemans
-           Mark Robinson
-     DATE: 2002/07/18
-  CHANGES: 2002/08/25, PFH, rearranged
-           2004/02/15, PFH, added super() call in constructor
-           2004/05/06, PFH, added tracking of flush progress
+
+     File: BinaryWriter.java
+   Author: Peter Hollemans
+     Date: 2002/07/18
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

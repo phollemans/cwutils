@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: LandMask.java
-  PURPOSE: Gets land mask data from a pre-rendered database.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/12/15
-  CHANGES: n/a
+
+     File: LandMask.java
+   Author: Peter Hollemans
+     Date: 2004/12/15
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

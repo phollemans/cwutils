@@ -1,24 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwautonav.java
-  PURPOSE: To automatically add navigation corrections to data files.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/02/08
-  CHANGES: 2005/03/15, PFH, reformatted documentation and usage note
-           2005/04/23, PFH, added ToolServices.setCommandLine()
-           2005/05/10, PFH, added search, correlation, separation, fraction
-             options
-           2005/05/18, PFH, modified box centers for reader datum
-           2006/10/25, PFH, fixed problem with lat/lon separator characters
-           2007/04/20, PFH, added version printing
-           2012/12/04, PFH, added call to canUpdateNavigation for reader
-           2015/05/23, PFH
-           - Changes: Updated documentation.
-           - Issue: We created Unix man pages and the documentation needed
-             a few changes.
- 
+
+     File: cwautonav.java
+   Author: Peter Hollemans
+     Date: 2005/02/08
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,35 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwmath.java
-  PURPOSE: To combine earth data variables using an expression.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/04/20
-  CHANGES: 2003/05/22, PFH, added bitwise or/and functions
-           2004/01/23, PFH, modified to use SPLIT_REGEX and updated docs
-           2004/02/16, PFH, updated documentation, added --template option
-           2004/09/22, PFH, modified to allow existing output file
-           2004/09/28, PFH, modified to use ToolServices.setCommandLine()
-           2004/11/16, PFH, modified to allow multiple input files
-           2005/01/30, PFH, modified to use CleanupHook class
-           2005/03/15, PFH
-           - reformatted documentation and usage note
-           - modified to use no scaling for float output
-           2005/05/05, PFH, modified to not read full template data array
-           2005/06/08, PFH, updated units strings
-           2006/06/05, PFH, added ubyte and ushort types
-           2006/06/06, PFH, added xor, not functions
-           2006/07/10, PFH, moved JEP creation to ExpressionParserFactory
-           2007/04/19, PFH, added version printing
-           2008/03/04, PFH, added special code for symbols in variable names
-           2008/04/03, PFH, fixed problem with nan, pi, e constants
-           2009/06/26, PFH, added extra attribute copying for template variables
-           2015/05/23, PFH
-           - Changes: Updated documentation.
-           - Issue: We created Unix man pages and the documentation needed
-             a few changes.
- 
+
+     File: cwmath.java
+   Author: Peter Hollemans
+     Date: 2003/04/20
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

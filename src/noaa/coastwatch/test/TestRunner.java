@@ -1,24 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TestableTester.java
-  PURPOSE: Runs tests on testable classes.
-   AUTHOR: Peter Hollemans
-     DATE: 2014/03/23
-  CHANGES: 2015/05/07, PFH
-           - Changes: Added class sorting by name.
-           - Issues: The order that classes were being tested was random,
-             so it was difficult to locate a test reliably from one run to
-             another, so we added a sort of class names before the testing
-             to resolve this.
-           2016/01/19, PFH
-           - Changes: Updated to new TestLogger class.
-           - Issues: With more classes being unit tested, it was difficult to
-             see the pass/fail status of each test.  The singleton class
-             TestLogger now handles unit test output, and prints messages 
-             in color using a standard message layout.
- 
+
+     File: TestableTester.java
+   Author: Peter Hollemans
+     Date: 2014/03/23
+
   CoastWatch Software Library and Utilities
-  Copyright 2014-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2014 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

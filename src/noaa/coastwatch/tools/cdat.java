@@ -1,65 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cdat.java
-  PURPOSE: To view and analyze earth data.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/10
-  CHANGES: 2004/09/28, PFH, modified to use ToolServices.setCommandLine()
-           2004/10/12, PFH, changed to use scrolling tab layout policy
-           2005/01/30, PFH, added error dialog to replace standard error
-           2005/02/04, PFH, changed "Options" to "Preferences"
-           2005/03/14, PFH, reformatted documentation and usage note
-           2005/04/04, PFH, added menu item icons
-           2005/04/06, PFH, modified help dialog size
-           2005/06/20, PFH, added minimized window icon
-           2005/06/22, PFH, modified to use new open operation
-           2005/07/04, PFH, modified to use local/network data chooser
-           2005/07/07, PFH, added call to ResourceManager.checkResources()
-           2005/07/07, PFH, added file information menu item
-           2006/03/11, PFH, modified menu keymask for better Mac integration
-           2006/03/16, PFH, added drag and drop event handling
-           2006/03/31, PFH, added file open support on Mac
-           2006/06/23, PFH, changed --nosplash to --splash command line option
-           2006/10/19, PFH, changed save as to export
-           2006/10/24, PFH, added icon for analysis tabs
-           2006/10/30, PFH, increased default frame width for legend
-           2006/11/03, PFH, added units preferences
-           2006/11/04, PFH, changed to use LONG_NAME for GUI components
-           2006/11/06, PFH, added context help support
-           2006/12/14, PFH, added navigation analysis panel
-           2007/04/19, PFH, added version printing
-           2007/07/26, PFH, added full screen menu item
-           2007/12/21, PFH, slightly increased frame size
-           2011/05/16, XL, added menu items to save and load profiles of color 
-                           enhancement information and overlays
-           2014/08/11, PFH
-           - Changes: Added command line parameter for window geometry.  Cleaned
-             up profile load/save code.
-           - Issue: We had a user feature request to be able to set the window 
-             geometry.
-           2014/09/15, PFH
-           - Changes: Removed splash screen options and replaced splash
-             functionality with JRE builtin capability.
-           - Issues: In some cases we were getting a slow startup, so we want
-             to make sure the user knows there is something happening.
-           2014/09/17, PFH
-           - Changes: Added menu options to set window geometry, and store/recall
-             of previous session window geometry.
-           - Issues: A user requested the functionality.
-           2014/11/11, PFH
-           - Changes: Refined menu options to set window geometry, and added
-             potnetial code for setting view panel size (remains commented).
-             Also improved the menu enable/disable functionality.
-           - Issue: A user requested the functionality.
-           2015/05/08, PFH
-           - Changes: Added a scripting console to the tools menu.
-           - Issue: We'd like to have deeper access to the Java VM for testing
-             and debugging, and also would like to explore what a scripting
-             capability makes available to the user for operations within
-             CDAT that aren't normally possible, such as math or custom code.
+
+     File: cdat.java
+   Author: Peter Hollemans
+     Date: 2004/05/10
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

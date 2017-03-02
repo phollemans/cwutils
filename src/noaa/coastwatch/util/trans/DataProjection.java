@@ -1,18 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: DataProjection.java
-  PURPOSE: To act as a projection based on explicit lat/lon data.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/05/31
-  CHANGES: 2002/07/25, PFH, converted to location classes
-           2003/11/22, PFH, fixed Javadoc comments
-           2004/10/05, PFH, modified for getDimensions() in EarthTransform
-           2005/05/16, PFH, modified for in-place transform
-           2005/05/20, PFH, now extends 2D transform
-           2007/04/24, PFH, added getLat() and getLon()
+
+     File: DataProjection.java
+   Author: Peter Hollemans
+     Date: 2002/05/31
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

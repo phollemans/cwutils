@@ -1,14 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: FileOperationChooser.java
-  PURPOSE: Allows the selection of a file operation.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/10
-  CHANGES: 2006/10/19, PFH, changed save as to export
-           2013/02/22, PFH, added special Aqua handling
-           
+
+     File: FileOperationChooser.java
+   Author: Peter Hollemans
+     Date: 2004/05/10
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,25 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TilingScheme.java
-  PURPOSE: A class to support tiling of 2D data.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/11/06
-  CHANGES: 2002/12/04, PFH, added Cloneable interface to TilePosition
-           2004/10/20, PFH, modified TilePosition.contains() for better speed
-           2014/07/01, PFH
-           - Changes: Moved Java class to new package and added extra methods
-             and unit testing code.
-           - Issue: Creating new package for tile-related I/O operations.
-           2015/04/11, PFH
-           - Changes: Added getStart() method in TilePosition class.
-           - Issue: We needed a way to easily loop over each tile in the
-             tiling scheme and do something, and the getStart() method 
-             helped to do that.
-           2016/01/19, PFH
-           - Changes: Updated to new logging API.
+
+     File: TilingScheme.java
+   Author: Peter Hollemans
+     Date: 2002/11/06
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

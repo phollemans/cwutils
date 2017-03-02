@@ -1,27 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthDataAnalysisPanel.java
-  PURPOSE: Groups together related earth data view and chooser
-           components in one panel.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/02/17
-           2006/10/24, PFH, added tab icon
-           2006/10/30, PFH, added legend panel
-           2006/11/06, PFH, added help buttons
-           2006/12/14, PFH, added showNavAnalysisDialog()
-           2007/07/26, PFH, added showFullScreen()
-           2007/08/09, PFH, added width to control tabs for overlay selection
-           2007/12/21, PFH, added with to control tabs for enhance buttons
-           2011/05/13, XL,  added methods to load and save profiles of overlays 
-             and enhancement functions
-           2014/11/11, PFH
-           - Changes: Added ability to get/set view panel size.
-           - Issue: We wanted to be able to let the user set the view panel size
-             independently of the enclosing panels, so that data exports could
-             be a consistent size.
- 
+
+     File: EarthDataAnalysisPanel.java
+   Author: Peter Hollemans
+     Date: 2004/02/17
+
   CoastWatch Software Library and Utilities
-  Copyright 2004-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: RenderOptionPanel.java
-  PURPOSE: Allows the user to choose options for rendered images.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/03
-  CHANGES: 2006/11/15, PFH, added more options
+
+     File: RenderOptionPanel.java
+   Author: Peter Hollemans
+     Date: 2004/05/03
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

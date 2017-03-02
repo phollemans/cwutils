@@ -1,18 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwtoolstest.java
-  PURPOSE: To run the command line tools with and without options.
-   AUTHOR: Melanie Wright
-     DATE: 2009/03/29
-           2010/03/23, PFH, edited comments and modified output format
-           2015/05/10, PFH
-           - Changes: Added "test-" identifier to input and output file names.
-           - Issue: We needed a better way to identify which files were
-             used in the testing to allow a cleanup task to differentiate 
-             between original input files and test files.
- 
+
+     File: cwtoolstest.java
+   Author: Melanie Wright
+     Date: 2009/03/29
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2009 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
  */
 ////////////////////////////////////////////////////////////////////////

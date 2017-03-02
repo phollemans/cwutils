@@ -1,22 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: MultilayerBitmaskOverlay.java
-  PURPOSE: An overlay for bitmasked variable data with multiple layers.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/03/05
-  CHANGES: 2004/04/04, PFH, added special serialization methods
-           2004/08/30, PFH, added special case for Java VMs that do
-             not support binary image with transparent color
-           2004/10/17, PFH
-           - added invalidate(), getGrid()
-           - changed to extend GridContainerOverlay
-           - modified to use EarthDataView.hasCompatibleCaches()
-           2006/01/16, PFH, added check for null color in bitmask overlays
-           2006/07/10, PFH, added TransparentOverlay interface
-           2007/11/05, PFH, modified getGridList() to return non-null
+
+     File: MultilayerBitmaskOverlay.java
+   Author: Peter Hollemans
+     Date: 2004/03/05
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

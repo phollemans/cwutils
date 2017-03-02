@@ -1,43 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TSHDFReader.java
-  PURPOSE: A class to read TeraScan HDF format files using the
-           JNI interface to the HDF library.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/06/06
-  CHANGES: 2002/06/07, PFH, added variable names array
-           2002/06/25, PFH, moved constructor functionality to abstract parent
-           2002/10/31, PFH, modified for tiling support
-           2002/11/12, PFH, removed pass type attribute
-           2002/11/28, PFH, corrected TeraScan date and time unpacking
-           2002/12/03, PFH, modified for map projection changes
-           2003/01/10, PFH, modified initial history string
-           2003/03/12, PFH, added emercator projection, modified default
-             ellipsoid to assume WGS84, added documentation
-           2003/05/28, PFH, added rows and cols to global info object
-           2003/05/29, PFH, added fallback values for TDF master datasets
-           2003/12/28, PFH
-             - added projection names for when only index is available
-             - modified rectangular projection
-           2004/01/12, PFH, added dynamic spheroid detection
-           2004/02/10, PFH, updated Javadocs
-           2004/04/10, PFH, added getDataFormat() method
-           2004/09/28, PFH, removed automatic history append on read
-           2004/10/05, PFH, modified for new MapProjection constructor
-           2005/05/18, PFH, changed "datum" to "spheroid"
-           2005/10/04, PFH, modified to eliminate invalid SDnametoindex calls
-           2006/02/28, PFH, added ability to read "import_atts" attribute
-           2006/05/28, PFH, modified to use MapProjectionFactory
-           2006/10/02, PFH, modified to handle missing location values
-           2010/03/30, PFH, modified constructor to close file on failure
-           2015/04/17, PFH
-           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
-           - Issue: The HDF library was crashing the VM due to multiple threads
-             calling the library simultaneously and the library is not
-             threadsafe.
+
+     File: TSHDFReader.java
+   Author: Peter Hollemans
+     Date: 2002/06/06
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

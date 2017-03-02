@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: HTMLPanel.java
-  PURPOSE: A class to display a basic HTML panel.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/11/28
-  CHANGES: 2003/01/14, PFH, removed absolute path for icon files
-           2003/11/22, PFH, fixed Javadoc comments
-           2004/05/22, PFH, modified to use GUIServices.getIcon()
-           2005/04/07, PFH, modified to hide refresh button on request
-           2006/03/15, PFH, modified to use GUIServices.getIconButton()
+
+     File: HTMLPanel.java
+   Author: Peter Hollemans
+     Date: 2002/11/28
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

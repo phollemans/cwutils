@@ -1,18 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: AbstractOverlayListPanel.java
-  PURPOSE: Allows the user to add/remove/edit a list of overlays.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/02/20
-  CHANGES: 2004/05/22, PFH, modified to use GUIServices.getIcon()
-           2006/03/15, PFH, modified to use GUIServices.getIconButton() and
-             JToolBar for the overlay add buttons
-           2006/11/01, PFH, modified to re-select when an overlay is deleted
-           2006/12/29, PFH, added group list change support
-           2007/12/19, PFH, modified group list support to remove listener
-           
+
+     File: AbstractOverlayListPanel.java
+   Author: Peter Hollemans
+     Date: 2004/02/20
+
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

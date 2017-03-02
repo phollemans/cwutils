@@ -1,25 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwcomposite.java
-  PURPOSE: To combine earth data files by variable.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/04/06
-  CHANGES: 2004/09/28, PFH
-           - modified to use EarthDataInfo.append()
-           - modified to use ToolServices.setCommandLine()
-           - added --pedantic option
-           2004/09/29, PFH, added --inputs option
-           2004/11/12, PFH, added stdin option for inputs file
-           2005/01/30, PFH, modified to use CleanupHook class
-           2005/03/15, PFH, reformatted documentation and usage note
-           2006/07/10, PFH, added --coherent option
-           2007/04/19, PFH, added version printing
-           2008/07/30, HG, added computing geometric mean in computeComposite 
-             method
-           2016/06/09, PFH, updated documentation on method types
+
+     File: cwcomposite.java
+   Author: Peter Hollemans
+     Date: 2003/04/06
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

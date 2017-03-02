@@ -1,27 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: PreferencesChooser.java
-  PURPOSE: Allows the user to choose preferences.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/21
-  CHANGES: 2005/02/03, PFH
-           - divided into private classes
-           - added general section
-           - added enhancement functions
-           - added showDialog()
-           2005/10/09, PFH, added variableChange=null check in applyChanges()
-           2006/03/15, PFH, modified to use GUIServices.getIconButton()
-           2006/11/03, PFH, added units and list icons
-           2006/11/08, PFH, added help button
-           2012/12/04, PFH, updated to use getSelectedValuesList()
-           2015/05/15, PFH
-          - Changes: Added support for heap and cache size preferences.
-          - Issue: We needed some way to give the user the ability to
-            change the Java VM heap size and tile cache size without
-            having to edit batch or script files.
+
+     File: PreferencesChooser.java
+   Author: Peter Hollemans
+     Date: 2004/05/21
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TimePeriod.java
-  PURPOSE: A class to represent a date and time duration.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/07/02
-  CHANGES: 2010/02/22, PFH, added Comparable interface
+
+     File: TimePeriod.java
+   Author: Peter Hollemans
+     Date: 2004/07/02
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

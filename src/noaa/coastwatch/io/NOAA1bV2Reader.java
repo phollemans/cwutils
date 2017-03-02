@@ -1,32 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: NOAA1bV2Reader.java
-  PURPOSE: A class to read NOAA 1b format version 2 files.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/02/03
-  CHANGES: 2003/03/28, PFH, added GAC and CLAVR cloud support
-           2004/04/10, PFH, added getDataFormat() method
-           2004/11/29, PFH, added getCalibration()
-           2005/02/15, PFH, modified to help extend for V3 reader
-           2005/05/12, PFH, modified format description check for leniency
-           2006/01/27, PFH, modified format description check for version
-           2006/08/28, PFH, updated to use java.nio classes
-           2006/06/21, PFH, added support for missing scan lines
-           2006/12/27, PFH, added scan line time data reading
-           2006/12/30, PFH, added isNavigationUsable() for constructor use
-           2007/07/03, PFH, added check for NOAA-15 "verion 1" format problem
-           2007/12/15, PFH, added scan line caching
-           2014/11/05, PFH
-           Changes:
-           - Added start/end time attribute reading to support parent class
-             getTimePeriod().
-           Issues:
-           - We wanted to support start/end time reading in the parent class
-             to avoid confusion in time reporting.  See the notes in
-             NOAA1bReader for more details.
+
+     File: NOAA1bV2Reader.java
+   Author: Peter Hollemans
+     Date: 2003/02/03
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

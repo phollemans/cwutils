@@ -1,20 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthDataExporter.java
-  PURPOSE: Allows the user to save Earth-locatable data.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/01
-  CHANGES: 2005/03/28, PFH, added GIF saving
-           2006/10/19, PFH, changed save as to export on dialog title
-           2006/11/06, PFH, added help button, reorganized class
-           2006/12/19, PFH, modified to use FileSavePanel
-           2015/04/13, PFH
-           - Changes: Added NetCDF 3 and NetCDF 4 options in the file chooser
-             format extensions.
-           - Issue: We wanted to be able to save data from CDAT in NetCDF.
+
+     File: EarthDataExporter.java
+   Author: Peter Hollemans
+     Date: 2004/05/01
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

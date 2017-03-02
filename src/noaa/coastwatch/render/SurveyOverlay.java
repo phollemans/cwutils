@@ -1,21 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: SurveyOverlay.java
-  PURPOSE: An overlay for survey objects.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/04/01
-  CHANGES: 2005/03/22, PFH, added transparency handling
-           2006/01/16, PFH, added check for null color
-           2007/01/15, PFH, fixed inaccuracy in box survey rendering
-           2015/02/27, PFH
-           - Changes: Rewrote rendering algorithm for point surveys.
-           - Issue: It turns out that AffineTransform doesn't always return
-             an object of type GeneralPath even if that's the input object.  So
-             we need to access the iterator for the transformed shape and
-             use the first iterator point to get the point survey location.
- 
+
+     File: SurveyOverlay.java
+   Author: Peter Hollemans
+     Date: 2004/04/01
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

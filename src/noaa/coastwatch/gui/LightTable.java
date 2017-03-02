@@ -1,19 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: LightTable.java
-  PURPOSE: Handles common drawing operations.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/12/13
-  CHANGES: 2004/03/28, PFH, added getDrawingMode(), getActive(), getCursor()
-           2004/04/05, PFH, changed Vector to ArrayList, added polyline mode
-           2004/06/02, PFH, added handling for delayed rendering components
-           2004/06/07, PFH, added image translate and rotate modes
-           2006/12/14, PFH, modified for new setImageAffine() behaviour
-           2007/07/27, PFH, reimplemented using JLayoutPane
-           2011/05/16, XL, added a popup menu to copy/paste between earthDataView's
+
+     File: LightTable.java
+   Author: Peter Hollemans
+     Date: 2002/12/13
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2007, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

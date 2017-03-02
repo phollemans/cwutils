@@ -1,41 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthContextElement.java
-  PURPOSE: A class to handle an earth context annotation element.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/09/30
-  CHANGES: 2002/10/23, PFH, set default stroke to beveled joins
-           2002/22/08, PFH, added minimum context resolution
-           2002/12/03, PFH, modified for map projection changes
-           2002/12/12, PFH, modified for earth vector transform() change
-           2002/12/30, PFH, changed to use binned GSHHS reader
-           2003/01/15, PFH, modified for global re-centerable views, grid
-             lines, earth edge, and solar zenith terminator
-           2003/03/29, PFH, added bounding box polygon check for swath
-           2003/10/04, PFH, added handling for null coastline data
-           2003/11/16, PFH
-             - added setContextArea(EarthArea)
-             - added get/set for context factor
-             - added more documentation to class description
-           2003/11/20, PFH, added labels to bounding boxes
-           2003/11/21, PFH, added getBoundingBox(), getBoundingBoxes(),
-             and getEarthImageTransform()
-           2003/12/10, PFH, changed LineFeatureReader to LineFeatureSource
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2004/04/01, PFH, added render() exception for invalid transform
-           2004/09/30, PFH, modified to use EarthTransform.getBoundingBox()
-           2005/02/01, PFH, changed to output warnings to System.out
-           2005/05/21, PFH, modified to handle earth location datum
-           2005/05/27, PFH, modified to not draw discontinuous polygons
-           2005/12/20, PFH, corrected label colors to match docs
-           2006/05/26, PFH, modified to use SpheroidConstants
-           2006/06/10, PFH, modified to use BinnedGSHHSReaderFactory
-           2012/12/07, PFH, modified to use MapProjectionFactory
-           2014/03/25, PFH
-           - Changes: Updated to use new EarthImageTransform constructor
+
+     File: EarthContextElement.java
+   Author: Peter Hollemans
+     Date: 2002/09/30
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

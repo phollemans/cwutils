@@ -1,15 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: BivariateEstimator.java
-  PURPOSE: To perform estimation of a function of two variables.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/05/28
-  CHANGES: 2002/11/12, PFH, added optimization to evaluate
-           2002/11/16, PFH, added SVD code to constructor for overdetermined
-             matrices, revised documentation
+
+     File: BivariateEstimator.java
+   Author: Peter Hollemans
+     Date: 2002/05/28
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2002, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

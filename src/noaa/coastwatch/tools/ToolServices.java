@@ -1,36 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ToolServices.java
-  PURPOSE: A class to perform various static tool-related functions.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/12/17
-  CHANGES: 2004/01/01, PFH
-           - added regular expression splitter
-           - added website constant
-           - added splash screen text
-           2005/01/31, PFH, added error instructions text
-           2005/04/18, PFH, added Locale.setDefault() call
-           2005/05/05, PFH, added short package description
-           2005/10/07, PFH, added OS and Java version to About message
-           2006/10/19, PFH, added support email address separate from author
-           2007/04/19, PFH, added version property reading
-           2007/05/17, PFH, modified about dialog text to use HTML
-           2013/02/05, PFH, updated copyright date in About message
-           2014/08/26, PFH
-           - Changes: Added startMemoryMonitor() method.
-           - Issue: We would like a way to monitor the memory usage of the tools
-             while they're running to check for issues such as the VM memory
-             running out, without having to resort to a profiling tool.
-           2016/02/12, PFH
-           - Changes: Added the setSplitRegex() and getSplitRegex() methods.
-           - Issue: We had a case in cwrender where we needed to specify a
-             variable name with slashes in it plus extra optional parameters, 
-             so the default SPLIT_REGEX doesn't work.  A new command line option
-             specifies the splitting expression. Ultimately all the tools
-             should support this behaviour.
+
+     File: ToolServices.java
+   Author: Peter Hollemans
+     Date: 2002/12/17
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

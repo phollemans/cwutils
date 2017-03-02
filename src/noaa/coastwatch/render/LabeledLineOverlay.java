@@ -1,19 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: LabeledLineOverlay.java
-  PURPOSE: Draws lines and labels on a data view.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/12/20
-  CHANGES: 2015/06/17, PFH
-           - Changes: Refactored private classes into noaa.coastwatch.render.lines
-             package.  Added ability to use different labelling algorithms.
-             Added serialization constant.
-           - Issue: A user requested the ability to have labels be centered
-             in the data view for geostationary projections.  The code needed
-             to be refactored to allow for different label placement algorithms.
- 
+
+     File: LabeledLineOverlay.java
+   Author: Peter Hollemans
+     Date: 2006/12/20
+
   CoastWatch Software Library and Utilities
-  Copyright 2006-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

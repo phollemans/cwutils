@@ -1,41 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GCTPProjection.java
-  PURPOSE: To perform GCTP map projection calculations.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/04/15
-  CHANGES: 2002/05/15, PFH, added javadoc, package
-           2002/07/11, PFH, added equals method
-           2002/07/25, PFH, converted to location classes
-           2002/10/02, PFH, added try/catch around GCTP calls
-           2002/10/03, PFH, added getPixelSize
-           2002/12/02, PFH, removed projection names
-           2002/12/03, PFH, modified GCTP variable names, get methods,
-             and constructor
-           2002/12/04, PFH, added Cloneable interface, getDatumName,
-             getPixelDimensions
-           2002/12/11, PFH, added checks for GCTP.GEO in transform methods
-           2003/01/15, PFH, allowed access to affine from subclasses
-           2003/03/13, PFH, corrected commenting
-           2003/11/22, PFH, fixed Javadoc comments
-           2004/05/04, PFH, modified clone(), added createTranslated() method
-           2004/10/05, PFH
-           - modified clone() for new superclass
-           - modified to have only dimensions-based constructor
-           2004/10/13, PFH
-           - added setPositiveLon()
-           - changed createTranslated() to getSubset()
-           2004/12/13, PFH, modified equals() to use almostEquals()
-           2005/05/16, PFH, modified for in-place transform
-           2005/05/18, PFH, changed "datum" to "spheroid" and added actual
-             datum-related functionality
-           2005/05/27, PFH, added check for unsupported spheroid
-           2005/05/20, PFH, now extends 2D transform
-           2005/08/01, PFH, added getSubset()
-           2005/05/26, PFH, separated into MapProjection and GCTPProjection
+
+     File: GCTPProjection.java
+   Author: Peter Hollemans
+     Date: 2002/04/15
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

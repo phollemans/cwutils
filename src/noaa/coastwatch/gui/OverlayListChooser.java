@@ -1,20 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: OverlayListChooser.java
-  PURPOSE: Allows the user to manipulate a list of earth data overlays.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/02/21
-  CHANGES: 2004/05/22, PFH, modified to use GUIServices.getIcon()
-           2005/03/21, PFH, added shape overlays
-           2005/04/12, PFH, removed dbf and shx shapefile extensions
-           2006/03/15, PFH, modified to use GUIServices.getIconButton()
-           2006/10/31, PFH, added expression masking
-           2006/11/02, PFH, modified showDialog() for validation
-           2006/12/22, PFH, added data reference grid overlay
-           2012/08/30, PFH, fixed toURL() deprecation
+
+     File: OverlayListChooser.java
+   Author: Peter Hollemans
+     Date: 2004/02/21
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

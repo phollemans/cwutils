@@ -1,27 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GSHHSReader.java
-  PURPOSE: To provide GSHHS coastline data.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/01/18
-  CHANGES: 2002/04/30, PFH, fixed coastline EOF error
-           2002/09/06, PFH, incorporated into cwf classes and added
-             index file and selection methods
-           2002/09/30, PFH, added non-indexed data file options
-           2002/10/11, PFH, moved to render package
-           2002/11/30, PFH, added polygon filtering
-           2002/12/06, PFH, modified select for new stored area, added
-             non-static getDatabase
-           2002/12/10, PFH, added check for invalid resolution in getDatabase
-           2002/12/16, PFH, added polygon caching
-           2002/12/29, PFH, deprecated
-           2003/05/11, PFH, changed internal variable list to vectorList
-           2003/12/10, PFH, changed LineFeatureReader to LineFeatureSource
-           2004/03/24, PFH, changed Vector to List
-           2005/05/26, PFH, changed vectorList to featureList
+
+     File: GSHHSReader.java
+   Author: Peter Hollemans
+     Date: 2002/01/18
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

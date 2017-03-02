@@ -1,14 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ESRIShapefileReader.java
-  PURPOSE: Creates an overlay based on ESRI shapefile contents.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/03/18
-  CHANGES: 2005/05/26, PFH, changed vectorList to featureList
-           2012/08/30, PFH, fixed toURL() deprecation
+
+     File: ESRIShapefileReader.java
+   Author: Peter Hollemans
+     Date: 2005/03/18
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

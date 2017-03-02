@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: DateFormatter.java
-  PURPOSE: A class to format dates.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/07/02
-  CHANGES: 2013/01/31, PFH, added parseDate method
+
+     File: DateFormatter.java
+   Author: Peter Hollemans
+     Date: 2004/07/02
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

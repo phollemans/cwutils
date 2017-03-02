@@ -1,23 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CDMGridMappedProjection.java
-  PURPOSE: Common Data Model wrapped projection.
-   AUTHOR: Peter Hollemans
-     DATE: 2015/12/24
-  CHANGES: 2016/03/06, PFH
-           - Changes: Added setting of the dims internal variable in the 
-             constructor.
-           - Issue: We were getting a NUllPointerException for some operations
-             when getDimensions() was needed.
-           2016/03/11, PFH
-           - Changes: Added an equals() method.
-           - Issue: We needed to be able to compare projections for equality,
-             especially in the case where we have more than one grid mapped
-             projection defined in a file, and we want to make sure they match
-             before continuing.
+
+     File: CDMGridMappedProjection.java
+   Author: Peter Hollemans
+     Date: 2015/12/24
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2015 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

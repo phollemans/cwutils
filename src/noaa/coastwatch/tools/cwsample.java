@@ -1,22 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwsample.java
-  PURPOSE: To perform sampling of earth data at discrete earth 
-           locations.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/01/26
-  CHANGES: 2004/01/23, PFH, modified to use SPLIT_REGEX and updated docs
-           2004/03/18, PFH, changed to print NaN for missing values
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2005/02/15, PFH, added --imagecoords options
-           2005/03/14, PFH, reformatted documentation and usage note
-           2005/04/23, PFH, added ToolServices.setCommandLine()
-           2005/05/19, PFH, modified to use reader datum for earth locations
-           2006/01/12, PFH, added --variable option
-           2007/04/19, PFH, added version printing
+
+     File: cwsample.java
+   Author: Peter Hollemans
+     Date: 2002/01/26
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

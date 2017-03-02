@@ -1,14 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: AnnotationElement.java
-  PURPOSE: A class to handle annotation elements such as text, shapes, 
-           symbols, etc.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/09/15
-  CHANGES: n/a
+
+     File: AnnotationElement.java
+   Author: Peter Hollemans
+     Date: 2002/09/15
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2002, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

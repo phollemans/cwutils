@@ -1,44 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: HDFReader.java
-  PURPOSE: A class to read HDF format files using the JNI interface 
-           to the HDF library.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/06/06
-  CHANGES: 2002/06/25, PFH, added constructor
-           2002/07/12, PFH, added close, closed test
-           2002/07/23, PFH, added new chunking/compression native calls
-           2002/11/07, PFH, added HDFSD interface
-           2002/12/26, PFH, moved getDecimals to DataVariable
-           2003/04/21, PFH, added getFilename, HDFWriter-based constructor
-           2003/05/28, PFH, added getVariableDimensions
-           2004/02/11, PFH, modified getAttribute() exception throwing
-           2004/02/15, PFH, added super() call in constructor
-           2004/02/16, PFH, added unsigned type handling
-           2004/04/11, PFH, fixed exception report string
-           2004/09/10, PFH, modified value formatting string to remove commas
-           2004/09/14, PFH, added getAttributeData(), getAttributeAsArray()
-           2004/09/23, PFH, added readAllMetadata()
-           2004/09/30, PFH, added getAttributes(int,List,Map)
-           2004/10/05, PFH, modified to use MetadataContainer methods
-           2005/06/15, PFH, added common units conversions
-           2005/06/22, PFH, added raw metadata reading
-           2005/09/12, PFH, modified to ignore coord variables in variable list
-           2006/11/03, PFH, changed getPreview(int) to getPreviewImpl(int)
-           2010/03/30, PFH, modified constructor to close file on failure
-           2012/12/02, PFH, replaced native method getChunkLengths
-           2013/03/07, PFH, added extra read for missing_data if _FillValue missing
-           2013/12/27, PFH
-           - Changes: added call to Hishdf before opening
-           - Issue: SDstart was failing on NetCDF 3 files in xdr_NC_array
-           2015/04/17, PFH
-           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
-           - Issue: The HDF library was crashing the VM due to multiple threads
-             calling the library simultaneously and the library is not
-             threadsafe.
+
+     File: HDFReader.java
+   Author: Peter Hollemans
+     Date: 2002/06/06
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

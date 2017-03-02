@@ -1,35 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthLocation.java
-  PURPOSE: To define an earth location point and operations.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/07/25
-  CHANGES: 2002/09/04, PFH, added isValid
-           2002/09/09, PFH, added lonRange
-           2002/09/11, PFH, added pole adjustments in translate
-           2002/09/13, PFH, added lon range adjustment in constructor
-           2002/09/19, PFH, added static format
-           2002/12/04, PFH, added Cloneable interface
-           2002/12/05, PFH, modified format for 2 decimals
-           2002/01/15, PFH, added latRange, render
-           2004/03/28, PFH, added additional format() method
-           2004/09/20, PFH, added DDDD format style code
-           2004/10/13, PFH, added equals()
-           2005/02/07, PFH, added default format styles
-           2005/05/16, PFH, added datum handling
-           2005/05/18, PFH, modified clone() to call super.clone()
-           2006/05/26, PFH, modified to use SpheroidConstants
-           2014/03/20, PFH
-           - Changes: Added the markInvalid method and test code
-           - Issue: We needed a way to mark earth locations as invalid in
-             one call, with no need to know about how invalid locations are
-             actually implemented.
-           2016/01/19, PFH
-           - Changes: Updated to new logging API and created static 
-             distance() method.
+
+     File: EarthLocation.java
+   Author: Peter Hollemans
+     Date: 2002/07/25
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,16 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: BinaryStreamReader.java
-  PURPOSE: Reads streams of byte data described by an XML document.
-   AUTHOR: Peter Hollemans
-     DATE: 2007/09/01
-  CHANGES: 2007/11/22, PFH, updated to print array values in main()
-           2013/06/09, PFH, added example XML template
-           2013/12/16, PFH, updated main() to handle byte swapped input
-             and print an error when a value cannot be read correctly
+
+     File: BinaryStreamReader.java
+   Author: Peter Hollemans
+     Date: 2007/09/01
 
   CoastWatch Software Library and Utilities
-  Copyright 2007-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2007 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

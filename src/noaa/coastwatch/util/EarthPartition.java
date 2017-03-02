@@ -1,21 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthPartition.java
-  PURPOSE: To allow Earth-locatable data to be divided up into sections.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/06/01
-  CHANGES: 2002/07/25, PFH, converted to location classes
-           2002/11/18, PFH, added last found partition
-           2002/12/20, PFH, added check for invalid partition bounds
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2004/09/13, PFH, added test for valid resolution in constructor
-           2005/09/19, PFH, added extra info in constructor exception
-           2006/10/02, PFH, added new algorithm for missing location values
-           2007/09/14, PFH, added new partition size function
-           2007/12/14, PFH, added new constructor with isRoot flag
+
+     File: EarthPartition.java
+   Author: Peter Hollemans
+     Date: 2002/06/01
 
   CoastWatch Software Library and Utilities
-  Copyright 2007, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

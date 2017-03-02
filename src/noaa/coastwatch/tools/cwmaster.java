@@ -1,59 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwmaster.java
-  PURPOSE: To create master projection data files.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/12/09
-  CHANGES: 2003/01/24, PFH, changed zoom and pan icons slightly
-           2003/02/24, PFH, added initial history and changed data to epoch
-             origin
-           2003/03/29, PFH, changed default datum to WGS84
-           2003/04/04, PFH, modified file chooser behaviour
-           2003/05/22, PFH, added polygon filling for coastlines
-           2004/01/08, PFH, added splash window
-           2004/02/21, PFH, added viewPanel.setStaticView (true)
-           2004/04/06, PFH
-            - fixed problem with setCurrentDirectory()
-            - added --nosplash option
-           2004/05/22, PFH, modified to use GUIServices.getIcon()
-           2004/06/01, PFH
-            - modified overlay menu
-            - updated to call viewPanel.stopRendering() when needed
-           2004/06/03, PFH
-            - modified to detect a zero-length pan
-            - changed border colors for better legibility
-           2004/06/17, PFH, modified to use ColorLookup for colors
-           2004/06/18, PFH, added update agent
-           2004/10/05, PFH, removed rows and cols usage in metadata
-           2005/01/30, PFH, added error dialog to replace standard error
-           2005/03/15, PFH, reformatted documentation and usage note
-           2005/04/04, PFH, added menu item icons
-           2005/04/06, PFH, modified help dialog size
-           2005/04/23, PFH, added ToolServices.setCommandLine()
-           2005/05/18, PFH, changed "datum" to "spheroid"
-           2005/05/21, PFH, removed "Created by" history attribute
-           2005/06/20, PFH, added minimized window icon
-           2006/03/11, PFH, modified menu keymask for better Mac integration
-           2006/05/28, PFH, modified to use MapProjectionFactory
-           2006/06/23, PFH, changed --nosplash to --splash command line option
-           2006/06/27, PFH, modified to use PoliticalOverlay class
-           2006/11/04, PFH, changed to use LONG_NAME for GUI components
-           2007/04/19, PFH, added version printing
-           2007/07/27, PFH
-           - changed DrawingProxy to LightTable
-           - temporarily removed invokeLater() call in setMaster()
-           2007/09/18, PFH
-           - changed to use GUIServices.getFileChooser()
-           - added calls to rescanCurrentDirectory() 
-           2014/09/15, PFH
-           - Changes: Removed splash screen options and replaced splash
-             functionality with JRE builtin capability.
-           - Issues: In some cases we were getting a slow startup, so we want
-             to make sure the user knows there is something happening.
 
+     File: cwmaster.java
+   Author: Peter Hollemans
+     Date: 2002/12/09
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

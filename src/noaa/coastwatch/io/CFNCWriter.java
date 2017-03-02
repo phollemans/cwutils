@@ -1,19 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CFNCWriter.java
-  PURPOSE: A class to write NetCDF/CF format files.
-   AUTHOR: Peter Hollemans
-     DATE: 2010/02/15
-  CHANGES: 2015/04/13, PFH
-           - Changes: Updated to use new NetcdfFileWriter class, and added
-             test main() method.
-           - Issue: The NetcdfFileWritable class was deprecated when we updated
-             to the latest NetCDF Java API.
-           2016/01/19, PFH
-           - Changes: Updated to new logging API.
+
+     File: CFNCWriter.java
+   Author: Peter Hollemans
+     Date: 2010/02/15
 
   CoastWatch Software Library and Utilities
-  Copyright 2010-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2010 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

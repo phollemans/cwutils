@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: SatellitePassTableModel.java
-  PURPOSE: A class to hold satellite pass info as a Swing table model.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/01/13
-  CHANGES: 2003/03/17, PFH, improved performance of date/time sorting
-           2003/03/26, PFH, modified to use new ServerQuery
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2004/06/01, PFH, added setSource() method and new constructor
-           2004/11/14, PFH, fixed event dispatch lockup bug in update()
+
+     File: SatellitePassTableModel.java
+   Author: Peter Hollemans
+     Date: 2003/01/13
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,39 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: LatLonOverlay.java
-  PURPOSE: An overlay for latitude/longitude grid lines and labels
-   AUTHOR: Peter Hollemans
-     DATE: 2002/07/25
-  CHANGES: 2002/09/04, PFH, rearranged
-           2002/10/23, PFH, added label shadows
-           2002/11/29, PFH, added prepare, draw
-           2002/12/12, PFH, modified grid line rendering for discontinuities
-           2003/01/14, PFH, added offset constant for line labels
-           2004/03/07, PFH, added various get methods
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2004/04/04, PFH, added serialization
-           2004/08/30, PFH, added readObject() to correct problems
-             when deserializing font information on different
-             operating systems
-           2005/02/07, PFH, modified to use EarthLocation.formatSingle()
-           2005/03/21, PFH, added transparency handling
-           2005/04/03, PFH, increased label offset
-           2005/05/18, PFH, modified to generate EarthLocations in view datum
-           2006/01/13, PFH, added check for null color
-           2006/04/10, PFH, changed grid line drawing to non-antialiased lines
-           2006/11/19, PFH, added light text halo for dark foreground colors
-           2006/11/20, PFH, modified rendering method for shadows
-           2006/12/21, PFH, moved some functionality to LabeledLineOverlay
-           2015/06/17, PFH
-           - Changes: Added serialization constant.
-           - Issue: The parent class was changed and refactored, so the
-             overlays that were previously saved were not being de-serialized
-             correctly.  So running "serialver" on the new classes, and 
-             comparing to the error message produced in the ResourceManager
-             class, yields the proper serialization constants.
+
+     File: LatLonOverlay.java
+   Author: Peter Hollemans
+     Date: 2002/07/25
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

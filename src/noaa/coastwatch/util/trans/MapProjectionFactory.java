@@ -1,19 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: MapProjectionFactory.java
-  PURPOSE: Creates map projection objects.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/05/26
-  CHANGES: 2006/10/05, PFH, added call to setPositiveLon for GEO projections
-           2007/07/13, PFH, added check for spheroid/system compatibility
-           2012/11/05, PFH, removed forceGctp flag, added new pure Java class 
-             projections, removed check for sphere-only support
-           2013/02/05, PFH
-             - added check for unsupported projection system code
-             - added missing geographic projection
- 
+
+     File: MapProjectionFactory.java
+   Author: Peter Hollemans
+     Date: 2006/05/26
+
   CoastWatch Software Library and Utilities
-  Copyright 2006-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

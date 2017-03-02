@@ -1,33 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ACSPOHDFReader.java
-  PURPOSE: Reads HDF files from the NOAA/NESDIS ACSPO processing system.
-   AUTHOR: Peter Hollemans
-     DATE: 2007/06/20
-  CHANGES: 2007/09/20, PFH, changed name to ACSPO
-           2007/12/06, PFH, added variable filtering based on dimensions
-           2008/04/02, PFH
-           - updated to read new SATELLITE attribute
-           - updated to use new HDF geolocation and prototype variables
-           2010/03/30, PFH, modified constructor to close file on failure
-           2010/11/01, XL, modified getVariable method to read non-chunked
-             compressed files
-           2010/12/02, XL, modified getGlobalInfo method to read satellite
-             name info for ACSPO VIIRS files
-           2013/11/18, PFH
-           - Changes: updated getGlobalInfo() for Metop-B satellite and to
-             properly read SATELLITE, L1B, INSTRUMENT_DATA, SENSOR attributes
-             in succession to get satellite and sensor
-           - Issue: reading AVHRR Metop-B files shows satellite "Unknown" and
-             sensor "FRAC"
-           2015/04/17, PFH
-           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
-           - Issue: The HDF library was crashing the VM due to multiple threads
-             calling the library simultaneously and the library is not
-             threadsafe.
+
+     File: ACSPOHDFReader.java
+   Author: Peter Hollemans
+     Date: 2007/06/20
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2007 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

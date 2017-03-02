@@ -1,16 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: VisualOverlay.java
-  PURPOSE: Defines a visual interface for an earth data overlay.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/03/01
-  CHANGES: 2004/10/19, PFH, modified to show only one chooser dialog
-           2005/04/06, PFH, added tool tip text to components
-           2006/06/29, PFH, modified for new createDialog() layout
-           2006/11/02, PFH, modified for validation of chooser
-           
+
+     File: VisualOverlay.java
+   Author: Peter Hollemans
+     Date: 2004/03/01
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

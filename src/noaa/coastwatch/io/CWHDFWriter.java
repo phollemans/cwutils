@@ -1,67 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CWHDFWriter.java
-  PURPOSE: A class to write CoastWatch HDF format files using the JNI
-           interface to the HDF library.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/06/29
-  CHANGES: 2002/07/12, PFH, added setMetaVersion
-           2002/07/20, PFH, added navigation attribute
-           2002/07/27, PFH, changed swath bounds data to double[]
-           2002/07/29, PFH, fixed 2.x/3.x affine transform bug
-           2002/11/12, PFH, removed pass type attribute
-           2002/11/18, PFH, added default metadata version constant
-           2002/12/03, PFH, modified for map projection changes
-           2002/12/24, PFH, added updating writer constructor
-           2003/08/28, PFH, added pass_type attribute for 2.x files
-           2003/11/22, PFH, fixed Javadoc comments
-           2004/02/16, PFH, fixed problem writing pass_type for non
-             created files in which info == null
-           2004/03/23, PFH, modified swath encoding to use List
-           2004/06/08, PFH, moved updateNavigation() to CWHDFReader
-           2004/09/09, PFH, added handling for non-satellite sources and 
-             composite data sets
-           2004/09/14, PFH, added writing code for multiple time periods
-           2004/09/22, PFH
-           - added updateHistory() 
-           - modified to write user-level global/variable metadata
-           2004/09/23, PFH
-           - changed compatibility mode default to "false"
-           - modified metadata upgrade test
-           2004/09/27, PFH
-           - modified to use MetadataServices.toArray()
-           - corrected setVariableInfo() to write rows/cols attributes for
-             any exception
-           2004/09/28, PFH, modified to append history on close
-           2004/09/29, PFH, added writing of extra transform metadata
-           2004/09/30, PFH
-           - modified to write pass_date for all metadata versions
-           2005/01/18, PFH, added support for sensor scan projections
-           2005/02/14, PFH, fixed inappropriate nav_affine write bug
-           2005/05/05, PFH, added package version to history logging
-           2005/05/18, PFH, changed "datum" to "spheroid"
-           2005/07/18, PFH, modified variable creation to set fraction digits
-             for unscaled float and double data
-           2007/04/19, PFH, modified to use getToolVersion()
-           2007/04/24, PFH, extended to allow DataProjection transform writing
-           2009/06/25, PFH, modified to write the "calibrated_nt" attribute
-           2010/03/30, PFH, modified constructor to close file on error
-           2015/04/17, PFH
-           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
-           - Issue: The HDF library was crashing the VM due to multiple threads
-             calling the library simultaneously and the library is not
-             threadsafe.
-           2015/09/03, PFH
-           - Changes: Added an extra test if missing data value is set for
-             a variable when writing data.
-           - Issue: If a data provider of swath data doesn't see a need for
-             a missing value, and then the data is reprojected, then we have a
-             problem for pixels that fall outside the swath in the
-             master region.  So we added some reasonable guesses for good 
-             missing values on IEEE floating point types.
+
+     File: CWHDFWriter.java
+   Author: Peter Hollemans
+     Date: 2002/06/29
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

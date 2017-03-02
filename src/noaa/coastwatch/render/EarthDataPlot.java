@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthDataPlot.java
-  PURPOSE: A class to set up a plot of earth data with legends.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/10/04
-  CHANGES: 2002/10/14, PFH, added Renderable interface
-           2003/11/21, PFH, modified for updates in EarthContextElement
-           2004/09/09, PFH, changed SatelliteDataPlot to EarthDataPlot
-           2004/10/08, PFH, fixed to initialize stroke before drawing
-           2006/11/20, PFH, modified to use GraphicsServices.drawRect()
+
+     File: EarthDataPlot.java
+   Author: Peter Hollemans
+     Date: 2002/10/04
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

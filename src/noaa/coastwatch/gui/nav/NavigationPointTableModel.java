@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: NavigationPointTableModel.java
-  PURPOSE: Provides table data for a set of navigation points.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/12/12
-  CHANGES: n/a
+
+     File: NavigationPointTableModel.java
+   Author: Peter Hollemans
+     Date: 2006/12/12
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

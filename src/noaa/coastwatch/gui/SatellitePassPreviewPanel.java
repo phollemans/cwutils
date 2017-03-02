@@ -1,15 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: SatellitePassPreviewPanel.java
-  PURPOSE: To display an image preview of a satellite pass.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/01/20
-  CHANGES: 2003/03/26, PFH, modified to blank on invalid preview URL
-           2004/05/22, PFH, modified to use GUIServices.getIcon()
-           2006/03/15, PFH, modified to use GUIServices.getIconButton()
+
+     File: SatellitePassPreviewPanel.java
+   Author: Peter Hollemans
+     Date: 2003/01/20
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

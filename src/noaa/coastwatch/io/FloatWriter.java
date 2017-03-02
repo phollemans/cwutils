@@ -1,15 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: FloatWriter.java
-  PURPOSE: A class to write binary format files as a stream of 
-           32-bit IEEE floating point values.
-   AUTHOR: Mark Robinson
-     DATE: 2002/07/19
-  CHANGES: 2002/08/25, PFH, rearranged
-           2005/02/16, PFH, fixed getTypeMin() returning positive value
+
+     File: FloatWriter.java
+   Author: Mark Robinson
+     Date: 2002/07/19
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

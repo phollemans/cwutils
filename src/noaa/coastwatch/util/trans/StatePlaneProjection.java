@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: StatePlaneProjection.java
-  PURPOSE: Handles State Plane map transformations.
-   AUTHOR: Peter Hollemans
-     DATE: 2012/11/02
-  CHANGES: 2013/09/23, PFH
-           - change: modified call to super to pass actual zone (not zero)
-           - issue: cwmaster reverting to 0 for zone on Apply
-           - change: added call to setDatum in constructor
-           - issue: datum reported was incorrect, only set correctly in actual
+
+     File: StatePlaneProjection.java
+   Author: Peter Hollemans
+     Date: 2012/11/02
 
   CoastWatch Software Library and Utilities
-  Copyright 2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2012 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

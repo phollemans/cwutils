@@ -1,29 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: InverseGridResampler.java
-  PURPOSE: A class to perform resampling of data from one projection 
-           to another.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/01/26
-  CHANGES: 2014/02/12, PFH
-           - Changes: Modified perform() method to minimize dynamic memory
-             allocation.
-           - Issue: The nested for loops in perform() were allocating a number
-             of objects for every iteration.  We suspect the loop would run 
-             more efficiently without the overhead of creating new objects
-             every time through.
-           2015/11/05, PFH
-           - Changes: Updated to extent the mapping of pixels to full edges.
-           - Issue: When time sequential swaths were being registered 
-             separately and then combined, we found single pixel gaps along
-             the seam between swaths.  By extending the source location
-             bounds test to include the 0.5 pixel border of the source grid,
-             this cleared up these gap lines.
-           2017/01/14, PFH
-           - Changes: Aded extra informtation printing in verbose mode.
+
+     File: InverseGridResampler.java
+   Author: Peter Hollemans
+     Date: 2005/01/26
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

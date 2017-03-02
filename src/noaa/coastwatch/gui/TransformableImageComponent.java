@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TransformableImageComponent.java
-  PURPOSE: To define the methods for a transformable image component.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/06/02
-  CHANGES: 2006/12/14, PFH, added getImageAffine()
+
+     File: TransformableImageComponent.java
+   Author: Peter Hollemans
+     Date: 2004/06/02
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

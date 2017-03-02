@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: PalettePanel.java
-  PURPOSE: To show a color palette graphically.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/09/13
-  CHANGES: 2003/11/22, PFH, fixed Javadoc comments
-           2004/02/17, PFH, changed setEnhancement to setFunction
-           2004/02/09, PFH, fixed color range problem
-           2005/03/21, PFH, added clone() calls
-           2005/10/09, PFH, added check for >256 color palette
+
+     File: PalettePanel.java
+   Author: Peter Hollemans
+     Date: 2003/09/13
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

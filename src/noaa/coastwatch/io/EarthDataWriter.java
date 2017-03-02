@@ -1,22 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthDataWriter.java
-  PURPOSE: Abstract class to setup the functionality of all data
-           writer subclasses.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/04/15
-  CHANGES: 2002/06/25, PFH, added javadoc, package
-           2002/07/12, PFH, added close
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2004/05/06, PFH, added tracking of flush progress
-           2004/09/09, PFH, renamed SatelliteDataWriter to EarthDataWriter
-           2014/08/26, PFH
-           - Changes: Cleaned up implementation of finalize() to call
-             super no matter what happens.
-           - Issue: The original finalize() wasn't written correctly.
+
+     File: EarthDataWriter.java
+   Author: Peter Hollemans
+     Date: 2002/04/15
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

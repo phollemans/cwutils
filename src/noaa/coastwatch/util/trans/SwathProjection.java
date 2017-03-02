@@ -1,44 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: SwathProjection.java
-  PURPOSE: A class to perform swath earth transform calculations.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/04/15
-  CHANGES: 2002/06/04, PFH, added javadoc, package, implementation
-           2002/07/11, PFH, added equals method
-           2002/07/25, PFH, converted to location classes
-           2002/09/13, PFH, added earth area, area.contains() calls,
-             and special longitude filtering
-           2002/10/25, PFH, added null mode
-           2002/11/07, PFH, fixed object encoding constructor
-           2003/03/29, PFH, modified to save last transform point, 
-             added getDimensions
-           2004/03/23, PFH, modified to use List rather than Vector
-           2004/09/20, PFH, raised max iterations for search loop and 
-             modified test for convergence
-           2004/10/05, PFH, moved getDimensions() to EarthTransform
-           2005/01/25, PFH, modified convergence test again for 1e-6 factor
-           2005/05/16, PFH, modified for in-place transform
-           2005/05/20, PFH, now extends 2D transform
-           2005/07/31, PFH, added getNorthIsUp()
-           2005/08/25, PFH, fixed Math.abs bug in convergence distance test
-           2005/10/15, PFH, fixed northIsUp flag to useEncoding()
-           2006/09/27, PFH, updated northIsUp flag computation
-           2006/10/02, PFH, modified to handle missing location values
-           2007/04/10, PFH, corrected type cast problem in equals()
-           2007/10/27, PFH, added seed list
-           2007/11/15, PFH, fixed seed list initialization
-           2007/12/14, PFH, added caching of seed earth locations
-           2016/03/03, PFH
-           - Changes: Added support in equals() method for two swaths created
-             in null mode.
-           - Issue: When swaths are created in null mode, we need to have some
-             way that the user can compare them without having to do some
-             complicated cast to SwathProjection, or adding another method in
-             EarthTransform.
+
+     File: SwathProjection.java
+   Author: Peter Hollemans
+     Date: 2002/04/15
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

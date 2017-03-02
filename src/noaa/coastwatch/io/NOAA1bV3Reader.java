@@ -1,14 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: NOAA1bV3Reader.java
-  PURPOSE: Reads NOAA 1b format version 3 files.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/02/15
-  CHANGES: 2005/05/12, PFH, modified format description check for leniency
-           2006/01/27, PFH, moved format description check to V2 class
+
+     File: NOAA1bV3Reader.java
+   Author: Peter Hollemans
+     Date: 2005/02/15
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

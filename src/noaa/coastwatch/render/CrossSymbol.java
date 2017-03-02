@@ -1,12 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CrossSymbol.java
-  PURPOSE: Draws a cross symbol for plotting.
-   AUTHOR: Peter Hollemans
-     DATE: 2008/06/19
+
+     File: CrossSymbol.java
+   Author: Peter Hollemans
+     Date: 2008/06/19
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2008, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2008 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

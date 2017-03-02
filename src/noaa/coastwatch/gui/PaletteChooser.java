@@ -1,19 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: PaletteChooser.java
-  PURPOSE: To select from a set of colour palettes.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/09/06
-  CHANGES: 2004/01/15, PFH, updated Javadocs
-           2004/02/17, PFH
-             - modified to get/set palette objects
-             - added TabComponent interface
-             - removed explicit property change support
-           2004/05/17, PFH, changed to use PaletteFactory.getPredefined()
-           2004/05/22, PFH, modified to use GUIServices.getIcon()
+
+     File: PaletteChooser.java
+   Author: Peter Hollemans
+     Date: 2003/09/06
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

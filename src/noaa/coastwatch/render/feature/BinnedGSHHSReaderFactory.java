@@ -1,15 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: BinnedGSHHSReaderFactory.java
-  PURPOSE: Defines a data factory for multiple resolution GSHHS
-           coastline, border, and river readers.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/06/10
-  CHANGES: 2006/11/16, PFH modified to only use cached version
-             for network sources
+
+     File: BinnedGSHHSReaderFactory.java
+   Author: Peter Hollemans
+     Date: 2006/06/10
 
   CoastWatch Software Library and Utilities
-  Copyright 2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

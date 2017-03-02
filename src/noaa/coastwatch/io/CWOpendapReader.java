@@ -1,21 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CWOpendapReader.java
-  PURPOSE: Reads CoastWatch-style data through the OPeNDAP interface.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/05/08
-  CHANGES: 2006/11/03, PFH, changed getPreview(int) to getPreviewImpl(int)
-           2008/02/18, PFH, modified to use opendap.dap classes
-           2016/03/16, PFH
-           - Changes: Updated to use new opendap.dap.DConnect2 class and call
-             DArray.getClearName().
-           - Issue: The Java NetCDF library uses the newer OPeNDAP Java
-             classes and they were conflicting with the older API that we were
-             using, so we had to remove the old dap2 jar and conform to the 
-             API found in the classes in the latest toolsUI jar file.
+
+     File: CWOpendapReader.java
+   Author: Peter Hollemans
+     Date: 2006/05/08
 
   CoastWatch Software Library and Utilities
-  Copyright 2006-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

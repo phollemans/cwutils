@@ -1,18 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TextElement.java
-  PURPOSE: A class to handle text strings for annotation.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/09/14
-  CHANGES: 2002/10/03, PFH, added getLayout
-           2002/10/23, PFH, added drop shadows
-           2004/04/25, PFH, added getBasePoint(), getFont()
-           2005/04/03, PFH, added fuzzy drop shadows
-           2006/11/19, PFH, changed drop shadow style
-           2007/07/16, PFH, modified render() to use Graphics2D.create/dispose
+
+     File: TextElement.java
+   Author: Peter Hollemans
+     Date: 2002/09/14
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

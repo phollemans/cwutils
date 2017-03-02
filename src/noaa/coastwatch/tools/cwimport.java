@@ -1,25 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwimport.java
-  PURPOSE: To import satellite data files to CoastWatch HDF format.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/07/09
-  CHANGES: 2002/07/22, PFH, fixed problem reading coordinate variables
-           2002/07/23, PFH, added chunk, match options, fixed NARGS value
-           2002/08/25, PFH, rearranged remaining options parsing
-           2002/11/05, PFH, modified setChunkSize for bytes
-           2002/11/11, PFH, changed some option names for easier reading
-           2002/11/16, PFH, modified verbose messages
-           2002/11/18, PFH, removed writer options, changed documentation
-           2003/02/23, PFH, added NOAA 1b import
-           2004/09/28, PFH, modified to use ToolServices.setCommandLine()
-           2005/01/30, PFH, modified to use CleanupHook class
-           2005/03/14, PFH, reformatted documentation and usage note
-           2007/04/10, PFH, added --copy option
-           2007/04/19, PFH, added version printing
+
+     File: cwimport.java
+   Author: Peter Hollemans
+     Date: 2002/07/09
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

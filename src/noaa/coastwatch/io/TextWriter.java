@@ -1,19 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TextWriter.java
-  PURPOSE: A class to write ASCII text format files.
-   AUTHOR: Peter Hollemans
-           Mark Robinson
-     DATE: 2002/04/16
-  CHANGES: 2002/07/26, MSR, added implementation
-           2002/07/31, PFH, converted to location classes
-           2002/08/25, PFH, rearranged
-           2002/11/26, PFH, optimized value printing loop
-           2003/06/10, PFH, fixed printing of NaN missing values
-           2004/02/15, PFH, added super() call in constructor
+
+     File: TextWriter.java
+   Author: Peter Hollemans
+     Date: 2002/04/16
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: BinaryOptionPanel.java
-  PURPOSE: Allows the user to choose binary options for data export.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/04
-  CHANGES: n/a
+
+     File: BinaryOptionPanel.java
+   Author: Peter Hollemans
+     Date: 2004/05/04
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

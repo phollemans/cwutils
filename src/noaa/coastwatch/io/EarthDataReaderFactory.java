@@ -1,35 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthDataReaderFactory.java
-  PURPOSE: A class to act as a factory for earth data readers.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/04/15
-  CHANGES: 2002/04/21, MSR, added implementation
-           2002/05/21, PFH, added javadoc, package, revised code
-           2003/02/13, PFH, added NOAA1b readers
-           2004/04/10, PFH, modified to use reader list
-           2004/09/09, PFH, renamed SatelliteDataReaderFactory to 
-             EarthDataReaderFactory
-           2005/02/15, PFH, added NOAA 1b V3 reader to default list
-           2005/07/03, PFH, added check for network file name
-           2005/07/04, PFH, added CWNCReader
-           2005/08/05, PFH, added GenericNCReader
-           2006/01/27, PFH, added NOAA 1b V4 reader to default list
-           2006/05/29, PFH, modified to use reader name strings
-           2006/09/01, PFH, added extensions
-           2006/11/15, PFH, added NOAA 1b V5 reader to default list
-           2007/09/20, PFH, added ACSPOHDFReader class
-           2007/11/05, PFH, added NOAA1bFileReader for non-AVHRR data
-           2012/10/19, PFH, removed HDF5-specific reader list
-           2012/12/02, PFH, removed IMGMAP-based reading
-           2015/02/27, PFH
-           - Changes: Renamed reader that uses Java NetCDF API with CF parsing
-             to CommonDataModelNCReader.
-           - Issue: We needed to have a name that better reflected the
-             function of the reader.
+
+     File: EarthDataReaderFactory.java
+   Author: Peter Hollemans
+     Date: 2002/04/15
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,21 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: SolidBackground.java
-  PURPOSE: A class to view earth data overlays against a plain background.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/12/01
-  CHANGES: 2003/04/19, PFH, added rendering progress mode
-           2005/05/30, PFH, added set/get background methods
-           2014/03/25, PFH
-           - Changes: Added a new constructor that only needs a color.
-           - Issue: Changes in EarthDataView made it so that routines that
-             called the constructor with null as the transform threw a
-             NullPointerException.  So we created a new constructor
-             and a default transform to use in these cases when the transform
-             is not important.
+
+     File: SolidBackground.java
+   Author: Peter Hollemans
+     Date: 2002/12/01
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

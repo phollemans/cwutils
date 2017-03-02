@@ -1,88 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwrender.java
-  PURPOSE: To perform earth data visualizations.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/10/11
-  CHANGES: 2002/10/21, PFH, modified BitmaskOverlay to accept Grid
-           2002/10/22, PFH, modified to calculate view-based statistics
-           2002/11/16, PFH, modified verbose messages
-           2002/11/20, PFH, added --bitmask option
-           2003/02/26, PFH, added --land option, simplified image i/o call
-           2003/03/12, PFH, added --water option, GeoTIFF output
-           2003/03/29, PFH
-             - added call to System.exit for headless operations
-             - fixed problem with two Blue-Red palettes
-           2003/03/31, PFH, added check for magnification lat/lon range
-           2003/04/02, PFH, changed to 3D logo
-           2003/05/14, PFH, changed default raster stroke rendering hint
-           2003/05/16, PFH, added GLERL palettes to comments
-           2003/05/26, PFH
-             - moved raster stroke hint into coast overlay
-             - added --coast option for line and fill specification
-           2003/07/21, PFH, added test for indexed GeoTIFF output
-           2003/08/28, PFH, added extra TIFF fields for GeoTIFF output
-           2003/11/15, PFH, modified to use ColorLookup.convert()
-           2003/12/29, PFH
-             - added --topo and --bath options
-             - modified to use SPLIT_REGEX and updated docs
-           2004/02/16, PFH, modified for simpler getVariable(String) calls
-           2004/05/03, PFH, added write() method
-           2004/05/18, PFH, modified to use PaletteFactory class
-           2004/05/20, PFH, tentatively removed preview mode
-           2004/10/12, PFH, modified for integer topography levels
-           2005/01/05, PFH, added --nostates option
-           2005/02/04, PFH, modified to use EnhancementFunctionFactory
-           2005/02/14, PFH
-           - added --logo option
-           - fixed PDF page size bug
-           2005/02/25, PFH, added chlorophyll palettes
-           2005/03/14, PFH
-           - reformatted documentation and usage note
-           - updated to handle alpha component colors
-           - added 'auto' output format mode
-           2005/03/26, PFH, added comments to write()
-           2005/03/28, PFH, added GIF output
-           2005/04/07, PFH, added shapefile support
-           2005/04/22, PFH, added --group option for overlay groups
-           2005/04/23, PFH, added ToolServices.setCommandLine()
-           2005/04/28, PFH, added spectrum and wind palettes
-           2005/05/19, PFH, modified to use reader datum for earth locations
-           2005/05/30, PFH, added --worldfile option
-           2005/06/03, PFH, added vector rendering and units conversion
-           2005/08/30, PFH, added call to ResourceManager.setupPalettes()
-           2006/01/19, PFH, added TIFF compression
-           2006/06/30, PFH, modified to use PoliticalOverlay class
-           2006/07/07, PFH, added --indexed and --imagecolors options
-           2006/07/11, PFH, added --exprmask and modified to accept multiple
-             options for --shape and --bitmask
-           2006/11/13, PFH, added TIFF equation desc for log enhancements
-           2006/11/22, PFH
-           - added check for 256 color map in indexed mode
-           - changed method of creating indexed image
-           - moved functionality to EarthImageWriter
-           2007/04/23, PFH, added version printing
-           2008/07/08, PFH, added --size=full support
-           2012/06/29, PFH, added --palettefile option
-           2012/08/11, PFH, added --palettecolors, --function boolean,
-             HSB-Cycle palette, watermark, and tickmark options
-           2013/11/07, PFH, added more detailed output for range normalization
-           2015/05/23, PFH
-           - Changes: Updated documentation.
-           - Issue: We created Unix man pages and the documentation needed
-             a few changes.
-           2016/02/10, PFH
-           - Changes: Added the --split option.
-           - Issue: We needed an alternative to the slash character for 
-             splitting command line arguments, because sometimes variable names
-             can contain a slash.
-           2017/01/18, PFH
-          - Changes: Added a --date option.
-          - Issue: We needed a way to override the date displayed in plot
-            legends, because sometimes the time-related metadata is incorrect.
+
+     File: cwrender.java
+   Author: Peter Hollemans
+     Date: 2002/10/11
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

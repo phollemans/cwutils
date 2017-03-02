@@ -1,28 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ContourGenerator.java
-  PURPOSE: Generates contour lines based on gridded data.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/12/10
-  CHANGES: 2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2004/10/12, PFH
-           - fixed zero contour levels problem
-           - added setLevelNudge() for contouring problems
-           2005/05/21, PFH, modified to handle earth location datum
-           2005/05/26, PFH, changed vectorList to featureList
 
-    NOTES: The algorithm for contouring gridded data values using a
-           triangular mesh is based on the CONREC subroutine from BYTE
-           magazine, June, 1987, and on information from the web site:
-
-             http://astronomy.swin.edu.au/~pbourke/projection/conrec
-
-           accessed December, 2003.  Substantial additions have been
-           made to the algorithm in order to join individual contour
-           segments into continuous lines where possible.
+     File: ContourGenerator.java
+   Author: Peter Hollemans
+     Date: 2003/12/10
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

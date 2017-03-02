@@ -1,18 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: VariableChooser.java
-  PURPOSE: Selects a variable from a data reader.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/02/17
-  CHANGES: 2014/11/11, PFH
-           - Changes: Added dispose() method.
-           - Issue: We had problems with garbage collecting all the memory when
-             a data analysis panel was closed, and it turned out that releasing
-             panels here and removing action listeners from the combo solved
-             most of the memory problems.
+
+     File: VariableChooser.java
+   Author: Peter Hollemans
+     Date: 2004/02/17
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

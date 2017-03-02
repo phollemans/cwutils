@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: MHSHeader.java
-  PURPOSE: Reads NOAA 1b format MHS data header records.
-   AUTHOR: Peter Hollemans
-     DATE: 2007/11/23
-  CHANGES: n/a
+
+     File: MHSHeader.java
+   Author: Peter Hollemans
+     Date: 2007/11/23
 
   CoastWatch Software Library and Utilities
-  Copyright 2007, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2007 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

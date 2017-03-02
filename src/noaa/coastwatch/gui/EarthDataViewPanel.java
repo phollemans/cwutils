@@ -1,48 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthDataViewPanel.java
-  PURPOSE: A class to display an earth data view.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/12/04
-  CHANGES: 2003/04/19, PFH, added rendering progress mode to view
-           2003/11/22, PFH, fixed Javadoc comments
-           2004/02/17, PFH, added documentation
-           2004/02/19, PFH, added reset() method
-           2004/02/20, PFH, added resize(), magnify(), updateDimensions()
-           2004/02/21, PFH, added setStaticView()
-           2004/03/28, PFH
-            - added getDefaultCursor()
-            - changed floor to round in data coords track bar
-           2004/04/26, PFH, added getAffine()
-           2004/05/29, PFH, added stopRendering(), isRendering() methods
-           2004/05/30, PFH, modified setView() to detect different view size
-           2004/06/03, PFH, improved paintComponent() algorithm
-           2004/06/04, PFH, added fitReset() method
-           2004/06/07, PFH, added setImageAffine() method
-           2004/10/19, PFH, fixed problem with rendering when not showing
-           2004/11/24, PFH, modified to use new delayed rendering scheme
-           2005/02/07, PFH, modified to use default EarthLocation formatting
-           2005/04/03, PFH, added antialiasing hint for buffer graphics
-           2005/05/24, PFH, added unityMagnify() method
-           2005/07/31, PFH, added setChanged() call in setView() to force
-             a redrawing of already prepared and unchanged views
-           2005/08/30, PFH, updated string printing in track bar update()
-           2006/04/03, PFH, added check for null transform in TrackBar
-           2006/05/25, PFH, added RENDERING_PROPERTY property change events
-           2006/12/14, PFH, added getImageAffine()
-           2007/07/30, PFH
-           - added setBounds() override
-           - tentatively disabled componentResized() listener
-           - added extra checks for resize in paintComponent()
-           2014/11/11, PFH
-           - Changes: Removed text field sizes in track bar.
-           - Issue: In implementing the ability to set the window size
-             programmatically, the track bar was preventing the interface from
-             being set to a smaller size.  This is because the trackbar
-             preferred size was much larger than necessary. 
-           
+
+     File: EarthDataViewPanel.java
+   Author: Peter Hollemans
+     Date: 2002/12/04
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,68 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthDataView.java
-  PURPOSE: A class to set up a graphical view of 2D earth locatable data.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/04/17
-  CHANGES: 2002/07/21, PFH, added implementation
-           2002/07/28, PFH, converted to location classes
-           2002/09/03, PFH, renamed to EarthDataView and restructured
-           2002/09/23, PFH, added upside down data detection
-           2002/10/04, PFH, added getLegend, getSize, setSize, setMaxAspect,
-             setWidth, setHeight
-           2002/10/08, PFH, changed to use center location, added resize
-             methods
-           2002/10/21, PFH, added coordinate caches
-           2002/10/22, PFH, added getCorners
-           2002/11/19, PFH, added verbose mode, modified to render bitmask
-             overlays correctly to destinations with no alpha support
-           2002/12/06, PFH, modified getArea to return clone
-           2002/12/10, PFH, added addOverlays and getOverlays, modified
-             constructor to only flip swath projections
-           2002/12/12, PFH, moved body of getResolution to EarthImageTransform
-           2002/12/15, PFH, added isPrepared
-           2002/12/16, PFH, added isChanged
-           2003/04/19, PFH, added rendering progress mode
-           2004/02/19, PFH, added getCenter(), magnify(factor)
-           2004/02/20, PFH, updated documentation
-           2004/02/21, PFH, added containsOverlay()
-           2004/03/01, PFH, added handling for overlay visibility and name
-           2004/03/03, PFH, added setChanged()
-           2004/03/09, PFH, modified isPrepared() to check overlay visibility
-           2004/03/11, PFH, added transform(Point,int[]), getProgress()
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2004/05/26, PFH, added setProperties() method
-           2004/05/28, PFH, added stopRendering(), isRendering() methods
-           2004/06/07, PFH, added image affine methods
-           2004/10/17, PFH, added invalidate()
-           2004/10/18, PFH, added hasCompatibleCaches()
-           2005/02/14, PFH, fixed fill problem when imageAffine rendering
-           2005/03/25, PFH
-           - added clone()
-           - modified to render all special overlays with alpha at once
-           2005/07/31, PFH, modified to use SwathProjection.getNorthIsUp()
-           2006/05/25, PFH, added call to setAccessHint() in computeCaches()
-           2006/06/06, PFH, added showSubregion() and getSubregion()
-           2006/10/07, PFH, modified to check for TransparentOverlay rather 
-             than BitmaskOverlay in render()
-           2006/12/14, PFH, added getImageAffine()
-           2006/12/18, PFH, added getUpsideDown()
-           2013/05/31, PFH, updated docs for getScale() and setCenterAndScale()
-           2014/02/25, PFH
-           - Changes: Updated to use orientation affine transform rather than
-             upside-down flag for orienting the view correctly.
-           - Issue: There were cases where a simple rotation of 180 deg wasn't
-             correct to orient the view and the best generic orientation was
-             expressed as an affine rather than using a negative scaling factor.
-           2014/04/02. PFH
-           - Changes: Corrected all documentation on scale factor.
-           - Issue: The meaning of scale factor was described inverse to its
-             implementation.
-           2016/01/19, PFH
-           - Changes: Updated to new logging API.
+
+     File: EarthDataView.java
+   Author: Peter Hollemans
+     Date: 2002/04/17
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

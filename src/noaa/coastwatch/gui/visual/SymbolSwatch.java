@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: SymbolSwatch.java
-  PURPOSE: An icon showing a plot symbol.
-   AUTHOR: Peter Hollemans
-     DATE: 2008/06/20
-  CHANGES: 2010/03/13, PFH, corrected Javadoc
-           
+
+     File: SymbolSwatch.java
+   Author: Peter Hollemans
+     Date: 2008/06/20
+
   CoastWatch Software Library and Utilities
-  Copyright 2010, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2008 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

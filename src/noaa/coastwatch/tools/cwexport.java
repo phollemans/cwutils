@@ -1,32 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwexport.java
-  PURPOSE: To translate earth data to external formats.
-   AUTHOR: Mark Robinson
-     DATE: 2002/07/07
-  CHANGES: 2002/07/31, PFH, added extra documentation and fixes
-           2002/11/16, PFH, modified verbose messages
-           2003/06/10, PFH, changed to print NaN for text missing values
-           2004/01/23, PFH, modified to use SPLIT_REGEX and updated docs
-           2005/01/30, PFH, modified to use CleanupHook class
-           2005/03/14, PFH
-           - reformatted documentation and usage note
-           - added automatic output format detection
-           2005/04/23, PFH, added ToolServices.setCommandLine()
-           2007/04/19, PFH, added version printing
-           2010/02/16, PFH, added NetCDF format output
-           2015/04/13, PFH
-           - Changes: Added NetCDF 4 write support.
-           - Issue: We want to start supporting NetCDF 4 read/write as an
-            alternative to HDF 4.  This is the first appearance of that
-            support, along with CDAT write support.
-           2015/05/23, PFH
-           - Changes: Updated documentation.
-           - Issue: We created Unix man pages and the documentation needed
-             a few changes.
- 
+
+     File: cwexport.java
+   Author: Mark Robinson
+     Date: 2002/07/07
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

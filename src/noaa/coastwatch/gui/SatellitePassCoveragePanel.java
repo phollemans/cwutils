@@ -1,14 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: SatellitePassCoveragePanel.java
-  PURPOSE: To display a graphical coverage diagram of a satellite pass.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/01/16
-  CHANGES: 2003/11/21, PFH, modified for updates in EarthContextElement
-           2005/05/19, PFH, fixed jumping problem at poles
+
+     File: SatellitePassCoveragePanel.java
+   Author: Peter Hollemans
+     Date: 2003/01/16
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2003, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

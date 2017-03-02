@@ -1,19 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: SimpleFileFilter.java
-  PURPOSE: To perform file filtering services for a file chooser.
-   AUTHOR: Jeff Dinkins
-     DATE: 2002/06/13
-  CHANGES: 2003/04/04, PFH
-             - renamed from ExampleFileFilter in Java SDK examples
-             - added standard comment block
-             - add "*" to file extension descriptions
-           2003/11/22, PFH, fixed Javadoc comments
-           2004/04/06, PFH, fixed more Javadoc comments
-           2005/03/21, PFH, modified to use predictable filter ordering
+
+     File: SimpleFileFilter.java
+   Author: Jeff Dinkins
+     Date: 2002/06/13
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

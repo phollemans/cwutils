@@ -1,29 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: MixedGridResampler.java
-  PURPOSE: A class to perform resampling of data from one projection 
-           to another.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/01/26
-  CHANGES: 2005/08/31, PFH, modified destination footprint computation
-             to avoid pixel dropout between rectangles
-           2006/07/13, PFH, added check for closer center point
-           2015/11/05, PFH
-           - Changes: Added extra test for destination rectangle location
-             goemetry, and setSourceFilter function.
-           - Issue: Users reported issues with registration of data in the
-             Pacific Ocean, and we found that in some cases when a
-             source rectangle crosses the +180/-180 boundary, the destination
-             rectangle locations are discontinuous (for example, Mercator
-             projection). One fix for this was to move the destination 
-             projection center longitude to -180.  The other solution is to
-             recognize source rectangles that map to a discontinuous area and
-             remove them from processing.  We also needed a way to handle 
-             selecting which source locations to use for registration, and the
-             setSourceFilter function allows for this in a generic way.
+
+     File: MixedGridResampler.java
+   Author: Peter Hollemans
+     Date: 2005/01/26
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

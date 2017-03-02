@@ -1,47 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwregister.java
-  PURPOSE: To register a number of earth data variables to a master 
-           projection.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/11/11
-  CHANGES: 2002/12/19, PFH, added try/catch around getVariable
-           2004/09/14, PFH, modified to clone EarthDataInfo object
-           2004/09/28, PFH, modified to use ToolServices.setCommandLine()
-           2004/10/05, PFH, modified to use EarthTransform.getDimensions()
-           2005/01/27, PFH, added --method, --rectsize, and --overwrite options
-           2005/01/30, PFH, modified to use CleanupHook class
-           2005/03/15, PFH, reformatted documentation and usage note
-           2006/07/13, PFH, updated for new overwrite behaviour
-           2007/04/19, PFH, added version printing
-           2011/09/13, XL, modified to use ACSPOInverseGridResampler for ACSPO files
-           2013/03/06, PFH, modified to make ACSPO resampler usage a method subtype
-           2015/11/05, PFH
-           - Changes: Removed usage of ACSPO-specific registration classes.
-           - Issue: In order to avoid duplicate changes/updates to
-             registration algorithms, we combined ACSPO and
-             regular registration classes into single classes.
-           2016/06/10, PFH
-           - Changes: Moved VIIRS bow-tie detection to new class.  Added options
-             for using an expression or filter to determine if a source pixel
-             should be used in registration.
-           - Issue: We had a request from Phil Keegstra to let the user supply a
-             data variable that contains a 1/0 flag for usability of the source
-             pixel data.
-           2016/10/13, PFH
-           - Changes: Re-added 'mixed-acspo' registration type to help with
-             backwards compatibility.
-           - Issue: Scripts that call the new version of cwregister were 
-             failing.
-           2017/01/19, PFH
-           - Changes: Added a method called "direct".
-           - Issue: We want to have some way of comparing the accuracy of 
-             remapping methods to the ultimate direct mapping approach which
-             may be slow but very accurate.  So we now have a "direct" method
-             of remapping to compare the results to other methods.
+
+     File: cwregister.java
+   Author: Peter Hollemans
+     Date: 2002/11/11
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

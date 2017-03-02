@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: HistogramPanel.java
-  PURPOSE: To show a histogram graphically.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/09/13
-  CHANGES: 2005/03/21, PFH, added clone() calls
+
+     File: HistogramPanel.java
+   Author: Peter Hollemans
+     Date: 2003/09/13
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

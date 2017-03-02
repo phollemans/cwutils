@@ -1,41 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GUIServices.java
-  PURPOSE: A class to perform various static GUI-related functions.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/10/09
-  CHANGES: 2004/05/03, PFH, added setContainerEnabled() method
-           2004/05/07, PFH, added invokeAndWait() method
-           2004/05/09, PFH, added createDialog(), createAction()
-           2004/05/10, PFH, added createMessageDialog()
-           2004/05/22, PFH, added getIcon(), ICON_INSETS
-           2005/01/31, PFH, added createErrorDialog() and lineWrap()
-           2005/02/05, PFH, modified setContainerEnabled() for certain classes
-           2005/03/21, PFH, added getFileChooser()
-           2006/01/10, PFH, fixed long string problem in lineWrap()
-           2006/03/11, PFH, added IS_MAC constant
-           2006/03/15, PFH, added getIconButton(), getIconToggle(), setSquare()
-           2006/10/14, PFH, added addMacOpenFileListener()
-           2006/05/03, PFH, added try/catch around user.dir property fetch
-           2006/06/29, PFH
-           - added setSameSize() method, 
-           - modified createDialog() layout to use Box for buttons
-           2006/10/28, PFH 
-           - added IS_WIN constant
-           - changed default directory to home for Mac and Windows
-           2006/11/06, PFH, added help-related methods and variables
-           2006/11/08, PFH, changed default position of OK button
-           2011/05/16, XL, added the local clipboard
-           2013/02/22, PFH, updated to supply Aqua help button
-           2014/08/11, PFH
-           - Changes: Added getPlatformDefaultDirectory() method.
-           - Issue: Different platforms use different locations to
-             open the initial directory for a file chooser.  We wanted
-             to have a consistent way to deliver this directory to
-             user code opening new file choosers.
+
+     File: GUIServices.java
+   Author: Peter Hollemans
+     Date: 2002/10/09
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

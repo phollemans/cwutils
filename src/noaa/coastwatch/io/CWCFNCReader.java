@@ -1,33 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CWCFNCReader.java
-  PURPOSE: Reads CoastWatch-style data through the NetCDF interface.
-   AUTHOR: X. Liu
-     DATE: 2012/06/27
-  CHANGES: 2013/06/21, PFH, updated to use Variable.getShortName()
-           2014/04/09, PFH
-           - Changes: Removed use of setIsCFConventions in DataVariable.
-           - Issue: The use of the method was never fully implemented in 
-             DataVariable so rather than continuing its use, we decided
-             to remove it and re-arrange the scaling and offset for CF
-             conventions before passing into the Grid constructor.
-           2016/02/10, PFH
-           - Changes: Added more sophisticated detection of rows and columns
-             dimensions for map transforms.  Previously the code was hard
-             coded to detect a "latitude" variable.  Now it looks for the
-             first 2D variable and uses that.
-           - Issue: Files that had CoastWatch HDF-like metadata but no 
-             "latitude" variable were not having a correct transform being
-             created.
-           2016/03/16, PFH
-           - Changes: Updated getPreviewImpl method to read any rank of
-             data, assuming that the rows and cols dimensions are the last 
-             two.
-           - Issue: The CoastWatch THREDDS server contained files that have
-             a rank of 5, and this reader was balking at those variables.
-  
+
+     File: CWCFNCReader.java
+   Author: X. Liu
+     Date: 2012/06/27
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2012 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

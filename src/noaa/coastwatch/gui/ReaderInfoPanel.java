@@ -1,15 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ReaderInfoPanel.java
-  PURPOSE: To show information from an earth data reader.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/02/17
-  CHANGES: 2004/11/24, PFH, extended to print transform info
-           2005/02/18, PFH, modified newline insertion points
-           2005/07/06, PFH, removed info tab, added showDialog() 
+
+     File: ReaderInfoPanel.java
+   Author: Peter Hollemans
+     Date: 2004/02/17
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

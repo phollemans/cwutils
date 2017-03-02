@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GraphicsServices.java
-  PURPOSE: A class to perform various static graphics functions.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/10/09
-  CHANGES: 2004/08/30, PFH, added supportsBinaryWithTransparency()
-           2005/03/27, PFH, modified isRasterDevice() for PDF
-           2006/05/03, PFH, enclosed PDF classes in try/catch statements
-           2006/05/28, PFH, modified PDF class tests for applet performance
-           2006/11/18, PFH, added drawRect()
+
+     File: GraphicsServices.java
+   Author: Peter Hollemans
+     Date: 2002/10/09
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

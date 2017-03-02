@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ExpressionParserFactory.java
-  PURPOSE: Creates standard expression parsers.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/07/11
-  CHANGES: n/a
+
+     File: ExpressionParserFactory.java
+   Author: Peter Hollemans
+     Date: 2006/07/11
 
   CoastWatch Software Library and Utilities
-  Copyright 2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

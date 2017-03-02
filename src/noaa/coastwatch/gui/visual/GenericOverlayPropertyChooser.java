@@ -1,23 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GenericOverlayPropertyChooser.java
-  PURPOSE: Allows the user to edit overlay properties.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/03/06
-  CHANGES: 2005/03/21, PFH, added transparency property
-           2005/04/05, PFH, made getLabel public static
-           2006/11/02, PFH, added getComponent()
-           2006/12/21, PFH, changed labels to drawLabels
-           2006/12/24, PFH, added properties for data reference overlays
-           2015/06/08, PFH
-             - Changes: Changed the maximum value for "mask" property values
-               to Integer.MAX_VALUE.
-             - Issue: It was limiting in CDAT to only be allowed to type in 
-               up to 255 for the integer mask value for a bitmask overlay, so
-               we increased the value to allow any mask value.
-           
+
+     File: GenericOverlayPropertyChooser.java
+   Author: Peter Hollemans
+     Date: 2004/03/06
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

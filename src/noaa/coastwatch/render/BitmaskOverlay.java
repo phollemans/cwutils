@@ -1,29 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: BitmaskOverlay.java
-  PURPOSE: An overlay for bitmasked variable data.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/09/23
-  CHANGES: 2002/10/21, PFH, optimized render
-           2002/11/29, PFH, added prepare, draw
-           2003/03/12, PFH, added inverse flag
-           2004/03/05, PFH, added getInverse(), getMask(), getGrid()
-           2004/03/12, PFH, updated to work with GUI display
-           2004/03/25, PFH, added public createColorModel() method
-           2004/03/26, PFH, modified to delay loading of grid variable
-           2004/04/04, PFH, added special serialization methods
-           2004/08/30, PFH, added special case for Java VMs that do
-             not support binary image with transparent color
-           2004/10/17, PFH
-           - added invalidate()
-           - changed to extend GridContainerOverlay
-           - modified to use EarthDataView.hasCompatibleCaches()
-           2006/01/13, PFH, added check for null color
-           2006/07/10, PFH, moved some functionality to MaskOverlay class
-           2007/11/05, PFH, modified getGridList() to return non-null
+
+     File: BitmaskOverlay.java
+   Author: Peter Hollemans
+     Date: 2002/09/23
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

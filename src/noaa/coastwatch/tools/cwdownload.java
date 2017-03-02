@@ -1,38 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwdownload.java
-  PURPOSE: To download CoastWatch data from a server.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/05/08
-  CHANGES: 2002/05/13, PFH, added multiple satellite, region, and type
-             specifications, added more verbose output
-           2002/07/09, PFH, modified command line processing
-           2002/07/16, PFH, added man page, and ground, test, force options
-           2002/11/16, PFH, modified verbose messages
-           2002/12/23, PFH, modified for pattern matching, added more
-             documentation
-           2003/01/24, PFH, removed default server, added host parameter
-           2003/03/25, PFH, modified to use new ServerQuery, added coverage
-             option
-           2003/04/29, PFH, added age option
-           2003/04/30, PFH, modified so that coverage and region indicate
-             mapped products
-           2003/05/16, PFH, updated documentation
-           2003/09/02, PFH, modified to *not* exit on connection error
-           2003/09/03, PFH, modified to abort when network hangs
-           2004/10/10, PFH
-           - modified to handle more network problems 
-           - added --timeout option
-           2005/01/30, PFH
-           - added --projection option
-           - modified to use CleanupHook class
-           2005/03/16, PFH, reformatted documentation and usage note
-           2005/04/23, PFH, added ToolServices.setCommandLine()
-           2006/01/13, PFH, modified to delete partial file on transfer error
-           2007/04/19, PFH, added version printing
+
+     File: cwdownload.java
+   Author: Peter Hollemans
+     Date: 2002/05/08
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

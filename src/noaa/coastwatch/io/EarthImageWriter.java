@@ -1,19 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthImageWriter.java
-  PURPOSE: Writes earth data to various image formats.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/11/22
-  CHANGES: 2007/06/19, PFH, modified to use ToolServices.getVersion()
-           2016/02/22, PFH
-           - Changes: Added writing of extra metadata to GIF, JPEG, PNG, GeoTIFF
-             and PDF files.
-           - Issue: We wanted to be able to tell which version of the software
-             was used to create a file, and the command line, in order to aid 
-             with diagnosing rendering issues.
- 
+
+     File: EarthImageWriter.java
+   Author: Peter Hollemans
+     Date: 2006/11/22
+
   CoastWatch Software Library and Utilities
-  Copyright 2006-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

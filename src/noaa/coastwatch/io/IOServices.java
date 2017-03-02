@@ -1,16 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: IOServices.java
-  PURPOSE: Performs various static IO-related functions.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/12/28
-  CHANGES: 2016/02/22, PFH
-           - Changes: Added printing of XML documents.
-           - Issue: In some cases, I/O involves XML documents, and we wanted
-             to be able to print these for debugging purposes.
+
+     File: IOServices.java
+   Author: Peter Hollemans
+     Date: 2003/12/28
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,27 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: DataLocation.java
-  PURPOSE: To define a data coordinate container with operations.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/07/25
-  CHANGES: 2002/08/26, PFH, added index/dims constructor
-           2002/09/06, PFH, changed rounding in getIndex
-           2002/09/16, PFH, added getPoint
-           2002/10/06, PFH, added increment
-           2002/11/14, PFH, added isInvalid
-           2002/12/04, PFH, added Cloneable interface
-           2003/12/27, PFH, added hashCode()
-           2004/01/10, PFH, added setCoords(int[])
-           2004/03/27, PFH, added setCoords(DataLocation)
-           2004/03/28, PFH, added format() method
-           2014/02/11, PFH
-           - Changes: Added markInvalid, transformInPlace, and 
-             getCoords (double[]).
-           - Issue: To help in implementing changes in LocationEstimator and
-             reduce memory allocations needed in InverseGridResampler.
- 
+
+     File: DataLocation.java
+   Author: Peter Hollemans
+     Date: 2002/07/25
+
   CoastWatch Software Library and Utilities
-  Copyright 2004-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

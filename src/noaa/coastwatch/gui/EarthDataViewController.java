@@ -1,30 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthDataViewController.java
-  PURPOSE: Handles the interaction between choosers and the view panel.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/02/17
-           2004/10/17, PFH, fixed bug in bitmask overlay navigation
-           2005/02/13, PFH, added null check in performViewOperation()
-           2005/05/22, PFH, added 1:1 view operation
-           2006/10/20, PFH, added warning message before navigation
-           2006/10/30, PFH, added legend panel
-           2006/11/10, PFH, added view update on adjusting function
-           2006/12/14, PFH, added navigation analysis panel
-           2007/07/27, PFH, changed DrawingProxy to LightTable
-           2007/07/30, PFH, changed BOX_MODE to BOX_ZOOM_MODE
-           2007/11/05, PFH, fixed null object in updateNavigation()
-           2014/11/11, PFH
-           - Changes: Added call to variableChooser.dispose().
-           - Issue: Memory was being held onto even after the dispose method
-             was called, and we found that it was largely through the 
-             VariableChooser instance.
-           2015/02/27, PFH
-           - Changes: Added call to compositeChooser.dispose()
-           - Issue: Same as the last change, memory was being leaked.
- 
+
+     File: EarthDataViewController.java
+   Author: Peter Hollemans
+     Date: 2004/02/17
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

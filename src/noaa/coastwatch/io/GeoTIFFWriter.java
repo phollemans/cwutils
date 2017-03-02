@@ -1,21 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GeoTIFFWriter.java
-  PURPOSE: To write GeoTIFF format TIFF files.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/03/03
-  CHANGES: 2003/08/28, PFH, added DateTime field, setAuthor, setDescription
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2005/05/18, PFH, changed "datum" to "spheroid"
-           2006/01/19, PFH, added compression
-           2016/02/22, PFH
-           - Changes: Added writing of extra metadata tags.
-           - Issue: We wanted to be able to tell which version of the software
-             was used to create a file, and the command line, in order to aid 
-             with diagnosing rendering issues.
+
+     File: GeoTIFFWriter.java
+   Author: Peter Hollemans
+     Date: 2003/03/03
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

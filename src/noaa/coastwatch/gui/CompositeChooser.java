@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CompositeChooser.java
-  PURPOSE: Selects a set of data composite variables.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/25
-  CHANGES: 2015/02/27, PFH
-           - Changes: Added dispose() method.
-           - Issue: Object references saved by this class were leading to
-             memory being not released automatically.  So we remove the action
-             listeners and the combo boxes when the chooser is no longer needed.
+
+     File: CompositeChooser.java
+   Author: Peter Hollemans
+     Date: 2004/05/25
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

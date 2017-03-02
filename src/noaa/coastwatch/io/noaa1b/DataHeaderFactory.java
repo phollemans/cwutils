@@ -1,14 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: DataHeaderFactory.java
-  PURPOSE: Creates NOAA 1b data headers from byte data.
-   AUTHOR: Peter Hollemans
-     DATE: 2007/08/27
-  CHANGES: 2007/11/16, PFH, added AMSU-A headers
-           2007/11/22, PFH, added AMSU-B and MHS headers
+
+     File: DataHeaderFactory.java
+   Author: Peter Hollemans
+     Date: 2007/08/27
 
   CoastWatch Software Library and Utilities
-  Copyright 2007, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2007 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

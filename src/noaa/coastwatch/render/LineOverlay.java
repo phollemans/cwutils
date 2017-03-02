@@ -1,21 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: LineOverlay.java
-  PURPOSE: An overlay for vector specified data such as lines and shapes.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/07/25
-  CHANGES: 2002/09/03, PFH, modified parent class, rearranged
-           2002/09/19, PFH, added clip
-           2002/10/03, PFH, added fill
-           2002/10/10, PFH, added clip detection in polyline rendering
-           2002/10/10, PFH, changed operations to use Point2D
-           2002/10/23, PFH, changed default stroke to beveled joins
-           2003/11/22, PFH, fixed Javadoc comments
-           2004/04/04, PFH, added special serialization methods
-           2006/12/26, PFH, added drop shadows for lines
+
+     File: LineOverlay.java
+   Author: Peter Hollemans
+     Date: 2002/07/25
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

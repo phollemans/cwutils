@@ -1,22 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: Palette.java
-  PURPOSE: To hold palette name and color map.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/07/23
-  CHANGES: 2002/09/30, PFH, added predefined support in constructors
-           2002/10/11, PFH, moved parsing code to SimpleParser
-           2002/11/09, PFH, added NDVI palette
-           2002/12/29, PFH, renamed palettes files to end in ".txt"
-           2003/03/29, PFH, fixed problem with two Blue-Red palettes
-           2003/05/01, PFH, added GLERL palettes
-           2004/02/17, PFH, added getInstance(), equals()
-           2004/05/17, PFH, added getPredefined(), addPredefined()
-           2004/05/18, PFH, moved factory methods to PaletteFactory class
-           2005/02/25, PFH, fixed remap index bug
+
+     File: Palette.java
+   Author: Peter Hollemans
+     Date: 2002/07/23
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

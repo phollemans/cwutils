@@ -1,36 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthDataReader.java
-  PURPOSE: Abstract class to set the functionality of all data
-           reader subclasses.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/04/15
-  CHANGES: 2002/05/14, PFH, added javadoc, package
-           2002/06/07, PFH, added getIndex
-           2002/07/22, PFH, added getVariable(String), getPreview(String)
-           2002/11/12, PFH, added getSceneTime
-           2004/02/15, PFH, added getSource() and related constructor
-           2004/02/16, PFH, added better excpetion throwing to
-             getPreview(String), getVariable (String)
-           2004/03/11, PFH, added getAllGrids() method
-           2004/04/10, PFH, added getDataFormat() method
-           2004/05/07, PFH, added statistics map
-           2004/06/08, PFH, added updateNavigation() method
-           2004/09/09, PFH, renamed SatelliteDataReader to EarthDataReader
-           2005/01/28, PFH, added setDataProjection()
-           2005/04/22, PFH, added getAllVariables()
-           2005/06/22, PFH, added getRawMetadata()
-           2005/07/03, PFH, added extra docs for implementing classes
-           2006/11/03, PFH, added setUnitsMap() for default units
-           2010/03/15, PFH, added getCoordinateSystems()
-           2012/12/04, PFH, added canUpdateNavigation()
-           2014/08/26, PFH
-           - Changes: Cleaned up implementation of finalize() to call
-             super no matter what happens.
-           - Issue: The original finalize wasn't written correctly.
+
+     File: EarthDataReader.java
+   Author: Peter Hollemans
+     Date: 2002/04/15
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

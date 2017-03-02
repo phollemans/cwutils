@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: PaletteFactory.java
-  PURPOSE: To manage a set of predefined written color palettes.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/18
-  CHANGES: 2005/02/25, PFH, added chlorophyll palettes
-           2005/04/28, PFH, added spectrum and wind palettes
-           2006/02/03, PFH, added coral reef palettes
-           2006/02/02, PFH, added step sequential 25 palette for ECN
-           2012/08/11, PFH, added HSB-Cycle palette
+
+     File: PaletteFactory.java
+   Author: Peter Hollemans
+     Date: 2004/05/18
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

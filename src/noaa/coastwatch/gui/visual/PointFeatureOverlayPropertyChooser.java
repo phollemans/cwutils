@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: PointFeatureOverlayPropertyChooser.java
-  PURPOSE: Allows the user to edit overlay properties for point feature overlays.
-   AUTHOR: Peter Hollemans
-     DATE: 2017/02/09
-  CHANGES: n/a
-           
+
+     File: PointFeatureOverlayPropertyChooser.java
+   Author: Peter Hollemans
+     Date: 2017/02/09
+
   CoastWatch Software Library and Utilities
-  Copyright 2017, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2017 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

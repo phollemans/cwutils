@@ -1,18 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: MapProjection.java
-  PURPOSE: To perform common 2D map projection calculations.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/05/26
-  CHANGES: 2014/03/25, PFH
-           - Changes: Added isOrientable() override to return false.
-           - Issue: By default EarthTransform objects are orientable for
-             display, but some map projections shouldn't be oriented, so
-             by default we return false here and let individual projections
-             decide.
+
+     File: MapProjection.java
+   Author: Peter Hollemans
+     Date: 2006/05/26
 
   CoastWatch Software Library and Utilities
-  Copyright 2006-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

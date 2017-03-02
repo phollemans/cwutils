@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GCTPCStyleProjection.java
-  PURPOSE: Provides methods to directly implement GCTP C projections.
-   AUTHOR: Peter Hollemans
-     DATE: 2012/11/01
-  CHANGES: n/a
+
+     File: GCTPCStyleProjection.java
+   Author: Peter Hollemans
+     Date: 2012/11/01
 
   CoastWatch Software Library and Utilities
-  Copyright 2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2012 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

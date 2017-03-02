@@ -1,36 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthTransform.java
-  PURPOSE: Abstract class to set the functionality of all transform
-           subclasses.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/04/15
-  CHANGES: 2002/05/14, PFH, added javadoc, package
-           2002/06/01, PFH, made abstract, added distance function
-           2002/06/04, PFH, added integer coord distance function
-           2002/06/06, PFH, added getType
-           2002/06/07, PFH, added toGeo for integer coords
-           2002/07/25, PFH, converted to location classes
-           2002/07/31, PFH, added getResolution
-           2004/05/04, PFH, added createTranslated() method
-           2004/09/29, PFH, modified to extend MetadataContainer
-           2004/09/30, PFH, added getBoundingBox()
-           2004/10/05, PFH, added getDimensions()
-           2004/10/13, PFH, changed createTranslated() to getSubset()
-           2005/05/16, PFH, modified for datum shifting and in-place transform
-           2005/05/20, PFH
-           - moved 2D-specific methods to EarthTransform2D
-           - reworked getResolution() to be independent of dimension
-           2006/05/26, PFH, modified to implement SpheroidConstants
-           2006/05/28, PFH, moved getSpheroid() methods from GCTP class
-           2014/03/25, PFH
-           - Changes: Added get2DVersion()
-           - Issue: In some cases, we want to use 2D data locations and the code
-            assumes the transform is 2D.  But this is confusing, so we've added
-            the method to avoid having to cast to EarthTransform2D in user code.
+
+     File: EarthTransform.java
+   Author: Peter Hollemans
+     Date: 2002/04/15
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

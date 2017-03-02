@@ -1,28 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ColorComposite.java
-  PURPOSE: A class to set up a graphical view of earth data using
-           red/green/blue combination of three data variables.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/07/21
-  CHANGES: 2002/07/28, PFH, converted to location classes
-           2002/09/05, PFH, added comments and rearranged
-           2002/10/10, PFH, changed to use generic enhancement functions
-           2002/10/20, PFH, optimized getRGB, prepare
-           2002/10/22, PFH, added normalize
-           2003/04/19, PFH, added rendering progress mode
-           2003/09/13, PFH, moved Statistics out of DataVariable
-           2004/03/11, PFH, modified to improve performance
-           2004/05/25, PFH, changed getGrid() to getGrids()
-           2004/05/28, PFH, added handling for stopRendering flag
-           2004/06/09, PFH, modified setGrids() to invalidate row/col caches
-           2004/10/17, PFH, modified to use invalidate()
-           2014/03/25, PFH
-           - Changes: Changed to use getBounds() from getCorners()
-           - Issue: API was unclear.
+
+     File: ColorComposite.java
+   Author: Peter Hollemans
+     Date: 2002/07/21
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

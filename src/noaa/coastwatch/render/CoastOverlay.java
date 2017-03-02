@@ -1,28 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CoastOverlay.java
-  PURPOSE: An overlay for coastlines.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/07/25
-  CHANGES: 2002/09/04, PFH, rearranged
-           2002/09/22, PFH, added dynamic minimum area cutoff
-           2002/11/29, PFH, added prepare, draw
-           2002/12/16, PFH, optimized prepare
-           2002/12/30, PFH, changed to use binned GSHHS reader
-           2003/05/12, PFH, added polygon rendering
-           2003/05/25, PFH, added rendering hint changes
-           2003/05/29, PFH, added flag for small polygons
-           2004/03/03, PFH, fixed change in fill color problem
-           2004/03/07, PFH, added getSmallPolygons()
-           2004/03/09, PFH, added protected prepared flag
-           2004/04/04, PFH, added serialization
-           2004/10/18, PFH, fixed small polygons bug
-           2005/03/22, PFH, added transparency handling
-           2006/06/10, PFH, modified to use BinnedGSHHSReaderFactory and
-             added serialization constant
+
+     File: CoastOverlay.java
+   Author: Peter Hollemans
+     Date: 2002/07/25
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

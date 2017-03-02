@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: LegendPanel.java
-  PURPOSE: Displays a legend in a panel.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/04/03
-  CHANGES: 2006/10/30, PFH, added handling for isEnabled() == false
+
+     File: LegendPanel.java
+   Author: Peter Hollemans
+     Date: 2006/04/03
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,16 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GIFWriter.java
-  PURPOSE: Writes GIF format image files.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/03/28
-  CHANGES: 2016/02/22, PFH
-           - Changes: Refactored the encode() method.
-           - Issue: We wanted to have access to the quantization step from
-             outside the class.
+
+     File: GIFWriter.java
+   Author: Peter Hollemans
+     Date: 2005/03/28
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

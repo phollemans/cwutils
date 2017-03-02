@@ -1,23 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: NCReader.java
-  PURPOSE: Reads data through the NetCDF interface.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/07/03
-  CHANGES: 2006/11/03, PFH, changed getPreview(int) to getPreviewImpl(int)
-           2010/03/15, PFH, added getCoordinateSystems() and 
-             getVariablesForSystem()
-           2013/02/10, PFH, added NCSD interface and methods
-           2013/06/21, PFH, updated to use Variable.getShortName()
-           2014/08/26, PFH
-           - Changes: Updated to call dispose() on data variables when closing.
-           - Issue: We added a dispose() method at the DataVariable level to
-             better handle disposing of resources, rather than relying on 
-             finalize() which is inherently unsafe because there is no guarantee
-             that it will ever be called by the VM.
+
+     File: NCReader.java
+   Author: Peter Hollemans
+     Date: 2005/07/03
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

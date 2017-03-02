@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: Statistics.java
-  PURPOSE: To hold statistical data measurements.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/09/08
-  CHANGES: 2004/03/27, PFH, modified to use DataIterator
-           2004/03/29, PFH, added getData() method
-           2004/06/11, PFH, added null histogram check in getNormalizedCount()
-           2005/09/07, PFH, added average deviation
-           2007/06/18, PFH, added median value
+
+     File: Statistics.java
+   Author: Peter Hollemans
+     Date: 2003/09/08
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

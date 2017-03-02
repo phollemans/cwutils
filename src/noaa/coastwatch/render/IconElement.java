@@ -1,14 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: IconElement.java
-  PURPOSE: A class to handle small icon annotation elements.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/09/28
-  CHANGES: 2002/10/09, PFH, added rendering test for raster device
-           2003/04/02, PFH, added 3D icons 
+
+     File: IconElement.java
+   Author: Peter Hollemans
+     Date: 2002/09/28
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2002, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

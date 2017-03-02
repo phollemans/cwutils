@@ -1,30 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ImageTransform.java
-  PURPOSE: Class to set up image to data coordinate transformations.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/09/02
-  CHANGES: 2002/09/04, PFH, added isValid
-           2002/09/16, PFH, reverse coordinate order in affine
-           2002/09/23, PFH, modified for reversed corner coordinates
-           2002/10/08, PFH, changed to use center location
-           2002/10/10, PFH, changed transform to return Point2D
-           2002/12/12, PFH, added transform (Point2D)
-           2003/05/28, PFH, corrected pixel shift for overlay lines
-           2013/05/31, PFH, added new constructors and orientation affine
-           2014/04/02, PFH
-           - Changes: Implemented orientation affine changes, and deprecated
-             various constructors.
-           - Issue: We added constructors to take the orientation affine, but
-             didn't fully implement the changes needed to make use of the
-             new affine.  The documentation for the scale factor had to be
-             updated as well, since its desciption was inverse of the actual
-             usage.
-           2016/01/19, PFH
-           - Changes: Updated to new logging API.
+
+     File: ImageTransform.java
+   Author: Peter Hollemans
+     Date: 2002/09/02
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

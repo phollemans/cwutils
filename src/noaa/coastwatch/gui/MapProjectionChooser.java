@@ -1,23 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: MapProjectionChooser.java
-  PURPOSE: A class to display and modify map projection parameters.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/12/03
-  CHANGES: 2003/11/22, PFH, fixed Javadoc comments
-           2004/05/22, PFH, modified row/column linking selector
-           2005/05/18, PFH
-           - changed "datum" to "spheroid"
-           - modified to force sphere for certain systems
-           - modified to generate EarthLocation center in map datum
-           2006/05/28, PFH, modified to use MapProjectionFactory
-           2013/09/30, PFH
-           - changes: modified various methods to dynamically change
-             spheroid list based on current projection systems
-           - issue: state plane was allowing invalid spheroids to be set
+
+     File: MapProjectionChooser.java
+   Author: Peter Hollemans
+     Date: 2002/12/03
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

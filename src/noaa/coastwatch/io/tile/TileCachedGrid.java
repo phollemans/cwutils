@@ -1,25 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TileCachedGrid.java
-   AUTHOR: Peter Hollemans
-     DATE: 2014/08/01
-  CHANGES: 2014/08/26, PFH
-           - Changes: Implemented dispose() method.
-           - Issue: We added a dispose() method at the DataVariable level to
-             better handle disposing of resources, rather than relying on 
-             finalize() which is inherently unsafe because there is no guarantee
-             that it will ever be called by the VM.  In this case we needed
-             to remove tiles from the cache for this grid, when the tiles are 
-             known to no longer be needed.
-          2014/11/11, PFH
-          - Changes: Changed to use weak references for last tile.
-          - Issue: Holding onto strong references for the last tile was causing
-            problems with memory management.
-          2016/01/19, PFH
-           - Changes: Updated to new logging API.
+
+     File: TileCachedGrid.java
+   Author: Peter Hollemans
+     Date: 2014/08/01
 
   CoastWatch Software Library and Utilities
-  Copyright 2014-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2014 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,32 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GCTP.java
-  PURPOSE: To allow access to GCTP transformations from Java
-           via the native GCTP library in C.
-   AUTHOR: Mark Robinson
-     DATE: 2002/04/15
-  CHANGES: 2002/05/15, PFH, added javadoc, package
-           2002/06/01, PFH, added STD_RADIUS
-           2002/12/02, PFH, added Requirements inner class
-           2002/12/09, PFH, modified pack_angle, added unpack_angle
-           2003/03/05, PFH, modified documentation on requirements
-           2004/01/12, PFH, added getSpheroid()
-           2004/02/10, PFH, added getSpheroid(String), getProjection(String)
-           2004/09/05, PFH, corrected spelling of sinusoidal
-           2005/04/10, PFH, added supportsSpheroid()
-           2005/05/18, PFH
-           - added flattening constants
-           - changed "datum" to "spheroid"
-           2006/05/26, PFH, removed spheroid and projection constants/methods
-           2012/10/13, PFH, deprecated native methods and library
-           2013/09/29, PFH
-           - change: added the isSupportedSpheroid() method
-           - issue: cwmaster was allowing unsupported spheroids for the 
-             state plane system, so using this new method provided more 
-             information about compatible spheroids
-           
+
+     File: GCTP.java
+   Author: Mark Robinson
+     Date: 2002/04/15
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,23 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: DataColorScale.java
-  PURPOSE: A class to render a color scale with numbers and tick marks.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/09/26
-  CHANGES: 2004/02/06, PFH, modified for better log enhancement behaviour
-           2004/03/31, PFH
-            - added getLinearTickInterval() method
-            - modified annotation label when no units available
-           2004/10/08, PFH, fixed to initialize stroke before drawing
-           2004/10/12, PFH, modified for step enhancement problems
-           2005/05/30, PFH, removed dependency on passing DataVariable object
-           2006/04/03, PFH, changed rectangle plotting to line plotting
-           2006/06/20, PFH, modified to improve log scale labels
-           2006/11/20, PFH, modified to use GraphicsServices.drawRect()
-           2012/08/13, PFH, added setTickLabels
+
+     File: DataColorScale.java
+   Author: Peter Hollemans
+     Date: 2002/09/26
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

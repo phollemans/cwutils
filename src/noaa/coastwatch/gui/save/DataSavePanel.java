@@ -1,24 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: DataSavePanel.java
-  PURPOSE: Allows the user to choose save options for exported data.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/04
-  CHANGES: 2004/09/14, PFH, modified to clone EarthDataInfo
-           2004/10/13, PFH, modified to use EarthTransform.getSubset()
-           2005/05/20, PFH, modified to set datum on user-specified locations
-           2006/11/09, PFH
-           - changed write() to write(File)
-           - added setVariables(List)
-           2014/03/25, PFH
-           - Changes: Changed to use getBounds() from getCorners()
-           - Issue: API was unclear.
-           2015/04/13, PFH
-           - Changes: Added NetCDF 3 and NetCDF 4 save panels.
-           - Issue: We wanted to be able to save data from CDAT in NetCDF.
+
+     File: DataSavePanel.java
+   Author: Peter Hollemans
+     Date: 2004/05/04
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

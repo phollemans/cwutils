@@ -1,20 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: NOAA1bCachedGrid.java
-  PURPOSE: A subclass of CachedGrid that works with NOAA1b files.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/02/19
-  CHANGES: 2003/04/10, PFH, added longitude filtering for navigation 
-             interpolation
-           2004/10/07, PFH, modified to use setOptimizedCacheSize()
-           2005/07/28, PFH, modified to use line caching rather than 
-             tile caching (speeds up subsampled views considerably)
-           2005/09/21, PFH, moved longitude filtering to NOAA1bReader
-           2006/06/21, PFH, added support for missing scan lines
-           2006/12/27, PFH, added scan line time data reading
+
+     File: NOAA1bCachedGrid.java
+   Author: Peter Hollemans
+     Date: 2003/02/19
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

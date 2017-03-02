@@ -1,27 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthDataChooser.java
-  PURPOSE: Allows the user to open Earth-locatable data.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/06/23
-  CHANGES: 2006/03/19, PFH, updated to switch tab pane on showDialog() with
-             a file selected
-           2006/06/29, PFH, added message label about choosing variables
-           2006/10/20, PFH, added check for long variable name in dialog
-           2006/11/06, PFH, added help button
-           2007/09/18, PFH, added call to rescanCurrentDirectory()
-           2007/12/19, PFH, modified to discard reader ref after showDialog()
-           2007/12/20, PFH, added popup message when file reading is delayed
-           2011/02/22, XL, fixed the popup message bug of "no parent window"
-           2013/02/04, PFH, temporarily removed network file tabs
-           2013/09/05, PFH, removed cwf extension from file filters
-           2014/03/31, PFH
-           - Changes: Updated to use new SolidBackground constructor
-           - Issue: The constructor for SolidBackground was throwing a
-             NullPointerException on construction.
+
+     File: EarthDataChooser.java
+   Author: Peter Hollemans
+     Date: 2005/06/23
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

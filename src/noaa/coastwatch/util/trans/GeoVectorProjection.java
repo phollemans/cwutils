@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GeoVectorProjection.java
-  PURPOSE: Geographic vector based projection.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/08/05
-  CHANGES: 2017/01/18, PFH
-           - Changes: Added setting of dims protected variable in constructor.
-           - Issue: We were getting a null pointer exception when 
-             EarthTransform.transform() was running because it uses dims.length
-             to create a DataLocation object.
+
+     File: GeoVectorProjection.java
+   Author: Peter Hollemans
+     Date: 2005/08/05
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,21 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: HDFGSHHSReader.java
-  PURPOSE: To provide GSHHS coastline data from HDF data files.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/06/12
-  CHANGES: 2014/08/26, PFH
-           - Changes: Cleaned up implementation of finalize() to call
-             super no matter what happens.
-           - Issue: The original finalize wasn't written correctly.
-           2015/04/17, PFH
-           - Changes: Wrapped all HDF library calls in HDFLib.getInstance().
-           - Issue: The HDF library was crashing the VM due to multiple threads
-             calling the library simultaneously and the library is not
-             threadsafe.
+
+     File: HDFGSHHSReader.java
+   Author: Peter Hollemans
+     Date: 2006/06/12
 
   CoastWatch Software Library and Utilities
-  Copyright 2006-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

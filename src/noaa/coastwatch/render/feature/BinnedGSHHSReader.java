@@ -1,30 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: BinnedGSHHSReader.java
-  PURPOSE: To provide GSHHS coastline data from binned data files.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/12/29
-  CHANGES: 2003/05/11, PFH
-           - changed to extend PolygonFeatureReader
-           - added Bin.getPolygonFeatures
-           - modified various Segment methods
-           2003/05/21, PFH, fixed bin boundary fill problems
-           2003/10/04, PFH, fixed URL to path conversion problem on Win32
-           2003/11/22, PFH, fixed Javadoc comments
-           2003/12/10, PFH, changed PolygonFeatureReader to 
-             PolygonFeatureSource
-           2003/12/28, PFH, modified to use IOServices.getFilePath()
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2004/10/15, PFH, fixed coastline bugs and updated to use GSHHS 1.3
-           2005/05/26, PFH, changed vectorList to featureList
-           2006/06/10, PFH
-           - updated to allow for non-HDF child class
-           - moved some functionality to BinnedGSHHSReaderFactory
-           - moved HDF calls to HDFGSHHSReader
-           2006/11/16, PFH, added get methods for polygonRendering and minArea
+
+     File: BinnedGSHHSReader.java
+   Author: Peter Hollemans
+     Date: 2002/12/29
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,25 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwstats.java
-  PURPOSE: To calculate earth data file statistics.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/05/25
-           2002/07/16, PFH, added man page
-           2002/06/10, PFH, added stride option
-           2002/06/10, PFH, added sample option
-           2002/11/16, PFH, modified verbose messages
-           2002/11/27, PFH, added match option
-           2003/09/13, PFH, changed statistics methods
-           2004/09/09, PFH, modified to use printf()
-           2005/03/14, PFH, reformatted documentation and usage note
-           2005/04/23, PFH, added ToolServices.setCommandLine()
-           2005/09/23, PFH, added --limits option
-           2006/06/04, PFH, added --region option
-           2007/04/23, PFH, added version printing
-           2007/06/18, PFH, added median value
+
+     File: cwstats.java
+   Author: Peter Hollemans
+     Date: 2002/05/25
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: VariableEstimator.java
-  PURPOSE: To estimate the value of a spatially smooth variable value.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/06/03
-  CHANGES: 2002/07/25, PFH, converted to location classes
-           2002/09/13, PFH, added filter methods
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2006/10/02, PFH, modified to handle missing data values
-           2007/04/10, PFH, corrected documentation of getEncoding()
+
+     File: VariableEstimator.java
+   Author: Peter Hollemans
+     Date: 2002/06/03
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

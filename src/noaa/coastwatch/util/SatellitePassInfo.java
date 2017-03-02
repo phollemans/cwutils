@@ -1,14 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: SatellitePassInfo.java
-  PURPOSE: A class to hold satellite pass information.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/01/13
-  CHANGES: 2003/03/26, PFH, modified to use new ServerQuery
-           2004/08/31, PFH, modified to use new SatelliteDataInfo parent
+
+     File: SatellitePassInfo.java
+   Author: Peter Hollemans
+     Date: 2003/01/13
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

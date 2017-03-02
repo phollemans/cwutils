@@ -1,20 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: PolygonFeatureSource.java
-  PURPOSE: An abstract class for earth polygon data source methods.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/05/11
-  CHANGES: 2003/05/22, PFH, added test for degenerate polygon path
-           2003/12/10, PFH, changed class name from PolygonFeatureReader
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2005/03/21, PFH
-           - added more docs for renderPolygons()
-           - added renderOutlines()
-           2005/05/03, PFH, modified for changes in LineFeatureSource
-           2005/05/27, PFH, changed disjoint to discontinuous
+
+     File: PolygonFeatureSource.java
+   Author: Peter Hollemans
+     Date: 2003/05/11
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

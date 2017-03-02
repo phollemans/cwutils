@@ -1,15 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: VariableOptionPanel.java
-  PURPOSE: Allows the user to choose a subset from a list of variables.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/04
-  CHANGES: 2006/11/09, PFH, added setVariables()
-           2006/12/19, PFH, fixed bug in setVariables()
-           2012/12/04, PFH, updated to use getSelectedValuesList()
+
+     File: VariableOptionPanel.java
+   Author: Peter Hollemans
+     Date: 2004/05/04
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2012, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

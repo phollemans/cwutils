@@ -1,19 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: Preferences.java
-  PURPOSE: To manage a set of user preferences.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/05/19
-  CHANGES: 2005/02/04, PFH, added general settings and enhancement functions
-           2006/11/03, PFH, added units support
-           2015/05/15, PFH
-          - Changes: Added support for heap and cache size preferences.
-          - Issue: We needed some way to give the user the ability to
-            change the Java VM heap size and tile cache size without
-            having to edit batch or script files.
+
+     File: Preferences.java
+   Author: Peter Hollemans
+     Date: 2004/05/19
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

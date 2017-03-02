@@ -1,33 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ACSPONCCFReader.java
-  PURPOSE: Reads ACSPO data encoded in NetCDF with CF metadata.
-   AUTHOR: Peter Hollemans
-     DATE: 2013/01/25
-  CHANGES: 2013/02/12, PFH, added support for cached grids to getActualVariable
-           2013/05/13, PFH, fixed date parsing
-           2014/01/25, PFH
-           - Changes: added more strict check for ACSPO-specific attributes
-           - Issue: Lucas Moxey reported that recognizing some types of CF
-             data was failing, and it was because this reader was being used
-             rather than the generic NetCDF reader.
-           2014/08/08, PFH
-           - Changes: Updated to use the TileCachedGrid and NCTileSource classes
-             in getActualVariable().  Also fixed missing value for unsigned byte
-             data variables.
-           - Issue: The NCCachedGrid class uses a per-variable cache of limited
-             flexibility, and we needed to be able to handle larger chunk sizes
-             than it allowed for with tracking of total cache size across variables.
-             The TileCachedGrid makes this possible.  We were getting chunk size
-             too large messages when reading certain files.  Also, the missing value for
-             byte data should only be applied to signed byte types, not unsigned
-             according to Yury Kihai via email July 8, 2014.  We were seeing 
-             issues with nighttime data where the cloud bitmask data for SST 
-             was showing clear in situations where it should have been masked,
-             because the value was being ignored as missing data.
+
+     File: ACSPONCCFReader.java
+   Author: Peter Hollemans
+     Date: 2013/01/25
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2013 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

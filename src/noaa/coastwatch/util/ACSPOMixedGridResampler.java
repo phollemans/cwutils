@@ -1,15 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ACSPOMixedGridResampler.java
-  PURPOSE: A subclass of MixedGridResampler, but the perform method
-           is overwritten to handle the VIIRS bow-tie deletion. 
-   AUTHOR: X. Liu
-     DATE: 2012/04/25
-  CHANGES: 2013/04/10, PFH, cleaned up and moved bowtie deletion detection
-           2015/11/05, PFH, deprecated
+
+     File: ACSPOMixedGridResampler.java
+   Author: X. Liu
+     Date: 2012/04/25
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2015, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2012 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

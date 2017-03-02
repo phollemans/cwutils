@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ColorLookup.java
-  PURPOSE: A class to look up colors based on their name.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/10/11
-  CHANGES: 2003/11/15, PFH, added convert method
-           2004/05/17, PFH, changed to use XML format
-           2004/06/17, PFH, added getInstance(), method
-           2005/03/13, PFH, modified convert() to accept RGBA values
-           2005/03/26, PFH, modified convert() to accept color:trans values
+
+     File: ColorLookup.java
+   Author: Peter Hollemans
+     Date: 2002/10/11
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

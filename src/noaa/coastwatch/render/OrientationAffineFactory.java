@@ -1,14 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: OrientationAffineFactory.java
-  PURPOSE: Analyses earth transforms to determine need for a transform.
-   AUTHOR: Peter Hollemans
-     DATE: 2014/02/23
-  CHANGES: 2016/01/19, PFH
-           - Changes: Updated to new logging API.
+
+     File: OrientationAffineFactory.java
+   Author: Peter Hollemans
+     Date: 2014/02/23
 
   CoastWatch Software Library and Utilities
-  Copyright 2014-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2014 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

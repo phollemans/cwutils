@@ -1,55 +1,20 @@
 ///////////////////////////////////////////////////////////////////////
 /*
-     FILE: DataVariable.java
-  PURPOSE: A class to act as a container for variable data and
-           attributes.  The hash map acts as a catch-all container for
-           attribute key/value pairs.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/04/15
-  CHANGES: 2002/04/25, MSR, null pointer fix
-           2002/05/14, PFH, added javadoc, package
-           2002/05/31, PFH, added data coordinate routines
-           2002/06/06, PFH, rearranged and added getSubset and getValues
-           2002/07/25, PFH, simplified, added location class
-           2002/09/03, PFH, renamed to DataVariable
-           2002/10/06, PFH, added statistics class, added stride to
-             statistics calculation, added getRank
-           2002/10/21, PFH, optimized scaleValue
-           2002/10/22, PFH, added start and end to getStatistics
-           2002/10/31, PFH, removed get/set checks for invalid indices
-           2002/12/26, PFH, added getDecimals
-           2003/02/20, PFH, modified getStatistics to set Double.NaN values,
-             fixed max statistic problem
-           2003/02/21, PFH, added check in getStatistics for valid locations
-           2003/09/08, PFH, moved Statistics to its own class
-           2003/11/22, PFH, fixed Javadoc comments
-           2004/02/16, PFH, added unsigned type handling
-           2004/03/11, PFH, added toString() method
-           2004/03/27, PFH, modified to use DataVariableIterator and
-             StrideLocationIterator in getStatistics()
-           2004/03/28, PFH, added getOptimalStride() method
-           2004/04/12, PFH, added lookup tables
-           2004/10/05, PFH, modified to extend MetadataContainer
-           2005/06/03, PFH, added convertUnits() method
-           2006/05/25, PFH, added setAccessHint() method
-           2007/06/20, PFH, added various set methods
-           2014/04/09, PFH
-           - Changes: Removed method setIsCFConvention
-           - Issue: There are various operations to do with units
-             conversion and setting values that aren't set up to handle CF
-             scaling.  It was introduced for reading CF convention files, but
-             not fully implemented.  The fix is to re-arrange the scaling factor
-             and offset when reading CF data and then pass in the re-arranged
-             scaling to the data variable constructor.
-           2014/08/26, PFH
-           - Changes: Added dispose() method.
-           - Issue: We added a dispose() method at the DataVariable level to
-             better handle disposing of resources, rather than relying on 
-             finalize() which is inherently unsafe because there is no guarantee
-             that it will ever be called by the VM.
- 
+
+     File: DataVariable.java
+   Author: Peter Hollemans
+     Date: 2002/04/15
+
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

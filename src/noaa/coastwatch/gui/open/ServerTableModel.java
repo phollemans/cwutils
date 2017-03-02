@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ServerTableModel.java
-  PURPOSE: Models server information.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/06/24
-  CHANGES: n/a
+
+     File: ServerTableModel.java
+   Author: Peter Hollemans
+     Date: 2005/06/24
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

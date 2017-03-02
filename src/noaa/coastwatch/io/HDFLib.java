@@ -1,18 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: HDFLib.java
-  PURPOSE: Provides a singleton access point for the HDF 4 library.
-   AUTHOR: Peter Hollemans
-     DATE: 2015/04/17
-  CHANGES: 2017/01/14, PFH
-           - Changes: Updated the HDF class path (removing the ncsa).  Also
-             added workaround code for some HDF library JNI bugs.
-           - Issue: We updated the HDF library to version 4.2.12 in Java HDF
-             3.2.1.  We found that SDfindattr and SDiscoordvar have issues in
-             the JNI code, preventing proper operation as-is.
+
+     File: HDFLib.java
+   Author: Peter Hollemans
+     Date: 2015/04/17
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2015 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

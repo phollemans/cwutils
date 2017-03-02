@@ -1,16 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: HDF5Lib.java
-  PURPOSE: Provides a singleton access point for the HDF 5 library.
-   AUTHOR: Peter Hollemans
-     DATE: 2015/05/08
-  CHANGES: 2017/01/14, PFH
-           - Changes: Updated the HDF class path (removing the ncsa).
-           - Issue: We updated the Java HDF to version 3.2.1.
-  CHANGES: n/a
+
+     File: HDF5Lib.java
+   Author: Peter Hollemans
+     Date: 2015/05/08
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2015 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

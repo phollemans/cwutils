@@ -1,98 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CommonDataModelNCReader.java
-  PURPOSE: Reads CoastWatch-style data through the NetCDF interface.
-   AUTHOR: Peter Hollemans
-     DATE: 2005/07/04
-  CHANGES: 2006/05/28, PFH, modified to use MapProjectionFactory
-           2006/11/03, PFH, changed getPreview(int) to getPreviewImpl(int)
-           2007/02/13, PFH, added support for reading > 2D datasets using
-             array sections (ugly!)
-           2007/03/29, PFH, augmented to read multiple grid sets
-           2008/02/16, PFH, modified to use new Java netCDF 2.2.22 library
-           2010/02/14, PFH, modified to use new Java netCDF 4.1 library
-           2013/01/06, PFH, added extra comments for class
-           2013/05/24, PFH
-            - updated to use GridCoordSystem.getCalendarDateRange()
-            - modified latitude axis reading to handle south first reading
-           2014/04/06, PFH
-           - Changes: Updated to access the underlying NetCDF variable 
-             rather than the enhanced VariableDS, and to use the NCCachedGrid.
-             This means we have to do the metadata parsing ourselves for 
-             missing value and scaling/offset since there do not appear
-             to be any methods in VariableDS to access that info.
-           - Issue: We were running out of heap space with large datasets
-             (3600x7200) with float datatype, ~100 Mb per variable.  We need
-             to reduce this data footprint on the heap, and also use caching.
-             Accessing the underlying variable gave us access to the scaled
-             data (ie: short rather than float) and combined with caching
-             should control the heap usage.
-           2014/04/09, PFH
-           - Changes: Removed use of setIsCFConventions in DataVariable.
-           - Issue: The use of the method was never fully implemented in 
-             DataVariable so rather than continuing its use, we decided
-             to remove it and re-arrange the scaling and offset for CF
-             conventions before passing into the Grid constructor.
-           2014/11/17, PFH
-           - Changes: Renamed class to "CommonDataModel" from "Generic"
-           - Issue: We needed a more accurate description of the reader class,
-             since we'd like to expand its functionality in the future.
-           2016/02/12, PFH
-           - Changes: Added extra test for missing scaling factor in float
-             or double data types.
-           - Issue: Float and double variables with no scaling factor were 
-             being printed as integer values.
-           2016/03/03, PFH
-           - Changes: Modified getVariableNamesInGroup() and getVariableNames()
-             for better handling of coordinate axes.
-           - Issue: When NetCDF / CF data files contained data grids in which
-             the rank of data variables in a grid set was different than the
-             number of axes in the coordinate system, this violated the 
-             assumption in the getVariableNamesInGroup() method that they were
-             equal in rank.  Also, if coordinate axes were showing up as 
-             data variables as well as coordinate axes and being shared between
-             grid sets, they were being included in the list of variables twice.
-           2016/03/06, PFH
-           - Changes: Added support for CDM-style grid mapped projections.
-           - Issue: There was a request for support for satellite geostationary
-             projection from CF metadata, so we needed to add a generic way
-             to have grid mapped projections be read and a special type of
-             earth transform used to pass transformation calculations into 
-             and out of the CDM projection layer.
-           2016/03/11, PFH
-           - Changes: Added a nasty hack to support the geostationary projection
-             data for the Himawari satellite via an EllipsoidPerspectiveProjection
-             object.
-           - Issue: Users wanted to be able to have full lat/lon <--> row/col
-             transformation capability, using just the swath level data provided
-             in level 2 style files.  The current SwathTransform doesn't handle
-             geostationary projection so we have put in this hack to help the
-             users for now.  We also tried to use the CDM grid map projection
-             classes, but in our case the geostationary projection computations
-             didn't seem to be returning the correct values -- the coastlines
-             were shifted at off-nadir angles.  Also, the users were reluctant
-             to but all the extra metadata into the L2 files that are required 
-             for properly specifying a CF grid mapped projection (concern about
-             limitation of the GHRSST L2 format).
-           2016/03/24, PFH
-           - Changes: Updated getBaseVariableName method to use more specific
-             regular expression.
-           - Issue: There were some Grib files found in testing that had
-             variables with names like "Land_cover_0__sea_1__land_surface"
-             which broke the variable name extension scheme that uses "__"
-             as a field separator.
-           2016/06/24, PFH
-           - Changes: Updates attribute names for geostationary projection data.
-           - Issue: The attribute names were changed from mixed case to all
-             lower case.
-           2017/01/18, PFH
-           - Changes: Added detection of non-regularly spaced cylindrical 
-             projections.
-           - Issue: Non-regularly spaced product set projections were being 
-             treated as regularly spaced geographic projections.
+
+     File: CommonDataModelNCReader.java
+   Author: Peter Hollemans
+     Date: 2005/07/04
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2005 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

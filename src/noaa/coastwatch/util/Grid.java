@@ -1,26 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: Grid.java
-  PURPOSE: A subclass of DataVariable that has a 2 dimensions
-           and functions for data navigation correction.   
-   AUTHOR: Peter Hollemans
-     DATE: 2002/04/15
-  CHANGES: 2002/05/16, PFH, added javadoc, package
-           2002/07/25, PFH, converted to location classes
-           2002/10/20, PFH, optimized navigate function
-           2002/10/21, PFH, added getValue(int,int)
-           2002/10/31, PFH, modified getData for subsets
-           2002/11/12, PFH, added new constructor
-           2003/11/22, PFH, fixed Javadoc comments
-           2004/02/16, PFH, added unsigned type handling
-           2004/04/12, PFH, added lookup tables
-           2004/05/05, PFH
-            - added getSubset() method
-            - modified checkSubset() to check dimensions
-           2004/10/05, PFH, modified to use MetadataContainer methods
+
+     File: Grid.java
+   Author: Peter Hollemans
+     Date: 2002/04/15
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

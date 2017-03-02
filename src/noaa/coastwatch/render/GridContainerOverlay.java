@@ -1,15 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GridContainerOverlay.java
-  PURPOSE: An abstract overlay that uses grid data.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/10/17
-  CHANGES: 2006/07/10, PFH, added getGridList() and converted to interface
-           2006/11/17, PFH, added setDataSource()
-           2007/11/05, PFH, removed getGrid()
+
+     File: GridContainerOverlay.java
+   Author: Peter Hollemans
+     Date: 2004/10/17
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

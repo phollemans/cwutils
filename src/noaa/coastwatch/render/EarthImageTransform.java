@@ -1,20 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthImageTransform.java
-  PURPOSE: Class to set up geographic to image coordinate transformations.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/09/02
-  CHANGES: 2002/10/08, PFH, changed to use center location
-           2002/10/10, PFH, changed transform to return Point2D
-           2002/12/12, PFH, added getResolution, isDiscontinuous
-           2003/05/26, PFH, changed discontinuous jump factor threshold to 10
-           2014/03/25, PFH
-           - Changes: Depreacted constructor.
-           - Issue: The constructor for ImageTransform changed, so this 
-             constructor had to follow suit.
+
+     File: EarthImageTransform.java
+   Author: Peter Hollemans
+     Date: 2002/09/02
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

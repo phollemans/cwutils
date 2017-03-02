@@ -1,16 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ExpressionMaskOverlay.java
-  PURPOSE: Masks data based on a math expression.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/07/10
-  CHANGES: 2006/10/31, PFH, added handling for empty expressions
-           2006/11/02, PFH, modified for repeated setExpression() calls
-           2006/11/17, PFH, added setDataSource()
-           2007/11/05, PFH, removed getGrid()
+
+     File: ExpressionMaskOverlay.java
+   Author: Peter Hollemans
+     Date: 2006/07/10
 
   CoastWatch Software Library and Utilities
-  Copyright 2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

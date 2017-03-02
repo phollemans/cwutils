@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: CatalogQueryAgent.java
-  PURPOSE: Abstract class for performing earth data catalog queries.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/05/09
-  CHANGES: n/a
+
+     File: CatalogQueryAgent.java
+   Author: Peter Hollemans
+     Date: 2006/05/09
 
   CoastWatch Software Library and Utilities
-  Copyright 2006, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

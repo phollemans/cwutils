@@ -1,18 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GridResampler.java
-  PURPOSE: A class to perform resampling of data from one projection 
-           to another.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/11/11
-  CHANGES: 2002/12/19, PFH, modified verbose message
-           2002/12/20, PFH, added check for valid destination 
-             earth location
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2005/01/26, PFH, moved main funtionality to child class
+
+     File: GridResampler.java
+   Author: Peter Hollemans
+     Date: 2002/11/11
 
   CoastWatch Software Library and Utilities
-  Copyright 2004-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

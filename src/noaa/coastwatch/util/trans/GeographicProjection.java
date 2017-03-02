@@ -1,24 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GeographicProjection.java
-  PURPOSE: Handles Geographic map transformations.
-   AUTHOR: Peter Hollemans
-     DATE: 2012/11/02
-  CHANGES: 2017/01/15, PFH
-           - Changes: Corrected calculation in projfor with 
-             positive longitude adjustment.
-           - Issue: The returned column values for projections in which the
-             positive longitude flag was set were incorrect, because the 
-             adjustment to longitude was being done in degrees rather than
-             radians.  This affected the drawing of topographic contours for
-             areas east of +180 degrees longitude because the ETOPO database
-             earth transform is geographic and spans the +180/-180 boundary 
-             and column values for longitudes in the range [-180,0] were 
-             large and incorrect.  It probably also impacted coastlines and
-             other lines being drawn on geographic projection datasets.
+
+     File: GeographicProjection.java
+   Author: Peter Hollemans
+     Date: 2012/11/02
 
   CoastWatch Software Library and Utilities
-  Copyright 2012-2017, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2012 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

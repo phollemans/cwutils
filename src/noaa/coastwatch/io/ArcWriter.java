@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: ArcWriter.java
-  PURPOSE: A class to write Arc Files.
-   AUTHOR: Mark Robinson
-     DATE: 2002/07/15
-  CHANGES: 2002/08/25, PFH, rearranged
-           2005/02/16, PFH, modified setMissing() and writeHeader() to use 
-             negative missing value
-           2006/05/19, PFH, removed formatting to two decimal places
-           2007/05/08, PFH, added nbits line in header
+
+     File: ArcWriter.java
+   Author: Mark Robinson
+     Date: 2002/07/15
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

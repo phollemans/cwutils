@@ -1,12 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: TileCache.java
-   AUTHOR: Peter Hollemans
-     DATE: 2014/07/01
-  CHANGES: n/a
+
+     File: TileCache.java
+   Author: Peter Hollemans
+     Date: 2014/07/01
 
   CoastWatch Software Library and Utilities
-  Copyright 2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2014 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

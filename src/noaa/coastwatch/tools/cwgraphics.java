@@ -1,19 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwgraphics.java
-  PURPOSE: To creates annotation graphics.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/05/28
-  CHANGES: 2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2004/09/28, PFH, modified to use ToolServices.setCommandLine()
-           2004/10/05, PFH, modified to use EarthTransform.getDimensions()
-           2005/03/14, PFH, reformatted documentation and usage note
-           2006/05/28, PFH, reworded documentation for example
-           2006/07/01, PFH, modified to use PoliticalOverlay class
-           2007/04/19, PFH, added version printing
+
+     File: cwgraphics.java
+   Author: Peter Hollemans
+     Date: 2003/05/28
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

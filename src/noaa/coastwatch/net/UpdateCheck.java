@@ -1,14 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: UpdateCheck.java
-  PURPOSE: To check for updates to the CWF software online.
-   AUTHOR: Peter Hollemans
-     DATE: 2004/06/18
-  CHANGES: 2004/11/18, PFH, modified to generate unique user ID
-           2007/06/19, PFH, updated to use ToolServices.getVersion()
+
+     File: UpdateCheck.java
+   Author: Peter Hollemans
+     Date: 2004/06/18
 
   CoastWatch Software Library and Utilities
-  Copyright 2004, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

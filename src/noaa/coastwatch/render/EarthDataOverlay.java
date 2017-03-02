@@ -1,29 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: EarthDataOverlay.java
-  PURPOSE: A data overlay specifies information used for the
-           annotation of a data view.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/04/18
-  CHANGES: 2002/07/23, PFH, added package, javadoc
-           2002/03/09, PFH, renamed to EarthDataOverlay and rearranged
-           2002/11/29, PFH, added last earth image transform, prepare, draw
-           2002/12/15, PFH, added isPrepared
-           2004/03/01, PFH, added visible and name properties
-           2004/03/03, PFH, changed render() to use isPrepared()
-           2004/03/07, PFH, added clone() method
-           2004/03/09, PFH, added protected prepared flag
-           2004/03/26, PFH, added extra docs on cloning
-           2004/03/29, PFH, added needsPrepare() method
-           2004/04/04, PFH, added serialization
-           2004/10/17, PFH, added invalidate(), serialization constant
-           2005/03/21, PFH, added transparency handling
-           2005/03/27, PFH, added readObject() to set alpha value 
-             on deserialization
-           2006/07/07, PFH, added getColors()
+
+     File: EarthDataOverlay.java
+   Author: Peter Hollemans
+     Date: 2002/04/18
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

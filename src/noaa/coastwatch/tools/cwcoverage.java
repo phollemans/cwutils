@@ -1,18 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: cwcoverage.java
-  PURPOSE: To render earth data and station coverage maps.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/11/15
-  CHANGES: 2004/01/23, PFH, modified to use SPLIT_REGEX and updated docs
-           2004/10/05, PFH, modified to use EarthTransform.getDimensions()
-           2004/11/04, PFH, added ground station options
-           2005/03/14, PFH, reformatted documentation and usage note
-           2006/05/26, PFH, modified to use SpheroidConstants
-           2007/04/19, PFH, added version printing
+
+     File: cwcoverage.java
+   Author: Peter Hollemans
+     Date: 2003/11/15
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

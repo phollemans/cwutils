@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: LineFeatureSource.java
-  PURPOSE: An abstract class for line feature data source methods.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/09/12
-  CHANGES: 2002/10/11, PFH, moved to render package and made abstract
-           2002/12/06, PFH, added getArea
-           2003/12/10, PFH, changed class name from LineFeatureReader
-           2004/03/23, PFH, modified to use ArrayList rather than Vector
-           2005/05/03, PFH, modified to extend AbstractFeatureSource
+
+     File: LineFeatureSource.java
+   Author: Peter Hollemans
+     Date: 2002/09/12
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2005, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

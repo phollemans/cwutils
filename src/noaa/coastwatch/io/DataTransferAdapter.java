@@ -1,13 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: DataTransferAdapter.java
-  PURPOSE: To provide default implementations for a data transfer listener.
-   AUTHOR: Peter Hollemans
-     DATE: 2002/02/17
-  CHANGES: 2003/10/26, PFH, added to the Coastwatch package
+
+     File: DataTransferAdapter.java
+   Author: Peter Hollemans
+     Date: 2002/02/17
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2003, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2002 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

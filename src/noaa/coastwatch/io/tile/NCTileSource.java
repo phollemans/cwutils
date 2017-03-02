@@ -1,29 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: NCTileSource.java
-   AUTHOR: Peter Hollemans
-     DATE: 2014/07/30
-  CHANGES: 2014/09/09, PFH
-           - Changes: Updated to use FileFormat.createInstance (String, int).
-           - Issue: A user reported an issue on opening read-only files:
-               "hdf.hdf5lib.exceptions.HDF5Exception: Cannot write file,
-               try open as read-only"
-             This was because we were using getInstance (String) followed by 
-             open(), rather than createInstance.  getInstance defaults to
-             read/write access, where as createInstance allows read-only
-             to be specified.
-           2015/05/08, PFH
-           - Changes: Added a synchronized statement around the HDF 5 library
-             calls.
-           - Issue: It's unclear from the HDF 5 documentation if this is
-             needed, but there may be multithreading issues with HDF 5 JNI
-             code.  So to be safe, we serialize access to the code that calls
-             the HDF 5 C library.
-          2016/01/19, PFH
-           - Changes: Updated to new logging API.
+
+     File: NCTileSource.java
+   Author: Peter Hollemans
+     Date: 2014/07/30
 
   CoastWatch Software Library and Utilities
-  Copyright 2014-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2014 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

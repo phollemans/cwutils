@@ -1,17 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: GCTPStyleProjection.java
-  PURPOSE: Provides constants and functions for GCTP classes.
-   AUTHOR: Peter Hollemans
-     DATE: 2006/05/28
-  CHANGES: 2012/10/30, PFH, added full set of support functions
-           2012/11/05, PFH, added handling of spheres in constructor
-           2013/09/23, PFH
-           - changes: added setDatum
-           - issue: state plane needs the datum set after init
+
+     File: GCTPStyleProjection.java
+   Author: Peter Hollemans
+     Date: 2006/05/28
 
   CoastWatch Software Library and Utilities
-  Copyright 2006-2013, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2006 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////

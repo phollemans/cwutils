@@ -1,54 +1,20 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: NOAA1bReader.java
-  PURPOSE: A class to read NOAA 1b format files.
-   AUTHOR: Peter Hollemans
-     DATE: 2003/02/03
-  CHANGES: 2003/03/28, PFH, added GAC and CLAVR cloud support
-           2003/04/10, PFH, added longitude filtering for navigation 
-             interpolation
-           2003/11/22, PFH, fixed Javadoc comments
-           2004/02/15, PFH, added super() call in constructor
-           2004/06/17, PFH, added rows and cols settings in info for 
-             cwcoverage error
-           2004/09/11, PFH, modified geolocation data error message
-           2004/09/28, PFH, modified automatic history append on read
-           2004/10/05, PFH, removed rows and cols setting in metadata
-           2004/11/29, PFH, added calibration lookup tables
-           2005/02/01, PFH, added dataProjection flag
-           2005/02/02, PFH, added fallback to use data-only projection
-           2005/06/08, PFH, updated units strings
-           2005/09/21, PFH, updated longitude interpolation near poles
-           2006/08/28, PFH, updated to use java.nio classes
-           2006/08/31, PFH, added support for 8 and 16 bit sensor data formats
-           2006/09/21, PFH, added support for missing scan lines
-           2006/11/03, PFH, changed getPreview(int) to getPreviewImpl(int)
-           2006/12/27, PFH, added scan line time data reading
-           2006/12/30, PFH, modified to find largest good line chunk
-           2007/06/27, PFH, corrected GAC navigation start/end indices
-           2007/12/13, PFH
-           - added scan line caching
-           - added extra code in close() to combat memory leaks
-           2007/12/15, PFH, added scan line caching
-           2007/12/20, PFH, corrected problem with start/count in getScanLine() 
-           2014/11/05, PFH
-           Changes:
-           - Added new getPeriodList() method to replace getDate().
-           - Made changes in constructor to support time period list.
-           Issues:
-           - The cwinfo tool was reporting just the start of the data, not
-             the full time span.  This can be misleading since it's not clear
-             to the user if the date reported is the start date or end date.
-             So we added full time period reporting to avoid confusion.
-           - Something that we also learned here is that some subsets of NOAA
-             1b datasets created by the CLASS archive do not have a data header
-             start/end that matches the actual subset start/end indicated by
-             the scan lines.  The scan line time period is much smaller,
-             possibly because CLASS doesn't alter the header sufficiently when
-             creating the subset.
+
+     File: NOAA1bReader.java
+   Author: Peter Hollemans
+     Date: 2003/02/03
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2014, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2003 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 */
 ////////////////////////////////////////////////////////////////////////
