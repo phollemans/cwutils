@@ -46,7 +46,6 @@
 		E93C27CC1E274058008A698D /* neuquant.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = neuquant.jar; path = ../../../../Libraries/gif/neuquant.jar; sourceTree = "<group>"; };
 		E93C27CD1E274058008A698D /* Nujan-1.4.2.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "Nujan-1.4.2.jar"; path = "../../../../Libraries/netcdf/Nujan-1.4.2.jar"; sourceTree = "<group>"; };
 		E93C27CE1E274058008A698D /* PlotPackage.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = PlotPackage.jar; path = ../../../../Libraries/misc/PlotPackage.jar; sourceTree = "<group>"; };
-		E93C27CF1E274058008A698D /* reflections-0.9.9-RC1.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "reflections-0.9.9-RC1.jar"; path = "../../../../Libraries/reflect/reflections-0.9.9-RC1.jar"; sourceTree = "<group>"; };
 		E93C27D01E274058008A698D /* saxon8-dom.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "saxon8-dom.jar"; path = "../../../../Libraries/xml/saxon8-dom.jar"; sourceTree = "<group>"; };
 		E93C27D11E274058008A698D /* saxpath.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = saxpath.jar; path = ../../../../Libraries/xml/saxpath.jar; sourceTree = "<group>"; };
 		E93C27D21E274058008A698D /* slf4j-api-1.7.5.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "slf4j-api-1.7.5.jar"; path = "../../../../Libraries/hdf/slf4j-api-1.7.5.jar"; sourceTree = "<group>"; };
@@ -2641,7 +2640,6 @@
 				E93C27CC1E274058008A698D /* neuquant.jar */,
 				E93C27CD1E274058008A698D /* Nujan-1.4.2.jar */,
 				E93C27CE1E274058008A698D /* PlotPackage.jar */,
-				E93C27CF1E274058008A698D /* reflections-0.9.9-RC1.jar */,
 				E93C27D01E274058008A698D /* saxon8-dom.jar */,
 				E93C27D11E274058008A698D /* saxpath.jar */,
 				E93C27D21E274058008A698D /* slf4j-api-1.7.5.jar */,
