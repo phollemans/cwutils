@@ -22,6 +22,7 @@ import java.awt.AlphaComposite;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import javax.swing.JPanel;
 import noaa.coastwatch.render.Legend;
 
@@ -90,8 +91,12 @@ public class LegendPanel
 
       // Render legend
       // -------------
-      legend.render ((Graphics2D) g, preferred.width/2 - actual.width/2, 
+      Graphics2D g2d = (Graphics2D) g;
+      Object textHint = g2d.getRenderingHint (RenderingHints.KEY_TEXT_ANTIALIASING);
+      g2d.setRenderingHint (RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+      legend.render (g2d, preferred.width/2 - actual.width/2,
         preferred.height/2 - actual.height/2);
+      g2d.setRenderingHint (RenderingHints.KEY_TEXT_ANTIALIASING, textHint);
 
     } // if
 

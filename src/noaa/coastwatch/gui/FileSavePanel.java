@@ -171,7 +171,7 @@ public class FileSavePanel
       GridBagConstraints.HORIZONTAL, 1, 0);
     this.add (saveField, gc);
 
-    JButton selectButton = new JButton ("Select...");
+    JButton selectButton = GUIServices.getTextButton ("Select...");
     selectButton.addActionListener (new ActionListener () {
         public void actionPerformed (ActionEvent event) {
           showFileSelection();

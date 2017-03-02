@@ -985,6 +985,7 @@ utilities when:
       Object missing;
       try {
         missing = getAttribute (var, "_FillValue");
+        if (missing == null) missing = getAttribute (var, "_fillvalue");
         if (missing == null) missing = getAttribute (var, "missing_value");
       } // try
       catch (Exception e) {

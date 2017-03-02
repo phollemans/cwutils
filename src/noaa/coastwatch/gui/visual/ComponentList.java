@@ -25,6 +25,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -32,11 +33,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
 import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 import javax.swing.UIManager;
 import javax.swing.event.MouseInputAdapter;
+
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.TestContainer;
 import noaa.coastwatch.gui.visual.ComponentProducer;
@@ -60,9 +63,9 @@ import noaa.coastwatch.render.LatLonOverlay;
  * @author Peter Hollemans
  * @since 3.1.7
  */
-public class ComponentList
+public class ComponentList<E extends ComponentProducer>
   extends JPanel 
-  implements Scrollable {
+  implements Scrollable, Iterable<E> {
 
   // Constants
   // ---------
@@ -77,13 +80,13 @@ public class ComponentList
   // ---------
 
   /** The list of component producers. */
-  private List producerList;
+  private List<E> producerList;
 
   /** The map of components to producers. */
-  private Map componentMap;
+  private Map<Component,E> componentMap;
 
   /** The hash set of selections. */
-  private SortedSet selectionSet;
+  private SortedSet<Integer> selectionSet;
 
   /** The last component index that was clicked. */
   private Integer lastIndex;
@@ -97,18 +100,21 @@ public class ComponentList
   /** The visible row count. */
   private int visibleRowCount = 8;
 
+  /** The selectable flag, true if rows can be selected or false if not. */
+  private boolean isSelectable = true;
+
   ////////////////////////////////////////////////////////////
 
   /** Creates a new empty component list. */
-  public ComponentList () {
+  public ComponentList() {
 
     super (new GridBagLayout());
 
     // Initialize
     // ----------
-    producerList = new LinkedList();
-    selectionSet = new TreeSet();
-    componentMap = new HashMap();
+    producerList = new LinkedList<E>();
+    selectionSet = new TreeSet<Integer>();
+    componentMap = new HashMap<Component, E>();
 
     // Add selection listener
     // ----------------------
@@ -123,6 +129,25 @@ public class ComponentList
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Sets the selectable flag.  When on, the list rows are selectable 
+   * and change their background colour when selected.  When off, rows
+   * are not selectable and keep their default background color even when
+   * clicked.
+   *
+   * @param selectableFlag the selectable flag, true if rows should be 
+   * selectable or false if not.
+   */
+  public void setSelectable (
+    boolean selectableFlag
+  ) {
+  
+    this.isSelectable = selectableFlag;
+   
+  } // setSelectable
+
+  ////////////////////////////////////////////////////////////
+
   /** Clears the list of all components. */
   public void clear () {
 
@@ -134,9 +159,13 @@ public class ComponentList
 
   ////////////////////////////////////////////////////////////
 
-  /** Adds a new component to the end of the list. */
+  /** 
+   * Adds a new component to the end of the list.
+   * 
+   * @param producer the component producer to add to the list.
+   */
   public void addElement (
-    ComponentProducer producer
+    E producer
   ) { 
 
     addElement (producerList.size(), producer);
@@ -145,10 +174,17 @@ public class ComponentList
 
   ////////////////////////////////////////////////////////////
 
-  /** Adds a new component at the specified index in the list. */
+  /** 
+   * Adds a new component at the specified index in the list.
+   *
+   * @param index the index to add the component at.  The component is 
+   * inserted at the index and all component indices after the inserted
+   * index are incremented.
+   * @param producer the component producer to add to the list.
+   */
   public void addElement (
     int index,
-    ComponentProducer producer
+    E producer
   ) {
 
     producerList.add (index, producer);
@@ -159,9 +195,15 @@ public class ComponentList
 
   ////////////////////////////////////////////////////////////
 
-  /** Removes the specified component from the list. */
+  /** 
+   * Removes the specified component from the list.
+   * 
+   * @param producer the component producer to remove.
+   * 
+   * @return true if the component was removed, false otherwise.
+   */
   public boolean removeElement (
-    ComponentProducer producer
+    E producer
   ) { 
 
     boolean removed = producerList.remove (producer);
@@ -175,13 +217,18 @@ public class ComponentList
 
   ////////////////////////////////////////////////////////////
 
-  /** Removes the component at the specified index. */
-  public ComponentProducer removeElement (
+  /** 
+   * Removes the component at the specified index.
+   *
+   * @param index the index of the component to remove.
+   *
+   * @return the removed component producer.
+   */
+  public E removeElement (
     int index
   ) {
 
-    ComponentProducer producer = 
-      (ComponentProducer) producerList.remove (index);
+    E producer = producerList.remove (index);
     if (producer != null) {
       componentMap.remove (producer.getComponent());
       reset();
@@ -192,7 +239,14 @@ public class ComponentList
 
   ////////////////////////////////////////////////////////////
 
-  /** Moves the component between the specified indices. */
+  /** 
+   * Moves the component between the specified indices.
+   *
+   * @param source the source index for the component to move.
+   * @param dest the destination index to insert a new component.  The
+   * destination index is relative to the indices of elements after the 
+   * removal operation has happened.
+   */
   public void moveElement (
     int source,
     int dest
@@ -205,12 +259,21 @@ public class ComponentList
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the number of components in the list. */
+  /** 
+   * Gets the number of components in the list.
+   *
+   * @return the number of components.
+   */
   public int getElements () { return (producerList.size()); }
 
   ////////////////////////////////////////////////////////////
   
-  /** Gets the currently selected indices. */
+  /** 
+   * Gets the currently selected indices.
+   *
+   * @return the array of selected indices, possible zero length if no
+   * rows are selected.
+   */
   public int[] getSelectedIndices () {
 
     int[] indices = new int[selectionSet.size()];
@@ -227,43 +290,83 @@ public class ComponentList
   /** 
    * Sets the selection indices between the specified start and end
    * inclusive.
+   *
+   * @param start the starting index for the selection.
+   * @param end the ending index for selection.
+   * 
+   * @throws IndexOutOfBoundsException if either index is out of bounds.
    */
   public void setSelectionInterval (
     int start, 
     int end
   ) {
 
-    checkBounds (start);
-    checkBounds (end);
-    selectionSet.clear();
-    for (int i = start; i <= end; i++)
-      selectionSet.add (new Integer (i));
-    lastIndex = new Integer (start);
-    updateBackgrounds();
-
+    if (isSelectable) {
+      checkBounds (start);
+      checkBounds (end);
+      selectionSet.clear();
+      for (int i = start; i <= end; i++)
+        selectionSet.add (new Integer (i));
+      lastIndex = new Integer (start);
+      updateBackgrounds();
+    } // if
+    
   } // setSelectionInterval
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the component at the specified index. */
-  public ComponentProducer getElement (
+  /** 
+   * Gets the component at the specified index.
+   *
+   * @param index to index of the component producer to retrieve.
+   *
+   * @return the component producer at the specified index.
+   *
+   * @throws IndexOutOfBoundsException if the index is out of range.
+   */
+  public E getElement (
     int index
   ) {
 
-    return ((ComponentProducer) producerList.get (index));
+    return (producerList.get (index));
 
   } // getElement
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns an iterator over components in the list. */
-  public Iterator iterator () { return (producerList.iterator()); }
+  /** 
+   * Gets an iterator over the component producers in the list.
+   *
+   * @return the iterator over component producers.
+   */
+  public Iterator<E> iterator () { return (producerList.iterator()); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the index of a component producer in the list.
+   *
+   * @param producer the component producer to search for.
+   *
+   * @return the index of the first occurrence of the producer,
+   * or -1 if this list does not contain the producer.
+   */
+  public int indexOf (
+    E producer
+  ) {
+  
+    return (producerList.indexOf (producer));
+   
+  } // indexOf
 
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Checks if the index is within the allowed bounds, and throws an
-   * exception if not.
+   * Checks if an index is within bounds.
+   *
+   * @param index the index to check.
+   *
+   * @throws IndexOutOfBoundsException if the index is out of bounds.
    */
   private void checkBounds (
     int index
@@ -309,8 +412,7 @@ public class ComponentList
 
     // Add each component
     // ------------------
-    for (Iterator iter = producerList.iterator(); iter.hasNext();) 
-      this.add (((ComponentProducer) iter.next()).getComponent(), gc);
+    this.forEach (prod -> this.add (prod.getComponent(), gc));
 
     // Add final space-filling component
     // ---------------------------------
@@ -337,8 +439,7 @@ public class ComponentList
   private void updateBackgrounds() {
 
     for (int i = 0; i < producerList.size(); i++) {
-      Component component = 
-        ((ComponentProducer) producerList.get (i)).getComponent();
+      Component component = producerList.get (i).getComponent();
       if (selectionSet.contains (new Integer (i)))
         component.setBackground (selectionBackground);
       else
@@ -354,52 +455,56 @@ public class ComponentList
   private class SelectionListener extends MouseInputAdapter {
     public void	mouseClicked (MouseEvent e) {
 
-      // Get click count
-      // ---------------
-      int clicks = e.getClickCount();
+      if (isSelectable) {
 
-      // Get component index
-      // -------------------
-      Component component = findComponentAt (e.getPoint());
-      Integer index = 
-        new Integer (producerList.indexOf (componentMap.get (component)));
-      if (index.intValue() == -1) return;
+        // Get click count
+        // ---------------
+        int clicks = e.getClickCount();
 
-      // Respond to single click
-      // -----------------------
-      if (clicks == 1) {
+        // Get component index
+        // -------------------
+        Component component = findComponentAt (e.getPoint());
+        Integer index = 
+          new Integer (producerList.indexOf (componentMap.get (component)));
+        if (index.intValue() == -1) return;
 
-        // Add index to selection
-        // ----------------------
-        if (GUIServices.IS_MAC ? e.isMetaDown() : e.isControlDown()) {
-          if (selectionSet.contains (index))
-            selectionSet.remove (index);
-          else
+        // Respond to single click
+        // -----------------------
+        if (clicks == 1) {
+
+          // Add index to selection
+          // ----------------------
+          if (GUIServices.IS_MAC ? e.isMetaDown() : e.isControlDown()) {
+            if (selectionSet.contains (index))
+              selectionSet.remove (index);
+            else
+              selectionSet.add (index);
+            lastIndex = index;
+          } // if
+
+          // Add index range to selection
+          // ----------------------------
+          else if (e.isShiftDown() && lastIndex != null) {
+            int start = Math.min (lastIndex.intValue(), index.intValue());
+            int end = Math.max (lastIndex.intValue(), index.intValue());
+            selectionSet.clear();
+            for (int i = start; i <= end; i++)
+              selectionSet.add (new Integer (i));
+          } // else if
+
+          // Create new selection
+          // --------------------
+          else {
+            selectionSet.clear();
             selectionSet.add (index);
-          lastIndex = index;
+            lastIndex = index;
+          } // else
+
+          // Update backgrounds
+          // ------------------
+          updateBackgrounds();
+
         } // if
-
-        // Add index range to selection
-        // ----------------------------
-        else if (e.isShiftDown() && lastIndex != null) {
-          int start = Math.min (lastIndex.intValue(), index.intValue());
-          int end = Math.max (lastIndex.intValue(), index.intValue());
-          selectionSet.clear();
-          for (int i = start; i <= end; i++)
-            selectionSet.add (new Integer (i));
-        } // else if
-
-        // Create new selection
-        // --------------------
-        else {
-          selectionSet.clear();
-          selectionSet.add (index);
-          lastIndex = index;
-        } // else
-
-        // Update backgrounds
-        // ------------------
-        updateBackgrounds();
 
       } // if
 
@@ -426,14 +531,20 @@ public class ComponentList
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the number of visible rows in this list. */
+  /** 
+   * Gets the visible rows in this list.
+   *
+   * @return the number of visible rows in the component list.
+   */
   public int getVisibleRowCount () { return (visibleRowCount); }
 
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the height of each component.  The maximum height of any of
-   * the components is returned.
+   * Gets the row height.
+   *
+   * @return the row height, calculated as the maximum height of any of 
+   * the components.
    */
   private int getRowHeight () {
 
@@ -450,7 +561,7 @@ public class ComponentList
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the scrollable viewport size. */
+  @Override
   public Dimension getPreferredScrollableViewportSize () {
 
      Dimension size = getPreferredSize();
@@ -463,7 +574,7 @@ public class ComponentList
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the scrollable block increment. */
+  @Override
   public int getScrollableBlockIncrement (
     Rectangle visibleRect, 
     int orientation, 
@@ -476,17 +587,30 @@ public class ComponentList
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns false as this list is independent of the viewport height. */
-  public boolean getScrollableTracksViewportHeight() { return (false); }
+  @Override
+  public boolean getScrollableTracksViewportHeight() {
+
+    // We return false here as this list is independent of the
+    // viewport height.
+  
+    return (false);
+    
+  } // getScrollableTracksViewportHeight
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns true as this list expands to the viewport width. */
-  public boolean getScrollableTracksViewportWidth() { return (true); }
+  @Override
+  public boolean getScrollableTracksViewportWidth() {
+  
+    // We return true here as this list expands to the viewport width.
+  
+    return (true);
+    
+  } // getScrollableTracksViewportWidth
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the scrollable unit increment. */
+  @Override
   public int getScrollableUnitIncrement (
     Rectangle visibleRect, 
     int orientation, 
@@ -506,7 +630,7 @@ public class ComponentList
    */
   public static void main (String[] argv) {
 
-    ComponentList list = new ComponentList();
+    ComponentList<VisualOverlay> list = new ComponentList<VisualOverlay>();
     list.addElement (new VisualOverlay (
       new noaa.coastwatch.render.LatLonOverlay (Color.WHITE)));
     list.addElement (new VisualOverlay (

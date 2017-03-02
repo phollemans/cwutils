@@ -50,6 +50,8 @@ import noaa.coastwatch.gui.visual.VisualServices;
 import noaa.coastwatch.render.CoastOverlay;
 import noaa.coastwatch.render.EarthDataOverlay;
 import noaa.coastwatch.render.MultilayerBitmaskOverlay;
+import noaa.coastwatch.render.PointFeatureOverlay;
+import noaa.coastwatch.render.MultiPointFeatureOverlay;
 
 /**
  * The <code>VisualOverlay</code> class represents an
@@ -106,17 +108,19 @@ public class VisualOverlay
    * this visual overlay object itself fires property changes when one
    * of the overlay properties is changed.
    *
-   * @param property the overlay property to add a component for.
+   * @param target the target to create a visual property.
+   * @param property the property to add a component.
    * @param needsListener the listener flag, true if a listener should
    * be attached to the property component that simply fires a
    * property change event from this visual overlay object.
    */
   private void addVisualPropertyComponent (
+    Object target,
     String property,
     boolean needsListener
   ) {
 
-    VisualObject visual = VisualObjectFactory.create (overlay, property);
+    VisualObject visual = VisualObjectFactory.create (target, property);
     if (needsListener) {
       visual.addPropertyChangeListener (new PropertyChangeListener () {
           public void propertyChange (PropertyChangeEvent event) {
@@ -135,7 +139,7 @@ public class VisualOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the panel used to represent the array. */
+  /** Gets the panel used to represent the overlay. */
   public Component getComponent () { return (panel); }
 
   ////////////////////////////////////////////////////////////
@@ -272,14 +276,16 @@ public class VisualOverlay
 
     // Add property components
     // -----------------------
-    addVisualPropertyComponent ("visible", true);
-    addVisualPropertyComponent ("name", false);
-    if (!(overlay instanceof MultilayerBitmaskOverlay))
-      addVisualPropertyComponent ("color", true);
-    if (VisualServices.hasProperty (overlay, "stroke"))
-      addVisualPropertyComponent ("stroke", true);
+    addVisualPropertyComponent (overlay, "visible", true);
+    addVisualPropertyComponent (overlay, "name", false);
+    if (overlay instanceof PointFeatureOverlay)
+      addVisualPropertyComponent (((PointFeatureOverlay) overlay).getSymbol(), "plotSymbol", true);
+    if (!(overlay instanceof MultilayerBitmaskOverlay) && !(overlay instanceof MultiPointFeatureOverlay))
+      addVisualPropertyComponent (overlay, "color", true);
+    if (VisualServices.hasProperty (overlay, "stroke") && !(overlay instanceof PointFeatureOverlay))
+      addVisualPropertyComponent (overlay, "stroke", true);
     if (VisualServices.hasProperty (overlay, "fillColor"))
-      addVisualPropertyComponent ("fillColor", true);
+      addVisualPropertyComponent (overlay, "fillColor", true);
 
     // Perform layout if needed
     // ------------------------

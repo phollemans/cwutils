@@ -31,7 +31,7 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
@@ -48,9 +48,9 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import noaa.coastwatch.render.LineFeature;
-import noaa.coastwatch.render.PolygonFeature;
-import noaa.coastwatch.render.PolygonFeatureSource;
+import noaa.coastwatch.render.feature.LineFeature;
+import noaa.coastwatch.render.feature.PolygonFeature;
+import noaa.coastwatch.render.feature.PolygonFeatureSource;
 import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.EarthLocation;
 

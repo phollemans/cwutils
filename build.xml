@@ -361,10 +361,11 @@
   </target>
 
   <target name="test-unit"
-    description="Runs the CoastWatch unit tests by running noaa.coastwatch.test.TestableTester">
+    description="Runs the CoastWatch unit tests by running noaa.coastwatch.test.TestRunner">
+    <exec executable="scripts/find_testable.sh" outputproperty="unit.tests"/>
     <antcall target="test">
-      <param name="class" value="noaa.coastwatch.test.TestableTester"/>
-      <param name="args" value=""/>
+      <param name="class" value="noaa.coastwatch.test.TestRunner"/>
+      <param name="args" value="${unit.tests}"/>
     </antcall>
   </target>
 

@@ -22,7 +22,7 @@ package noaa.coastwatch.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import noaa.coastwatch.net.ServerQuery;
-import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.feature.LineFeature;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.SatelliteDataInfo;

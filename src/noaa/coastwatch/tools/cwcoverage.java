@@ -46,7 +46,7 @@ import noaa.coastwatch.io.EarthDataReaderFactory;
 import noaa.coastwatch.render.ColorLookup;
 import noaa.coastwatch.render.EarthContextElement;
 import noaa.coastwatch.render.EarthImageTransform;
-import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.feature.LineFeature;
 import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.EarthArea;

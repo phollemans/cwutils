@@ -21,7 +21,7 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
@@ -32,8 +32,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import noaa.coastwatch.render.EarthImageTransform;
-import noaa.coastwatch.render.LineFeatureSource;
-import noaa.coastwatch.render.PolygonFeature;
+import noaa.coastwatch.render.feature.LineFeatureSource;
+import noaa.coastwatch.render.feature.PolygonFeature;
 
 /**
  * The <code>PolygonFeatureSource</code> extends the

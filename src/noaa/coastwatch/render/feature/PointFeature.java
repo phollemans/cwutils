@@ -14,14 +14,14 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import noaa.coastwatch.render.AbstractFeature;
+import noaa.coastwatch.render.feature.AbstractFeature;
 import noaa.coastwatch.util.EarthLocation;
 
 /*
@@ -71,6 +71,7 @@ public class PointFeature
     Object[] attributeArray
   ) {
 
+    super (null);
     this.point = point;
     setAttributes (attributeArray);
 
@@ -87,6 +88,7 @@ public class PointFeature
     EarthLocation point
   ) {
 
+    super (null);
     this.point = point;
 
   } // PointFeature constructor

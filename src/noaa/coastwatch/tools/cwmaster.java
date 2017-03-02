@@ -572,12 +572,12 @@ public final class cwmaster
     gc.anchor = GridBagConstraints.CENTER;
     gc.insets = new Insets (0,0,0,0);
 
-    JButton applyButton = new JButton (APPLY_COMMAND);
+    JButton applyButton = GUIServices.getTextButton (APPLY_COMMAND);
     AbstractAction chooserAction = new ChooserAction();
     applyButton.addActionListener (chooserAction);
     chooserButtonPanel.add (applyButton);
 
-    JButton revertButton = new JButton (REVERT_COMMAND);
+    JButton revertButton = GUIServices.getTextButton (REVERT_COMMAND);
     revertButton.addActionListener (chooserAction);
     chooserButtonPanel.add (revertButton);
 

@@ -14,13 +14,16 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.render.feature.Feature;
+import noaa.coastwatch.render.feature.Attribute;
 
 /**
  * The <code>FeatureSource</code> interface provides methods
@@ -31,7 +34,8 @@ import noaa.coastwatch.util.EarthArea;
  * @author Peter Hollemans
  * @since 3.2.0
  */
-public interface FeatureSource {
+public interface FeatureSource
+  extends Iterable<Feature> {
 
   ////////////////////////////////////////////////////////////
 
@@ -49,40 +53,33 @@ public interface FeatureSource {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the currently selected earth area. */
-  public EarthArea getArea ();
+  /** Gets the currently selected Earth area. */
+  public EarthArea getArea();
 
   ////////////////////////////////////////////////////////////
 
   /** Gets an iterator over all selected features. */
-  public Iterator iterator ();
+  public Iterator<Feature> iterator();
 
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets an attribute name for the attributes in each feature
-   * from this source.
-   * 
-   * @param index the attribute index, starting at 0.
+   * Gets the list of attributes for each feature from this source.
    *
-   * @return the attribute name.
-   * 
-   * @throws IndexOutOfBoundsException if the index is out of range.
+   * @return the list of attributes.
    */
-  public String getAttributeName (
-    int index
-  );
+  public List<Attribute> getAttributes();
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Gets the number of attributes for each feature from this
-   * source.
+  /**
+   * Gets the number of attributes in the attribute list for each feature.
+   *
+   * @return the attribute count.
    */
   public int getAttributeCount();
 
   ////////////////////////////////////////////////////////////
-
 
 } // FeatureSource class
 

@@ -51,6 +51,8 @@ public interface VisualObject
   /** 
    * Adds a listener to receive property change events for when this
    * object's value changes.
+   *
+   * @param listener the listener to add.
    */
   public void addPropertyChangeListener (PropertyChangeListener listener);
 

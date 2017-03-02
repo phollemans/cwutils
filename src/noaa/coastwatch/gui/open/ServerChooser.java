@@ -25,8 +25,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.swing.AbstractAction;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -40,8 +42,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+
 import noaa.coastwatch.gui.open.ServerTableModel;
 import noaa.coastwatch.gui.open.ServerTableModel.Entry;
+import noaa.coastwatch.gui.GUIServices;
 
 /**
  * The <code>ServerChooser</code> class allows the user to select from
@@ -123,12 +127,12 @@ public class ServerChooser
     this.add (buttonBar, BorderLayout.SOUTH);
 
     ActionListener buttonListener = new ButtonListener();
-    removeButton = new JButton (REMOVE_COMMAND);
+    removeButton = GUIServices.getTextButton (REMOVE_COMMAND);
     removeButton.addActionListener (buttonListener);
     removeButton.setEnabled (false);
     buttonBar.add (removeButton);
     
-    connectButton = new JButton (CONNECT_COMMAND);
+    connectButton = GUIServices.getTextButton (CONNECT_COMMAND);
     connectButton.addActionListener (buttonListener);
     connectButton.setEnabled (false);
     buttonBar.add (Box.createGlue());

@@ -26,11 +26,11 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 import noaa.coastwatch.gui.visual.AbstractVisualObject;
 import noaa.coastwatch.render.PlotSymbolFactory;
 
-import jahuwaldt.plot.PlotSymbol;
 /**
  * The <code>VisualSymbol</code> class represents a plot symbol
  * as a combo box with an icon of the symbol.
@@ -45,30 +45,13 @@ public class VisualSymbol
   // ---------
 
   /** The size of the symbol icon. */
-  private static final int ICON_SIZE = 16;
+  private static final int ICON_SIZE = 14;
 
   // Variables
   // ---------
 
-  /** The set of possible symbols. */
-  private static List<PlotSymbol> symbolList;
-
   /** The symbol component combo box. */
   private JComboBox symbolCombo;
-
-  ////////////////////////////////////////////////////////////
-
-  static {
-
-    // Create array of plot symbols
-    // ----------------------------
-    symbolList = new ArrayList<PlotSymbol>();
-    for (Iterator<String> iter = PlotSymbolFactory.getSymbolNames();
-      iter.hasNext();) {
-      symbolList.add (PlotSymbolFactory.create (iter.next()));
-    } // for
-
-  } // static
 
   ////////////////////////////////////////////////////////////
 
@@ -79,9 +62,11 @@ public class VisualSymbol
 
     // Create combo box
     // ----------------
-    symbolCombo = new JComboBox (symbolList.toArray());
+    symbolCombo = new JComboBox<PlotSymbol>();
+    PlotSymbolFactory.getSymbolNames()
+      .forEachRemaining (name -> symbolCombo.addItem (PlotSymbolFactory.create (name)));
     symbolCombo.setSelectedItem (symbol);
-    //    symbolCombo.addActionListener (new SymbolComboListener());
+    symbolCombo.addActionListener (event -> firePropertyChange());
     symbolCombo.setRenderer (new SymbolRenderer());
 
   } // VisualSymbol constructor
@@ -91,7 +76,7 @@ public class VisualSymbol
   /** Renders the symbols as symbol swatches. */
   private class SymbolRenderer
     extends JLabel
-    implements ListCellRenderer {
+    implements ListCellRenderer<PlotSymbol> {
 
     ////////////////////////////////////////////////////////
 
@@ -104,19 +89,16 @@ public class VisualSymbol
 
     ////////////////////////////////////////////////////////
 
-    /** Sets this label to show a stroke swatch icon. */
+    /** Sets this label to show a symbol swatch icon. */
     public Component getListCellRendererComponent (
       JList list,
-      Object value,
+      PlotSymbol value,
       int index,
       boolean isSelected,
       boolean cellHasFocus
     ) {
 
-      /*
-      setIcon (new SymbolSwatch (getBasicStroke (2, (float[]) value),
-        SWATCH_SIZE*3, SWATCH_SIZE));
-      */
+      setIcon (new SymbolSwatch (value, ICON_SIZE));
       if (isSelected) {
         setBackground (list.getSelectionBackground());
         setForeground (list.getSelectionForeground());
@@ -135,12 +117,12 @@ public class VisualSymbol
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the combo box used to represent the symbol. */
+  @Override
   public Component getComponent () { return (symbolCombo); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the symbol value. */
+  @Override
   public Object getValue () { return (symbolCombo.getSelectedItem()); }
 
   ////////////////////////////////////////////////////////////
@@ -152,14 +134,12 @@ public class VisualSymbol
    */
   public static void main (String argv[]) {
   
-    /*
     JPanel panel = new JPanel();
-    Stroke stroke = StrokeChooser.getBasicStroke (2, 
-      StrokeChooser.DASH_PATTERNS[1]);
-    Component comp =  new VisualSymbol (stroke).getComponent();
+    String symbolName = PlotSymbolFactory.getSymbolNames().next();
+    PlotSymbol symbol = PlotSymbolFactory.create (symbolName);
+    Component comp =  new VisualSymbol (symbol).getComponent();
     panel.add (comp);
     noaa.coastwatch.gui.TestContainer.showFrame (panel);
-    */
 
   } // main
 

@@ -23,7 +23,7 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
@@ -36,8 +36,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
-import noaa.coastwatch.render.LineFeature;
-import noaa.coastwatch.render.LineFeatureSource;
+import noaa.coastwatch.render.feature.LineFeature;
+import noaa.coastwatch.render.feature.LineFeatureSource;
 import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.EarthLocation;
 

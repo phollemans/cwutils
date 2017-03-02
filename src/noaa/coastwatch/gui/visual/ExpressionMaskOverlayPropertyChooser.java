@@ -41,7 +41,7 @@ public class ExpressionMaskOverlayPropertyChooser
   // Variables
   // ---------
 
-  /** The text field foe expression input. */
+  /** The text field for expression input. */
   private JTextField field;
 
   ////////////////////////////////////////////////////////////

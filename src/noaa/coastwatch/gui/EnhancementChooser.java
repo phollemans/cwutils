@@ -264,16 +264,16 @@ public class EnhancementChooser
     enhancementRangeContainer.add (rangeButtonPanel, gc);
     gc.anchor = GridBagConstraints.CENTER;
 
-    normalizeButton = new JButton (NORMALIZE_COMMAND);
+    normalizeButton = GUIServices.getTextButton (NORMALIZE_COMMAND);
     RangeButtonAction buttonAction = new RangeButtonAction();
     normalizeButton.addActionListener (buttonAction);
     rangeButtonPanel.add (normalizeButton);
 
-    JButton reverseButton = new JButton (REVERSE_COMMAND);
+    JButton reverseButton = GUIServices.getTextButton (REVERSE_COMMAND);
     reverseButton.addActionListener (buttonAction);
     rangeButtonPanel.add (reverseButton);
 
-    JButton resetButton = new JButton (RESET_COMMAND);
+    JButton resetButton = GUIServices.getTextButton (RESET_COMMAND);
     resetButton.addActionListener (buttonAction);
     rangeButtonPanel.add (resetButton);
 

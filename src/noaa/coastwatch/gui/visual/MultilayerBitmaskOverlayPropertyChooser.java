@@ -85,7 +85,7 @@ public class MultilayerBitmaskOverlayPropertyChooser
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Creates a new generic overlay property chooser panel.  The
+   * Creates a new multilayer overlay property chooser panel.  The
    * assumption is that the number of bitmasks in the list is a
    * multiple of 8.
    */

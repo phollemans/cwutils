@@ -47,6 +47,7 @@ package noaa.coastwatch.gui;
 // Imports
 // -------
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -59,20 +60,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
+
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.text.BreakIterator;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.prefs.Preferences;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Box;
@@ -102,6 +111,7 @@ import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
+
 import noaa.coastwatch.gui.HTMLPanel;
 import noaa.coastwatch.gui.PanelOutputStream;
 import noaa.coastwatch.tools.ToolServices;
@@ -293,6 +303,111 @@ public class GUIServices {
     c.weighty = weighty;
 
   } // setConstraints
+
+  ////////////////////////////////////////////////////////////
+  
+  /** 
+   * This is a class to handle the text foreground color changes that
+   * happen under the Mac Aqua look and feel that aren't implemented by 
+   * default.
+   */
+  private static class AquaButtonListener
+    extends MouseAdapter
+    implements FocusListener {
+  
+    /** The flag indicating if we are currently being pressed. */
+    boolean isPressed = false;
+
+    public void mousePressed (MouseEvent event) {
+      isPressed = true;
+      event.getComponent().setForeground (Color.WHITE);
+    } // mousePressed
+
+    public void mouseReleased (MouseEvent event) {
+      isPressed = false;
+      event.getComponent().setForeground (UIManager.getColor ("Button.foreground"));
+    } // mouseReleased
+
+    public void mouseEntered (MouseEvent event) {
+      if (isPressed) {
+        event.getComponent().setForeground (Color.WHITE);
+      } // if
+    } // mouseEntered
+
+    public void mouseExited (MouseEvent event) {
+      if (isPressed) {
+        event.getComponent().setForeground (UIManager.getColor ("Button.foreground"));
+      } // if
+    } // mouseExited
+
+    public void focusLost (FocusEvent event) {
+      event.getComponent().setForeground (UIManager.getColor ("Button.foreground"));
+    } // focusLost
+
+    public void focusGained (FocusEvent event) { }
+
+  } // AquaButtonListener class
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Adds a listener to the button to enhance the behaviour under Aqua.
+   *
+   * @param button the button to modify.
+   */
+  private static void applyAquaButtonTreatment (
+    JButton button
+  ) {
+  
+    AquaButtonListener listener = new AquaButtonListener();
+    button.addMouseListener (listener);
+    button.addFocusListener (listener);
+  
+  } // applyAquaButtonTreatment
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets a button with text label using an action.  In some look and feels, this returns
+   * a slightly modified button that is more consistent with the operating
+   * system UI.
+   *
+   * @param action the action for the button.
+   *
+   * @return the button created using the action.
+   */
+  public static JButton getTextButton (
+    Action action
+  ) {
+  
+    JButton button = new JButton (action);
+    if (IS_AQUA) applyAquaButtonTreatment (button);
+
+    return (button);
+    
+  } // getTextButton
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets a button with text label.  In some look and feels, this returns
+   * a slightly modified button that is more consistent with the operating
+   * system UI.
+   *
+   * @param text the text label.
+   *
+   * @return the button with text label.
+   */
+  public static JButton getTextButton (
+    String text
+  ) {
+  
+    JButton button = new JButton (text);
+    if (IS_AQUA) applyAquaButtonTreatment (button);
+
+    return (button);
+    
+  } // getTextButton
 
   ////////////////////////////////////////////////////////////
 
@@ -505,7 +620,11 @@ public class GUIServices {
     for (int i = 0; i < actions.length; i++) {
       int j = (reverseOrder ? actions.length-1-i : i);
       JButton button = new JButton (actions[j]);
-      if (j == 0) dialog.getRootPane().setDefaultButton (button);
+      if (j == 0) {
+        dialog.getRootPane().setDefaultButton (button);
+        if (IS_AQUA) button.setForeground (Color.WHITE);
+      } // if
+      else if (IS_AQUA) applyAquaButtonTreatment (button);
       if (hideAction == null || hideAction[j])
         button.addActionListener (hideListener);
       buttonBox.add (button);
@@ -520,7 +639,7 @@ public class GUIServices {
     dialog.pack();
     dialog.setLocationRelativeTo (parent);
     if (doDispose) dialog.setDefaultCloseOperation (JDialog.DISPOSE_ON_CLOSE);
-
+    
     return (dialog);
 
   } // createDialog

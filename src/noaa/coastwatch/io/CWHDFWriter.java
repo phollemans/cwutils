@@ -87,7 +87,7 @@ import noaa.coastwatch.io.HDFLib;
 import noaa.coastwatch.io.CWHDFReader;
 import noaa.coastwatch.io.HDFReader;
 import noaa.coastwatch.io.HDFWriter;
-import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.feature.LineFeature;
 import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.DataVariable;

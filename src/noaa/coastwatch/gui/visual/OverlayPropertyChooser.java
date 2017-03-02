@@ -38,7 +38,7 @@ import noaa.coastwatch.render.EarthDataOverlay;
  * @author Peter Hollemans
  * @since 3.1.7
  */
-public abstract class OverlayPropertyChooser
+public abstract class OverlayPropertyChooser<T extends EarthDataOverlay>
   extends JPanel {
 
   // Constants
@@ -51,13 +51,13 @@ public abstract class OverlayPropertyChooser
   // ---------
 
   /** The overlay to use for choosing properties. */
-  protected EarthDataOverlay overlay;
+  protected T overlay;
 
   ////////////////////////////////////////////////////////////
 
   /** Creates a new overlay property chooser panel. */
   protected OverlayPropertyChooser (
-    EarthDataOverlay newOverlay
+    T newOverlay
   ) {
 
     // Initialize
@@ -93,7 +93,7 @@ public abstract class OverlayPropertyChooser
    * @throws IllegalStateException if the chooser controls are
    * not in a valid state.
    */
-  public EarthDataOverlay getOverlay() { 
+  public T getOverlay() {
 
     validateInput();
     return (overlay); 

@@ -29,7 +29,7 @@ import java.util.Iterator;
 import javax.swing.JPanel;
 import noaa.coastwatch.gui.TestContainer;
 import noaa.coastwatch.render.PlotSymbolFactory;
-import noaa.coastwatch.render.PointFeature;
+import noaa.coastwatch.render.feature.PointFeature;
 import noaa.coastwatch.render.PointFeatureSymbol;
 import noaa.coastwatch.render.TextElement;
 
@@ -41,7 +41,8 @@ import noaa.coastwatch.render.TextElement;
  * @since 3.2.0
  */
 public class SimpleSymbol
-  extends PointFeatureSymbol {
+  extends PointFeatureSymbol
+  implements Cloneable {
 
   // Variables
   // ---------
@@ -54,6 +55,36 @@ public class SimpleSymbol
 
   /** The text element to use for drawing the text label or null. */
   private TextElement element = null;
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public Object clone () {
+
+    SimpleSymbol copy = (SimpleSymbol) super.clone();
+    if (element != null)
+      copy.element = new TextElement ("", element.getFont(), new Point(), new double[] {0, 0}, 0);
+    return (copy);
+
+  } // clone
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the plot symbol.
+   *
+   * @return the plot symbol.
+   */
+  public PlotSymbol getPlotSymbol () { return (symbol); }
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Sets the plot symbol.
+   *
+   * @param symbol the plot symbol.
+   */
+  public void setPlotSymbol (PlotSymbol symbol) { this.symbol = symbol; }
 
   ////////////////////////////////////////////////////////////
 
@@ -88,18 +119,38 @@ public class SimpleSymbol
 
     this.symbol = symbol;
     this.attribute = attribute;
-    this.element = new TextElement ("", font, new Point(), new double[] {0, 0},
-      0);
+    this.element = new TextElement ("", font, new Point(), new double[] {0, 0}, 0);
 
   } // SimpleSymbol constructor
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public int getSize() { return (symbol.getSize()); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
   public void setSize (int size) { symbol.setSize (size); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
   public void setBorderColor (Color color) { symbol.setBorderColor (color); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
   public Color getBorderColor() { return (symbol.getBorderColor()); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
   public void setFillColor (Color color) { symbol.setFillColor (color); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
   public Color getFillColor() { return (symbol.getFillColor()); }
 
   ////////////////////////////////////////////////////////////
@@ -126,6 +177,21 @@ public class SimpleSymbol
     } // if
 
   } // draw
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public String toString () {
+
+    StringBuffer buffer = new StringBuffer();
+    buffer.append ("SimpleSymbol[");
+    buffer.append ("symbol=" + symbol + ",");
+    buffer.append ("size=" + symbol.getSize());
+    buffer.append ("]");
+
+    return (buffer.toString());
+
+  } // toString
 
   ////////////////////////////////////////////////////////////
 

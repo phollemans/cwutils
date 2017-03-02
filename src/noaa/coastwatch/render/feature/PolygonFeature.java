@@ -16,14 +16,14 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
 import java.awt.Graphics2D;
 import java.awt.geom.GeneralPath;
 import noaa.coastwatch.render.EarthImageTransform;
-import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.feature.LineFeature;
 
 /**
  * The <code>PolygonFeature</code> class is a {@link LineFeature} with

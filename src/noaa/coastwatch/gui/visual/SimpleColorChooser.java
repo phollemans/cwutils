@@ -126,23 +126,23 @@ public class SimpleColorChooser
      * action listener in the JButton is never called.
      */
     chooserButton = new JButton ("Other...") {
-        public java.awt.im.InputContext getInputContext() { return (null); }
-      };
+      public java.awt.im.InputContext getInputContext() { return (null); }
+    };
     chooserButton.addActionListener (new ActionListener() {
-        public void actionPerformed (ActionEvent event) {
-          Color c = getColor();
-          if (c != null) chooserPanel.setColor (c);
-          chooserDialog = JColorChooser.createDialog (
-            SimpleColorChooser.this, "Select a color", true, chooserPanel, 
-            new ActionListener() {
-              public void actionPerformed (ActionEvent event) {
-                chooserDialog.dispose();
-                setColor (chooserPanel.getColor());
-              } // actionPerformed
-            }, null);
-          chooserDialog.setVisible (true);
-        } // actionPerformed
-      });
+      public void actionPerformed (ActionEvent event) {
+        Color c = getColor();
+        if (c != null) chooserPanel.setColor (c);
+        chooserDialog = JColorChooser.createDialog (
+          SimpleColorChooser.this, "Select a color", true, chooserPanel, 
+          new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+              chooserDialog.dispose();
+              setColor (chooserPanel.getColor());
+            } // actionPerformed
+          }, null);
+        chooserDialog.setVisible (true);
+      } // actionPerformed
+    });
     this.add (chooserButton, BorderLayout.SOUTH);
 
   } // SimpleColorChooser

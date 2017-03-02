@@ -18,15 +18,15 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
 import java.awt.Graphics2D;
 import java.util.Iterator;
-import noaa.coastwatch.render.AbstractFeatureSource;
+import noaa.coastwatch.render.feature.AbstractFeatureSource;
 import noaa.coastwatch.render.EarthImageTransform;
-import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.feature.LineFeature;
 
 /**
  * The <code>LineFeatureSource</code> class supplies methods that read

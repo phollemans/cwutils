@@ -14,14 +14,15 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import noaa.coastwatch.render.Feature;
+import noaa.coastwatch.render.feature.Feature;
+import noaa.coastwatch.util.EarthLocation;
 
 /*
  * An <code>AbstractFeature</code> can be extended by any concrete
@@ -41,10 +42,11 @@ public abstract class AbstractFeature
   private Object[] attributeArray;
 
   /** The list of feature points. */
-  private List points;
+  private List<EarthLocation> points;
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public Object getAttribute (int index) { return (attributeArray[index]); }
 
   ////////////////////////////////////////////////////////////
@@ -65,26 +67,47 @@ public abstract class AbstractFeature
   ////////////////////////////////////////////////////////////
     
   /** Gets an iterator over the points in this feature. */
-  public Iterator iterator () {  return (points.iterator()); }
+  public Iterator<EarthLocation> iterator () {  return (points.iterator()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new feature with no attributes. */
+  /** 
+   * Creates a new feature with no attributes.
+   *
+   * @param points the list of points to use for this feature, or null to
+   * not create a list of points.  In this case, the child class is responsible
+   * for the feature points.
+   */
+  protected AbstractFeature (
+    List<EarthLocation> points
+  ) {
+
+    if (points != null)
+      this.points = new ArrayList<EarthLocation> (points);
+
+  } // AbstractFeature constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Creates a new feature with no attributes.  The list of points is
+   * created and initialized to be empty.
+   */
   protected AbstractFeature () {
 
-    points = new ArrayList();
+    points = new ArrayList<EarthLocation>();
 
   } // AbstractFeature constructor
 
   ////////////////////////////////////////////////////////////
 
   /** Adds a new point to this feature. */
-  public void add (Object point) { points.add (point); }
+  public void add (EarthLocation point) { points.add (point); }
 
   ////////////////////////////////////////////////////////////
 
   /** Gets a point from this feature. */
-  public Object get (int index) { return (points.get (index)); }
+  public EarthLocation get (int index) { return (points.get (index)); }
 
   ////////////////////////////////////////////////////////////
 
@@ -94,14 +117,14 @@ public abstract class AbstractFeature
   ////////////////////////////////////////////////////////////
 
   /** Removes a point from this feature. */
-  public Object remove (int index) { return (points.remove (index)); }
+  public EarthLocation remove (int index) { return (points.remove (index)); }
 
   ////////////////////////////////////////////////////////////
 
   /** Adds a number of points from another feature to this feature. */
   public void addAll (Feature feature) { 
 
-    for (Iterator iter = feature.iterator(); iter.hasNext(); )
+    for (Iterator<EarthLocation> iter = feature.iterator(); iter.hasNext(); )
       points.add (iter.next());
 
   } // addAll

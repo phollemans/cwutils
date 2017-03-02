@@ -68,7 +68,7 @@ public class VisualFont
 
     // Create button
     // -------------
-    button = new JButton (getFontDescription (font));
+    button = GUIServices.getTextButton (getFontDescription (font));
     button.addActionListener (new ActionListener() {
         public void actionPerformed (ActionEvent event) {
           showDialog();

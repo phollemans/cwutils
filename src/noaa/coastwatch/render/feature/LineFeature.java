@@ -29,7 +29,7 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
@@ -38,7 +38,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-import noaa.coastwatch.render.AbstractFeature;
+import noaa.coastwatch.render.feature.AbstractFeature;
 import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.EarthLocation;

@@ -176,11 +176,20 @@ public class PaletteChooser
   
   ////////////////////////////////////////////////////////////
 
-  /** Set the palette by name. */
-  
-  public void setPalette (String name) {
-	  paletteList.setSelectedValue (name, true);
-  }
+  /** 
+   * Set the selected palette by name.
+   *
+   * @param name the palette name.
+   *
+   * @see #setPalette(Palette)
+   */
+  public void setPalette (
+    String name
+  ) {
+
+    paletteList.setSelectedValue (name, true);
+
+  } // setPalette
 
   ////////////////////////////////////////////////////////////
 

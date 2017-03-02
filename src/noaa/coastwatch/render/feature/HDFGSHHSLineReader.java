@@ -22,7 +22,7 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
@@ -31,7 +31,7 @@ import hdf.hdflib.HDFConstants;
 import hdf.hdflib.HDFException;
 import noaa.coastwatch.io.HDFLib;
 import noaa.coastwatch.io.IOServices;
-import noaa.coastwatch.render.BinnedGSHHSLineReader;
+import noaa.coastwatch.render.feature.BinnedGSHHSLineReader;
 
 /**
  * The <code>HDFGSHHSLineReader</code> extends

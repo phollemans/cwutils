@@ -203,7 +203,7 @@ public class FileChooser
     filterBar.add (filterField, gc);
     GUIServices.setConstraints (gc, GridBagConstraints.RELATIVE, 0, 1, 1, 
       GridBagConstraints.NONE, 0, 0);
-    JButton clearButton = new JButton ("Clear");
+    JButton clearButton = GUIServices.getTextButton ("Clear");
     clearButton.addActionListener (new ClearClicked());
     filterBar.add (clearButton, gc);
     this.add (filterBar, BorderLayout.SOUTH);

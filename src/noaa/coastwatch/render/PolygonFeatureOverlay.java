@@ -25,7 +25,7 @@ import java.awt.Stroke;
 import java.io.IOException;
 import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.EarthImageTransform;
-import noaa.coastwatch.render.PolygonFeatureSource;
+import noaa.coastwatch.render.feature.PolygonFeatureSource;
 import noaa.coastwatch.render.PolygonOverlay;
 
 /**
@@ -96,7 +96,9 @@ public class PolygonFeatureOverlay
     // Select data from the source
     // ---------------------------
     try { source.select (view.getArea()); }
-    catch (IOException e) { return; }
+    catch (IOException e) {
+      throw new RuntimeException (e);
+    } // catch
 
   } // prepare
 

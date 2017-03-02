@@ -19,6 +19,7 @@ package noaa.coastwatch.render;
 // Imports
 // -------
 import jahuwaldt.plot.PlotSymbol;
+import noaa.coastwatch.render.feature.PointFeature;
 
 /**
  * A <code>PointFeatureSymbol</code> is a <code>PlotSymbol</code> that

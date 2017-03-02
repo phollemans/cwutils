@@ -70,7 +70,7 @@ public class ScriptConsole {
     Box buttonBox = Box.createHorizontalBox();
     buttonBox.setBorder ((Border) UIManager.get ("OptionPane.buttonAreaBorder"));
     buttonBox.add (Box.createHorizontalGlue());
-    JButton closeButton = new JButton ("Close");
+    JButton closeButton = GUIServices.getTextButton ("Close");
     closeButton.addActionListener (new ActionListener () {
       public void actionPerformed (ActionEvent event) {
         scriptFrame.setVisible (false);

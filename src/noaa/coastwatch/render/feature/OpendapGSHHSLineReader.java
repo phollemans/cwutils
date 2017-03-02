@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: OpendapGSHHSReader.java
-  PURPOSE: To provide GSHHS coastline data from an OPeNDAP connection.
+     FILE: OpendapGSHHSLineReader.java
+  PURPOSE: To provide GSHHS line data from an OPeNDAP connection.
    AUTHOR: Peter Hollemans
-     DATE: 2006/06/09
+     DATE: 2006/06/26
   CHANGES: 2008/02/18, PFH, modified to use opendap.dap classes
            2016/03/16, PFH
            - Changes: Updated to use new opendap.dap.DConnect2 class and call
@@ -21,7 +21,7 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import noaa.coastwatch.render.BinnedGSHHSReader;
+import noaa.coastwatch.render.feature.BinnedGSHHSLineReader;
 import opendap.dap.DArray;
 import opendap.dap.DArrayDimension;
 import opendap.dap.DConnect2;
@@ -47,33 +47,33 @@ import opendap.dap.NoSuchVariableException;
 import opendap.dap.PrimitiveVector;
 
 /**
- * The <code>OpendapGSHHSReader</code> extends
- * <code>BinnedGSHHSReader</code> to read data from an OPeNDAP-enabled
+ * The <code>OpendapGSHHSLineReader</code> extends
+ * <code>BinnedGSHHSLineReader</code> to read data from an OPeNDAP-enabled
  * binned data file.  Some optimizations are made for network
  * connections.
  *
  * @author Peter Hollemans
  * @since 3.2.1
  */
-public class OpendapGSHHSReader
-  extends BinnedGSHHSReader {
+public class OpendapGSHHSLineReader
+  extends BinnedGSHHSLineReader {
 
   // Constants
   // ---------
 
   /** The array of variable names that will be accessed. */
   private static final String VAR_NAMES[] = new String[] {
-    "Embedded_npts_levels_exit_entry_for_a_segment",
-    "Ten_times_the_km_squared_area_of_the_parent_polygon_of_a_segmen",
+    "Hierarchial_level_of_a_segment",
+    "N_points_for_a_segment",
     "Relative_longitude_from_SW_corner_of_bin",
     "Relative_latitude_from_SW_corner_of_bin"
   };
 
   /** The segment info id. */
-  private static final int SEGMENT_INFO_ID = 0;
+  private static final int SEGMENT_LEVEL_ID = 0;
 
   /** The segment area id. */
-  private static final int SEGMENT_AREA_ID = 1;
+  private static final int SEGMENT_POINTS_ID = 1;
 
   /** The point dx id. */
   private static final int DX_ID = 2;
@@ -130,16 +130,16 @@ public class OpendapGSHHSReader
 
     switch (sdsid) {
 
-    // Get segment info data
-    // ---------------------
-    case SEGMENT_INFO_ID:
-      System.arraycopy (binData.segmentInfo, 0, data, 0, count[0]);
+    // Get segment level data
+    // ----------------------
+    case SEGMENT_LEVEL_ID:
+      System.arraycopy (binData.segmentLevel, 0, data, 0, count[0]);
       break;
 
-    // Get segment area data
-    // ---------------------
-    case SEGMENT_AREA_ID:
-      System.arraycopy (binData.segmentArea, 0, data, 0, count[0]);
+    // Get segment points data
+    // -----------------------
+    case SEGMENT_POINTS_ID:
+      System.arraycopy (binData.segmentPoints, 0, data, 0, count[0]);
       break;
 
     // Get point dx data
@@ -173,6 +173,43 @@ public class OpendapGSHHSReader
     throw new IOException ("Unsupported method call");
 
   } // readData
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * The <code>BinData</code> class holds data segment information,
+   * segment area, and segment dx, dy points for a bin. 
+   */
+  private static class BinData {
+
+    /** The raw segment level for each segment in a bin. */
+    public short[] segmentLevel;
+
+    /** The raw segment points for each segment. */
+    public short[] segmentPoints;
+
+    /** The dx for each segment point in a bin. */
+    public short[] dx;
+
+    /** The dy for each segment point in a bin. */
+    public short[] dy;
+
+    /** Creates a new bin data object. */
+    public BinData (
+      short[] segmentLevel,
+      short[] segmentPoints, 
+      short[] dx, 
+      short[] dy
+    ) {
+
+      this.segmentLevel = segmentLevel;
+      this.segmentPoints = segmentPoints;
+      this.dx = dx;
+      this.dy = dy;
+
+    } // BinData constructor
+
+  } // BinData class
 
   ////////////////////////////////////////////////////////////
 
@@ -227,15 +264,15 @@ public class OpendapGSHHSReader
       // ---------------------
       List specList = new ArrayList();
 
-      DataSpec segmentInfoSpec = new DataSpec (
-        "Embedded_npts_levels_exit_entry_for_a_segment", 
-        firstReadSegment, readSegments, new int[readSegments]);
-      specList.add (segmentInfoSpec);
+      DataSpec segmentLevelSpec = new DataSpec (
+        "Hierarchial_level_of_a_segment",
+        firstReadSegment, readSegments, new short[readSegments]);
+      specList.add (segmentLevelSpec);
 
-      DataSpec segmentAreaSpec = new DataSpec (
-        "Ten_times_the_km_squared_area_of_the_parent_polygon_of_a_segmen",
-        firstReadSegment, readSegments, new int[readSegments]);
-      specList.add (segmentAreaSpec);
+      DataSpec segmentPointsSpec = new DataSpec (
+        "N_points_for_a_segment",
+        firstReadSegment, readSegments, new short[readSegments]);
+      specList.add (segmentPointsSpec);
 
       DataSpec dxSpec = new DataSpec (
         "Relative_longitude_from_SW_corner_of_bin",
@@ -274,20 +311,20 @@ public class OpendapGSHHSReader
 
         // Create bin cache entry
         // ----------------------
-        int[] segmentInfo = new int[numSegments[i]];
-        int[] segmentArea = new int[numSegments[i]];
+        short[] segmentLevel = new short[numSegments[i]];
+        short[] segmentPoints = new short[numSegments[i]];
         short[] dx = new short[binPoints];
         short[] dy = new short[binPoints];
-        System.arraycopy (segmentInfoSpec.data, 
-          firstBinSegment-firstReadSegment, segmentInfo, 0, numSegments[i]);
-        System.arraycopy (segmentAreaSpec.data, 
-          firstBinSegment-firstReadSegment, segmentArea, 0, numSegments[i]);
+        System.arraycopy (segmentLevelSpec.data, 
+          firstBinSegment-firstReadSegment, segmentLevel, 0, numSegments[i]);
+        System.arraycopy (segmentPointsSpec.data, 
+          firstBinSegment-firstReadSegment, segmentPoints, 0, numSegments[i]);
         System.arraycopy (dxSpec.data, 
           firstBinPoint-firstReadPoint, dx, 0, binPoints);
         System.arraycopy (dySpec.data, 
           firstBinPoint-firstReadPoint, dy, 0, binPoints);
         binDataCache.put (new Integer (i), 
-          new BinData (segmentInfo, segmentArea, dx, dy));
+          new BinData (segmentLevel, segmentPoints, dx, dy));
 
       } // for
 
@@ -296,43 +333,6 @@ public class OpendapGSHHSReader
     ////////////////////////////////////////////////////////
 
   } // BinSequenceReader class
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * The <code>BinData</code> class holds data segment information,
-   * segment area, and segment dx, dy points for a bin. 
-   */
-  private static class BinData {
-
-    /** The raw segment information for each segment in a bin. */
-    public int[] segmentInfo;
-
-    /** The raw segment area for each segment. */
-    public int[] segmentArea;
-
-    /** The dx for each segment point in a bin. */
-    public short[] dx;
-
-    /** The dy for each segment point in a bin. */
-    public short[] dy;
-
-    /** Creates a new bin data object. */
-    public BinData (
-      int[] segmentInfo, 
-      int[] segmentArea, 
-      short[] dx, 
-      short[] dy
-    ) {
-
-      this.segmentInfo = segmentInfo;
-      this.segmentArea = segmentArea;
-      this.dx = dx;
-      this.dy = dy;
-
-    } // BinData constructor
-
-  } // BinData class
 
   ////////////////////////////////////////////////////////////
 
@@ -353,8 +353,8 @@ public class OpendapGSHHSReader
       } // else
     } // for
 
-    // Read each sequential run
-    // ------------------------
+    // Create list of sequence readers
+    // -------------------------------
     int bin = 0;
     List readerList = new ArrayList();
     while (bin < bins) {
@@ -571,10 +571,6 @@ public class OpendapGSHHSReader
     specList.add (new DataSpec ("N_segments_in_a_bin", 
       0, totalBins, numSegments));
 
-    binInfo = new short[totalBins];
-    specList.add (new DataSpec ("Embedded_node_levels_in_a_bin", 
-      0, totalBins, binInfo));
-
     segmentStart = new int[totalSegments];
     specList.add (new DataSpec ("Id_of_first_point_in_a_segment", 
       0, totalSegments, segmentStart));
@@ -595,8 +591,8 @@ public class OpendapGSHHSReader
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new binned GSHHS reader from the database name.  By
-   * default, there is no minimum area for polygon selection and no
+   * Creates a new reader from the database name.  By default,
+   * there is no minimum area for polygon selection and no
    * polygons are selected.
    * 
    * @param path the OPeNDAP server path as http://server/path.
@@ -606,7 +602,7 @@ public class OpendapGSHHSReader
    *
    * @throws IOException if an error occurred reading the file.
    */
-  public OpendapGSHHSReader (
+  public OpendapGSHHSLineReader (
     String path,
     String name
   ) throws IOException {
@@ -614,10 +610,10 @@ public class OpendapGSHHSReader
     this.path = path;
     init (name);
 
-  } // OpendapGSHHSReader constructor
+  } // OpendapGSHHSLineReader constructor
 
   ////////////////////////////////////////////////////////////
 
-} // OpendapGSHHSReader class
+} // OpendapGSHHSLineReader class
 
 ////////////////////////////////////////////////////////////////////////

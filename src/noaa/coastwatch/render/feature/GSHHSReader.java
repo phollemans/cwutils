@@ -28,7 +28,7 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
@@ -45,8 +45,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
-import noaa.coastwatch.render.LineFeature;
-import noaa.coastwatch.render.LineFeatureSource;
+import noaa.coastwatch.render.feature.LineFeature;
+import noaa.coastwatch.render.feature.LineFeatureSource;
 import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.EarthLocation;
 

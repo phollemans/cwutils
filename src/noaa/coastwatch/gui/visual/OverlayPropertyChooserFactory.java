@@ -22,9 +22,14 @@ import noaa.coastwatch.gui.visual.ExpressionMaskOverlayPropertyChooser;
 import noaa.coastwatch.gui.visual.GenericOverlayPropertyChooser;
 import noaa.coastwatch.gui.visual.MultilayerBitmaskOverlayPropertyChooser;
 import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
+import noaa.coastwatch.gui.visual.PointFeatureOverlayPropertyChooser;
+import noaa.coastwatch.gui.visual.MultiPointFeatureOverlayPropertyChooser;
 import noaa.coastwatch.render.EarthDataOverlay;
 import noaa.coastwatch.render.ExpressionMaskOverlay;
 import noaa.coastwatch.render.MultilayerBitmaskOverlay;
+import noaa.coastwatch.render.PointFeatureOverlay;
+import noaa.coastwatch.render.MultiPointFeatureOverlay;
+import noaa.coastwatch.render.SimpleSymbol;
 
 /**
  * The <code>OverlayPropertyChooserFactory</code> class may be used to
@@ -68,13 +73,27 @@ public class OverlayPropertyChooserFactory {
     else if (overlay instanceof ExpressionMaskOverlay) {
       chooser = new ExpressionMaskOverlayPropertyChooser (
         (ExpressionMaskOverlay) overlay);
-    } // if
+    } // else if
     
+    // Create point data overlay chooser
+    // ---------------------------------
+    else if (overlay instanceof PointFeatureOverlay) {
+      chooser = new PointFeatureOverlayPropertyChooser (
+        (PointFeatureOverlay<SimpleSymbol>) overlay);
+    } // else if
+    
+    // Create multi-point data overlay chooser
+    // ---------------------------------------
+    else if (overlay instanceof MultiPointFeatureOverlay) {
+      chooser = new MultiPointFeatureOverlayPropertyChooser (
+        (MultiPointFeatureOverlay<SimpleSymbol>) overlay);
+    } // else if
+
     // Create generic chooser
     // ----------------------
     else {
       try { chooser = new GenericOverlayPropertyChooser (overlay); }
-      catch (Exception e) { }
+      catch (Exception e) { e.printStackTrace(); }
     } // try
 
     // Check for unsupported overlay

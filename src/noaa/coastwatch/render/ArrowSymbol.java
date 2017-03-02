@@ -32,7 +32,7 @@ import java.awt.geom.GeneralPath;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import noaa.coastwatch.render.DirectionSymbol;
-import noaa.coastwatch.render.PointFeature;
+import noaa.coastwatch.render.feature.PointFeature;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform2D;
 

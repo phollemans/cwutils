@@ -16,19 +16,19 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import noaa.coastwatch.render.BinnedGSHHSLineReader;
-import noaa.coastwatch.render.BinnedGSHHSReader;
-import noaa.coastwatch.render.HDFGSHHSLineReader;
-import noaa.coastwatch.render.HDFGSHHSReader;
-import noaa.coastwatch.render.OpendapGSHHSLineReader;
-import noaa.coastwatch.render.OpendapGSHHSReader;
+import noaa.coastwatch.render.feature.BinnedGSHHSLineReader;
+import noaa.coastwatch.render.feature.BinnedGSHHSReader;
+import noaa.coastwatch.render.feature.HDFGSHHSLineReader;
+import noaa.coastwatch.render.feature.HDFGSHHSReader;
+import noaa.coastwatch.render.feature.OpendapGSHHSLineReader;
+import noaa.coastwatch.render.feature.OpendapGSHHSReader;
 
 /**
  * A <code>BinnedGSHHSReaderFactory</code> creates instances of

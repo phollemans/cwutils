@@ -15,7 +15,7 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
@@ -29,6 +29,7 @@ import com.vividsolutions.jts.geom.MultiPoint;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
@@ -36,16 +37,18 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+
 import noaa.coastwatch.render.EarthDataOverlay;
-import noaa.coastwatch.render.LineFeature;
+import noaa.coastwatch.render.feature.LineFeature;
 import noaa.coastwatch.render.LineFeatureOverlay;
-import noaa.coastwatch.render.LineFeatureSource;
-import noaa.coastwatch.render.PointFeature;
-import noaa.coastwatch.render.PointFeatureSource;
-import noaa.coastwatch.render.PolygonFeature;
+import noaa.coastwatch.render.feature.LineFeatureSource;
+import noaa.coastwatch.render.feature.PointFeature;
+import noaa.coastwatch.render.feature.PointFeatureSource;
+import noaa.coastwatch.render.feature.PolygonFeature;
 import noaa.coastwatch.render.PolygonFeatureOverlay;
-import noaa.coastwatch.render.PolygonFeatureSource;
+import noaa.coastwatch.render.feature.PolygonFeatureSource;
 import noaa.coastwatch.util.EarthLocation;
+
 import org.geotools.data.FeatureReader;
 import org.geotools.data.FeatureResults;
 import org.geotools.data.FeatureSource;
@@ -53,7 +56,6 @@ import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.feature.Feature;
 import org.geotools.feature.IllegalAttributeException;
 
-import com.vividsolutions.jts.geom.Polygon;
 /**
  * <p>The <code>ESRIShapefileReader</code> class reads geographic
  * features from ESRI shapefile data and presents the data as an

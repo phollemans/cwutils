@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////
 /*
      FILE: PlotSymbolFactory.java
-  PURPOSE: To manage a set of predefined written color palettes.
+  PURPOSE: To manage a set of predefined plot symbols.
    AUTHOR: Peter Hollemans
      DATE: 2008/06/16
 

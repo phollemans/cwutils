@@ -14,11 +14,12 @@
 
 // Package
 // -------
-package noaa.coastwatch.render;
+package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
 import java.util.Iterator;
+import noaa.coastwatch.util.EarthLocation;
 
 /*
  * A <code>Feature</code> represents any geographic object with a list
@@ -28,13 +29,14 @@ import java.util.Iterator;
  * @author Peter Hollemans
  * @since 3.2.0
  */
-public interface Feature {
+public interface Feature
+  extends Iterable<EarthLocation> {
 
   /** Gets the value of the indexed attribute. */
   public Object getAttribute (int index);
 
   /** Gets an iterator over the points associated with this feature. */
-  public Iterator iterator();
+  public Iterator<EarthLocation> iterator();
 
 } // Feature interface
 
