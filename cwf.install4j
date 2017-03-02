@@ -833,6 +833,77 @@
             <serializedBean>
               <java class="java.beans.XMLDecoder">
                 <object class="com.install4j.runtime.beans.screens.LicenseScreen">
+                  <void property="displayedText">
+                    <string>&lt;html&gt;
+&lt;p&gt;
+Copyright (c) 1998-2017 National Oceanic and Atmospheric Administration&lt;br&gt;
+All rights reserved.
+&lt;/p&gt;
+
+&lt;p&gt;
+Developed by:&lt;br&gt;
+&amp;emsp;CoastWatch / OceanWatch&lt;br&gt;
+&amp;emsp;Center for Satellite Applications and Research&lt;br&gt;
+&amp;emsp;http://coastwatch.noaa.gov
+&lt;/p&gt;
+
+&lt;p&gt;
+Permission is hereby granted, free of charge, to any
+person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal with the
+Software without restriction, including without
+limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the
+following conditions:
+&lt;/p&gt;
+
+&lt;ul&gt;
+   &lt;li&gt;
+     Redistributions of source code must retain the
+     above copyright notice, this list of conditions
+     and the following disclaimers.
+   &lt;/li&gt;
+   &lt;li&gt;
+     Redistributions in binary form must reproduce the
+     above copyright notice, this list of conditions
+     and the following disclaimers in the documentation
+     and/or other materials provided with the
+     distribution.
+   &lt;/li&gt;
+   &lt;li&gt;
+     In addition, redistributions of modified forms
+     of the source or binary code must carry prominent
+     notices stating that the original code was
+     changed and the date of the change.
+   &lt;/li&gt;
+   &lt;li&gt;
+     Neither the names of CoastWatch / OceanWatch,
+     Center for Satellite Applications and Research,
+     nor the names of its contributors may be used to
+     endorse or promote products derived from this
+     Software without specific prior written
+     permission.
+   &lt;/li&gt;
+&lt;/ul&gt;
+ 
+&lt;p&gt;
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+SHALL THE CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN
+AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS WITH THE SOFTWARE.
+&lt;/p&gt;
+
+&lt;br&gt;
+
+&lt;/html&gt;</string>
+                  </void>
                   <void property="displayedTextFile">
                     <void property="languageIdToExternalFile">
                       <void method="put">
@@ -845,6 +916,9 @@
                   </void>
                   <void property="readAllRequired">
                     <boolean>true</boolean>
+                  </void>
+                  <void property="textSource">
+                    <object class="com.install4j.runtime.beans.screens.components.TextSource" field="DIRECT" />
                   </void>
                 </object>
               </java>
