@@ -142,7 +142,7 @@ public abstract class AbstractOverlayListPanel
   // ---------
 
   /** The list of overlays. */
-  protected ComponentList overlayList;
+  protected ComponentList<VisualOverlay> overlayList;
 
   /** The edit button. */
   private JButton editButton;
@@ -733,7 +733,7 @@ public abstract class AbstractOverlayListPanel
       if (indices.length == 0) 
         firePropertyChange (SELECTION_PROPERTY, null, null);
       else if (indices.length == 1) {
-        VisualOverlay visual = 
+        VisualOverlay visual =
           (VisualOverlay) overlayList.getElement (indices[0]);
         firePropertyChange (SELECTION_PROPERTY, null, visual.getValue());
       } // if

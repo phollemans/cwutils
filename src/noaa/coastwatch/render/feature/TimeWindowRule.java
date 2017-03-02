@@ -43,14 +43,20 @@ import java.util.List;
  */
 @noaa.coastwatch.test.Testable
 public class TimeWindowRule
-  extends AttributeRule {
+  extends AttributeRule<TimeWindow> {
 
   // Constants
   // ---------
   
   /** The operators for this class of rule. */
   public enum Operator {
-    IS_WITHIN
+    IS_WITHIN;
+    @Override
+    public String toString() {
+      String value = super.toString();
+      value = value.toLowerCase().replaceAll ("_", " ");
+      return (value);
+    } // toString    
   } // Operator
   
   ////////////////////////////////////////////////////////////
@@ -93,10 +99,9 @@ public class TimeWindowRule
     boolean isMatch = false;
     if (featureAttValue != null) {
       Operator windowOp = (Operator) operator;
-      TimeWindow windowValue = (TimeWindow) matchAttValue;
       switch (windowOp) {
       case IS_WITHIN:
-        isMatch = windowValue.isInWindow (featureAttValue);
+        isMatch = matchAttValue.isInWindow (featureAttValue);
         break;
       default:
       } // switch

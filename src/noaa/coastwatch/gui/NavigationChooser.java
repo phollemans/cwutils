@@ -400,7 +400,7 @@ public class NavigationChooser
 
     // Add buttons
     // -----------
-    JButton performButton = new JButton ("Perform");
+    JButton performButton = GUIServices.getTextButton ("Perform");
     performButton.addActionListener (new ManualButtonListener());
     buttonPanel.add (performButton);
 

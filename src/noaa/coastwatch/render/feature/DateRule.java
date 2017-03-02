@@ -41,7 +41,7 @@ import java.util.List;
  */
 @noaa.coastwatch.test.Testable
 public class DateRule
-  extends AttributeRule {
+  extends AttributeRule<Date> {
 
   // Constants
   // ---------
@@ -49,7 +49,13 @@ public class DateRule
   /** The operators for this class of rule. */
   public enum Operator {
     IS_BEFORE,
-    IS_AFTER
+    IS_AFTER;
+    @Override
+    public String toString() {
+      String value = super.toString();
+      value = value.toLowerCase().replaceAll ("_", " ");
+      return (value);
+    } // toString    
   } // Operator
   
   ////////////////////////////////////////////////////////////
@@ -92,13 +98,12 @@ public class DateRule
     boolean isMatch = false;
     if (featureAttValue != null) {
       Operator dateOp = (Operator) operator;
-      Date dateValue = (Date) matchAttValue;
       switch (dateOp) {
       case IS_BEFORE:
-        isMatch = featureAttValue.before (dateValue);
+        isMatch = featureAttValue.before (matchAttValue);
         break;
       case IS_AFTER:
-        isMatch = featureAttValue.after (dateValue);
+        isMatch = featureAttValue.after (matchAttValue);
         break;
       default:
       } // switch

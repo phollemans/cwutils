@@ -22,9 +22,10 @@ import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+
 import java.util.Iterator;
 import java.util.Map;
-import java.util.LinkedHashMap;
+
 import noaa.coastwatch.render.feature.AbstractFeatureSource;
 import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.render.feature.PointFeature;
@@ -40,15 +41,6 @@ import noaa.coastwatch.render.PointFeatureSymbol;
  */
 public abstract class PointFeatureSource 
   extends AbstractFeatureSource {
-
-  // Variables
-  // ---------
-  
-  /** 
-   * The map of rectangles drawn by the last call to render to the point feature
-   * drawn inside the rectangle.
-   */
-  private Map<Rectangle, PointFeature> rectToFeatureMap = new LinkedHashMap<Rectangle, PointFeature>();
 
   ////////////////////////////////////////////////////////////
 
@@ -66,9 +58,29 @@ public abstract class PointFeatureSource
     PointFeatureSymbol symbol
   ) {
 
-    // Create or clear rectangle map
-    // -----------------------------
-    rectToFeatureMap.clear();
+    render (g, trans, symbol, null);
+
+  } // render
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Renders the selected point feature data to a graphics context.
+   *
+   * @param g the graphics context for drawing.
+   * @param trans the earth image transform for converting Earth
+   * locations to image points.
+   * @param symbol the symbol to use for rendering each point feature.
+   * @param rectToFeatureMap the map of rectangle to point feature for the
+   * rendering operation, or null to not save this information.  This map 
+   * can later be used to easily recall what point features were drawn where.
+   */
+  public void render (
+    Graphics2D g,
+    EarthImageTransform trans,
+    PointFeatureSymbol symbol,
+    Map<Rectangle, PointFeature> rectToFeatureMap
+  ) {
 
     // Loop over each point feature
     // ----------------------------
@@ -88,45 +100,16 @@ public abstract class PointFeatureSource
 
         // Save rectangle
         // --------------
-        int size = symbol.getSize();
-        Rectangle rect = new Rectangle (center.x - size/2, center.y - size/2, size, size);
-        rectToFeatureMap.put (rect, pointFeature);
+        if (rectToFeatureMap != null) {
+          int size = symbol.getSize();
+          Rectangle rect = new Rectangle (center.x - size/2, center.y - size/2, size, size);
+          rectToFeatureMap.put (rect, pointFeature);
+        } // if
 
       } // if
     } // for
 
   } // render
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Gets the feature drawn in the last call to render whose symbol's 
-   * rectangular extents contain the specified point.
-   *
-   * @param point the point for the feature query.
-   *
-   * @return the feature or null if no feature was drawn at the specified 
-   * point. If more than one feature matches the point, the first feature 
-   * rendered will be returned.
-   */
-  public PointFeature getFeatureAtPoint (
-    Point point
-  ) {
-    
-    PointFeature result = null;
-    
-    // Loop over all symbol rectangles
-    // -------------------------------
-    for (Rectangle rect : rectToFeatureMap.keySet()) {
-      if (rect.contains (point)) {
-        result = rectToFeatureMap.get (rect);
-        break;
-      } // if
-    } // for
-
-    return (result);
-
-  } // getFeatureAtPoint
 
   ////////////////////////////////////////////////////////////
 

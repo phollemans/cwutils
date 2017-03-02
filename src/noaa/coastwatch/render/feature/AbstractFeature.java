@@ -71,7 +71,28 @@ public abstract class AbstractFeature
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new feature with no attributes. */
+  /** 
+   * Creates a new feature with no attributes.
+   *
+   * @param points the list of points to use for this feature, or null to
+   * not create a list of points.  In this case, the child class is responsible
+   * for the feature points.
+   */
+  protected AbstractFeature (
+    List<EarthLocation> points
+  ) {
+
+    if (points != null)
+      this.points = new ArrayList<EarthLocation> (points);
+
+  } // AbstractFeature constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Creates a new feature with no attributes.  The list of points is
+   * created and initialized to be empty.
+   */
   protected AbstractFeature () {
 
     points = new ArrayList<EarthLocation>();

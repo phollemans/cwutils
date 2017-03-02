@@ -20,12 +20,27 @@ package noaa.coastwatch.gui.visual;
 // -------
 import java.beans.PropertyChangeListener;
 import javax.swing.event.SwingPropertyChangeSupport;
+
 import noaa.coastwatch.gui.visual.VisualObject;
+import noaa.coastwatch.gui.visual.ComponentProducer;
 
 /**
- * The <code>AbstractVisualObject</code> class implements property
- * change support, default chooser behaviour, and restrictions for
- * visual objects.
+ * The <code>AbstractVisualObject</code> class implements default versions
+ * of the following interface methods:
+ * <ul>
+ *   <li>{@link ComponentProducer#refreshComponent} (no operation)</li>
+ *   <li>{@link VisualObject#addPropertyChangeListener}</li>
+ *   <li>{@link VisualObject#firePropertyChange}</li>
+ *   <li>{@link VisualObject#showChooser} (no operation)</li>
+ *   <li>{@link VisualObject#hasChooser} (returns false)</li>
+ *   <li>{@link VisualObject#setRestrictions} (no operation)</li>
+ * </ul>
+ * Child classes must implement:
+ * <ul>
+ *   <li>{@link ComponentProducer#getComponent}</li>
+ *   <li>{@link VisualObject#getValue}</li>
+ * </ul>
+ * and override any default behaviours needed for the methods provided here.
  *
  * @author Peter Hollemans
  * @since 3.1.7
@@ -59,10 +74,7 @@ public abstract class AbstractVisualObject
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Adds a listener to receive property change events when the object's
-   * value changes.
-   */
+  @Override
   public void addPropertyChangeListener (
     PropertyChangeListener listener
   ) {
@@ -78,6 +90,7 @@ public abstract class AbstractVisualObject
    * property value is set to null, and the new value is set to the
    * value returned by <code>getValue()</code>.
    */
+  @Override
   public void firePropertyChange () {
 
     changeSupport.firePropertyChange (VALUE_PROPERTY, null, getValue());
@@ -89,6 +102,9 @@ public abstract class AbstractVisualObject
   /** 
    * Fires a property change event for this object's value using the
    * specified old and new values.
+   *
+   * @param oldValue the old value for the property change event.
+   * @param newValue the new value for the property change event.
    */
   public void firePropertyChange (
     Object oldValue,
@@ -101,28 +117,18 @@ public abstract class AbstractVisualObject
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Shows the chooser dialog used to manipulate the object's
-   * properties.  This method has no effect unless overridden in the
-   * child class.
-   */
-  public void showChooser () { }
+  @Override
+  public void showChooser () { } // no operation
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Returns true if this object has a chooser, or false if not.  This
-   * method always returns false unless overridden in the child class.
-   */
+  @Override
   public boolean hasChooser () { return (false); }
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Sets restrictions on the allowed object values.  This method does
-   * nothing unless overridden in the child class.
-   */
-  public void setRestrictions (Object restrict) { }
+  @Override
+  public void setRestrictions (Object restrict) { } // no operation
 
   ////////////////////////////////////////////////////////////
 
@@ -131,7 +137,7 @@ public abstract class AbstractVisualObject
    * current object.  This method does nothing unless overridden in
    * the child class.
    */
-  public void refreshComponent () { }
+  public void refreshComponent () { } // no operation
 
   ////////////////////////////////////////////////////////////
 

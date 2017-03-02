@@ -333,7 +333,7 @@ public class NavigationAnalysisPanel
     removeButton.setEnabled (false);
     listButtonPanel.add (removeButton);
 
-    clearButton = new JButton (CLEAR_COMMAND);
+    clearButton = GUIServices.getTextButton (CLEAR_COMMAND);
     clearButton.addActionListener (listButtonListener);
     clearButton.setToolTipText (CLEAR_COMMAND);
     clearButton.setEnabled (false);
@@ -426,7 +426,7 @@ public class NavigationAnalysisPanel
     gc.insets = new Insets (2, 0, 2, 0);
     bottomPanel.add (colSpinner, gc);
 
-    autoButton = new JButton ("Auto");
+    autoButton = GUIServices.getTextButton ("Auto");
     autoButton.addActionListener (new ActionListener () {
         public void actionPerformed (ActionEvent event) {
           navigatePoint (getSelectedPoint());
@@ -437,7 +437,7 @@ public class NavigationAnalysisPanel
       GridBagConstraints.HORIZONTAL, 0, 0);
     bottomPanel.add (autoButton, gc);
 
-    resetButton = new JButton ("Reset");
+    resetButton = GUIServices.getTextButton ("Reset");
     resetButton.addActionListener (new ActionListener () {
         public void actionPerformed (ActionEvent event) {
           resetPoint (getSelectedPoint());

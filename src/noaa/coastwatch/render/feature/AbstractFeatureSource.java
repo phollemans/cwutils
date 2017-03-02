@@ -22,7 +22,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
 import noaa.coastwatch.render.feature.FeatureSource;
+import noaa.coastwatch.render.feature.SelectionRuleFilter;
 import noaa.coastwatch.render.feature.Feature;
 import noaa.coastwatch.render.feature.Attribute;
 import noaa.coastwatch.util.EarthArea;
@@ -49,9 +53,38 @@ public abstract class AbstractFeatureSource
   /** The list of attributes. */
   private List<Attribute> attributeList;
 
+  /** The filter for the features, or null for no filtering. */
+  private SelectionRuleFilter filter;
+
+  /** The map of attribute name to index. */
+  private Map<String, Integer> attNameMap;
+
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new feature source with an empty list of features. */
+  /**
+   * Gets the mapping from attribute name to index.  The index can be used to
+   * retrieve the attribute value in each attribute of the features provided by
+   * this source.
+   *
+   * @return the attribute name to index map.
+   */
+  public Map<String, Integer> getAttributeNameMap () {
+  
+    if (attNameMap == null) {
+      attNameMap = new HashMap<String, Integer>();
+      attributeList.forEach (att -> attNameMap.put (att.getName(), attributeList.indexOf (att)));
+    } // if
+    
+    return (attNameMap);
+    
+  } // getAttributeNameMap
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Creates a new feature source with an empty list of features and a zero
+   * length list of attributes.
+   */
   protected AbstractFeatureSource () { 
 
     featureList = new ArrayList<Feature>();
@@ -59,6 +92,24 @@ public abstract class AbstractFeatureSource
     attributeList = new ArrayList<Attribute>();
 
   } // AbstractFeatureSource constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the feature filter being used in this source.
+   *
+   * @return the feature filter or null for no filtering.
+   */
+  public SelectionRuleFilter getFilter () { return (filter); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the feature filter to use in this source.
+   *
+   * @param filter the feature filter or null for no filtering.
+   */
+  public void setFilter (SelectionRuleFilter filter) { this.filter = filter; }
 
   ////////////////////////////////////////////////////////////
 
@@ -90,12 +141,30 @@ public abstract class AbstractFeatureSource
   ////////////////////////////////////////////////////////////
 
   @Override
-  public Iterator<Feature> iterator () { return (featureList.iterator()); }
+  public Iterator<Feature> iterator () {
+  
+    Iterator<Feature> iterator;
+    if (filter == null) {
+      iterator = featureList.iterator();
+    } // if
+    else {
+      List<Feature> filteredList = filter.filter (featureList);
+      iterator = filteredList.iterator();
+    } // else
+
+    return (iterator);
+    
+  } // iterator
 
   ////////////////////////////////////////////////////////////
 
   @Override
   public List<Attribute> getAttributes() { return (new ArrayList<Attribute> (attributeList)); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public int getAttributeCount() { return (attributeList.size()); }
 
   ////////////////////////////////////////////////////////////
 
@@ -109,6 +178,7 @@ public abstract class AbstractFeatureSource
   ) {
 
     this.attributeList = new ArrayList<Attribute> (attributeList);
+    this.attNameMap = null;
 
   } // setAttributes
 

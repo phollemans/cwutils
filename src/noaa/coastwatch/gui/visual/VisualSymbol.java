@@ -50,24 +50,8 @@ public class VisualSymbol
   // Variables
   // ---------
 
-  /** The set of possible symbols. */
-  private static List<PlotSymbol> symbolList;
-
   /** The symbol component combo box. */
   private JComboBox symbolCombo;
-
-  ////////////////////////////////////////////////////////////
-
-  static {
-
-    // Create array of plot symbols
-    // ----------------------------
-    symbolList = new ArrayList<PlotSymbol>();
-    for (Iterator<String> iter = PlotSymbolFactory.getSymbolNames(); iter.hasNext();) {
-      symbolList.add (PlotSymbolFactory.create (iter.next()));
-    } // for
-
-  } // static
 
   ////////////////////////////////////////////////////////////
 
@@ -78,9 +62,11 @@ public class VisualSymbol
 
     // Create combo box
     // ----------------
-    symbolCombo = new JComboBox (symbolList.toArray());
+    symbolCombo = new JComboBox<PlotSymbol>();
+    PlotSymbolFactory.getSymbolNames()
+      .forEachRemaining (name -> symbolCombo.addItem (PlotSymbolFactory.create (name)));
     symbolCombo.setSelectedItem (symbol);
-    //    symbolCombo.addActionListener (new SymbolComboListener());
+    symbolCombo.addActionListener (event -> firePropertyChange());
     symbolCombo.setRenderer (new SymbolRenderer());
 
   } // VisualSymbol constructor
@@ -90,7 +76,7 @@ public class VisualSymbol
   /** Renders the symbols as symbol swatches. */
   private class SymbolRenderer
     extends JLabel
-    implements ListCellRenderer {
+    implements ListCellRenderer<PlotSymbol> {
 
     ////////////////////////////////////////////////////////
 
@@ -106,13 +92,13 @@ public class VisualSymbol
     /** Sets this label to show a symbol swatch icon. */
     public Component getListCellRendererComponent (
       JList list,
-      Object value,
+      PlotSymbol value,
       int index,
       boolean isSelected,
       boolean cellHasFocus
     ) {
 
-      setIcon (new SymbolSwatch ((PlotSymbol) value, ICON_SIZE));
+      setIcon (new SymbolSwatch (value, ICON_SIZE));
       if (isSelected) {
         setBackground (list.getSelectionBackground());
         setForeground (list.getSelectionForeground());
@@ -131,12 +117,12 @@ public class VisualSymbol
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the combo box used to represent the symbol. */
+  @Override
   public Component getComponent () { return (symbolCombo); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the symbol value. */
+  @Override
   public Object getValue () { return (symbolCombo.getSelectedItem()); }
 
   ////////////////////////////////////////////////////////////
@@ -149,7 +135,8 @@ public class VisualSymbol
   public static void main (String argv[]) {
   
     JPanel panel = new JPanel();
-    PlotSymbol symbol = symbolList.get (0);
+    String symbolName = PlotSymbolFactory.getSymbolNames().next();
+    PlotSymbol symbol = PlotSymbolFactory.create (symbolName);
     Component comp =  new VisualSymbol (symbol).getComponent();
     panel.add (comp);
     noaa.coastwatch.gui.TestContainer.showFrame (panel);

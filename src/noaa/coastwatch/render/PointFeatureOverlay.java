@@ -21,6 +21,8 @@ package noaa.coastwatch.render;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.Point;
+import java.awt.Rectangle;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,7 @@ import java.util.Date;
 import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.feature.Attribute;
 import noaa.coastwatch.render.feature.PointFeatureSource;
+import noaa.coastwatch.render.feature.SelectionRuleFilter;
 import noaa.coastwatch.render.feature.PointFeature;
 import noaa.coastwatch.render.PointFeatureSymbol;
 import noaa.coastwatch.render.PolygonOverlay;
@@ -38,12 +41,12 @@ import noaa.coastwatch.util.DateFormatter;
 
 /**
  * The <code>PointFeatureOverlay</code> class annotes a data view with
- * symbols using data from from a {@link PointFeatureSource}.
+ * symbols using data from a {@link PointFeatureSource}.
  *
  * @author Peter Hollemans
  * @since 3.2.0
  */
-public class PointFeatureOverlay 
+public class PointFeatureOverlay<T extends PointFeatureSymbol>
   extends PolygonOverlay {
 
   // Constants
@@ -59,29 +62,53 @@ public class PointFeatureOverlay
   private PointFeatureSource source;
 
   /** The feature symbol. */
-  private PointFeatureSymbol symbol;
+  private T symbol;
 
-  /** The list of attribute names to use as labels. */
-  private List<Integer> attList;
+  /** The filter for the features, or null for no filtering. */
+  private SelectionRuleFilter filter;
+  
+  /** The rectangle to point feature map from the last rendering. */
+  private transient Map<Rectangle, PointFeature> rectToFeatureMap;
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the list of attributes to use as point data labels. */
-  public void setLabelAttributes (List<Integer> attList) {
+  @Override
+  public Object clone () {
 
-    this.attList = attList;
+    PointFeatureOverlay<T> copy = (PointFeatureOverlay<T>) super.clone();
+    copy.symbol = (T) symbol.clone();
+    copy.filter = (SelectionRuleFilter) filter.clone();
+    return (copy);
 
-  } // setLabelAttributes
+  } // clone
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the feature filter being used in this overlay.
+   *
+   * @return the feature filter or null for no filtering.
+   */
+  public SelectionRuleFilter getFilter () { return (filter); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the feature filter to use in this overlay.
+   *
+   * @param filter the feature filter or null for no filtering.
+   */
+  public void setFilter (SelectionRuleFilter filter) { this.filter = filter; }
 
   ////////////////////////////////////////////////////////////
 
   /** Gets the point symbol. */
-  public PointFeatureSymbol getSymbol () { return (symbol); }
+  public T getSymbol () { return (symbol); }
 
   ////////////////////////////////////////////////////////////
 
   /** Sets the point symbol. */
-  public void setSymbol (PointFeatureSymbol symbol) { this.symbol = symbol; }
+  public void setSymbol (T symbol) { this.symbol = symbol; }
 
   ////////////////////////////////////////////////////////////
 
@@ -98,7 +125,7 @@ public class PointFeatureOverlay
     int layer,
     Stroke stroke,
     PointFeatureSource source,
-    PointFeatureSymbol symbol
+    T symbol
   ) { 
 
     super (symbol.getBorderColor(), layer, stroke, symbol.getFillColor());
@@ -118,7 +145,7 @@ public class PointFeatureOverlay
    * @param symbol the symbol to use for each point feature.
    */
   public PointFeatureOverlay (
-    PointFeatureSymbol symbol,
+    T symbol,
     PointFeatureSource source
   ) { 
 
@@ -128,6 +155,15 @@ public class PointFeatureOverlay
     this.symbol = symbol;
 
   } // PointFeatureOverlay constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the feature source for this overlay.
+   *
+   * @return the feature source.
+   */
+  public PointFeatureSource getSource() { return (source); }
 
   ////////////////////////////////////////////////////////////
 
@@ -157,28 +193,17 @@ public class PointFeatureOverlay
     EarthDataView view
   ) {
 
-    // Draw symbol
-    // -----------
+    // Prepare symbol
+    // --------------
     g.setStroke (getStroke());
     symbol.setBorderColor (getColorWithAlpha());
     symbol.setFillColor (getFillColorWithAlpha());
-    source.render (g, view.getTransform(), symbol);
 
-    // Draw labels
-    // -----------
-/*
-    if (attList != null) {
-      for (Integer attIndex : attList) {
-      
-
-// TODO: The drawing of attribute values needs to be implemented!
-
-
-
-      } // for
-    } // if
-*/
-
+    // Perform rendering
+    // -----------------
+    source.setFilter (filter);
+    rectToFeatureMap = new LinkedHashMap<Rectangle, PointFeature>();
+    source.render (g, view.getTransform(), symbol, rectToFeatureMap);
 
   } // draw
 
@@ -195,7 +220,17 @@ public class PointFeatureOverlay
   ) {
    
     Map<String, Object> metadataMap = null;
-    PointFeature feature = source.getFeatureAtPoint (point);
+
+    // Find feature
+    // ------------
+    PointFeature feature =
+      rectToFeatureMap.entrySet()
+      .stream()
+      .filter (entry -> entry.getKey().contains (point))
+      .map (entry -> entry.getValue())
+      .findFirst()
+      .orElse (null);
+
     if (feature != null) {
 
       // Create metadata map
@@ -226,6 +261,24 @@ public class PointFeatureOverlay
     return (metadataMap);
 
   } // getMetadataAtPoint
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public String toString () {
+
+    StringBuffer buffer = new StringBuffer();
+    buffer.append ("PointFeatureOverlay[");
+    buffer.append ("name=" + getName() + ",");
+    buffer.append ("color=" + getColor() + ",");
+    buffer.append ("fillColor=" + getFillColor() + ",");
+    buffer.append ("\nfilter=" + filter + ",\n");
+    buffer.append ("symbol=" + symbol);
+    buffer.append ("]");
+
+    return (buffer.toString());
+
+  } // toString
 
   ////////////////////////////////////////////////////////////
 

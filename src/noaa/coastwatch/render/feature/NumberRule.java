@@ -40,7 +40,7 @@ import java.util.List;
  */
 @noaa.coastwatch.test.Testable
 public class NumberRule
-  extends AttributeRule {
+  extends AttributeRule<Number> {
 
   // Constants
   // ---------
@@ -50,7 +50,15 @@ public class NumberRule
     IS_GREATER_THAN,
     IS_LESS_THAN,
     IS_EQUAL_TO,
-    IS_NOT_EQUAL_TO
+    IS_NOT_EQUAL_TO,
+    CONTAINS_BITS_FROM,
+    DOES_NOT_CONTAIN_BITS_FROM;
+    @Override
+    public String toString() {
+      String value = super.toString();
+      value = value.toLowerCase().replaceAll ("_", " ");
+      return (value);
+    } // toString
   } // Operator
 
   ////////////////////////////////////////////////////////////
@@ -86,29 +94,53 @@ public class NumberRule
     // Get feature attribute value
     // ---------------------------
     int attIndex = nameMap.get (matchAttName);
-    Comparable featureAttValue = (Comparable) feature.getAttribute (attIndex);
+    Number featureAttValue = (Number) feature.getAttribute (attIndex);
 
     // Compare to match value
     // ----------------------
     boolean isMatch = false;
     if (featureAttValue != null) {
       Operator numberOp = (Operator) operator;
-      Comparable numberValue = (Comparable) matchAttValue;
-      switch (numberOp) {
-      case IS_GREATER_THAN:
-        isMatch = (featureAttValue.compareTo (numberValue) > 0);
-        break;
-      case IS_LESS_THAN:
-        isMatch = (featureAttValue.compareTo (numberValue) < 0);
-        break;
-      case IS_EQUAL_TO:
-        isMatch = (featureAttValue.compareTo (numberValue) == 0);
-        break;
-      case IS_NOT_EQUAL_TO:
-        isMatch = (featureAttValue.compareTo (numberValue) != 0);
-        break;
-      default:
-      } // switch
+      if (featureAttValue instanceof Float || featureAttValue instanceof Double) {
+        switch (numberOp) {
+        case IS_GREATER_THAN:
+          isMatch = (featureAttValue.doubleValue() > matchAttValue.doubleValue());
+          break;
+        case IS_LESS_THAN:
+          isMatch = (featureAttValue.doubleValue() < matchAttValue.doubleValue());
+          break;
+        case IS_EQUAL_TO:
+          isMatch = (featureAttValue.doubleValue() == matchAttValue.doubleValue());
+          break;
+        case IS_NOT_EQUAL_TO:
+          isMatch = (featureAttValue.doubleValue() != matchAttValue.doubleValue());
+          break;
+        default:
+        } // switch
+      } // if
+      else {
+        switch (numberOp) {
+        case IS_GREATER_THAN:
+          isMatch = (featureAttValue.longValue() > matchAttValue.longValue());
+          break;
+        case IS_LESS_THAN:
+          isMatch = (featureAttValue.longValue() < matchAttValue.longValue());
+          break;
+        case IS_EQUAL_TO:
+          isMatch = (featureAttValue.longValue() == matchAttValue.longValue());
+          break;
+        case IS_NOT_EQUAL_TO:
+          isMatch = (featureAttValue.longValue() != matchAttValue.longValue());
+          break;
+        case CONTAINS_BITS_FROM:
+          isMatch = ((featureAttValue.longValue() & matchAttValue.longValue()) != 0);
+          break;
+        case DOES_NOT_CONTAIN_BITS_FROM:
+          isMatch = ((featureAttValue.longValue() & matchAttValue.longValue()) == 0);
+          break;
+        default:
+        } // switch
+      } // else
     } // if
     
     return (isMatch);
@@ -155,7 +187,9 @@ public class NumberRule
     assert (operatorList.contains (Operator.IS_LESS_THAN));
     assert (operatorList.contains (Operator.IS_EQUAL_TO));
     assert (operatorList.contains (Operator.IS_NOT_EQUAL_TO));
-    assert (operatorList.size() == 4);
+    assert (operatorList.contains (Operator.CONTAINS_BITS_FROM));
+    assert (operatorList.contains (Operator.DOES_NOT_CONTAIN_BITS_FROM));
+    assert (operatorList.size() == 6);
     logger.passed();
 
     logger.test ("matches");
@@ -169,6 +203,10 @@ public class NumberRule
     assert (rule.matches (feature));
     rule.setOperator (Operator.IS_NOT_EQUAL_TO);
     assert (!rule.matches (feature));
+    rule.setOperator (Operator.CONTAINS_BITS_FROM);
+    assert (rule.matches (feature));
+    rule.setOperator (Operator.DOES_NOT_CONTAIN_BITS_FROM);
+    assert (!rule.matches (feature));
 
     // Testing: attribute1 is greater than 2 etc.
     rule.setValue (2);
@@ -179,6 +217,10 @@ public class NumberRule
     rule.setOperator (Operator.IS_EQUAL_TO);
     assert (!rule.matches (feature));
     rule.setOperator (Operator.IS_NOT_EQUAL_TO);
+    assert (rule.matches (feature));
+    rule.setOperator (Operator.CONTAINS_BITS_FROM);
+    assert (!rule.matches (feature));
+    rule.setOperator (Operator.DOES_NOT_CONTAIN_BITS_FROM);
     assert (rule.matches (feature));
 
     // Testing: attribute1 is greater than 0 etc.
@@ -191,6 +233,10 @@ public class NumberRule
     assert (!rule.matches (feature));
     rule.setOperator (Operator.IS_NOT_EQUAL_TO);
     assert (rule.matches (feature));
+    rule.setOperator (Operator.CONTAINS_BITS_FROM);
+    assert (!rule.matches (feature));
+    rule.setOperator (Operator.DOES_NOT_CONTAIN_BITS_FROM);
+    assert (rule.matches (feature));
 
     // Testing: attribute3 is greater than 0 etc. (null test)
     rule.setAttribute ("attribute3");
@@ -201,6 +247,10 @@ public class NumberRule
     rule.setOperator (Operator.IS_EQUAL_TO);
     assert (!rule.matches (feature));
     rule.setOperator (Operator.IS_NOT_EQUAL_TO);
+    assert (!rule.matches (feature));
+    rule.setOperator (Operator.CONTAINS_BITS_FROM);
+    assert (!rule.matches (feature));
+    rule.setOperator (Operator.DOES_NOT_CONTAIN_BITS_FROM);
     assert (!rule.matches (feature));
     
     logger.passed();

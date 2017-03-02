@@ -36,6 +36,8 @@ import noaa.coastwatch.gui.visual.VisualObject;
 import noaa.coastwatch.gui.visual.VisualServices;
 import noaa.coastwatch.gui.visual.VisualString;
 import noaa.coastwatch.gui.visual.VisualStroke;
+import noaa.coastwatch.gui.visual.VisualSymbol;
+import jahuwaldt.plot.PlotSymbol;
 
 /**
  * The <code>VisualObjectFactory</code> class contains static methods
@@ -109,6 +111,8 @@ public class VisualObjectFactory {
     } // else if
     else if (propertyClass.equals (String.class))
       visualObjectClass = VisualString.class;
+    else if (propertyClass.equals (PlotSymbol.class))
+      visualObjectClass = VisualSymbol.class;
     else if (propertyClass.isArray()) {
       visualObjectClass = VisualArray.class;
       propertyClass = Object.class;

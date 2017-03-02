@@ -307,7 +307,7 @@ public class EarthDataExporter
       GridBagConstraints.HORIZONTAL, 1, 0);
     this.add (formatCombo, gc);
 
-    JButton optionButton = new JButton ("Options...");
+    JButton optionButton = GUIServices.getTextButton ("Options...");
     optionButton.addActionListener (new ActionListener () {
         public void actionPerformed (ActionEvent event) {
           showOptions();

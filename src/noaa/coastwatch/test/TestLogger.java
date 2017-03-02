@@ -96,6 +96,24 @@ public class TestLogger implements TerminalColors {
   ////////////////////////////////////////////////////////////
 
   /**
+   * Prints a debug message.
+   * 
+   * @param obj the object to print in the message.
+   */
+  public void debug (
+    Object obj
+  ) {
+  
+    System.out.println();
+    System.out.print (ANSI_PURPLE + "    DEBUG --[ " + ANSI_RESET);
+    System.out.print (obj);
+    System.out.print (ANSI_PURPLE + " ]-- " + ANSI_RESET);
+  
+  } // debug
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Prints an error message.
    * 
    * @param message the error message to print.
@@ -114,7 +132,7 @@ public class TestLogger implements TerminalColors {
   /** Prints a test passed message. */
   public void passed () {
   
-    System.out.print (ANSI_GREEN + "OK" + ANSI_RESET);
+    System.out.print (ANSI_GREEN + "PASSED" + ANSI_RESET);
     System.out.println();
   
   } // passed

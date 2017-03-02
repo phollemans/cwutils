@@ -411,7 +411,7 @@ public class MultilayerBitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates and returns a copy of this object. */
+  @Override
   public Object clone () {
 
     MultilayerBitmaskOverlay overlay = 

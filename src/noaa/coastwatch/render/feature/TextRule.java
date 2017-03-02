@@ -40,7 +40,7 @@ import java.util.List;
  */
 @noaa.coastwatch.test.Testable
 public class TextRule
-  extends AttributeRule {
+  extends AttributeRule<String> {
 
   // Constants
   // ---------
@@ -51,7 +51,13 @@ public class TextRule
     DOES_NOT_CONTAIN,
     BEGINS_WITH,
     ENDS_WITH,
-    IS_EQUAL_TO
+    IS_EQUAL_TO;
+    @Override
+    public String toString() {
+      String value = super.toString();
+      value = value.toLowerCase().replaceAll ("_", " ");
+      return (value);
+    } // toString    
   } // Operator
 
   ////////////////////////////////////////////////////////////
@@ -94,22 +100,21 @@ public class TextRule
     boolean isMatch = false;
     if (featureAttValue != null) {
       Operator textOp = (Operator) operator;
-      String textValue = (String) matchAttValue;
       switch (textOp) {
       case CONTAINS:
-        isMatch = (featureAttValue.indexOf (textValue) != -1);
+        isMatch = (featureAttValue.indexOf (matchAttValue) != -1);
         break;
       case DOES_NOT_CONTAIN:
-        isMatch = (featureAttValue.indexOf (textValue) == -1);
+        isMatch = (featureAttValue.indexOf (matchAttValue) == -1);
         break;
       case BEGINS_WITH:
-        isMatch = featureAttValue.startsWith (textValue);
+        isMatch = featureAttValue.startsWith (matchAttValue);
         break;
       case ENDS_WITH:
-        isMatch = featureAttValue.endsWith (textValue);
+        isMatch = featureAttValue.endsWith (matchAttValue);
         break;
       case IS_EQUAL_TO:
-        isMatch = featureAttValue.equals (textValue);
+        isMatch = featureAttValue.equals (matchAttValue);
         break;
       default:
       } // switch

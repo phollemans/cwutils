@@ -33,8 +33,8 @@ import java.util.Map;
  * @author Peter Hollemans
  * @since 3.3.2
  */
-public abstract class AttributeRule
-  implements SelectionRule {
+public abstract class AttributeRule<T>
+  implements SelectionRule, Cloneable {
 
   // Variables
   // ---------
@@ -43,13 +43,26 @@ public abstract class AttributeRule
   protected String matchAttName;
   
   /** The attribute value to use for matching. */
-  protected Object matchAttValue;
+  protected T matchAttValue;
   
   /** The map to use to translate name to index for attributes. */
   protected Map<String, Integer> nameMap;
   
   /** Thee rule operator currently being used. */
   protected Enum operator;
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public Object clone () {
+
+    AttributeRule copy;
+    try { copy = (AttributeRule) super.clone(); }
+    catch (CloneNotSupportedException e) { copy = null; }
+    
+    return (copy);
+
+  } // clone
 
   ////////////////////////////////////////////////////////////
 
@@ -66,7 +79,7 @@ public abstract class AttributeRule
   protected AttributeRule (
     String attName,
     Map<String, Integer> nameMap,
-    Object attValue
+    T attValue
   ) {
 
     this.nameMap = nameMap;
@@ -110,7 +123,7 @@ public abstract class AttributeRule
    *
    * @return the attribute value used by this rule for matching.
    */
-  public Object getValue() { return (matchAttValue); }
+  public T getValue() { return (matchAttValue); }
 
   ////////////////////////////////////////////////////////////
 
@@ -119,7 +132,7 @@ public abstract class AttributeRule
    *
    * @param attValue the attribute value to use for matching.
    */
-  public void setValue (Object attValue) { this.matchAttValue = attValue; }
+  public void setValue (T attValue) { this.matchAttValue = attValue; }
 
   ////////////////////////////////////////////////////////////
 
@@ -154,6 +167,19 @@ public abstract class AttributeRule
     this.operator = operator;
     
   } // setOperator
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public String toString () {
+
+    return ("AttributeRule[" +
+      "att=" + matchAttName + "," +
+      "op=" + operator + "," +
+      "value=" + matchAttValue +
+      "]");
+
+  } // toString
 
   ////////////////////////////////////////////////////////////
 

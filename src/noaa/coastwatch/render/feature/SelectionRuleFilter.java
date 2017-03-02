@@ -1,13 +1,13 @@
 ////////////////////////////////////////////////////////////////////////
 /*
-     FILE: FilteredFeatureSource.java
-  PURPOSE: Allows features in a source to filtered by rules.
+     FILE: SelectionRuleFilter.java
+  PURPOSE: Holds a list of feature selection rules.
    AUTHOR: Peter Hollemans
-     DATE: 2016/07/21
+     DATE: 2017/01/26
   CHANGES: n/a
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright 2017, USDOC/NOAA/NESDIS CoastWatch
 
 */
 ////////////////////////////////////////////////////////////////////////
@@ -18,44 +18,31 @@ package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
-import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.io.IOException;
-import noaa.coastwatch.render.feature.FeatureSource;
-import noaa.coastwatch.util.EarthArea;
+import java.lang.reflect.Method;
 import noaa.coastwatch.render.feature.SelectionRule;
 
 // Testing
 // -------
-import noaa.coastwatch.test.TestLogger;
 import java.util.Map;
 import java.util.HashMap;
+import noaa.coastwatch.test.TestLogger;
 import noaa.coastwatch.util.EarthLocation;
 
 /**
- * A <code>FilteredFeatureSource</code> is a feature source whose features
- * conform to a set of rules based on the attribute values of the features.
- * The rule set can be matched one of two ways: either all the rules must be
- * matched for a certain feature to be included, or any of the rules must be 
- * matched.
+ * A <code>SelectionRuleFilter</code> is a list of {@link SelectionRule} objects
+ * together with an overall rule that determines how to filter a set of
+ * {@link Feature} objects.  The filter list can be used for feature matching
+ * in one of two ways: either all the rules must be matched for a certain 
+ * feature to be included, or any of the rules can be matched (at least one).
  *
  * @author Peter Hollemans
  * @since 3.3.2
  */
 @noaa.coastwatch.test.Testable
-public class FilteredFeatureSource
-
-/*
- * Originally this class was designed to filter any feature source, but to fit
- * it into its intended place as a filter for point feature data without 
- * redesigning the class hirarchy, we had to change it to extend a 
- * PointFeatureSource so it could easily be used in PointFeatureOverlay objects.
- */
-
-//  implements FeatureSource {
-  extends PointFeatureSource {
-
+public class SelectionRuleFilter
+  extends ArrayList<SelectionRule> {
 
   // Enumerations
   // ------------
@@ -63,52 +50,57 @@ public class FilteredFeatureSource
   /** The mode that the filtering is operating under. */
   public enum FilterMode {
     MATCHES_ALL,
-    MATCHES_ANY
+    MATCHES_ANY;
+    @Override
+    public String toString() {
+      String value = super.toString();
+      value = value.toLowerCase().replaceAll ("_", " ");
+      return (value);
+    } // toString    
   } // FilterNMode
 
   // Variables
   // ---------
 
-  /** The feature source that this source is wrapping. */
-  private FeatureSource innerSource;
-  
-  /** The list of rules to use for filtering. */
-  private List<SelectionRule> ruleList;
-  
   /** The filtering mode: either match any rules or all rules. */
   private FilterMode mode;
 
   ////////////////////////////////////////////////////////////
 
   @Override
-  public void select (
-    EarthArea area
-  ) throws IOException {
-  
-    innerSource.select (area);
-  
-  } // select
+  public Object clone () {
+
+    SelectionRuleFilter copy = new SelectionRuleFilter();
+    copy.mode = mode;
+    forEach (rule -> {
+      Object ruleObj = (Object) rule;
+      Object ruleCopy;
+      try {
+        Method method = ruleObj.getClass().getMethod ("clone");
+        ruleCopy = method.invoke (ruleObj);
+      } // try
+      catch (Exception e) {
+        throw new RuntimeException ("Error cloning object of type " + ruleObj.getClass());
+      } // catch
+      copy.add ((SelectionRule) ruleCopy);
+    });
+    return (copy);
+
+  } // clone
 
   ////////////////////////////////////////////////////////////
 
-  /*
-   * This is implemented as a side-effect of extending an AbstractFeatureSource.
-   * We wouldn't need this if we were using the original design.  It does
-   * nothing because we never call it, we call the inner source's
-   * select (EarthArea) method.
+  /**
+   * Filters a collection of features using the rules in this filter for
+   * matching.
+   * 
+   * @param features the features to filter.
+   *
+   * @return the list of the matching features, possibly empty.
    */
-  @Override
-  protected void select () throws IOException { }
-
-  ////////////////////////////////////////////////////////////
-
-  @Override
-  public EarthArea getArea() { return (innerSource.getArea()); }
-
-  ////////////////////////////////////////////////////////////
-
-  @Override
-  public Iterator<Feature> iterator() {
+  public List<Feature> filter (
+    List<Feature> features
+  ) {
   
     List<Feature> filteredList = new ArrayList<Feature>();
 
@@ -119,9 +111,9 @@ public class FilteredFeatureSource
       // Filter by matching any rule
       // ---------------------------
       case MATCHES_ANY:
-        for (Feature feature : innerSource) {
+        for (Feature feature : features) {
           boolean isMatching = false;
-          for (SelectionRule rule : ruleList) {
+          for (SelectionRule rule : this) {
             if (rule.matches (feature)) {
               isMatching = true;
               break;
@@ -134,9 +126,9 @@ public class FilteredFeatureSource
       // Filter by matching all rules
       // ----------------------------
       case MATCHES_ALL:
-        for (Feature feature : innerSource) {
+        for (Feature feature : features) {
           boolean isMatching = true;
-          for (SelectionRule rule : ruleList) {
+          for (SelectionRule rule : this) {
             if (!rule.matches (feature)) {
               isMatching = false;
               break;
@@ -148,24 +140,9 @@ public class FilteredFeatureSource
 
     } // switch
 
-    return (filteredList.iterator());
+    return (filteredList);
   
-  } // iterator
-
-  ////////////////////////////////////////////////////////////
-
-  @Override
-  public List<Attribute> getAttributes() { return (innerSource.getAttributes()); }
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Gets the list of selection rules.  Changes made to the returned list will
-   * be reflected in the iterator results.
-   *
-   * @return the rule list.
-   */
-  public List<SelectionRule> getRules() { return (ruleList); }
+  } // filter
 
   ////////////////////////////////////////////////////////////
 
@@ -174,9 +151,9 @@ public class FilteredFeatureSource
    *
    * @param mode the filtering mode, either <code>MATCHES_ANY</code>
    * or <code>MATCHES_ALL</code>.  When set to 'any', if any single rule
-   * matches a feature, the feature is included in the results.  When set to
-   * 'all', the entire list of rules must match the feature for it to be
-   * included.
+   * matches a feature, the feature is included in the filter results.  When 
+   * set to 'all', the entire list of rules must match the feature for it to 
+   * be included.
    */
   public void setMode (FilterMode mode) { this.mode = mode; }
 
@@ -187,28 +164,35 @@ public class FilteredFeatureSource
    *
    * @return the filtering mode, either <code>MATCHES_ANY</code> or
    * <code>MATCHES_ALL</code>.
+   *
+   * @see #setMode
    */
   public FilterMode getMode () { return (mode); }
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Creates a new filtered source using an existing source.  The iterator 
-   * will return features from this source that match the filtering rules.
-   * The initial rule set is empty and the filtering mode set to match any rule.
-   *
-   * @param source the feature source to use for filtering.  The iterator will 
-   * return features from this source that match the filtering rules.
-   */
-  public FilteredFeatureSource (
-    FeatureSource source
-  ) {
+  /** Creates a new empty filter with mode set to <code>MATCHES_ANY</code>. */
+  public SelectionRuleFilter () {
   
-    this.innerSource = source;
-    this.ruleList = new ArrayList<SelectionRule>();
+    super();
     this.mode = FilterMode.MATCHES_ANY;
 
-  } // FilteredFeatureSource
+  } // SelectionRuleFilter
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public String toString () {
+
+    StringBuffer buffer = new StringBuffer();
+    buffer.append ("SelectionRuleFilter[mode=" + mode + ", \n");
+    this.forEach (rule -> buffer.append ("  " + rule.toString() + ",\n"));
+    buffer.deleteCharAt (buffer.lastIndexOf (","));
+    buffer.append ("]");
+
+    return (buffer.toString());
+
+  } // toString
 
   ////////////////////////////////////////////////////////////
 
@@ -220,7 +204,7 @@ public class FilteredFeatureSource
   public static void main (String argv[]) throws Exception {
 
     TestLogger logger = TestLogger.getInstance();
-    logger.startClass (FilteredFeatureSource.class);
+    logger.startClass (SelectionRuleFilter.class);
 
     logger.test ("Framework");
 
@@ -254,51 +238,41 @@ public class FilteredFeatureSource
       new EarthLocation (0, 0),
       new Object[] {1, 1, 1, 1}
     ));
-    
-    // feature source for the 4 features
-    FeatureSource source = new FeatureSource() {
-      public void select (EarthArea area) throws IOException {}
-      public EarthArea getArea() { return (null); }
-      public Iterator<Feature> iterator() { return (featureList.iterator()); }
-      public List<Attribute> getAttributes() { return (null); }
-    }; // FeatureSource
 
-    List<SelectionRule> ruleList = new ArrayList<SelectionRule>();
+    logger.passed();
+    
+    logger.test ("constructor");
+    SelectionRuleFilter filter = new SelectionRuleFilter();
 
     NumberRule rule = new NumberRule ("attribute0", nameMap, 1);
     rule.setOperator (NumberRule.Operator.IS_GREATER_THAN);
-    ruleList.add (rule);
+    filter.add (rule);
 
     rule = new NumberRule ("attribute1", nameMap, 1);
     rule.setOperator (NumberRule.Operator.IS_GREATER_THAN);
-    ruleList.add (rule);
+    filter.add (rule);
 
     rule = new NumberRule ("attribute2", nameMap, 1);
     rule.setOperator (NumberRule.Operator.IS_GREATER_THAN);
-    ruleList.add (rule);
+    filter.add (rule);
 
     rule = new NumberRule ("attribute3", nameMap, 1);
     rule.setOperator (NumberRule.Operator.IS_GREATER_THAN);
-    ruleList.add (rule);
+    filter.add (rule);
 
+    assert (filter.size() == 4);
+    assert (filter.getMode() == FilterMode.MATCHES_ANY);
     logger.passed();
 
-    logger.test ("constructor");
-    FilteredFeatureSource filteredSource = new FilteredFeatureSource (source);
-    filteredSource.getRules().addAll (ruleList);
-    assert (filteredSource.getRules().size() == 4);
-    assert (filteredSource.getMode() == FilterMode.MATCHES_ANY);
-    logger.passed();
-
-    logger.test ("iterator");
+    logger.test ("filter");
 
     int count = 0;
-    for (Feature feature : filteredSource) count++;
+    for (Feature feature : filter.filter (featureList)) count++;
     assert (count == 3);
 
-    filteredSource.setMode (FilterMode.MATCHES_ALL);
+    filter.setMode (FilterMode.MATCHES_ALL);
     count = 0;
-    for (Feature feature : filteredSource) count++;
+    for (Feature feature : filter.filter (featureList)) count++;
     assert (count == 0);
 
     logger.passed();
@@ -307,6 +281,6 @@ public class FilteredFeatureSource
 
   ////////////////////////////////////////////////////////////
 
-} // FilteredFeatureSource class
+} // SelectionRuleFilter class
 
 ////////////////////////////////////////////////////////////////////////

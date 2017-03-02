@@ -71,6 +71,7 @@ public class PointFeature
     Object[] attributeArray
   ) {
 
+    super (null);
     this.point = point;
     setAttributes (attributeArray);
 
@@ -87,6 +88,7 @@ public class PointFeature
     EarthLocation point
   ) {
 
+    super (null);
     this.point = point;
 
   } // PointFeature constructor

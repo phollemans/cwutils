@@ -334,7 +334,7 @@ public abstract class EarthDataOverlay
  
   ////////////////////////////////////////////////////////////
 
-  /** Creates and returns a copy of this object. */
+  @Override
   public Object clone () {
 
     try {

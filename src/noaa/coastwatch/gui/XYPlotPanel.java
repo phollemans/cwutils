@@ -23,6 +23,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
@@ -184,141 +185,153 @@ public abstract class XYPlotPanel
   ) {
 
     super.paintComponent (g);
+
+    // Set rendering hints
+    // -------------------
     Graphics2D g2d = (Graphics2D) g;
+    Object textHint = g2d.getRenderingHint (RenderingHints.KEY_TEXT_ANTIALIASING);
+    g2d.setRenderingHint (RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
     // Setup labels
     // ------------
     if (xAxisLabel == null) setupLabels();
-    if (!isValid) return;
 
-    // Set color
-    // ---------
-    Color foreground = getForeground();
-    g.setColor (foreground);
-    Color faint = getBackground().darker();
+    if (isValid) {
 
-    // Set origin y value
-    // ------------------
-    Point origin = new Point();
-    Dimension panelDims = getSize();
-    Rectangle xAxisBounds = xAxisLabel.getBounds (g2d);
-    Rectangle xTickBounds = xTickLabels[0].getBounds (g2d);
-    origin.y = panelDims.height-1 - SPACE_SIZE - xAxisBounds.height - 
-      SPACE_SIZE - xTickBounds.height - SPACE_SIZE - TICK_SIZE;
-
-    // Set origin x value
-    // ------------------
-    Rectangle yAxisBounds = yAxisLabel.getBounds (g2d);
-    Rectangle yTickBounds = yTickLabels[0].getBounds (g2d);
-    for (int i = 1; i < yTickLabels.length; i++) {
-      Rectangle bounds = yTickLabels[i].getBounds (g2d);
-      if (bounds.width > yTickBounds.width) yTickBounds = bounds;
-    } // for
-    origin.x = SPACE_SIZE + yAxisBounds.width + SPACE_SIZE + yTickBounds.width
-     + SPACE_SIZE + TICK_SIZE;
-
-    // Set plot maximum point
-    // ----------------------
-    xTickBounds = xTickLabels[xTickLabels.length-1].getBounds (g2d);
-    yTickBounds = yTickLabels[yTickLabels.length-1].getBounds (g2d);
-    Point maximum = new Point (
-      panelDims.width-1 - SPACE_SIZE*2 - xTickBounds.width/2, 
-      SPACE_SIZE*2 + yTickBounds.height/2);
-
-    // Create affine transform
-    // -----------------------
-    AffineTransform affine = new AffineTransform();
-    double[] xRange = getXRange();
-    double[] yRange = getYRange();
-    affine.preConcatenate (AffineTransform.getTranslateInstance (-xRange[0],
-      -yRange[0]));
-    affine.preConcatenate (AffineTransform.getScaleInstance (
-      (maximum.x - origin.x) / (xRange[1] - xRange[0]),
-      (maximum.y - origin.y) / (yRange[1] - yRange[0])));
-    affine.preConcatenate (AffineTransform.getTranslateInstance (origin.x, 
-      origin.y));
-
-    // Draw x axis
-    // -----------
-    Point2D.Double dataPoint1 = new Point2D.Double();
-    Point2D.Double plotPoint1 = new Point2D.Double();
-    Point2D.Double dataPoint2 = new Point2D.Double();
-    Point2D.Double plotPoint2 = new Point2D.Double();
-    Line2D line = new Line2D.Double ();
-    NumberFormat format = NumberFormat.getInstance();
-    for (int i = 0; i < xTickLabels.length; i++) {
-
-      // Draw tick
+      // Set color
       // ---------
-      double xValue = Double.parseDouble (xTickLabels[i].getText());
-      dataPoint1.setLocation (xValue, 0);
-      affine.transform (dataPoint1, plotPoint1);
-      plotPoint1.y = origin.y;
-      plotPoint2.setLocation (plotPoint1.x, plotPoint1.y + TICK_SIZE);      
-      line.setLine (plotPoint1, plotPoint2);
-      g2d.draw (line);
+      Color foreground = getForeground();
+      g.setColor (foreground);
+      Color faint = getBackground().darker();
 
-      // Draw label
-      // ----------
-      plotPoint2.y += TICK_SIZE;
-      xTickLabels[i].setBasePoint (plotPoint2);
-      xTickLabels[i].render (g2d, foreground, null);
+      // Set origin y value
+      // ------------------
+      Point origin = new Point();
+      Dimension panelDims = getSize();
+      Rectangle xAxisBounds = xAxisLabel.getBounds (g2d);
+      Rectangle xTickBounds = xTickLabels[0].getBounds (g2d);
+      origin.y = panelDims.height-1 - SPACE_SIZE - xAxisBounds.height - 
+        SPACE_SIZE - xTickBounds.height - SPACE_SIZE - TICK_SIZE;
 
-      // Draw grid line
-      // --------------
-      plotPoint2.y = maximum.y;
-      line.setLine (plotPoint1, plotPoint2);
-      g2d.setColor (faint);
-      g2d.draw (line);
-      g2d.setColor (foreground);
+      // Set origin x value
+      // ------------------
+      Rectangle yAxisBounds = yAxisLabel.getBounds (g2d);
+      Rectangle yTickBounds = yTickLabels[0].getBounds (g2d);
+      for (int i = 1; i < yTickLabels.length; i++) {
+        Rectangle bounds = yTickLabels[i].getBounds (g2d);
+        if (bounds.width > yTickBounds.width) yTickBounds = bounds;
+      } // for
+      origin.x = SPACE_SIZE + yAxisBounds.width + SPACE_SIZE + yTickBounds.width
+       + SPACE_SIZE + TICK_SIZE;
 
-    } // for
+      // Set plot maximum point
+      // ----------------------
+      xTickBounds = xTickLabels[xTickLabels.length-1].getBounds (g2d);
+      yTickBounds = yTickLabels[yTickLabels.length-1].getBounds (g2d);
+      Point maximum = new Point (
+        panelDims.width-1 - SPACE_SIZE*2 - xTickBounds.width/2, 
+        SPACE_SIZE*2 + yTickBounds.height/2);
 
-    // Draw y axis labels
-    // ------------------
-    for (int i = 0; i < yTickLabels.length; i++) {
+      // Create affine transform
+      // -----------------------
+      AffineTransform affine = new AffineTransform();
+      double[] xRange = getXRange();
+      double[] yRange = getYRange();
+      affine.preConcatenate (AffineTransform.getTranslateInstance (-xRange[0],
+        -yRange[0]));
+      affine.preConcatenate (AffineTransform.getScaleInstance (
+        (maximum.x - origin.x) / (xRange[1] - xRange[0]),
+        (maximum.y - origin.y) / (yRange[1] - yRange[0])));
+      affine.preConcatenate (AffineTransform.getTranslateInstance (origin.x, 
+        origin.y));
 
-      // Draw tick
+      // Draw x axis
+      // -----------
+      Point2D.Double dataPoint1 = new Point2D.Double();
+      Point2D.Double plotPoint1 = new Point2D.Double();
+      Point2D.Double dataPoint2 = new Point2D.Double();
+      Point2D.Double plotPoint2 = new Point2D.Double();
+      Line2D line = new Line2D.Double ();
+      NumberFormat format = NumberFormat.getInstance();
+      for (int i = 0; i < xTickLabels.length; i++) {
+
+        // Draw tick
+        // ---------
+        double xValue = Double.parseDouble (xTickLabels[i].getText());
+        dataPoint1.setLocation (xValue, 0);
+        affine.transform (dataPoint1, plotPoint1);
+        plotPoint1.y = origin.y;
+        plotPoint2.setLocation (plotPoint1.x, plotPoint1.y + TICK_SIZE);      
+        line.setLine (plotPoint1, plotPoint2);
+        g2d.draw (line);
+
+        // Draw label
+        // ----------
+        plotPoint2.y += TICK_SIZE;
+        xTickLabels[i].setBasePoint (plotPoint2);
+        xTickLabels[i].render (g2d, foreground, null);
+
+        // Draw grid line
+        // --------------
+        plotPoint2.y = maximum.y;
+        line.setLine (plotPoint1, plotPoint2);
+        g2d.setColor (faint);
+        g2d.draw (line);
+        g2d.setColor (foreground);
+
+      } // for
+
+      // Draw y axis labels
+      // ------------------
+      for (int i = 0; i < yTickLabels.length; i++) {
+
+        // Draw tick
+        // ---------
+        double yValue = Double.parseDouble (yTickLabels[i].getText());
+        dataPoint1.setLocation (0, yValue);
+        affine.transform (dataPoint1, plotPoint1);
+        plotPoint1.x = origin.x;
+        plotPoint2.setLocation (plotPoint1.x - TICK_SIZE, plotPoint1.y);
+        line.setLine (plotPoint1, plotPoint2);
+        g2d.draw (line);
+
+        // Draw label
+        // ----------
+        plotPoint2.x += -TICK_SIZE;
+        yTickLabels[i].setBasePoint (plotPoint2);
+        yTickLabels[i].render (g2d, foreground, null);
+
+        // Draw grid line
+        // --------------
+        plotPoint2.x = maximum.x;
+        line.setLine (plotPoint1, plotPoint2);
+        g2d.setColor (faint);
+        g2d.draw (line);
+        g2d.setColor (foreground);
+
+      } // for
+
+      // Draw axes
       // ---------
-      double yValue = Double.parseDouble (yTickLabels[i].getText());
-      dataPoint1.setLocation (0, yValue);
-      affine.transform (dataPoint1, plotPoint1);
-      plotPoint1.x = origin.x;
-      plotPoint2.setLocation (plotPoint1.x - TICK_SIZE, plotPoint1.y);
-      line.setLine (plotPoint1, plotPoint2);
-      g2d.draw (line);
+      xAxisLabel.setBasePoint (new Point ((origin.x + maximum.x)/2, 
+        panelDims.height-1 - SPACE_SIZE));
+      xAxisLabel.render (g2d, foreground, null);
+      g.drawLine (origin.x, origin.y, maximum.x, origin.y);
+      yAxisLabel.setBasePoint (new Point (SPACE_SIZE, (origin.y + maximum.y)/2));
+      yAxisLabel.render (g2d, foreground, null);
+      g.drawLine (origin.x, origin.y, origin.x, maximum.y);
 
-      // Draw label
-      // ----------
-      plotPoint2.x += -TICK_SIZE;
-      yTickLabels[i].setBasePoint (plotPoint2);
-      yTickLabels[i].render (g2d, foreground, null);
+      // Set plot bounds and affine
+      // --------------------------
+      plotBounds = new Rectangle (origin.x, maximum.y, 
+        maximum.x-origin.x+1, origin.y-maximum.y+1);
+      plotAffine = affine;
 
-      // Draw grid line
-      // --------------
-      plotPoint2.x = maximum.x;
-      line.setLine (plotPoint1, plotPoint2);
-      g2d.setColor (faint);
-      g2d.draw (line);
-      g2d.setColor (foreground);
-
-    } // for
-
-    // Draw axes
-    // ---------
-    xAxisLabel.setBasePoint (new Point ((origin.x + maximum.x)/2, 
-      panelDims.height-1 - SPACE_SIZE));
-    xAxisLabel.render (g2d, foreground, null);
-    g.drawLine (origin.x, origin.y, maximum.x, origin.y);
-    yAxisLabel.setBasePoint (new Point (SPACE_SIZE, (origin.y + maximum.y)/2));
-    yAxisLabel.render (g2d, foreground, null);
-    g.drawLine (origin.x, origin.y, origin.x, maximum.y);
-
-    // Set plot bounds and affine
-    // --------------------------
-    plotBounds = new Rectangle (origin.x, maximum.y, 
-      maximum.x-origin.x+1, origin.y-maximum.y+1);
-    plotAffine = affine;
+    } // if
+    
+    // Reset rendering hints
+    // ---------------------
+    g2d.setRenderingHint (RenderingHints.KEY_TEXT_ANTIALIASING, textHint);
 
   } // paintComponent
 

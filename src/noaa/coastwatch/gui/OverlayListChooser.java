@@ -37,6 +37,9 @@ import java.net.URI;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
+
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -46,6 +49,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+
 import noaa.coastwatch.gui.AbstractOverlayListPanel;
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.SimpleFileFilter;
@@ -54,6 +58,8 @@ import noaa.coastwatch.gui.visual.MultilayerBitmaskOverlayPropertyChooser;
 import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
 import noaa.coastwatch.gui.visual.OverlayPropertyChooserFactory;
 import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.render.BitmaskOverlay;
 import noaa.coastwatch.render.CoastOverlay;
 import noaa.coastwatch.render.DataReferenceOverlay;
@@ -355,7 +361,7 @@ public class OverlayListChooser
       String name
     ) {
 
-      if (name != null) overlay.setName (name + listPanel.getOverlayCount (name));
+      if (name != null) overlay.setName (name + " " + listPanel.getOverlayCount (name));
       listPanel.addOverlay (overlay);
 
     } // addNewOverlay
@@ -420,9 +426,8 @@ public class OverlayListChooser
           // --------------------
           else if (command.equals (SHAPE_COMMAND)) {
             List<EarthDataOverlay> overlayList = createShapeOverlays();
-            String name = (overlayList.size() == 1 ? command : null);
             for (EarthDataOverlay overlay : overlayList)
-              addNewOverlay (overlay, name);
+              addNewOverlay (overlay, overlay.getName());
           } // else if
 
         } // if
@@ -538,11 +543,12 @@ public class OverlayListChooser
         // Try reading as shapefile
         // ------------------------
         try {
-          ESRIShapefileReader reader = new ESRIShapefileReader (file.toURI().toURL());
-          EarthDataOverlay overlay = reader.getOverlay();
+          ESRIShapefileReader shapeReader = new ESRIShapefileReader (file.toURI().toURL());
+          EarthDataOverlay overlay = shapeReader.getOverlay();
           if (overlay instanceof PolygonOverlay)
             ((PolygonOverlay) overlay).setFillColor (null);
           overlay.setColor (Color.WHITE);
+          overlay.setName ("ESRI data");
           overlayList.add (overlay);
         } // try
         catch (IOException e) { }
@@ -552,7 +558,12 @@ public class OverlayListChooser
         if (overlayList.size() == 0) {
           try {
             IQuamNCReader iquamReader = new IQuamNCReader (file.getAbsolutePath());
-            overlayList.addAll (iquamReader.getStandardOverlays (reader.getInfo().getDate()));
+            Date date = reader.getInfo().getDate();
+            EarthTransform trans = reader.getInfo().getTransform();
+            List<Grid> gridList = new ArrayList<Grid>();
+            for (Object name : variableList)
+              gridList.add ((Grid) reader.getVariable ((String) name));
+            overlayList.addAll (iquamReader.getStandardOverlays (date, trans, gridList));
           } // try
           catch (IOException e) { }
         } // if

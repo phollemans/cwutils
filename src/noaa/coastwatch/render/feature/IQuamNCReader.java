@@ -40,17 +40,23 @@ import ncsa.hdf.object.Datatype;
 
 import noaa.coastwatch.render.feature.PointFeature;
 import noaa.coastwatch.render.feature.PointFeatureSource;
-import noaa.coastwatch.render.feature.FilteredFeatureSource;
-import noaa.coastwatch.render.feature.FilteredFeatureSource.FilterMode;
+import noaa.coastwatch.render.feature.ColocatedPointFeatureSource;
+import noaa.coastwatch.render.feature.SelectionRuleFilter;
+import noaa.coastwatch.render.feature.SelectionRuleFilter.FilterMode;
+import noaa.coastwatch.render.feature.FeatureGroupFilter;
 import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.render.feature.Attribute;
 import noaa.coastwatch.render.EarthDataOverlay;
 import noaa.coastwatch.render.feature.TimeWindow;
 import noaa.coastwatch.render.feature.TimeWindowRule;
+import noaa.coastwatch.render.feature.DateRule;
 import noaa.coastwatch.render.SimpleSymbol;
 import noaa.coastwatch.render.PlotSymbolFactory;
 import noaa.coastwatch.render.PointFeatureOverlay;
+import noaa.coastwatch.render.MultiPointFeatureOverlay;
 
 /**
  * The iQuam data reader reads NOAA iQuam (in-situ SST quality monitoring)
@@ -811,39 +817,126 @@ public class IQuamNCReader
    * @param date the date to use for the set of overlays.  Point data in the
    * overlays will be filtered to fall within a certain time window centered
    * on the date.
-   * 
+   * @param trans the earth transform for the grid data.
+   * @param gridList the list of grids to append data values to the point 
+   * feature attributes.
+   *
    * @return a set of overlays that can be used to display iQuam data points.
    *
    * @throws IOException if an error occurred accessing the data file.
    */
   public List<EarthDataOverlay> getStandardOverlays (
-    Date date
+    Date date,
+    EarthTransform trans,
+    List<Grid> gridList
   ) throws IOException {
 
+    // Create multi-point overlay
+    // --------------------------
     List<EarthDataOverlay> overlayList = new ArrayList<EarthDataOverlay>();
+    MultiPointFeatureOverlay multiOverlay = new MultiPointFeatureOverlay();
+    multiOverlay.setName ("iQuam data");
+    overlayList.add (multiOverlay);
 
-    // Create time window rule
+    // Create colocated point source
+    // -----------------------------
+    ColocatedPointFeatureSource colocatedSource = new ColocatedPointFeatureSource (this,
+      trans, gridList);
+    
+    // Configure global filter
     // -----------------------
-    Map<String, Integer> attNameMap = new HashMap<String, Integer>();
-    List<Attribute> attList = getAttributes();
-    for (int i = 0; i < attList.size(); i++)
-      attNameMap.put (attList.get (i).getName(), i);
-    TimeWindow window = new TimeWindow (date, 12*60*60*1000L);  // date +/- 12 hours
-    TimeWindowRule timeRule = new TimeWindowRule ("time", attNameMap, window);
+    SelectionRuleFilter globalFilter = multiOverlay.getGlobalFilter();
+    globalFilter.setMode (FilterMode.MATCHES_ALL);
+
+    Map<String, Integer> attNameMap = colocatedSource.getAttributeNameMap();
+
+/*
+
+TODO: We need to have a chooser for time window values rather than a before and  
+      after rule:
+
+  ------------              --------  -------------    ---------------------------
+ | time    v |   is within  |  30  |  | minutes v | of | 2017/02/28 18:17:00 UTC |
+  ------------              --------  -------------    ---------------------------
+
+//    TimeWindow window = new TimeWindow (date, 12*60*60*1000L);  // date +/- 12 hours
+//    TimeWindowRule timeRule = new TimeWindowRule ("time", attNameMap, window);
+//    multiOverlay.getGlobalFilter().add (timeRule);
+
+//    long windowSize = 12*60*60*1000L;
+
+*/
+
+    long windowSize = 30*60*1000L;
+    DateRule afterDateRule = new DateRule ("time", attNameMap, new Date (date.getTime() - windowSize));
+    afterDateRule.setOperator (DateRule.Operator.IS_AFTER);
+    globalFilter.add (afterDateRule);
+
+    DateRule beforeDateRule = new DateRule ("time", attNameMap, new Date (date.getTime() + windowSize));
+    beforeDateRule.setOperator (DateRule.Operator.IS_BEFORE);
+    globalFilter.add (beforeDateRule);
+
+    NumberRule qualityRule = new NumberRule ("quality_level", attNameMap, 5);
+    qualityRule.setOperator (NumberRule.Operator.IS_EQUAL_TO);
+    globalFilter.add (qualityRule);
+
+    boolean hasFlags =
+      gridList.stream().map (grid -> grid.getName().equals ("l2p_flags"))
+      .filter (flag -> flag)
+      .findFirst().orElse (false);
+    if (hasFlags) {
+      NumberRule flagsRule = new NumberRule ("grid::l2p_flags", attNameMap, 49152);
+      flagsRule.setOperator (NumberRule.Operator.DOES_NOT_CONTAIN_BITS_FROM);
+      globalFilter.add (flagsRule);
+    } // if
+
+    // Configure group filter
+    // ----------------------
+    FeatureGroupFilter groupFilter = new FeatureGroupFilter ("platform_id",
+      attNameMap, "time", date);
+    multiOverlay.setGroupFilter (groupFilter);
+
+
+
+/*
+
+TODO:
+
+   - Need to check other types of quality levels in other ACSPO files.
+     For example, we have l2p_flags but other products have other quality flags.
+
+   - Need to have a set of options to turn on and off group filtering.
+
+   - When an attribute changes to a different type in the feature filter chooser,
+     the operator combo should not reset to a different operator when the type
+     is still some kind of number (ie: integer to byte).
+ 
+   - The multipoint overlay re-filters and re-renders even when another overlay
+     changes visibility.  Could we make it hold onto the filtered results
+     so rendering could be faster?  Maybe hold onto just the graphics rendered?
+     Check other overlay classes to see how they work.
+ 
+   - When time is chosen as a filtering attribute in the chooser global rules,
+     the default time value should be the satellite image time for convenience.
+
+   - Do these overlays created need to be saveable?
+ 
+*/
+
+
 
     // Loop over each platform type
     // ----------------------------
     for (Map.Entry<Integer, String> entry : getPlatformTypes().entrySet()) {
 
-      // Create a filtered source for the platform
+      // Create a filter for the platform features
       // -----------------------------------------
-      FilteredFeatureSource source = new FilteredFeatureSource (this);
-      source.setMode (FilterMode.MATCHES_ALL);
-      source.getRules().add (timeRule);
+      SelectionRuleFilter filter = new SelectionRuleFilter();
+      filter.setMode (FilterMode.MATCHES_ALL);
       int platformType = entry.getKey();
       NumberRule platformRule = new NumberRule ("platform_type", attNameMap, (byte) platformType);
       platformRule.setOperator (NumberRule.Operator.IS_EQUAL_TO);
-      source.getRules().add (platformRule);
+      filter.add (platformRule);
 
       // Get symbol and color for this overlay
       // -------------------------------------
@@ -863,9 +956,13 @@ public class IQuamNCReader
 
       // Create overlay
       // --------------
-      PointFeatureOverlay overlay = new PointFeatureOverlay (symbol, source);
-      overlay.setName (entry.getValue());
-      overlayList.add (overlay);
+      PointFeatureOverlay overlay = new PointFeatureOverlay (symbol, colocatedSource);
+      String platformName = entry.getValue();
+      overlay.setName (platformName);
+      overlay.setFilter (filter);
+      boolean isVisible = (platformName.equals ("Drifter") || platformName.equals ("T-Mooring"));
+      overlay.setVisible (isVisible);
+      multiOverlay.getOverlayList().add (overlay);
 
     } // for
 

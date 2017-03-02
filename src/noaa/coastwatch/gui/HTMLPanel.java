@@ -27,11 +27,14 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
+
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -45,6 +48,7 @@ import javax.swing.JToolBar;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.Document;
+
 import noaa.coastwatch.gui.GUIServices;
 
 /**
@@ -431,14 +435,17 @@ public class HTMLPanel
 
     // Create HTML dialog
     // ------------------
-    JOptionPane optionPane = new JOptionPane (this,
-      JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION,
-      null, new String [] {"Close"});
-    JDialog dialog = optionPane.createDialog (component, title);
-    dialog.setResizable (true);
-    dialog.setModal (false);
+    JDialog dialog = GUIServices.createDialog (
+      component,
+      title,
+      false,
+      this,
+      null,
+      new Action[] {GUIServices.createAction ("Close", null)},
+      new boolean[] {true},
+      true);
     dialog.setVisible (true);
-
+    
   } // showDialog
 
   ////////////////////////////////////////////////////////////
