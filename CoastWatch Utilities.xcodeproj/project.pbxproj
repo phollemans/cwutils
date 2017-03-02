@@ -58,6 +58,14 @@
 		E93F2AE51E6422A600C4FF6B /* find_testable.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = find_testable.sh; path = scripts/find_testable.sh; sourceTree = "<group>"; };
 		E94294B41B2F5C7E00C0BBA4 /* LineCollection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = LineCollection.java; path = lines/LineCollection.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E94294B61B2F606400C0BBA4 /* LabeledLine.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = LabeledLine.java; path = lines/LabeledLine.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E95BB7561E67C56400EB9D6F /* binned_border_c.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_border_c.hdf; path = feature/binned_border_c.hdf; sourceTree = "<group>"; };
+		E95BB7571E67C56400EB9D6F /* binned_border_h.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_border_h.hdf; path = feature/binned_border_h.hdf; sourceTree = "<group>"; };
+		E95BB7581E67C56400EB9D6F /* binned_border_i.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_border_i.hdf; path = feature/binned_border_i.hdf; sourceTree = "<group>"; };
+		E95BB7591E67C56400EB9D6F /* binned_border_l.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_border_l.hdf; path = feature/binned_border_l.hdf; sourceTree = "<group>"; };
+		E95BB75A1E67C56400EB9D6F /* binned_GSHHS_c.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_GSHHS_c.hdf; path = feature/binned_GSHHS_c.hdf; sourceTree = "<group>"; };
+		E95BB75B1E67C56400EB9D6F /* binned_GSHHS_h.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_GSHHS_h.hdf; path = feature/binned_GSHHS_h.hdf; sourceTree = "<group>"; };
+		E95BB75C1E67C56400EB9D6F /* binned_GSHHS_i.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_GSHHS_i.hdf; path = feature/binned_GSHHS_i.hdf; sourceTree = "<group>"; };
+		E95BB75D1E67C56400EB9D6F /* binned_GSHHS_l.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_GSHHS_l.hdf; path = feature/binned_GSHHS_l.hdf; sourceTree = "<group>"; };
 		E95FF124164326B4002C27C6 /* GCTPCStyleProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GCTPCStyleProjection.java; sourceTree = "<group>"; };
 		E965CD981AE1A54400D3E59B /* HDFLib.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = HDFLib.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D87B8161661420009B833 /* build.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = build.xml; sourceTree = "<group>"; };
@@ -680,7 +688,6 @@
 		E96D8B76161661420009B833 /* HDFSD.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = HDFSD.java; sourceTree = "<group>"; };
 		E96D8B77161661420009B833 /* HDFWriter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = HDFWriter.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8B78161661420009B833 /* IOServices.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = IOServices.java; sourceTree = "<group>"; };
-		E96D8B79161661420009B833 /* L2PNCReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 2; path = L2PNCReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8B7A161661420009B833 /* NCReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = NCReader.java; sourceTree = "<group>"; };
 		E96D8B7C161661420009B833 /* AbstractArchiveHeader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = AbstractArchiveHeader.java; sourceTree = "<group>"; };
 		E96D8B7D161661420009B833 /* AbstractDataHeader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = AbstractDataHeader.java; sourceTree = "<group>"; };
@@ -885,7 +892,6 @@
 		E96D8C63161661420009B833 /* GCTPProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GCTPProjection.java; sourceTree = "<group>"; };
 		E96D8C64161661420009B833 /* GCTPStyleProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GCTPStyleProjection.java; sourceTree = "<group>"; };
 		E96D8C65161661420009B833 /* GeoVectorProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GeoVectorProjection.java; sourceTree = "<group>"; };
-		E96D8C66161661420009B833 /* L2PProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 2; path = L2PProjection.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8C67161661420009B833 /* MapProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = MapProjection.java; sourceTree = "<group>"; };
 		E96D8C68161661420009B833 /* MapProjectionFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = MapProjectionFactory.java; sourceTree = "<group>"; };
 		E96D8C69161661420009B833 /* MercatorProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = MercatorProjection.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
@@ -997,13 +1003,13 @@
 		E9A91443196E33A700ABC12D /* LRUTileCache.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = LRUTileCache.java; path = io/tile/LRUTileCache.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9AF25A51BE43D6E00A2E69F /* LocationFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = LocationFilter.java; sourceTree = "<group>"; };
 		E9B50A141652F29C00D997D5 /* GeographicProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GeographicProjection.java; sourceTree = "<group>"; };
+		E9BCD1871E31995600984958 /* DirectGridResampler.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DirectGridResampler.java; sourceTree = "<group>"; };
 		E9C01AD31E3A6C9A00CCAC66 /* SelectionRuleFilterChooser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = SelectionRuleFilterChooser.java; sourceTree = "<group>"; };
 		E9C01AD41E3A843400CCAC66 /* SelectionRuleFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = SelectionRuleFilter.java; sourceTree = "<group>"; };
 		E9C43E7D1D358B4800BEC746 /* NumberRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = NumberRule.java; sourceTree = "<group>"; };
 		E9C43E7E1D3897D100BEC746 /* DateRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DateRule.java; sourceTree = "<group>"; };
 		E9C43E7F1D3C690700BEC746 /* TimeWindow.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TimeWindow.java; sourceTree = "<group>"; };
 		E9C43E801D3D909E00BEC746 /* TimeWindowRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TimeWindowRule.java; sourceTree = "<group>"; };
-		E9BCD1871E31995600984958 /* DirectGridResampler.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DirectGridResampler.java; sourceTree = "<group>"; };
 		E9CA7C6D1AD5DD2800C2C96C /* CFNC4Writer.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CFNC4Writer.java; sourceTree = "<group>"; };
 		E9D2E0671D063B790079783B /* ExpressionFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ExpressionFilter.java; sourceTree = "<group>"; };
 		E9D2E0681D07A04A0079783B /* VIIRSBowtieFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = VIIRSBowtieFilter.java; sourceTree = "<group>"; };
@@ -1039,14 +1045,6 @@
 		E9E0591A1D2B2AB500DA53C5 /* AreaRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = AreaRule.java; sourceTree = "<group>"; };
 		E9E0591B1D2ECF4D00DA53C5 /* AttributeRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = AttributeRule.java; sourceTree = "<group>"; };
 		E9E0591D1D34132200DA53C5 /* TextRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TextRule.java; sourceTree = "<group>"; };
-		E9E41A8D1E2C882200426F4F /* binned_border_c.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_border_c.hdf; sourceTree = "<group>"; };
-		E9E41A8E1E2C882200426F4F /* binned_border_h.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_border_h.hdf; sourceTree = "<group>"; };
-		E9E41A8F1E2C882200426F4F /* binned_border_i.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_border_i.hdf; sourceTree = "<group>"; };
-		E9E41A901E2C882200426F4F /* binned_border_l.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_border_l.hdf; sourceTree = "<group>"; };
-		E9E41A911E2C882200426F4F /* binned_GSHHS_c.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_GSHHS_c.hdf; sourceTree = "<group>"; };
-		E9E41A921E2C882200426F4F /* binned_GSHHS_h.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_GSHHS_h.hdf; sourceTree = "<group>"; };
-		E9E41A931E2C882200426F4F /* binned_GSHHS_i.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_GSHHS_i.hdf; sourceTree = "<group>"; };
-		E9E41A941E2C882200426F4F /* binned_GSHHS_l.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = binned_GSHHS_l.hdf; sourceTree = "<group>"; };
 		E9E9BCC91976110200B85B5E /* TileCacheKey.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileCacheKey.java; path = io/tile/TileCacheKey.java; sourceTree = "<group>"; };
 		E9E9BCCA1989F37300B85B5E /* NCTileSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = NCTileSource.java; path = io/tile/NCTileSource.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9E9BCD1198C9AFC00B85B5E /* TileCachedGrid.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileCachedGrid.java; path = io/tile/TileCachedGrid.java; sourceTree = "<group>"; };
@@ -1154,6 +1152,21 @@
 			);
 			sourceTree = "<group>";
 		};
+		E95BB7551E67C51A00EB9D6F /* feature */ = {
+			isa = PBXGroup;
+			children = (
+				E95BB7561E67C56400EB9D6F /* binned_border_c.hdf */,
+				E95BB7571E67C56400EB9D6F /* binned_border_h.hdf */,
+				E95BB7581E67C56400EB9D6F /* binned_border_i.hdf */,
+				E95BB7591E67C56400EB9D6F /* binned_border_l.hdf */,
+				E95BB75A1E67C56400EB9D6F /* binned_GSHHS_c.hdf */,
+				E95BB75B1E67C56400EB9D6F /* binned_GSHHS_h.hdf */,
+				E95BB75C1E67C56400EB9D6F /* binned_GSHHS_i.hdf */,
+				E95BB75D1E67C56400EB9D6F /* binned_GSHHS_l.hdf */,
+			);
+			name = feature;
+			sourceTree = "<group>";
+		};
 		E96D87BB161661420009B833 /* data */ = {
 			isa = PBXGroup;
 			children = (
@@ -1183,14 +1196,7 @@
 		E96D87BE161661420009B833 /* render */ = {
 			isa = PBXGroup;
 			children = (
-				E9E41A8D1E2C882200426F4F /* binned_border_c.hdf */,
-				E9E41A8E1E2C882200426F4F /* binned_border_h.hdf */,
-				E9E41A8F1E2C882200426F4F /* binned_border_i.hdf */,
-				E9E41A901E2C882200426F4F /* binned_border_l.hdf */,
-				E9E41A911E2C882200426F4F /* binned_GSHHS_c.hdf */,
-				E9E41A921E2C882200426F4F /* binned_GSHHS_h.hdf */,
-				E9E41A931E2C882200426F4F /* binned_GSHHS_i.hdf */,
-				E9E41A941E2C882200426F4F /* binned_GSHHS_l.hdf */,
+				E95BB7551E67C51A00EB9D6F /* feature */,
 				E96D87C7161661420009B833 /* etopo5.hdf */,
 			);
 			path = render;
@@ -2214,7 +2220,6 @@
 				E96D8B76161661420009B833 /* HDFSD.java */,
 				E96D8B77161661420009B833 /* HDFWriter.java */,
 				E96D8B78161661420009B833 /* IOServices.java */,
-				E96D8B79161661420009B833 /* L2PNCReader.java */,
 				E9F3ED8916C3398400E05633 /* NCCachedGrid.java */,
 				E96D8B7A161661420009B833 /* NCReader.java */,
 				E9F3ED8C16C89DDB00E05633 /* NCSD.java */,
@@ -2492,7 +2497,6 @@
 				E9EA430D164475EA006AD294 /* HotineObliqueMercatorProjection.java */,
 				E9EA430E1644786A006AD294 /* InterruptedGoodeHomolosineProjection.java */,
 				E9EA43211649F228006AD294 /* InterruptedMollweideProjection.java */,
-				E96D8C66161661420009B833 /* L2PProjection.java */,
 				E9EA430F16447A07006AD294 /* LambertAzimuthalEqualAreaProjection.java */,
 				E9EA431016447F83006AD294 /* LambertConformalConicProjection.java */,
 				E96D8C67161661420009B833 /* MapProjection.java */,

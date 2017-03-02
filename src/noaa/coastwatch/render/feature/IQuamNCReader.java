@@ -32,11 +32,11 @@ import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
 import java.awt.Color;
 
-import ncsa.hdf.object.FileFormat;
-import ncsa.hdf.object.HObject;
-import ncsa.hdf.object.Dataset;
-import ncsa.hdf.object.Group;
-import ncsa.hdf.object.Datatype;
+import hdf.object.FileFormat;
+import hdf.object.HObject;
+import hdf.object.Dataset;
+import hdf.object.Group;
+import hdf.object.Datatype;
 
 import noaa.coastwatch.render.feature.PointFeature;
 import noaa.coastwatch.render.feature.PointFeatureSource;
@@ -198,7 +198,7 @@ public class IQuamNCReader
   ) throws Exception {
   
     Object attValue = null;
-    for (ncsa.hdf.object.Attribute att : (List<ncsa.hdf.object.Attribute>) object.getMetadata()) {
+    for (hdf.object.Attribute att : (List<hdf.object.Attribute>) object.getMetadata()) {
       if (att.getName().equals (attName))
         attValue = Array.get (att.getValue(), 0);
     } // for
@@ -235,6 +235,7 @@ public class IQuamNCReader
 
     else if (desc.indexOf ("integer") != -1) {
       switch (type.getDatatypeSize()) {
+      case 1: retClass = Byte.class; break;
       case 2: retClass = Short.class; break;
       case 4: retClass = Integer.class; break;
       case 8: retClass = Long.class; break;
@@ -332,7 +333,12 @@ public class IQuamNCReader
 
 //          if (dataType.getDatatypeSign() == Datatype.SIGN_NONE) System.out.println ("Unsigned");
 
-          Class attType = getClassForDatatype (dataset.getDatatype());
+          Datatype dataType = dataset.getDatatype();
+          Class attType = getClassForDatatype (dataType);
+          if (attType == null) {
+            throw new IOException ("Unsupported datatype for " + datasetName + ": " +
+              dataType.getDatatypeDescription());
+          } // if
           String attUnits = (String) getObjectAttribute (dataset, "units");
           fillValues[index] = getObjectAttribute (dataset, "_FillValue");
           att = new Attribute (attName, attType, attUnits);

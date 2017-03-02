@@ -1,12 +1,38 @@
 CoastWatch Software Library and Utilities
-Copyright 1998-2017, USDOC/NOAA/NESDIS CoastWatch
+Copyright (c) 1998-2017 National Oceanic and Atmospheric Administration
+All rights reserved.
 
-Permission to use, copy, modify, and distribute this software and
-its documentation for any purpose and without fee is hereby
-granted, provided that the above copyright notice appear in all
-copies, that both the copyright notice and this permission notice
-appear in supporting documentation, and that redistributions of
-modified forms of the source or binary code carry prominent
-notices stating that the original code was changed and the date
-of the change.  This software is provided "as is" without express
-or implied warranty.
+Developed by: CoastWatch / OceanWatch
+              Center for Satellite Applications and Research
+              http://coastwatch.noaa.gov
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the "Software"),
+to deal with the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+  o  Redistributions of source code must retain the above copyright notice,
+     this list of conditions and the following disclaimers.
+
+  o  Redistributions in binary form must reproduce the above copyright notice,
+     this list of conditions and the following disclaimers in the documentation
+     and/or other materials provided with the distribution.
+
+  o  In addition, redistributions of modified forms of the source or binary
+     code must carry prominent notices stating that the original code was
+     changed and the date of the change.
+
+  o  Neither the names of CoastWatch / OceanWatch, Center for Satellite
+     Applications and Research, nor the names of its contributors may be used
+     to endorse or promote products derived from this Software without specific
+     prior written permission.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS WITH THE SOFTWARE.
