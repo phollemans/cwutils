@@ -762,17 +762,31 @@ public class EarthDataViewPanel
                 } // for
                 buffer.append ("</html>");
 
-                // Show popup
-                // ----------
+                // Create label with metadata
+                // --------------------------
                 JLabel label = new JLabel (buffer.toString());
                 Font labelFont = label.getFont();
-                label.setFont (labelFont.deriveFont (labelFont.getSize2D() - 4));
+                label.setFont (labelFont.deriveFont (labelFont.getSize2D() - 2));
                 label.setBorder (BorderFactory.createEmptyBorder (10, 10, 10, 10));
+
+                // Set popup position
+                // ------------------
                 Component parent = EarthDataViewPanel.this;
-                Point topLeft = parent.getLocationOnScreen();
+                Point parentTopLeft = parent.getLocationOnScreen();
                 hideMetadata();
+                Point popupTopLeft = new Point (
+                  parentTopLeft.x + screenPoint.x + 10,
+                  parentTopLeft.y + screenPoint.y + 10
+                );
+                Rectangle bounds = getGraphicsConfiguration().getBounds();
+                Dimension labelDims = label.getPreferredSize();
+                if (popupTopLeft.y + labelDims.height > bounds.height)
+                  popupTopLeft.y = bounds.height - labelDims.height - 10;
+                
+                // Create and show popup
+                // ---------------------
                 metadataPopup = PopupFactory.getSharedInstance().getPopup (parent,
-                  label, topLeft.x + screenPoint.x + 10, topLeft.y + screenPoint.y + 10);
+                  label, popupTopLeft.x, popupTopLeft.y);
                 metadataPopup.show();
                 
                 // Save metadata

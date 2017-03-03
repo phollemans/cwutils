@@ -1,12 +1,19 @@
 <!--
 
      FILE: build.xml
-  PURPOSE: To define Ant build targets for building the CWF software.
    AUTHOR: Peter Hollemans
      DATE: 2004/03/16
 
   CoastWatch Software Library and Utilities
-  Copyright 1998-2016, USDOC/NOAA/NESDIS CoastWatch
+  Copyright (c) 2004 National Oceanic and Atmospheric Administration
+  All rights reserved.
+
+  Developed by: CoastWatch / OceanWatch
+                Center for Satellite Applications and Research
+                http://coastwatch.noaa.gov
+
+  For conditions of distribution and use, see the accompanying
+  license.txt file.
 
 -->
 
@@ -371,6 +378,15 @@
 
   <!-- Define branch targets -->
   <!-- ********************* -->
+  
+  <!--
+  Some other useful git commands:
+    git rm                      - removes a file from repository
+    git status                  - shows the status of adds/deletes/modifications
+    git tag                     - list tags performed
+    git tag -a LABEL            - add a tag with label
+    git log --pretty=oneline    - simple log of commits
+  -->
   
   <target name="branch-list"
     description="Lists the development branches">
