@@ -227,42 +227,44 @@ public class PointFeatureOverlay<T extends PointFeatureSymbol>
   ) {
    
     Map<String, Object> metadataMap = null;
+    if (rectToFeatureMap != null) {
 
-    // Find feature
-    // ------------
-    PointFeature feature =
-      rectToFeatureMap.entrySet()
-      .stream()
-      .filter (entry -> entry.getKey().contains (point))
-      .map (entry -> entry.getValue())
-      .findFirst()
-      .orElse (null);
+      // Find feature
+      // ------------
+      PointFeature feature =
+        rectToFeatureMap.entrySet()
+        .stream()
+        .filter (entry -> entry.getKey().contains (point))
+        .map (entry -> entry.getValue())
+        .findFirst()
+        .orElse (null);
 
-    if (feature != null) {
+      if (feature != null) {
 
-      // Create metadata map
-      // -------------------
-      metadataMap = new LinkedHashMap<String, Object>();
-      List<Attribute> attList = source.getAttributes();
+        // Create metadata map
+        // -------------------
+        metadataMap = new LinkedHashMap<String, Object>();
+        List<Attribute> attList = source.getAttributes();
 
-      // Loop over each attribute and add value if non-null
-      // --------------------------------------------------
-      for (int attIndex = 0; attIndex < attList.size(); attIndex++) {
-        Object attValue = feature.getAttribute (attIndex);
-        if (attValue != null) {
-          String attName = attList.get (attIndex).getName();
-          String attUnits = attList.get (attIndex).getUnits();
-          StringBuilder valueStr = new StringBuilder();
-          if (attValue instanceof Date)
-            valueStr.append (DateFormatter.formatDate ((Date) attValue, DATE_TIME_FMT));
-          else
-            valueStr.append (attValue.toString());
-          if (attUnits != null)
-            valueStr.append (" (" + attUnits + ")");
-          metadataMap.put (attName, valueStr.toString());
-        } // if
-      } // for
-    
+        // Loop over each attribute and add value if non-null
+        // --------------------------------------------------
+        for (int attIndex = 0; attIndex < attList.size(); attIndex++) {
+          Object attValue = feature.getAttribute (attIndex);
+          if (attValue != null) {
+            String attName = attList.get (attIndex).getName();
+            String attUnits = attList.get (attIndex).getUnits();
+            StringBuilder valueStr = new StringBuilder();
+            if (attValue instanceof Date)
+              valueStr.append (DateFormatter.formatDate ((Date) attValue, DATE_TIME_FMT));
+            else
+              valueStr.append (attValue.toString());
+            if (attUnits != null)
+              valueStr.append (" (" + attUnits + ")");
+            metadataMap.put (attName, valueStr.toString());
+          } // if
+        } // for
+      
+      } // if    
     } // if
 
     return (metadataMap);

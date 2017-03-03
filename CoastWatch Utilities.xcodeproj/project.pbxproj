@@ -65,6 +65,7 @@
 		E95BB75B1E67C56400EB9D6F /* binned_GSHHS_h.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_GSHHS_h.hdf; path = feature/binned_GSHHS_h.hdf; sourceTree = "<group>"; };
 		E95BB75C1E67C56400EB9D6F /* binned_GSHHS_i.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_GSHHS_i.hdf; path = feature/binned_GSHHS_i.hdf; sourceTree = "<group>"; };
 		E95BB75D1E67C56400EB9D6F /* binned_GSHHS_l.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_GSHHS_l.hdf; path = feature/binned_GSHHS_l.hdf; sourceTree = "<group>"; };
+		E95BB75E1E68F46500EB9D6F /* ContourGenerator.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ContourGenerator.java; sourceTree = "<group>"; };
 		E95FF124164326B4002C27C6 /* GCTPCStyleProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GCTPCStyleProjection.java; sourceTree = "<group>"; };
 		E965CD981AE1A54400D3E59B /* HDFLib.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = HDFLib.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D87B8161661420009B833 /* build.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = build.xml; sourceTree = "<group>"; };
@@ -1036,8 +1037,6 @@
 		E9E059121D19F46F00DA53C5 /* PolygonFeature.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = PolygonFeature.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9E059131D19F46F00DA53C5 /* PolygonFeatureSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = PolygonFeatureSource.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9E059141D19F46F00DA53C5 /* TSVectorReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = TSVectorReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E9E059151D19FD2F00DA53C5 /* ContourGenerator.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ContourGenerator.java; sourceTree = "<group>"; };
-		E9E059161D19FD2F00DA53C5 /* ContourGenerator.java.orig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ContourGenerator.java.orig; sourceTree = "<group>"; };
 		E9E059171D19FDF700DA53C5 /* OpendapGSHHSLineReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = OpendapGSHHSLineReader.java; sourceTree = "<group>"; };
 		E9E059181D1C534B00DA53C5 /* Attribute.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = Attribute.java; sourceTree = "<group>"; };
 		E9E059191D2B27C500DA53C5 /* SelectionRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = SelectionRule.java; sourceTree = "<group>"; };
@@ -2314,6 +2313,7 @@
 				E96D8BC6161661420009B833 /* ColorLookup.java */,
 				E96D8BC7161661420009B833 /* ColorPointEnhancement.java */,
 				E96D8BC8161661420009B833 /* ColorWindBarbSymbol.java */,
+				E95BB75E1E68F46500EB9D6F /* ContourGenerator.java */,
 				E96D8BCB161661420009B833 /* CrossSymbol.java */,
 				E96D8BCC161661420009B833 /* DataColorScale.java */,
 				E96D8BCD161661420009B833 /* DataReferenceOverlay.java */,
@@ -2547,8 +2547,6 @@
 				E9E059031D19F46F00DA53C5 /* BinnedGSHHSReader.java */,
 				E9E059041D19F46F00DA53C5 /* BinnedGSHHSReaderFactory.java */,
 				E916FE2B1E5BEE7B00262FDD /* ColocatedPointFeatureSource.java */,
-				E9E059151D19FD2F00DA53C5 /* ContourGenerator.java */,
-				E9E059161D19FD2F00DA53C5 /* ContourGenerator.java.orig */,
 				E9C43E7E1D3897D100BEC746 /* DateRule.java */,
 				E9E059051D19F46F00DA53C5 /* ESRIShapefileReader.java */,
 				E9E059061D19F46F00DA53C5 /* Feature.java */,

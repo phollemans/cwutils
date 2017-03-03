@@ -63,11 +63,10 @@ public class ToolServices {
 
   /** The software copyright. */
   public static final String COPYRIGHT = 
-    "1998-2016 USDOC/NOAA/NESDIS CoastWatch";
+    "(c) 1998-2017 National Oceanic and Atmospheric Administration";
 
   /** The software copyright (short version). */
-  public static final String COPYRIGHT_SHORT = 
-    "1998-2016\nUSDOC/NOAA/NESDIS CoastWatch";
+  public static final String COPYRIGHT_SHORT = COPYRIGHT;
 
   /** The tool parameter splitting expression. */
   public static final String SPLIT_REGEX = "[,/]";
