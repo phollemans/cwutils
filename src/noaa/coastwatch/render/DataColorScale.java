@@ -32,6 +32,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.IndexColorModel;
+import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -128,27 +129,36 @@ public class DataColorScale
 
     // Draw scale colors
     // -----------------
-    x1 = x + SPACE_SIZE*2 + 1;
-    x2 = x1 + SCALE_WIDTH - 1;
+    x1 = x + SPACE_SIZE*2;
+    x2 = x1 + SCALE_WIDTH;
+
+    Dimension imageDims = new Dimension (SCALE_WIDTH, scaleHeight);
+    BufferedImage image = new BufferedImage (imageDims.width, imageDims.height,
+      BufferedImage.TYPE_INT_RGB);
+    Graphics2D imageGraphics = image.createGraphics();
+    imageGraphics.setStroke (DEFAULT_STROKE);
+
     IndexColorModel model = palette.getModel();
     int colors = model.getMapSize();
     for (int i = 0; i < scaleHeight; i++) {
-      y1 = (y + SPACE_SIZE*2 + 1) + (scaleHeight-1-i);
-      y2 = y1;
+      y1 = y2 = scaleHeight-1-i;
       double norm = (double) i / (scaleHeight-1);
       if (function instanceof StepEnhancement)
         norm = function.getValue (function.getInverse (norm));
       if (reverse) norm = 1-norm;
       int index = (int) Math.round (norm*(colors-1));
-      g.setColor (new Color (model.getRGB (index)));
-      g.drawLine (x1, y1, x2, y2);
-    } /* for */
+      imageGraphics.setColor (new Color (model.getRGB (index)));
+      imageGraphics.drawLine (0, y1, imageDims.width-1, y2);
+    } // for
+
+    g.drawImage (image, x1, y + SPACE_SIZE*2, null);
+    imageGraphics.dispose();
 
     // Draw scale border
     // -----------------
     g.setColor (fore);
     GraphicsServices.drawRect (g, new Rectangle (x + SPACE_SIZE*2, 
-      y + SPACE_SIZE*2, SCALE_WIDTH+1, scaleHeight+1));
+      y + SPACE_SIZE*2, SCALE_WIDTH, scaleHeight));
 
     // Check for valid range
     // ---------------------
@@ -157,7 +167,7 @@ public class DataColorScale
 
     // Draw scale ticks
     // ----------------
-    x1 = x2 + 2;
+    x1 = x2 + 1;
     x2 = x1 + TICK_SIZE - 1;
     int maxx = x2 + SPACE_SIZE;
     boolean invert = (range[0] > range[1]);

@@ -778,6 +778,13 @@ public class EarthDataViewPanel
                   parentTopLeft.x + screenPoint.x + 10,
                   parentTopLeft.y + screenPoint.y + 10
                 );
+
+                // TODO: If we get the bounds in this way, it seems that in a
+                // multimonitor setup with the desktop being extended, the
+                // bounds include the whole extended virtual desktop and not
+                // just the physical screen that the panel is currently on.
+                // We might want to correct this in the future.
+
                 Rectangle bounds = getGraphicsConfiguration().getBounds();
                 Dimension labelDims = label.getPreferredSize();
                 if (popupTopLeft.y + labelDims.height > bounds.height)
