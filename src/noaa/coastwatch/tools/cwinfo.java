@@ -105,9 +105,9 @@ import ucar.nc2.units.DateUnit;
  *   <li>Total height from (mc,0) to (mc,nr-1)</li>
  *   <li>Center lat/lon at (mc,mr)</li>
  *   <li>Upper-left lat/lon at (0,0)</li>
- *   <li>Upper-right lat/lon at (mc-1,0)</li>
- *   <li>Lower-left lat/lon at (0,mr-1)</li>
- *   <li>Lower-right lat/lon at (mc-1,mr-1)</li>
+ *   <li>Upper-right lat/lon at (nc-1,0)</li>
+ *   <li>Lower-left lat/lon at (0,nr-1)</li>
+ *   <li>Lower-right lat/lon at (nc-1,nr-1)</li>
  * </ul>
  *
  * <p>When the <b>--coord</b> option is used, Common Data Model
@@ -142,6 +142,25 @@ import ucar.nc2.units.DateUnit;
  *   <dd> Specifies that Common Data Model coordinate system
  *   information should also be printed.  The default is to show
  *   only global and variable information. </dd>
+ *
+ *   <dt> -e, --edge </dt>
+ *   <dd> Specifies that transform information should print the coordinates of
+ *   the extreme edges of the corner pixels.  The default is to print 
+ *   the coordinates of the center of corner pixels. </dd>
+ *
+ *   <dt> -l, --locFormat </dt>
+ *   <dd> Specifies the format style for geographic coordinates printed by the
+ *   <b>--transform</b> option.  Valid values are:
+ *   <ul>
+ *     <li>D - Integer degrees, eg: '124 W'.</li>
+ *     <li>DD - 2-digit degrees, eg: '124.36 W'.</li>
+ *     <li>DDDD - 4-digit degrees, eg: '124.3600 W'.</li>
+ *     <li>DDMM - Degrees, minutes, eg: '124 21.60 W'.</li>
+ *     <li>DDMMSS - Degrees, minutes, seconds, eg: '124 21 36.00 W'.</li>
+ *     <li>RAW - Decimal degrees up to the full 64-bit precision, eg: '-124.36003592404',
+ *     in the range [-90,90] for latitude and [-180,180] for longitude.</li>
+ *   </ul>
+ *   The default is 'DDDD'.</dd>
  *
  *   <dt> -v, --verbose </dt>
  *   <dd> Turns verbose mode on.  The current status of automatic file
@@ -259,6 +278,8 @@ public final class cwinfo {
     Option verboseOpt = cmd.addBooleanOption ('v', "verbose");
     Option transformOpt = cmd.addBooleanOption ('t', "transform");
     Option coordOpt = cmd.addBooleanOption ('c', "coord");
+    Option edgeOpt = cmd.addBooleanOption ('e', "edge");
+    Option locFormatOpt = cmd.addStringOption ('l', "locFormat");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -296,6 +317,28 @@ public final class cwinfo {
     boolean verbose = (cmd.getOptionValue (verboseOpt) != null);
     boolean transform = (cmd.getOptionValue (transformOpt) != null);
     boolean coord = (cmd.getOptionValue (coordOpt) != null);
+    Boolean edgeObj = (Boolean) cmd.getOptionValue (edgeOpt);
+    boolean edge = (edgeObj == null ? false : edgeObj.booleanValue());
+    String locFormatObj = (String) cmd.getOptionValue (locFormatOpt);
+    int locFormat = EarthLocation.DDDD;
+    if (locFormatObj != null) {
+      if (locFormatObj.equals ("D"))
+        locFormat = EarthLocation.D;
+      else if (locFormatObj.equals ("DD"))
+        locFormat = EarthLocation.DD;
+      else if (locFormatObj.equals ("DDDD"))
+        locFormat = EarthLocation.DDDD;
+      else if (locFormatObj.equals ("DDMM"))
+        locFormat = EarthLocation.DDMM;
+      else if (locFormatObj.equals ("DDMMSS"))
+        locFormat = EarthLocation.DDMMSS;
+      else if (locFormatObj.equals ("RAW"))
+        locFormat = EarthLocation.RAW;
+      else {
+        System.err.println (PROG + ": Invalid location format '" + locFormatObj + "'");
+        System.exit (1);
+      } // else
+    } // if
 
     // Setup verbose mode in factory
     // -----------------------------
@@ -316,7 +359,7 @@ public final class cwinfo {
     // Print information
     // -----------------
     printInfo (reader, System.out);
-    if (transform) printTransform (reader, System.out, false);
+    if (transform) printTransform (reader, System.out, edge, locFormat);
     if (coord) printCoordSystems (reader, System.out);
 
   } // main
@@ -326,17 +369,45 @@ public final class cwinfo {
   /**
    * Prints earth transform data from the specified file.  The Earth
    * transform data includes pixel resolution, total width and height,
-   * and latitude and longitude data for selected locations.
+   * and latitude and longitude data for selected locations.  Earth location
+   * coordinates are printed using the EarthLocation.DDDD format.
    *
    * @param reader the earth data reader object to use.
    * @param stream the output stream for printing.
    * @param useEdges true to use actual edges for location values,
    * false to use center of edge pixels.
+   *
+   * @see #printTransform(EarthDataReader,PrintStream,boolean)
    */
   public static void printTransform (
     EarthDataReader reader,
     PrintStream stream,
     boolean useEdges
+  ) {
+  
+    printTransform (reader, stream, useEdges, EarthLocation.DDDD);
+    
+  } // printTransform
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Prints Earth transform data from the specified file.  The Earth
+   * transform data includes pixel resolution, total width and height,
+   * and latitude and longitude data for selected locations.
+   *
+   * @param reader the Earth data reader object to use.
+   * @param stream the output stream for printing.
+   * @param useEdges true to use actual edges for location values,
+   * false to use center of edge pixels.
+   * @param locFormat the Earth location format code,
+   * see {@link EarthLocation#format}.
+   */
+  public static void printTransform (
+    EarthDataReader reader,
+    PrintStream stream,
+    boolean useEdges,
+    int locFormat
   ) {
 
     // Get info
@@ -392,7 +463,7 @@ public final class cwinfo {
     for (Iterator iter = valueMap.keySet().iterator(); iter.hasNext(); ) {
       String key = (String) iter.next();
       String value = (String) valueMap.get (key);
-      stream.format ("  %-20s %s\n", key + ":", value);
+      stream.format ("  %-30s %s\n", key + ":", value);
     } // for
     stream.println();
 
@@ -788,6 +859,10 @@ public final class cwinfo {
 "  -h, --help                 Show this help message.\n" +
 "  -t, --transform            Print earth transform information.\n" +
 "  -c, --coord                Print CDM coordinate system information.\n" +
+"  -e, --edge                 Print edge of pixels in transform information.\n" +
+"  -l, --locFormat=TYPE       Set the output format for location coordinates.\n" +
+"                               TYPE may be 'D', 'DD', 'DDDD', 'DDMM',\n" +
+"                               'DDMMSS', or 'RAW'.\n" +
 "  -v, --verbose              Print verbose messages.\n" +
 "  --version                  Show version information.\n"
     );

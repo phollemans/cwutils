@@ -51,26 +51,29 @@ public class EarthLocation
   // Constants
   // ---------
 
-  /** Format style code for integer degrees: '124 N'. */
-  public final static int D = 0;
+  /** Format style code for integer degrees: '124 W'. */
+  public static final int D = 0;
 
-  /** Format style code for 2-digit degrees: '124.36 N'. */
-  public final static int DD = 1;
+  /** Format style code for 2-digit degrees: '124.36 W'. */
+  public static final int DD = 1;
 
-  /** Format style code for 4-digit degrees: '124.3600 N'. */
-  public final static int DDDD = 4;
+  /** Format style code for 4-digit degrees: '124.3600 W'. */
+  public static final int DDDD = 4;
 
-  /** Format style code for degrees, minutes: '124 21.60 N'. */
-  public final static int DDMM = 2;
+  /** Format style code for full precision degrees: '-124.360001453546473'. */
+  public static final int RAW = 5;
 
-  /** Format style code for degrees, minutes, seconds: '124 21 36.00 N'. */
-  public final static int DDMMSS = 3;
+  /** Format style code for degrees, minutes: '124 21.60 W'. */
+  public static final int DDMM = 2;
+
+  /** Format style code for degrees, minutes, seconds: '124 21 36.00 W'. */
+  public static final int DDMMSS = 3;
 
   /** Selection code for latitude. */
-  public final static int LAT = 0;
+  public static final int LAT = 0;
 
   /** Selection code for longitude. */
-  public final static int LON = 1;
+  public static final int LON = 1;
 
   /** The instance of WGS84. */
   private static final Datum WGS84 = 
@@ -435,44 +438,54 @@ public class EarthLocation
     int select
   ) {
 
-    // Get hemisphere
-    // --------------
-    String hemisphere;
-    if (select == LAT) hemisphere = (deg < 0 ? "S" : "N");
-    else hemisphere = (deg < 0 ? "W" : "E");
-
-    // Format value
-    // ------------
+    // Check for raw format
+    // --------------------
     String str = null;
-    deg = Math.abs (deg);
-    DecimalFormat fmt = new DecimalFormat ("0.00");
-    switch (style) {
-    case D:
-      str = ((int) deg) + " " + hemisphere;
-      break;
-    case DD:
-      str = fmt.format(deg) + " " + hemisphere;
-      break;
-    case DDDD:
-      str = new DecimalFormat ("0.0000").format (deg) + " " + hemisphere;
-      break;
-    case DDMM: {
-      int dd = (int) deg;
-      double mm = (deg - dd) * 60;
-      str = dd + " " + fmt.format(mm) + " " + hemisphere;
-      break; 
-    } // case
-    case DDMMSS: {
-      int dd = (int) deg;
-      int mm = (int) ((deg - dd)*60);
-      double ss = (deg - dd - mm/60.0)*3600;
-      str = dd + "d" + mm + "'" + fmt.format(ss) + "\"" + hemisphere;
-      break;
-    } // case
-    default:
-      break;
-    } // switch 
+    if (style == RAW) {
+      str = Double.toString (deg);
+    } // if
 
+    else {
+
+      // Get hemisphere
+      // --------------
+      String hemisphere;
+      if (select == LAT) hemisphere = (deg < 0 ? "S" : "N");
+      else hemisphere = (deg < 0 ? "W" : "E");
+
+      // Format value
+      // ------------
+      deg = Math.abs (deg);
+      DecimalFormat fmt = new DecimalFormat ("0.00");
+      switch (style) {
+      case D:
+        str = ((int) deg) + " " + hemisphere;
+        break;
+      case DD:
+        str = fmt.format(deg) + " " + hemisphere;
+        break;
+      case DDDD:
+        str = new DecimalFormat ("0.0000").format (deg) + " " + hemisphere;
+        break;
+      case DDMM: {
+        int dd = (int) deg;
+        double mm = (deg - dd) * 60;
+        str = dd + " " + fmt.format(mm) + " " + hemisphere;
+        break; 
+      } // case
+      case DDMMSS: {
+        int dd = (int) deg;
+        int mm = (int) ((deg - dd)*60);
+        double ss = (deg - dd - mm/60.0)*3600;
+        str = dd + "d" + mm + "'" + fmt.format(ss) + "\"" + hemisphere;
+        break;
+      } // case
+      default:
+        break;
+      } // switch 
+
+    } // else
+    
     return (str);
 
   } // formatSingle
