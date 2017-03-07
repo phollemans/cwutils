@@ -445,17 +445,18 @@ public final class cwinfo {
 
     // Add location info
     // -----------------
-    EarthLocation earthLoc;
-    earthLoc = trans.transform (new DataLocation (centerRow, centerCol));
-    valueMap.put ("Center", earthLoc.isValid() ? earthLoc.format() : "Invalid");
-    earthLoc = trans.transform (new DataLocation (0, 0));
-    valueMap.put ("Upper-left", earthLoc.isValid() ? earthLoc.format() : "Invalid");
-    earthLoc = trans.transform (new DataLocation (0, cols-1));
-    valueMap.put ("Upper-right", earthLoc.isValid() ? earthLoc.format() : "Invalid");
-    earthLoc = trans.transform (new DataLocation (rows-1, 0));
-    valueMap.put ("Lower-left", earthLoc.isValid() ? earthLoc.format() : "Invalid");
-    earthLoc = trans.transform (new DataLocation (rows-1, cols-1));
-    valueMap.put ("Lower-right", earthLoc.isValid() ? earthLoc.format() : "Invalid");
+    double corr = (useEdges ? 0.5 : 0);
+    String pixelLoc = (useEdges ? "edge" : "center");
+    valueMap.put ("Center",
+      trans.transform (new DataLocation (centerRow, centerCol)).format (locFormat));
+    valueMap.put ("Upper-left (pixel " + pixelLoc + ")",
+      trans.transform (new DataLocation (0-corr, 0-corr)).format (locFormat));
+    valueMap.put ("Upper-right (pixel " + pixelLoc + ")",
+      trans.transform (new DataLocation (0-corr, cols-1+corr)).format (locFormat));
+    valueMap.put ("Lower-left (pixel " + pixelLoc + ")",
+      trans.transform (new DataLocation (rows-1+corr, 0-corr)).format (locFormat));
+    valueMap.put ("Lower-right (pixel " + pixelLoc + ")",
+      trans.transform (new DataLocation (rows-1+corr, cols-1+corr)).format (locFormat));
 
     // Print data
     // ----------
