@@ -39,6 +39,8 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.Box;
 import javax.swing.Action;
+import javax.swing.JCheckBox;
+import javax.swing.BoxLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,7 @@ import java.io.IOException;
 
 import noaa.coastwatch.gui.AbstractOverlayListPanel;
 import noaa.coastwatch.gui.SelectionRuleFilterChooser;
+import noaa.coastwatch.gui.FeatureGroupFilterChooser;
 import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
 import noaa.coastwatch.gui.visual.PointFeatureOverlayPropertyChooser;
 import noaa.coastwatch.gui.GUIServices;
@@ -58,6 +61,9 @@ import noaa.coastwatch.render.feature.NumberRule;
 import noaa.coastwatch.render.feature.DateRule;
 import noaa.coastwatch.render.feature.SelectionRuleFilter;
 import noaa.coastwatch.render.feature.PointFeatureSource;
+import noaa.coastwatch.render.feature.FeatureGroupFilter;
+import noaa.coastwatch.render.feature.TimeWindow;
+import noaa.coastwatch.render.feature.TimeWindowRule;
 import noaa.coastwatch.render.PointFeatureOverlay;
 import noaa.coastwatch.render.MultiPointFeatureOverlay;
 import noaa.coastwatch.render.SimpleSymbol;
@@ -95,6 +101,30 @@ public class MultiPointFeatureOverlayPropertyChooser
   /** The source for point data. */
   private PointFeatureSource source;
   
+  /** The chooser for group filter. */
+  private FeatureGroupFilterChooser groupFilterChooser;
+  
+  /** The check box indicating that the group filter is active/inactive. */
+  private JCheckBox groupCheckBox;
+  
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Create a chooser object based on the current source and overlay.
+   *
+   * @return the chooser to use.
+   */
+  private SelectionRuleFilterChooser createRuleFilterChooser() {
+  
+    TimeWindow window = overlay.getTimeWindowHint();
+    if (window == null) window = new TimeWindow (new Date(), 0);
+    SelectionRuleFilterChooser ruleFilterChooser = new SelectionRuleFilterChooser (source.getAttributes(),
+      source.getAttributeNameMap(), window);
+
+    return (ruleFilterChooser);
+
+  } // createRuleFilterChooser
+
   ////////////////////////////////////////////////////////////
   
   /** 
@@ -114,16 +144,46 @@ public class MultiPointFeatureOverlayPropertyChooser
 
     // Add top panel
     // -------------
+    JPanel topPanel = new JPanel (new BorderLayout());
+    this.add (topPanel, BorderLayout.NORTH);
 
-// TODO: what if there are no overlays yet?  where can we get the source?
+    // Add selection rule panel
+    // ------------------------
+    List<PointFeatureOverlay<SimpleSymbol>> overlayList = overlay.getOverlayList();
+    if (overlayList.size() == 0) throw new RuntimeException ("Required point data source not available");
+    source = overlayList.get(0).getSource();
+    SelectionRuleFilterChooser ruleFilterChooser = createRuleFilterChooser();
+    ruleFilterChooser.setFilter (overlay.getGlobalFilter());
+    ruleFilterChooser.setBorder (new TitledBorder (new EtchedBorder(), "Feature Selection Rules"));
+    ruleFilterChooser.addPropertyChangeListener (SelectionRuleFilterChooser.FILTER_PROPERTY, event -> signalOverlayChanged());
+    topPanel.add (ruleFilterChooser, BorderLayout.NORTH);
 
-    source = overlay.getOverlayList().get(0).getSource();
-    SelectionRuleFilterChooser filterChooser = new SelectionRuleFilterChooser (source.getAttributes(),
-      source.getAttributeNameMap());
-    filterChooser.setFilter (overlay.getGlobalFilter());
-    filterChooser.setBorder (new TitledBorder (new EtchedBorder(), "Feature Selection Rules"));
-    filterChooser.addPropertyChangeListener (SelectionRuleFilterChooser.FILTER_PROPERTY, event -> signalOverlayChanged());
-    this.add (filterChooser, BorderLayout.NORTH);
+    // Add grouping rule panel
+    // -----------------------
+    JPanel groupFilterPanel = new JPanel (new GridBagLayout());
+    GridBagConstraints gc = new GridBagConstraints();
+    gc.anchor = GridBagConstraints.NORTH;
+    int xPos = 0;
+    groupFilterPanel.setBorder (new TitledBorder (new EtchedBorder(), "Grouping Rules"));
+    topPanel.add (groupFilterPanel, BorderLayout.SOUTH);
+    
+    groupCheckBox = new JCheckBox();
+    groupCheckBox.setSelected (overlay.getGroupFilterActive());
+    groupCheckBox.addActionListener (event -> groupCheckChanged());
+    GUIServices.setConstraints (gc, 0, 0, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
+    groupFilterPanel.add (groupCheckBox, gc);
+
+    TimeWindow windowHint = overlay.getTimeWindowHint();
+    Date defaultDate = (windowHint != null ? windowHint.getCentralDate() : new Date(0));
+    groupFilterChooser = new FeatureGroupFilterChooser (source.getAttributes(),
+      source.getAttributeNameMap(), defaultDate);
+    FeatureGroupFilter groupFilter = overlay.getGroupFilter();
+    if (groupFilter != null)
+      groupFilterChooser.setFilter (groupFilter);
+    groupFilterChooser.addPropertyChangeListener (FeatureGroupFilterChooser.FILTER_PROPERTY, event -> groupFilterChanged());
+    GUIServices.setContainerEnabled (groupFilterChooser, groupCheckBox.isSelected());
+    GUIServices.setConstraints (gc, 1, 0, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
+    groupFilterPanel.add (groupFilterChooser, gc);
 
     // Add center panel
     // ----------------
@@ -138,8 +198,6 @@ public class MultiPointFeatureOverlayPropertyChooser
     // Add side button panel
     // ---------------------
     JPanel sidePanel = new JPanel (new GridBagLayout());
-    GridBagConstraints gc = new GridBagConstraints();
-    gc.anchor = GridBagConstraints.WEST;
     int yPos = 0;
 
     addButton = GUIServices.getTextButton ("Add Symbol");
@@ -173,6 +231,28 @@ public class MultiPointFeatureOverlayPropertyChooser
 
   } // MultiPointFeatureOverlayPropertyChooser constructor
   
+  ////////////////////////////////////////////////////////////
+
+  /** Handles the group filter changing state. */
+  private void groupFilterChanged () {
+  
+    overlay.setGroupFilter (groupFilterChooser.getFilter());
+    signalOverlayChanged();
+
+  } // groupFilterChanged
+
+  ////////////////////////////////////////////////////////////
+
+  /** Handles the group filter check box changing state. */
+  private void groupCheckChanged () {
+
+    boolean isGroupFilterActive = groupCheckBox.isSelected();
+    GUIServices.setContainerEnabled (groupFilterChooser, isGroupFilterActive);
+    overlay.setGroupFilterActive (isGroupFilterActive);
+    signalOverlayChanged();
+  
+  } // groupCheckChanged
+
   ////////////////////////////////////////////////////////////
 
   /** Handles a change in list element selection. */
@@ -223,8 +303,7 @@ public class MultiPointFeatureOverlayPropertyChooser
     symbol.setFillColor (Color.RED);
 
     PointFeatureOverlay<SimpleSymbol> pointOverlay = new PointFeatureOverlay<> (symbol, source);
-    SelectionRuleFilterChooser chooser = new SelectionRuleFilterChooser (source.getAttributes(),
-      source.getAttributeNameMap());
+    SelectionRuleFilterChooser chooser = createRuleFilterChooser();
     pointOverlay.setFilter (chooser.getFilter());
 
     return (pointOverlay);
@@ -428,7 +507,7 @@ public class MultiPointFeatureOverlayPropertyChooser
     
     MultiPointFeatureOverlay multiOverlay = new MultiPointFeatureOverlay();
     multiOverlay.getOverlayList().add (pointOverlay);
-    multiOverlay.getGlobalFilter().add (new DateRule ("time", attNameMap, new Date()));
+    multiOverlay.getGlobalFilter().add (new TimeWindowRule ("time", attNameMap, new TimeWindow (new Date(), 0)));
 
     MultiPointFeatureOverlayPropertyChooser chooser = new MultiPointFeatureOverlayPropertyChooser (multiOverlay);
     noaa.coastwatch.gui.TestContainer.showFrame (chooser);

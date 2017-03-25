@@ -52,10 +52,10 @@ public class UpdateCheck {
     "http://coastwatch.noaa.gov/cw_cwfv3.html";
 
   /** The update string. */
-  private static final String UPDATE_STRING = "cwf_update=";
+  private static final String UPDATE_STRING = "cwutils_update=";
 
   /** The update persistant cache key. */
-  private static final String UPDATE_KEY = "cwf_update_id";
+  private static final String UPDATE_KEY = "cwutils_update_id";
 
   // Variables
   // ---------

@@ -38,6 +38,7 @@ import noaa.coastwatch.render.feature.SelectionRuleFilter;
 import noaa.coastwatch.render.feature.FeatureGroupFilter;
 import noaa.coastwatch.render.feature.Feature;
 import noaa.coastwatch.render.PointFeatureSymbol;
+import noaa.coastwatch.render.feature.TimeWindow;
 
 /**
  * The <code>MultiPointFeatureOverlay</code> class annotes a data view with
@@ -64,6 +65,65 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
   /** The list of overlays. */
   private List<PointFeatureOverlay<T>> overlayList;
   
+  /** A hint for a TimeWindow object to use with this overlay. */
+  private TimeWindow timeWindowHint;
+  
+  /** The group filter flag, true to use the group filter or false otherwise. */
+  private boolean isGroupFilterActive = true;
+  
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the group filter flag.
+   *
+   * @return the group filter flag.
+   *
+   * @see #setGroupFilterFlag
+   */
+  public boolean getGroupFilterActive() { return (isGroupFilterActive); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the group filter flag.  By default the group filter is active, if
+   * set to a non-null value.
+   *
+   * @param flag the filter flag, true to use the group filter or false to not
+   * use the filter in drawing the overlay.
+   */
+  public void setGroupFilterActive (boolean flag) { isGroupFilterActive = flag; }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the time window hint.  This hint may be used by choosers to 
+   * present a reasonable default time and time window.
+   *
+   * @param window the time window to use for a hint.
+   */
+  public void setTimeWindowHint (
+    TimeWindow window
+  ) {
+  
+    this.timeWindowHint = window;
+  
+  } // setTimeWindowHint
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the time window hint.  
+   *
+   * @return the time window hint or null if there is no hint available.
+   *
+   * @see #setTimeWindowHint
+   */
+  public TimeWindow getTimeWindowHint() {
+  
+    return (timeWindowHint);
+  
+  } // getTimeWindowHint
+
   ////////////////////////////////////////////////////////////
 
   @Override
@@ -100,6 +160,8 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
    * are drawn.
    *
    * @param groupFilter the group filter or null to specify no group filtering.
+   * Another way to specify no group filtering is to set a group filter, then
+   * mark it as inactive using {@link #setGroupFilterActive}.
    */
   public void setGroupFilter (
     FeatureGroupFilter groupFilter
@@ -112,7 +174,7 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the group filter for the overlay
+   * Gets the group filter for the overlay.
    *
    * @return the group filter.
    *
@@ -129,7 +191,8 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
   /** 
    * Gets the global filter for features in all overlays.
    *
-   * @return the global filter.
+   * @return the global filter.  The returned filter is not a copy, therefore
+   * changes to the filter will be reflected in the overlay.
    */
   public SelectionRuleFilter getGlobalFilter () { return (globalFilter); }
 
@@ -181,7 +244,7 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
         
         // Apply group filter second
         // -------------------------
-        if (groupFilter != null)
+        if (groupFilter != null && isGroupFilterActive)
           preFilterResultList = groupFilter.filter (preFilterResultList);
 
       } // if
@@ -246,6 +309,29 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
     return (metadata);
 
   } // getMetadataAtPoint
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public String toString () {
+
+    StringBuffer buffer = new StringBuffer();
+    buffer.append ("MultiPointFeatureOverlay[");
+    buffer.append ("\nglobalFilter=" + globalFilter + ",");
+    buffer.append ("\ngroupFilter=" + groupFilter + ",");
+    buffer.append ("\noverlayList=[\n");
+    for (int i = 0; i < overlayList.size(); i++) {
+      buffer.append (overlayList.get(0).toString());
+      if (i < overlayList.size()-1) buffer.append (",\n");
+      else buffer.append ("\n");
+    } // for
+    buffer.append ("],\n");
+    buffer.append ("timewindowHint=" + timeWindowHint);
+    buffer.append ("]");
+
+    return (buffer.toString());
+
+  } // toString
 
   ////////////////////////////////////////////////////////////
 

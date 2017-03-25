@@ -40,19 +40,35 @@ import noaa.coastwatch.gui.visual.ComponentProducer;
 public interface VisualObject
   extends ComponentProducer {
 
+  ////////////////////////////////////////////////////////////
+
   /** 
    * Shows the chooser dialog used to manipulate the object's
    * properties.  In some cases, a visual object may not have a
-   * chooser, in which case <code>hasChooser()</code> should return
+   * chooser, in which case {@link #hasChooser} returns
    * false and this method has no effect.
    */
-  public void showChooser ();
+  public void showChooser();
 
-  /** Returns true if this object has a chooser, or false if not. */
-  public boolean hasChooser ();
+  ////////////////////////////////////////////////////////////
 
-  /** Gets the object value. */
-  public Object getValue ();
+  /** 
+   * Gets the chooser flag.
+   *
+   * @return true if this object has a chooser, or false if not.
+   */
+  public boolean hasChooser();
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the object value.
+   *
+   * @return the value that this visual object currently holds.
+   */
+  public Object getValue();
+
+  ////////////////////////////////////////////////////////////
 
   /** 
    * Adds a listener to receive property change events for when this
@@ -62,11 +78,22 @@ public interface VisualObject
    */
   public void addPropertyChangeListener (PropertyChangeListener listener);
 
-  /** Fires a property change event for this object's value. */
-  public void firePropertyChange ();
+  ////////////////////////////////////////////////////////////
 
-  /** Sets restrictions on the allowed object values. */
+  /** Fires a property change event for this object's value. */
+  public void firePropertyChange();
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Sets restrictions on the allowed object values.
+   *
+   * @param restrict the restictions, a custom object that is known to
+   * the child class.
+   */
   public void setRestrictions (Object restrict);
+
+  ////////////////////////////////////////////////////////////
   
 } // VisualObject interface
 

@@ -83,7 +83,7 @@ public class ResourceManager {
   };
   
   /** The Java VM options file. */
-  private static final String VMOPTIONS_FILE = "cwf.vmoptions";
+  private static final String VMOPTIONS_FILE = "cwutils.vmoptions";
 
   // Variables
   // ---------

@@ -95,7 +95,7 @@ public abstract class AbstractVisualObject
   /** 
    * Fires a property change event for this object's value.  The old
    * property value is set to null, and the new value is set to the
-   * value returned by <code>getValue()</code>.
+   * value returned by {@link #getValue}.
    */
   @Override
   public void firePropertyChange () {

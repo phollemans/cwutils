@@ -50,7 +50,7 @@ public class ToolServices {
     "CoastWatch Software Library and Utilities";
 
   /** The short package description. */
-  public static final String PACKAGE_SHORT = "cwf";
+  public static final String PACKAGE_SHORT = "cwutils";
 
   /** The author. */
   public static final String AUTHOR = "Peter Hollemans";
@@ -122,7 +122,7 @@ public class ToolServices {
       Properties props = new Properties();
       try { 
         props.load (stream); 
-        version = props.getProperty ("cwf.version");
+        version = props.getProperty ("cwutils.version");
       } // try
       catch (IOException e) { }
       finally { 
@@ -210,7 +210,7 @@ public class ToolServices {
    *
    * @param tool the tool or program name.
    *
-   * @return the tool version string, for example "[cwf 3.2.2] cwrender".
+   * @return the tool version string, for example "[cwutils 3.2.2] cwrender".
    */
   public static String getToolVersion (
     String tool

@@ -848,6 +848,9 @@ public class IQuamNCReader
     // --------------------------
     List<EarthDataOverlay> overlayList = new ArrayList<EarthDataOverlay>();
     MultiPointFeatureOverlay multiOverlay = new MultiPointFeatureOverlay();
+    long windowSize = 30*60*1000L;
+    TimeWindow window = new TimeWindow (date, windowSize);
+    multiOverlay.setTimeWindowHint (window);
     multiOverlay.setName ("iQuam data");
     overlayList.add (multiOverlay);
 
@@ -860,36 +863,11 @@ public class IQuamNCReader
     // -----------------------
     SelectionRuleFilter globalFilter = multiOverlay.getGlobalFilter();
     globalFilter.setMode (FilterMode.MATCHES_ALL);
-
     Map<String, Integer> attNameMap = colocatedSource.getAttributeNameMap();
+    TimeWindowRule timeRule = new TimeWindowRule ("time", attNameMap, window);
+    globalFilter.add (timeRule);
 
-/*
-
-TODO: We need to have a chooser for time window values rather than a before and  
-      after rule:
-
-  ------------              --------  -------------    ---------------------------
- | time    v |   is within  |  30  |  | minutes v | of | 2017/02/28 18:17:00 UTC |
-  ------------              --------  -------------    ---------------------------
-
-//    TimeWindow window = new TimeWindow (date, 12*60*60*1000L);  // date +/- 12 hours
-//    TimeWindowRule timeRule = new TimeWindowRule ("time", attNameMap, window);
-//    multiOverlay.getGlobalFilter().add (timeRule);
-
-//    long windowSize = 12*60*60*1000L;
-
-*/
-
-    long windowSize = 30*60*1000L;
-    DateRule afterDateRule = new DateRule ("time", attNameMap, new Date (date.getTime() - windowSize));
-    afterDateRule.setOperator (DateRule.Operator.IS_AFTER);
-    globalFilter.add (afterDateRule);
-
-    DateRule beforeDateRule = new DateRule ("time", attNameMap, new Date (date.getTime() + windowSize));
-    beforeDateRule.setOperator (DateRule.Operator.IS_BEFORE);
-    globalFilter.add (beforeDateRule);
-
-    NumberRule qualityRule = new NumberRule ("quality_level", attNameMap, 5);
+    NumberRule qualityRule = new NumberRule ("quality_level", attNameMap, (byte) 5);
     qualityRule.setOperator (NumberRule.Operator.IS_EQUAL_TO);
     globalFilter.add (qualityRule);
 
@@ -898,7 +876,7 @@ TODO: We need to have a chooser for time window values rather than a before and
       .filter (flag -> flag)
       .findFirst().orElse (false);
     if (hasFlags) {
-      NumberRule flagsRule = new NumberRule ("grid::l2p_flags", attNameMap, 49152);
+      NumberRule flagsRule = new NumberRule ("grid::l2p_flags", attNameMap, (short) 49152);
       flagsRule.setOperator (NumberRule.Operator.DOES_NOT_CONTAIN_BITS_FROM);
       globalFilter.add (flagsRule);
     } // if
@@ -918,9 +896,9 @@ TODO:
    - Need to check other types of quality levels in other ACSPO files.
      For example, we have l2p_flags but other products have other quality flags.
 
-   - Need to have a set of options to turn on and off group filtering.
+**   - Need to have a set of options to turn on and off group filtering.
 
-   - When an attribute changes to a different type in the feature filter chooser,
+**   - When an attribute changes to a different type in the feature filter chooser,
      the operator combo should not reset to a different operator when the type
      is still some kind of number (ie: integer to byte).
  
@@ -929,10 +907,17 @@ TODO:
      so rendering could be faster?  Maybe hold onto just the graphics rendered?
      Check other overlay classes to see how they work.
  
-   - When time is chosen as a filtering attribute in the chooser global rules,
+**   - When time is chosen as a filtering attribute in the chooser global rules,
      the default time value should be the satellite image time for convenience.
 
    - Do these overlays created need to be saveable?
+ 
+**   - When feature grouping is turned off, the chooser loses the group filter
+     settings that were there when the file was opened.
+ 
+   - Should the operator list for Float and Double attributes include the bitwise
+     operators?  For now they do because all number-like attributes are run 
+     through the NumberAttributeRule.
  
 */
 

@@ -164,8 +164,8 @@ rm -rf tools
 echo "Making user's guide ... \c"
 cd users_guide
 guide_version=`echo $version | sed -e 's/\./_/g'`
-guide_name="cwf_users_guide"
-guide_name_with_verson="cwf_ug_${guide_version}"
+guide_name="cwutils_users_guide"
+guide_name_with_verson="cwutils_ug_${guide_version}"
 $pdflatex --interaction batchmode ${guide_name}.tex > /dev/null 2>&1
 if [ $? -ne 0 ] ; then
   echo "FAILED1"

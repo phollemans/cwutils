@@ -17,13 +17,13 @@
 
 -->
 
-<project name="cwf" default="classes">
+<project name="cwutils" default="classes">
 
   <!-- Setup global properties -->
   <!-- *********************** -->
 
   <buildnumber/>
-  <property file="cwf.properties"/>
+  <property file="cwutils.properties"/>
   <tstamp>
     <format property="current.time" pattern="yyyyMMdd_HHmmss"/>
   </tstamp>
@@ -73,8 +73,8 @@
     </javac>
     <echo
       file="resources/version.properties" 
-      message="cwf.version=${version.full} ${current.time}${line.separator}"/>
-    <jar destfile="lib/java/cwf.jar">
+      message="cwutils.version=${version.full} ${current.time}${line.separator}"/>
+    <jar destfile="lib/java/cwutils.jar">
       <fileset dir="classes"/>
       <fileset dir="resources"/>
     </jar>
@@ -98,8 +98,8 @@
     </javac>
     <echo
       file="resources/version.properties" 
-      message="cwf.version=${version.full} ${current.time}${line.separator}"/>
-    <jar destfile="lib/java/cwf.jar">
+      message="cwutils.version=${version.full} ${current.time}${line.separator}"/>
+    <jar destfile="lib/java/cwutils.jar">
       <fileset dir="classes"/>
       <fileset dir="resources"/>
     </jar>
@@ -142,7 +142,7 @@
   </target>
 
   <target name="test-man" depends="doc"
-    description="Copies the CWF man pages into the install directory">
+    description="Copies the CW utilities man pages into the install directory">
     <copy todir="${install.dir}/doc/man">
       <fileset dir="doc/man"/>
     </copy>
@@ -172,6 +172,7 @@
   <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64,solaris32,solaris64"/>
   <property name="build.id.linux32" value="88"/>
   <property name="build.id.linux64" value="288"/>
+  <property name="build.id.linux64.gui" value="701"/>
   <property name="build.id.windows32" value="10"/>
   <property name="build.id.windows64" value="278"/>
   <property name="build.id.macosx64" value="276"/>
@@ -232,7 +233,7 @@
 
     <!-- Call install4j task -->
     <install4j
-      projectfile="cwf.install4j"
+      projectfile="cwutils.install4j"
       release="${version.full}"
       buildids="${build.ids}"
       verbose="true">
@@ -272,13 +273,13 @@
     <delete dir="classes"/>
     <delete dir="doc/api"/>
     <delete verbose="true" quiet="true" includeemptydirs="true">
-      <fileset file="lib/java/cwf.jar"/>
+      <fileset file="lib/java/cwutils.jar"/>
       <fileset file="src.zip"/>
       <fileset dir="doc/tools"/>
       <fileset dir="doc/man"/>
       <fileset dir="doc">
         <include name="api.zip"/>
-        <include name="cwf_ug_*.pdf"/>
+        <include name="cwutils_ug_*.pdf"/>
       </fileset>
       <fileset dir="doc/users_guide" excludes="*.tex,*.bib,figures/*,icons/*"/>
       <fileset dir="data/noaa/coastwatch/tools/test">
@@ -298,8 +299,8 @@
   <!-- ******************* -->
   
   <target name="test-jar" depends="classes"
-    description="Copies the CWF jar file into the install directory for direct in-situ testing">
-    <copy file="lib/java/cwf.jar" todir="${install.dir}/lib/java"/>
+    description="Copies the CW utilities jar file into the install directory for direct in-situ testing">
+    <copy file="lib/java/cwutils.jar" todir="${install.dir}/lib/java"/>
   </target>
   
   <path id="test.class.path">

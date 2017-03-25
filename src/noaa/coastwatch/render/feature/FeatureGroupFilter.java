@@ -294,6 +294,20 @@ public class FeatureGroupFilter
 
   ////////////////////////////////////////////////////////////
 
+  @Override
+  public String toString() {
+  
+    return (
+      "FeatureGroupFilter[" +
+      "groupAttName=" + groupAttName + "," +
+      "filterAttName=" + filterAttName + "," +
+      "targetAttValue=" + targetAttValue + "]"
+    );
+
+  } // toString
+  
+  ////////////////////////////////////////////////////////////
+
   /**
    * Tests this class.
    *

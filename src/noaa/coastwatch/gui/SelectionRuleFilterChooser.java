@@ -62,6 +62,7 @@ import javax.swing.Box;
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
 import javax.swing.border.EtchedBorder;
+import javax.swing.SwingUtilities;
 
 import noaa.coastwatch.render.feature.SelectionRuleFilter;
 import noaa.coastwatch.render.feature.SelectionRuleFilter.FilterMode;
@@ -71,19 +72,22 @@ import noaa.coastwatch.render.feature.Attribute;
 import noaa.coastwatch.render.feature.TextRule;
 import noaa.coastwatch.render.feature.NumberRule;
 import noaa.coastwatch.render.feature.DateRule;
+import noaa.coastwatch.render.feature.TimeWindowRule;
+import noaa.coastwatch.render.feature.TimeWindow;
 import noaa.coastwatch.gui.visual.ComponentList;
 import noaa.coastwatch.gui.visual.ComponentProducer;
 import noaa.coastwatch.util.DateFormatter;
 import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.AttributeValueChooser;
 
 /**
  * The <code>SelectionRuleFilterChooser</code> class is a panel that allows the 
  * user to manipulate a {@link SelectionRuleFilter}.  If no filter is set, an
- * initial default filter is created and displayed.
+ * initial default filter is created and displayed.<p>
  *
  * The chooser signals a change in the filter by firing a
  * <code>PropertyChangeEvent</code> with property name {@link #FILTER_PROPERTY}, 
- * and new value containing an object of type {@link SelectionRuleFilter}.
+ * and new value containing an object of type {@link SelectionRuleFilter}.<p>
  *
  * @author Peter Hollemans
  * @since 3.3.2
@@ -100,30 +104,33 @@ public class SelectionRuleFilterChooser
   // Variables
   // ---------
 
-  /** The feature filter to be modified. */
+  /** The selection rule filter to be modified. */
   private SelectionRuleFilter filter;
 
-  /** The attribute list to use for filter rules. */
+  /** The attribute list to use for selection rules. */
   private List<Attribute> attributeList;
 
-  /** The attribute name map for filter rules. */
+  /** The attribute name map for selection rules. */
   private Map<String, Integer> attributeNameMap;
 
-  /** The combo box for selecting the feature filter type. */
+  /** The combo box for choosing the selection rule filter mode. */
   private JComboBox<FilterMode> filterModeCombo;
   
-  /** The component list showing the list of filter line panels. */
+  /** The component list showing the list of selection rule panels. */
   private ComponentList<FilterLine> componentList;
 
   /** The flag that denotes we are in the middle of a panel reconfiguration. */
   private boolean isReconfiguring;
 
+  /** The default time window to use for new date attribute rules. */
+  private TimeWindow defaultTimeWindow;
+
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Creates a new empty feature filter chooser.
+   * Creates a new empty selection rule filter chooser.
    * 
-   * @param attributeList the list of attributes to use for the filtering
+   * @param attributeList the list of attributes to use for the selection
    * rules.  
    * @param attributeNameMap the map of attribute name to index for features
    * to be filtered.
@@ -131,6 +138,27 @@ public class SelectionRuleFilterChooser
   public SelectionRuleFilterChooser (
     List<Attribute> attributeList,
     Map<String, Integer> attributeNameMap
+  ) {
+
+    this (attributeList, attributeNameMap, new TimeWindow (new Date(), 0));
+
+  } // SelectionRuleFilterChooser constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Creates a new empty selection rule filter chooser.
+   * 
+   * @param attributeList the list of attributes to use for the selection
+   * rules.  
+   * @param attributeNameMap the map of attribute name to index for features
+   * to be filtered.
+   * @param the default time window to be used with Date type attributes.
+   */
+  public SelectionRuleFilterChooser (
+    List<Attribute> attributeList,
+    Map<String, Integer> attributeNameMap,
+    TimeWindow defaultTimeWindow
   ) {
 
     super (new BorderLayout());
@@ -161,6 +189,7 @@ public class SelectionRuleFilterChooser
     // -----------
     this.attributeList = attributeList;
     this.attributeNameMap = attributeNameMap;
+    this.defaultTimeWindow = defaultTimeWindow;
     setFilter (createDefaultFilter());
 
   } // SelectionRuleFilterChooser constructor
@@ -253,11 +282,14 @@ public class SelectionRuleFilterChooser
    */
   private void updateWindowSize () {
 
-    Window root = javax.swing.SwingUtilities.windowForComponent (this);
+    Window root = SwingUtilities.windowForComponent (this);
     if (root != null) {
       Dimension minSize = root.getMinimumSize();
       Dimension size = root.getSize();
-      Dimension newSize = new Dimension (size.width, minSize.height);
+      Dimension newSize = new Dimension (
+        (minSize.width > size.width ? minSize.width : size.width),
+        minSize.height
+      );
       root.setPreferredSize (newSize);
       root.validate();
       root.pack();
@@ -376,7 +408,7 @@ public class SelectionRuleFilterChooser
       rule = new NumberRule (attName, attributeNameMap, 0);
     } // else if
     else if (attType.equals (Date.class)) {
-      rule = new DateRule (attName, attributeNameMap, new Date (0));
+      rule = new TimeWindowRule (attName, attributeNameMap, defaultTimeWindow);
     } // else if
     else
       throw new RuntimeException ("Unsupported attribute type: " + attType);
@@ -403,40 +435,22 @@ public class SelectionRuleFilterChooser
    */
   private class FilterLine
     implements ComponentProducer {
-  
-    // Constants
-    // ---------
-  
-    /** The date format for display and parsing. */
-    private static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss 'UTC    '";
-  
+    
     // Variables
     // ---------
     
     /** The panel to show for this line in the list. */
     private JPanel panel;
 
+    /** The attribute chooser for this rule. */
+    private AttributeValueChooser attChooser;
+
     /** The attribute rule for this line. */
     private AttributeRule rule;
 
-    /** The attribute combo box. */
-    private JComboBox<Attribute> attributeCombo;
-
     /** The operator combo box. */
     private JComboBox<Enum> operatorCombo;
-    
-    /** The data entry text field. */
-    private JTextField dataField;
-    
-    /** The date spinner. */
-    private JSpinner dateSpinner;
-    
-    /** The label that goes after the data field for optional extra words. */
-    private JLabel postDataLabel;
-    
-    /** The current attribute selected in the attribute combo. */
-    private Attribute currentAtt;
-    
+      
     /** The flag that denotes we are in the middle of a panel reconfiguration. */
     private boolean isReconfiguring;
 
@@ -479,40 +493,18 @@ public class SelectionRuleFilterChooser
       GridBagConstraints gc = new GridBagConstraints();
       gc.anchor = GridBagConstraints.WEST;
       int xPos = 0;
-      
-      attributeCombo = new JComboBox<Attribute> (attributeList.toArray (new Attribute[0]));
-      attributeCombo.addActionListener (event -> {if (!isReconfiguring) attributeChanged();});
+
+      attChooser = new AttributeValueChooser (attributeList, defaultTimeWindow);
+      attChooser.setLayout (new FlowLayout (FlowLayout.LEFT, 2, 0));
+      attChooser.addPropertyChangeListener (AttributeValueChooser.STATE_PROPERTY, event -> {
+        if (!isReconfiguring) attributeChanged();
+      });
       GUIServices.setConstraints (gc, xPos++, 0, 1, 1, GridBagConstraints.NONE, 0, 0);
-      panel.add (attributeCombo, gc);
+      panel.add (attChooser, gc);
 
       operatorCombo = new JComboBox<Enum>();
       operatorCombo.addActionListener (event -> {if (!isReconfiguring) operatorChanged();});
-      GUIServices.setConstraints (gc, xPos++, 0, 1, 1, GridBagConstraints.NONE, 0, 0);
-      panel.add (operatorCombo, gc);
-
-      dataField = new JTextField();
-      DataVerifier verifier = new DataVerifier();
-      dataField.setInputVerifier (verifier);
-      dataField.addActionListener (verifier);
-      dataField.setColumns (10);
-      dataField.setMinimumSize (dataField.getPreferredSize());
-      GUIServices.setConstraints (gc, xPos++, 0, 1, 1, GridBagConstraints.NONE, 0, 0);
-      panel.add (dataField, gc);
-
-      SpinnerModel dateModel = new SpinnerDateModel();
-      dateModel.setValue (new Date());
-      dateSpinner = new JSpinner (dateModel);
-      JSpinner.DateEditor editor = new JSpinner.DateEditor (dateSpinner, DATE_FORMAT);
-      SimpleDateFormat dateFormat = editor.getFormat();
-      dateFormat.setTimeZone (TimeZone.getTimeZone ("GMT+0"));
-      dateSpinner.setEditor (editor);
-      dateSpinner.addChangeListener (listener -> {if (!isReconfiguring) dateChanged();});
-      GUIServices.setConstraints (gc, xPos++, 0, 1, 1, GridBagConstraints.NONE, 0, 0);
-      panel.add (dateSpinner, gc);
-
-      postDataLabel = new JLabel();
-      GUIServices.setConstraints (gc, xPos++, 0, 1, 1, GridBagConstraints.NONE, 0, 0);
-      panel.add (postDataLabel, gc);
+      attChooser.add (operatorCombo, 1);
 
       GUIServices.setConstraints (gc, xPos++, 0, 1, 1, GridBagConstraints.NONE, 0, 0);
       panel.add (Box.createHorizontalStrut (20), gc);
@@ -539,80 +531,21 @@ public class SelectionRuleFilterChooser
 
     ////////////////////////////////////////////////////////
 
-    /** Handles input verification for the data text field. */
-    private class DataVerifier extends InputVerifier implements ActionListener {
-
-      //////////////////////////////////////////////////
-
-      @Override
-      public boolean verify (JComponent input) {
-        boolean isValid = true;
-        if (Number.class.isAssignableFrom (currentAtt.getType())) {
-          try { Double.parseDouble (dataField.getText()); }
-          catch (NumberFormatException e) { isValid = false; }
-        } // if
-        return (isValid);
-      } // verify
-      
-      //////////////////////////////////////////////////
-
-      @Override
-      public boolean shouldYieldFocus (JComponent input) {
-        boolean isValid = verify (input);
-        if (!isValid) {
-          Toolkit.getDefaultToolkit().beep();
-          dataField.setText (rule.getValue().toString());
-          dataField.selectAll();
-        } // if
-        dataChanged();
-        return (isValid);
-      } // shouldYieldFocus
-      
-      //////////////////////////////////////////////////
-
-      @Override
-      public void actionPerformed (ActionEvent e) {
-        shouldYieldFocus (dataField);
-        dataChanged();
-      } // actionPerformed
-
-      //////////////////////////////////////////////////
-      
-    } // DataVerifier class
-
-    ////////////////////////////////////////////////////////
-
-    /** Handles the rule attribute name being changed. */
+    /** Handles the rule attribute being changed. */
     private void attributeChanged() {
-      
-      // Detect a change in attribute type
-      // ---------------------------------
-      Attribute att = (Attribute) attributeCombo.getSelectedItem();
-      Class attType = att.getType();
-      boolean isDifferentType = true;
-      if (currentAtt != null) {
-        if (currentAtt.getType().equals (attType)) isDifferentType = false;
-      } // if
-      currentAtt = att;
 
-      // Create new rule if needed
-      // -------------------------
-      if (isDifferentType) {
-        AttributeRule newRule = createDefaultRule (att);
-        filter.set (filter.indexOf (rule), newRule);
-        reconfigureForRule (newRule);
-      } // if
-
-      // Change attribute for existing rule
-      // ----------------------------------
-      else {
-        rule.setAttribute (att.getName());
-      } // else
-
+      Attribute att = attChooser.getAttribute();
+      AttributeRule newRule = createDefaultRule (att);
+      if (newRule.getClass().equals (rule.getClass()))
+        newRule.setOperator ((Enum) operatorCombo.getSelectedItem());
+      newRule.setValue (attChooser.getValue());
+      filter.set (filter.indexOf (rule), newRule);
+      reconfigureForRule (newRule);
+      updateWindowSize();
       signalFilterChanged();
 
     } // attributeChanged
-    
+
     ////////////////////////////////////////////////////////
 
     /** Handles the rule operator being changed. */
@@ -622,59 +555,6 @@ public class SelectionRuleFilterChooser
       signalFilterChanged();
 
     } // operatorChanged
-
-    ////////////////////////////////////////////////////////
-
-    /** Handles the rule date value being changed. */
-    private void dateChanged() {
-
-      Object newValue = dateSpinner.getValue();
-      rule.setValue (newValue);
-      signalFilterChanged();
-      
-    } // dateChanged
-
-    ////////////////////////////////////////////////////////
-
-    /** Handles the rule data value being changed. */
-    private void dataChanged() {
-
-      Class attType = currentAtt.getType();
-      String text = dataField.getText();
-      Object newValue;
-
-      // Get new string value
-      // --------------------
-      if (attType.equals (String.class)) {
-        newValue = text;
-      } // if
-
-      // Get new number value
-      // --------------------
-      else if (Number.class.isAssignableFrom (attType)) {
-        Double doubleValue = null;
-        Integer intValue = null;
-        try { doubleValue = Double.parseDouble (text); }
-        catch (NumberFormatException e) { }
-        try { intValue = Integer.parseInt (text); }
-        catch (NumberFormatException e) { }
-        if (intValue != null)
-          newValue = intValue;
-        else if (doubleValue != null)
-          newValue = doubleValue;
-        else
-          throw new RuntimeException ("Cannot parse '" + text + "' to number");
-      } // else if
-
-      // Unsupported type
-      // ----------------
-      else
-        throw new RuntimeException ("Unsupported attribute type: " + attType);
-
-      rule.setValue (newValue);
-      signalFilterChanged();
-
-    } // dataChanged
 
     ////////////////////////////////////////////////////////
 
@@ -691,29 +571,15 @@ public class SelectionRuleFilterChooser
       isReconfiguring = true;
       rule = newRule;
 
-      // Update panel components for rule
-      // --------------------------------
       String attName = rule.getAttribute();
-      if (!((Attribute) attributeCombo.getSelectedItem()).getName().equals (attName)) {
-        currentAtt = attributeList.stream().filter (att -> att.getName().equals (attName)).findFirst().get();
-        attributeCombo.setSelectedItem (currentAtt);
-      } // if
-      else {
-        currentAtt = (Attribute) attributeCombo.getSelectedItem();
-      } // else
+      Attribute currentAtt = attributeList.stream().filter (att -> att.getName().equals (attName)).findFirst().get();
+      attChooser.setAttributeAndValue (currentAtt, rule.getValue());
+
       operatorCombo.removeAllItems();
       Arrays.stream (rule.operators()).forEach (op -> operatorCombo.addItem (op));
       operatorCombo.setSelectedItem (rule.getOperator());
-      if (currentAtt.getType().equals (Date.class)) {
-        dataField.setVisible (false);
-        dateSpinner.setVisible (true);
-        dateSpinner.setValue (rule.getValue());
-      } // if
-      else {
-        dateSpinner.setVisible (false);
-        dataField.setVisible (true);
-        dataField.setText (rule.getValue().toString());
-      } // else
+      boolean isDate = currentAtt.getType().equals (Date.class);
+      operatorCombo.setVisible (!isDate);
 
       isReconfiguring = false;
       
@@ -765,12 +631,13 @@ public class SelectionRuleFilterChooser
     attNameMap.put ("quality_level", i++);
     attNameMap.put ("time", i++);
 
-    SelectionRuleFilterChooser chooser = new SelectionRuleFilterChooser (attList, attNameMap);
+    TimeWindow window = new TimeWindow (new Date(), 24*60*60*1000L);
+    SelectionRuleFilterChooser chooser = new SelectionRuleFilterChooser (attList, attNameMap, window);
 
     SelectionRuleFilter filter = new SelectionRuleFilter();
     filter.add (new TextRule ("platform_id", attNameMap, "NMM"));
-    filter.add (new NumberRule ("quality_level", attNameMap, 5));
-    filter.add (new DateRule ("time", attNameMap, new Date()));
+    filter.add (new NumberRule ("quality_level", attNameMap, (byte) 5));
+    filter.add (new TimeWindowRule ("time", attNameMap, window));
     chooser.setFilter (filter);
 
     noaa.coastwatch.gui.TestContainer.showFrame (chooser);

@@ -45,7 +45,7 @@ of directories and files in the installation that are of use to
 developers:
 \begin{description}
 
-\item[{\file lib/}] -- Contains the main {\file cwf.jar} file of
+\item[{\file lib/java/}] -- Contains the main {\file cwutils.jar} file of
 CoastWatch Utilities code, plus all JAR files required by the
 CoastWatch code.  The major dependencies are as follows:
 \begin{itemize}
@@ -121,12 +121,12 @@ file I/O, and GCTP map projection coordinate transformations.
 
 \end{description}
 
-To use the API, you {\em must} have the {\file cwf.jar} file in
+To use the API, you {\em must} have the {\file cwutils.jar} file in
 your Java class path to compile and run custom code, for example
 on Unix:
 \begin{verbatim}
-  javac -classpath ~/cwf/lib/cwf.jar MyCode.java
-  java -classpath  .:~/cwf/lib/cwf.jar MyCode
+  javac -classpath ~/cwutils/lib/java/cwutils.jar MyCode.java
+  java -classpath  .:~/cwutils/lib/java/cwutils.jar MyCode
 \end{verbatim}
 Depending on what CoastWatch classes are used in the
 {\file MyCode.java} code, other JAR files as listed above may also
@@ -136,13 +136,13 @@ using a Unix bash shell under Mac OS X, this code fragment sets
 up the environment for compiling and running with the CoastWatch
 Utilities:
 \begin{verbatim}
-  cwfroot="/Applications/CoastWatch Utilities 3.2.2"
+  cwutils_root="/Applications/CoastWatch Utilities 3.2.2"
   CLASSPATH="."
-  for fname in "$cwfroot"/lib/*.jar "$cwfroot"/lib/*.zip ; do 
+  for fname in "$cwutils_root"/lib/*.jar "$cwutils_root"/lib/*.zip ; do
     CLASSPATH=${CLASSPATH}:"$fname"
   done
   export CLASSPATH
-  export DYLD_LIBRARY_PATH="$cwfroot"/lib/macosx
+  export DYLD_LIBRARY_PATH="$cwutils_root"/lib/macosx
 \end{verbatim}
 If you prefer to use a GUI development environment such as
 Eclipse or JBuilder, then the GUI will have settings to store the

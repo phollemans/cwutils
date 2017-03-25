@@ -130,6 +130,15 @@ public class TimeWindow {
 
   ////////////////////////////////////////////////////////////
 
+  @Override
+  public String toString() {
+  
+    return ("TimeWindow[centralDate=" + centralDate + ",windowSize=" + windowSize +"]");
+  
+  } // toString
+
+  ////////////////////////////////////////////////////////////
+
   /**
    * Tests this class.
    *
