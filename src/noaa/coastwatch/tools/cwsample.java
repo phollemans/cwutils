@@ -107,16 +107,17 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   <dt> -s, --sample=LATITUDE/LONGITUDE </dt>
  *   <dd> The sample point for a single sampling operation.  The point
  *   is specified in terms of earth location latitude and longitude in
- *   the range [-90..90] and [-180..180]. </dd>
+ *   the range [-90..90] and [-180..180] with a datum matching that of the 
+ *   input file. </dd>
  *
  *   <dt> -S, --samples=FILE </dt>
  *   <dd> The file name containing a list of sample points for
  *   performing multiple sampling operations.  The file must be an
  *   ASCII text file containing sample points as latitude / longitude
- *   pairs, one line per pair, with values separated by spaces or
+ *   pairs, one pair per line, with values separated by spaces or
  *   tabs.  The points are specified in terms of earth location
  *   latitude and longitude in the range [-90..90] and
- *   [-180..180]. </dd>
+ *   [-180..180] with a datum matching that of the input file. </dd>
  *
  *   <dt> input </dt>
  *   <dd> The input data file name. </dd>

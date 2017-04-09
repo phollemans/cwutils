@@ -43,6 +43,8 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.Statistics;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.MapProjection;
+import noaa.coastwatch.util.DataLocationConstraints;
+import noaa.coastwatch.util.VariableStatisticsGenerator;
 
 /**
  * The <code>EarthDataViewFactory</code> uses an {@link
@@ -149,7 +151,9 @@ public class EarthDataViewFactory {
       ColorEnhancementSettings settings = 
         ResourceManager.getPreferences().getEnhancement (varName);
       if (settings == null) {
-        Statistics stats = grid.getStatistics (0.01);
+        DataLocationConstraints lc = new DataLocationConstraints();
+        lc.fraction = 0.01;
+        Statistics stats = VariableStatisticsGenerator.getInstance().generate (grid, lc);
         EnhancementFunction func = new LinearEnhancement (
           new double[] {Math.floor (stats.getMin()), 
           Math.ceil (stats.getMax())});

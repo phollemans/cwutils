@@ -44,7 +44,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * @since 3.3.0
  *
  * @deprecated As of 3.3.1, use {@link MixedGridResampler} with a location 
- * filter of {@link ACSPOVIIRSBowtieDeletionFilter} to get the same results.
+ * filter of {@link VIIRSBowtieFilter} to get the same results.
  */
 @Deprecated
 public class ACSPOMixedGridResampler

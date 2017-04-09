@@ -45,6 +45,8 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.Statistics;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.DataLocationConstraints;
+import noaa.coastwatch.util.VariableStatisticsGenerator;
 
 /**
  * A color enhancement is an earth data view that creates an image
@@ -501,8 +503,11 @@ public class ColorEnhancement
     // Calculate statistics
     // --------------------
     DataLocation[] corners = getBounds();
-    Statistics stats = grid.getStatistics (corners[0],
-      corners[1], 0.01);
+    DataLocationConstraints lc = new DataLocationConstraints();
+    lc.start = corners[0];
+    lc.end = corners[1];
+    lc.fraction = 0.01;
+    Statistics stats = VariableStatisticsGenerator.getInstance().generate (grid, lc);
 
     // Check for zero valid
     // --------------------    

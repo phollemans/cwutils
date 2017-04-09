@@ -72,6 +72,9 @@
 		E95A3ED91E84D7AF00AD8698 /* ShortValuePanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = ShortValuePanel.java; path = value/ShortValuePanel.java; sourceTree = "<group>"; };
 		E95A3EDA1E859CB700AD8698 /* IntegerValuePanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = IntegerValuePanel.java; path = value/IntegerValuePanel.java; sourceTree = "<group>"; };
 		E95A3EDB1E859E0800AD8698 /* FloatValuePanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = FloatValuePanel.java; path = value/FloatValuePanel.java; sourceTree = "<group>"; };
+		E95A3EDC1E8F748700AD8698 /* DataLocationIteratorFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DataLocationIteratorFactory.java; sourceTree = "<group>"; };
+		E95A3EDD1E93049B00AD8698 /* DataLocationConstraints.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DataLocationConstraints.java; sourceTree = "<group>"; };
+		E95A3EDE1E95AAD800AD8698 /* VariableStatisticsGenerator.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = VariableStatisticsGenerator.java; sourceTree = "<group>"; };
 		E95BB7561E67C56400EB9D6F /* binned_border_c.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_border_c.hdf; path = feature/binned_border_c.hdf; sourceTree = "<group>"; };
 		E95BB7571E67C56400EB9D6F /* binned_border_h.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_border_h.hdf; path = feature/binned_border_h.hdf; sourceTree = "<group>"; };
 		E95BB7581E67C56400EB9D6F /* binned_border_i.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_border_i.hdf; path = feature/binned_border_i.hdf; sourceTree = "<group>"; };
@@ -2454,7 +2457,9 @@
 				E96D8C2F161661420009B833 /* ConstrainedStrideLocationIterator.java */,
 				E96D8C30161661420009B833 /* DataIterator.java */,
 				E96D8C31161661420009B833 /* DataLocation.java */,
+				E95A3EDD1E93049B00AD8698 /* DataLocationConstraints.java */,
 				E96D8C32161661420009B833 /* DataLocationIterator.java */,
+				E95A3EDC1E8F748700AD8698 /* DataLocationIteratorFactory.java */,
 				E96D8C33161661420009B833 /* DataVariable.java */,
 				E96D8C34161661420009B833 /* DataVariableIterator.java */,
 				E96D8C35161661420009B833 /* DateFormatter.java */,
@@ -2503,6 +2508,7 @@
 				E96D8C72161661420009B833 /* UnivariateEstimator.java */,
 				E96D8C73161661420009B833 /* ValueSource.java */,
 				E96D8C74161661420009B833 /* VariableEstimator.java */,
+				E95A3EDE1E95AAD800AD8698 /* VariableStatisticsGenerator.java */,
 				E9D2E0681D07A04A0079783B /* VIIRSBowtieFilter.java */,
 			);
 			path = util;

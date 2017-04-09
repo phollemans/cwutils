@@ -520,7 +520,7 @@ public class CWOpendapReader
     CWOpendapReader reader = new CWOpendapReader (argv[0]);
     noaa.coastwatch.tools.cwinfo.printInfo (reader, System.out);
     noaa.coastwatch.tools.cwinfo.printTransform (reader, System.out, false);
-    noaa.coastwatch.tools.cwstats.printStats (reader, null, null, 0, 0.01, 
+    noaa.coastwatch.tools.cwstats.printStats (reader, null, null, null, 0, 0.01,
       null);
 
   } // main

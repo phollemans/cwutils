@@ -69,6 +69,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
 import noaa.coastwatch.gui.EarthDataViewFactory;
 import noaa.coastwatch.gui.EarthDataViewPanel;
 import noaa.coastwatch.gui.GUIServices;
@@ -90,6 +91,8 @@ import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.Statistics;
 import noaa.coastwatch.util.trans.SwathProjection;
+import noaa.coastwatch.util.DataLocationConstraints;
+import noaa.coastwatch.util.VariableStatisticsGenerator;
 
 /** 
  * The <code>EarthDataChooser</code> class allows the user to choose a
@@ -433,7 +436,9 @@ public class EarthDataChooser
             DataVariable var;
             try { var = reader.getVariable (name); }
             catch (IOException e) { continue; }
-            Statistics stats = var.getStatistics (0.01);
+            DataLocationConstraints lc = new DataLocationConstraints();
+            lc.fraction = 0.01;
+            Statistics stats = VariableStatisticsGenerator.getInstance().generate (var, lc);
             reader.putStatistics (name, stats);
             
           } // for

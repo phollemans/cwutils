@@ -78,7 +78,7 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
    *
    * @return the group filter flag.
    *
-   * @see #setGroupFilterFlag
+   * @see #setGroupFilterActive
    */
   public boolean getGroupFilterActive() { return (isGroupFilterActive); }
 

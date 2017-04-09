@@ -26,20 +26,39 @@ package noaa.coastwatch.tools;
 // Imports
 // --------
 import com.braju.format.Format;
+
 import jargs.gnu.CmdLineParser;
 import jargs.gnu.CmdLineParser.Option;
 import jargs.gnu.CmdLineParser.OptionException;
+
+import java.awt.Shape;
+import java.awt.Point;
+import java.awt.geom.Path2D;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.io.SimpleParser;
 import noaa.coastwatch.render.Subregion;
 import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataLocationConstraints;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.Statistics;
+import noaa.coastwatch.util.VariableStatisticsGenerator;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.Datum;
 
 /**
  * <p>The statistics utility calculates a number of statistics for each
@@ -64,6 +83,7 @@ import noaa.coastwatch.util.Statistics;
  * -i, --region=LAT/LON/RADIUS <br>
  * -l, --limit=STARTROW/STARTCOL/ENDROW/ENDCOL <br>
  * -m, --match=PATTERN <br>
+ * -p, --polygon=FILE <br>
  * -s, --stride=N <br>
  * -S, --sample=FACTOR <br>
  * --version <br>
@@ -74,8 +94,7 @@ import noaa.coastwatch.util.Statistics;
  * statistics for each variable in an earth data file:</p>
  * <ul>
  *   <li> Count - the count of total data values sampled. </li>
- *   <li> Valid - the number of valid (not missing) data
- *   values. </li>
+ *   <li> Valid - the number of valid (not missing) data values. </li>
  *   <li> Min - the minimum data value. </li>
  *   <li> Max - the maximum data value. </li>
  *   <li> Mean - the average data value. </li>
@@ -84,9 +103,9 @@ import noaa.coastwatch.util.Statistics;
  * </ul> 
  * <p>To speed up the statitics calculations, a subset of the data values
  * in each variable may be specified using either the <b>--stride</b>
- * or <b>--sample</b> options, and the <b>--limit</b> option.  The
- * <b>--match</b> option may also be used to limit the statistics
- * calculations to a subset of the variables.  </p>
+ * or <b>--sample</b> options, and one of the <b>--limit</b>, <b>--region</b>, 
+ * or <b>--polygon</b> options.  The <b>--match</b> option may also be used 
+ * to limit the statistics calculations to a subset of the variables.</p>
  *
  * <h2>Parameters</h2>
  *
@@ -111,15 +130,16 @@ import noaa.coastwatch.util.Statistics;
  *   region is specified by the center latitude and longitude in
  *   degrees, and the radius from the center in kilometers.  Only data
  *   within the rectangle specified by the center and radius is
- *   sampled.  By default, all data is sampled.  Either the
- *   <b>--region</b> option or the <b>--limit</b> option may be
- *   specified, but not both.</dd>
+ *   sampled.  By default, all data is sampled.  Only one of the
+ *   <b>--region</b>, <b>--limit</b>, or <b>--polygon</b> options may be
+ *   specified.</dd>
  *
  *   <dt> -l, --limit=STARTROW/ENDROW/STARTCOL/ENDCOL</dt> 
  *   <dd> The sampling limits for each two-dimensional variable in
  *   image coordinates.  Only data between the limits is sampled.  By
- *   default, all data is sampled.  Either the <b>--region</b> option
- *   or the <b>--limit</b> option may be specified, but not both.</dd>
+ *   default, all data is sampled.  Only one of the
+ *   <b>--region</b>, <b>--limit</b>, or <b>--polygon</b> options may be
+ *   specified.</dd>
  *
  *   <dt> -m, --match=PATTERN </dt>
  *   <dd> The variable name matching pattern.  If specified, the
@@ -127,6 +147,18 @@ import noaa.coastwatch.util.Statistics;
  *   Only variables matching the pattern are included in the
  *   calculations.  By default, no pattern matching is performed and
  *   all variables are included. </dd>
+ *
+ *   <dt> -p, --polygon=FILE </dt>
+ *   <dd> The file name containing a list of polygon vertex points to use for
+ *   constraining the statistics calculation.  The file must be an
+ *   ASCII text file containing vertex points as latitude / longitude
+ *   pairs, one pair per line, with values separated by spaces or
+ *   tabs.  The points are specified in terms of earth location
+ *   latitude and longitude in the range [-90..90] and
+ *   [-180..180] with a datum matching that of the input file.  Only data 
+ *   inside the polygon is sampled.  By default, all data is sampled.  
+ *   Only one of the <b>--region</b>, <b>--limit</b>, or <b>--polygon</b> 
+ *   options may be specified.</dd>
  *
  *   <dt> -s, --stride=N </dt>
  *   <dd> The sampling frequency for each variable dimension.  The
@@ -209,6 +241,7 @@ public final class cwstats {
     Option sampleOpt = cmd.addDoubleOption ('S', "sample");
     Option matchOpt = cmd.addStringOption ('m', "match");
     Option limitOpt = cmd.addStringOption ('l', "limit");
+    Option polygonOpt = cmd.addStringOption ('p', "polygon");
     Option regionOpt = cmd.addStringOption ('i', "region");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
@@ -251,6 +284,7 @@ public final class cwstats {
     String match = (String) cmd.getOptionValue (matchOpt);
     String limit = (String) cmd.getOptionValue (limitOpt);
     String region = (String) cmd.getOptionValue (regionOpt);
+    String polygon = (String) cmd.getOptionValue (polygonOpt);
 
     // Get limits
     // ----------
@@ -302,9 +336,52 @@ public final class cwstats {
       } // if
     } // if
 
+    // Get polygon point data
+    // ----------------------
+    Shape polygonShape = null;
+    if (polygon != null) {
+
+      // Read points
+      // -----------
+      List<EarthLocation> locations = new ArrayList<EarthLocation>();
+      EarthTransform trans = reader.getInfo().getTransform();
+      Datum datum = trans.getDatum();
+      try {
+        SimpleParser parser = new SimpleParser (new BufferedReader (
+          new InputStreamReader (new FileInputStream (new File (polygon)))));
+        do {
+          double lat = parser.getNumber();
+          double lon = parser.getNumber();
+          locations.add (new EarthLocation (lat, lon, datum));
+        } while (!parser.eof());
+      } // try
+      catch (IOException e) {
+        System.err.println (PROG + ": Error parsing polygon points file");
+        e.printStackTrace();
+        System.exit (2);
+      } // catch
+
+      // Convert to data location path
+      // -----------------------------
+      Iterator<EarthLocation> iter = locations.iterator();
+      if (iter.hasNext()) {
+        DataLocation dataLoc = new DataLocation (2);
+        trans.transform (iter.next(), dataLoc);
+        Path2D path = new Path2D.Double();
+        path.moveTo (dataLoc.get (0), dataLoc.get (1));
+        iter.forEachRemaining (earthLoc -> {
+          trans.transform (earthLoc, dataLoc);
+          path.lineTo (dataLoc.get (0), dataLoc.get (1));
+        });
+        path.closePath();
+        polygonShape = path;
+      } // if
+
+    } // if
+
     // Print stats
     // -----------
-    printStats (reader, start, end, stride, sample, match);   
+    printStats (reader, start, end, polygonShape, stride, sample, match);
 
   } // main
 
@@ -318,6 +395,8 @@ public final class cwstats {
    * beginning of the data.
    * @param end the ending data location, or null for the end of the
    * data.
+   * @param polygon the polygon to use for constraining the statistics
+   * calculation, or null to use the values of start and end.
    * @param stride the sampling stride for each variable.
    * @param sample the sampling factor for each variable, or
    * <code>Double.NaN</code> if the sampling stride should be used.
@@ -333,6 +412,7 @@ public final class cwstats {
     EarthDataReader reader,
     DataLocation start,
     DataLocation end,
+    Shape polygon,
     int stride,
     double sample,
     String match
@@ -382,17 +462,25 @@ public final class cwstats {
 
       // Calculate statistics
       // --------------------
-      Statistics stats;
+      DataLocationConstraints lc = new DataLocationConstraints();
+      if (useLimits) {
+        lc.start = start;
+        lc.end = end;
+      } // if
+      else {
+        lc.dims = var.getDimensions();
+      } // else
       if (Double.isNaN (sample)) {
         int[] strideArray = new int[varRank];
         Arrays.fill (strideArray, stride);
-        if (useLimits) stats = var.getStatistics (start, end, strideArray);
-        else stats = var.getStatistics (strideArray);
+        lc.stride = strideArray;
       } // if
       else {
-        if (useLimits) stats = var.getStatistics (start, end, sample);
-        else stats = var.getStatistics (sample);
+        lc.fraction = sample;
       } // else
+      if (polygon != null && varRank == 2)
+        lc.polygon = polygon;
+      Statistics stats = VariableStatisticsGenerator.getInstance().generate (var, lc);
 
       // Print statistics
       // ----------------
@@ -439,6 +527,8 @@ public final class cwstats {
 "                              between the limits.\n" +
 "  -m, --match=PATTERN        Only compute statistics for variables\n" +
 "                              matching the pattern.\n" +
+"  -p, --polygon=FILE         Only compute statistics inside the polygon\n" +
+"                               specified by the set of vertex points.\n" +
 "  -s, --stride=N             Sample every Nth value in each dimension.\n" +
 "  -S, --sample=FACTOR        Sample only a fraction of the data in each\n" +
 "                              variable.  FACTOR must be between 0 and 1.\n" +

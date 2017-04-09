@@ -153,7 +153,8 @@ public class SelectionRuleFilterChooser
    * rules.  
    * @param attributeNameMap the map of attribute name to index for features
    * to be filtered.
-   * @param the default time window to be used with Date type attributes.
+   * @param defaultTimeWindow the default time window to be used with Date type 
+   * attributes.
    */
   public SelectionRuleFilterChooser (
     List<Attribute> attributeList,

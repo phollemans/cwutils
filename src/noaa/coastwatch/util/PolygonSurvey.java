@@ -99,64 +99,27 @@ public class PolygonSurvey
     Shape shape
   ) { 
 
-    // Initialize
-    // ----------
     this.shape = shape;
 
-    // Check survey bounds
-    // -------------------
-    Rectangle bounds = shape.getBounds();
-    if (bounds.width == 0 && bounds.height == 0)
-      throw new IllegalArgumentException ("Polygon has zero area");
+    // Compute statistics
+    // ------------------
+    DataLocationConstraints lc = new DataLocationConstraints();
+    lc.polygon = shape;
+    lc.fraction = 0.01;
+    lc.minCount = 1000;
+    Statistics stats = VariableStatisticsGenerator.getInstance().generate (variable, lc);
 
-    // Set start and end locations
-    // ---------------------------
-    int minX = bounds.x;
-    int minY = bounds.y;
-    int maxX = bounds.x + bounds.width - 1;
-    int maxY = bounds.y + bounds.height - 1;
-    DataLocation start = new DataLocation (minX, minY);
-    DataLocation end = new DataLocation (maxX, maxY);
-
-    // Compute area fraction
-    // ---------------------
-    int span = Math.min (bounds.width, bounds.height);
-    int increment = (int) Math.round (Math.max (span / 20.0, 1));
-    int totalPoints = 0;
-    int sampledPoints = 0;
-    Point point = new Point();
-    for (point.x = minX; point.x < maxX; point.x += increment) {
-      for (point.y = minY; point.y < maxY; point.y += increment) {
-        totalPoints++;
-        if (shape.contains (point)) sampledPoints++;
-      } // for
-    } // for
-    areaFraction = ((double) sampledPoints) / totalPoints;
-
-    // Get statistics
-    // --------------
-    double sampleFactor = 0.01;
-    int minCount = 1000;
-    if (areaFraction != 0) {
-      sampleFactor = Math.min (sampleFactor / areaFraction, 1);
-      minCount = (int) (minCount / areaFraction);
-    } // if
-    int[] stride = variable.getOptimalStride (start, end, sampleFactor, 
-      minCount);
-    DataVariableIterator iter = new DataVariableIterator (variable,
-      new ConstrainedStrideLocationIterator (shape, stride));
-    Statistics stats = new Statistics (iter);
-
-    // Setup super
-    // -----------
+    // Initialize
+    // ----------
     init (
       variable.getName(),
       variable.getUnits(),
       variable.getFormat(),
       trans,
       stats,
-      new DataLocation[] {start, end}
+      DataLocationConstraints.getShapeBounds (shape)
     );
+    areaFraction = DataLocationConstraints.getShapeArea (shape);
 
   } // PolygonSurvey constructor
 

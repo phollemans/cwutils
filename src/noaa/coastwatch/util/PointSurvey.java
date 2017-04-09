@@ -32,6 +32,8 @@ import noaa.coastwatch.util.EarthDataSurvey;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.Statistics;
 import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.DataLocationConstraints;
+import noaa.coastwatch.util.VariableStatisticsGenerator;
 
 /**
  * The <code>PointSurvey</code> class holds survey information for a
@@ -85,12 +87,22 @@ public class PointSurvey
     DataLocation loc
   ) { 
 
-    super (
+    // Compute statistics
+    // ------------------
+    DataLocationConstraints lc = new DataLocationConstraints();
+    lc.start = loc;
+    lc.end = loc;
+    lc.fraction = 1;
+    Statistics stats = VariableStatisticsGenerator.getInstance().generate (variable, lc);
+
+    // Initialize
+    // ----------
+    init (
       variable.getName(),
       variable.getUnits(),
       variable.getFormat(),
       trans,
-      variable.getStatistics (loc, loc, 1),
+      stats,
       new DataLocation[] {loc, loc}
     );
 

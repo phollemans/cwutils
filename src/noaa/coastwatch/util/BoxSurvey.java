@@ -33,6 +33,8 @@ import noaa.coastwatch.util.EarthDataSurvey;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.Statistics;
 import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.DataLocationConstraints;
+import noaa.coastwatch.util.VariableStatisticsGenerator;
 
 /**
  * The <code>BoxSurvey</code> class holds survey information for a
@@ -134,13 +136,23 @@ public class BoxSurvey
     DataLocation end
   ) { 
 
-    super (
+    // Compute statistics
+    // ------------------
+    DataLocationConstraints lc = new DataLocationConstraints();
+    lc.start = start;
+    lc.end = end;
+    lc.fraction = 0.01;
+    lc.minCount = 1000;
+    Statistics stats = VariableStatisticsGenerator.getInstance().generate (variable, lc);
+
+    // Initialize
+    // ----------
+    init (
       variable.getName(),
       variable.getUnits(),
       variable.getFormat(),
       trans,
-      variable.getStatistics (start, end, 
-        variable.getOptimalStride (start, end, 0.01, 1000)),
+      stats,
       new DataLocation[] {start, end}
     );
 
