@@ -268,26 +268,26 @@ public class CWCFNCReader
   /** Gets the list of variable names. */
   private String[] getVariableNames () {
 
-	    // Get variable names
-	    // ------------------
-	    List variableList = dataset.getReferencedFile().getVariables();
-	    List nameList = new ArrayList();
-	    for (Iterator iter = variableList.iterator(); iter.hasNext(); ) {
-	      Variable var = (Variable) iter.next();
+    // Get variable names
+    // ------------------
+    List variableList = dataset.getReferencedFile().getVariables();
+    List nameList = new ArrayList();
+    for (Iterator iter = variableList.iterator(); iter.hasNext(); ) {
+      Variable var = (Variable) iter.next();
 
-	      // Check for coordinate variable
-	      // -----------------------------
-	      if (var.isCoordinateVariable()) continue;
+      // Check for coordinate variable
+      // -----------------------------
+      if (var.isCoordinateVariable()) continue;
 
-	      // Check for correct dimensions
-	      // ----------------------------
-	      if (var.getRank() >= 2 && !var.getShortName().equals("time_bounds")) {
-	    	  nameList.add (var.getShortName());
-	    	  
-	      } // if
-	    } // for
+      // Check for correct dimensions
+      // ----------------------------
+      if (var.getRank() >= 2 && !var.getShortName().equals("time_bounds")) {
+          nameList.add (var.getShortName());
+          
+      } // if
+    } // for
 
-	    return ((String[]) nameList.toArray (new String[]{}));
+    return ((String[]) nameList.toArray (new String[]{}));
 
   } // getVariableNames
 
@@ -305,11 +305,19 @@ public class CWCFNCReader
   ) throws IOException {
 
     super (name);
-    variables = getVariableNames();
-    info = getGlobalInfo();
-    if(info == null) throw new RuntimeException("no global info found");
 
   } // CWCFNCReader constructor
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  protected void initializeReader () throws IOException {
+  
+    variables = getVariableNames();
+    info = getGlobalInfo();
+    if (info == null) throw new RuntimeException ("No global info found");
+  
+  } // initializeReader
 
   ////////////////////////////////////////////////////////////
 

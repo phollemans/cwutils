@@ -217,18 +217,42 @@ public class EarthDataReaderFactory {
     Object[] args = new Object[] {file};
     EarthDataReader reader = null;
     for (Iterator iter = readerList.iterator(); iter.hasNext(); ) {
+
+      // Try to create a new reader object from the file name
+      // ----------------------------------------------------
       try {
         Class readerClass = Class.forName ((String) iter.next());
         Constructor constructor = readerClass.getConstructor (types);
         reader = (EarthDataReader) constructor.newInstance (args);
       } // try
-      catch (InvocationTargetException e1) {
-        if (verbose) e1.getCause().printStackTrace();
+
+      // Handle error thrown by from reader constructor
+      // ----------------------------------------------
+      catch (InvocationTargetException targetException) {
+
+        // If out of memory, stop now
+        // --------------------------
+        Throwable cause = targetException.getCause();
+        if (cause instanceof OutOfMemoryError) {
+          throw ((OutOfMemoryError) cause);
+        } // if
+
+        // Otherwise show a stack trace
+        // ----------------------------
+        if (verbose) cause.printStackTrace();
+
       } // catch
-      catch (Exception e2) {
-        if (verbose) e2.printStackTrace();
+
+      // Handle some other error
+      // -----------------------
+      catch (Exception otherException) {
+        if (verbose) otherException.printStackTrace();
       } // catch
+
+      // Check if we've found the right reader
+      // -------------------------------------
       if (reader != null) break;
+
     } // for
     
     // Give up and throw an error 

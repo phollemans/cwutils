@@ -456,8 +456,8 @@ public class EarthPlotInfo
     // ----------------
     int requiredHeight = textHeight + (size.width - SPACE_SIZE*4)*2 + 
       SPACE_SIZE*8;
-    if (preferred != null)
-      size.height = Math.max (preferred.height, requiredHeight);
+    if (preferredSize != null)
+      size.height = Math.max (preferredSize.height, requiredHeight);
     else
       size.height = requiredHeight;
 

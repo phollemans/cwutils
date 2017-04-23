@@ -445,7 +445,7 @@ utilities when:
               dims, center, pixelDims);
           } // try
           catch (NoninvertibleTransformException e) {
-            throw new RuntimeException ("Got non-invertible transform creating geographic projection");
+            throw new RuntimeException ("Got non-invertible transform while creating geographic projection");
           } // catch
 
         } // if
@@ -713,6 +713,13 @@ utilities when:
 
     super (name);
 
+  } // CommonDataModelNCReader constructor
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  protected void initializeReader () throws IOException {
+  
     // Get grid sets
     // -------------
     groupList = new ArrayList<VariableGroup>();
@@ -720,7 +727,7 @@ utilities when:
     GridDataset gridDataset = (GridDataset) FeatureDatasetFactoryManager.wrap (
       FeatureType.GRID, dataset, null, errorLog);
     if (gridDataset == null)
-      throw new IOException ("Failed to find grids in " + name + ", error is: " + errorLog);
+      throw new IOException ("Failed to find grids in " + getFilename() + ", error is: " + errorLog);
     Collection gridsets = gridDataset.getGridsets();
     for (Iterator iter = gridsets.iterator(); iter.hasNext();) {
       VariableGroup group = new VariableGroup();
@@ -734,8 +741,8 @@ utilities when:
     // ----------------------
     variables = getVariableNames();
     info = getGlobalInfo();
-
-  } // CommonDataModelNCReader constructor
+  
+  } // initializeReader
 
   ////////////////////////////////////////////////////////////
 

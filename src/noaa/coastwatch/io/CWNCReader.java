@@ -302,10 +302,18 @@ public class CWNCReader
   ) throws IOException {
 
     super (name);
-    info = getGlobalInfo();
-    variables = getVariableNames();
 
   } // CWNCReader constructor
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  protected void initializeReader () throws IOException {
+  
+    info = getGlobalInfo();
+    variables = getVariableNames();
+  
+  } // initializeReader
 
   ////////////////////////////////////////////////////////////
 

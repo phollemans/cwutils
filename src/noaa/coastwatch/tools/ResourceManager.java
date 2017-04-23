@@ -528,6 +528,13 @@ public class ResourceManager {
       if (preferences == null) {
         preferences = new Preferences (new FileInputStream (
           new File (PREFERENCES_DIR, PREFERENCES_FILE)));
+        /**
+         * Note that we specifically DO NOT read the vmoptions file
+         * here to get the options, unlike above where we write the
+         * options to a file.  That's because the vmoptions file
+         * is secondary to the preferences XML file, and only needed
+         * by the Java launch code to pass to the VM on startup.
+         */
       } // if
 
       return (preferences);

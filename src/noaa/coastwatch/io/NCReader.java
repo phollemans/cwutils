@@ -73,12 +73,17 @@ public abstract class NCReader
   /** The network flag, true if this dataset is network-connected. */
   private boolean isNetwork;
 
+  /** Flag to signify that the file has been closed. */
+  private boolean isClosed;
+
   ////////////////////////////////////////////////////////////
 
+  @Override
   public NetcdfDataset getDataset () { return (dataset); }
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public String getFilename () { return (getSource()); }
 
   ////////////////////////////////////////////////////////////
@@ -96,32 +101,61 @@ public abstract class NCReader
 
     super (name);
 
-    // Open network dataset
-    // --------------------
-    isNetwork = name.startsWith ("http://");
-    if (isNetwork) {
-      dataset = datasetCache.get (name);
-      if (dataset == null) {
-        dataset = NetcdfDataset.openDataset (name);
-        datasetCache.put (name, dataset);
+    try {
+    
+      isClosed = true;
+
+      // Open network dataset
+      // --------------------
+      isNetwork = name.startsWith ("http://");
+      if (isNetwork) {
+        dataset = datasetCache.get (name);
+        if (dataset == null) {
+          dataset = NetcdfDataset.openDataset (name);
+          datasetCache.put (name, dataset);
+        } // if
       } // if
-    } // if
 
-    // Open local dataset
-    // ------------------
-    else {
-      dataset = NetcdfDataset.openDataset (name);
-    } // else
+      // Open local dataset
+      // ------------------
+      else {
+        dataset = NetcdfDataset.openDataset (name);
+      } // else
 
-    // Add raw metadata to map
-    // -----------------------
-    List attList = dataset.getGlobalAttributes();
-    for (Iterator iter = attList.iterator(); iter.hasNext();) {
-      Attribute att = (Attribute) iter.next();
-      rawMetadataMap.put (att.getShortName(), convertAttributeValue (att, false));
-    } // for
+      isClosed = false;
+
+      // Add raw metadata to map
+      // -----------------------
+      List attList = dataset.getGlobalAttributes();
+      for (Iterator iter = attList.iterator(); iter.hasNext();) {
+        Attribute att = (Attribute) iter.next();
+        rawMetadataMap.put (att.getShortName(), convertAttributeValue (att, false));
+      } // for
+
+      // Finish initialization
+      // ---------------------
+      initializeReader();
+
+    } // try
+
+    // Catch exception and close file
+    // ------------------------------
+    catch (Exception e) {
+      try { close(); }
+      catch (IOException e2) { }
+      throw new IOException (e);
+    } // catch
 
   } // NCReader constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Performs reader initialization after the dataset has been opened.
+   * 
+   * @throws IOException if an error occurred on initialization.
+   */
+  protected void initializeReader () throws IOException {}
 
   ////////////////////////////////////////////////////////////
 
@@ -317,15 +351,19 @@ public abstract class NCReader
     // Close local datasets
     // --------------------
     if (!isNetwork) {
-      dataset.close();
-      for (DataVariable dataVar : variableCache.values())
-        dataVar.dispose();
+      if (!isClosed) {
+        dataset.close();
+        for (DataVariable dataVar : variableCache.values())
+          dataVar.dispose();
+        isClosed = true;
+      } // if
     } // if
 
   } // close
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public Grid getGridSubset (
     String varName,
     int[] start,

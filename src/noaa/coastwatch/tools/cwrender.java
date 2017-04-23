@@ -167,6 +167,7 @@ import ucar.units.Unit;
  * --palettefile=FILE <br>
  * --palettecolors=COLOR1[/COLOR2[/COLOR3...]] <br>
  * -r, --range=MIN/MAX <br>
+ * --scalewidth=PIXELS <br>
  * --ticklabels=LABEL1[/LABEL2[/LABEL3/...]] <br>
  * -U, --units=UNITS
  * </p>
@@ -808,6 +809,16 @@ import ucar.units.Unit;
  *   enhancement window of 1.5 standard deviation units around the
  *   mean.</dd>
  *
+ *   <dt>--scalewidth=PIXELS</dt>
+ * 
+ *   <dd>The data color scale width.  By default the data color scale is
+ *   90 pixels wide which includes the color bar, tick marks, value labels,
+ *   and the variable name and units.  This default accomodates most scales,
+ *   but if a scale requires a wider legend, the legend will grow to accomodate
+ *   it.  In some cases this results in data plots that have different data
+ *   ranges being different widths overall, which may be undesirable.  In these
+ *   cases the scale width can be set explicitly to a larger value.</dd>
+ *
  *   <dt>--ticklabels=LABEL1[/LABEL2[/LABEL3/...]]</dt>
  *
  *   <dd>The numeric tick mark labels to use for the data color scale.  By
@@ -1057,6 +1068,7 @@ public class cwrender {
     Option versionOpt = cmd.addBooleanOption ("version");
     Option splitOpt = cmd.addStringOption ("split");
     Option dateOpt = cmd.addStringOption ('D', "date");    
+    Option scalewidthOpt = cmd.addIntegerOption ("scalewidth");
     try { cmd.parse (argv); }
     catch (OptionException e) {
       System.err.println (PROG + ": " + e.getMessage());
@@ -1189,6 +1201,8 @@ public class cwrender {
     boolean watermarkshadow = (cmd.getOptionValue (watermarkshadowOpt) != null);
     String ticklabels = (String) cmd.getOptionValue (ticklabelsOpt);
     String date = (String) cmd.getOptionValue (dateOpt);
+    Integer scalewidthObj = (Integer) cmd.getOptionValue (scalewidthOpt);
+    int scalewidth = (scalewidthObj == null ? 90 : scalewidthObj.intValue());
     
     try {
 
@@ -1463,15 +1477,18 @@ public class cwrender {
         System.exit (2);
       } // else
 
-      // Set color scale ticks
-      // ---------------------
-      if (ticklabels != null) {
-        Legend legend = view.getLegend();
-        if (legend != null && legend instanceof DataColorScale) {
-          DataColorScale scale = (DataColorScale) legend;
+      // Modify color scale legend
+      // -------------------------
+      Legend legend = view.getLegend();
+      if (legend != null && legend instanceof DataColorScale) {
+        DataColorScale scale = (DataColorScale) legend;
+        if (ticklabels != null) {
           String[] ticklabelArray = ticklabels.split (ToolServices.getSplitRegex());
           scale.setTickLabels (ticklabelArray);
         } // if
+        else if (scalewidth != 0) {
+          legend.setPreferredSize (new Dimension (scalewidth, 0));
+        } // else if
       } // if
 
       // Add cloud overlay
@@ -1932,8 +1949,9 @@ public class cwrender {
 "  --palettecolors=COLOR1[/COLOR2[/COLOR3...]]\n" +
 "                             Set palette colors used to map data to color.\n" +
 "  -r, --range=MIN/MAX        Set enhancement minimum and maximum.\n" +
+"  --scalewidth=PIXELS        Set data color scale width.\n" +
 "  --ticklabels=LABEL1[/LABEL2[/LABEL3/...]]\n" +
-"                             Set tick mark labels\n" +
+"                             Set tick mark labels.\n" +
 "  -U, --units=UNITS          Set range and color scale units.\n" +
 "\n" +
 "Color composite options:\n" +

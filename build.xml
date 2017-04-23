@@ -168,7 +168,7 @@
   -->
   <!--  <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64,solaris32,solaris64"/> -->
 
-  <property name="builds.default" value="linux32,linux64,windows64,macosx64"/>
+  <property name="builds.default" value="linux64,windows64,macosx64"/>
   <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64,solaris32,solaris64"/>
   <property name="build.id.linux32" value="88"/>
   <property name="build.id.linux64" value="288"/>

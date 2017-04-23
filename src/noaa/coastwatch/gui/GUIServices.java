@@ -683,6 +683,36 @@ public class GUIServices {
   ////////////////////////////////////////////////////////////
 
   /**
+   * Truncates a string to a maximum length by embedding an ellipsis in the
+   * middle.  This is useful for long file names for example.
+   *
+   * @param input the input string to truncate.
+   * @param maxLength the maximum length of the output string.
+   *
+   * @return the input string, truncated to the specified max length and 
+   * ellipsis inserted if needed.  If the input is less than or equal to 
+   * the maximum length, no truncation is done an the input string is
+   * returned as-is.
+   */
+  public static String ellipsisString (
+    String input,
+    int maxLength
+  ) {
+  
+    int length = input.length();
+    if (length > maxLength) {
+      String head = input.substring (0, maxLength/2-2);
+      String tail = input.substring (length - maxLength/2-1, length);
+      input = head + "..." + tail;
+    } // if
+
+    return (input);
+
+  } // ellipsisString
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Creates a dialog that displays standard error messages to the
    * user in a graphical window.  The dialog uses a {@link
    * PanelOutputStream} object to redirect standard error messages to

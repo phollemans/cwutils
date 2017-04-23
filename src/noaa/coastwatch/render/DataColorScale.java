@@ -60,6 +60,7 @@ public class DataColorScale
 
   // Constants
   // ---------
+  
   /** The default number of desired tick marks. */
   private final static int TICKS = 10;
 
@@ -71,6 +72,7 @@ public class DataColorScale
 
   // Variables
   // ---------
+  
   /** The color palette used for the scale. */
   private Palette palette;
 
@@ -95,12 +97,13 @@ public class DataColorScale
     String[] labels
   ) {
   
-    this.labels = labels;
+    this.labels = (String[]) labels.clone();
     
   } // setTickLabels
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void render (
     Graphics2D g,
     int x,
@@ -236,6 +239,7 @@ public class DataColorScale
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public Dimension getSize (
     Graphics2D g
   ) {
@@ -257,22 +261,19 @@ public class DataColorScale
       new Point(), null, 90);
     Rectangle annotationBounds = annotationElement.getBounds(g);
 
-    // Calculate width
-    // ---------------
-    Dimension size = new Dimension();
-    size.width = SPACE_SIZE*2 + 1 + SCALE_WIDTH + 1 + TICK_SIZE + SPACE_SIZE + 
+    // Calculate size
+    // --------------
+    int requiredWidth = SPACE_SIZE*2 + 1 + SCALE_WIDTH + 1 + TICK_SIZE + SPACE_SIZE +
       labelBounds.width + SPACE_SIZE + annotationBounds.width + SPACE_SIZE*2;
-
-    // Calculate height
-    // ----------------
     int requiredHeight = Math.max (labelBounds.height * labels.length * 2,
       annotationBounds.height);
-    requiredHeight += SPACE_SIZE*4; 
-    if (preferred != null)
-      size.height = Math.max (preferred.height, requiredHeight);
-    else
-      size.height = requiredHeight;
-
+    requiredHeight += SPACE_SIZE*4;
+    Dimension size = new Dimension (requiredWidth, requiredHeight);
+    if (preferredSize != null) {
+      size.width = Math.max (preferredSize.width, size.width);
+      size.height = Math.max (preferredSize.height, size.height);
+    } // if
+    
     return (size);
 
   } // getSize

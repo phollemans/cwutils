@@ -44,6 +44,7 @@ public abstract class Legend {
 
   // Constants
   // ---------
+  
   /** The default space size between legend elements. */
   public static final int SPACE_SIZE = 5;
 
@@ -53,8 +54,9 @@ public abstract class Legend {
 
   // Variables
   // ---------
-  /** The preferred dimensions. */
-  protected Dimension preferred;
+  
+  /** The preferred dimensions for the legend. */
+  protected Dimension preferredSize;
 
   /** The legend font. */
   protected Font font;
@@ -64,14 +66,21 @@ public abstract class Legend {
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the color to be used for drawing legend elements. */
+  /** 
+   * Sets the foreground color.
+   *
+   * @param color the foreground color to be used for drawing legend 
+   * elements.
+   */
   public void setForeground (Color color) { this.fore = color; }
 
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Sets the color to be used for drawing the legend background.  If
-   * the background color is null, no background is drawn.
+   * Sets the background color.
+   *
+   * @param color the background colour to be used for drawing the legend 
+   * background., or null if no background is to be drawn.
    */
   public void setBackground (Color color) { this.back = color; }
 
@@ -90,7 +99,7 @@ public abstract class Legend {
     Dimension size
   ) {
 
-    this.preferred = (size == null ? null : (Dimension) size.clone());
+    this.preferredSize = (size == null ? null : (Dimension) size.clone());
 
   } // setPreferredSize 
 
@@ -112,7 +121,11 @@ public abstract class Legend {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the actual rendered legend size. */
+  /** 
+   * Gets the actual required legend size.
+   *
+   * @param g the graphics device that the legend will be rendered on.
+   */
   public abstract Dimension getSize (
     Graphics2D g
   );
@@ -120,8 +133,10 @@ public abstract class Legend {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Sets the legend font.  If null, the font is set to the default
-   * font face, plain style, 12 point.
+   * Sets the legend font.
+   *
+   * @param font the legend font, or null to use the default font face, 
+   * plain style, 12 point.
    */
   public void setFont (
     Font font
@@ -133,7 +148,15 @@ public abstract class Legend {
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new legend with the specified size, font, and colors. */
+  /** 
+   * Creates a new legend with the specified properties.
+   *
+   * @param dim the dimensions for the legend, or null to detect the size
+   * of the legend from the subclass {@link #getSize} method.
+   * @param font the font the use for the legend text.
+   * @param fore the forground color to use for text and lines.
+   * @param back the background colour for filling behind the legend contents.
+   */
   protected Legend (
     Dimension dim,
     Font font,

@@ -383,7 +383,7 @@ public class EarthDataChooser
     String fileName = new File (reader.getSource()).getName();
     final JLabel note = new JLabel ("Computing statistics for " + longestName);
     JOptionPane pane = new JOptionPane (
-      new Object[] {"Reading data from " + fileName, note, bar},
+      new Object[] {"Reading data from " + GUIServices.ellipsisString (fileName, 40), note, bar},
       JOptionPane.INFORMATION_MESSAGE);
     pane.setOptions (new Object[] {});
     final JDialog progressDialog = pane.createDialog (openDialog, 

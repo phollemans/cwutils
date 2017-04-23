@@ -128,7 +128,7 @@ public class EarthDataPlot
     // Initialize view and legend
     // --------------------------
     this.view = view;
-    Dimension viewSize = view.getSize(null);
+    Dimension viewSize = view.getSize (null);
     viewLegend = view.getLegend();
     if (viewLegend != null) {
       viewLegend.setFont (font);
@@ -196,7 +196,7 @@ public class EarthDataPlot
     if (viewLegend != null) {
       size.width += Legend.SPACE_SIZE*2 + viewLegendSize.width;
       if (viewLegendSize.height != size.height)
-        viewLegend.setPreferredSize (new Dimension (0, size.height));
+        viewLegend.setPreferredSize (new Dimension (viewLegendSize.width, size.height));
     } // if
  
     // Add info legend size

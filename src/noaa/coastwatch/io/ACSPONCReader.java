@@ -312,13 +312,22 @@ public class ACSPONCReader
   ) throws IOException {
 
     super (name);
-    variables = getVariableNames();
-    info = getGlobalInfo();
 
   } // ACSPONCReader constructor
 
   ////////////////////////////////////////////////////////////
 
+  @Override
+  protected void initializeReader () throws IOException {
+  
+    variables = getVariableNames();
+    info = getGlobalInfo();
+  
+  } // initializeReader
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
   protected DataVariable getPreviewImpl (
     int index
   ) throws IOException { 

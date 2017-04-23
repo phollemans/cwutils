@@ -232,10 +232,18 @@ public class ACSPONCCFReader
   ) throws IOException {
 
     super (name);
-    variables = getVariableNames();
-    info = getGlobalInfo();
 
   } // ACSPONCCFReader constructor
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  protected void initializeReader () throws IOException {
+  
+    variables = getVariableNames();
+    info = getGlobalInfo();
+  
+  } // initializeReader
 
   ////////////////////////////////////////////////////////////
 

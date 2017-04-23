@@ -119,7 +119,7 @@ public abstract class EarthDataReader {
 
   /**
    * Sets the data projection flag.  This is only applicable to
-   * readers that deal with earth transforms stored as explicit Earth
+   * readers that deal with earth transforms stored as explicit earth
    * location data.  When true, the data projection flag forces the
    * reader to return a <code>DataProjection</code> object for the
    * earth transform when reading explicit latitude and longitude
