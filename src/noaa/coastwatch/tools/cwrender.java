@@ -813,9 +813,9 @@ import ucar.units.Unit;
  * 
  *   <dd>The data color scale width.  By default the data color scale is
  *   90 pixels wide which includes the color bar, tick marks, value labels,
- *   and the variable name and units.  This default accomodates most scales,
- *   but if a scale requires a wider legend, the legend will grow to accomodate
- *   it.  In some cases this results in data plots that have different data
+ *   and the variable name and units.  This default accommodates most scales,
+ *   but if a scale requires a wider size, it will grow to fit.
+ *   In some cases this results in data plots with different data
  *   ranges being different widths overall, which may be undesirable.  In these
  *   cases the scale width can be set explicitly to a larger value.</dd>
  *

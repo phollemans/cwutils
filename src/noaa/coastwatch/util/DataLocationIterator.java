@@ -23,6 +23,11 @@
 // -------
 package noaa.coastwatch.util;
 
+// Imports
+// -------
+import java.util.Iterator;
+import noaa.coastwatch.util.DataLocation;
+
 /**
  * The <code>DataLocationIterator</code> class adds an extra interface
  * method to return the next data location.  This helps to save
@@ -33,7 +38,7 @@ package noaa.coastwatch.util;
  * @since 3.1.7
  */
 public interface DataLocationIterator
-  extends ResettableIterator {
+  extends Iterator<DataLocation>, ResettableIterator {
 
   ////////////////////////////////////////////////////////////
 

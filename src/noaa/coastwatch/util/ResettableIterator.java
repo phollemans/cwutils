@@ -23,20 +23,14 @@
 // -------
 package noaa.coastwatch.util;
 
-// Imports
-// -------
-import java.util.Iterator;
-
 /**
- * The <code>ResettableIterator</code> class adds an extra interface
- * method to <code>Iterator</code> to make it go back to the first
- * element again.
+ * The <code>ResettableIterator</code> class has an interface to make iterators
+ * go back to the first element again.
  *
  * @author Peter Hollemans
  * @since 3.1.6
  */
-public interface ResettableIterator
-  extends Iterator {
+public interface ResettableIterator {
 
   ////////////////////////////////////////////////////////////
 

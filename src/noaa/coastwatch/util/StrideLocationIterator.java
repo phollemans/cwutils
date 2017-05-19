@@ -84,11 +84,12 @@ public class StrideLocationIterator
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns true if there are more data locations. */
+  @Override
   public boolean hasNext () { return (nextValid); }
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public DataLocation nextLocation (DataLocation loc) {
 
     // Check for valid
@@ -110,13 +111,13 @@ public class StrideLocationIterator
 
   ////////////////////////////////////////////////////////////
 
-  /** Throws an exception, since removal is not supported. */
+  @Override
   public void remove () { throw new UnsupportedOperationException(); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Resets back to the first data variable value. */
-  public void reset () { 
+  @Override
+  public void reset () {
 
     current.setCoords (start);
     nextValid = true;
@@ -125,8 +126,8 @@ public class StrideLocationIterator
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the next data location. */
-  public Object next () { return (nextLocation (null)); }
+  @Override
+  public DataLocation next () { return (nextLocation (null)); }
 
   ////////////////////////////////////////////////////////////
 

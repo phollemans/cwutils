@@ -240,6 +240,11 @@
       <vmParameter value="-Xmx1024m"/>
     </install4j>
 
+    <!-- Tag the package version -->
+    <exec executable="git">
+      <arg line="tag ${version.full}"/>
+    </exec>
+
   </target>
 
 <!--

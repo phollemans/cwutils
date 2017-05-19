@@ -216,7 +216,7 @@ public class NCCachedGrid
 
 
 
-    // TODO: Why don't we adjust the cache size in the next line to accomodate
+    // TODO: Why don't we adjust the cache size in the next line to accommodate
     // 8 tiles?  That seems like the obvious answer here.  Did we try that
     // and get thrashing?  See the TODO note in the readTile method for more.
 

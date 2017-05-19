@@ -40,6 +40,14 @@ import noaa.coastwatch.util.VariableEstimator;
 import noaa.coastwatch.util.trans.DataProjection;
 import noaa.coastwatch.util.trans.EarthTransform2D;
 
+// Testing
+import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.DataLocationIterator;
+import noaa.coastwatch.util.DataLocationConstraints;
+import noaa.coastwatch.util.DataLocationIteratorFactory;
+
 /**
  * The <code>SwathProjection</code> class implements earth transform
  * calculations for satellite swath (also called sensor scan) 2D
@@ -82,6 +90,9 @@ public class SwathProjection
   /** Flag to indicate no operation mode. */
   private static boolean nullMode = false;
 
+  /** Flag to indicate test mode. */
+  private static boolean testMode = false;
+
   /** 
    * The last data coordinate from an earth location to data location
    * transform.  The idea here is to save the last coordinate
@@ -100,6 +111,9 @@ public class SwathProjection
   
   /** The north flag, true if latitudes vary inversely as row index. */
   private boolean northIsUp;
+  
+  /** The data projection used to create the lat/lon estimators. */
+  private EarthTransform dataTrans;
 
   ////////////////////////////////////////////////////////////
 
@@ -115,6 +129,18 @@ public class SwathProjection
    * @param flag the null mode flag, true for null mode.
    */
   public static void setNullMode (boolean flag) { nullMode = flag; }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the test operation mode for newly constructed swath
+   * transforms.  In test mode, swath projections created from
+   * lat/lon data variables save the data projection for later
+   * testing.  But default, test mode is off.
+   *
+   * @param flag the test mode flag, true for test mode.
+   */
+  public static void setTestMode (boolean flag) { testMode = flag; }
 
   ////////////////////////////////////////////////////////////
 
@@ -254,6 +280,7 @@ public class SwathProjection
     // Create estimators
     // -----------------
     EarthTransform trans = new DataProjection (lat, lon);
+    if (testMode) dataTrans = trans;
     latEst = new VariableEstimator (lat, trans, maxSize, maxDims);
     lonEst = new VariableEstimator (lon, new LongitudeFilter(), latEst);
 
@@ -263,6 +290,21 @@ public class SwathProjection
     resetArea();
 
   } // SwathProjection constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the data projection used to create the lat/lon estimators.
+   * This is only available if the swath projection was created in
+   * test mode.
+   *
+   * @return the data peojection or null if not available.
+   */
+  public EarthTransform getDataTransform () {
+
+    return (dataTrans);
+    
+  } // getDataTransform
 
   ////////////////////////////////////////////////////////////
 
@@ -686,6 +728,89 @@ public class SwathProjection
     return (true);
 
   } // equals
+
+  ////////////////////////////////////////////////////////////
+  
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
+  public static void main (String[] argv) throws Exception {
+
+    // Read the earth transform
+    // ------------------------
+    SwathProjection.setTestMode (true);
+    EarthDataReader reader = EarthDataReaderFactory.create (argv[0]);
+    EarthTransform trans = reader.getInfo().getTransform();
+
+    if (trans instanceof SwathProjection) {
+      SwathProjection swathProj = (SwathProjection) trans;
+      EarthTransform dataProj = swathProj.getDataTransform();
+      if (dataProj == null) {
+        System.out.println ("Encountered null data projection in swath");
+      } // if
+      else {
+
+        // Create data iterator
+        // --------------------
+        DataLocationConstraints cons = new DataLocationConstraints();
+        cons.dims = swathProj.getDimensions();
+        cons.fraction = 1;
+        DataLocationIterator iter = DataLocationIteratorFactory.getInstance().create (cons);
+
+        // Initialize statistics
+        // ---------------------
+        double min = Double.MAX_VALUE;
+        double max = -Double.MAX_VALUE;
+        double sum = 0;
+        int valid = 0;
+        int values = 0;
+
+        // Calculate statistics
+        // --------------------
+        EarthLocation swathEarthLoc = new EarthLocation();
+        EarthLocation actualEarthLoc = new EarthLocation();
+        DataLocation dataLoc = new DataLocation (2);
+        DataLocation maxErrorLoc = null;
+        while (iter.hasNext()) {
+
+          iter.nextLocation (dataLoc);
+          swathProj.transform (dataLoc, swathEarthLoc);
+          dataProj.transform (dataLoc, actualEarthLoc);
+
+          double dist = swathEarthLoc.distance (actualEarthLoc);
+          if (!Double.isNaN (dist)) {
+            min = Math.min (dist, min);
+            max = Math.max (dist, max);
+            if (dist == max) {
+              maxErrorLoc = (DataLocation) dataLoc.clone();
+            } // if
+            sum += dist;
+            valid++;
+          } // if
+          values++;
+        
+        } // while
+        double mean = (valid == 0 ? Double.NaN : sum/valid);
+
+        // Print statistics
+        // ----------------
+        System.out.println ("Locations checked = " + values);
+        System.out.println ("Locations valid = " + valid);
+        System.out.println ("Locations invalid = " + (values-valid));
+        System.out.println ("Min error = " + min + " km");
+        System.out.println ("Max error = " + max + " km");
+        System.out.println ("Max error location = " + maxErrorLoc);
+        System.out.println ("Mean error = " + mean + " km");
+
+      } // else
+    } // if
+    else {
+      System.out.println ("Found non-swath transform: " + trans);
+    } // else
+
+  } // main
 
   ////////////////////////////////////////////////////////////
 

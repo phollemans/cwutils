@@ -37,11 +37,15 @@ import java.util.Iterator;
  * @since 3.1.7
  */
 public interface DoubleIterator
-  extends Iterator {
+  extends Iterator<Double> {
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns the next double value. */
+  /*
+   * Gets the next value.
+   *
+   * @return the next double value.
+   */
   public double nextDouble();
 
   ////////////////////////////////////////////////////////////

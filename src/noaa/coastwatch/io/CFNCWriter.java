@@ -83,7 +83,7 @@ import noaa.coastwatch.test.TestLogger;
  * be extremely I/O intensive to put the file back into define
  * mode (via NetcdfFileWriteable.setRedefineMode (true)), because
  * it may require that the entire file be re-written to
- * accomodate the new header information.  To avoid this issue,
+ * accommodate the new header information.  To avoid this issue,
  * we reserve 64 kb of extra space for header information.
  * **NOTE** Currently, there is a bug in the NetCDF library that
  * makes this option not work correctly.  Waiting for it to be

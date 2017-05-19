@@ -66,12 +66,12 @@ public class DataVariableIterator
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns true if there are more data variable values. */
+  @Override
   public boolean hasNext () { return (locationIter.hasNext()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the next data variable value. */
+  @Override
   public double nextDouble () {
 
     if (currentLocation == null)
@@ -85,13 +85,13 @@ public class DataVariableIterator
 
   ////////////////////////////////////////////////////////////
 
-  /** Throws an exception, since removal is not supported. */
+  @Override
   public void remove () { throw new UnsupportedOperationException(); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Resets back to the first data variable value. */
-  public void reset () { 
+  @Override
+  public void reset () {
 
     locationIter.reset();
     currentLocation = null;
@@ -100,8 +100,8 @@ public class DataVariableIterator
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the next data variable value as a <code>Double</code>. */
-  public Object next () { return (new Double (nextDouble())); }
+  @Override
+  public Double next () { return (new Double (nextDouble())); }
 
   ////////////////////////////////////////////////////////////
 

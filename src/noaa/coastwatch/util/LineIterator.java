@@ -27,6 +27,7 @@ package noaa.coastwatch.util;
 // -------
 import java.awt.Point;
 import java.util.NoSuchElementException;
+import java.util.Iterator;
 import noaa.coastwatch.util.ResettableIterator;
 
 /**
@@ -43,7 +44,7 @@ import noaa.coastwatch.util.ResettableIterator;
  * @since 3.1.7
  */
 public class LineIterator
-  implements ResettableIterator {
+  implements Iterator<Point>, ResettableIterator {
 
   // Variables
   // ---------
@@ -137,7 +138,7 @@ public class LineIterator
 
   ////////////////////////////////////////////////////////////
 
-  /** Resets the line to the starting point. */
+  @Override
   public void reset () {
 
     if (deltax >= deltay) num = deltax / 2;
@@ -189,17 +190,17 @@ public class LineIterator
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns true if the line has another point, or false if not. */
+  @Override
   public boolean hasNext() { return (curpixel <= numpixels); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns the next point in the line. */
-  public Object next() { return (nextPoint (null)); }
+  @Override
+  public Point next() { return (nextPoint (null)); }
 
   ////////////////////////////////////////////////////////////
   
-  /** Throws an error as removal is not supported. */
+  @Override
   public void remove () { throw new UnsupportedOperationException(); }
 
   ////////////////////////////////////////////////////////////
