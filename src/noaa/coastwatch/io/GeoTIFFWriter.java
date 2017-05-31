@@ -29,6 +29,7 @@ import com.sun.media.jai.codec.ImageCodec;
 import com.sun.media.jai.codec.ImageEncoder;
 import com.sun.media.jai.codec.TIFFEncodeParam;
 import com.sun.media.jai.codec.TIFFField;
+
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.image.RenderedImage;
@@ -43,11 +44,53 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.TreeSet;
+
 import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.render.ImageTransform;
 import noaa.coastwatch.util.GCTP;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.MapProjection;
+
+/*
+ * A note to the developer: a numer of JAI codec classes are used in this
+ * class to store and encode TIFF field values.  The API can be found here:
+ *
+ * http://docs.oracle.com/cd/E17802_01/products/products/java-media/jai/forDevelopers/jai-apidocs/index.html
+ *
+ * The TIFFField class in particular is used with the following constructor:
+ *
+ * public TIFFField (
+ *   int tag,
+ *   int type,
+ *   int count,
+ *   Object data)
+ *
+ * Constructs a TIFFField with arbitrary data. The data parameter must be an 
+ * array of a Java type appropriate for the type of the TIFF field. Since 
+ * there is no available 32-bit unsigned datatype, long is used. The mapping 
+ * between types is as follows:
+ *
+ *   TIFF type	       Java type
+ *   TIFF_BYTE         byte
+ *   TIFF_ASCII        String
+ *   TIFF_SHORT        char
+ *   TIFF_LONG         long
+ *   TIFF_RATIONAL     long[2]
+ *   TIFF_SBYTE        byte
+ *   TIFF_UNDEFINED    byte
+ *   TIFF_SSHORT       short
+ *   TIFF_SLONG        int
+ *   TIFF_SRATIONAL    int[2]
+ *   TIFF_FLOAT        float
+ *   TIFF_DOUBLE       double
+ *
+ * Note that the data parameter should always be the actual field value 
+ * regardless of the number of bytes required for that value. This is the 
+ * case despite the fact that the TIFF IFD Entry corresponding to the field 
+ * may actually contain the offset to the field's value rather than the 
+ * value itself (the latter occurring if and only if the value fits 
+ * into 4 bytes).
+ */
 
 /**
  * A GeoTIFF writer uses an earth image transform and rendered image
@@ -130,14 +173,14 @@ public class GeoTIFFWriter {
   private static Properties props = null;
 
   /** The hash set of ignored projection system parameters. */
-  private static HashSet ignoreSet;
+  private static HashSet<String> ignoreSet;
 
   ////////////////////////////////////////////////////////////
 
   /** Creates the ignored set of projection system parameters. */
   static {
 
-    ignoreSet = new HashSet();
+    ignoreSet = new HashSet<>();
     ignoreSet.add ("SMajor");
     ignoreSet.add ("SMinor");
     ignoreSet.add ("Sphere");
@@ -205,6 +248,62 @@ public class GeoTIFFWriter {
   ////////////////////////////////////////////////////////////
 
   /** 
+   * Gets the GeoTIFF keys representing the specified UTM map projection
+   * system as TIFF field objects.
+   *
+   * @param map the UTM map projection to convert.
+   *
+   * @return a vector of GeoTIFF keys as TIFF field objects.
+   *
+   * @throws IllegalArgumentException if the map projection system is
+   * not UTM.
+   */
+  private List<TIFFField> getUTMKeys (
+    MapProjection map
+  ) {
+
+    // Check system
+    // ------------
+    if (map.getSystem() != GCTP.UTM)
+      throw new IllegalArgumentException ("Projection system is not UTM");
+
+    // Check zone
+    // ----------
+    int zone = map.getZone();
+    int zoneValue = Math.abs (zone);
+    String zoneHemisphere = (zone > 0 ? "N" : "S");
+    if (zoneValue < 1 || zoneValue > 60)
+      throw new IllegalArgumentException ("Expected UTM zone in range +[1..60] for north or -[1..60] for south");
+
+    // Get UTM projection type
+    // -----------------------
+    String spheroidName = map.getSpheroidName();
+    String spheroidKey = spheroidName.replace (" ", "");
+    String zoneKey = zoneValue + zoneHemisphere;
+    String pcsTypeKey = "PCS_" + spheroidKey + "_UTM_zone_" + zoneKey;
+    String pcsCitation = "UTM Zone " + zoneValue + " " + zoneHemisphere + " with " + spheroidKey;
+    int pcsTypeValue;
+    try { pcsTypeValue = getIntValue (pcsTypeKey); }
+    catch (Exception e) {
+      throw new IllegalArgumentException ("Unsupported UTM zone / spheroid combination '" +
+        pcsCitation + "'");
+    } // catch
+
+    // Create key list
+    // ---------------
+    List<TIFFField> keyList = new ArrayList<>();
+    keyList.add (new TIFFField (getIntValue ("ProjectedCSTypeGeoKey"),
+      TIFFField.TIFF_SHORT, 1, new char[] {(char) pcsTypeValue}));
+    keyList.add (new TIFFField (getIntValue ("PCSCitationGeoKey"),
+      TIFFField.TIFF_ASCII, 1, new String[] {pcsCitation}));
+
+    return (keyList);
+
+  } // getUTMKeys
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
    * Gets the GeoTIFF keys representing the specified map projection
    * system as TIFF field objects.
    *
@@ -215,7 +314,7 @@ public class GeoTIFFWriter {
    * @throws IllegalArgumentException if the map projection system is
    * not supported.
    */
-  private List getProjectionSystemKeys (
+  private List<TIFFField> getProjectionSystemKeys (
     MapProjection map
   ) {
 
@@ -239,7 +338,7 @@ public class GeoTIFFWriter {
 
     // Initialize key list
     // -------------------
-    List keyList = new ArrayList();
+    List<TIFFField> keyList = new ArrayList<>();
 
     // Set projection system and citation
     // ----------------------------------
@@ -295,7 +394,7 @@ public class GeoTIFFWriter {
    * @throws IllegalArgumentException if the map projection spheroid is
    * not supported.
    */
-  private List getSpheroidKeys (
+  private List<TIFFField> getSpheroidKeys (
     MapProjection map
   ) {
 
@@ -330,7 +429,7 @@ public class GeoTIFFWriter {
 
     // Create key list
     // ---------------
-    List keyList = new ArrayList();
+    List<TIFFField> keyList = new ArrayList<>();
 
     // Specify known ellipsoid
     // -----------------------
@@ -379,8 +478,8 @@ public class GeoTIFFWriter {
    * @throws IllegalArgumentException if a TIFF field type is not among
    * the allowed types for GeoTIFF keys.
    */
-  private List translateKeys (
-    TreeSet keyList
+  private List<TIFFField> translateKeys (
+    TreeSet<TIFFField> keyList
   ) {
 
     // Count field values
@@ -388,9 +487,9 @@ public class GeoTIFFWriter {
     int keys = keyList.size();
     int doubleValues = 0;
     int asciiValues = 0;
-    Iterator iter = keyList.iterator();
+    Iterator<TIFFField> iter = keyList.iterator();
     while (iter.hasNext()) {
-      TIFFField field = (TIFFField) iter.next();
+      TIFFField field = iter.next();
       switch (field.getType()) {
       case TIFFField.TIFF_SHORT: 
         break;
@@ -433,7 +532,7 @@ public class GeoTIFFWriter {
     int count, i;
     iter = keyList.iterator();
     while (iter.hasNext()) {
-      TIFFField field = (TIFFField) iter.next();
+      TIFFField field = iter.next();
       switch (field.getType()) {
       case TIFFField.TIFF_SHORT: 
         directoryArray[directoryIndex*4 + 0] = (char) field.getTag();
@@ -466,7 +565,7 @@ public class GeoTIFFWriter {
 
     // Create TIFF fields
     // ------------------
-    List tagList = new ArrayList();
+    List<TIFFField> tagList = new ArrayList<>();
     TIFFField directoryField = new TIFFField (directoryTag, 
       TIFFField.TIFF_SHORT, directoryArray.length, directoryArray);
     tagList.add (directoryField);
@@ -516,8 +615,8 @@ public class GeoTIFFWriter {
 
     // Create lists of tags and keys
     // -----------------------------
-    TreeSet tagList = new TreeSet();
-    TreeSet keyList = new TreeSet();
+    TreeSet<TIFFField> tagList = new TreeSet();
+    TreeSet<TIFFField> keyList = new TreeSet();
 
     // Set main citation
     // -----------------
@@ -536,6 +635,7 @@ public class GeoTIFFWriter {
       keyList.add (new TIFFField (getIntValue ("GTModelTypeGeoKey"),
         TIFFField.TIFF_SHORT, 1, 
         new char[] {(char) getIntValue ("ModelTypeGeographic")}));
+      keyList.addAll (getSpheroidKeys (map));
     } // if
 
     // Set map projection keys
@@ -544,19 +644,21 @@ public class GeoTIFFWriter {
       keyList.add (new TIFFField (getIntValue ("GTModelTypeGeoKey"),
         TIFFField.TIFF_SHORT, 1, 
         new char[] {(char) getIntValue ("ModelTypeProjected")}));
-      keyList.addAll (getProjectionSystemKeys (map));
-    } // else
-
-    // Set spheroid keys
-    // -----------------
-    keyList.addAll (getSpheroidKeys (map));
+      if (map.getSystem() == GCTP.UTM) {
+        keyList.addAll (getUTMKeys (map));
+      } // if
+      else {
+        keyList.addAll (getProjectionSystemKeys (map));
+        keyList.addAll (getSpheroidKeys (map));
+      } // else
+    
+    } // if
 
     // Get image (x,y) to model (x,y) transform
     // ----------------------------------------
     AffineTransform imageAffine;
     try { 
       imageAffine = imageTrans.getAffine().createInverse(); 
-      imageAffine.translate (-0.5, -0.5);
     } // try
     catch (NoninvertibleTransformException e) { 
       throw new RuntimeException (e.getMessage());
@@ -583,7 +685,7 @@ public class GeoTIFFWriter {
     // Translate keys to tags
     // ----------------------
     tagList.addAll (translateKeys (keyList));
-    return ((TIFFField[]) tagList.toArray (new TIFFField[] {}));
+    return (tagList.toArray (new TIFFField[] {}));
 
   } // getGeoFields
 

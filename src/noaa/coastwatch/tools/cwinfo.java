@@ -79,6 +79,8 @@ import ucar.nc2.units.DateUnit;
  * -h, --help <br>
  * -t, --transform <br>
  * -c, --coord <br>
+ * -e, --edge <br>
+ * -l, --locFormat=TYPE <br>
  * -v, --verbose <br>
  * --version <br>
  * </p>
@@ -148,7 +150,7 @@ import ucar.nc2.units.DateUnit;
  *   the extreme edges of the corner pixels.  The default is to print 
  *   the coordinates of the center of corner pixels. </dd>
  *
- *   <dt> -l, --locFormat </dt>
+ *   <dt> -l, --locFormat=TYPE </dt>
  *   <dd> Specifies the format style for geographic coordinates printed by the
  *   <b>--transform</b> option.  Valid values are:
  *   <ul>

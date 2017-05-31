@@ -1018,6 +1018,7 @@
 		E99D69A61C50279900F4A238 /* view_1_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "view_1_1@2x.png"; sourceTree = "<group>"; };
 		E99D69A71C50279900F4A238 /* zoom_in@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zoom_in@2x.png"; sourceTree = "<group>"; };
 		E99D69A81C50279900F4A238 /* zoom_out@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zoom_out@2x.png"; sourceTree = "<group>"; };
+		E9A081041ED1083400EADC83 /* MultiPointFeatureOverlaySymbolPanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = MultiPointFeatureOverlaySymbolPanel.java; sourceTree = "<group>"; };
 		E9A91443196E33A700ABC12D /* LRUTileCache.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = LRUTileCache.java; path = io/tile/LRUTileCache.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9AF25A51BE43D6E00A2E69F /* LocationFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = LocationFilter.java; sourceTree = "<group>"; };
 		E9B50A141652F29C00D997D5 /* GeographicProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GeographicProjection.java; sourceTree = "<group>"; };
@@ -2069,6 +2070,7 @@
 				E96D8AE2161661420009B833 /* LineStatisticsPanel.java */,
 				E96D8AE3161661420009B833 /* MacGUIServices.java */,
 				E96D8AE4161661420009B833 /* MapProjectionChooser.java */,
+				E9A081041ED1083400EADC83 /* MultiPointFeatureOverlaySymbolPanel.java */,
 				E96D8AE5161661420009B833 /* nav */,
 				E96D8AEF161661420009B833 /* NavigationChooser.java */,
 				E96D8AF0161661420009B833 /* open */,

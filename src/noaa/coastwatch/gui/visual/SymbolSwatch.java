@@ -48,16 +48,16 @@ public class SymbolSwatch
   // ---------
   
   /** The size of the border around the icon. */
-  private static final int BORDER_SIZE = 3;
+  protected static final int BORDER_SIZE = 3;
 
   // Variables
   // ---------
 
   /** The swatch symbol. */
-  private PlotSymbol symbol;
+  protected PlotSymbol symbol;
 
   /** The icon size. */
-  private int size;
+  protected int size;
 
   ////////////////////////////////////////////////////////////
 

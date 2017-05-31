@@ -348,16 +348,28 @@ public class ImageTransform {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data to image coordinate transform. */
+  /** 
+   * Gets the data to image coordinate transform.
+   *
+   * @return the affine to transform data [row,column] to image [x,y].
+   */
   public AffineTransform getAffine () { 
-    return ((AffineTransform) inverse.clone()); 
+
+    return ((AffineTransform) inverse.clone());
+
   } // getAffine
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current image dimensions. */
+  /**
+   * Gets the current image dimensions.
+   *
+   * @return the image dimensions width and height in pixels.
+   */
   public Dimension getImageDimensions () {
-    return ((Dimension) imageDims.clone()); 
+
+    return ((Dimension) imageDims.clone());
+
   } // getImageDimensions
 
   ////////////////////////////////////////////////////////////

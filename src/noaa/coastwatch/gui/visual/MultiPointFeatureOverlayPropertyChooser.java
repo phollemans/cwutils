@@ -472,16 +472,12 @@ public class MultiPointFeatureOverlayPropertyChooser
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Tests this class.
+   * Creates a simple overlay for testing.
    *
-   * @param argv the array of command line parameters.
+   * @return the test overlay.
    */
-  public static void main (String[] argv) {
-
-    SimpleSymbol symbol = new SimpleSymbol (PlotSymbolFactory.create ("Circle"));
-    symbol.setBorderColor (Color.WHITE);
-    symbol.setFillColor (new Color (145, 22, 22));
-
+  public static MultiPointFeatureOverlay createTestOverlay () {
+  
     final List<Attribute> attList = new ArrayList<Attribute>();
     attList.add (new Attribute ("platform_type", Byte.class, ""));
     attList.add (new Attribute ("platform_id", String.class, ""));
@@ -495,23 +491,81 @@ public class MultiPointFeatureOverlayPropertyChooser
       protected void select () throws IOException { }
     };
 
-    Map<String, Integer> attNameMap = source.getAttributeNameMap();
-    NumberRule platformRule = new NumberRule ("platform_type", attNameMap, (byte) 8);
-    platformRule.setOperator (NumberRule.Operator.IS_EQUAL_TO);
-    SelectionRuleFilter filter = new SelectionRuleFilter();
-    filter.add (platformRule);
-
-    PointFeatureOverlay pointOverlay = new PointFeatureOverlay (symbol, source);
-    pointOverlay.setFilter (filter);
-    pointOverlay.setName ("CRW");
+    int[] platformValues = new int[] {0,1,2,3,4,5,6,7,8};
+    String[] platformNames = new String[] {
+      "Unknown",
+      "Ship",
+      "Drifter",
+      "T-Mooring",
+      "C-Mooring",
+      "Argo",
+      "HR-Drifter",
+      "IMOS",
+      "CRW"
+    };
+    Color[] platformColors = new Color[] {
+      new Color (255, 255, 255),    // unknown
+      new Color (20, 150, 20),      // ship
+      new Color (0, 0, 180),        // drifter
+      new Color (240, 0, 0),        // t-mooring
+      new Color (170, 0, 170),      // c-mooring
+      new Color (0, 170, 170),      // argo
+      new Color (0, 90, 240),       // hr-drifter
+      new Color (0, 230, 0),        // imos
+      new Color (145, 22, 22)       // crw
+    };
+    String[] platformSymbols = new String[] {
+      "X",             // unknown
+      "Diamond",       // ship
+      "Diamond",       // drifter
+      "Triangle Up",   // t-mooring
+      "Triangle Down", // c-mooring
+      "Circle",        // argo
+      "Square",        // hr-drifter
+      "Square",        // imos
+      "Circle"         // crw
+    };
     
+    Map<String, Integer> attNameMap = source.getAttributeNameMap();
     MultiPointFeatureOverlay multiOverlay = new MultiPointFeatureOverlay();
-    multiOverlay.getOverlayList().add (pointOverlay);
-    multiOverlay.getGlobalFilter().add (new TimeWindowRule ("time", attNameMap, new TimeWindow (new Date(), 0)));
+    for (int i = 0; i < platformValues.length; i++) {
 
-    MultiPointFeatureOverlayPropertyChooser chooser = new MultiPointFeatureOverlayPropertyChooser (multiOverlay);
+      NumberRule platformRule = new NumberRule ("platform_type", attNameMap, (byte) platformValues[i]);
+      platformRule.setOperator (NumberRule.Operator.IS_EQUAL_TO);
+      SelectionRuleFilter filter = new SelectionRuleFilter();
+      filter.add (platformRule);
+
+      SimpleSymbol symbol = new SimpleSymbol (PlotSymbolFactory.create (platformSymbols[i]));
+      symbol.setBorderColor (Color.WHITE);
+      symbol.setFillColor (platformColors[i]);
+
+      PointFeatureOverlay pointOverlay = new PointFeatureOverlay (symbol, source);
+      pointOverlay.setFilter (filter);
+      pointOverlay.setName (platformNames[i]);
+
+      multiOverlay.getOverlayList().add (pointOverlay);
+
+    } // for
+        
+    multiOverlay.getGlobalFilter().add (new TimeWindowRule ("time", attNameMap, new TimeWindow (new Date(), 0)));
+  
+    return (multiOverlay);
+  
+  } // createTestOverlay
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
+  public static void main (String[] argv) {
+
+    MultiPointFeatureOverlay overlay = createTestOverlay();
+    MultiPointFeatureOverlayPropertyChooser chooser = new MultiPointFeatureOverlayPropertyChooser (overlay);
     noaa.coastwatch.gui.TestContainer.showFrame (chooser);
-    Runtime.getRuntime().addShutdownHook (new Thread (() -> System.out.println (multiOverlay)));
+    Runtime.getRuntime().addShutdownHook (new Thread (() -> System.out.println (overlay)));
 
   } // main
 

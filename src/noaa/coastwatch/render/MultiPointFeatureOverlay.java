@@ -222,7 +222,9 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
   /** 
    * Defines a filter that produces the intersection between the set
    * of features that satisfy the global filter and the set of features
-   * that satisfy the overlay filter.
+   * that satisfy the overlay filter.  The intersection filter can be used
+   * to filter a number of different overlays without inucrring the overhead
+   * of re-filtering the base set of features each time.
    */
   private class IntersectionFilter extends SelectionRuleFilter {
   
@@ -257,6 +259,30 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
     public void setOverlayFilter (SelectionRuleFilter filter) { this.overlayFilter = filter; }
   
   } // IntersectionFilter class
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the matching point features for the specified overlay.
+   *
+   * @param overlay the overlay to get the list of matching features.  
+   * These are the features that will be displayed if the overlay has 
+   * its visibility turned on in this multi-point overlay.
+   */
+  public List<Feature> getMatchingFeatures (
+    PointFeatureOverlay overlay
+  ) {
+  
+    IntersectionFilter intersectionFilter = new IntersectionFilter();
+    intersectionFilter.setOverlayFilter (overlay.getFilter());
+
+    return (null);
+
+
+
+
+
+  } // getMatchingFeatures
 
   ////////////////////////////////////////////////////////////
 
