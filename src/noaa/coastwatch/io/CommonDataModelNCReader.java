@@ -346,6 +346,9 @@ utilities when:
 
 
 /*
+
+  Version 2.41b02:
+ 
 		:sub_lon = 140.7 ;
 		:dist_virt_sat = 42164. ;
 		:earth_radius_equator = 6378.137 ;
@@ -354,8 +357,8 @@ utilities when:
 		:lfac = 20466275 ;
 		:coff = 2750.5f ;
 		:loff = 2750.5f ;
-*/
 
+*/
 
     try {
       double subpointLon = ((Number) getAttribute ("sub_lon")).doubleValue();
@@ -381,11 +384,49 @@ utilities when:
       return (trans);
     } // try
     catch (Exception e) { }
+
+/*
+
+  Version 2.41b03:
+ 
+                :Sub_Lon = 140.7 ;
+                :Dist_Virt_Sat = 42164. ;
+                :Earth_Radius_Equator = 6378.137 ;
+                :Earth_Radius_Polar = 6356.7523 ;
+                :CFAC = 20466275 ;
+                :LFAC = 20466275 ;
+                :COFF = 2750.5f ;
+                :LOFF = 2750.5f ;
+ 
+*/
+
+    try {
+      double subpointLon = ((Number) getAttribute ("Sub_Lon")).doubleValue();
+      double satDist = ((Number) getAttribute ("Dist_Virt_Sat")).doubleValue();
+      int columnFactor = ((Number) getAttribute ("CFAC")).intValue();
+      int lineFactor = ((Number) getAttribute ("LFAC")).intValue();
+      double eqRadius = ((Number) getAttribute ("Earth_Radius_Equator")).doubleValue();
+      double polarRadius = ((Number) getAttribute ("Earth_Radius_Polar")).doubleValue();
+      double columnOffset = ((Number) getAttribute ("COFF")).doubleValue();
+      double lineOffset = ((Number) getAttribute ("LOFF")).doubleValue();
+      CoordinateAxis xHorizAxis = coordSystem.getXHorizAxis();
+      int[] dims = xHorizAxis.getShape();
+      trans = new EllipsoidPerspectiveProjection (
+        new double[] {
+          0,
+          subpointLon,
+          satDist,
+          Math.toRadians (65536.0/lineFactor),
+          Math.toRadians (65536.0/columnFactor)
+        },
+        dims
+      );
+      return (trans);
+    } // try
+    catch (Exception e) { }
     
-
-
-
-
+    
+    
 
 
 

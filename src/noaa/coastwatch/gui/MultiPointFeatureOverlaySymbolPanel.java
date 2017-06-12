@@ -44,20 +44,24 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import java.util.Vector;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
 
+import noaa.coastwatch.gui.visual.SymbolSwatch;
 import noaa.coastwatch.render.MultiPointFeatureOverlay;
 import noaa.coastwatch.render.PointFeatureOverlay;
-import noaa.coastwatch.gui.visual.SymbolSwatch;
 import noaa.coastwatch.render.feature.Feature;
+import noaa.coastwatch.render.feature.PointFeature;
 import noaa.coastwatch.render.feature.Attribute;
-
-
-
-
-
+import noaa.coastwatch.util.EarthArea;
+import noaa.coastwatch.util.DateFormatter;
 
 // Testing
 import noaa.coastwatch.gui.visual.MultiPointFeatureOverlayPropertyChooser;
@@ -72,6 +76,12 @@ import noaa.coastwatch.gui.visual.MultiPointFeatureOverlayPropertyChooser;
  */
 public class MultiPointFeatureOverlaySymbolPanel
   extends JPanel {
+
+  // Constants
+  // ---------
+  
+  /** The date format for display. */
+  private static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss 'UTC '";
 
   // Variables
   // ---------
@@ -90,12 +100,18 @@ public class MultiPointFeatureOverlaySymbolPanel
 
   /** The list of feature attributes. */
   private List<Attribute> featureAttributes;
+  
+  /** The earth area for feature display. */
+  private EarthArea featureArea;
 
+  /** The model used by the table of feature attribute values. */
+  private FeatureTableModel featureModel;
 
+  /** The currently point overlay displayed in the table of features. */
+  private PointFeatureOverlay displayedPointOverlay;
 
-
-
-
+  /** The table of feature attribute values. */
+  private JTable featureTable;
 
   ////////////////////////////////////////////////////////////
 
@@ -194,7 +210,12 @@ public class MultiPointFeatureOverlaySymbolPanel
     @Override
     public Object getValueAt (int row, int column) {
     
-      return (matchingFeatures.get (row).getAttribute (column));
+      Object value = matchingFeatures.get (row).getAttribute (column);
+      Class attClass = featureAttributes.get (column).getType();
+      if (attClass.equals (Date.class))
+        value = DateFormatter.formatDate ((Date) value, DATE_FORMAT);
+      
+      return (value);
 
     } // getValueAt
 
@@ -215,44 +236,119 @@ public class MultiPointFeatureOverlaySymbolPanel
 
   /** 
    * Updates the matching features table based on the currently selected
-   *
+   * point overlay.
    */
   private void updateMatchingFeatures () {
 
+    boolean wasShowingData = (displayedPointOverlay != null);
     PointFeatureOverlay pointOverlay = overlayList.getSelectedValue();
-    if (pointOverlay != null) {
-    
-    
+    if (pointOverlay != null && displayedPointOverlay != pointOverlay) {
 
+      // Update attributes (ie: table columns)
+      // -------------------------------------
+      if (!wasShowingData) featureAttributes = pointOverlay.getSource().getAttributes();
 
+      // Update features (ie: table rows)
+      // --------------------------------
+      matchingFeatures = overlay.getMatchingFeatures (pointOverlay, featureArea);
+      matchingFeaturesLabel.setText ("Found " + matchingFeatures.size() + " matching feature(s)");
+      displayedPointOverlay = pointOverlay;
 
-    
+      // Signal changes to model
+      // -----------------------
+      if (wasShowingData)
+        featureModel.fireTableDataChanged();
+      else {
+        featureModel.fireTableStructureChanged();
+        initTableColumnSizes();
+      } // else
+      
     } // if
-    else {
-    
-
-    
-    
-    } // else
-
-
-
-
   
   } // updateMatchingFeatures
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets a prototype value for the feature table cell at the specified 
+   * column.
+   *
+   * @param column the column for the prototype.
+   *
+   * @return the prototype value to display in the cell.
+   */
+  private Object getPrototypeCellValue (
+    int column
+  ) {
+
+    Object cellValue;
+    Class attType = featureAttributes.get (column).getType();
+    if (attType.equals (String.class)) cellValue = "1234567890";
+    else if (attType.equals (Float.class)) cellValue = -Float.MAX_VALUE;
+    else if (attType.equals (Double.class)) cellValue = -Double.MAX_VALUE;
+    else if (attType.equals (Byte.class)) cellValue = Byte.MIN_VALUE;
+    else if (attType.equals (Short.class)) cellValue = Short.MIN_VALUE;
+    else if (attType.equals (Integer.class)) cellValue = Integer.MIN_VALUE;
+    else if (attType.equals (Long.class)) cellValue = Long.MIN_VALUE;
+    else if (attType.equals (Date.class)) cellValue = DateFormatter.formatDate (new Date(), DATE_FORMAT);
+    else
+      throw new RuntimeException ("Unsupported attribute class: " + attType);
+
+    return (cellValue);
+    
+  } // getPrototypeCellValue
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Initializes the feature table columns to reasonable sizes based
+   * on the column names and column data types.
+   */
+  private void initTableColumnSizes() {
+
+    TableCellRenderer headerRenderer = featureTable.getTableHeader().getDefaultRenderer();
+
+    for (int i = 0; i < featureAttributes.size(); i++) {
+
+      // Get required header width
+      // -------------------------
+      TableColumn column = featureTable.getColumnModel().getColumn (i);
+      Component headerComponent = headerRenderer.getTableCellRendererComponent (
+        null, column.getHeaderValue(), false, false, 0, 0);
+      int headerWidth = headerComponent.getPreferredSize().width;
+
+      // Get prototype cell width
+      // ------------------------
+      Component cellComponent = featureTable.getDefaultRenderer (
+        featureModel.getColumnClass (i)).getTableCellRendererComponent (
+        featureTable, getPrototypeCellValue (i), false, false, 0, i);
+      int cellWidth = cellComponent.getPreferredSize().width;
+      
+      // Set column width
+      // ----------------
+      column.setPreferredWidth (Math.max (headerWidth, cellWidth) + 5);
+
+    } // for
+
+  } // initTableColumnSizes
 
   ////////////////////////////////////////////////////////////
   
   /** 
    * Creates a new symbol display panel.
    *
-   * @param overlay the overlay to display.
+   * @param overlay the overlay the use for feature display.
+   * @param area the earth area to use for feature display.
    */
   public MultiPointFeatureOverlaySymbolPanel (
-    MultiPointFeatureOverlay overlay
+    MultiPointFeatureOverlay overlay,
+    EarthArea area
   ) {
 
     this.overlay = overlay;
+    this.featureArea = area;
+    this.featureAttributes = new ArrayList<>();
+    this.matchingFeatures = new ArrayList<>();
     
     // Setup layout
     // ------------
@@ -277,9 +373,12 @@ public class MultiPointFeatureOverlaySymbolPanel
     JPanel centerPanel = new JPanel (new BorderLayout());
     this.add (centerPanel, BorderLayout.CENTER);
     centerPanel.setBorder (new TitledBorder (new EtchedBorder(), "Features"));
-
-    JTable featureTable = new JTable (new FeatureTableModel());
-    JScrollPane tableScroller = new JScrollPane (featureTable);
+    featureModel = new FeatureTableModel();
+    featureTable = new JTable (featureModel);
+    featureTable.setAutoCreateRowSorter (true);
+    JScrollPane tableScroller = new JScrollPane (featureTable,
+      JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    featureTable.setAutoResizeMode (JTable.AUTO_RESIZE_OFF);
     centerPanel.add (tableScroller, BorderLayout.CENTER);
 
     matchingFeaturesLabel = new JLabel();
@@ -288,6 +387,13 @@ public class MultiPointFeatureOverlaySymbolPanel
     // Select first symbol
     // -------------------
     overlayList.setSelectionInterval (0, 0);
+
+
+
+// TODO: How do we update the model here when the overlay changes filters?
+
+
+
 
   } // MultiPointFeatureOverlaySymbolPanel constructor
   
@@ -301,7 +407,11 @@ public class MultiPointFeatureOverlaySymbolPanel
   public static void main (String[] argv) {
 
     MultiPointFeatureOverlay overlay = MultiPointFeatureOverlayPropertyChooser.createTestOverlay();
-    MultiPointFeatureOverlaySymbolPanel panel = new MultiPointFeatureOverlaySymbolPanel (overlay);
+    EarthArea area = new EarthArea();
+    area.addAll();
+    MultiPointFeatureOverlaySymbolPanel panel =
+      new MultiPointFeatureOverlaySymbolPanel (overlay, area);
+
     noaa.coastwatch.gui.TestContainer.showFrame (panel);
 
   } // main

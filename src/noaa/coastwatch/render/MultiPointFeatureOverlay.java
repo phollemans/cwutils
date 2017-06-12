@@ -39,6 +39,7 @@ import noaa.coastwatch.render.feature.FeatureGroupFilter;
 import noaa.coastwatch.render.feature.Feature;
 import noaa.coastwatch.render.PointFeatureSymbol;
 import noaa.coastwatch.render.feature.TimeWindow;
+import noaa.coastwatch.util.EarthArea;
 
 /**
  * The <code>MultiPointFeatureOverlay</code> class annotes a data view with
@@ -243,15 +244,15 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
         preFilterResultList = features;
         if (globalFilter.size() != 0)
           preFilterResultList = globalFilter.filter (preFilterResultList);
-        
+
         // Apply group filter second
         // -------------------------
         if (groupFilter != null && isGroupFilterActive)
           preFilterResultList = groupFilter.filter (preFilterResultList);
 
       } // if
-      List<Feature> overlayResultList = overlayFilter.filter (preFilterResultList);
 
+      List<Feature> overlayResultList = overlayFilter.filter (preFilterResultList);
       return (overlayResultList);
 
     } // filter
@@ -263,24 +264,35 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the matching point features for the specified overlay.
+   * Gets the matching point features for the specified overlay.    
    *
    * @param overlay the overlay to get the list of matching features.  
    * These are the features that will be displayed if the overlay has 
    * its visibility turned on in this multi-point overlay.
+   * @param area the earth area to use for feature matching.
+   *
+   * @return the list of features that will be drawn when the overlay is 
+   * rendered with a view that shows the same earth area as that specified.
+   *
    */
   public List<Feature> getMatchingFeatures (
-    PointFeatureOverlay overlay
+    PointFeatureOverlay overlay,
+    EarthArea area
   ) {
-  
+
+    // Create the intersection filter
+    // ------------------------------
     IntersectionFilter intersectionFilter = new IntersectionFilter();
-    intersectionFilter.setOverlayFilter (overlay.getFilter());
+    SelectionRuleFilter overlayFilter = overlay.getFilter();
+    intersectionFilter.setOverlayFilter (overlayFilter);
+    overlay.setFilter (intersectionFilter);
 
-    return (null);
+    // Get matching features in overlay
+    // --------------------------------
+    List<Feature> featureList = overlay.getMatchingFeatures (area);
+    overlay.setFilter (overlayFilter);
 
-
-
-
+    return (featureList);
 
   } // getMatchingFeatures
 

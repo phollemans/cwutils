@@ -40,7 +40,10 @@ import noaa.coastwatch.util.EarthArea;
 
 /**
  * The <code>AbstractFeatureSource</code> class supplies default
- * implementations for some <code>FeatureSource</code> methods.
+ * implementations for some <code>FeatureSource</code> methods.  The class
+ * also adds the ability for any feature source to be filterable, by adding
+ * a {@link SelectionRuleFilter}.  When a filter is set, the iterator
+ * only returns features that match the filter.
  *
  * @author Peter Hollemans
  * @since 3.2.0

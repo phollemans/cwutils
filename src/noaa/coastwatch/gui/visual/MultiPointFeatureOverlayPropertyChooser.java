@@ -34,6 +34,7 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -55,12 +56,14 @@ import noaa.coastwatch.gui.FeatureGroupFilterChooser;
 import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
 import noaa.coastwatch.gui.visual.PointFeatureOverlayPropertyChooser;
 import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.MultiPointFeatureOverlaySymbolPanel;
 
 import noaa.coastwatch.render.feature.Attribute;
 import noaa.coastwatch.render.feature.NumberRule;
 import noaa.coastwatch.render.feature.DateRule;
 import noaa.coastwatch.render.feature.SelectionRuleFilter;
 import noaa.coastwatch.render.feature.PointFeatureSource;
+import noaa.coastwatch.render.feature.PointFeature;
 import noaa.coastwatch.render.feature.FeatureGroupFilter;
 import noaa.coastwatch.render.feature.TimeWindow;
 import noaa.coastwatch.render.feature.TimeWindowRule;
@@ -68,6 +71,9 @@ import noaa.coastwatch.render.PointFeatureOverlay;
 import noaa.coastwatch.render.MultiPointFeatureOverlay;
 import noaa.coastwatch.render.SimpleSymbol;
 import noaa.coastwatch.render.PlotSymbolFactory;
+
+import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.EarthArea;
 
 /** 
  * A <code>MultiPointFeatureOverlayPropertyChooser</code> is an
@@ -138,14 +144,21 @@ public class MultiPointFeatureOverlayPropertyChooser
 
     super (overlay);
 
-    // Setup layout
-    // ------------
+    // Create tabbed pane
+    // ------------------
     setLayout (new BorderLayout());
+    JTabbedPane tabbedPane = new JTabbedPane();
+    this.add (tabbedPane, BorderLayout.CENTER);
+
+    // Create filter panel
+    // -------------------
+    JPanel filterPanel = new JPanel (new BorderLayout());
+    tabbedPane.add ("Filters", filterPanel);
 
     // Add top panel
     // -------------
     JPanel topPanel = new JPanel (new BorderLayout());
-    this.add (topPanel, BorderLayout.NORTH);
+    filterPanel.add (topPanel, BorderLayout.NORTH);
 
     // Add selection rule panel
     // ------------------------
@@ -193,7 +206,7 @@ public class MultiPointFeatureOverlayPropertyChooser
     listPanel.addPropertyChangeListener (PointFeatureOverlayListPanel.SELECTION_PROPERTY, event -> selectionChanged());
     listPanel.addPropertyChangeListener (PointFeatureOverlayListPanel.OVERLAY_PROPERTY, event -> signalOverlayChanged());
     centerPanel.add (listPanel, BorderLayout.CENTER);
-    this.add (centerPanel, BorderLayout.CENTER);
+    filterPanel.add (centerPanel, BorderLayout.CENTER);
 
     // Add side button panel
     // ---------------------
@@ -223,11 +236,36 @@ public class MultiPointFeatureOverlayPropertyChooser
     GUIServices.setConstraints (gc, 0, yPos++, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
     sidePanel.add (Box.createVerticalStrut (4*addButton.getMinimumSize().height), gc);
     
-    this.add (sidePanel, BorderLayout.EAST);
+    filterPanel.add (sidePanel, BorderLayout.EAST);
 
     // Fire a selection change to initialize the buttons
     // -------------------------------------------------
     selectionChanged();
+
+    // Add feature panel
+    // -----------------
+
+
+// TODO: What should we do here for the area?  We'd rather the feature view
+// doesn't show features outside the area of interest.  But what is the area
+// of interest exactly?  Should it be the currently visible area, or should it
+// be the full area of the grid in this tab?
+
+
+    EarthArea area = new EarthArea();
+    area.addAll();
+    MultiPointFeatureOverlaySymbolPanel featurePanel =
+      new MultiPointFeatureOverlaySymbolPanel (overlay, area);
+    tabbedPane.add ("Features", featurePanel);
+
+
+
+
+
+
+
+
+
 
   } // MultiPointFeatureOverlayPropertyChooser constructor
   
@@ -488,7 +526,31 @@ public class MultiPointFeatureOverlayPropertyChooser
       {
         setAttributes (attList);
       }
-      protected void select () throws IOException { }
+      protected void select () throws IOException {
+        if (featureList.size() == 0) {
+          for (int i = 0; i < 100; i++) {
+            EarthLocation earthLoc = new EarthLocation (
+              -90 + Math.random()*180,
+              -180 + Math.random()*360
+            );
+            Object[] attArray = new Object[] {
+              (byte) (Math.round (Math.random()*8)),
+              new String (new char[] {
+                (char) ('A' + Math.round (Math.random()*25)),
+                (char) ('A' + Math.round (Math.random()*25)),
+                (char) ('0' + Math.round (Math.random()*9)),
+                (char) ('0' + Math.round (Math.random()*9)),
+                (char) ('0' + Math.round (Math.random()*9)),
+                (char) ('0' + Math.round (Math.random()*9))
+              }),
+              Math.random()*35,
+              (int) Math.round (Math.random()*2),
+              new Date (System.currentTimeMillis() - (long) Math.round (Math.random()*2592e6))
+            };
+            featureList.add (new PointFeature (earthLoc, attArray));
+          } // for
+        } // if
+      } // select
     };
 
     int[] platformValues = new int[] {0,1,2,3,4,5,6,7,8};
@@ -504,7 +566,7 @@ public class MultiPointFeatureOverlayPropertyChooser
       "CRW"
     };
     Color[] platformColors = new Color[] {
-      new Color (255, 255, 255),    // unknown
+      new Color (128, 128, 128),    // unknown
       new Color (20, 150, 20),      // ship
       new Color (0, 0, 180),        // drifter
       new Color (240, 0, 0),        // t-mooring
@@ -536,7 +598,7 @@ public class MultiPointFeatureOverlayPropertyChooser
       filter.add (platformRule);
 
       SimpleSymbol symbol = new SimpleSymbol (PlotSymbolFactory.create (platformSymbols[i]));
-      symbol.setBorderColor (Color.WHITE);
+      symbol.setBorderColor (Color.BLACK);
       symbol.setFillColor (platformColors[i]);
 
       PointFeatureOverlay pointOverlay = new PointFeatureOverlay (symbol, source);
@@ -546,8 +608,9 @@ public class MultiPointFeatureOverlayPropertyChooser
       multiOverlay.getOverlayList().add (pointOverlay);
 
     } // for
-        
-    multiOverlay.getGlobalFilter().add (new TimeWindowRule ("time", attNameMap, new TimeWindow (new Date(), 0)));
+
+    TimeWindow window = new TimeWindow (new Date(), 2592000000L/2);
+    multiOverlay.getGlobalFilter().add (new TimeWindowRule ("time", attNameMap, window));
   
     return (multiOverlay);
   

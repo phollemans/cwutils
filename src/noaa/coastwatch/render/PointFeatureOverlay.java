@@ -32,12 +32,14 @@ import java.awt.Rectangle;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.Date;
 
 import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.feature.Attribute;
+import noaa.coastwatch.render.feature.Feature;
 import noaa.coastwatch.render.feature.PointFeatureSource;
 import noaa.coastwatch.render.feature.SelectionRuleFilter;
 import noaa.coastwatch.render.feature.PointFeature;
@@ -171,6 +173,41 @@ public class PointFeatureOverlay<T extends PointFeatureSymbol>
    * @return the feature source.
    */
   public PointFeatureSource getSource() { return (source); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the matching point features in this overlay for the specified area.
+   *
+   * @param area the earth area to use for features.
+   *
+   * @return the list of features that will be drawn when the overlay is 
+   * rendered with a view that shows the same earth area as that specified.
+   *
+   * @since 3.3.2
+   */
+  public List<Feature> getMatchingFeatures (
+    EarthArea area
+  ) {
+
+    // Select the features from the source by area
+    // -------------------------------------------
+    if (!area.equals (source.getArea())) {
+      try { source.select (area); }
+      catch (IOException e) {
+        throw new RuntimeException (e);
+      } // catch
+    } // if
+
+    // Get the features from the source
+    // --------------------------------
+    source.setFilter (filter);
+    List<Feature> featureList = new ArrayList<>();
+    for (Feature feature : source) featureList.add (feature);
+
+    return (featureList);
+
+  } // getMatchingFeatures
 
   ////////////////////////////////////////////////////////////
 
