@@ -10,7 +10,7 @@
 		E906137B16B234C50047F604 /* ACSPONCCFReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = ACSPONCCFReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E90956521E4CE9B4000F6B70 /* PointFeatureOverlayPropertyChooser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = PointFeatureOverlayPropertyChooser.java; sourceTree = "<group>"; };
 		E90956531E4FBFCD000F6B70 /* MultiPointFeatureOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = MultiPointFeatureOverlay.java; sourceTree = "<group>"; };
-		E90956541E5140AC000F6B70 /* MultiPointFeatureOverlayPropertyChooser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = MultiPointFeatureOverlayPropertyChooser.java; sourceTree = "<group>"; };
+		E90956541E5140AC000F6B70 /* MultiPointFeatureOverlayPropertyChooser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = MultiPointFeatureOverlayPropertyChooser.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E91669291C2CD994005D76EB /* CDMGridMappedProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CDMGridMappedProjection.java; sourceTree = "<group>"; };
 		E916692A1C370E5D005D76EB /* TestLogger.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TestLogger.java; path = test/TestLogger.java; sourceTree = "<group>"; };
 		E916692B1C371B08005D76EB /* TerminalColors.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TerminalColors.java; path = test/TerminalColors.java; sourceTree = "<group>"; };
@@ -85,6 +85,7 @@
 		E95BB75D1E67C56400EB9D6F /* binned_GSHHS_l.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_GSHHS_l.hdf; path = feature/binned_GSHHS_l.hdf; sourceTree = "<group>"; };
 		E95BB75E1E68F46500EB9D6F /* ContourGenerator.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ContourGenerator.java; sourceTree = "<group>"; };
 		E95FF124164326B4002C27C6 /* GCTPCStyleProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GCTPCStyleProjection.java; sourceTree = "<group>"; };
+		E962FABD1F05D67B003D971B /* MultiPointFeatureOverlayStatsPanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = MultiPointFeatureOverlayStatsPanel.java; sourceTree = "<group>"; };
 		E965CD981AE1A54400D3E59B /* HDFLib.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = HDFLib.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D87B8161661420009B833 /* build.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = build.xml; sourceTree = "<group>"; };
 		E96D87B9161661420009B833 /* cwutils.install4j */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = cwutils.install4j; sourceTree = "<group>"; };
@@ -685,19 +686,19 @@
 		E96D8B5D161661420009B833 /* CFNCWriter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = CFNCWriter.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8B62161661420009B833 /* CWHDFReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = CWHDFReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8B63161661420009B833 /* CWHDFWriter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = CWHDFWriter.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8B64161661420009B833 /* CWCFNCReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CWCFNCReader.java; sourceTree = "<group>"; };
-		E96D8B65161661420009B833 /* CWNCReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CWNCReader.java; sourceTree = "<group>"; };
-		E96D8B66161661420009B833 /* CWOpendapReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CWOpendapReader.java; sourceTree = "<group>"; };
+		E96D8B64161661420009B833 /* CWCFNCReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = CWCFNCReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E96D8B65161661420009B833 /* CWNCReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = CWNCReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E96D8B66161661420009B833 /* CWOpendapReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = CWOpendapReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8B67161661420009B833 /* DataTransfer.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DataTransfer.java; sourceTree = "<group>"; };
 		E96D8B68161661420009B833 /* DataTransferAdapter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DataTransferAdapter.java; sourceTree = "<group>"; };
 		E96D8B69161661420009B833 /* DataTransferEvent.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DataTransferEvent.java; sourceTree = "<group>"; };
 		E96D8B6A161661420009B833 /* DataTransferListener.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DataTransferListener.java; sourceTree = "<group>"; };
-		E96D8B6B161661420009B833 /* EarthDataReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = EarthDataReader.java; sourceTree = "<group>"; };
+		E96D8B6B161661420009B833 /* EarthDataReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = EarthDataReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8B6C161661420009B833 /* EarthDataReaderFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = EarthDataReaderFactory.java; sourceTree = "<group>"; };
 		E96D8B6D161661420009B833 /* EarthDataWriter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = EarthDataWriter.java; sourceTree = "<group>"; };
 		E96D8B6E161661420009B833 /* EarthImageWriter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = EarthImageWriter.java; sourceTree = "<group>"; };
 		E96D8B6F161661420009B833 /* FloatWriter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = FloatWriter.java; sourceTree = "<group>"; };
-		E96D8B70161661420009B833 /* CommonDataModelNCReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CommonDataModelNCReader.java; sourceTree = "<group>"; };
+		E96D8B70161661420009B833 /* CommonDataModelNCReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = CommonDataModelNCReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8B71161661420009B833 /* GeoTIFFWriter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GeoTIFFWriter.java; sourceTree = "<group>"; };
 		E96D8B72161661420009B833 /* GIFWriter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GIFWriter.java; sourceTree = "<group>"; };
 		E96D8B73161661420009B833 /* GridSubsetReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GridSubsetReader.java; sourceTree = "<group>"; };
@@ -738,11 +739,11 @@
 		E96D8B98161661420009B833 /* package.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = package.html; sourceTree = "<group>"; };
 		E96D8B99161661420009B833 /* TBMHeader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TBMHeader.java; sourceTree = "<group>"; };
 		E96D8B9A161661420009B833 /* NOAA1bCachedGrid.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = NOAA1bCachedGrid.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
-		E96D8B9B161661420009B833 /* NOAA1bReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = NOAA1bReader.java; sourceTree = "<group>"; };
-		E96D8B9C161661420009B833 /* NOAA1bV1Reader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = NOAA1bV1Reader.java; sourceTree = "<group>"; };
-		E96D8B9D161661420009B833 /* NOAA1bV2Reader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = NOAA1bV2Reader.java; sourceTree = "<group>"; };
-		E96D8B9E161661420009B833 /* NOAA1bV3Reader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = NOAA1bV3Reader.java; sourceTree = "<group>"; };
-		E96D8B9F161661420009B833 /* NOAA1bV4Reader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = NOAA1bV4Reader.java; sourceTree = "<group>"; };
+		E96D8B9B161661420009B833 /* NOAA1bReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = NOAA1bReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E96D8B9C161661420009B833 /* NOAA1bV1Reader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = NOAA1bV1Reader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E96D8B9D161661420009B833 /* NOAA1bV2Reader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = NOAA1bV2Reader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E96D8B9E161661420009B833 /* NOAA1bV3Reader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = NOAA1bV3Reader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E96D8B9F161661420009B833 /* NOAA1bV4Reader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = NOAA1bV4Reader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8BA0161661420009B833 /* NOAA1bV5Reader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = NOAA1bV5Reader.java; sourceTree = "<group>"; };
 		E96D8BA1161661420009B833 /* OpendapGrid.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = OpendapGrid.java; sourceTree = "<group>"; };
 		E96D8BA2161661420009B833 /* OpendapReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = OpendapReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
@@ -866,7 +867,7 @@
 		E96D8C35161661420009B833 /* DateFormatter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DateFormatter.java; sourceTree = "<group>"; };
 		E96D8C36161661420009B833 /* DoubleIterator.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DoubleIterator.java; sourceTree = "<group>"; };
 		E96D8C37161661420009B833 /* EarthArea.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = EarthArea.java; sourceTree = "<group>"; };
-		E96D8C38161661420009B833 /* EarthDataInfo.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = EarthDataInfo.java; sourceTree = "<group>"; };
+		E96D8C38161661420009B833 /* EarthDataInfo.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = EarthDataInfo.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E96D8C39161661420009B833 /* EarthDataSurvey.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = EarthDataSurvey.java; sourceTree = "<group>"; };
 		E96D8C3A161661420009B833 /* EarthLocation.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = EarthLocation.java; sourceTree = "<group>"; };
 		E96D8C3B161661420009B833 /* EarthPartition.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = EarthPartition.java; sourceTree = "<group>"; };
@@ -1029,7 +1030,7 @@
 		E9C43E7E1D3897D100BEC746 /* DateRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DateRule.java; sourceTree = "<group>"; };
 		E9C43E7F1D3C690700BEC746 /* TimeWindow.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TimeWindow.java; sourceTree = "<group>"; };
 		E9C43E801D3D909E00BEC746 /* TimeWindowRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TimeWindowRule.java; sourceTree = "<group>"; };
-		E9CA7C6D1AD5DD2800C2C96C /* CFNC4Writer.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CFNC4Writer.java; sourceTree = "<group>"; };
+		E9CA7C6D1AD5DD2800C2C96C /* CFNC4Writer.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = CFNC4Writer.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9D2E0671D063B790079783B /* ExpressionFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ExpressionFilter.java; sourceTree = "<group>"; };
 		E9D2E0681D07A04A0079783B /* VIIRSBowtieFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = VIIRSBowtieFilter.java; sourceTree = "<group>"; };
 		E9D3A73E1B06D3C10027AA5F /* saxon9he.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = saxon9he.jar; path = scripts/saxon9he.jar; sourceTree = "<group>"; };
@@ -2070,6 +2071,7 @@
 				E96D8AE2161661420009B833 /* LineStatisticsPanel.java */,
 				E96D8AE3161661420009B833 /* MacGUIServices.java */,
 				E96D8AE4161661420009B833 /* MapProjectionChooser.java */,
+				E962FABD1F05D67B003D971B /* MultiPointFeatureOverlayStatsPanel.java */,
 				E9A081041ED1083400EADC83 /* MultiPointFeatureOverlaySymbolPanel.java */,
 				E96D8AE5161661420009B833 /* nav */,
 				E96D8AEF161661420009B833 /* NavigationChooser.java */,

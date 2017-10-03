@@ -57,6 +57,7 @@ import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
 import noaa.coastwatch.gui.visual.PointFeatureOverlayPropertyChooser;
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.MultiPointFeatureOverlaySymbolPanel;
+import noaa.coastwatch.gui.MultiPointFeatureOverlayStatsPanel;
 
 import noaa.coastwatch.render.feature.Attribute;
 import noaa.coastwatch.render.feature.NumberRule;
@@ -112,6 +113,12 @@ public class MultiPointFeatureOverlayPropertyChooser
   
   /** The check box indicating that the group filter is active/inactive. */
   private JCheckBox groupCheckBox;
+  
+  /** The panel showing the results of feature filtering. */
+  private MultiPointFeatureOverlaySymbolPanel featurePanel;
+
+  /** The panel showing the results of feature statistics calculations. */
+  private MultiPointFeatureOverlayStatsPanel statsPanel;
   
   ////////////////////////////////////////////////////////////
 
@@ -202,6 +209,7 @@ public class MultiPointFeatureOverlayPropertyChooser
     // ----------------
     JPanel centerPanel = new JPanel (new BorderLayout());
     centerPanel.setBorder (new TitledBorder (new EtchedBorder(), "Symbols"));
+
     listPanel = new PointFeatureOverlayListPanel (overlay.getOverlayList());
     listPanel.addPropertyChangeListener (PointFeatureOverlayListPanel.SELECTION_PROPERTY, event -> selectionChanged());
     listPanel.addPropertyChangeListener (PointFeatureOverlayListPanel.OVERLAY_PROPERTY, event -> signalOverlayChanged());
@@ -233,10 +241,13 @@ public class MultiPointFeatureOverlayPropertyChooser
     GUIServices.setConstraints (gc, 0, yPos++, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
     sidePanel.add (removeButton, gc);
     
-    GUIServices.setConstraints (gc, 0, yPos++, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
-    sidePanel.add (Box.createVerticalStrut (4*addButton.getMinimumSize().height), gc);
+    GUIServices.setConstraints (gc, 0, yPos++, 1, 1, GridBagConstraints.BOTH, 0, 1);
+    sidePanel.add (new JPanel(), gc);
+
+//    GUIServices.setConstraints (gc, 0, yPos++, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
+//    sidePanel.add (Box.createVerticalStrut (4*addButton.getMinimumSize().height), gc);
     
-    filterPanel.add (sidePanel, BorderLayout.EAST);
+    centerPanel.add (sidePanel, BorderLayout.EAST);
 
     // Fire a selection change to initialize the buttons
     // -------------------------------------------------
@@ -244,28 +255,22 @@ public class MultiPointFeatureOverlayPropertyChooser
 
     // Add feature panel
     // -----------------
-
-
-// TODO: What should we do here for the area?  We'd rather the feature view
-// doesn't show features outside the area of interest.  But what is the area
-// of interest exactly?  Should it be the currently visible area, or should it
-// be the full area of the grid in this tab?
-
-
-    EarthArea area = new EarthArea();
-    area.addAll();
-    MultiPointFeatureOverlaySymbolPanel featurePanel =
-      new MultiPointFeatureOverlaySymbolPanel (overlay, area);
+    EarthArea area = overlay.getEarthAreaHint();
+    if (area == null) {
+      area = new EarthArea();
+      area.addAll();
+    } // if
+    featurePanel = new MultiPointFeatureOverlaySymbolPanel (overlay, area);
     tabbedPane.add ("Features", featurePanel);
 
-
-
-
-
-
-
-
-
+    // Add stats panel
+    // -----------------
+    statsPanel = new MultiPointFeatureOverlayStatsPanel (overlay, area);
+    tabbedPane.add ("Statistics", statsPanel);
+    List<String> expressionListHint = overlay.getExpressionListHint();
+    if (expressionListHint != null) {
+      expressionListHint.forEach (expression -> statsPanel.addExpression (expression));
+    } // if
 
   } // MultiPointFeatureOverlayPropertyChooser constructor
   
@@ -324,6 +329,8 @@ public class MultiPointFeatureOverlayPropertyChooser
   private void signalOverlayChanged() {
   
     firePropertyChange (OVERLAY_PROPERTY, null, overlay);
+    featurePanel.overlayChanged();
+    statsPanel.overlayChanged();
 
   } // signalOverlayChanged
   
@@ -371,6 +378,8 @@ public class MultiPointFeatureOverlayPropertyChooser
     ) {
 
       super (false, false, false, true, false);
+      int i = overlayList.size();
+      for (PointFeatureOverlay overlay : overlayList) overlay.setLayer (i--);
       addOverlays (overlayList);
 
     } // PointFeatureOverlayListPanel constructor
@@ -463,7 +472,16 @@ public class MultiPointFeatureOverlayPropertyChooser
     public void editSymbol () {
 
       int index = overlayList.getSelectedIndices()[0];
-      overlayList.getElement (index).showChooser();
+      List<PointFeatureOverlay<SimpleSymbol>> list = overlay.getOverlayList();
+      PointFeatureOverlay<SimpleSymbol> pointOverlay = list.get (index);
+      PointFeatureOverlay<SimpleSymbol> copy = (PointFeatureOverlay<SimpleSymbol>) pointOverlay.clone();
+      PointFeatureOverlayPropertyChooser chooser = new PointFeatureOverlayPropertyChooser (copy);
+      showDialog (chooser, () -> {
+        list.remove (pointOverlay);
+        list.add (index, copy);
+        reorderSymbols();
+        signalOverlayChanged();
+      });
     
     } // editSymbol
 
@@ -611,6 +629,11 @@ public class MultiPointFeatureOverlayPropertyChooser
 
     TimeWindow window = new TimeWindow (new Date(), 2592000000L/2);
     multiOverlay.getGlobalFilter().add (new TimeWindowRule ("time", attNameMap, window));
+  
+    FeatureGroupFilter groupFilter = new FeatureGroupFilter ("platform_id",
+      attNameMap, "time", new Date());
+    multiOverlay.setGroupFilter (groupFilter);
+    multiOverlay.setGroupFilterActive (false);
   
     return (multiOverlay);
   

@@ -353,7 +353,7 @@ public class EarthDataInfo
 
     // Check for a null transform
     // --------------------------
-    if (trans == null) return ("unknown");
+    if (trans == null) return ("Unknown");
 
     // Create solar zenith object
     // --------------------------

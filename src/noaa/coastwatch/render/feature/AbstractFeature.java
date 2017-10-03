@@ -51,6 +51,12 @@ public abstract class AbstractFeature
   /** The list of feature points. */
   private List<EarthLocation> points;
 
+  /** The precalculated hash code. */
+  private int hash;
+
+  /** The hashed flag, true if the hash code is valid. */
+  private boolean isHashed = false;
+
   ////////////////////////////////////////////////////////////
 
   @Override
@@ -73,7 +79,7 @@ public abstract class AbstractFeature
 
   ////////////////////////////////////////////////////////////
     
-  /** Gets an iterator over the points in this feature. */
+  @Override
   public Iterator<EarthLocation> iterator () {  return (points.iterator()); }
 
   ////////////////////////////////////////////////////////////
@@ -135,6 +141,95 @@ public abstract class AbstractFeature
       points.add (iter.next());
 
   } // addAll
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public int getAttributeCount() { return (attributeArray.length); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean equals (Object obj) {
+  
+    boolean isEqual = true;
+
+    // Check object type
+    // -----------------
+    if (!(obj instanceof AbstractFeature)) {
+      isEqual = false;
+    } // if
+    
+    else {
+      AbstractFeature feature = (AbstractFeature) obj;
+
+      // Check points
+      // ------------
+      if (this.size() != feature.size()) {
+        isEqual = false;
+      } // if
+      else {
+        for (int i = 0; i < this.size(); i++) {
+          if (!this.get (i).equals (feature.get (i))) {
+            isEqual = false;
+            break;
+          } // if
+        } // for
+      } // else
+
+      // Check attribute values
+      // ----------------------
+      if (isEqual) {
+        if (this.getAttributeCount() != feature.getAttributeCount()) {
+          isEqual = false;
+        } // if
+        else {
+          for (int i = 0; i < this.getAttributeCount(); i++) {
+            if (!this.getAttribute (i).equals (feature.getAttribute (i))) {
+              isEqual = false;
+              break;
+            } // if
+          } // for
+        } // else
+      } // if
+    
+    } // else
+    
+    return (isEqual);
+
+  } // equals
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public int hashCode () {
+
+    // Get cached hash code
+    // --------------------
+    if (isHashed) return (hash);
+
+    // Calculate hash code
+    // -------------------
+    hash = 0;
+    for (int i = 0; i < this.size(); i++) {
+      EarthLocation loc = get (i);
+      long bits = Double.doubleToLongBits (loc.lat);
+      hash = hash ^ ((int) (bits^(bits >>> 32)));
+      bits = Double.doubleToLongBits (loc.lon);
+      hash = hash ^ ((int) (bits^(bits >>> 32)));
+    } // for
+
+    for (int i = 0; i < getAttributeCount(); i++) {
+      Object attValue = getAttribute (i);
+      if (attValue != null) hash = hash ^ attValue.hashCode();
+    } // for
+
+    // Set flag and return
+    // -------------------
+    isHashed = true;
+    return (hash);
+
+  } // hashCode
 
   ////////////////////////////////////////////////////////////
 

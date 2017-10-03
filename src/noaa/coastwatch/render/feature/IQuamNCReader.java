@@ -53,6 +53,7 @@ import noaa.coastwatch.render.feature.SelectionRuleFilter.FilterMode;
 import noaa.coastwatch.render.feature.FeatureGroupFilter;
 import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.render.feature.Attribute;
@@ -127,7 +128,7 @@ public class IQuamNCReader
   
   /** The array of plot symbol colors. */
   private static final Color[] plotSymbolColors = new Color[] {
-    new Color (255, 255, 255),    // unknown
+    new Color (128, 128, 128),    // unknown
     new Color (20, 150, 20),      // ship
     new Color (0, 0, 180),        // drifter
     new Color (240, 0, 0),        // t-mooring
@@ -389,7 +390,12 @@ public class IQuamNCReader
     
     /** The index of this observation in the data file. */
     private int obsIndex;
+
+    ////////////////////////////////////////////////////
     
+    @Override
+    public int getAttributeCount() { return (IQuamNCReader.this.getAttributeCount()); }
+
     ////////////////////////////////////////////////////
     
     @Override
@@ -848,12 +854,35 @@ public class IQuamNCReader
     // --------------------------
     List<EarthDataOverlay> overlayList = new ArrayList<EarthDataOverlay>();
     MultiPointFeatureOverlay multiOverlay = new MultiPointFeatureOverlay();
-    long windowSize = 30*60*1000L;
-    TimeWindow window = new TimeWindow (date, windowSize);
-    multiOverlay.setTimeWindowHint (window);
     multiOverlay.setName ("iQuam data");
     overlayList.add (multiOverlay);
 
+    // Set overlay hints
+    // -----------------
+    long windowSize = 30*60*1000L;
+    TimeWindow window = new TimeWindow (date, windowSize);
+    multiOverlay.setTimeWindowHint (window);
+
+    int[] dims = trans.getDimensions();
+    int rows = dims[Grid.ROWS];
+    int cols = dims[Grid.COLS];
+    DataLocation minLoc = new DataLocation (0, 0);
+    DataLocation maxLoc = new DataLocation (rows-1, cols-1);
+    EarthArea area = new EarthArea (trans, minLoc, maxLoc);
+    multiOverlay.setEarthAreaHint (area);
+
+    List<String> expressionList = new ArrayList<>();
+    expressionList.add ("sst - sst_ref1");
+    expressionList.add ("sst - sst_ref2");
+    boolean hasSST =
+      gridList.stream().map (grid -> grid.getName().equals ("sea_surface_temperature"))
+      .filter (flag -> flag)
+      .findFirst().orElse (false);
+    if (hasSST) {
+      expressionList.add ("sst - GRID_sea_surface_temperature");
+    } // if
+    multiOverlay.setExpressionListHint (expressionList);
+    
     // Create colocated point source
     // -----------------------------
     ColocatedPointFeatureSource colocatedSource = new ColocatedPointFeatureSource (this,
@@ -876,7 +905,7 @@ public class IQuamNCReader
       .filter (flag -> flag)
       .findFirst().orElse (false);
     if (hasFlags) {
-      NumberRule flagsRule = new NumberRule ("grid::l2p_flags", attNameMap, (short) 49152);
+      NumberRule flagsRule = new NumberRule ("GRID_l2p_flags", attNameMap, (short) 49152);
       flagsRule.setOperator (NumberRule.Operator.DOES_NOT_CONTAIN_BITS_FROM);
       globalFilter.add (flagsRule);
     } // if
@@ -902,7 +931,7 @@ TODO:
      the operator combo should not reset to a different operator when the type
      is still some kind of number (ie: integer to byte).
  
-   - The multipoint overlay re-filters and re-renders even when another overlay
+**   - The multipoint overlay re-filters and re-renders even when another overlay
      changes visibility.  Could we make it hold onto the filtered results
      so rendering could be faster?  Maybe hold onto just the graphics rendered?
      Check other overlay classes to see how they work.
@@ -949,7 +978,10 @@ TODO:
         symbolColor = plotSymbolColors[0];
       } // else
       SimpleSymbol symbol = new SimpleSymbol (PlotSymbolFactory.create (symbolName));
-      symbol.setBorderColor (Color.WHITE);
+      if (symbolName.equals ("X"))
+        symbol.setBorderColor (Color.BLACK);
+      else
+        symbol.setBorderColor (Color.WHITE);
       symbol.setFillColor (symbolColor);
 
       // Create overlay

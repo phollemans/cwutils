@@ -187,10 +187,10 @@ public class TSHDFReader
     // ---------------------
     String sat;
     try { sat = (String) getAttribute (sdid, "satellite"); }
-    catch (HDFException e) { sat = "unknown"; }
+    catch (HDFException e) { sat = "Unknown"; }
     String sensor;
     try { sensor = (String) getAttribute (sdid, "sensor_name"); }
-    catch (HDFException e) { sensor = "unknown"; }
+    catch (HDFException e) { sensor = "Unknown"; }
     String origin;
     try { origin = (String) getAttribute (sdid, "origin"); }
     catch (HDFException e) { origin = "SeaSpace TeraScan"; }

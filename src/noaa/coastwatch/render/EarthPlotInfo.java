@@ -290,7 +290,7 @@ public class EarthPlotInfo
     // -------------------
     EarthTransform trans = info.getTransform ();
     strings.add ("Projection type:");
-    strings.add ("  " + (trans == null ? "unknown" : 
+    strings.add ("  " + (trans == null ? "Unknown" : 
       trans.describe().toUpperCase()));
 
     // Add mapped projection attributes

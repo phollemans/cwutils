@@ -677,7 +677,7 @@ public final class cwinfo {
     // Add earth transform info
     // ------------------------
     EarthTransform trans = info.getTransform();
-    valueMap.put ("Projection type", (trans == null ? "unknown" : 
+    valueMap.put ("Projection type", (trans == null ? "Unknown" : 
       trans.describe()));
 
     // Add map projection info
@@ -738,7 +738,7 @@ public final class cwinfo {
 
     // Check for unknown type
     // ----------------------
-    if (typeName == null) return ("unknown");
+    if (typeName == null) return ("Unknown");
 
     // Add unsigned prefix
     // -------------------

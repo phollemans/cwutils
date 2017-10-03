@@ -123,7 +123,7 @@ public class CWNCReader
     String sensor = (String) getAttribute ("sensor");
     String source = (String) getAttribute ("data_source");
     String origin = (String) getAttribute ("origin");
-    if (origin == null) origin = "unknown";
+    if (origin == null) origin = "Unknown";
     String history = (String) getAttribute ("history");
     if (history == null) history = "";
 
@@ -136,14 +136,14 @@ public class CWNCReader
     // ------------------
     EarthDataInfo info;
     if (sat == null && sensor == null && source == null)
-      source = "unknown";
+      source = "Unknown";
     if (source != null) {
       info = new EarthDataInfo (source, periodList, transform, 
         origin, history);
     } // if
     else {
-      if (sat == null) sat = "unknown";
-      if (sensor == null) sensor = "unknown";
+      if (sat == null) sat = "Unknown";
+      if (sensor == null) sensor = "Unknown";
       info = new SatelliteDataInfo (sat, sensor, periodList, transform, 
         origin, history);
     } // else

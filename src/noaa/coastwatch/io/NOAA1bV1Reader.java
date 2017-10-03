@@ -227,7 +227,7 @@ public class NOAA1bV1Reader
     // ----------------
     String spacecraft = (String) header.getAttribute (
       DataHeader.SPACECRAFT_ID);
-    if (spacecraft.equals ("unknown")) 
+    if (spacecraft.equals ("Unknown")) 
       throw new IOException ("Unknown spacecraft ID");
 
     // Set constants for LAC/HRPT data
@@ -992,7 +992,7 @@ public class NOAA1bV1Reader
         case NOAA_10_ID: return (new String ("noaa-10"));
         case NOAA_12_ID: return (new String ("noaa-12"));
         case NOAA_14_ID: return (new String ("noaa-14"));
-        default: return (new String ("unknown"));
+        default: return (new String ("Unknown"));
         } // switch
       case DATA_TYPE_CODE: 
         int code = getUByte (data, 1) >>> 4;
@@ -1006,7 +1006,7 @@ public class NOAA1bV1Reader
         case 7: return (new String ("ssu"));
         case 8: return (new String ("dcs"));
         case 9: return (new String ("sem"));
-        default: return (new String ("unknown"));
+        default: return (new String ("Unknown"));
         } // switch
       case START_YEAR:
         int startYear = getUByte (data, 2) >>> 1;
@@ -1027,7 +1027,7 @@ public class NOAA1bV1Reader
       case DATASET_NAME: 
         try { return (new String (getBytes (data, 40, 44), "Cp500").trim()); }
         catch (UnsupportedEncodingException e) { 
-          return (new String ("unknown"));
+          return (new String ("Unknown"));
         } // catch
 
       // Format specific attributes

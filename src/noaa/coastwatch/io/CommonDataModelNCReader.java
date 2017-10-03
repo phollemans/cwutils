@@ -221,8 +221,8 @@ public class CommonDataModelNCReader
         } // if
       } // if
     } // for
-    if (origin == null) origin = "unknown";
-    if (source == null) source = "unknown";
+    if (origin == null) origin = "Unknown";
+    if (source == null) source = "Unknown";
 
     // Create satellite info
     // ---------------------

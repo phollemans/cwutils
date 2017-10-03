@@ -256,7 +256,7 @@ public class NOAA1bV2Reader
     // ----------------
     String spacecraft = (String) header.getAttribute (
       DataHeader.SPACECRAFT_ID);
-    if (spacecraft.equals ("unknown")) 
+    if (spacecraft.equals ("Unknown")) 
       throw new IOException ("Unknown spacecraft ID");
 
     // Get format version
@@ -1118,7 +1118,7 @@ public class NOAA1bV2Reader
         case NOAA_15_ID: return (new String ("noaa-15"));
         case NOAA_16_ID: return (new String ("noaa-16"));
         case NOAA_17_ID: return (new String ("noaa-17"));
-        default: return (new String ("unknown"));
+        default: return (new String ("Unknown"));
         } // switch
       case DATA_TYPE_CODE: 
         int code = getUShort (data, 76);
@@ -1134,7 +1134,7 @@ public class NOAA1bV2Reader
         case 9: return (new String ("sem"));
         case 10: return (new String ("amsu-a"));
         case 11: return (new String ("amsu-b"));
-        default: return (new String ("unknown"));
+        default: return (new String ("Unknown"));
         } // switch
       case START_YEAR: return (new Integer (getUShort (data, 84)));
       case START_DAY: return (new Integer (getUShort (data, 86)));

@@ -43,6 +43,7 @@ public class PointFeature
 
   // Variables
   // ---------
+  
   /** The single geographic point. */
   private EarthLocation point;
 
@@ -99,6 +100,38 @@ public class PointFeature
     this.point = point;
 
   } // PointFeature constructor
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public void add (EarthLocation point) { throw new UnsupportedOperationException(); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public EarthLocation get (
+    int index
+  ) {
+  
+    if (index == 0) return (point);
+    else throw (new IndexOutOfBoundsException());
+  
+  } // get
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public int size () { return (1); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public EarthLocation remove (int index) { throw new UnsupportedOperationException(); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public void addAll (Feature feature) { new UnsupportedOperationException(); }
 
   ////////////////////////////////////////////////////////////
 

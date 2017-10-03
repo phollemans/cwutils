@@ -228,7 +228,7 @@ public class BasicReaderInfoPanel
     // ------------------------
     EarthTransform trans = info.getTransform();
     String projection;
-    if (trans == null) projection = "unknown";
+    if (trans == null) projection = "Unknown";
     else {
       projection = trans.describe();
       if (trans instanceof MapProjection)

@@ -1046,8 +1046,8 @@ public final class cwmaster
 
     try {
       Date date = new Date (0L);
-      SatelliteDataInfo info = new SatelliteDataInfo ("unknown", "unknown", 
-        date, proj, "unknown", "");
+      SatelliteDataInfo info = new SatelliteDataInfo ("Unknown", "Unknown",
+        date, proj, "Unknown", "");
       CWHDFWriter writer = new CWHDFWriter (info, file);
       int sdid = writer.getSDID();
       writer.close();

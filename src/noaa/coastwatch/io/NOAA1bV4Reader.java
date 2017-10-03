@@ -136,7 +136,7 @@ public class NOAA1bV4Reader
         case NOAA_19_ID: return (new String ("noaa-19"));
         case METOP_1_ID: return (new String ("metop-1"));
         case METOP_2_ID: return (new String ("metop-2"));
-        default: return (new String ("unknown"));
+        default: return (new String ("Unknown"));
         } // switch
 
       // Also handle the new Metop FRAC code
@@ -164,7 +164,7 @@ public class NOAA1bV4Reader
         case 9: return (new String ("sem"));
         case 10: return (new String ("amsu-a"));
         case 11: return (new String ("amsu-b"));
-        default: return (new String ("unknown"));
+        default: return (new String ("Unknown"));
         } // switch
 
       // Otherwise, delegate to the parent

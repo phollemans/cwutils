@@ -680,12 +680,12 @@ public class EarthLocation
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns true if the specified location is identical to this one. */
+  @Override
   public boolean equals (Object obj) {
 
     if (!(obj instanceof EarthLocation)) return (false);
     EarthLocation loc = (EarthLocation) obj;
-    return (this.lat == loc.lat && this.lon == loc.lon);
+    return (this.lat == loc.lat && this.lon == loc.lon && this.datum.equals (loc.datum));
 
   } // equals
 

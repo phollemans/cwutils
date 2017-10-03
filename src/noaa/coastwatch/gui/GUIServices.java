@@ -338,9 +338,15 @@ public class GUIServices {
     JButton button
   ) {
   
+  // TODO: This doesn't actually work correctly (see the CDAT file open
+  // dialog for an issue), so for now we disable it until we can do more
+  // testing.
+
+/*
     AquaButtonListener listener = new AquaButtonListener();
     button.addMouseListener (listener);
     button.addFocusListener (listener);
+*/
   
   } // applyAquaButtonTreatment
 
@@ -601,7 +607,12 @@ public class GUIServices {
       JButton button = new JButton (actions[j]);
       if (j == 0) {
         dialog.getRootPane().setDefaultButton (button);
-        if (IS_AQUA) button.setForeground (Color.WHITE);
+
+
+ // TODO: This doesn't work well, see note in applyAquaButtonTreatment
+ //         if (IS_AQUA) button.setForeground (Color.WHITE);
+
+
       } // if
       else if (IS_AQUA) applyAquaButtonTreatment (button);
       if (hideAction == null || hideAction[j])

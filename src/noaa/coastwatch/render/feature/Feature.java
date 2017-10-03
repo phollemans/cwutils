@@ -39,11 +39,38 @@ import noaa.coastwatch.util.EarthLocation;
 public interface Feature
   extends Iterable<EarthLocation> {
 
-  /** Gets the value of the indexed attribute. */
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the value of the specified attribute.
+   *
+   * @param index the index of the attribute to get.
+   *
+   * @return the attribute value (possibly null).
+   *
+   * @throws IndexOutOfBoundsException if the attribute index is invalid.
+   */
   public Object getAttribute (int index);
 
-  /** Gets an iterator over the points associated with this feature. */
+  ////////////////////////////////////////////////////////////
+  
+  /**
+   * Gets the number of attributes.
+   *
+   * @return the attribute count.
+   */
+  public int getAttributeCount();
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets an iterator over the points associated with this feature.
+   *
+   * @return the iterator over points.
+   */
   public Iterator<EarthLocation> iterator();
+
+  ////////////////////////////////////////////////////////////
 
 } // Feature interface
 

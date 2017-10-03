@@ -64,11 +64,11 @@ import noaa.coastwatch.render.feature.SelectionRuleFilter.FilterMode;
  * <ul>
  *   <li>observation_time</li>
  *   <li>windspeed</li>
- *   <li>grid::sst</li>
- *   <li>grid::cloud</li>
+ *   <li>GRID_sst</li>
+ *   <li>GRID_cloud</li>
  * </ul>
  * where the sst and cloud data values are taken from the grids at the geolocation
- * of the point data.  The "grid::" extension to the grid names prevents name 
+ * of the point data.  The "GRID_" extension to the grid names prevents name
  * collisions, if the attributes and grids happen to have some of the same names.
  *
  * @author Peter Hollemans
@@ -181,7 +181,7 @@ public class ColocatedPointFeatureSource
     for (Grid grid : gridList) {
       Class type = getUnpackedType (grid);
       gridTypeList.add (type);
-      Attribute att = new Attribute ("grid::" + grid.getName(), type, grid.getUnits());
+      Attribute att = new Attribute ("GRID_" + grid.getName(), type, grid.getUnits());
       attList.add (att);
     } // for
     setAttributes (attList);
@@ -219,6 +219,11 @@ public class ColocatedPointFeatureSource
     private PointFeature sourceFeature;
     
     ////////////////////////////////////////////////////
+
+    @Override
+    public int getAttributeCount() { return (ColocatedPointFeatureSource.this.getAttributeCount()); }
+    
+    ////////////////////////////////////////////////////
     
     @Override
     public Object getAttribute (int index) {
@@ -254,6 +259,11 @@ public class ColocatedPointFeatureSource
             else if (type.equals (Byte.class))
               dataValue = (byte) dblValue;
             else throw new RuntimeException ("Unsupported attribute type: " + type);
+
+
+            // TODO: What happens when a grid type is unsigned here?
+
+
           } // if
         } // if
       } // else
@@ -277,6 +287,18 @@ public class ColocatedPointFeatureSource
       this.sourceFeature = sourceFeature;
 
     } // ColocatedPointFeature constructor
+
+    ////////////////////////////////////////////////////
+
+    @Override
+    public EarthLocation get (
+      int index
+    ) {
+    
+      if (index == 0) return (sourceFeature.getPoint());
+      else throw (new IndexOutOfBoundsException());
+    
+    } // get
 
     ////////////////////////////////////////////////////
 
@@ -404,7 +426,7 @@ public class ColocatedPointFeatureSource
     assert (colocatedAttList.get (2).getName().equals ("sst"));
     assert (colocatedAttList.get (3).getName().equals ("quality_level"));
     assert (colocatedAttList.get (4).getName().equals ("time"));
-    assert (colocatedAttList.get (5).getName().equals ("grid::avhrr_ch4"));
+    assert (colocatedAttList.get (5).getName().equals ("GRID_avhrr_ch4"));
     logger.passed();
 
     logger.test ("select, getArea");
@@ -434,7 +456,7 @@ public class ColocatedPointFeatureSource
     sstRule.setOperator (NumberRule.Operator.IS_GREATER_THAN);
     filter.add (sstRule);
     
-    NumberRule gridRule = new NumberRule ("grid::avhrr_ch4", attNameMap, varValues.get (2));
+    NumberRule gridRule = new NumberRule ("GRID_avhrr_ch4", attNameMap, varValues.get (2));
     gridRule.setOperator (NumberRule.Operator.IS_NOT_EQUAL_TO );
     filter.add (gridRule);
   
@@ -445,13 +467,6 @@ public class ColocatedPointFeatureSource
     for (Feature feature : colocatedSource) selected.add (feature);
     assert (selected.size() == 1);
     logger.passed();
-
-
-
-
-
-
-
 
   } // main
 

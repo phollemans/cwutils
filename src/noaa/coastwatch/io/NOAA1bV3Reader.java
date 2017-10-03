@@ -206,7 +206,7 @@ public class NOAA1bV3Reader
         case NOAA_17_ID: return (new String ("noaa-17"));
         case NOAA_18_ID: return (new String ("noaa-18"));
         case NOAA_19_ID: return (new String ("noaa-19"));
-        default: return (new String ("unknown"));
+        default: return (new String ("Unknown"));
         } // switch
 
       // Otherwise, delegate to the parent

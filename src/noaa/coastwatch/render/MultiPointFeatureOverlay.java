@@ -31,6 +31,8 @@ import java.awt.Point;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
+import java.util.LinkedHashSet;
 
 import noaa.coastwatch.render.PointFeatureOverlay;
 import noaa.coastwatch.render.EarthDataOverlay;
@@ -69,6 +71,12 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
   /** A hint for a TimeWindow object to use with this overlay. */
   private TimeWindow timeWindowHint;
   
+  /** A hint for an EarthArea object to use with this overlay. */
+  private EarthArea earthAreaHint;
+
+  /** A hint for a list of expression to use with the feature attributes in this overlay. */
+  private List<String> expressionListHint;
+
   /** The group filter flag, true to use the group filter or false otherwise. */
   private boolean isGroupFilterActive = true;
   
@@ -124,6 +132,74 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
     return (timeWindowHint);
   
   } // getTimeWindowHint
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the earth area hint.  This hint may be used to help in obtaining
+   * a list of matching features that will be displayed when this overlay
+   * renders.
+   *
+   * @param area the earth area to use for a hint.
+   * 
+   * @see #getMatchingFeatures(PointFeatureOverlay,EarthArea)
+   * @see #getMatchingFeatures(EarthArea)
+   */
+  public void setEarthAreaHint (
+    EarthArea area
+  ) {
+  
+    this.earthAreaHint = area;
+  
+  } // setEarthAreaHint
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the earth area hint.
+   *
+   * @return the earth area hint or null if there is no hint available.
+   *
+   * @see #getMatchingFeatures(PointFeatureOverlay,EarthArea)
+   * @see #getMatchingFeatures(EarthArea)
+   * @see #setEarthAreaHint
+   */
+  public EarthArea getEarthAreaHint() {
+  
+    return (earthAreaHint);
+  
+  } // getEarthAreaHint
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the expression list hint.  This hint may be used to compute
+   * statistics on the attributes of features in the overlay.
+   *
+   * @param expressionList the expression list to use for a hint.
+   */
+  public void setExpressionListHint (
+    List<String> expressionList
+  ) {
+  
+    this.expressionListHint = expressionList;
+  
+  } // setExpressionListHint
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the expression list hint.  This hint may be used to compute
+   * statistics on the attributes of features in the overlay.
+   *
+   * @return expressionList the expression list to use for a hint, or null
+   * if there is no hint available.
+   */
+  public List<String> getExpressionListHint () {
+  
+    return (expressionListHint);
+  
+  } // getExpressionListHint
 
   ////////////////////////////////////////////////////////////
 
@@ -202,7 +278,8 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
   /** 
    * Gets the list of overlays displayed.
    *
-   * @return the list of overlays.
+   * @return the list of overlays.  The returned list may be modified, and
+   * the changes will be reflected the next time the overlay is rendered.
    */
   public List<PointFeatureOverlay<T>> getOverlayList () { return (overlayList); }
 
@@ -264,6 +341,42 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
   ////////////////////////////////////////////////////////////
 
   /**
+   * Gets the matching point features for this overlay.
+   *
+   * @param area the earth area to use for feature matching.
+   *
+   * @return the list of features that will be drawn when the overlay is 
+   * rendered with a view that shows the same earth area as that specified.
+   */
+  public List<Feature> getMatchingFeatures (
+    EarthArea area
+  ) {
+
+    // Create intersection filter
+    // --------------------------
+    IntersectionFilter intersectionFilter = new IntersectionFilter();
+
+    // Get features for each overlay using the intersection filter
+    // -----------------------------------------------------------
+    Set<Feature> featureSet = new LinkedHashSet<Feature>();
+    overlayList
+      .stream()
+      .filter (overlay -> overlay.getVisible())
+      .forEach (overlay -> {
+        SelectionRuleFilter overlayFilter = overlay.getFilter();
+        intersectionFilter.setOverlayFilter (overlayFilter);
+        overlay.setFilter (intersectionFilter);
+        featureSet.addAll (overlay.getMatchingFeatures (area));
+        overlay.setFilter (overlayFilter);
+      });
+        
+    return (new ArrayList<Feature> (featureSet));
+
+  } // getMatchingFeatures
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Gets the matching point features for the specified overlay.    
    *
    * @param overlay the overlay to get the list of matching features.  
@@ -273,7 +386,6 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
    *
    * @return the list of features that will be drawn when the overlay is 
    * rendered with a view that shows the same earth area as that specified.
-   *
    */
   public List<Feature> getMatchingFeatures (
     PointFeatureOverlay overlay,
@@ -359,7 +471,7 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
     buffer.append ("\ngroupFilter=" + groupFilter + ",");
     buffer.append ("\noverlayList=[\n");
     for (int i = 0; i < overlayList.size(); i++) {
-      buffer.append (overlayList.get(0).toString());
+      buffer.append (overlayList.get (i).toString());
       if (i < overlayList.size()-1) buffer.append (",\n");
       else buffer.append ("\n");
     } // for

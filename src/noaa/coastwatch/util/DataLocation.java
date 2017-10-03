@@ -595,6 +595,7 @@ public class DataLocation
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public boolean equals (
     Object o
   ) {
@@ -773,6 +774,7 @@ public class DataLocation
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public int hashCode () {
 
     // Get cached hash code

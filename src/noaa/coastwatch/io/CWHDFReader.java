@@ -191,7 +191,7 @@ public class CWHDFReader
     catch (HDFException e) { }
     String origin;
     try { origin = (String) getAttribute (sdid, "origin"); }
-    catch (HDFException e) { origin = "unknown"; }
+    catch (HDFException e) { origin = "Unknown"; }
     String history;
     try { history = (String) getAttribute (sdid, "history"); }
     catch (HDFException e) { history = ""; }
@@ -205,14 +205,14 @@ public class CWHDFReader
     // ------------------
     EarthDataInfo info;
     if (sat == null && sensor == null && source == null)
-      source = "unknown";
+      source = "Unknown";
     if (source != null) {
       info = new EarthDataInfo (source, periodList, transform, 
         origin, history);
     } // if
     else {
-      if (sat == null) sat = "unknown";
-      if (sensor == null) sensor = "unknown";
+      if (sat == null) sat = "Unknown";
+      if (sensor == null) sensor = "Unknown";
       info = new SatelliteDataInfo (sat, sensor, periodList, transform, 
         origin, history);
     } // else

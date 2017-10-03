@@ -121,7 +121,7 @@ public class CWOpendapReader
     String sensor = (String) rawMetadataMap.get ("sensor");
     String source = (String) rawMetadataMap.get ("data_source");
     String origin = (String) rawMetadataMap.get ("origin");
-    if (origin == null) origin = "unknown";
+    if (origin == null) origin = "Unknown";
     String history = (String) rawMetadataMap.get ("history");
     if (history == null) history = "";
 
@@ -134,14 +134,14 @@ public class CWOpendapReader
     // ------------------
     EarthDataInfo info;
     if (sat == null && sensor == null && source == null)
-      source = "unknown";
+      source = "Unknown";
     if (source != null) {
       info = new EarthDataInfo (source, periodList, transform, 
         origin, history);
     } // if
     else {
-      if (sat == null) sat = "unknown";
-      if (sensor == null) sensor = "unknown";
+      if (sat == null) sat = "Unknown";
+      if (sensor == null) sensor = "Unknown";
       info = new SatelliteDataInfo (sat, sensor, periodList, transform, 
         origin, history);
     } // else

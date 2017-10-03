@@ -253,7 +253,7 @@ public abstract class EarthDataReader {
       for (int i = 0; i < variables.length; i++)
         if ((var = getPreview (i)) instanceof Grid) break;
     } catch (IOException e) { }
-    if (var == null || !(var instanceof Grid)) return ("unknown");
+    if (var == null || !(var instanceof Grid)) return ("Unknown");
 
     // Get scene time
     // --------------

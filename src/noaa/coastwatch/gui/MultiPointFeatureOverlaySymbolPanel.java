@@ -37,6 +37,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.ListCellRenderer;
 import javax.swing.JScrollPane;
@@ -47,8 +48,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+import javax.swing.SwingConstants;
 
+import java.util.Collections;
 import java.util.Vector;
 import java.util.List;
 import java.util.ArrayList;
@@ -57,11 +61,14 @@ import java.util.Date;
 import noaa.coastwatch.gui.visual.SymbolSwatch;
 import noaa.coastwatch.render.MultiPointFeatureOverlay;
 import noaa.coastwatch.render.PointFeatureOverlay;
+import noaa.coastwatch.render.SimpleSymbol;
 import noaa.coastwatch.render.feature.Feature;
 import noaa.coastwatch.render.feature.PointFeature;
 import noaa.coastwatch.render.feature.Attribute;
 import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.DateFormatter;
+
+import com.braju.format.Format;
 
 // Testing
 import noaa.coastwatch.gui.visual.MultiPointFeatureOverlayPropertyChooser;
@@ -87,7 +94,7 @@ public class MultiPointFeatureOverlaySymbolPanel
   // ---------
   
   /** The overlay to display features from in this panel. */
-  private MultiPointFeatureOverlay overlay;
+  private MultiPointFeatureOverlay<SimpleSymbol> multiPointOverlay;
 
   /** The list of symbol overlays. */
   private JList<PointFeatureOverlay> overlayList;
@@ -112,6 +119,9 @@ public class MultiPointFeatureOverlaySymbolPanel
 
   /** The table of feature attribute values. */
   private JTable featureTable;
+  
+  /** The flag to indicate that the symbol overlay list is being internally updated. */
+  private boolean isOverlayListUpdating;
 
   ////////////////////////////////////////////////////////////
 
@@ -230,6 +240,19 @@ public class MultiPointFeatureOverlaySymbolPanel
 
     ////////////////////////////////////////////////////////
 
+    @Override
+    public Class<?> getColumnClass (int column) {
+    
+      Class attClass = featureAttributes.get (column).getType();
+      if (attClass.equals (Date.class))
+        attClass = String.class;
+
+      return (attClass);
+      
+    } // getColumnClass
+
+    ////////////////////////////////////////////////////////
+
   } // FeatureTableModel class
 
   ////////////////////////////////////////////////////////////
@@ -237,12 +260,18 @@ public class MultiPointFeatureOverlaySymbolPanel
   /** 
    * Updates the matching features table based on the currently selected
    * point overlay.
+   *
+   * @param featureDataChanged the feature data change flag, true if the
+   * feature table should be updated due to a change in the underlying
+   * features, or false if not.
    */
-  private void updateMatchingFeatures () {
+  private void updateMatchingFeatures (
+    boolean featureDataChanged
+  ) {
 
     boolean wasShowingData = (displayedPointOverlay != null);
     PointFeatureOverlay pointOverlay = overlayList.getSelectedValue();
-    if (pointOverlay != null && displayedPointOverlay != pointOverlay) {
+    if ((pointOverlay != null && displayedPointOverlay != pointOverlay) || featureDataChanged) {
 
       // Update attributes (ie: table columns)
       // -------------------------------------
@@ -250,7 +279,7 @@ public class MultiPointFeatureOverlaySymbolPanel
 
       // Update features (ie: table rows)
       // --------------------------------
-      matchingFeatures = overlay.getMatchingFeatures (pointOverlay, featureArea);
+      matchingFeatures = multiPointOverlay.getMatchingFeatures (pointOverlay, featureArea);
       matchingFeaturesLabel.setText ("Found " + matchingFeatures.size() + " matching feature(s)");
       displayedPointOverlay = pointOverlay;
 
@@ -260,7 +289,7 @@ public class MultiPointFeatureOverlaySymbolPanel
         featureModel.fireTableDataChanged();
       else {
         featureModel.fireTableStructureChanged();
-        initTableColumnSizes();
+        initTableColumns();
       } // else
       
     } // if
@@ -301,10 +330,54 @@ public class MultiPointFeatureOverlaySymbolPanel
   ////////////////////////////////////////////////////////////
 
   /**
-   * Initializes the feature table columns to reasonable sizes based
-   * on the column names and column data types.
+   * Renders a table cell data according to a format object.
    */
-  private void initTableColumnSizes() {
+  private class FormatRenderer extends DefaultTableCellRenderer {
+
+    /** The format to use for the cell value. */
+    private String format;
+
+    ////////////////////////////////////////////////////////
+
+    /**
+     * Creates a format-based renderer.
+     *
+     * @param format the format to use for cell values.
+     */
+    public FormatRenderer (
+      String format
+    ) {
+    
+      this.format = format;
+      setHorizontalAlignment (SwingConstants.RIGHT);
+
+    } // FormatRenderer constructor
+
+    ////////////////////////////////////////////////////////
+
+    @Override
+    public void setValue (Object value) {
+
+      try {
+        if (value != null) value = Format.sprintf (format, new Object[] {value});
+      } // try
+      catch (IllegalArgumentException e) {}
+
+      super.setValue (value);
+
+    } // setValue
+
+    ////////////////////////////////////////////////////////
+    
+  } // FormatRenderer class
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Initializes the feature table columns based on the column names and 
+   * column data types.
+   */
+  private void initTableColumns() {
 
     TableCellRenderer headerRenderer = featureTable.getTableHeader().getDefaultRenderer();
 
@@ -319,33 +392,73 @@ public class MultiPointFeatureOverlaySymbolPanel
 
       // Get prototype cell width
       // ------------------------
-      Component cellComponent = featureTable.getDefaultRenderer (
-        featureModel.getColumnClass (i)).getTableCellRendererComponent (
+      TableCellRenderer renderer = null;
+      Class colClass = featureModel.getColumnClass (i);
+      if (colClass.equals (Double.class)) {
+        renderer = new FormatRenderer ("%.15g");
+        column.setCellRenderer (renderer);
+      } // if
+      else if (colClass.equals (Float.class)) {
+        renderer = new FormatRenderer ("%.6g");
+        column.setCellRenderer (renderer);
+      } // else if
+      else {
+        renderer = featureTable.getDefaultRenderer (colClass);
+      } // else
+      Component cellComponent = renderer.getTableCellRendererComponent (
         featureTable, getPrototypeCellValue (i), false, false, 0, i);
       int cellWidth = cellComponent.getPreferredSize().width;
-      
+
       // Set column width
       // ----------------
       column.setPreferredWidth (Math.max (headerWidth, cellWidth) + 5);
 
     } // for
 
-  } // initTableColumnSizes
+  } // initTableColumns
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Signals that the feature overlay has changed in some way, and to update
+   * the panel accordingly.
+   */
+  public void overlayChanged () {
+
+    // Repopulate the list model if needed
+    // -----------------------------------
+    DefaultListModel<PointFeatureOverlay> model = (DefaultListModel<PointFeatureOverlay>) overlayList.getModel();
+    List<PointFeatureOverlay<SimpleSymbol>> list = multiPointOverlay.getOverlayList();
+    if (!list.equals (Collections.list (model.elements()))) {
+      PointFeatureOverlay selectedOverlay = overlayList.getSelectedValue();
+      isOverlayListUpdating = true;
+      DefaultListModel<PointFeatureOverlay> newModel = new DefaultListModel<>();
+      list.forEach (overlay -> newModel.addElement (overlay));
+      overlayList.setModel (newModel);
+      int index = model.indexOf (selectedOverlay);
+      if (index < 0) index = 0;
+      overlayList.setSelectionInterval (index, index);
+      isOverlayListUpdating = false;
+    } // if
+  
+    updateMatchingFeatures (true);
+  
+  } // overlayChanged
 
   ////////////////////////////////////////////////////////////
   
   /** 
    * Creates a new symbol display panel.
    *
-   * @param overlay the overlay the use for feature display.
+   * @param multiPointOverlay the overlay the use for feature display.
    * @param area the earth area to use for feature display.
    */
   public MultiPointFeatureOverlaySymbolPanel (
-    MultiPointFeatureOverlay overlay,
+    MultiPointFeatureOverlay<SimpleSymbol> multiPointOverlay,
     EarthArea area
   ) {
 
-    this.overlay = overlay;
+    this.multiPointOverlay = multiPointOverlay;
     this.featureArea = area;
     this.featureAttributes = new ArrayList<>();
     this.matchingFeatures = new ArrayList<>();
@@ -360,11 +473,15 @@ public class MultiPointFeatureOverlaySymbolPanel
     this.add (leftPanel, BorderLayout.WEST);
     leftPanel.setBorder (new TitledBorder (new EtchedBorder(), "Symbols"));
 
-    Vector<PointFeatureOverlay> overlayVector = new Vector<> (overlay.getOverlayList());
-    overlayList = new JList<PointFeatureOverlay> (overlayVector);
+    DefaultListModel<PointFeatureOverlay> model = new DefaultListModel<>();
+    multiPointOverlay.getOverlayList().forEach (overlay -> model.addElement (overlay));
+
+    overlayList = new JList<PointFeatureOverlay> (model);
     overlayList.setCellRenderer (new SymbolOverlayRenderer());
     overlayList.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
-    overlayList.addListSelectionListener (event -> updateMatchingFeatures());
+    overlayList.addListSelectionListener (event -> {
+      if (!isOverlayListUpdating) updateMatchingFeatures (false);
+    });
     JScrollPane listScroller = new JScrollPane (overlayList);
     leftPanel.add (listScroller, BorderLayout.CENTER);
 
@@ -387,13 +504,6 @@ public class MultiPointFeatureOverlaySymbolPanel
     // Select first symbol
     // -------------------
     overlayList.setSelectionInterval (0, 0);
-
-
-
-// TODO: How do we update the model here when the overlay changes filters?
-
-
-
 
   } // MultiPointFeatureOverlaySymbolPanel constructor
   
