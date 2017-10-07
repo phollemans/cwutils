@@ -1,120 +1,116 @@
 \chapter{Data Format Compatibility}
 \label{compatible}
 
-
-%% TODO: Replace this note with actual changes.
-
-{\fbox{\parbox{5in}{
-{\bf *** NOTE TO USERS ***} \newline
-This section of the User's Guide needs
-updating.  For example, the CoastWatch IMGMAP format is no longer supported,
-and cwexport and CDAT can write NetCDF 3 and 4 files.
-}}
-
-
-
 Many of the tools automatically detect the input file format and
 perform the same operation for a number of different formats, for
-example CoastWatch IMGMAP files and CoastWatch HDF files. The
-following table shows the file format compatibility of the various
-tools: \\
+example viewing of HDF 4 and NOAA 1b files. The following table shows
+the file format compatibility of the various tools: \\
 \\
 \begin{tabular}{|l|p{5cm}|p{5cm}|}
   \hline 
 
-  Tool & Input formats & Output formats \\ \hline 
+  TOOL & INPUT & OUTPUT \\ \hline
 
-  cdat & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & CWHDF, Binary, Text,
-  ArcGIS, PNG, GIF, JPEG, PDF, GeoTIFF \\ \hline
+  cdat & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & HDF 4, NetCDF 3, NetCDF 4,
+  Binary, Text, ArcGIS, PNG, GIF, JPEG, PDF, GeoTIFF \\ \hline
 
-  cwangles & CWHDF/NC & -- \\ \hline
+  cwangles & HDF 4, NetCDF 3 & -- \\ \hline
 
-  cwautonav & CWHDF/NC, CWF & -- \\ \hline
+  cwautonav & HDF 4, NetCDF 3 & -- \\ \hline
 
-  cwcomposite & CWHDF/NC, CWF, TSHDF, OPeNDAP & CWHDF \\ \hline
+  cwcomposite & HDF 4, NetCDF 3, NetCDF 4 & HDF 4 \\ \hline
 
-  cwcoverage & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & PNG \\ \hline
+  cwcoverage & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & PNG \\ \hline
 
   cwdownload & -- & -- \\ \hline
 
-  cwexport & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & Binary, Text, ArcGIS \\
-  \hline
+  cwexport & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & Binary, Text, ArcGIS,
+  NetCDF 3, NetCDF 4 \\ \hline
 
-  cwgraphics & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & CWHDF \\ \hline
+  cwgraphics & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & HDF 4 \\ \hline
 
-  cwimport & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & CWHDF \\ \hline
+  cwimport & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & HDF 4 \\ \hline
 
-  cwinfo & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & -- \\ \hline
+  cwinfo & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & -- \\ \hline
 
-  cwmaster & CWHDF/NC, CWF, TSHDF & CWHDF \\ \hline
+  cwmaster & HDF 4, NetCDF 3, NetCDF 4 & HDF 4 \\ \hline
 
-  cwmath & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & CWHDF \\ \hline
+  cwmath & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & HDF 4 \\ \hline
 
-  cwnavigate & CWHDF/NC, CWF & -- \\ \hline
+  cwnavigate & HDF 4, NetCDF 3 & -- \\ \hline
 
-  cwregister & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & CWHDF \\ \hline
-
-%%\end{tabular}
-%%
-%%\begin{tabular}{|l|p{5cm}|p{5cm}|}
-%%  \hline
-%%
-%%  Tool & Input formats & Output formats \\ \hline
-
-  cwrender & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & PNG, GIF, JPEG, PDF,
-  GeoTIFF \\ \hline
-
-  cwsample & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & Text \\ \hline
-
-  cwstats & CWHDF/NC, CWF, TSHDF, N1B, OPeNDAP & -- \\ \hline
-
-  cwstatus & -- & -- \\ \hline
+  cwregister & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & HDF 4 \\ \hline
 
 \end{tabular}
 
-where:
+\begin{tabular}{|l|p{5cm}|p{5cm}|}
+  \hline
 
-\begin{description}
+  TOOL & INPUT & OUTPUT \\ \hline
 
-  \item[CWHDF/NC] HDF 4 and netCDF 3 with CoastWatch HDF or CF
-  metadata (.hdf, .nc).  CF metadata support is still experimental.
+  cwrender & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & PNG, GIF, JPEG, PDF,
+  GeoTIFF \\ \hline
 
-  \item[CWF] CoastWatch format (.cwf) files that contain AVHRR SST, cloud,
-  channel, angle, and graphics data.  These files were produced by
-  CoastWatch up to 2004.
+  cwsample & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & Text \\ \hline
 
-  \item[TSHDF] SeaSpace TeraScan files that have been converted to HDF
-  using tdftohdf.  Only the {\tt rectangular}, {\tt polarstereo}, {\tt
-  mercator}, and {\tt emercator} projections are supported, along with
-  {\tt sensor\_scan} if latitude and longitude angles have been
-  included in the file.
+  cwstats & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & -- \\ \hline
 
-  \item[N1B] NOAA 1b AVHRR data, format versions 1 through 5, GAC or LAC
-  resolutions, 8-bit, 10-bit, and 16-bit sensor word sizes with or
-  without archive header.
+  cwstatus & -- & -- \\ \hline
 
-  \item[OPeNDAP] OPeNDAP datasets with CoastWatch HDF or CF metadata,
-  map projection files only.  CF metadata support is still
-  experimental.  Swath datasets and {\tt RasterPixelIsPoint} mode are
-  not supported.
+\end{tabular} \\
+\\
+\\
+Note that the metadata and/or versions supported by the physical file formats
+are as follows: \\
+\\
+\begin{tabular}{|l|p{10cm}|}
+  \hline 
 
-  \item[Binary] Raw binary format.  See individual manual pages for a
-  description of the binary file contents.
+  PHYSICAL FORMAT & METADATA / VERSION \\ \hline
 
-  \item[Text] Standard ASCII text format.  See individual manual pages
-  for a description of the text file contents.
+  HDF 4 & CoastWatch 3.4, TeraScan (only {\tt rectangular}, {\tt polarstereo},
+  {\tt mercator}, {\tt emercator}, and {\tt sensor\ scan} projections), ACSPO \\ \hline
 
-  \item[ArcGIS] ESRI ArcGIS binary grid format (32-bit IEEE floats) with
-  accompanying header file.
+  NetCDF 3 & CoastWatch 3.4, CF 1.4 \\ \hline
 
-  \item[PNG] Portable Network Graphics with optional world file.
+  NetCDF 4 & CoastWatch 3.4, CF 1.4, ACSPO \\ \hline
 
-  \item[GIF] Graphics Interchange Format with optional world file.
+  NOAA 1b & AVHRR, AMSU-A, AMSU-B, HIRS 4, and MHS sensors \\
+  & AVHRR LAC or GAC in 8/10/16-bit sensor word sizes \\
+  & File format versions 1 through 5, with or without archive header \\ \hline
 
-  \item[JPEG] Joint Photographic Experts Group with optional world file.
+  ArcGIS & 32-bit IEEE float binary grid with accompanying header
+  file \\ \hline
 
-  \item[PDF] Adobe Portable Document Format
+  GeoTIFF & TIFF spec 6.0, GeoTIFF spec 1.8.2 \\
+  & Uncompressed, Deflate (PKZIP-style), and PackBits compression \\
+  & 8-bit or 24-bit \\
+  & Map projections supported: \\
+  & Alaska Conformal \\
+  & Albers Conical Equal Area \\
+  & Azimuthal Equidistant \\
+  & Equirectangular \\
+  & Gnomonic \\
+  & Lambert Azimuthal Equal Area \\
+  & Lambert Conformal Conic \\
+  & Mercator \\
+  & Miller Cylindrical \\
+  & Orthographic \\
+  & Polar Stereographic \\
+  & Polyconic \\
+  & Robinson \\
+  & Sinusoidal \\
+  & Stereographic \\
+  & Transverse Mercator \\
+  & Universal Transverse Mercator \\
+  & Van der Grinten \\ \hline
 
-  \item[GeoTIFF] Tagged Image File Format with georeferencing tags.
+  GIF & Version 89a with LZW compression and optional world file \\ \hline
 
-\end{description}
+  JPEG & JFIF standard 1.02 with optional world file \\ \hline
+
+  PDF & Version 1.4 with LZW image compression \\ \hline
+
+  PNG & 8-bit, 24-bit with LZW compression and optional world file \\ \hline
+
+\end{tabular}

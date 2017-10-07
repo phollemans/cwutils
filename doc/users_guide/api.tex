@@ -1,31 +1,18 @@
 \chapter{Programmer's API}
 \label{api}
 
-
-%% TODO: Replace this note with actual changes.
-
-{\fbox{\parbox{5in}{
-{\bf *** NOTE TO USERS ***} \newline
-This section of the User's Guide needs
-updating.  The {\file lib/} directory structure, JAR files, and
-operating system-specfic native libraries have changed.
-}}
-
-
-
-
 \section{How to use the API}
 
 Developers may want to use some of the same code used by the
 CoastWatch Utilities to read and write data, render images, or
 perform some variation on the existing functionality.  Since the
 CoastWatch Utilities are written almost entirely in Java
-(conforming to the Java 5 language spec), the Java Application
-Programming Interface (API) documentation is available in the
+(conforming to the Java 8 language spec), the Java Application
+Programming Interface (API) documentation is available in
 standard Javadoc-generated HTML web page format, included with the
 CoastWatch Utilities distribution package as the compressed
 {\file doc/api.zip} file in the installation directory.  Users of
-the graphical installers on Windows, Mac, and some Unix versions
+the graphical installers on Windows, Mac, and Linux
 have to manually check off the ``Source code and API docs'' when
 the package is installed in order to get the API zip file (you
 also get the full source code {\file src.zip} file whose Java code
@@ -46,78 +33,31 @@ developers:
 \begin{description}
 
 \item[{\file lib/java/}] -- Contains the main {\file cwutils.jar} file of
-CoastWatch Utilities code, plus all JAR files required by the
-CoastWatch code.  The major dependencies are as follows:
+CoastWatch Utilities code.
+
+\item[{\file lib/java/depend/}] -- Contains the Java JAR dependencies for:
 \begin{itemize}
 
-\item Alloy Look and Feel (used for Unix GUI only):\\
-{\file alloy.jar}
-
-\item GeoTools (shapefile support):\\
-{\file geoapi-1.1.0alpha.jar}\\
-{\file gt2-main-nojai.jar}\\
-{\file gt2-shapefile.jar}\\
-{\file JTS-1.4.jar}
-
-\item GIF encoding: \\
-{\file neuquant.jar} (neural net color quantization) \\
-{\file gifencoder.jar} (actual format encoder) \\
-{\file kd.jar} (KD-tree color quantization)
-
-\item PDF encoding: \\
-{\file itext-1.2.jar}
-
-\item XML parsing: \\
-{\file jaxen-full.jar} \\
-{\file saxpath.jar}
-
-\item C-style print formatting:\\
-{\file hb16.zip}
-
-\item Command line argument parsing:\\
-{\file jargs.jar}
-
-\item Java Advanced Imaging CODEC (mainly for GeoTIFF encoding):\\
-{\file jai\_codec.jar}
-
-\item Mathematical expression parsing:\\
-{\file jep-2.24.jar}
-
-\item Plotting symbols:\\
-{\file PlotPackage.jar}
-
-\item Java matrix manipulation:\\
-{\file Jama-1.0.1.jar}
-
-\item HDF native library stubs:\\
-{\file jhdf.jar}
-
-\item Unidata UDUNITS support:\\
-{\file udunits.jar}
-
-\item NetCDF Java support:\\
-{\file bzip2.jar}\\
-{\file commons-httpclient-2.0.1.jar}\\
-{\file commons-logging.jar}\\
-{\file dods-1.1.7.jar}\\
-{\file gnu-regexp-1.1.4.jar}\\
-{\file grib.jar}\\
-{\file jdom-b9.jar}\\
-{\file jpeg2000.jar}\\
-{\file netcdf-2.2.jar}\\
-{\file visad.jar}
-
-\item Terrenus HRPT interfaces for NOAA1b instrument data:\\
-{\file hrpt.jar}
+\item Alloy Look and Feel (used for Linux GUI)
+\item GeoTools (ArcGIS Shapefile rendering)
+\item GIF encoding
+\item PDF encoding
+\item XML parsing
+\item C-style print formatting
+\item Command line argument parsing
+\item Java Advanced Imaging CODEC (mainly for GeoTIFF encoding)
+\item Mathematical expression parsing
+\item Plotting symbols
+\item Java matrix manipulation
+\item HDF and NetCDF I/O
+\item Unidata UDUNITS units conversion
+\item Terrenus HRPT interfaces for NOAA1b instrument data
 
 \end{itemize}
 
-\item[{\file lib/aix},{\file linux},{\file macosx},{\file solaris},{\file
-win32}/] -- Native libraries for various operating systems.  C
-language code has been compiled to native binary libraries and
+\item[{\file lib/native/}] -- Native libraries for various operating systems.
+C language code has been compiled to native binary libraries and
 linked to Java via JNI in cases where no Java libraries existed.
-Native libraries include HDF 4 file I/O, CoastWatch IMGMAP (.cwf)
-file I/O, and GCTP map projection coordinate transformations.
 
 \end{description}
 
@@ -137,12 +77,12 @@ up the environment for compiling and running with the CoastWatch
 Utilities:
 \begin{verbatim}
   cwutils_root="/Applications/CoastWatch Utilities 3.2.2"
-  CLASSPATH="."
-  for fname in "$cwutils_root"/lib/*.jar "$cwutils_root"/lib/*.zip ; do
+  CLASSPATH=".:$cwutils_root/lib/java/cwutils.jar"
+  for fname in "$cwutils_root"/lib/java/depend/* ; do
     CLASSPATH=${CLASSPATH}:"$fname"
   done
   export CLASSPATH
-  export DYLD_LIBRARY_PATH="$cwutils_root"/lib/macosx
+  export DYLD_LIBRARY_PATH="$cwutils_root"/lib/native/macosx_x86_64
 \end{verbatim}
 If you prefer to use a GUI development environment such as
 Eclipse or JBuilder, then the GUI will have settings to store the

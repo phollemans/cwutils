@@ -767,7 +767,7 @@ public class MultiPointFeatureOverlayStatsPanel
   /**
    * Sets the value of an expression in the statistics table.
    *
-   * @param the index to set the expression.
+   * @param index the index to set the expression.
    * @param expression the expression to set.
    *
    * @throws IllegalArgumentException if an error occurred parsing the

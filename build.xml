@@ -141,6 +141,13 @@
     </exec>
   </target>
 
+  <target name="guide"
+    description="Creates user's guide in doc/users_guide/">
+    <exec executable="pdflatex" dir="doc/users_guide">
+      <arg line="cwutils_users_guide.tex"/>
+    </exec>
+  </target>
+
   <target name="test-man" depends="doc"
     description="Copies the CW utilities man pages into the install directory">
     <copy todir="${install.dir}/doc/man">

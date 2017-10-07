@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
 import noaa.coastwatch.io.NCReader;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
@@ -49,10 +50,12 @@ import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.EarthTransform2D;
 import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
+
 import ucar.ma2.DataType;
 import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
+import ucar.nc2.Dimension;
 import ucar.nc2.dataset.NetcdfDataset;
 
 /** 
@@ -283,10 +286,27 @@ public class CWCFNCReader
 
       // Check for correct dimensions
       // ----------------------------
-      if (var.getRank() >= 2 && !var.getShortName().equals("time_bounds")) {
+      String varName = var.getShortName();
+      if (var.getRank() >= 2) {
+
+        // Detect time bounds variable
+        // ---------------------------
+        List<Dimension> dims = var.getDimensions();
+        Dimension dim0 = dims.get (0);
+        Dimension dim1 = dims.get (1);
+        boolean isTimeBounds = (
+          var.getRank() == 2 &&
+          (dim0.getLength() == 1 || dim1.getLength() == 1) &&
+          (dim0.getShortName().matches (".*time.*") || dim1.getShortName().matches (".*time.*"))
+        );
+
+        // Skip time bounds variable in list
+        // ---------------------------------
+        if (!isTimeBounds)
           nameList.add (var.getShortName());
-          
+
       } // if
+      
     } // for
 
     return ((String[]) nameList.toArray (new String[]{}));
