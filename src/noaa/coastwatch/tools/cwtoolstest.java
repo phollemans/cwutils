@@ -211,7 +211,7 @@ public class cwtoolstest {
         "--region", "(er|sr)", 
         "--station", "wi", 
         "--dir", TEST_DATA_DIR,
-        "psbcw1.nesdis.noaa.gov"
+        "vmcwsst3.nesdis.noaa.gov"
       }));
       
       // Run info tests

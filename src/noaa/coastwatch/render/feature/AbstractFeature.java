@@ -185,9 +185,17 @@ public abstract class AbstractFeature
         } // if
         else {
           for (int i = 0; i < this.getAttributeCount(); i++) {
-            if (!this.getAttribute (i).equals (feature.getAttribute (i))) {
-              isEqual = false;
-              break;
+            Object attValue = getAttribute (i);
+            Object otherAttValue = feature.getAttribute (i);
+            if (!(attValue == null && otherAttValue == null)) {   // both values are null
+              if (
+                (attValue != null && otherAttValue == null) ||    // one value is null
+                (attValue == null && otherAttValue != null) ||    // other value is null
+                (!attValue.equals (otherAttValue))                // values are non-null but unequal
+              ) {
+                isEqual = false;
+                break;
+              } // if
             } // if
           } // for
         } // else
