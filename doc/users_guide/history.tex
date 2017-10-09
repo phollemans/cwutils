@@ -1152,3 +1152,105 @@
 
 \end{itemize}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Version 3.3.2, 2017/10/09}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\hspace{0.4cm} {\bf Graphical tools}
+
+\begin{itemize}
+
+  \item CDAT optionally checks on startup if software update is available.
+
+  \item CDAT now displays iQuam SST quality monitoring point data files and
+  computes the statistics between image and point data attributes.  Use
+  by adding a shape overlay to an image and selecting an iQuam SST data file.
+
+\end{itemize}
+
+\hspace{0.4cm} {\bf File formats and I/O}
+
+\begin{itemize}
+
+  \item GeoTIFF, JPEG, GIF, PNG, and PDF rendered files have extra metadata tags
+  that describe the software version and options used.
+
+  \item New support for NetCDF 4 files in level 2 swath projection and
+  non-geographic dimensions.
+
+  \item NetCDF 4 files now have better support for grid mapped projections in
+  the CF metadata.
+
+  \item HDF is now updated to the HDF Java 3.2.1 version.
+
+  \item Data file opening now correctly reports an out of memory issue if it
+  occurs while identifying the file type.
+
+  \item GeoTIFF output now supports UTM projection data.
+
+\end{itemize}
+
+\hspace{0.4cm} {\bf Command line tools}
+
+\begin{itemize}
+
+  \item Manual page for cwsample now correctly shows how to output to the
+  terminal.
+
+  \item Manual page for cwcomposite clarifies use of -{-}method option.
+
+  \item The cwregister tool has two new options -{-}srcfilter and -{-}srcexpr
+  to limit pixels used from the source data in registration.
+
+  \item The cwrender tool now has a -{-}date option to override the plot legend
+  date in cases where the file metadata is incorrect or unavailable.
+
+  \item The cwstats tool now has a -{-}polygon option that computes statistics
+  within a polygon boundary.
+
+  \item The cwrender tool has a new -{-}scalewidth option to explicitly set the
+  width of the color scale legend.  This is useful so that a series of plots
+  match in overall width.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+  \item Long text lines in plot legends are now wrapped.
+
+  \item NetCDF 4 file writing now properly includes missing value attribute
+  for variable data.
+
+  \item NetCDF 4 float and double types now read with full precision formatting.
+
+  \item NetCDF 4 files with 4D and 5D variables are read more reliably.
+
+  \item GRIB files with variables names containing double underscpres now read
+  correctly.
+
+  \item The cwregister tool performance is now greatly improved in some cases
+  where source and destination data is chunked.
+
+  \item Topographic and other lines are now drawn more reliably on plots in
+  geographic projection.
+
+  \item NetCDF 4 data is now correctly displayed in the case where a
+  cylindrical projection is used with irregularly spaced latitude and longitude
+  axes.
+
+  \item The color scale legend in PDF output plots has an improved appearance
+  in onscreen PDF readers.
+
+  \item Open NetCDF files that are no longer needed are now properly closed.
+
+  \item GeoTIFF ModelTransformationTag values have been updated to correct
+  a 0.5 pixel error.
+
+\end{itemize}
+
+
+
+
