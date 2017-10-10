@@ -1040,6 +1040,20 @@ OTHER DEALINGS WITH THE SOFTWARE.
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction">
+                      <void property="programGroupEntryConfigs">
+                        <void method="add">
+                          <object class="com.install4j.runtime.beans.screens.components.ProgramGroupFileConfig">
+                            <void property="name">
+                              <string>User's Guide</string>
+                            </void>
+                            <void property="target">
+                              <object class="java.io.File">
+                                <string>doc/cwutils_ug_3_3_2.pdf</string>
+                              </object>
+                            </void>
+                          </object>
+                        </void>
+                      </void>
                       <void property="uninstallerMenuName">
                         <string>${i18n:UninstallerMenuEntry(${compiler:sys.fullName})}</string>
                       </void>
