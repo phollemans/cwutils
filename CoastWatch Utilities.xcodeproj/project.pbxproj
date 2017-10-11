@@ -19,6 +19,7 @@
 		E91D3DDB1C6ACB8600EAFF79 /* build.number */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = build.number; sourceTree = "<group>"; };
 		E91FD1B61B1003BA0096CCA3 /* html2mdoc.xsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = html2mdoc.xsl; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xml; };
 		E92229931AF4937B00E392D0 /* ScriptConsole.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ScriptConsole.java; sourceTree = "<group>"; };
+		E929B1F11F8DC77E000BB7CF /* version.tex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = version.tex; sourceTree = "<group>"; };
 		E9339BBF16D1F0740019383B /* logging.properties */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = logging.properties; sourceTree = "<group>"; };
 		E93C27B51E274015008A698D /* libjhdf.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libjhdf.dylib; sourceTree = "<group>"; };
 		E93C27B61E274015008A698D /* libjhdf5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libjhdf5.dylib; sourceTree = "<group>"; };
@@ -1303,6 +1304,7 @@
 				E96D8887161661420009B833 /* misc_formats.tex */,
 				E96D8889161661420009B833 /* references.bib */,
 				E96D888B161661420009B833 /* title.tex */,
+				E929B1F11F8DC77E000BB7CF /* version.tex */,
 			);
 			path = users_guide;
 			sourceTree = "<group>";

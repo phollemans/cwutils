@@ -132,7 +132,13 @@
     </javadoc>
   </target>
 
-  <target name="doc" depends="api"
+  <target name="guide-version">
+    <echo
+      file="doc/users_guide/version.tex"
+      message="\newcommand{\version}{${version}}"/>
+  </target>
+
+  <target name="doc" depends="api,guide-version"
     description="Creates Java API documentation, tool manual pages, and user's guide in doc/">
     <delete dir="doc/tools"/>
     <delete dir="doc/man"/>
@@ -141,7 +147,7 @@
     </exec>
   </target>
 
-  <target name="guide"
+  <target name="guide" depends="guide-version"
     description="Creates user's guide in doc/users_guide/">
     <exec executable="pdflatex" dir="doc/users_guide">
       <arg line="cwutils_users_guide.tex"/>
