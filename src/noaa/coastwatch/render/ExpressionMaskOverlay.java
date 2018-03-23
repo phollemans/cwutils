@@ -35,7 +35,7 @@ import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.GridContainerOverlay;
 import noaa.coastwatch.render.MaskOverlay;
 import noaa.coastwatch.util.DataLocation;
-import noaa.coastwatch.util.ExpressionParserFactory;
+import noaa.coastwatch.util.expression.ExpressionParserFactory;
 import noaa.coastwatch.util.Grid;
 import org.nfunk.jep.JEP;
 import org.nfunk.jep.SymbolTable;

@@ -199,6 +199,7 @@ public class NavigationAnalysisPanel
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void performOperation (
     Shape shape
   ) {
@@ -214,7 +215,11 @@ public class NavigationAnalysisPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Adds a point to the list of navigation points. */
+  /**
+   * Adds a point to the list of navigation points.
+   *
+   * @param earthLoc the point to add.
+   */
   public void addPoint (
     EarthLocation earthLoc
   ) {
@@ -243,18 +248,21 @@ public class NavigationAnalysisPanel
 
   ////////////////////////////////////////////////////////////
 
-  public int getOperationMode () { 
+  @Override
+  public LightTable.Mode getOperationMode () {
 
-    return (isActive() ? LightTable.POINT_MODE : -1); 
+    return (isActive() ? LightTable.Mode.POINT : LightTable.Mode.NONE);
 
   } // getOperationMode
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public boolean isActive () { return (!hidden.isSelected()); }
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void deactivate () { hidden.setSelected (true); }
 
   ////////////////////////////////////////////////////////////
@@ -385,7 +393,7 @@ public class NavigationAnalysisPanel
     viewPanel = new EarthDataViewPanel (nullView);
     lightTable = new LightTable (viewPanel);
     lightTable.addChangeListener (new DrawListener()); 
-    lightTable.setDrawingMode (LightTable.IMAGE_TRANSLATE_MODE);
+    lightTable.setDrawingMode (LightTable.Mode.IMAGE_TRANSLATE);
     lightTable.setBackground (Color.BLACK);
     lightTable.setPreferredSize (new Dimension (256, 256));
 
@@ -891,8 +899,7 @@ public class NavigationAnalysisPanel
     public void actionPerformed (ActionEvent event) {
 
       addCommand = event.getActionCommand();
-      firePropertyChange (OPERATION_MODE_PROPERTY, null, 
-        new Integer (getOperationMode()));
+      firePropertyChange (OPERATION_MODE_PROPERTY, null, getOperationMode());
 
     } // actionPerformed
   } // AddButtonListener class

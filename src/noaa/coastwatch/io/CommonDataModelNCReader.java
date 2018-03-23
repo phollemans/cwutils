@@ -44,6 +44,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
 import noaa.coastwatch.io.NCReader;
 import noaa.coastwatch.io.tile.NCTileSource;
 import noaa.coastwatch.io.tile.TileCachedGrid;
@@ -62,6 +63,7 @@ import noaa.coastwatch.util.trans.GeoVectorProjection;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
 import noaa.coastwatch.util.trans.SwathProjection;
 import noaa.coastwatch.util.trans.EllipsoidPerspectiveProjection;
+
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Attribute;
@@ -79,6 +81,8 @@ import ucar.nc2.dt.GridDatatype;
 import ucar.nc2.ft.FeatureDatasetFactoryManager;
 import ucar.nc2.time.CalendarDate;
 import ucar.nc2.time.CalendarDateRange;
+import ucar.nc2.dataset.CoordinateAxisTimeHelper;
+import ucar.nc2.time.Calendar;
 
 /** 
  * The <code>CommonDataModelNCReader</code> class reads Java NetCDF API
@@ -172,30 +176,48 @@ public class CommonDataModelNCReader
   /** Gets the earth data info object. */
   private EarthDataInfo getGlobalInfo () throws IOException { 
 
-    // TODO: Does this correctly detect the time periods in the file?
-    // We have a MODIS file that this doesn't seem to work with.
-
-    // Create list of time periods
-    // ---------------------------
+    // Detect time periods from time axis
+    // ----------------------------------
     Set<Date> dateSet = new TreeSet<Date>();
     for (VariableGroup group : groupList) {
       GridCoordSystem coordSystem = group.gridset.getGeoCoordSystem();
       CalendarDateRange dateRange = coordSystem.getCalendarDateRange();
-      if (dateRange != null) {
+
+      // Use time axis directly
+      // ----------------------
+      if (dateRange == null) {
+        if (coordSystem.hasTimeAxis()) {
+          CoordinateAxis axis = coordSystem.getTimeAxis();
+          if (axis.isScalar()) {
+            double offset = axis.readScalarDouble();
+            CoordinateAxisTimeHelper helper = new CoordinateAxisTimeHelper (Calendar.getDefault(), axis.getUnitsString());
+            CalendarDate date = helper.makeCalendarDateFromOffset (offset);
+            dateSet.add (new Date (date.getMillis()));
+          } // if
+        } // if
+      } // if
+      
+      // Use detected date range
+      // -----------------------
+      else {
         dateSet.add (new Date (dateRange.getStart().getMillis()));
         dateSet.add (new Date (dateRange.getEnd().getMillis()));
-      } // if
+      } // else
+
     } // for
-    if (dateSet.size() == 0) dateSet.add (new Date(0));
-    List<TimePeriod> periodList = new ArrayList<TimePeriod>();
-    for (Date date : dateSet) periodList.add (new TimePeriod (date, 0));
-    
+
+    // Test for time axis success
+    // --------------------------
+    boolean foundTimeAxis = (dateSet.size() != 0);
+
     // Find the data origin and source
     // -------------------------------
     String origin = null;
     String source = null;
     String platform = null;
     String sensor = null;
+    String time_start = null;
+    String time_end = null;
     for (Attribute att : (List<Attribute>) dataset.getGlobalAttributes()) {
       if (!att.isString()) continue;
       String name = att.getShortName().toLowerCase();
@@ -211,18 +233,44 @@ public class CommonDataModelNCReader
         } // if
       } // if
       if (platform == null) {
-        if (name.equals ("platform")) {
+        if (name.equals ("platform") || name.equals ("platform_id")) {
           platform = att.getStringValue();
         } // if
       } // if
       if (sensor == null) {
-        if (name.equals ("sensor")) {
+        if (name.equals ("sensor") || name.equals ("instrument_id")) {
           sensor = att.getStringValue();
+        } // if
+      } // if
+      if (time_start == null) {
+        if (name.equals ("time_coverage_start")) {
+          time_start = att.getStringValue();
+        } // if
+      } // if
+      if (time_end == null) {
+        if (name.equals ("time_coverage_end")) {
+          time_end = att.getStringValue();
         } // if
       } // if
     } // for
     if (origin == null) origin = "Unknown";
     if (source == null) source = "Unknown";
+
+    // Detect time periods from global attributes
+    // ------------------------------------------
+    if (!foundTimeAxis && (time_start != null && time_end != null)) {
+      String calName = Calendar.getDefault().toString();
+      try {
+        CalendarDate start = CalendarDate.parseISOformat (calName, time_start);
+        dateSet.add (new Date (start.getMillis()));
+        CalendarDate end = CalendarDate.parseISOformat (calName, time_end);
+        dateSet.add (new Date (end.getMillis()));
+      } // try
+      catch (Exception e) { } // Might have a parsing error here
+    } // if
+    if (dateSet.size() == 0) dateSet.add (new Date(0));
+    List<TimePeriod> periodList = new ArrayList<TimePeriod>();
+    for (Date date : dateSet) periodList.add (new TimePeriod (date, 0));
 
     // Create satellite info
     // ---------------------
@@ -916,7 +964,7 @@ utilities when:
     VariableGroup group = groupMap.get (variables[index]);
     
     try {
-    
+
       // Get variable info
       // -----------------
       int varDims[] = (group.varDims != null ? group.varDims : var.getShape());
@@ -1053,7 +1101,11 @@ utilities when:
       // Create variable
       // ---------------
       DataVariable dataVar;
-      if (rank == 1) {
+      if (rank == 0) {
+        dataVar = new Line (name, longName, units, 1, data, format,
+          scaling, missing);
+      } // if
+      else if (rank == 1) {
         dataVar = new Line (name, longName, units, varDims[0], data, format,
           scaling, missing);
       } // if

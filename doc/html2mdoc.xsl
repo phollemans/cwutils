@@ -15,6 +15,7 @@
 <xsl:template match="head|h1"></xsl:template>
 
 <!-- Man page header -->
+<!-- Note that these formatting command come from the groff_mdoc man page. -->
 
 <xsl:template match="html">
 .Dd <xsl:value-of select="$date"/>
@@ -90,7 +91,7 @@
 .Ef
 </xsl:template>
 
-<xsl:template match="i">
+<xsl:template match="i|u">
 .Bf -emphasis
 <xsl:value-of select="concat (normalize-space (.), '&#xa;')"/>
 .Ef

@@ -28,13 +28,16 @@ package noaa.coastwatch.tools;
 import jargs.gnu.CmdLineParser;
 import jargs.gnu.CmdLineParser.Option;
 import jargs.gnu.CmdLineParser.OptionException;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+
 import noaa.coastwatch.io.CWHDFReader;
 import noaa.coastwatch.io.CWHDFWriter;
 import noaa.coastwatch.io.EarthDataReader;
@@ -323,10 +326,10 @@ public class cwgraphics {
       } // if
       NumberFormat format = NumberFormat.getInstance();
       format.setMaximumFractionDigits (0);
-      Grid outputVar = new HDFCachedGrid (
-        new Grid (variable, "graphics overlay planes", null, rows, cols,
-        new byte[] {}, format, new double[] {1, 0}, new Byte ((byte)0)), 
-        writer);
+      Grid gridVar = new Grid (variable, "graphics overlay planes", null, rows, cols,
+        new byte[0], format, null, new Byte ((byte)0));
+      gridVar.setUnsigned (true);
+      Grid outputVar = new HDFCachedGrid (gridVar, writer);
 
       // Create solid background view
       // ----------------------------

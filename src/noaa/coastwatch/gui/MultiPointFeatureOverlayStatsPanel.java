@@ -62,7 +62,7 @@ import noaa.coastwatch.render.feature.Feature;
 import noaa.coastwatch.render.PointFeatureSymbol;
 import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.Statistics;
-import noaa.coastwatch.util.ExpressionParserFactory;
+import noaa.coastwatch.util.expression.ExpressionParserFactory;
 import noaa.coastwatch.util.DataIterator;
 
 import com.braju.format.Format;

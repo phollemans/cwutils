@@ -113,7 +113,7 @@ public interface DataViewOverlayControl {
    * @return the current operation mode as a mode from the {@link
    * LightTable} class.
    */
-  public int getOperationMode ();
+  public LightTable.Mode getOperationMode ();
 
   ////////////////////////////////////////////////////////////
 

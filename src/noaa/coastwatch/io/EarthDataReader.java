@@ -443,10 +443,16 @@ public abstract class EarthDataReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns a list of all grid (2D) variable names in this reader. */
-  public List getAllGrids () throws IOException {
+  /**
+   * Gets a list of all 2D grid variable names in this reader.
+   *
+   * @return the list of grid variable names.
+   *
+   * @throws IOException if an error occurred getting the list of grids.
+   */
+  public List<String> getAllGrids () throws IOException {
 
-    List gridList = new LinkedList();
+    List<String> gridList = new LinkedList<>();
     for (int i = 0; i < variables.length; i++) {
       DataVariable variable = getPreview (i);
       if (variable instanceof Grid)
@@ -459,8 +465,12 @@ public abstract class EarthDataReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns a list of all variable names in this reader. */
-  public List getAllVariables () {
+  /**
+   * Gets a list of all variable names in this reader.
+   *
+   * @return the list of variable names.
+   */
+  public List<String> getAllVariables () {
 
     return (Arrays.asList (variables));
 

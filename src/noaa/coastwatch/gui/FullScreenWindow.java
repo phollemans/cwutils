@@ -30,6 +30,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.DisplayMode;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -38,13 +39,16 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.event.MouseInputAdapter;
+
 import noaa.coastwatch.gui.FullScreenToolBar;
 import noaa.coastwatch.gui.GUIServices;
 
@@ -86,9 +90,8 @@ public class FullScreenWindow {
   // Variables
   // ---------
 
-  /** The default graphics device. */
-  private static GraphicsDevice device = 
-    GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+  /** The graphics device for the component. */
+  private GraphicsDevice device;
 
   /** The rectangle bounds for the full screen window. */
   private Rectangle bounds;
@@ -126,9 +129,6 @@ public class FullScreenWindow {
    * contents.
    * @param toolbar the toolbar to use for the component, or null for
    * no toolbar.
-   *
-   * @throws UnsupportedOperationException if full screen mode is not
-   * supported.
    */
   public FullScreenWindow (
     Component component,
@@ -142,7 +142,8 @@ public class FullScreenWindow {
 
     // Create frame
     // ------------
-    GraphicsConfiguration config = device.getDefaultConfiguration();
+    GraphicsConfiguration config = component.getGraphicsConfiguration();
+    this.device = config.getDevice();
     frame = new JFrame (config);
     frame.setUndecorated (true);
     frame.setResizable (false);
@@ -150,6 +151,7 @@ public class FullScreenWindow {
     // Get full screen window bounds
     // -----------------------------
     bounds = config.getBounds();
+    bounds.x = bounds.y = 0;  // These could be non-zero in a virtual device
 
     if (toolbar != null) {
       
@@ -359,9 +361,11 @@ public class FullScreenWindow {
    *
    * @return true if full screen mode is supported or false if not.
    */
+  @Deprecated
   public static boolean isFullScreenSupported () {
 
-    return (device.isFullScreenSupported());
+//    return (device.isFullScreenSupported());
+    return (true);
 
   } // isFullScreenSupported
   

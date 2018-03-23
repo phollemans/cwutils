@@ -118,7 +118,8 @@ public class TestRunner {
       catch (InvocationTargetException e) {
         logger.failed();
         Throwable cause = e.getCause();
-        logger.error (cause.getClass().getName());
+//        logger.error (cause.getClass().getName());
+        logger.error (cause.toString());
         for (StackTraceElement element : cause.getStackTrace()) {
           logger.error ("  at " + element);
         } // for

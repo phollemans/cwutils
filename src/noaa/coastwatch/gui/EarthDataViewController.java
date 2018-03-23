@@ -58,6 +58,7 @@ import noaa.coastwatch.gui.EarthDataViewPanel;
 import noaa.coastwatch.gui.EnhancementChooser;
 import noaa.coastwatch.gui.LegendPanel;
 import noaa.coastwatch.gui.LightTable;
+import noaa.coastwatch.gui.LightTable.Mode;
 import noaa.coastwatch.gui.NavigationChooser;
 import noaa.coastwatch.gui.OverlayListChooser;
 import noaa.coastwatch.gui.PaletteChooser;
@@ -246,9 +247,9 @@ public class EarthDataViewController {
    *
    * @return the component panels.
    */
-  public List getTabComponentPanels () {
+  public List<TabComponent> getTabComponentPanels () {
 
-    List list = new LinkedList();
+    List<TabComponent> list = new LinkedList<>();
     list.add (enhancementChooser);
     list.add (paletteChooser);
     list.add (overlayChooser);
@@ -688,7 +689,7 @@ public class EarthDataViewController {
       // Change navigation mode
       // ----------------------
       if (property.equals (NavigationAnalysisPanel.OPERATION_MODE_PROPERTY)) {
-        int mode = ((Integer) event.getNewValue()).intValue();
+        LightTable.Mode mode = (LightTable.Mode) event.getNewValue();
         lightTable.setDrawingMode (mode);
         setInteractionMode (NAV_ANALYSIS_MODE);
         lightTable.setActive (true);
@@ -711,9 +712,9 @@ public class EarthDataViewController {
       if (property.equals (NavigationChooser.NAVIGATION_MODE_PROPERTY)) {
         String mode = (String) event.getNewValue();
         if (mode.equals (NavigationChooser.TRANSLATION))
-          lightTable.setDrawingMode (LightTable.IMAGE_TRANSLATE_MODE);
+          lightTable.setDrawingMode (Mode.IMAGE_TRANSLATE);
         else if (mode.equals (NavigationChooser.ROTATION))
-          lightTable.setDrawingMode (LightTable.IMAGE_ROTATE_MODE);
+          lightTable.setDrawingMode (Mode.IMAGE_ROTATE);
         setInteractionMode (NAVIGATION_MODE);
         lightTable.setActive (true);
         viewPanel.setDefaultCursor (lightTable.getCursor());
@@ -1109,13 +1110,13 @@ public class EarthDataViewController {
       // Set light table
       // ---------------
       if (command.equals (SurveyListChooser.POINT_COMMAND))
-        lightTable.setDrawingMode (LightTable.POINT_MODE);
+        lightTable.setDrawingMode (Mode.POINT);
       else if (command.equals (SurveyListChooser.LINE_COMMAND))
-        lightTable.setDrawingMode (LightTable.LINE_MODE);
+        lightTable.setDrawingMode (Mode.LINE);
       else if (command.equals (SurveyListChooser.BOX_COMMAND))
-        lightTable.setDrawingMode (LightTable.BOX_MODE);
+        lightTable.setDrawingMode (Mode.BOX);
       else if (command.equals (SurveyListChooser.POLYGON_COMMAND))
-        lightTable.setDrawingMode (LightTable.POLYLINE_MODE);
+        lightTable.setDrawingMode (Mode.POLYLINE);
       else {
         throw new IllegalArgumentException (
           "Unknown survey command " + command);
@@ -1141,19 +1142,19 @@ public class EarthDataViewController {
       // Set light table
       // ---------------
       if (command.equals (AnnotationListChooser.LINE_COMMAND))
-        lightTable.setDrawingMode (LightTable.LINE_MODE);
+        lightTable.setDrawingMode (Mode.LINE);
       else if (command.equals (AnnotationListChooser.POLYLINE_COMMAND))
-        lightTable.setDrawingMode (LightTable.POLYLINE_MODE);
+        lightTable.setDrawingMode (Mode.POLYLINE);
       else if (command.equals (AnnotationListChooser.BOX_COMMAND))
-        lightTable.setDrawingMode (LightTable.BOX_MODE);
+        lightTable.setDrawingMode (Mode.BOX);
       else if (command.equals (AnnotationListChooser.POLYGON_COMMAND))
-        lightTable.setDrawingMode (LightTable.POLYLINE_MODE);
+        lightTable.setDrawingMode (Mode.POLYLINE);
       else if (command.equals (AnnotationListChooser.CIRCLE_COMMAND))
-        lightTable.setDrawingMode (LightTable.CIRCLE_MODE);
+        lightTable.setDrawingMode (Mode.CIRCLE);
       else if (command.equals (AnnotationListChooser.CURVE_COMMAND))
-        lightTable.setDrawingMode (LightTable.POLYLINE_MODE);
+        lightTable.setDrawingMode (Mode.POLYLINE);
       else if (command.equals (AnnotationListChooser.TEXT_COMMAND))
-        lightTable.setDrawingMode (LightTable.POINT_MODE);
+        lightTable.setDrawingMode (Mode.POINT);
       else {
         throw new IllegalArgumentException (
           "Unknown annotation command " + command);
@@ -1191,19 +1192,19 @@ public class EarthDataViewController {
       // --------------------------------
       if (operation.equals (ViewOperationChooser.ZOOM)) {
         setInteractionMode (VIEW_MODE);
-        lightTable.setDrawingMode (LightTable.BOX_ZOOM_MODE);
+        lightTable.setDrawingMode (Mode.BOX_ZOOM);
         lightTable.setActive (true);
         viewPanel.setDefaultCursor (lightTable.getCursor());
       } // if
       else if (operation.equals (ViewOperationChooser.PAN)) {
         setInteractionMode (VIEW_MODE);
-        lightTable.setDrawingMode (LightTable.IMAGE_MODE);
+        lightTable.setDrawingMode (Mode.IMAGE);
         lightTable.setActive (true);
         viewPanel.setDefaultCursor (lightTable.getCursor());
       } // else if
       else if (operation.equals (ViewOperationChooser.RECENTER)) {
         setInteractionMode (VIEW_MODE);
-        lightTable.setDrawingMode (LightTable.POINT_MODE);
+        lightTable.setDrawingMode (Mode.POINT);
         lightTable.setActive (true);
         viewPanel.setDefaultCursor (lightTable.getCursor());
       } // else if

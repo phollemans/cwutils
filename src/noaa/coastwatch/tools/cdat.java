@@ -40,7 +40,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.geom.NoninvertibleTransformException;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -49,6 +51,7 @@ import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -66,6 +69,12 @@ import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
+import javax.swing.JButton;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBoxMenuItem;
+
+import noaa.coastwatch.gui.CloseIcon;
 import noaa.coastwatch.gui.CompoundToolBar;
 import noaa.coastwatch.gui.EarthDataAnalysisPanel;
 import noaa.coastwatch.gui.FileOperationChooser;
@@ -83,6 +92,7 @@ import noaa.coastwatch.gui.ViewOperationChooser;
 import noaa.coastwatch.gui.WindowMonitor;
 import noaa.coastwatch.gui.open.EarthDataChooser;
 import noaa.coastwatch.gui.save.EarthDataExporter;
+
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.OverlayGroupManager;
@@ -90,6 +100,7 @@ import noaa.coastwatch.tools.Preferences;
 import noaa.coastwatch.tools.ResourceManager;
 import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.gui.ScriptConsole;
 
 /**
@@ -191,8 +202,7 @@ public final class cdat
   private static final String SHORT_NAME = "CDAT";
 
   /** The long program name. */
-  private static final String LONG_NAME = 
-    "CoastWatch Data Analysis Tool";
+  private static final String LONG_NAME = "CoastWatch Data Analysis Tool";
 
   /** The File/Open menu command. */
   private static final String OPEN_COMMAND = FileOperationChooser.OPEN;
@@ -231,9 +241,7 @@ public final class cdat
   private static final String DATA_SIZE_CUSTOM_COMMAND = "Custom Data Size";
 
   /** The View/Full Screen Mode menu command. */
-  private static final String FULL_SCREEN_COMMAND = "Full Screen " + 
-    (!FullScreenWindow.isFullScreenSupported() ? "Emulation " : "") +
-    "Mode";
+  private static final String FULL_SCREEN_COMMAND = "Full Screen Mode";
 
   /** The Tools/Preferences menu command. */
   private static final String PREFS_COMMAND = "Preferences";
@@ -274,6 +282,9 @@ public final class cdat
   /** The view operation chooser. */
   private ViewOperationChooser viewChooser;
 
+  /** The compound toolbar. */
+  private CompoundToolBar toolBar;
+
   /** The tabbed pane used to hold analysis panels. */
   private JTabbedPane tabbedPane;
 
@@ -288,7 +299,85 @@ public final class cdat
 
   /** The help index URL. */
   private static URL helpIndex = cdat.class.getResource (HELP_INDEX);
+  
+  /** The open recent menu item. */
+  private JMenu openRecentMenu;
+  
+  /** The saved view center location. */
+  private EarthLocation savedViewCenter;
 
+  /** The saved view scale. */
+  private double savedViewScale;
+  
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Rebuilds the open recent file menu to reflect the current list of
+   * recent files.
+   *
+   * @since 3.4.0
+   */
+  private void rebuildRecentFilesMenu () {
+
+    List<String> recentFilesList = GUIServices.getRecentlyOpenedFiles (cdat.class);
+
+    // Add recently opened files
+    // -------------------------
+    openRecentMenu.removeAll();
+    for (int i = 0; i < recentFilesList.size(); i++) {
+      JMenuItem menuItem = new JMenuItem (new File (recentFilesList.get (i)).getName());
+      final int index = i;
+      menuItem.addActionListener (event -> openRecentFile (index));
+      openRecentMenu.insert (menuItem, 0);
+    } // for
+
+    // Add clear menu item
+    // -------------------
+    JMenuItem menuItem = new JMenuItem ("Clear Menu");
+    if (recentFilesList.size() == 0)
+      menuItem.setEnabled (false);
+    else {
+      menuItem.addActionListener (event -> clearRecentFilesMenu());
+      openRecentMenu.addSeparator();
+    } // else
+    openRecentMenu.add (menuItem);
+
+  } // rebuildRecentFilesMenu
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Resets the list of recently opened files to zero length and updates
+   * the menu to be empty.
+   *
+   * @since 3.4.0
+   */
+  private void clearRecentFilesMenu () {
+
+    GUIServices.setRecentlyOpenedFiles (new ArrayList<String>(), cdat.class);
+    rebuildRecentFilesMenu();
+
+  } // clearRecentFilesMenu
+  
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Opens a file from the recently opened files list.
+   *
+   * @param index the index of the file to open.
+   *
+   * @since 3.4.0
+   */
+  private void openRecentFile (
+    int index
+  ) {
+
+    List<String> recentFilesList = GUIServices.getRecentlyOpenedFiles (cdat.class);
+    File file = new File (recentFilesList.get (index));
+    openFile (file);
+
+  } // openRecentFile
+  
   ////////////////////////////////////////////////////////////
 
   /** Creates a new CDAT frame. */
@@ -323,23 +412,27 @@ public final class cdat
     FileMenuListener fileListener = new FileMenuListener();
     JMenuItem menuItem;
     int keymask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-    menuItem = new JMenuItem (OPEN_COMMAND, 
-      GUIServices.getIcon ("menu.open"));
+//    menuItem = new JMenuItem (OPEN_COMMAND, GUIServices.getIcon ("menu.open"));
+    menuItem = new JMenuItem (OPEN_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_O);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_O, keymask));
     menuItem.addActionListener (fileListener); 
     fileMenu.add (menuItem);
 
-    menuItem = new JMenuItem (CLOSE_COMMAND, 
-      GUIServices.getIcon ("menu.close"));
+    openRecentMenu = new JMenu ("Open Recent");
+    fileMenu.add (openRecentMenu);
+    rebuildRecentFilesMenu();
+
+//    menuItem = new JMenuItem (CLOSE_COMMAND, GUIServices.getIcon ("menu.close"));
+    menuItem = new JMenuItem (CLOSE_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_C);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_W, keymask));
     menuItem.addActionListener (fileListener); 
     fileMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
-    menuItem = new JMenuItem (EXPORT_COMMAND, 
-      GUIServices.getIcon ("menu.export"));
+//    menuItem = new JMenuItem (EXPORT_COMMAND, GUIServices.getIcon ("menu.export"));
+    menuItem = new JMenuItem (EXPORT_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_E);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_E, keymask));
     menuItem.addActionListener (fileListener); 
@@ -438,6 +531,71 @@ public final class cdat
     viewMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
+    viewMenu.addSeparator();
+
+    menuItem = new JMenuItem ("Fit Image to Window");
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_0, keymask));
+    menuItem.addActionListener (event -> viewChooser.performOperation (ViewOperationChooser.RESET));
+    viewMenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
+
+    menuItem = new JMenuItem ("Actual Size");
+    menuItem.addActionListener (event -> viewChooser.performOperation (ViewOperationChooser.ONE_TO_ONE));
+    viewMenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
+
+    menuItem = new JMenuItem ("Fill Window");
+    menuItem.addActionListener (event -> viewChooser.performOperation (ViewOperationChooser.FIT));
+    viewMenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
+
+    menuItem = new JMenuItem ("Zoom In");
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_EQUALS, keymask));
+    menuItem.addActionListener (event -> viewChooser.performOperation (ViewOperationChooser.MAGNIFY));
+    viewMenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
+
+    menuItem = new JMenuItem ("Zoom Out");
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_MINUS, keymask));
+    menuItem.addActionListener (event -> viewChooser.performOperation (ViewOperationChooser.SHRINK));
+    viewMenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
+
+    menuItem = new JMenuItem ("Zoom to Selection");
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_Z, keymask));
+    menuItem.addActionListener (event -> viewChooser.performOperation (ViewOperationChooser.ZOOM));
+    viewMenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
+
+    viewMenu.addSeparator();
+
+    menuItem = new JMenuItem ("Copy View Zoom");
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_C, keymask | InputEvent.SHIFT_DOWN_MASK));
+    menuItem.addActionListener (event -> saveViewCenterAndScale());
+    viewMenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
+
+    menuItem = new JMenuItem ("Paste View Zoom");
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_V, keymask | InputEvent.SHIFT_DOWN_MASK));
+    menuItem.addActionListener (event -> restoreViewCenterAndScale());
+    viewMenu.add (menuItem);
+    menuItemDisableList.add (menuItem);
+
+    viewMenu.addSeparator();
+
+    JCheckBoxMenuItem checkBoxMenuItem;
+    checkBoxMenuItem = new JCheckBoxMenuItem ("Show Tool bar");
+    boolean isToolbarVisible = GUIServices.recallBooleanSettingForClass (true, "toolbar.visibility", cdat.class);
+    checkBoxMenuItem.setState (isToolbarVisible);
+    checkBoxMenuItem.addActionListener (event -> updateToolbarVisibility (event));
+    viewMenu.add (checkBoxMenuItem);
+
+    checkBoxMenuItem = new JCheckBoxMenuItem ("Show Control tabs");
+    boolean areControlTabsVisible = GUIServices.recallBooleanSettingForClass (true, "controltabs.visibility", cdat.class);
+    checkBoxMenuItem.setState (areControlTabsVisible);
+    checkBoxMenuItem.addActionListener (event -> updateControlTabsVisibility (event));
+    viewMenu.add (checkBoxMenuItem);
+
     // Create tools menu
     // -----------------
     JMenu toolsMenu = new JMenu ("Tools");
@@ -445,7 +603,8 @@ public final class cdat
     menuBar.add (toolsMenu);
 
     ToolsMenuListener toolsListener = new ToolsMenuListener();
-    menuItem = new JMenuItem (PREFS_COMMAND, GUIServices.getIcon ("menu.prefs"));
+//    menuItem = new JMenuItem (PREFS_COMMAND, GUIServices.getIcon ("menu.prefs"));
+    menuItem = new JMenuItem (PREFS_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_P);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_COMMA, keymask));
     menuItem.addActionListener (toolsListener);
@@ -496,8 +655,8 @@ public final class cdat
     menuBar.add (helpMenu);
 
     HelpMenuListener helpListener = new HelpMenuListener();
-    menuItem = new JMenuItem (HELP_COMMAND,
-      GUIServices.getIcon ("menu.support"));
+//    menuItem = new JMenuItem (HELP_COMMAND, GUIServices.getIcon ("menu.support"));
+    menuItem = new JMenuItem (HELP_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_H);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (
       KeyEvent.VK_F1, 0));
@@ -505,8 +664,8 @@ public final class cdat
     helpMenu.add (menuItem);
     helpMenu.addSeparator();
 
-    menuItem = new JMenuItem (ABOUT_COMMAND, 
-      GUIServices.getIcon ("menu.about"));
+//    menuItem = new JMenuItem (ABOUT_COMMAND, GUIServices.getIcon ("menu.about"));
+    menuItem = new JMenuItem (ABOUT_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_A);
     menuItem.addActionListener (helpListener); 
     helpMenu.add (menuItem);
@@ -531,10 +690,10 @@ public final class cdat
 
     // Create tool bar
     // ---------------
-    CompoundToolBar toolBar = 
-      new CompoundToolBar (new JToolBar[] {fileChooser, viewChooser}, true);
+    toolBar = new CompoundToolBar (new JToolBar[] {fileChooser, viewChooser}, true);
     toolBar.setFloatable (false);
     toolBar.setBorder (new BevelBorder (BevelBorder.RAISED));
+    toolBar.setVisible (isToolbarVisible);
     this.getContentPane().add (toolBar, BorderLayout.NORTH);
 
     // Create tabbed pane
@@ -576,6 +735,61 @@ public final class cdat
 
   } // cdat constructor
 
+  ////////////////////////////////////////////////////////////
+
+  /** Updates the visibility of the toolbar. */
+  private void updateToolbarVisibility (ActionEvent event) {
+
+    boolean flag = ((JCheckBoxMenuItem) event.getSource()).getState();
+    toolBar.setVisible (flag);
+    GUIServices.storeBooleanSettingForClass (flag, "toolbar.visibility", cdat.class);
+
+  } // updateToolbarVisibility
+  
+  ////////////////////////////////////////////////////////////
+
+  /** Updates the visibility of the control tabs. */
+  private void updateControlTabsVisibility (ActionEvent event) {
+
+    boolean flag = ((JCheckBoxMenuItem) event.getSource()).getState();
+    for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+      getAnalysisPanelAt (i).setTabbedPaneVisible (flag);
+    } // for
+    GUIServices.storeBooleanSettingForClass (flag, "controltabs.visibility", cdat.class);
+
+  } // updateControlTabsVisibility
+  
+  ////////////////////////////////////////////////////////////
+
+  /** Saves the view center and scale for later recall. */
+  private void saveViewCenterAndScale () {
+
+    EarthDataView view = getAnalysisPanel().getView();
+    DataLocation center = view.getCenter();
+    savedViewCenter = view.getTransform().getEarthTransform().transform (center);
+    savedViewScale = view.getScale();
+  
+  } // saveViewCenterAndScale
+
+  ////////////////////////////////////////////////////////////
+
+  /** Saves the view center and scale for later recall. */
+  private void restoreViewCenterAndScale () {
+
+    if (savedViewCenter != null && savedViewScale != 0) {
+      EarthDataView view = getAnalysisPanel().getView();
+      DataLocation center = view.getTransform().getEarthTransform().transform (savedViewCenter);
+      if (center.isValid()) {
+        try {
+          view.setCenterAndScale (center, savedViewScale);
+          getAnalysisPanel().repaint();
+        } // try
+        catch (NoninvertibleTransformException e) {}
+      } // if
+    } // if
+  
+  } // restoreViewCenterAndScale
+  
   ////////////////////////////////////////////////////////////
 
   /** 
@@ -864,6 +1078,54 @@ public final class cdat
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a tab panel with a close button that runs the action listener.
+   *
+   * @param title the title to use for the panel.
+   * @param listener the action listener to run for the tab close button.
+   *
+   * @return the panel to use for the tab.
+   *
+   * @since 3.4.0
+   */
+  private JPanel getTabTitlePanel (
+    String title,
+    ActionListener listener
+  ) {
+
+    // Create the tab panel
+    // --------------------
+    JPanel tabPanel = new JPanel();
+    tabPanel.setLayout (new BoxLayout (tabPanel, BoxLayout.X_AXIS));
+
+    // Add the close button
+    // --------------------
+    int size = 14;
+    JButton closeButton = new JButton (new CloseIcon (CloseIcon.Mode.NORMAL, size));
+    closeButton.setRolloverIcon (new CloseIcon (CloseIcon.Mode.HOVER, size));
+    closeButton.setPressedIcon (new CloseIcon (CloseIcon.Mode.PRESSED, size));
+    closeButton.setOpaque (false);
+    closeButton.setContentAreaFilled (false);
+    closeButton.setBorderPainted (false);
+    closeButton.setFocusPainted (false);
+    closeButton.setMargin (new Insets (2, 2, 2, 2));
+    closeButton.addActionListener (listener);
+    tabPanel.add (closeButton);
+    tabPanel.add (Box.createHorizontalStrut (5));
+    
+    // Add the title label
+    // -------------------
+    tabPanel.setOpaque (false);
+    JLabel titleLabel = new JLabel (title);
+    tabPanel.add (titleLabel);
+    tabPanel.add (Box.createHorizontalStrut (5));
+
+    return (tabPanel);
+    
+  } // getTabTitlePanel
+
+  ////////////////////////////////////////////////////////////
+
   /** 
    * Opens a file and adds a new tab to the application.
    *
@@ -881,11 +1143,20 @@ public final class cdat
     // ---------------------------------
     if (reader != null) {
       List<String> variables = reader.getStatisticsVariables();
-      TabComponent tab = new EarthDataAnalysisPanel (reader, variables);
-      tabbedPane.addTab (tab.getTitle(), tab.getIcon(), (Component) tab, 
-        tab.getToolTip());
-      tabbedPane.setSelectedComponent ((Component) tab);
+      EarthDataAnalysisPanel panel = new EarthDataAnalysisPanel (reader, variables);
+      boolean areControlTabsVisible = GUIServices.recallBooleanSettingForClass (true, "controltabs.visibility", cdat.class);
+      panel.setTabbedPaneVisible (areControlTabsVisible);
+      tabbedPane.addTab (panel.getTitle(), panel.getIcon(), panel, panel.getToolTip());
+      JPanel tabTitlePanel = getTabTitlePanel (panel.getTitle(), event -> {
+        tabbedPane.remove (panel);
+        panel.dispose();
+        updateEnabled();
+      });
+      tabbedPane.setTabComponentAt (tabbedPane.indexOfComponent (panel), tabTitlePanel);
+      tabbedPane.setSelectedComponent (panel);
       updateEnabled();
+      GUIServices.addFileToRecentlyOpened (reader.getSource(), cdat.class, 10);
+      rebuildRecentFilesMenu();
     } // if
 
   } // openFile

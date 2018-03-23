@@ -948,6 +948,20 @@ TODO:
      operators?  For now they do because all number-like attributes are run 
      through the NumberAttributeRule.
  
+   - When testing iQuam SST data files overlaid on Himawari SST data, 
+     we discovered that the Himawari data is chunked as a monolithic 5500x5500
+     array.  Refer to this article on NetCDF for guidance on this:
+     
+     http://www.unidata.ucar.edu/blogs/developer/entry/adding-compression-to-netcdf-3
+ 
+     Specifically this statement: 
+     
+The biggest problems with compression are these.
+
+1. A variable whose data is to be compressed needs to be divided into some 
+set of same-size blocks. This is to avoid having to uncompress the whole 
+variable before accessing any part of it.
+ 
 */
 
 

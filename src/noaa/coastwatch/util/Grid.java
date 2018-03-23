@@ -31,6 +31,10 @@ import java.text.NumberFormat;
 import java.util.Map;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.io.tile.TilingScheme;
+
+// Testing
+import noaa.coastwatch.test.TestLogger;
 
 /**
  * The 2D grid class is a special form of data variable with
@@ -47,6 +51,7 @@ import noaa.coastwatch.util.DataVariable;
  * @author Peter Hollemans
  * @since 3.1.0
  */
+@noaa.coastwatch.test.Testable
 public class Grid
   extends DataVariable {
 
@@ -65,6 +70,17 @@ public class Grid
 
   /** Identity navigation flag. */
   private boolean identityNavigation;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the tiling scheme for this grid if one is available.
+   *
+   * @return the tiling scheme or null for none.
+   *
+   * @since 3.4.0
+   */
+  public TilingScheme getTilingScheme () { return (null); }
 
   ////////////////////////////////////////////////////////////
 
@@ -408,8 +424,9 @@ public class Grid
     // Loop over each row in the copy
     // ------------------------------
     for (int i = 0; i < length[ROWS]; i++) {
-      System.arraycopy (src, (srcPos[ROWS]+i)*srcDims[COLS] + srcPos[COLS],
-        dest, (destPos[ROWS]+i)*destDims[COLS] + destPos[COLS], length[COLS]);
+      int srcStartIndex = (srcPos[ROWS]+i)*srcDims[COLS] + srcPos[COLS];
+      int destStartIndex = (destPos[ROWS]+i)*destDims[COLS] + destPos[COLS];
+      System.arraycopy (src, srcStartIndex, dest, destStartIndex, length[COLS]);
     } // for
 
   } // arraycopy
@@ -417,14 +434,50 @@ public class Grid
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets a subset of grid data values.  This method is similar to
-   * <code>getData()</code>, but retrieves only a subset of data
+   * Sets a subset of grid data values.  This method is similar to
+   * {@link DataVariable#setData(Object)}, but sets only a subset of data
    * values in the raw, unscaled form.
    *
-   * @param start the starting [row, column].
+   * @param subset the subset array of unscaled data values.
+   * @param start the subset starting [row, column].
+   * @param count the subset dimensions [rows, columns].
+   *
+   * @throws IndexOutOfBoundsException if the subset falls outside the
+   * grid dimensions.
+   *
+   * @since 3.4.0
+   */
+  public void setData (
+    Object subset,
+    int[] start,
+    int[] count
+  ) {
+
+    // Check subset
+    // ------------
+    if (!checkSubset (start, count))
+      throw new IndexOutOfBoundsException ("Invalid subset");
+
+    // Modify data
+    // -----------
+    arraycopy (subset, count, new int[] {0,0}, data, dims, start, count);
+
+  } // setData
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets a subset of grid data values.  This method is similar to
+   * {@link #getData}, but retrieves only a subset of data
+   * values in the raw, unscaled form.
+   *
+   * @param start the subset starting [row, column].
    * @param count the subset dimension [rows, columns].
    *
    * @return an array containing the unscaled data values.
+   *
+   * @throws IndexOutOfBoundsException if the subset falls outside the
+   * grid dimensions.
    *
    * @see DataVariable#getData
    */
@@ -440,8 +493,7 @@ public class Grid
 
     // Create subset
     // -------------
-    Object subset = Array.newInstance (getDataClass(), 
-      count[ROWS]*count[COLS]);
+    Object subset = Array.newInstance (getDataClass(), count[ROWS]*count[COLS]);
     arraycopy (data, dims, start, subset, count, new int[] {0,0}, count);
     return (subset);
 
@@ -467,6 +519,101 @@ public class Grid
     return (new SubsetGrid (this, start, dims));
 
   } // getSubset
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
+  public static void main (String[] argv) throws Exception {
+
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (Grid.class);
+
+    // ------------------------->
+
+    logger.test ("Framework");
+
+    int[] dims = new int[] {40, 40};
+    int[] data = new int[dims[ROWS]*dims[COLS]];
+    for (int i = 0; i < dims[ROWS]; i++) {
+      for (int j = 0; j < dims[COLS]; j++) {
+        data[i*dims[COLS] + j] = i*dims[COLS] + j;
+      } // for
+    } // for
+    for (int index = 1; index < data.length; index++) {
+      assert (data[index] != data[index-1]);
+    } // for
+
+    Grid grid = new Grid (
+      "test",
+      "test data",
+      "meters",
+      dims[ROWS],
+      dims[COLS],
+      data,
+      new java.text.DecimalFormat ("000"),
+      null,
+      null);
+
+    logger.passed();
+
+    // ------------------------->
+
+    logger.test ("getData");
+    
+    int[] start = new int[] {3, 25};
+    int[] count = new int[] {15, 9};
+    int[] readTile = (int[]) grid.getData (start, count);
+
+    for (int i = 0; i < count[ROWS]; i++) {
+      for (int j = 0; j < count[COLS]; j++) {
+        int globalRow = i+start[ROWS];
+        int globalCol = j+start[COLS];
+        assert (readTile[i*count[COLS] + j] == data[globalRow*dims[COLS] + globalCol]);
+      } // for
+    } // for
+
+    logger.passed();
+
+    // ------------------------->
+
+    logger.test ("setData");
+    
+    start = new int[] {7, 13};
+    count = new int[] {20, 15};
+    int[] writeTile = new int[count[ROWS]*count[COLS]];
+    for (int i = 0; i < count[ROWS]; i++) {
+      for (int j = 0; j < count[COLS]; j++) {
+        writeTile[i*count[COLS] + j] = (i*count[COLS] + j) + data.length;
+      } // for
+    } // for
+
+    grid.setData (writeTile, start, count);
+    
+    for (int i = 0; i < dims[ROWS]; i++) {
+      for (int j = 0; j < dims[COLS]; j++) {
+        int tileRow = i-start[ROWS];
+        int tileCol = j-start[COLS];
+        if (
+          tileRow < 0 || tileRow > count[ROWS]-1 ||
+          tileCol < 0 || tileCol > count[COLS]-1
+        ) {
+          assert (data[i*dims[COLS] + j] == (i*dims[COLS] + j));
+        } // if
+        else {
+          assert (data[i*dims[COLS] + j] == writeTile[tileRow*count[COLS] + tileCol]);
+        } // else
+      } // for
+    } // for
+
+    logger.passed();
+
+    // ------------------------->
+
+  } // main
 
   ////////////////////////////////////////////////////////////
 

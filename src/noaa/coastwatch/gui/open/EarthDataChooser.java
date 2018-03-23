@@ -127,7 +127,7 @@ public class EarthDataChooser
   private JFileChooser fileChooser;
 
   /** The file chooser for network files. */
-  private NetworkFileChooser networkChooser;
+//  private NetworkFileChooser networkChooser;
 
   /** The global reader info panel. */
   private BasicReaderInfoPanel readerInfoPanel;
@@ -160,7 +160,7 @@ public class EarthDataChooser
   private static CoastOverlay coast;
 
   /** The tabbed pane with file and network choosers. */
-  private JTabbedPane tabbedPane;
+//  private JTabbedPane tabbedPane;
 
   /** The timer for file information popup. */
   private Timer popupTimer;
@@ -169,7 +169,7 @@ public class EarthDataChooser
   private Popup popupMessage;
   
   /** The file chooser for the THREDDS server. */
-  private THREDDSFileChooser threddsChooser;
+//  private THREDDSFileChooser threddsChooser;
 
   ////////////////////////////////////////////////////////////
 
@@ -180,8 +180,8 @@ public class EarthDataChooser
 
     // Create tabbed pane
     // ------------------
-    tabbedPane = new JTabbedPane();
-    this.add (tabbedPane);
+//    tabbedPane = new JTabbedPane();
+//    this.add (tabbedPane);
 
     // Create local file chooser
     // -------------------------
@@ -192,13 +192,18 @@ public class EarthDataChooser
     fileChooser.setDialogType (JFileChooser.OPEN_DIALOG);
     fileChooser.addPropertyChangeListener (new LocalFileListener());
     fileChooser.setControlButtonsAreShown (false);
-    tabbedPane.addTab ("Local", GUIServices.getIcon ("open.local"), 
-      fileChooser);
+//    tabbedPane.addTab ("Local", GUIServices.getIcon ("open.local"),
+//      fileChooser);
+
+    this.add (fileChooser);
+    this.add (Box.createHorizontalStrut (10));
+    
+    
     
     // Create THREDDS file chooser
     // ---------------------------
-    threddsChooser = new THREDDSFileChooser(null);
-    threddsChooser.addPropertyChangeListener (new THREDDSFileListener());
+//    threddsChooser = new THREDDSFileChooser(null);
+//    threddsChooser.addPropertyChangeListener (new THREDDSFileListener());
 
 
 // FIXME: For now we disable the network and THREDDS file tabs because
@@ -212,11 +217,11 @@ public class EarthDataChooser
 
     // Create network file chooser
     // ---------------------------
-    HTTPDirectoryLister lister = new HTTPDirectoryLister();
-    lister.setRefFilter (new OpendapURLFilter());
-    networkChooser = new NetworkFileChooser (ResourceManager.getOpendapList(), 
-      lister);
-    networkChooser.addPropertyChangeListener (new NetworkFileListener());
+//    HTTPDirectoryLister lister = new HTTPDirectoryLister();
+//    lister.setRefFilter (new OpendapURLFilter());
+//    networkChooser = new NetworkFileChooser (ResourceManager.getOpendapList(),
+//      lister);
+//    networkChooser.addPropertyChangeListener (new NetworkFileListener());
 
 /*
     tabbedPane.addTab ("Network", GUIServices.getIcon ("open.network"),
@@ -473,8 +478,8 @@ public class EarthDataChooser
         String name = null;
         File file = fileChooser.getSelectedFile();
         if (file != null) name = file.getPath();
-        if (name != null && !name.equals (""))
-          networkChooser.clearSelection();
+//        if (name != null && !name.equals (""))
+//          networkChooser.clearSelection();
         updateFromLocalFile (name);
       } // if
 
@@ -484,22 +489,22 @@ public class EarthDataChooser
   ////////////////////////////////////////////////////////////
 
   /** Responds to a change in the network file chooser. */
-  private class NetworkFileListener implements PropertyChangeListener {
-    public void propertyChange (PropertyChangeEvent event) {
-
-      String prop = event.getPropertyName();
-
-      // Update with new file
-      // --------------------
-      if (prop.equals (NetworkFileChooser.FILE_PROPERTY)) {
-        String name = (String) event.getNewValue();
-        if (name != null && !name.equals (""))
-          fileChooser.setSelectedFile (new File (""));
-        updateFromNetworkFile (name);
-      } // if
-
-    } // propertyChange
-  } // NetworkFileListener class
+//  private class NetworkFileListener implements PropertyChangeListener {
+//    public void propertyChange (PropertyChangeEvent event) {
+//
+//      String prop = event.getPropertyName();
+//
+//      // Update with new file
+//      // --------------------
+//      if (prop.equals (NetworkFileChooser.FILE_PROPERTY)) {
+//        String name = (String) event.getNewValue();
+//        if (name != null && !name.equals (""))
+//          fileChooser.setSelectedFile (new File (""));
+//        updateFromNetworkFile (name);
+//      } // if
+//
+//    } // propertyChange
+//  } // NetworkFileListener class
 
   ////////////////////////////////////////////////////////////
   
@@ -573,7 +578,7 @@ public class EarthDataChooser
 
     if (doClose) closeOldReader();
     reader = null; 
-    networkChooser.clearSelection();
+//    networkChooser.clearSelection();
     fileChooser.setSelectedFile (new File (""));        
 
   } // clearReader
@@ -771,33 +776,33 @@ public class EarthDataChooser
   ////////////////////////////////////////////////////////////
 
   /** Updates the display for the specified network file. */ 
-  private void updateFromNetworkFile (final String name) {
-
-    // Clear display if name is null
-    // -----------------------------
-    closeOldReader();
-    reader = null;
-    if (name == null) {
-      updateDisplay();
-      return;
-    } // if
-
-    // Otherwise try opening network file
-    // ----------------------------------
-    networkChooser.runTask (new FileChooser.Task () {
-        public String getMessage () { 
-          return ("Getting file information ..."); 
-        } // getMessage
-        public void run () throws IOException {
-          try { reader = EarthDataReaderFactory.create (name); }
-          catch (IOException e) { reader = null; }
-        } // run
-        public void followup () {
-          updateDisplay();
-        } // followup
-      });
-
-  } // updateFromNetworkFile
+//  private void updateFromNetworkFile (final String name) {
+//
+//    // Clear display if name is null
+//    // -----------------------------
+//    closeOldReader();
+//    reader = null;
+//    if (name == null) {
+//      updateDisplay();
+//      return;
+//    } // if
+//
+//    // Otherwise try opening network file
+//    // ----------------------------------
+//    networkChooser.runTask (new FileChooser.Task () {
+//        public String getMessage () {
+//          return ("Getting file information ...");
+//        } // getMessage
+//        public void run () throws IOException {
+//          try { reader = EarthDataReaderFactory.create (name); }
+//          catch (IOException e) { reader = null; }
+//        } // run
+//        public void followup () {
+//          updateDisplay();
+//        } // followup
+//      });
+//
+//  } // updateFromNetworkFile
 
   ////////////////////////////////////////////////////////////
     
@@ -810,7 +815,7 @@ public class EarthDataChooser
     if (reader != null) {
       try { 
         gridPreviews = new ArrayList();
-        List gridNames = reader.getAllGrids();
+        List<String> gridNames = reader.getAllGrids();
         for (Iterator iter = gridNames.iterator(); iter.hasNext();)
           gridPreviews.add (reader.getPreview ((String) iter.next()));
       } // try
@@ -936,7 +941,7 @@ public class EarthDataChooser
     // --------------------------------
     if (selectedFile != null) {
       chooser.fileChooser.setSelectedFile (selectedFile);
-      chooser.tabbedPane.setSelectedComponent (chooser.fileChooser);
+//      chooser.tabbedPane.setSelectedComponent (chooser.fileChooser);
     } // if
 
     // Show the dialog and wait for return value
@@ -946,8 +951,8 @@ public class EarthDataChooser
 
     // Save any changes to the server list
     // -----------------------------------
-    List serverList = chooser.networkChooser.getServerList();
-    ResourceManager.setOpendapList (serverList);
+//    List serverList = chooser.networkChooser.getServerList();
+//    ResourceManager.setOpendapList (serverList);
 
     // Return a reader value
     // ---------------------

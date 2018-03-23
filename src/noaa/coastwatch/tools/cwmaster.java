@@ -988,7 +988,7 @@ public final class cwmaster
       // -----------------
       else if (command.equals (ZOOM_COMMAND)) {
         if (((JToggleButton) event.getSource()).isSelected ()) {
-          lightTable.setDrawingMode (LightTable.BOX_ZOOM_MODE);
+          lightTable.setDrawingMode (LightTable.Mode.BOX_ZOOM);
           lightTable.setActive (true);
           viewPanel.setDefaultCursor (Cursor.getPredefinedCursor (
             Cursor.CROSSHAIR_CURSOR));
@@ -999,7 +999,7 @@ public final class cwmaster
       // ----------------
       else if (command.equals (PAN_COMMAND)) {
         if (((JToggleButton) event.getSource()).isSelected ()) {
-          lightTable.setDrawingMode (LightTable.IMAGE_MODE);
+          lightTable.setDrawingMode (LightTable.Mode.IMAGE);
           lightTable.setActive (true);
           viewPanel.setDefaultCursor (Cursor.getPredefinedCursor (
             Cursor.MOVE_CURSOR));
@@ -1010,7 +1010,7 @@ public final class cwmaster
       // ---------------------
       else if (command.equals (RECENTER_COMMAND)) {
         if (((JToggleButton) event.getSource()).isSelected ()) {
-          lightTable.setDrawingMode (LightTable.POINT_MODE);
+          lightTable.setDrawingMode (LightTable.Mode.POINT);
           lightTable.setActive (true);
           viewPanel.setDefaultCursor (Cursor.getPredefinedCursor (
             Cursor.CROSSHAIR_CURSOR));

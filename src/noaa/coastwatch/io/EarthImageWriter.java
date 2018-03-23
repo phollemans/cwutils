@@ -89,20 +89,55 @@ import noaa.coastwatch.util.Grid;
  */
 public class EarthImageWriter {
 
-  // Constants
+  // Variables
   // ---------
 
+  /** The single instance of this class. */
+  private static EarthImageWriter instance;
+  
   /** The plot legend background. */
-  public static final Color BACK = new Color (237, 238, 207);
+  private Color backgroundColor = new Color (237, 238, 207);
 
   /** The plot legend foreground. */
-  public static final Color FORE = Color.BLACK;
+  private Color foregroundColor = Color.BLACK;
 
   /** The plot fill. */
-  private static final Color FILL = Color.WHITE;
+  private Color fillColor = Color.WHITE;
 
   /** The default plot font. */
-  private static final Font FONT = new Font (null, Font.PLAIN, 9);
+  private Font font = new Font (null, Font.PLAIN, 9);
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates an instance of this object.
+   *
+   * @return the object instance.
+   */
+  private EarthImageWriter () { }
+
+  ////////////////////////////////////////////////////////////
+  
+  /**
+   * Gets the singleton instance of this class.
+   *
+   * @return the singeton instance.
+   */
+  public static EarthImageWriter getInstance () {
+  
+    if (instance == null) instance = new EarthImageWriter();
+    return (instance);
+    
+  } // getInstance
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the font used for legends.
+   *
+   * @param font the new legend font.
+   */
+  public void setFont (Font font) { this.font = font; }
 
   ////////////////////////////////////////////////////////////
 
@@ -142,7 +177,7 @@ public class EarthImageWriter {
    * supported.
    * @throws IOException if an error occurred writing the image data.
    */
-  public static Renderable write (
+  public Renderable write (
     EarthDataView view,
     EarthDataInfo info,
     boolean isVerbose,
@@ -160,7 +195,7 @@ public class EarthImageWriter {
     // ------------------------
     Renderable renderable;
     if (hasLegends) {
-      renderable = new EarthDataPlot (view, info, logo, FORE, BACK, FONT);
+      renderable = new EarthDataPlot (view, info, logo, foregroundColor, backgroundColor, font);
     } // if
     else {
       renderable = view;
@@ -268,19 +303,19 @@ public class EarthImageWriter {
           // -----------------
           if (hasLegends) { 
 
-            red[colorIndex] = (byte) FILL.getRed();
-            green[colorIndex] = (byte) FILL.getGreen();
-            blue[colorIndex] = (byte) FILL.getBlue();
+            red[colorIndex] = (byte) fillColor.getRed();
+            green[colorIndex] = (byte) fillColor.getGreen();
+            blue[colorIndex] = (byte) fillColor.getBlue();
             colorIndex++;
 
-            red[colorIndex] = (byte) FORE.getRed();
-            green[colorIndex] = (byte) FORE.getGreen();
-            blue[colorIndex] = (byte) FORE.getBlue();
+            red[colorIndex] = (byte) foregroundColor.getRed();
+            green[colorIndex] = (byte) foregroundColor.getGreen();
+            blue[colorIndex] = (byte) foregroundColor.getBlue();
             colorIndex++;
 
-            red[colorIndex] = (byte) BACK.getRed();
-            green[colorIndex] = (byte) BACK.getGreen();
-            blue[colorIndex] = (byte) BACK.getBlue();
+            red[colorIndex] = (byte) backgroundColor.getRed();
+            green[colorIndex] = (byte) backgroundColor.getGreen();
+            blue[colorIndex] = (byte) backgroundColor.getBlue();
             colorIndex++;
 
           } // if
@@ -350,7 +385,7 @@ public class EarthImageWriter {
 
       // Render
       // ------
-      g.setColor (FILL);
+      g.setColor (fillColor);
       g.fillRect (0, 0, renderSize.width, renderSize.height); 
       renderable.render (g);
       g.dispose();

@@ -38,14 +38,10 @@ import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
@@ -54,23 +50,26 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.Timer;
+
 import noaa.coastwatch.gui.EarthDataViewPanel;
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.TestContainer;
@@ -95,101 +94,89 @@ public class LightTable
 
   // Constants
   // ---------
-  /** 
-   * The point drawing mode.  In this mode, a point is drawn by
-   * clicking once.
-   *
-   * @see #setDrawingMode
-   */
-  public static final int POINT_MODE = 0;
 
-  /**
-   * The line drawing mode.  In this mode, a line is drawn by pressing
-   * at one end of the line, dragging to the other end of the line,
-   * and releasing.
-   *
-   * @see #setDrawingMode
-   */
-  public static final int LINE_MODE = 1;
+  public enum Mode {
 
-  /**
-   * The polyline drawing mode.  In this mode, a multiple segment
-   * polyline is drawn by clicking at each segment start and end
-   * point.  The polyline is finished by double-clicking or right
-   * clicking on the final point.
-   *
-   * @see #setDrawingMode
-   */
-  public static final int POLYLINE_MODE = 2;
+    /** The non-drawing mode. */
+    NONE,
 
-  /** 
-   * The box drawing mode.  In this mode, a box is created by pressing
-   * at one corner, dragging to the diagonally opposite corner, and
-   * releasing.
-   *
-   * @see #setDrawingMode
-   */
-  public static final int BOX_MODE = 3;
+    /**
+     * The point drawing mode.  In this mode, a point is drawn by
+     * clicking once.
+     */
+    POINT,
 
-  /** 
-   * The zoom box drawing mode.  In this mode, a box is created by
-   * pressing at one corner, dragging to the diagonally opposite
-   * corner, and releasing.  The display indicates a "zoom" operation
-   * by dimming the area outside of the zoom box.
-   *
-   * @see #setDrawingMode
-   */
-  public static final int BOX_ZOOM_MODE = 103;
+    /**
+     * The line drawing mode.  In this mode, a line is drawn by pressing
+     * at one end of the line, dragging to the other end of the line,
+     * and releasing.
+     */
+    LINE,
 
-  /**
-   * The circle drawing mode.  In this mode, a circle is drawn by
-   * pressing at the circle center, dragging to a radius point, and
-   * releasing.
-   *
-   * @see #setDrawingMode
-   */
-  public static final int CIRCLE_MODE = 4;
+    /**
+     * The polyline drawing mode.  In this mode, a multiple segment
+     * polyline is drawn by clicking at each segment start and end
+     * point.  The polyline is finished by double-clicking or right
+     * clicking on the final point.
+     */
+    POLYLINE,
 
-  /**
-   * The general path drawing mode.  In this mode, a general path is
-   * used to create the graphics for rubber-banding.  The general path
-   * is drawn when the mouse button is pressed, redrawn while the
-   * mouse is dragged, then erased when the mouse button is released.
-   *
-   * @see #setDrawingMode
-   */
-  public static final int GENERAL_PATH_MODE = 5;
+    /**
+     * The box drawing mode.  In this mode, a box is created by pressing
+     * at one corner, dragging to the diagonally opposite corner, and
+     * releasing.
+     */
+    BOX,
 
-  /**
-   * The image drawing mode.  In this mode, the component background
-   * itself is used to create the graphics for rubber-banding.  The
-   * image moves continuously with the dragging mouse.
-   *
-   * @see #setDrawingMode
-   */
-  public static final int IMAGE_MODE = 6;
+    /**
+     * The zoom box drawing mode.  In this mode, a box is created by
+     * pressing at one corner, dragging to the diagonally opposite
+     * corner, and releasing.  The display indicates a "zoom" operation
+     * by dimming the area outside of the zoom box.
+     */
+    BOX_ZOOM,
 
-  /**
-   * The image translation mode.  In this mode, the component must be
-   * a <code>TransformableImageComponent</code> and the component is
-   * used to create the graphics for rubber-banding by calling its
-   * <code>setImageAffine()</code> method.  The image translates
-   * continuously with the dragging mouse.
-   *
-   * @see #setDrawingMode
-   */
-  public static final int IMAGE_TRANSLATE_MODE = 7;
+    /**
+     * The circle drawing mode.  In this mode, a circle is drawn by
+     * pressing at the circle center, dragging to a radius point, and
+     * releasing.
+     */
+    CIRCLE,
 
-  /**
-   * The image rotation mode.  In this mode, the component must be a
-   * <code>TransformableImageComponent</code> and the component is
-   * used to create the graphics for rubber-banding by calling its
-   * <code>setImageAffine()</code> method.  The image rotates
-   * continuously with the dragging mouse.
-   *
-   * @see #setDrawingMode
-   */
-  public static final int IMAGE_ROTATE_MODE = 8;
+    /**
+     * The general path drawing mode.  In this mode, a general path is
+     * used to create the graphics for rubber-banding.  The general path
+     * is drawn when the mouse button is pressed, redrawn while the
+     * mouse is dragged, then erased when the mouse button is released.
+     */
+    GENERAL_PATH,
+
+    /**
+     * The image drawing mode.  In this mode, the component background
+     * itself is used to create the graphics for rubber-banding.  The
+     * image moves continuously with the dragging mouse.
+     */
+    IMAGE,
+
+    /**
+     * The image translation mode.  In this mode, the component must be
+     * a <code>TransformableImageComponent</code> and the component is
+     * used to create the graphics for rubber-banding by calling its
+     * <code>setImageAffine()</code> method.  The image translates
+     * continuously with the dragging mouse.
+     */
+    IMAGE_TRANSLATE,
+
+    /**
+     * The image rotation mode.  In this mode, the component must be a
+     * <code>TransformableImageComponent</code> and the component is
+     * used to create the graphics for rubber-banding by calling its
+     * <code>setImageAffine()</code> method.  The image rotates
+     * continuously with the dragging mouse.
+     */
+    IMAGE_ROTATE
+    
+  } // Mode enum
 
   /** The radius of the point selection crosshairs. */
   private static final int CROSSHAIR_RADIUS = 10;
@@ -225,7 +212,7 @@ public class LightTable
   private boolean dragging;
 
   /** The current drawing mode. */
-  private int drawingMode;
+  private Mode drawingMode;
 
   /** The base point for the current drag. */
   private Point basePoint;
@@ -257,137 +244,23 @@ public class LightTable
   /** The initial image affine transform when dragging started. */
   private AffineTransform initialAffine;
   
-  /** The popup menu for copy/paste between earthDataView's */
-  private JPopupMenu popupMenu;
-  
-  /** The data flavor for copy/paste functions */
-  private DataFlavor df = new DataFlavor(double[].class, "Double Array");
+
+
+
+  private double wheelRotationTotal;
+  private Timer wheelRotationTimer;
+  private Point wheelRotationPoint;
+
+
 
   ////////////////////////////////////////////////////////////
 
   /** Gets the component used as a base layer for this table. */
   public JComponent getComponent () { return (component); }
-
-  ////////////////////////////////////////////////////////////
-  
-  // TODO: We need to move the code for cut/paste of the view center
-  // and magnification to another class, for example EarthDataViewPanel,
-  // and implement it without using data flavours.  They add an unnecessary
-  // layer of complication when we could simply use a static variable within
-  // the class to copy parameters across EarthDataViewPanel objects.
-  
-  /**
-   * The transferable EarthDataView for copy/paste function on the 
-   * local clipboard
-   */
-  private class EarthDataViewProperty implements Transferable{
-	  private double[] data;
-	  
-	  public EarthDataViewProperty(double[] data2Transfer){
-		  data = data2Transfer;
-	  }
-	  public DataFlavor[] getTransferDataFlavors(){
-		  DataFlavor[] dfs = {LightTable.this.df};
-		  return dfs;
-	  }
-	  public boolean isDataFlavorSupported(DataFlavor flavor){
-		  if(flavor.match(LightTable.this.df))
-			  return true;
-		  else
-			  return false;
-	  }
-	  public Object getTransferData(DataFlavor flavor)
-      throws UnsupportedFlavorException,
-             IOException{
-		  if(isDataFlavorSupported(flavor))
-			  return data;
-		  else
-			  return null;
-	  }
-  }
-
-  ////////////////////////////////////////////////////////////
-  
-  /**
-   * The action to copy an EarthDataView scale info to 
-   * the local clipboard
-   * 
-   * @author xiaoming
-   *
-   */
-  private class CopyScaleAction 
-	extends AbstractAction implements ClipboardOwner{
-	  public CopyScaleAction(){
-		  super("copy scale");
-	  }
-	  public void actionPerformed(ActionEvent e) {
-		  	EarthDataView edv = ((EarthDataViewPanel)(LightTable.this.component)).getView();
-		  	DataLocation dl = edv.getCenter();
-	  	  	double scale = edv.getScale();
-	  	  	double y = dl.get(0);
-	  	  	double x = dl.get(1);
-	  		double[] toClipboard = new double[]{y,x,scale};
-	  		EarthDataViewProperty scaleInfo = new EarthDataViewProperty(toClipboard);
-	  	    Clipboard clipboard = GUIServices.getCDATClipboard();
-	  	    clipboard.setContents( scaleInfo, this );
-	  }
-	  public boolean isEnabled(){
-		  return true;
-	  }
-	  public void lostOwnership( Clipboard aClipboard, Transferable aContents) {
-	  	     //do nothing
-	  }
-  }
-  
-  ////////////////////////////////////////////////////////////
-  
-  /**
-   * The action to get the scale info from the local clipboard
-   * and paste to the current EarthDataView
-   * 
-   * @author xiaoming
-   *
-   */
-  private class PasteScaleAction 
-	extends AbstractAction{
-	  public PasteScaleAction(){
-		  super("paste scale");
-	  }
-	  public void actionPerformed(ActionEvent e) {
-		  System.out.print("Action for paste");
-		  double[] result;
-		  Clipboard clipboard = GUIServices.getCDATClipboard();
-		  Transferable contents = clipboard.getContents(null);
-		  boolean hasTransferableText =
-		      (contents != null) &&
-		  contents.isDataFlavorSupported(LightTable.this.df);
-		  if ( hasTransferableText ) {
-		      try {
-		        result = (double[])contents.getTransferData(df);
-		  		DataLocation center = new DataLocation(result[0], result[1]);
-		  		double scale = result[2];
-		  		EarthDataView view = ((EarthDataViewPanel)(LightTable.this.component)).getView();
-		  		view.setCenterAndScale(center, scale);
-		      }
-		      catch (Exception ex){
-		        System.out.println(ex);
-		        ex.printStackTrace();
-		      }
-		  }
-		  
-	  }
-	  public boolean isEnabled(){
-		  Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		  Transferable contents = clipboard.getContents(null);
-		  boolean hasTransferableText =
-		      (contents != null) &&
-		  contents.isDataFlavorSupported(LightTable.this.df);
-		  return true;
-	  }
-  }
   
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void doLayout () {
 
     Rectangle bounds = new Rectangle (0, 0, getWidth(), getHeight());
@@ -405,8 +278,7 @@ public class LightTable
    * floats over top of the base component and receives mouse
    * events when active.
    */
-  private class GlassPane
-    extends JPanel {
+  private class GlassPane extends JPanel {
     public void paintComponent (Graphics g) {
       
       if (isOpaque()) super.paintComponent (g);
@@ -423,7 +295,7 @@ public class LightTable
 
       // Draw zoom box
       // -------------
-      if (drawingMode == BOX_ZOOM_MODE) {
+      if (drawingMode == Mode.BOX_ZOOM) {
         Area insideZoom = new Area (tableShape);
         Area outsideZoom = 
           new Area (new Rectangle (0, 0, getWidth(), getHeight()));
@@ -468,7 +340,7 @@ public class LightTable
     // ----------
     this.component = component;
     add (component, new Integer (0));
-    drawingMode = POINT_MODE;
+    drawingMode = Mode.POINT;
     dragging = false;
     active = false;
     listeners = new ArrayList<ChangeListener>();
@@ -485,20 +357,84 @@ public class LightTable
     MouseHandler handler = new MouseHandler();
     glassPane.addMouseListener (handler);
     glassPane.addMouseMotionListener (handler);
+    glassPane.addMouseWheelListener (event -> wheelRotation (event));
     MouseEventForwarder forwarder = new MouseEventForwarder();
     glassPane.addMouseListener (forwarder);
     glassPane.addMouseMotionListener (forwarder);
     
-    popupMenu = new JPopupMenu();
-    //JMenuItem menuItem = new JMenuItem(new SetScaleAction());
-    //popupMenu.add(menuItem);
-    JMenuItem menuItem = new JMenuItem(new CopyScaleAction());
-    popupMenu.add(menuItem);
-    menuItem = new JMenuItem(new PasteScaleAction());
-    popupMenu.add(menuItem);
-    add(popupMenu);
-
   } // LightTable constructor
+
+  ////////////////////////////////////////////////////////////
+
+  private void fireZoomEvent () {
+
+/*
+    System.out.println ("Rotation point = " + wheelRotationPoint);
+    System.out.println ("Rotation total = " + wheelRotationTotal);
+*/
+
+
+    wheelRotationPoint = null;
+    wheelRotationTimer = null;
+    wheelRotationTotal = 0;
+
+
+
+
+
+  
+  } // fireZoomEvent
+
+  ////////////////////////////////////////////////////////////
+
+  private void wheelRotation (MouseWheelEvent event) {
+
+    // Create or restart the timer
+    // ---------------------------
+    if (wheelRotationTimer == null) {
+      wheelRotationTimer = new Timer (300, action -> fireZoomEvent());
+      wheelRotationTimer.setRepeats (false);
+    } // if
+    else
+      wheelRotationTimer.restart();
+
+    // Save the rotation data
+    // ----------------------
+    wheelRotationPoint = event.getPoint();
+    wheelRotationTotal += event.getPreciseWheelRotation();
+
+
+
+
+
+/*
+
+    Dimension size = component.getSize();
+    Point center = wheelRotationPoint
+
+    double baseAngle = Math.atan2 (basePoint.x - center.x,
+      -(basePoint.y - center.y));
+    double pointAngle = Math.atan2 (p.x - center.x, -(p.y - center.y));
+    double theta = pointAngle - baseAngle;
+
+    AffineTransform scaleAffine =
+      AffineTransform.getScaleInstance (theta, center.x, center.y);
+
+    if (initialAffine != null) rotAffine.concatenate (initialAffine);
+
+    ((TransformableImageComponent) component).setImageAffine (rotAffine);
+    component.repaint();
+
+
+
+*/
+
+
+
+
+
+
+  } // wheelRotation
 
   ////////////////////////////////////////////////////////////
 
@@ -603,8 +539,7 @@ public class LightTable
   ////////////////////////////////////////////////////////////
 
   /** Handles mouse events. */
-  private class MouseHandler 
-    extends MouseInputAdapter {
+  private class MouseHandler extends MouseInputAdapter {
 
     // Event handlers for simple press/drag/release drawing modes
     // ----------------------------------------------------------
@@ -633,12 +568,9 @@ public class LightTable
           else
             appendPoly (truncate (e.getPoint()));
         } // else
-      } 
-      else if (active && drawingMode != POINT_MODE
-    		  && e.getButton()!=e.BUTTON1){
-          	popupMenu.show(e.getComponent(), e.getX(), e.getY());
       } // if
     } // mouseClicked
+    
     public void mouseMoved (MouseEvent e) { 
       if (active && isPolyMode && polyStarted) 
         update (truncate (e.getPoint()));
@@ -750,10 +682,8 @@ public class LightTable
 
     // Save initial affine
     // -------------------
-    if (drawingMode == IMAGE_TRANSLATE_MODE || 
-        drawingMode == IMAGE_ROTATE_MODE) {
-      initialAffine = 
-        ((TransformableImageComponent) component).getImageAffine();
+    if (drawingMode == Mode.IMAGE_TRANSLATE || drawingMode == Mode.IMAGE_ROTATE) {
+      initialAffine = ((TransformableImageComponent) component).getImageAffine();
     } // if
 
     // Store drawing state
@@ -773,18 +703,26 @@ public class LightTable
   public Cursor getCursor () {
 
     int cursor;
+    
     switch (drawingMode) {
-    case POINT_MODE: cursor = Cursor.CROSSHAIR_CURSOR; break;
-    case LINE_MODE: cursor = Cursor.CROSSHAIR_CURSOR; break;
-    case POLYLINE_MODE: cursor = Cursor.CROSSHAIR_CURSOR; break;
-    case BOX_ZOOM_MODE:
-    case BOX_MODE: cursor = Cursor.CROSSHAIR_CURSOR; break;
-    case CIRCLE_MODE: cursor = Cursor.CROSSHAIR_CURSOR; break;
-    case GENERAL_PATH_MODE: cursor = Cursor.MOVE_CURSOR; break;
-    case IMAGE_MODE: cursor = Cursor.MOVE_CURSOR; break;
-    case IMAGE_TRANSLATE_MODE: cursor = Cursor.HAND_CURSOR; break;
-    case IMAGE_ROTATE_MODE: cursor = Cursor.HAND_CURSOR; break;
-    default: cursor = Cursor.DEFAULT_CURSOR;
+    case POINT:
+    case LINE:
+    case POLYLINE:
+    case BOX_ZOOM:
+    case BOX:
+    case CIRCLE:
+      cursor = Cursor.CROSSHAIR_CURSOR;
+      break;
+    case GENERAL_PATH:
+    case IMAGE:
+      cursor = Cursor.MOVE_CURSOR;
+      break;
+    case IMAGE_TRANSLATE:
+    case IMAGE_ROTATE:
+      cursor = Cursor.HAND_CURSOR;
+      break;
+    default:
+      cursor = Cursor.DEFAULT_CURSOR;
     } // switch
 
     return (Cursor.getPredefinedCursor (cursor));
@@ -811,7 +749,7 @@ public class LightTable
 
     // Shape is a point
     // ---------------
-    case POINT_MODE: 
+    case POINT:
       GeneralPath path = new GeneralPath();
       path.moveTo (p2.x - CROSSHAIR_RADIUS, p2.y);
       path.lineTo (p2.x - CROSSHAIR_RADIUS/2, p2.y);
@@ -826,15 +764,15 @@ public class LightTable
 
     // Shape is a line
     // ---------------
-    case LINE_MODE:
-    case POLYLINE_MODE:
+    case LINE:
+    case POLYLINE:
       s = new Line2D.Float (p1, p2);
       break;
 
     // Shape is a box
     // --------------      
-    case BOX_ZOOM_MODE:
-    case BOX_MODE:
+    case BOX_ZOOM:
+    case BOX:
       s = new Rectangle (
         Math.min (p1.x, p2.x), 
         Math.min (p1.y, p2.y),
@@ -845,7 +783,7 @@ public class LightTable
 
     // Shape is a circle
     // -----------------      
-    case CIRCLE_MODE:
+    case CIRCLE:
       int radius = (int) p1.distance (p2);
       s = new Ellipse2D.Float (
         p1.x - radius,
@@ -857,7 +795,7 @@ public class LightTable
 
     // Shape is a general path
     // -----------------------
-    case GENERAL_PATH_MODE:
+    case GENERAL_PATH:
       s = null;
       break;
 
@@ -886,14 +824,14 @@ public class LightTable
     Shape s = null;
     switch (drawingMode) {
 
-    case POINT_MODE: 
+    case POINT:
       s = new Line2D.Float (p2, p2);
       break;
 
-    case GENERAL_PATH_MODE:
-    case IMAGE_MODE:
-    case IMAGE_TRANSLATE_MODE:
-    case IMAGE_ROTATE_MODE:
+    case GENERAL_PATH:
+    case IMAGE:
+    case IMAGE_TRANSLATE:
+    case IMAGE_ROTATE:
       s = new Line2D.Float (p1, p2);
       break;
 
@@ -910,18 +848,18 @@ public class LightTable
   ////////////////////////////////////////////////////////////
 
   /** Gets the drawing mode. */
-  public int getDrawingMode () { return (drawingMode); }
+  public Mode getDrawingMode () { return (drawingMode); }
 
   ////////////////////////////////////////////////////////////
 
   /** Sets the drawing mode to the specified mode. */
-  public void setDrawingMode (int mode) { 
+  public void setDrawingMode (Mode mode) {
 
     // Check mode
     // ----------
     switch (mode) {
-    case IMAGE_TRANSLATE_MODE:
-    case IMAGE_ROTATE_MODE:
+    case IMAGE_TRANSLATE:
+    case IMAGE_ROTATE:
       if (!(component instanceof TransformableImageComponent))
         throw new IllegalArgumentException ("Component is not transformable");
       break;
@@ -930,11 +868,11 @@ public class LightTable
     // Set mode
     // --------
     drawingMode = mode; 
-    isPolyMode = (drawingMode == POLYLINE_MODE);
+    isPolyMode = (drawingMode == Mode.POLYLINE);
     isImageMode = (
-      drawingMode == IMAGE_MODE ||
-      drawingMode == IMAGE_TRANSLATE_MODE ||
-      drawingMode == IMAGE_ROTATE_MODE
+      drawingMode == Mode.IMAGE ||
+      drawingMode == Mode.IMAGE_TRANSLATE ||
+      drawingMode == Mode.IMAGE_ROTATE
     );
 
   } // setDrawingMode
@@ -955,7 +893,7 @@ public class LightTable
 
       // Perform translation of entire image
       // -----------------------------------
-      case IMAGE_MODE:
+      case IMAGE:
         Rectangle bounds = component.getBounds();
         component.setBounds (p.x - basePoint.x, p.y - basePoint.y,
           bounds.width, bounds.height);
@@ -964,7 +902,7 @@ public class LightTable
 
       // Translate using the image affine
       // -------------------------------
-      case IMAGE_TRANSLATE_MODE:
+      case IMAGE_TRANSLATE:
         AffineTransform transAffine = AffineTransform.getTranslateInstance (
           p.x - basePoint.x, p.y - basePoint.y);
         if (initialAffine != null) transAffine.concatenate (initialAffine);
@@ -974,7 +912,7 @@ public class LightTable
         
       // Rotate using the image affine
       // -----------------------------
-      case IMAGE_ROTATE_MODE:
+      case IMAGE_ROTATE:
         Dimension size = component.getSize();
         Point center = new Point (size.width/2, size.height/2);
         double baseAngle = Math.atan2 (basePoint.x - center.x, 
@@ -1006,16 +944,16 @@ public class LightTable
    * Gets the current user shape.  The shape differs depending on the
    * drawing mode as follows:
    * <ul>
-   *   <li> <code>POINT_MODE = Line2D</code> </li>
-   *   <li> <code>LINE_MODE = Line2D</code> </li>
-   *   <li> <code>POLYLINE_MODE = GeneralPath</code> </li>
-   *   <li> <code>BOX_MODE = Rectangle2D</code> </li>
-   *   <li> <code>BOX_ZOOM_MODE = Rectangle2D</code> </li>
-   *   <li> <code>CIRCLE_MODE = Ellipse2D</code> </li>
-   *   <li> <code>GENERAL_PATH_MODE = Line2D</code> </li>
-   *   <li> <code>IMAGE_MODE = Line2D</code> </li>
-   *   <li> <code>IMAGE_TRANSLATE_MODE = Line2D</code> </li>
-   *   <li> <code>IMAGE_ROTATE_MODE = Line2D</code> </li>
+   *   <li> <code>Mode.POINT = Line2D</code> </li>
+   *   <li> <code>Mode.LINE = Line2D</code> </li>
+   *   <li> <code>Mode.POLYLINE = GeneralPath</code> </li>
+   *   <li> <code>Mode.BOX = Rectangle2D</code> </li>
+   *   <li> <code>Mode.BOX_ZOOM = Rectangle2D</code> </li>
+   *   <li> <code>Mode.CIRCLE = Ellipse2D</code> </li>
+   *   <li> <code>Mode.GENERAL_PATH = Line2D</code> </li>
+   *   <li> <code>Mode.IMAGE = Line2D</code> </li>
+   *   <li> <code>Mode.IMAGE_TRANSLATE = Line2D</code> </li>
+   *   <li> <code>Mode.IMAGE_ROTATE = Line2D</code> </li>
    * </ul>
    *
    * @return the current user shape or null if not available.
@@ -1037,7 +975,7 @@ public class LightTable
 
     // Restore component bounds
     // ------------------------
-    if (drawingMode == IMAGE_MODE) {
+    if (drawingMode == Mode.IMAGE) {
       component.setBounds (0, 0, getWidth(), getHeight());
       component.repaint();
     } // if
@@ -1102,23 +1040,18 @@ public class LightTable
     // ----------------------------
     JPanel buttons = new JPanel();
     panel.add (buttons, BorderLayout.SOUTH);
-    final Map map = new HashMap();
-    map.put ("Point", new Integer (POINT_MODE));
-    map.put ("Line", new Integer (LINE_MODE));
-    map.put ("Polyline", new Integer (POLYLINE_MODE));
-    map.put ("Box", new Integer (BOX_MODE));
-    map.put ("Box Zoom", new Integer (BOX_ZOOM_MODE));
-    map.put ("Circle", new Integer (CIRCLE_MODE));
-    //    map.put ("Path", new Integer (GENERAL_PATH_MODE));
-    map.put ("Image", new Integer (IMAGE_MODE));
-    final JComboBox combo = new JComboBox (map.keySet().toArray());
+    Map<String,Mode> map = new HashMap<>();
+    map.put ("Point", Mode.POINT);
+    map.put ("Line", Mode.LINE);
+    map.put ("Polyline", Mode.POLYLINE);
+    map.put ("Box", Mode.BOX);
+    map.put ("Box Zoom", Mode.BOX_ZOOM);
+    map.put ("Circle", Mode.CIRCLE);
+    //    map.put ("Path", Mode.GENERAL_PATH);
+    map.put ("Image", Mode.IMAGE);
+    JComboBox combo = new JComboBox (map.keySet().toArray());
     combo.setSelectedItem ("Point");
-    combo.addActionListener (new ActionListener () {
-        public void actionPerformed (ActionEvent e) {
-          table.setDrawingMode (((Integer) map.get (
-            combo.getSelectedItem())).intValue());
-        } // actionPerformed
-      });
+    combo.addActionListener (event -> table.setDrawingMode (map.get (combo.getSelectedItem())));
     buttons.add (combo);
 
     noaa.coastwatch.gui.TestContainer.showFrame (panel);

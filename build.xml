@@ -182,9 +182,10 @@
   <!--  <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64,solaris32,solaris64"/> -->
 
   <property name="builds.default" value="linux64,windows64,macosx64"/>
-  <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64,solaris32,solaris64"/>
+  <property name="builds.all" value="linux32,linux64,linux64.novm,windows32,windows64,macosx64,solaris32,solaris64"/>
   <property name="build.id.linux32" value="88"/>
   <property name="build.id.linux64" value="288"/>
+  <property name="build.id.linux64.novm" value="710"/>
   <property name="build.id.linux64.gui" value="701"/>
   <property name="build.id.windows32" value="10"/>
   <property name="build.id.windows64" value="278"/>
@@ -254,9 +255,11 @@
     </install4j>
 
     <!-- Tag the package version -->
+<!--
     <exec executable="git">
       <arg line="tag ${version.full}"/>
     </exec>
+-->
 
   </target>
 
@@ -388,7 +391,12 @@
 
   <target name="test-unit"
     description="Runs the CoastWatch unit tests by running noaa.coastwatch.test.TestRunner">
-    <exec executable="scripts/find_testable.sh" outputproperty="unit.tests"/>
+    <if>
+      <not><isset property="unit.tests"/></not>
+      <then>
+        <exec executable="scripts/find_testable.sh" outputproperty="unit.tests"/>
+      </then>
+    </if>
     <antcall target="test">
       <param name="class" value="noaa.coastwatch.test.TestRunner"/>
       <param name="args" value="${unit.tests}"/>

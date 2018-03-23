@@ -28,7 +28,7 @@ package noaa.coastwatch.util;
 import noaa.coastwatch.util.LocationFilter;
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.util.DataLocation;
-import noaa.coastwatch.util.ExpressionParserFactory;
+import noaa.coastwatch.util.expression.ExpressionParserFactory;
 import noaa.coastwatch.util.Grid;
 import java.io.IOException;
 import java.util.HashSet;

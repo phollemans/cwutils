@@ -831,11 +831,6 @@ public class EarthDataViewPanel
 
     ////////////////////////////////////////////////////////
     
-/*
-    @Override
-    public void mouseDragged (MouseEvent e) { showMetadata (e.getPoint()); }
-*/
-
   } // OverlayMetadataMouseHandler class
 
   ////////////////////////////////////////////////////////////

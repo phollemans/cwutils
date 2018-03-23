@@ -40,9 +40,12 @@ import noaa.coastwatch.io.tile.TilingScheme.Tile;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.Grid;
 
+// Testing
+import noaa.coastwatch.test.TestLogger;
+
 /**
- * The cached grid class is a grid that uses caching to reduce the
- * memory needed to read and write data values in a grid.  The cache
+ * A <code>CachedGrid</code> is a {@link Grid} that uses temporary caching
+ * to reduce the overall memory footprint of gridded data.  The cache
  * uses a similar strategy to how modern operating systems cache
  * memory pages.  A data stream is kept open, and a number of tiles
  * (rectangular sections of data) are brought into memory as they are
@@ -53,14 +56,20 @@ import noaa.coastwatch.util.Grid;
  * used to determine which tile to remove from the cache when the
  * cache reaches its maximum capacity.<p>
  *
- * The standard data variable set method is supported by keeping a
- * dirty flag for each tile.  If the tile has been written to, it is
- * kept in the cache until, upon removal, it is written to the data
- * stream.
+ * The standard {@link noaa.coastwatch.util.DataVariable#setValue} method is
+ * supported by keeping a dirty flag for each tile.  If the tile has been
+ * written to, it is kept in the cache until, upon removal, it is written
+ * to the data stream.<p>
+ *
+ * The only methods that subclasses need to implement are {@link #readTile} to
+ * retrieve tiles from the data source, {@link #writeTile} to update the
+ * data with any changes made to tiles, and {@link #getDataStream} to retrieve
+ * the object used to read and write data (only used to check for equality).<p>
  *
  * @author Peter Hollemans
  * @since 3.1.0
  */
+@noaa.coastwatch.test.Testable
 public abstract class CachedGrid
   extends Grid {
 
@@ -94,6 +103,15 @@ public abstract class CachedGrid
 
   /** The access mode. */
   protected int accessMode;
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public TilingScheme getTilingScheme () {
+  
+    return (tiling);
+    
+  } // getTilingScheme
 
   ////////////////////////////////////////////////////////////
 
@@ -135,6 +153,8 @@ public abstract class CachedGrid
   /**
    * Gets the cache data stream as an object.  This is useful for
    * classes that read and write cached grids.
+   *
+   * @return the data stream used for reading and writing data.
    */
   public abstract Object getDataStream();
 
@@ -168,6 +188,8 @@ public abstract class CachedGrid
             catch (IOException e) {
               throw new RuntimeException (e.getMessage());
             } // catch
+            if (tile.getDirty())
+              throw new IllegalStateException ("Written tile has getDirty() == true");
           } // if
           return (true);
         } // else
@@ -366,7 +388,8 @@ public abstract class CachedGrid
   ////////////////////////////////////////////////////////////
 
   /**
-   * Writes the specified tile.
+   * Writes the specified tile.  The implementation of this method must set
+   * the tile to be not dirty upon successfully writing it, or throw an error.
    *
    * @param tile the tile to write.
    *
@@ -385,15 +408,14 @@ public abstract class CachedGrid
    */
   public void flush () throws IOException {
 
-    // Loop ever each tile
-    // -------------------
-//    Iterator iter =  cache.values().iterator();
-
+    // Loop ever each tile and write if dirty
+    // --------------------------------------
     for (Tile tile : cache.values()) {
-//    while (iter.hasNext()) {
-//      Tile tile = (Tile) iter.next();
-      if (tile.getDirty()) 
-        writeTile (tile);      
+      if (tile.getDirty()) {
+        writeTile (tile);
+        if (tile.getDirty())
+          throw new IllegalStateException ("Written tile has getDirty() == true");
+      } // if
     } // while
 
   } // flush
@@ -460,6 +482,7 @@ public abstract class CachedGrid
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void setValue (
     int index,
     double val
@@ -471,6 +494,7 @@ public abstract class CachedGrid
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void setValue (
     int row,
     int col,
@@ -487,6 +511,7 @@ public abstract class CachedGrid
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public double getValue (
     int index
   ) {
@@ -497,6 +522,7 @@ public abstract class CachedGrid
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public double getValue (
     int row,
     int col
@@ -511,11 +537,29 @@ public abstract class CachedGrid
 
   ////////////////////////////////////////////////////////////
 
+  @Override
+  public void setData (Object data) { setData (data, new int[] {0, 0}, dims); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
   public Object getData () { return (getData (new int[] {0, 0}, dims)); }
 
   ////////////////////////////////////////////////////////////
 
-  public Object getData (
+  /**
+   * Gets a minimal list of tile positions that cover a subset of this
+   * grid.
+   *
+   * @param start the subset starting [row, column].
+   * @param count the subset dimension [rows, columns].
+   *
+   * @return the list of tile positions.
+   *
+   * @throws IndexOutOfBoundsException if the subset falls outside the
+   * grid dimensions.
+   */
+  public List<TilePosition> getCoveringPositions (
     int[] start,
     int[] count
   ) {
@@ -527,28 +571,35 @@ public abstract class CachedGrid
 
     // Find required tiles
     // -------------------
-    int[] minCoords = tiling.createTilePosition(start[ROWS], 
-      start[COLS]).getCoords();
-    int[] maxCoords = tiling.createTilePosition(start[ROWS]+count[ROWS]-1,
-      start[COLS]+count[COLS]-1).getCoords();
-    List tiles = new ArrayList();
+    int[] minCoords = tiling.createTilePosition (start[ROWS], start[COLS]).getCoords();
+    int[] maxCoords = tiling.createTilePosition (start[ROWS]+count[ROWS]-1, start[COLS]+count[COLS]-1).getCoords();
+    List<TilePosition> tilePositions = new ArrayList<>();
     for (int i = minCoords[ROWS]; i <= maxCoords[ROWS]; i++)
       for (int j = minCoords[COLS]; j <= maxCoords[COLS]; j++)
-        tiles.add (tiling.new TilePosition (i, j));
+        tilePositions.add (tiling.new TilePosition (i, j));
 
-    // Create subset array
-    // -------------------
-    Object subset = Array.newInstance (getDataClass(), 
-      count[ROWS]*count[COLS]);
-    Rectangle subsetRect = new Rectangle (start[COLS], start[ROWS], 
-      count[COLS], count[ROWS]);
+    return (tilePositions);
 
-    // Loop over each tile
-    // -------------------
-    Iterator iter = tiles.iterator();
-    while (iter.hasNext()) {
-      TilePosition pos = (TilePosition) iter.next();
+  } // getCoveringPositions
 
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public void setData (
+    Object subset,
+    int[] start,
+    int[] count
+  ) {
+
+    // Get list of tile positions
+    // --------------------------
+    List<TilePosition> tilePositions = getCoveringPositions (start, count);
+
+    // Loop over each tile position
+    // ----------------------------
+    Rectangle subsetRect = new Rectangle (start[COLS], start[ROWS], count[COLS], count[ROWS]);
+    for (TilePosition pos : tilePositions) {
+    
       // Get tile
       // --------
       if (!cache.containsKey (pos)) cacheMiss (pos);
@@ -556,26 +607,244 @@ public abstract class CachedGrid
       int[] thisTileDims = tile.getDimensions();
       Object tileData = tile.getData();
 
-      // Get tile intersection
-      // ---------------------
+      // Check for degenerate case -- subset is exactly one tile
+      // -------------------------------------------------------
       Rectangle tileRect = tile.getRectangle();
-      Rectangle intersect = subsetRect.intersection (tileRect);
+      if (tileRect.equals (subsetRect)) {
+        System.arraycopy (subset, 0, tileData, 0, thisTileDims[ROWS]*thisTileDims[COLS]);
+      } // if
+      
+      // Map subset data into tile data
+      // ------------------------------
+      else {
+        Rectangle intersect = subsetRect.intersection (tileRect);
+        for (int i = 0; i < intersect.height; i++) {
+          System.arraycopy (
+            subset,
+            (intersect.y-subsetRect.y+i)*count[COLS] + (intersect.x-subsetRect.x),
+            tileData,
+            (intersect.y-tileRect.y+i)*thisTileDims[COLS] + (intersect.x-tileRect.x),
+            intersect.width);
+        } // for
+      } // else
 
+      // Mark tile as needing to be written
+      // ----------------------------------
+      tile.setDirty (true);
+
+    } // for
+ 
+  } // setData
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public Object getData (
+    int[] start,
+    int[] count
+  ) {
+
+    // Get list of tile positions
+    // --------------------------
+    List<TilePosition> tilePositions = getCoveringPositions (start, count);
+
+    // Create subset array
+    // -------------------
+    Object subset = Array.newInstance (getDataClass(), count[ROWS]*count[COLS]);
+    Rectangle subsetRect = new Rectangle (start[COLS], start[ROWS], count[COLS], count[ROWS]);
+
+    // Loop over each tile
+    // -------------------
+    for (TilePosition pos : tilePositions) {
+    
+      // Get tile
+      // --------
+      if (!cache.containsKey (pos)) cacheMiss (pos);
+      Tile tile = (Tile) cache.get (pos);
+      int[] thisTileDims = tile.getDimensions();
+      Object tileData = tile.getData();
+
+      // Check for degenerate case -- subset is exactly one tile
+      // -------------------------------------------------------
+      Rectangle tileRect = tile.getRectangle();
+      if (tileRect.equals (subsetRect)) {
+        System.arraycopy (tileData, 0, subset, 0, thisTileDims[ROWS]*thisTileDims[COLS]);
+      } // if
+      
       // Map tile data into subset data
       // ------------------------------
-      for (int i = 0; i < intersect.height; i++) {
-        System.arraycopy (
-          tileData, (intersect.y-tileRect.y+i)*thisTileDims[COLS] + 
-          (intersect.x-tileRect.x),
-          subset, (intersect.y-subsetRect.y+i)*count[COLS] + 
-          (intersect.x-subsetRect.x), intersect.width);
-      } // for
+      else {
+        Rectangle intersect = subsetRect.intersection (tileRect);
+        for (int i = 0; i < intersect.height; i++) {
+          System.arraycopy (
+            tileData,
+            (intersect.y-tileRect.y+i)*thisTileDims[COLS] + (intersect.x-tileRect.x),
+            subset,
+            (intersect.y-subsetRect.y+i)*count[COLS] + (intersect.x-subsetRect.x),
+            intersect.width);
+        } // for
+      } // else
 
-    } // while
+    } // for
  
     return (subset);
 
   } // getData
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
+  public static void main (String[] argv) throws Exception {
+
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (CachedGrid.class);
+
+    // ------------------------->
+
+    logger.test ("Framework");
+
+    int[] testDims = new int[] {2000, 2000};
+    int[] testData = new int[testDims[ROWS]*testDims[COLS]];
+    for (int i = 0; i < testDims[ROWS]; i++) {
+      for (int j = 0; j < testDims[COLS]; j++) {
+        testData[i*testDims[COLS] + j] = i*testDims[COLS] + j;
+      } // for
+    } // for
+    for (int index = 1; index < testData.length; index++) {
+      assert (testData[index] != testData[index-1]);
+    } // for
+
+    Grid grid = new Grid (
+      "test",
+      "test data",
+      "meters",
+      testDims[ROWS],
+      testDims[COLS],
+      new int[0],
+      new java.text.DecimalFormat ("000"),
+      null,
+      null);
+    CachedGrid cached = new CachedGrid (grid, READ_WRITE) {
+
+      protected Tile readTile (
+        TilePosition pos
+      ) throws IOException {
+
+        int[] tileDims = pos.getDimensions();
+        int[] tileStart = pos.getStart();
+        int tileValues = tileDims[ROWS]*tileDims[COLS];
+        int[] tileData = new int[tileValues];
+        Grid.arraycopy (testData, testDims, tileStart, tileData, tileDims, new int[] {0, 0}, tileDims);
+        return (tiling.new Tile (pos, tileData));
+
+      } // readTile
+
+      protected void writeTile (
+        Tile tile
+      ) throws IOException {
+      
+        int[] tileDims = tile.getDimensions();
+        int[] tileStart = tile.getPosition().getStart();
+        Object tileData = tile.getData();
+        Grid.arraycopy (tileData, tileDims, new int[] {0, 0}, testData, testDims, tileStart, tileDims);
+        tile.setDirty (false);
+        
+      } // writeTile
+
+      public Object getDataStream() { return (null); }
+
+    };
+    int[] tileSize = new int[] {100, 100};
+    cached.setTileDims (tileSize);
+
+    logger.passed();
+
+    // ------------------------->
+
+    logger.test ("getData");
+
+    List<int[]> startList = new ArrayList<>();
+    List<int[]> countList = new ArrayList<>();
+
+    startList.add (new int[] {30, 250});
+    countList.add (new int[] {150, 90});
+
+    startList.add (new int[] {tileSize[ROWS]*2, tileSize[COLS]*4});
+    countList.add ((int[]) tileSize.clone());
+    
+    startList.add (new int[] {70, 130});
+    countList.add (new int[] {200, 150});
+    
+    for (int testIndex = 0; testIndex < startList.size(); testIndex++) {
+    
+      int[] start = startList.get (testIndex);
+      int[] count = countList.get (testIndex);
+
+      int[] readTile = (int[]) cached.getData (start, count);
+
+      for (int i = 0; i < count[ROWS]; i++) {
+        for (int j = 0; j < count[COLS]; j++) {
+          int globalRow = i+start[ROWS];
+          int globalCol = j+start[COLS];
+          assert (readTile[i*count[COLS] + j] == testData[globalRow*testDims[COLS] + globalCol]);
+        } // for
+      } // for
+
+    } // for
+
+    logger.passed();
+
+    // ------------------------->
+
+    logger.test ("setData");
+    
+    int[] savedTestData = (int[]) testData.clone();
+    for (int testIndex = 0; testIndex < startList.size(); testIndex++) {
+
+      int[] start = startList.get (testIndex);
+      int[] count = countList.get (testIndex);
+
+      int[] writeTile = new int[count[ROWS]*count[COLS]];
+
+      for (int i = 0; i < count[ROWS]; i++) {
+        for (int j = 0; j < count[COLS]; j++) {
+          writeTile[i*count[COLS] + j] = (i*count[COLS] + j) + testData.length;
+        } // for
+      } // for
+
+      cached.setData (writeTile, start, count);
+      cached.flush();
+    
+      for (int i = 0; i < testDims[ROWS]; i++) {
+        for (int j = 0; j < testDims[COLS]; j++) {
+          int tileRow = i-start[ROWS];
+          int tileCol = j-start[COLS];
+          if (
+            tileRow < 0 || tileRow > count[ROWS]-1 ||
+            tileCol < 0 || tileCol > count[COLS]-1
+          ) {
+            assert (testData[i*testDims[COLS] + j] == (i*testDims[COLS] + j));
+          } // if
+          else {
+            assert (testData[i*testDims[COLS] + j] == writeTile[tileRow*count[COLS] + tileCol]);
+          } // else
+        } // for
+      } // for
+
+      cached.setData (savedTestData);
+      cached.flush();
+
+    } // for
+
+    logger.passed();
+
+    // ------------------------->
+
+  } // main
 
   ////////////////////////////////////////////////////////////
 

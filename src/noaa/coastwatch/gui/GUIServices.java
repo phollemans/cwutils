@@ -34,7 +34,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Window;
-import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -56,6 +55,7 @@ import java.net.URL;
 import java.text.BreakIterator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -95,6 +95,9 @@ import noaa.coastwatch.gui.HTMLPanel;
 import noaa.coastwatch.gui.PanelOutputStream;
 import noaa.coastwatch.tools.ToolServices;
 
+// Testing
+import noaa.coastwatch.test.TestLogger;
+
 /**
  * The GUI services class defines various static methods relating
  * to graphical user interfaces.
@@ -102,6 +105,7 @@ import noaa.coastwatch.tools.ToolServices;
  * @author Peter Hollemans
  * @since 3.1.1
  */
+@noaa.coastwatch.test.Testable
 public class GUIServices {
 
   // Constants
@@ -132,9 +136,14 @@ public class GUIServices {
   /** The insets to use for icon-only button margins. */
   public static final Insets ICON_INSETS = new Insets (2, 2, 2, 2);
   
-  /** The window size keys for storing/recalling window sizes. */
+  /** The preferences key for application window width. */
   public static final String WINDOW_WIDTH_KEY = "window.width";
+
+  /** The preferences key for applicationwindow height. */
   public static final String WINDOW_HEIGHT_KEY = "window.height";
+
+  /** The preferences key for recently opened files. */
+  public static final String RECENT_FILES_KEY = "recent.files";
 
   // Variables
   // ---------
@@ -160,9 +169,6 @@ public class GUIServices {
   /** The hlpe index URL to use for help panels. */
   private static URL helpIndex;
   
-  /** The local clipboard. */
-  private static Clipboard clipboard;
-
   ////////////////////////////////////////////////////////////
 
   /** Loads the icon properties file. */
@@ -172,7 +178,6 @@ public class GUIServices {
     // ---------------------
     iconProperties = getPropertiesFromResource (ICON_PROPERTIES_FILE);
     helpProperties = getPropertiesFromResource (HELP_PROPERTIES_FILE);
-    clipboard = new Clipboard ("CDAT Clipboard");
 
     // Get current directory
     // ---------------------
@@ -1127,20 +1132,113 @@ public class GUIServices {
   } // setSameSize
 
   ////////////////////////////////////////////////////////////
-  
-  /** 
-   * Gets the local clipboard.
+
+  /**
+   * Get the list of recently opened files for the target class.
    *
-   * @return the clipboard.
+   * @param targetClass the class for the recent files.
+   *
+   * @return the list of recnetly opened file names, possibly empty.
+   *
+   * @since 3.4.0
    */
-  public static Clipboard getCDATClipboard() {
+  public static List<String> getRecentlyOpenedFiles (
+    Class targetClass
+  ) {
 
-    return (clipboard);
+    Preferences prefs = Preferences.userNodeForPackage (targetClass);
+    String recentFiles = prefs.get (RECENT_FILES_KEY, null);
+    List<String> recentFilesList;
+    if (recentFiles == null)
+      recentFilesList = new ArrayList<>();
+    else
+      recentFilesList = new ArrayList (Arrays.asList (recentFiles.split ("\n")));
 
-  } // getCDATClipBoard
+    return (recentFilesList);
+
+  } // getRecentlyOpenedFiles
+  
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Adds the specified file name to the list of recently opened files for the
+   * target class.
+   *
+   * @param file the file name to add.
+   * @param targetClass the class for the recent files.
+   * @param maxFiles the maximum number of files to store.
+   *
+   * @since 3.4.0
+   */
+  public static void addFileToRecentlyOpened (
+    String file,
+    Class targetClass,
+    int maxFiles
+  ) {
+
+    // Recall recent files
+    // -------------------
+    List<String> recentFilesList = getRecentlyOpenedFiles (targetClass);
+
+    // Add file to list
+    // ----------------
+    int index = recentFilesList.indexOf (file);
+    if (index == -1)
+      recentFilesList.add (file);
+    else {
+      recentFilesList.remove (index);
+      recentFilesList.add (file);
+    } // else
+
+    // Trim list length
+    // ----------------
+    if (recentFilesList.size() > maxFiles)
+      recentFilesList = recentFilesList.subList (recentFilesList.size() - maxFiles, recentFilesList.size());
+
+    setRecentlyOpenedFiles (recentFilesList, targetClass);
+
+  } // addFileToRecentlyOpened
+  
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the list of recently opened files for the target class.
+   *
+   * @param recentFilesList the new list of recently opened files, possibly
+   * empty.
+   * @param targetClass the class for the recent files.
+   *
+   * @since 3.4.0
+   */
+  public static void setRecentlyOpenedFiles (
+    List<String> recentFilesList,
+    Class targetClass
+  ) {
+
+    Preferences prefs = Preferences.userNodeForPackage (targetClass);
+
+    // Remove recent files list
+    // ------------------------
+    if (recentFilesList.size() == 0) {
+      prefs.remove (RECENT_FILES_KEY);
+    } //
+    
+    // Update recent files list
+    // ------------------------
+    else {
+      String recentFiles = "";
+      for (int i = 0; i < recentFilesList.size(); i++) {
+        recentFiles += recentFilesList.get (i);
+        if (i != recentFilesList.size()-1)
+          recentFiles += "\n";
+      } // for
+      prefs.put (RECENT_FILES_KEY, recentFiles);
+    } // else
+    
+  } // setRecentlyOpenedFiles
 
   ////////////////////////////////////////////////////////////
-  
+
   /**
    * Stores the specified window size for the target class.  Storing a window
    * size is useful for maintaining a window size across application 
@@ -1170,7 +1268,7 @@ public class GUIServices {
    * size is useful for maintaining a window size across application 
    * invokations.
    *
-   * @param targetClass the class to associate with the window size.
+   * @param targetClass the class to recall the window size.
    *
    * @return the windows size or null if one was not found for the target class.
    *
@@ -1194,7 +1292,118 @@ public class GUIServices {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Stores a boolean value for the target class.
+   *
+   * @param value the value to store.
+   * @param key the key to use for storing the boolen value.
+   * @param targetClass the class to associate with the value.
+   *
+   * @since 3.4.0
+   */
+  public static void storeBooleanSettingForClass (
+    boolean value,
+    String key,
+    Class targetClass
+  ) {
+
+    Preferences prefs = Preferences.userNodeForPackage (targetClass);
+    prefs.putBoolean (key, value);
+
+  } // storeBooleanSettingForClass
+  
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Recalls a boolean value for the target class.
+   *
+   * @param def the default value for the boolean if not found.
+   * @param key the key to use for recalling the boolean value.
+   * @param targetClass the class to recall the boolean value.
+   *
+   * @return the boolean value, or the default value if none was found.
+   *
+   * @since 3.4.0
+   */
+  public static boolean recallBooleanSettingForClass (
+    boolean def,
+    String key,
+    Class targetClass
+  ) {
+
+    Preferences prefs = Preferences.userNodeForPackage (targetClass);
+    return (prefs.getBoolean (key, def));
+
+  } // recallBooleanSettingForClass
+
+  ////////////////////////////////////////////////////////////
+
   private GUIServices () { }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurred.
+   */
+  public static void main (String[] argv) throws Exception {
+
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (GUIServices.class);
+
+    logger.test ("setRecentlyOpenedFiles, getRecentlyOpenedFiles");
+
+    List<String> files = new ArrayList<>();
+    setRecentlyOpenedFiles (files, GUIServices.class);
+    files = getRecentlyOpenedFiles (GUIServices.class);
+    assert (files.size() == 0);
+
+    files = Arrays.asList ("one", "two", "three");
+    setRecentlyOpenedFiles (files, GUIServices.class);
+    files = getRecentlyOpenedFiles (GUIServices.class);
+    assert (files.size() == 3);
+    assert (files.get (0).equals ("one"));
+    assert (files.get (1).equals ("two"));
+    assert (files.get (2).equals ("three"));
+    
+    files = new ArrayList<>();
+    setRecentlyOpenedFiles (files, GUIServices.class);
+    files = getRecentlyOpenedFiles (GUIServices.class);
+    assert (files.size() == 0);
+
+    logger.passed();
+
+    logger.test ("addFileToRecentlyOpened");
+    
+    for (int i = 0; i < 5; i++) {
+      String file = "file" + i;
+      addFileToRecentlyOpened (file, GUIServices.class, 5);
+      files = getRecentlyOpenedFiles (GUIServices.class);
+      assert (files.size() == (i+1));
+      assert (files.indexOf (file) == files.size()-1);
+    } // for
+
+    addFileToRecentlyOpened ("file3", GUIServices.class, 5);
+    files = getRecentlyOpenedFiles (GUIServices.class);
+    assert (files.size() == 5);
+    assert (files.indexOf ("file0") == 0);
+    assert (files.indexOf ("file1") == 1);
+    assert (files.indexOf ("file2") == 2);
+    assert (files.indexOf ("file4") == 3);
+    assert (files.indexOf ("file3") == 4);
+
+    addFileToRecentlyOpened ("file10", GUIServices.class, 5);
+    files = getRecentlyOpenedFiles (GUIServices.class);
+    assert (files.size() == 5);
+    assert (files.indexOf ("file10") == 4);
+    assert (files.indexOf ("file0") == -1);
+
+    logger.passed();
+
+  } // main
 
   ////////////////////////////////////////////////////////////
 

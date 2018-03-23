@@ -257,6 +257,8 @@ public class GeoTIFFWriter {
    *
    * @throws IllegalArgumentException if the map projection system is
    * not UTM.
+   *
+   * @since 3.3.2
    */
   private List<TIFFField> getUTMKeys (
     MapProjection map

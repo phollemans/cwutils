@@ -25,9 +25,12 @@ package noaa.coastwatch.tools;
 
 // Imports
 // --------
+import java.io.FileNotFoundException;
+
 import jargs.gnu.CmdLineParser;
 import jargs.gnu.CmdLineParser.Option;
 import jargs.gnu.CmdLineParser.OptionException;
+
 import noaa.coastwatch.io.CWHDFWriter;
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
@@ -378,8 +381,7 @@ public final class cwregister {
       int rows = 0, cols = 0;
       EarthTransform masterTrans = null;
       try {
-        EarthDataReader masterReader = EarthDataReaderFactory.create (
-          master);
+        EarthDataReader masterReader = EarthDataReaderFactory.create (master);
         masterInfo = masterReader.getInfo();
         masterTrans = masterInfo.getTransform();
         int[] dims = masterTrans.getDimensions();
@@ -387,8 +389,12 @@ public final class cwregister {
         cols = dims[1];
         masterReader.close();
       } // try
+      catch (FileNotFoundException fnf) {
+        fnf.printStackTrace();
+        System.exit (2);
+      } // catch
       catch (Exception e) {
-        System.err.println (PROG + ": Error reading master, aborting");        
+        System.err.println (PROG + ": Error reading master file " + master + ", " + e);
         System.exit (2);
       } // catch
 
@@ -550,7 +556,7 @@ public final class cwregister {
 
     } // try
     catch (Exception e) {
-      e.printStackTrace ();
+      e.printStackTrace();
       System.exit (2);
     } // catch
 

@@ -169,7 +169,7 @@ public abstract class ImageSavePanel
             EarthDataView viewClone = (EarthDataView) view.clone();
             String worldFile = (writeWorld ? 
               file.getPath().replaceFirst ("\\.[^.]*$", ".wld") : null);
-            EarthImageWriter.write (viewClone, info, false, hasLegends, 
+            EarthImageWriter.getInstance().write (viewClone, info, false, hasLegends, 
               logoIcon, isAntialiased, file, format, worldFile, tiffComp, 
               colors);
           } // try

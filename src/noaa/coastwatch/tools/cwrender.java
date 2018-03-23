@@ -28,6 +28,7 @@ package noaa.coastwatch.tools;
 import jargs.gnu.CmdLineParser;
 import jargs.gnu.CmdLineParser.Option;
 import jargs.gnu.CmdLineParser.OptionException;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -35,6 +36,8 @@ import java.awt.Transparency;
 import java.awt.geom.Point2D;
 import java.awt.image.DataBuffer;
 import java.awt.image.IndexColorModel;
+import java.awt.GraphicsEnvironment;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -44,6 +47,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
 import noaa.coastwatch.io.EarthImageWriter;
@@ -125,6 +129,8 @@ import ucar.units.Unit;
  * <p>
  * -a, --noantialias <br>
  * -D, --date=STARTDATE[/ENDDATE] <br>
+ * --font=FAMILY[/STYLE[/SIZE]] <br>
+ * --fontlist <br>
  * -f, --format=TYPE <br>
  * -i, --indexed <br>
  * -I, --imagecolors=NUMBER <br>
@@ -368,6 +374,23 @@ import ucar.units.Unit;
  *   ISO date/time format 'yyyy-mm-ddThh:mm:ssZ'.  For example, 
  *   Dec 19, 2013 at 11 pm UTC would be specified as '2013-12-19T23:00:00Z'.
  *   If the data has no known end date, the end date value may be omitted.</dd>
+ *
+ *   <dt>--font=FAMILY[/STYLE[/SIZE]]</dt>
+ *
+ *   <dd>The legend and overlay text font with optional style and size.
+ *   The default is 'Dialog/plain/9'. The font family names available differ
+ *   based on the fonts installed on a given system.  The family names 'Dialog',
+ *   'DialogInput', 'Monospaced', 'Serif', and 'SansSerif' are always available
+ *   and map to certain system fonts at runtime.  For a full listing of fonts
+ *   families available on the system, use the <b>--fontlist</b> option.
+ *   Valid styles  are 'plain', 'bold', 'italic', and 'bold-italic'.
+ *   For example to use an Arial font available on some systems, bold style,
+ *   of 12 point size, specify 'Arial/bold/12'.  To use a sans serif font
+ *   with default style and size, specify 'SansSerif'.</dd>
+ *
+ *   <dt>--fontlist</dt>
+ *
+ *   <dd>Lists the font family names available on the system.</dd>
  *
  *   <dt>-f, --format=TYPE</dt>
  *
@@ -1069,6 +1092,8 @@ public class cwrender {
     Option splitOpt = cmd.addStringOption ("split");
     Option dateOpt = cmd.addStringOption ('D', "date");    
     Option scalewidthOpt = cmd.addIntegerOption ("scalewidth");
+    Option fontOpt = cmd.addStringOption ("font");
+    Option fontlistOpt = cmd.addBooleanOption ("fontlist");
     try { cmd.parse (argv); }
     catch (OptionException e) {
       System.err.println (PROG + ": " + e.getMessage());
@@ -1089,6 +1114,17 @@ public class cwrender {
       System.out.println (ToolServices.getFullVersion (PROG));
       System.exit (0);
     } // if  
+
+    // Print font list
+    // ---------------
+    if (cmd.getOptionValue (fontlistOpt) != null) {
+      String[] families =
+        GraphicsEnvironment.getLocalGraphicsEnvironment().
+        getAvailableFontFamilyNames();
+      for (int i = 0; i < families.length; i++)
+        System.out.println (families[i]);
+      System.exit (0);
+    } // if
 
     // Get remaining arguments
     // -----------------------
@@ -1203,7 +1239,9 @@ public class cwrender {
     String date = (String) cmd.getOptionValue (dateOpt);
     Integer scalewidthObj = (Integer) cmd.getOptionValue (scalewidthOpt);
     int scalewidth = (scalewidthObj == null ? 90 : scalewidthObj.intValue());
-    
+    String fontStr = (String) cmd.getOptionValue (fontOpt);
+    if (fontStr == null) fontStr = "Dialog/plain/9";
+
     try {
 
       // Open input file
@@ -1477,6 +1515,28 @@ public class cwrender {
         System.exit (2);
       } // else
 
+      // Get font
+      // --------
+      String[] fontArray = fontStr.split (ToolServices.getSplitRegex());
+      if (fontArray.length < 1 || fontArray.length > 3) {
+        System.err.println (PROG + ": Invalid font '" + fontStr + "'");
+        System.exit (2);
+      } // if
+      String family = fontArray[0];
+      String fontStyleStr = (fontArray.length >= 2 ? fontArray[1] : "plain");
+      int fontStyle = 0;
+      if (fontStyleStr.equals ("plain")) fontStyle = Font.PLAIN;
+      else if (fontStyleStr.equals ("bold")) fontStyle = Font.BOLD;
+      else if (fontStyleStr.equals ("italic")) fontStyle = Font.ITALIC;
+      else if (fontStyleStr.equals ("bold-italic")) fontStyle = Font.BOLD + Font.ITALIC;
+      else {
+        System.err.println (PROG + ": Invalid font style '" + fontStyleStr + "'");
+        System.exit (2);
+      } // else
+      String fontSizeStr = (fontArray.length == 3 ? fontArray[2] : "9");
+      int fontSize = Integer.parseInt (fontSizeStr);
+      Font font = new Font (family, fontStyle, fontSize);
+
       // Modify color scale legend
       // -------------------------
       Legend legend = view.getLegend();
@@ -1667,6 +1727,7 @@ public class cwrender {
       // --------------
       if (grid != null) {
         LatLonOverlay gridOverlay = new LatLonOverlay (lookup.convert (grid));
+        gridOverlay.setFont (font.deriveFont (font.getSize() + 3.0f));
         view.addOverlay (gridOverlay);
       } // if
 
@@ -1757,11 +1818,11 @@ public class cwrender {
         int watermarkAngle = (watermarkArray.length >= 4 ?
           Integer.parseInt (watermarkArray[3]) : 0);
         TextOverlay watermarkOverlay = new TextOverlay (watermarkColor);
-        Font font = new Font ("Arial", Font.BOLD, watermarkSize);
+        Font watermarkFont = new Font ("Arial", Font.BOLD, watermarkSize);
         DataLocation baseLocation = view.getCenter();
         Point2D basePoint = new Point2D.Double (baseLocation.get (Grid.ROWS),
           baseLocation.get (Grid.COLS));
-        TextElement watermarkElement = new TextElement (watermarkText, font,
+        TextElement watermarkElement = new TextElement (watermarkText, watermarkFont,
           basePoint, new double[] {0.5, 0.5}, watermarkAngle);
         watermarkOverlay.addElement (watermarkElement);
         if (watermarkshadow) watermarkOverlay.setTextDropShadow (true);
@@ -1838,10 +1899,10 @@ public class cwrender {
 
       // Write image
       // -----------
-      final Renderable renderable = EarthImageWriter.write (view, 
-        info, verbose, !nolegends,
-        logoIcon, !noantialias, new File (output), format, worldfile, 
-        tiffcomp, imagecolors);
+      EarthImageWriter writer = EarthImageWriter.getInstance();
+      writer.setFont (font);
+      writer.write (view, info, verbose, !nolegends, logoIcon, !noantialias,
+        new File (output), format, worldfile, tiffcomp, imagecolors);
 
     } // try
     catch (Exception e) {
@@ -1889,6 +1950,9 @@ public class cwrender {
 "  -D, --date=STARTDATE[/ENDDATE]\n" +
 "                             Set the plot legend start and end date in ISO\n" +
 "                              format 'yyyy-mm-ddThh:mm:ssZ'\n" +
+"  --font=FAMILY[/STYLE[/SIZE]]\n" +
+"                             Set the legend and overlay text font.\n" +
+"  --fontlist                 Print system font family names.\n" +
 "  -f, --format=TYPE          Set the output format.  TYPE may be\n" +
 "                              'png', 'gif', 'jpg', 'tif', 'pdf', or\n" +
 "                              'auto'.\n" +
@@ -1902,7 +1966,7 @@ public class cwrender {
 "                              NAME may be 'noaa3d', 'nasa3d', 'nws3d',\n" +
 "                              'doc3d', 'noaa', 'nasa', 'nws', 'doc',\n" +
 "                              or any PNG, GIF, or JPEG file.\n" +
-"  -s, --size=PIXELS          Set the maximum data view width and height.\n" +
+"  -s, --size=PIXELS | full   Set the maximum data view width and height.\n" +
 "  -T, --tiffcomp=TYPE        Set the TIFF compression.  TYPE may be\n" +
 "                              'none', 'deflate', or 'pack'.\n" +
 "  -W, --worldfile=FILE       Write a text world file for georeferencing\n" +

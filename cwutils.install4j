@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="5.1.15" transformSequenceNumber="4">
   <directoryPresets config="../../../../../Downloads/software.iconset" />
-  <application name="CoastWatch Utilities" distributionSourceDir="" applicationId="1290-4459-1345-6363" mediaDir="${compiler:pkgDir}" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}-${compiler:osName}-${compiler:arch}" compression="9" lzmaCompression="true" pack200Compression="true" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="cwutils" publisher="National Oceanic and Atmospheric Administration" publisherWeb="http://coastwatch.noaa.gov" version="3.2.3" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.7" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
+  <application name="CoastWatch Utilities" distributionSourceDir="" applicationId="1290-4459-1345-6363" mediaDir="${compiler:pkgDir}" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}-${compiler:osName}-${compiler:arch}${compiler:novm}" compression="9" lzmaCompression="true" pack200Compression="true" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="cwutils" publisher="National Oceanic and Atmospheric Administration" publisherWeb="http://coastwatch.noaa.gov" version="3.0.0" allPathsRelative="true" backupOnSave="false" autoSave="false" convertDotsToUnderscores="true" macSignature="????" installerName="" javaMinVersion="1.8" javaMaxVersion="" allowBetaVM="false" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
       <additionalLanguages />
@@ -25,6 +25,7 @@
       <variable name="libDir" value="${compiler:osName}_${compiler:arch}" description="" category="" />
       <variable name="pkgDir" value="../Packages" description="" category="" />
       <variable name="vmOptionsFile" value="" description="" category="" />
+      <variable name="novm" value="" description="" category="" />
     </variables>
     <mergedProjects />
     <codeSigning macEnabled="false" macPkcs12File="" windowsEnabled="false" windowsKeySource="pvkAndSpc" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="" />
@@ -61,11 +62,11 @@
           <entry location="bin/${compiler:cdatName}" fileType="launcher" />
           <entry location="bin/${compiler:cwmasterName}" fileType="launcher" />
           <entry location="bin/${compiler:cwstatusName}" fileType="launcher" />
-          <entry location="data" fileType="regular" />
-          <entry location="doc/cwutils_ug_3_3_2.pdf" fileType="regular" />
-          <entry location="doc/license.txt" fileType="regular" />
           <entry location="extensions" fileType="regular" />
           <entry location="lib" fileType="regular" />
+          <entry location="doc/cwutils_ug_3_4_0.pdf" fileType="regular" />
+          <entry location="doc/license.txt" fileType="regular" />
+          <entry location="data" fileType="regular" />
         </include>
         <dependencies />
       </component>
@@ -859,7 +860,7 @@
                   <void property="displayedText">
                     <string>&lt;html&gt;
 &lt;p&gt;
-&lt;b&gt;Copyright (c) 1998-2017 National Oceanic and Atmospheric Administration&lt;br&gt;
+&lt;b&gt;Copyright (c) 1998-2018 National Oceanic and Atmospheric Administration&lt;br&gt;
 All rights reserved.&lt;/b&gt;
 &lt;/p&gt;
 
@@ -1048,7 +1049,7 @@ OTHER DEALINGS WITH THE SOFTWARE.
                             </void>
                             <void property="target">
                               <object class="java.io.File">
-                                <string>doc/cwutils_ug_3_3_2.pdf</string>
+                                <string>doc/cwutils_ug_3_4_0.pdf</string>
                               </object>
                             </void>
                           </object>
@@ -2751,21 +2752,13 @@ if (context.isUnattended()) {
       <excludedComponents />
       <includedDownloadableComponents />
     </windows>
-    <windows name="windows64" id="278" customizedId="" mediaFileName="" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="64" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="windows-amd64-1.8.0_72" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" verifyIntegrity="true">
-      <excludedLaunchers>
-        <launcher id="498" />
-        <launcher id="505" />
-        <launcher id="506" />
-      </excludedLaunchers>
+    <windows name="windows64" id="278" customizedId="" mediaFileName="" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="64" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="windows-x64-1.8.0_162.tar.gz" manualJREEntry="true" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" verifyIntegrity="true">
+      <excludedLaunchers />
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
-        <entry location="lib/native/linux_x86" fileType="regular" />
-        <entry location="lib/native/linux_x86_64" fileType="regular" />
-        <entry location="lib/native/macosx_x86" fileType="regular" />
         <entry location="lib/native/macosx_x86_64" fileType="regular" />
-        <entry location="lib/native/solaris_sparc" fileType="regular" />
-        <entry location="lib/native/solaris_sparcv9" fileType="regular" />
+        <entry location="lib/native/linux_x86_64" fileType="regular" />
         <entry location="lib/native/windows_x86" fileType="regular" />
       </exclude>
       <variables>
@@ -2810,7 +2803,7 @@ if (context.isUnattended()) {
         <customAttributes />
       </autoUpdate>
     </unixArchive>
-    <unixArchive name="linux64 (tgz)" id="288" customizedId="" mediaFileName="" installDir="${compiler:baseInstallDir}" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="linux-x64-1.8.0_45" manualJREEntry="false">
+    <unixArchive name="linux64 (tgz)" id="288" customizedId="" mediaFileName="" installDir="${compiler:baseInstallDir}" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="linux-x64-1.8.0_162" manualJREEntry="false">
       <excludedLaunchers>
         <launcher id="498" />
         <launcher id="505" />
@@ -2832,6 +2825,35 @@ if (context.isUnattended()) {
         <variable name="arch" value="x86_64" description="" category="" />
         <variable name="vmOptionsFile" value="${HOME}/.coastwatch/cwutils.vmoptions" description="" category="" />
         <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel -Dalloy.theme=glass" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+    </unixArchive>
+    <unixArchive name="linux64novm (tgz)" id="710" customizedId="" mediaFileName="" installDir="${compiler:baseInstallDir}" overridePrincipalLanguage="true" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="" manualJREEntry="false">
+      <excludedLaunchers>
+        <launcher id="498" />
+        <launcher id="505" />
+        <launcher id="506" />
+      </excludedLaunchers>
+      <excludedBeans />
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location="lib/native/linux_x86" fileType="regular" />
+        <entry location="lib/native/macosx_x86" fileType="regular" />
+        <entry location="lib/native/macosx_x86_64" fileType="regular" />
+        <entry location="lib/native/solaris_sparc" fileType="regular" />
+        <entry location="lib/native/solaris_sparcv9" fileType="regular" />
+        <entry location="lib/native/windows_x86" fileType="regular" />
+        <entry location="lib/native/windows_x86_64" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="osName" value="linux" description="" category="" />
+        <variable name="arch" value="x86_64" description="" category="" />
+        <variable name="vmOptionsFile" value="${HOME}/.coastwatch/cwutils.vmoptions" description="" category="" />
+        <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel -Dalloy.theme=glass" description="" category="" />
+        <variable name="novm" value="-novm" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
         <commentFiles />
@@ -2894,7 +2916,7 @@ if (context.isUnattended()) {
         <customAttributes />
       </autoUpdate>
     </unixArchive>
-    <macosFolder name="macosx64 (dmg)" id="276" customizedId="" mediaFileName="" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="macosx-amd64-1.8.0_72" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" appleJre="false" requiredVmIdPrefix="" customInstallBaseDir="" contentFilesType="1" downloadURL="" signLaunchers="false">
+    <macosFolder name="macosx64 (dmg)" id="276" customizedId="" mediaFileName="" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="macosx-x64-1.8.0_162" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" appleJre="false" requiredVmIdPrefix="" customInstallBaseDir="" contentFilesType="1" downloadURL="" signLaunchers="false">
       <excludedLaunchers />
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />

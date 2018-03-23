@@ -497,7 +497,7 @@ public class ImageViewPanel
     // Change to box zoom
     // ------------------
     case ZOOM_MODE: 
-      lightTable.setDrawingMode (LightTable.BOX_ZOOM_MODE);
+      lightTable.setDrawingMode (LightTable.Mode.BOX_ZOOM);
       setCursor (Cursor.getPredefinedCursor (Cursor.CROSSHAIR_CURSOR));
       if (ready) lightTable.setActive (true);
       break;
@@ -505,7 +505,7 @@ public class ImageViewPanel
     // Change to image pan
     // -------------------
     case PAN_MODE: 
-      lightTable.setDrawingMode (LightTable.IMAGE_MODE);
+      lightTable.setDrawingMode (LightTable.Mode.IMAGE);
       setCursor (Cursor.getPredefinedCursor (Cursor.MOVE_CURSOR));
       if (ready) lightTable.setActive (true);
       break;

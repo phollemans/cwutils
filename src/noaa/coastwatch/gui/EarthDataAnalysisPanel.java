@@ -136,8 +136,24 @@ public class EarthDataAnalysisPanel
   /** The controller object. */
   private EarthDataViewController controller;
 
-  /** The full screen window for this panel or null if not yet created. */
-  private FullScreenWindow fsWindow;
+  /** The tabbed pane displaying the view control tabs. */
+  private JTabbedPane tabbedPane;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Shows or hides the view controls tabs in this panel.
+   *
+   * @param isVisible the visiblity flag, true to show the tabbed pane or false
+   * to hide it.
+   */
+  public void setTabbedPaneVisible (
+    boolean isVisible
+  ) {
+
+    tabbedPane.setVisible (isVisible);
+
+  } // setTabbedPaneVisible
 
   ////////////////////////////////////////////////////////////
 
@@ -159,35 +175,23 @@ public class EarthDataAnalysisPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Shows this analysis panel in a full screen mode.
-   *
-   * @throws UnsupportedOperationException if full screen mode is
-   * not supported.
-   */
+  /** Shows this analysis panel in a full screen mode. */
   public void showFullScreen () {
 
     // Create window
     // -------------
     ViewOperationChooser opChooser = ViewOperationChooser.getInstance();
-    if (fsWindow == null) {
-      fsWindow = new FullScreenWindow (lightTable,
-        opChooser.getFullScreenChooser());
-      opChooser.addPropertyChangeListener (
-        ViewOperationChooser.OPERATION_PROPERTY, new PropertyChangeListener() {
-            public void propertyChange (PropertyChangeEvent event) {
-              if (event.getNewValue().equals (ViewOperationChooser.CLOSE)) {
-                if (fsWindow != null && fsWindow.isFullScreen())
-                  fsWindow.stop();
-              } // if
-            } // propertyChange
-          });
-    } // if
+    FullScreenWindow window = new FullScreenWindow (lightTable, opChooser.getFullScreenChooser());
+    opChooser.addPropertyChangeListener (ViewOperationChooser.OPERATION_PROPERTY, event -> {
+      if (event.getNewValue().equals (ViewOperationChooser.CLOSE)) {
+        if (window.isFullScreen()) window.stop();
+      } // if
+    });
 
     // Show window
     // -----------
     opChooser.performOperation (ViewOperationChooser.PAN);
-    fsWindow.start();
+    window.start();
 
   } // showFullScreen
 
@@ -323,23 +327,21 @@ public class EarthDataAnalysisPanel
     // Create tabbed pane
     // ------------------
     Insets tabInsets = (Insets) UIManager.get ("TabbedPane.tabInsets");
-    Insets smallTabInsets = (Insets) tabInsets.clone();
+    Insets smallTabInsets = (tabInsets == null ? new Insets (0, 0, 0, 0) : (Insets) tabInsets.clone());
     smallTabInsets.left = 4;
     smallTabInsets.right = 4;
     UIManager.put ("TabbedPane.tabInsets", smallTabInsets);
-    JTabbedPane tabbedPane = new JTabbedPane();
+    tabbedPane = new JTabbedPane();
     UIManager.put ("TabbedPane.tabInsets", tabInsets);
-    List tabs = controller.getTabComponentPanels();
-    for (Iterator iter = tabs.iterator(); iter.hasNext();) {
-      TabComponent tab = (TabComponent) iter.next();
+    List<TabComponent> tabs = controller.getTabComponentPanels();
+    for (TabComponent tab : tabs) {
       JPanel tabPanel = new JPanel (new BorderLayout());
       Box helpBox = Box.createHorizontalBox();
       helpBox.add (GUIServices.getHelpButton (tab.getClass()));
       helpBox.add (Box.createHorizontalGlue());
       tabPanel.add (helpBox, BorderLayout.SOUTH);
       tabPanel.add ((Component) tab, BorderLayout.CENTER);
-      tabbedPane.addTab (tab.getTitle(), tab.getIcon(), tabPanel,
-        tab.getToolTip());
+      tabbedPane.addTab (tab.getTitle(), tab.getIcon(), tabPanel, tab.getToolTip());
     } // for
     this.add (tabbedPane, BorderLayout.WEST);
     tabbedPane.setPreferredSize (new Dimension (TABBED_PANE_WIDTH, 0));
