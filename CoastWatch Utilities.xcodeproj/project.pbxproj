@@ -1104,6 +1104,8 @@
 		E9E0591A1D2B2AB500DA53C5 /* AreaRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = AreaRule.java; sourceTree = "<group>"; };
 		E9E0591B1D2ECF4D00DA53C5 /* AttributeRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = AttributeRule.java; sourceTree = "<group>"; };
 		E9E0591D1D34132200DA53C5 /* TextRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TextRule.java; sourceTree = "<group>"; };
+		E9E92A422069968C00D3EBB0 /* errata.tex */ = {isa = PBXFileReference; lastKnownFileType = text; path = errata.tex; sourceTree = "<group>"; };
+		E9E92A4320699C0B00D3EBB0 /* general_prefs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = general_prefs.png; sourceTree = "<group>"; };
 		E9E9BCC91976110200B85B5E /* TileCacheKey.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileCacheKey.java; path = io/tile/TileCacheKey.java; sourceTree = "<group>"; };
 		E9E9BCCA1989F37300B85B5E /* NCTileSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = NCTileSource.java; path = io/tile/NCTileSource.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9E9BCD1198C9AFC00B85B5E /* TileCachedGrid.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TileCachedGrid.java; path = io/tile/TileCachedGrid.java; sourceTree = "<group>"; };
@@ -1389,6 +1391,7 @@
 				E96D87E6161661420009B833 /* common.tex */,
 				E96D87E7161661420009B833 /* compatible.tex */,
 				E91838D6189209DF00A2F3DD /* cwutils_users_guide.tex */,
+				E9E92A422069968C00D3EBB0 /* errata.tex */,
 				E96D87F1161661420009B833 /* figures */,
 				E96D884A161661420009B833 /* history.tex */,
 				E96D884B161661420009B833 /* icons */,
@@ -1458,6 +1461,7 @@
 				E96D8823161661420009B833 /* fy1d_green.png */,
 				E96D8824161661420009B833 /* fy1d_red.png */,
 				E96D8825161661420009B833 /* fy1d_rgb.png */,
+				E9E92A4320699C0B00D3EBB0 /* general_prefs.png */,
 				E96D8826161661420009B833 /* grid.fig */,
 				E96D8827161661420009B833 /* grid.pdf */,
 				E96D8828161661420009B833 /* layers.fig */,

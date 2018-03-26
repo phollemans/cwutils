@@ -1038,8 +1038,45 @@ location and other parameters.
 
 \end{description}
 
-\section{Setting color, enhancement, and units preferences}
+\section{User Preferences}
 \label{preferences}
+
+\subsection{General preferences}
+
+CDAT has an application-wide set of general user preferences that you can
+access by clicking \button{preferences}{Preferences} from the {\gui Tools}
+menu (see \autoref{general_prefs}).  The general preferences include:
+\begin{description}
+
+\item[Memory limits] -- The maximum heap size (the total memory used
+by the Java VM for dynamic memory allocation) and the tile cache size (the
+amount of that heap used for storing data in memory prior to display).  These
+can only be specified at VM startup time, so changes to these values must be
+followed by a restart of CDAT.  In some cases you may receive an error message
+while reading a file that starts with {\file java.lang.OutOfMemoryError: Java
+heap space}.  In such a case, increase the heap size and cache size, restart
+CDAT, and repeat as needed until the error message no longer appears.  This
+error occurs as a result of reading certain data files with larger data caching
+requirements.
+
+\item[Geographic coordinates] -- The preferred format for geographic
+coordinates in various CDAT windows, including the main window where the
+geographic coordinates are displayed at the location of the mouse cursor.
+
+\end{description}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[width=4in]{figures/general_prefs.png}
+    \caption[General section in the Preferences panel]{
+       {\gui General} section in the
+       \button{preferences}{Preferences} panel
+    }
+    \label{general_prefs}
+  \end{center}
+\end{figure}
+
+\subsection{Setting color palette, enhancement, and units}
 
 When a data file is opened and variables are selected, CDAT shows
 the initial data view for each variable using a color palette,

@@ -255,11 +255,12 @@
     </install4j>
 
     <!-- Tag the package version -->
-<!--
-    <exec executable="git">
-      <arg line="tag ${version.full}"/>
-    </exec>
--->
+    <if>
+      <equals arg1="tag" arg2="true"/>
+      <exec executable="git">
+        <arg line="tag ${version.full}"/>
+      </exec>
+    </if>
 
   </target>
 
