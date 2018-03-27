@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import noaa.coastwatch.util.MetadataServices;
+import noaa.coastwatch.io.IOServices;
 
 /**
  * The tool services class defines various static methods relating
@@ -63,7 +64,7 @@ public class ToolServices {
 
   /** The software copyright. */
   public static final String COPYRIGHT = 
-    "(c) 1998-2017 National Oceanic and Atmospheric Administration";
+    "(c) 1998-2018 National Oceanic and Atmospheric Administration";
 
   /** The software copyright (short version). */
   public static final String COPYRIGHT_SHORT = COPYRIGHT;
@@ -321,6 +322,26 @@ public class ToolServices {
    * @param expr the new splitting expression.
    */
   public static void setSplitRegex (String expr) { splitRegex = expr; }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Checks the setup of tool services.
+   *
+   * @return an error string if any issues encountered, or null if none.
+   */
+  public static String checkSetup() {
+
+    String err = null;
+    
+    err = IOServices.checkSetup();
+    if (err == null) {
+      // Check other service setups here ...
+    } // if
+
+    return (err);
+
+  } // checkSetup
 
   ////////////////////////////////////////////////////////////
 

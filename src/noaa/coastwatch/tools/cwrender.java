@@ -746,7 +746,7 @@ import ucar.units.Unit;
  *   <dt>-P, --palette=NAME</dt>
  *
  *   <dd>The color palette for converting data values to colors.  The
- *   color palettes are dervied in part from the Interactive Data
+ *   color palettes are derived in part from the Interactive Data
  *   Language (IDL) v5.4 palettes and have similar names.  The valid
  *   color palette names are as follows (line indexes are simply for
  *   reference):

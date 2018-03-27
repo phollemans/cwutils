@@ -207,6 +207,35 @@ public class IOServices {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Checks the setup of I/O services.
+   *
+   * @return an error string if any issues encountered, or null if none.
+   */
+  public static String checkSetup() {
+
+    String ret = null;
+
+    // Check the HDF library
+    // ---------------------
+    int[] intArray = new int[3];
+    String[] strArray = new String[1];
+    try {
+      HDFLib.getInstance().Hgetlibversion (intArray, strArray);
+      HDF5Lib.getInstance().H5get_libversion (intArray);
+    } // try
+    catch (Exception e) {
+      ret =
+        "The HDF library cannot be initialized.  On Windows this may indicate that\n" +
+        "the prerequisite Visual C++ redistributable package has not been installed.";
+    } // catch
+
+    return (ret);
+  
+  } // checkSetup
+
+  ////////////////////////////////////////////////////////////
+
   private IOServices () { }
 
   ////////////////////////////////////////////////////////////

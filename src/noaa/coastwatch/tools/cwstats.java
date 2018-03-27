@@ -101,7 +101,7 @@ import noaa.coastwatch.util.trans.Datum;
  *   <li> Stdev - the standard deviation from the mean. </li>
  *   <li> Median - the median data value. </li>
  * </ul> 
- * <p>To speed up the statitics calculations, a subset of the data values
+ * <p>To speed up the statistics calculations, a subset of the data values
  * in each variable may be specified using either the <b>--stride</b>
  * or <b>--sample</b> options, and one of the <b>--limit</b>, <b>--region</b>, 
  * or <b>--polygon</b> options.  The <b>--match</b> option may also be used 

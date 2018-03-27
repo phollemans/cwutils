@@ -1384,6 +1384,18 @@ public final class cdat
           System.exit (1);
         } // catch
 
+        // Check setup
+        // -----------
+        String errorStr = ToolServices.checkSetup();
+        if (errorStr != null) {
+          JOptionPane.showMessageDialog (frame,
+            "An error has been detected in the setup check:\n" +
+            errorStr + "\n" +
+            "Please correct the problem and try again.",
+            "Error", JOptionPane.ERROR_MESSAGE);
+          System.exit (1);
+        } // if
+
         // Show frame
         // ----------
         frame.setVisible (true);

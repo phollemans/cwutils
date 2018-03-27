@@ -138,7 +138,7 @@ import noaa.coastwatch.util.trans.MapProjectionFactory;
  * the translation between grid row and column coordinates and Earth
  * latitude and longitude coordinates.  A number of common map
  * projections are available such as Mercator, Transverse Mercator,
- * Polar Stereographic, Orthograpic, Lambert Conformal Conic, and so
+ * Polar Stereographic, Orthographic, Lambert Conformal Conic, and so
  * on.  Detailed help on the usage of cwmaster is available from
  * within the utility using the menu bar under <i>Help | Help and
  * Support</i>.</p>
