@@ -1,0 +1,58 @@
+\section{Hidden command line options}
+
+There are a number of useful options for the command line tools that
+are not documented in the tool manual pages themselves.  This is because
+they can be used with all tools or some large subset of tools, and they
+alter some subtle feature of a tool's internal behaviour for which there
+is a reasonable default setting.  However, some users may want to tune
+or optimize these defaults.  All of the options are specified using a somewhat odd
+syntax with a leading {\file -J} to protect them from being passed to the tool
+command line processing engine -- instead they're intercepted and passed to
+the Java VM to become part of the Java environment in which the tool runs.  The
+options are as follows:
+\begin{description}
+
+  \item[{\file -J-XmxSIZEm}] The maximum Java heap size where SIZE is replaced
+  by a size in megabytes, for example {\file -J-Xmx1024m} would specify a
+  gigabyte.  The heap is where Java allocates memory dynamically as new objects
+  are created on-the-fly.  A larger heap may be required if an out of memory
+  error is thrown when running a tool.  The tools all have slightly different
+  default values for the maximum heap size, as required by their function.
+  For example, cwrender has a default heap size that is larger than cwinfo.
+
+  \item[{\file -J-Dcw.cache.size=SIZE}] The maximum cache size for storing
+  tiles of 2D data read from data files, currently only implemented for NetCDF
+  files.  The SIZE is replaced by a size in megabytes, with a default value
+  of 128 Mb.  For example {\file -J-Dcw.cache.size=1024} specifies a cache
+  size of 1024 Mb.  A larger cache size may be needed for some files when the
+  files are written with monolithic compression, ie: the entire data variable
+  is compressed and written as one chunk which expands to a size larger than
+  128 Mb in memory.  We generally discourage data providers from using monolithic data
+  variables because they require decompression of an entire variable even if
+  only one value or a small section is being accessed, which greatly increases
+  the time for interactive display and analysis or automated data processing.
+
+  \item[{\file -J-Dcw.compress.mode=true$|$false}] The compression mode flag for
+  writing CoastWatch HDF data files, by default true.  When true, HDF4 data
+  files are created or modified so that each variable is compressed into
+  square chunks.  In some cases this may be undesirable if processing speed
+  is important, for example if the file is being written from cwmath
+  as an intermediate step in a longer computation, and the file will be
+  deleted afterwards.  When false, HDF4 data files are written without
+  chunking or compression.  This increases the speed at which files can be
+  written and subsequently read from.
+
+  \item[{\file -J-Dcw.chunk.size=SIZE}] The chunk size used for writing
+  CoastWatch HDF data files, by default 512 kb.  The SIZE is replaced by
+  a size in kilobytes, so for example {\file -J-Dcw.chunk.size=1024} writes
+  data in 1 Mb chunks.  Note that this is different from the chunk dimensions.
+  If the chunk size is 512 kb, then 16-bit integer data is written in
+  chunks of dimensions 512$\times$512 because 2 bytes per value $\times$ 512
+  $\times$ 512 $=$ 524288 bytes $=$ 512 kb.  This is no coincidence, since
+  CoastWatch HDF with AVHRR data originally contained mostly 16-bit scaled
+  integer data and 512$\times$512 was a convenient chunk size for fast
+  reading and display.  Using 512 kb chunks means that 8-bit byte data is written
+  in 724$\times$724 chunks, 32-bit float data is written in 362$\times$362
+  chunks, and so on.
+
+\end{description}

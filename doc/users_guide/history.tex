@@ -1251,6 +1251,66 @@
 
 \end{itemize}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section*{Version 3.4.0, 2018/03/27}
 
+\subsection*{\bigicon{box_software} Updates}
 
+\hspace{0.4cm} {\bf Graphical tools}
+\begin{itemize}
+
+  \item CDAT has a new menu item {\gui Open Recent} under the {\gui File} menu,
+  with a list of recently opened files for quick access.
+
+  \item CDAT has new items in the {\gui View} menu for controlling the data
+  view, copying the view zoom between tabs, and showing/hiding the top toolbar
+  and left-side control tabs.
+
+  \item Tabs in CDAT now have a little x close button built into the tab.
+
+  \item The documentation for CDAT now has a section on setting memory limits
+  in the user preferences.
+
+\end{itemize}
+
+\hspace{0.4cm} {\bf Command line tools}
+\begin{itemize}
+
+  \item The cwmath tool has been largely re-written to improve performance.
+  The tool now processes 2D chunks of data rather than individual rows, and
+  uses a new Java Language math expression syntax.  An emulation parser mode
+  supports legacy expressions.  New options can be used to fully take advantage
+  of the performance increase and specify a greater variety of output variable
+  types without having to use a template variable: -{-}scale none,
+  -{-}skip-missing, -{-}missing, -{-}parser, and -{-}size int/uint/long/ulong/double.
+
+  \item The cwrender tool now has a -{-}font option to set the legend and overlay
+  font and a -{-}font-list option to list system-specific fonts available.
+
+  \item The user's guide now has a section on hidden command line options for
+  the command line tools (after the tool manual pages), to be used for
+  performance tuning.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+  \item CDAT full screen mode now works correctly on multi-monitor setups.
+
+  \item Reading of time axis metadata is now more complete for NetCDF 4 files.
+
+  \item The cwgraphics tool now correctly omits the scale factor and offset
+  for the graphics byte variable it creates.  Scale and offset are reserved
+  for packed data only.
+
+  \item The cwregister tool now distinguishes between a file not found error
+  and a format error for the master file.
+
+  \item Detection of link errors with the native HDF library code is now more
+  user-friendly.
+
+  \item The bundled Java VM version has been updated to 1.8.0\_162.
+
+\end{itemize}

@@ -282,7 +282,6 @@
 		E96D8882161661420009B833 /* zoom_in.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zoom_in.png; sourceTree = "<group>"; };
 		E96D8883161661420009B833 /* zoom_out.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zoom_out.png; sourceTree = "<group>"; };
 		E96D8884161661420009B833 /* intro.tex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = intro.tex; sourceTree = "<group>"; };
-		E96D8885161661420009B833 /* manual_pages.tex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; path = manual_pages.tex; sourceTree = "<group>"; };
 		E96D8886161661420009B833 /* metadata_spec.tex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = metadata_spec.tex; sourceTree = "<group>"; };
 		E96D8887161661420009B833 /* misc_formats.tex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = misc_formats.tex; sourceTree = "<group>"; };
 		E96D8889161661420009B833 /* references.bib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = references.bib; sourceTree = "<group>"; };
@@ -1052,6 +1051,7 @@
 		E99D69A81C50279900F4A238 /* zoom_out@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zoom_out@2x.png"; sourceTree = "<group>"; };
 		E9A081041ED1083400EADC83 /* MultiPointFeatureOverlaySymbolPanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = MultiPointFeatureOverlaySymbolPanel.java; sourceTree = "<group>"; };
 		E9A91443196E33A700ABC12D /* LRUTileCache.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = LRUTileCache.java; path = io/tile/LRUTileCache.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E9AD0A5A206B1626004F6861 /* hidden_options.tex */ = {isa = PBXFileReference; lastKnownFileType = text; path = hidden_options.tex; sourceTree = "<group>"; };
 		E9AF25A51BE43D6E00A2E69F /* LocationFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = LocationFilter.java; sourceTree = "<group>"; };
 		E9AFC46B1F9D66CF0099FC27 /* CloseIcon.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = CloseIcon.java; sourceTree = "<group>"; };
 		E9B50A141652F29C00D997D5 /* GeographicProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = GeographicProjection.java; sourceTree = "<group>"; };
@@ -1394,9 +1394,9 @@
 				E9E92A422069968C00D3EBB0 /* errata.tex */,
 				E96D87F1161661420009B833 /* figures */,
 				E96D884A161661420009B833 /* history.tex */,
+				E9AD0A5A206B1626004F6861 /* hidden_options.tex */,
 				E96D884B161661420009B833 /* icons */,
 				E96D8884161661420009B833 /* intro.tex */,
-				E96D8885161661420009B833 /* manual_pages.tex */,
 				E96D8886161661420009B833 /* metadata_spec.tex */,
 				E96D8887161661420009B833 /* misc_formats.tex */,
 				E96D8889161661420009B833 /* references.bib */,

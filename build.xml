@@ -181,7 +181,7 @@
   -->
   <!--  <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64,solaris32,solaris64"/> -->
 
-  <property name="builds.default" value="linux64,windows64,macosx64"/>
+  <property name="builds.default" value="linux64,linux64.novm,windows64,macosx64"/>
   <property name="builds.all" value="linux32,linux64,linux64.novm,windows32,windows64,macosx64,solaris32,solaris64"/>
   <property name="build.id.linux32" value="88"/>
   <property name="build.id.linux64" value="288"/>
@@ -257,9 +257,11 @@
     <!-- Tag the package version -->
     <if>
       <equals arg1="tag" arg2="true"/>
-      <exec executable="git">
-        <arg line="tag ${version.full}"/>
-      </exec>
+      <then>
+        <exec executable="git">
+          <arg line="tag ${version.full}"/>
+        </exec>
+      </then>
     </if>
 
   </target>
@@ -304,6 +306,7 @@
         <include name="cwutils_ug_*.pdf"/>
       </fileset>
       <fileset dir="doc/users_guide" excludes="*.tex,*.bib,figures/*,icons/*"/>
+      <fileset file="doc/users_guide/manual_pages.tex"/>
       <fileset dir="data/noaa/coastwatch/tools/test">
         <include name="test-*"/>
       </fileset>
@@ -433,7 +436,7 @@
   <target name="branch-log"
     description="Shows a history of latest commits to the active branch">
     <exec executable="git">
-      <arg line="log -n 10 --pretty='%n----> %cd%n%cn&lt;%ce&gt;%n%s' --name-status"/>
+      <arg line="log -n 10 --name-status"/>
     </exec>
   </target>
 
