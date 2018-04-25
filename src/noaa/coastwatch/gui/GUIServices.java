@@ -532,7 +532,8 @@ public class GUIServices {
    *
    * @param parent the dialog parent component.
    * @param title the dialog title string.
-   * @param modal true if the dialog should be model, false if not.
+   * @param modal true if the dialog should be modal (ie: blocking input in all
+   * other windows), false if not.
    * @param component the main dialog component.
    * @param controls the list of custom controls to be placed to the left
    * of the action buttons, or null for no custom controls.

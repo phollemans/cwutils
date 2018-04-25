@@ -1,6 +1,6 @@
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"> 
 
-<xsl:output method="text"/>
+<xsl:output method="text" use-character-maps="charmap"/>
 <xsl:strip-space elements="*"/>
 
 <!-- Parameters passed in -->
@@ -9,6 +9,12 @@
 <xsl:param name="date"/>
 <xsl:param name="package"/>
 <xsl:param name="version"/>
+
+<!-- Map these characters -->
+
+<xsl:character-map name="charmap">
+  <xsl:output-character character="&#8212;" string="&#xa;.Nd"/>
+</xsl:character-map>
 
 <!-- Ignore these tags -->
 

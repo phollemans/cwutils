@@ -1077,6 +1077,7 @@
 		E9DAE39C2040D87100BFDCF5 /* ParseTreeTransform.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ParseTreeTransform.java; sourceTree = "<group>"; };
 		E9DD13B6184D6E1200139E22 /* areadirblock.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = areadirblock.xml; path = mcidas/areadirblock.xml; sourceTree = "<group>"; };
 		E9DEDF7E19C278320028193C /* SplashScreenManager.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = SplashScreenManager.java; sourceTree = "<group>"; };
+		E9DFC1752078828D0086D428 /* html2latex.xsl */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = html2latex.xsl; sourceTree = "<group>"; };
 		E9E059001D19F46F00DA53C5 /* AbstractFeature.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = AbstractFeature.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9E059011D19F46F00DA53C5 /* AbstractFeatureSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = AbstractFeatureSource.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9E059021D19F46F00DA53C5 /* BinnedGSHHSLineReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = BinnedGSHHSLineReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
@@ -1372,6 +1373,7 @@
 			isa = PBXGroup;
 			children = (
 				E91FD1B61B1003BA0096CCA3 /* html2mdoc.xsl */,
+				E9DFC1752078828D0086D428 /* html2latex.xsl */,
 				E9875CC6161E652F00C423BB /* license.txt */,
 				E9875CC7161E652F00C423BB /* tool_categories.txt */,
 				E96D87DD161661420009B833 /* cw_cf_metadata.pdf */,

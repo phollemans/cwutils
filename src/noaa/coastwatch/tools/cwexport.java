@@ -124,7 +124,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  * <h3>Binary raster:</h3>
  *
  * <p>
- * The output is a stream of binary data values -- either 8-bit
+ * The output is a stream of binary data values &#8212; either 8-bit
  * unsigned bytes, 16-bit signed integers, or 32-bit IEEE floating
  * point values.  For 8- and 16-bit output, data values may be scaled
  * to integers using a minimum and maximum or by using a scaling
@@ -145,7 +145,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  * <h3>ASCII text:</h3>
  *
  * <p>The output is an ASCII text file with latitude, longitude, and data 
- * value printed -- one data value per line.</p>
+ * value printed &#8212; one data value per line.</p>
  *
  * <h3>ArcGIS binary grid:</h3>
  * 

@@ -53,7 +53,7 @@ public class SatellitePassTable
    */
   public SatellitePassTable () {
 
-    this ("", "");
+    this ("", "", "");
 
   } // SatellitePassTable
 
@@ -62,19 +62,21 @@ public class SatellitePassTable
   /** 
    * Creates a new pass table based on data from the specified server.
    *
+   * @param protocol the communications protocol.
    * @param host the server host.
    * @param path the query script path.
    *
    * @see SatellitePassTableModel
    */
   public SatellitePassTable (
+    String protocol,
     String host,
     String path
   ) {
 
     // Initialize
     // ----------
-    super (new SatellitePassTableModel (host, path));
+    super (new SatellitePassTableModel (protocol, host, path));
     setShowGrid (false);
     setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
     setIntercellSpacing (new Dimension (0,0));

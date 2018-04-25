@@ -28,6 +28,7 @@ package noaa.coastwatch.tools;
 import jargs.gnu.CmdLineParser;
 import jargs.gnu.CmdLineParser.Option;
 import jargs.gnu.CmdLineParser.OptionException;
+
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -35,7 +36,10 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.Insets;
+
 import java.net.URL;
+
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -56,6 +60,14 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.Box;
+import javax.swing.JTextField;
+import javax.swing.JCheckBox;
+import javax.swing.Action;
+import javax.swing.JDialog;
+
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.HTMLPanel;
 import noaa.coastwatch.gui.SatellitePassCoveragePanel;
@@ -93,6 +105,7 @@ import noaa.coastwatch.util.SatellitePassInfo;
  * -c, --script=PATH <br>
  * -h, --help <br>
  * -o, --operator <br>
+ * -s, --ssl <br>
  * --version <br>
  * </p>
  *
@@ -119,7 +132,7 @@ import noaa.coastwatch.util.SatellitePassInfo;
  *   <dd> The CoastWatch server host name.  There is no default host
  *   name.  If specified, the host is contacted and polled for its
  *   status immediately after the status utility starts.  Otherwise,
- *   the user must connect to the server manually using <i>File | New
+ *   the user must connect to the server manually using <i>Connect | New
  *   server</i> on the menu bar. </dd>
  *
  * </dl>
@@ -140,6 +153,11 @@ import noaa.coastwatch.util.SatellitePassInfo;
  *   default, errors on the server are not of interest to normal users
  *   and are not displayed.  Operator messages take the form of a
  *   special message box that appears when an error occurs.</dd>
+ *
+ *   <dt> -s, --ssl </dt>
+ *   <dd> Turns on SSL mode.  This makes the server connection use an
+ *   SSL-encrypted protocol (https).  The default is to use an unsecured
+ *   connection (http). </dd>
  *
  *   <dt>--version</dt>
  *
@@ -179,8 +197,7 @@ public final class cwstatus
   private static final String PROG = "cwstatus";
 
   /** The long program name. */
-  private static final String LONG_NAME = 
-    "CoastWatch Status Tool";
+  private static final String LONG_NAME = "CoastWatch Status Tool";
 
   /** The new server file command. */
   private static final String SERVER_COMMAND = "New server";
@@ -224,6 +241,9 @@ public final class cwstatus
   /** The currently selected pass ID. */
   private String selectedPassID;
 
+  /** The current status protocol. */
+  private String protocol;
+
   /** The current status host. */
   private String host;
 
@@ -235,11 +255,13 @@ public final class cwstatus
   /**
    * Creates a new status frame using the specified server.
    *
+   * @param protocol the communication protocol.
    * @param host the server host, or null for no initial host.
    * @param path the query script path, or null for the default script.
    * @param operator the operator mode flag.
    */
   public cwstatus (
+    String protocol,
     String host,
     String path,
     boolean operator
@@ -249,6 +271,7 @@ public final class cwstatus
     // ----------
     super (LONG_NAME);
     this.path = (path == null ? DEFAULT_SCRIPT : path);
+    this.protocol = protocol;
 
     // Create menu bar
     // ---------------
@@ -256,13 +279,13 @@ public final class cwstatus
     menuBar.setBorder (new BevelBorder (BevelBorder.RAISED));
     this.setJMenuBar (menuBar);
 
-    // Create file menu
-    // ----------------
-    JMenu fileMenu = new JMenu ("File");
-    fileMenu.setMnemonic (KeyEvent.VK_F);
-    menuBar.add (fileMenu);
+    // Create connect menu
+    // -------------------
+    JMenu connectMenu = new JMenu ("Connect");
+    connectMenu.setMnemonic (KeyEvent.VK_C);
+    menuBar.add (connectMenu);
 
-    AbstractAction fileAction = new FileAction();
+    AbstractAction connectAction = new ConnectAction();
     JMenuItem menuItem;
     int keymask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
@@ -270,16 +293,16 @@ public final class cwstatus
       GUIServices.getIcon ("menu.server"));
     menuItem.setMnemonic (KeyEvent.VK_N);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_N, keymask));
-    menuItem.addActionListener (fileAction); 
-    fileMenu.add (menuItem);
+    menuItem.addActionListener (connectAction);
+    connectMenu.add (menuItem);
 
     if (!GUIServices.IS_AQUA) {
-      fileMenu.addSeparator();
+      connectMenu.addSeparator();
       menuItem = new JMenuItem (QUIT_COMMAND);
       menuItem.setMnemonic (KeyEvent.VK_Q);
       menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_Q,keymask));
-      menuItem.addActionListener (fileAction); 
-      fileMenu.add (menuItem);
+      menuItem.addActionListener (connectAction); 
+      connectMenu.add (menuItem);
     } // if
 
     // Create help menu
@@ -364,7 +387,7 @@ public final class cwstatus
 
     // Set initial server
     // ------------------
-    if (host != null) setServer (host);
+    if (host != null) setServer (protocol, host);
     
     // Set minimized window icon
     // -------------------------
@@ -376,13 +399,15 @@ public final class cwstatus
 
   /** Sets the server to get status information from. */
   private void setServer (
+    String protocol,
     String host
   ) {
 
     timer.stop();
+    this.protocol = protocol;
     this.host = host;
-    statusPanel.setSource (host, path);
-    ((SatellitePassTableModel) passTable.getModel()).setSource (host, path);
+    statusPanel.setSource (protocol, host, path);
+    ((SatellitePassTableModel) passTable.getModel()).setSource (protocol, host, path);
     coveragePanel.setPass (null);
     previewPanel.setPass (null);
     timer.restart();
@@ -397,8 +422,7 @@ public final class cwstatus
     // Get selected pass
     // -----------------
     int row = passTable.getSelectedRow();
-    SatellitePassTableModel model = (SatellitePassTableModel) 
-      passTable.getModel();
+    SatellitePassTableModel model = (SatellitePassTableModel) passTable.getModel();
     selectedPassID = (row == -1 ? null : model.getPass(row).getPassID());
 
     // Update status and table
@@ -496,20 +520,49 @@ public final class cwstatus
 
   ////////////////////////////////////////////////////////////
 
-  /** Handles file operations. */
-  private class FileAction
+  /** Handles connect operations. */
+  private class ConnectAction
     extends AbstractAction {
 
     public void actionPerformed (ActionEvent event) {
 
       String command = event.getActionCommand();
-
+      
       // Set new server
       // --------------
       if (command.equals (SERVER_COMMAND)) {
-        String host = JOptionPane.showInputDialog (cwstatus.this, 
-          "Enter the new server host name or IP address:", cwstatus.this.host);
-        if (host != null && !host.equals ("")) setServer (host);
+
+        JPanel panel = new JPanel();
+        panel.setLayout (new BoxLayout (panel, BoxLayout.PAGE_AXIS));
+        panel.add (new JLabel ("Enter the new server host name or IP address:"));
+        panel.add (Box.createRigidArea (new Dimension (0, 5)));
+        JTextField serverField = new JTextField (cwstatus.this.host);
+        panel.add (serverField);
+        panel.add (Box.createRigidArea (new Dimension (0, 5)));
+        JCheckBox sslCheckBox = new JCheckBox ("Use secure connection", cwstatus.this.protocol.equals ("https"));
+        sslCheckBox.setSelected (cwstatus.this.protocol.equals ("https"));
+        panel.add (sslCheckBox);
+
+        Action okAction = GUIServices.createAction ("OK", () -> {
+          String text = serverField.getText();
+          boolean flag = sslCheckBox.isSelected();
+          if (text != null && !text.trim().equals ("")) {
+            setServer ((flag ? "https" : "http"), text);
+          } // if
+        });
+        Action cancelAction = GUIServices.createAction ("Cancel", null);
+        JDialog dialog = GUIServices.createDialog (
+          cwstatus.this,
+          "New server",
+          true,
+          panel,
+          null,
+          new Action[] {okAction, cancelAction},
+          new boolean[] {true, true},
+          true
+        );
+        dialog.setVisible (true);
+
       } // if
 
       // Quit program
@@ -520,7 +573,7 @@ public final class cwstatus
 
     } // actionPerformed
 
-  } // FileAction class
+  } // ConnectAction class
 
   ////////////////////////////////////////////////////////////
 
@@ -541,6 +594,7 @@ public final class cwstatus
     Option scriptOpt = cmd.addStringOption ('c', "script");
     Option operatorOpt = cmd.addBooleanOption ('o', "operator");
     Option versionOpt = cmd.addBooleanOption ("version");
+    Option sslOpt = cmd.addBooleanOption ('s', "ssl");
     try { cmd.parse (argv); }
     catch (OptionException e) {
       System.err.println (PROG + ": " + e.getMessage());
@@ -577,17 +631,17 @@ public final class cwstatus
     // ------------
     final String script = (String) cmd.getOptionValue (scriptOpt);
     final boolean operator = (cmd.getOptionValue (operatorOpt) != null);    
+    final boolean ssl = (cmd.getOptionValue (sslOpt) != null);
 
     // Create frame
     // ------------
     SwingUtilities.invokeLater (new Runnable() {
       public void run() { 
-        JFrame frame = new cwstatus (host, script, operator);
+        JFrame frame = new cwstatus ((ssl ? "https" : "http"), host, script, operator);
         frame.addWindowListener (new WindowMonitor());
         frame.addWindowListener (new UpdateAgent (PROG));
         frame.pack();
-        GUIServices.createErrorDialog (frame, "Error", 
-          ToolServices.ERROR_INSTRUCTIONS);
+        GUIServices.createErrorDialog (frame, "Error", ToolServices.ERROR_INSTRUCTIONS);
         frame.setVisible (true);
       } // run
     });
@@ -614,6 +668,7 @@ public final class cwstatus
 "  -c, --script=PATH          Set host query script path (advanced users).\n" +
 "  -h, --help                 Show this help message.\n" +
 "  -o, --operator             Show operator error messages.\n" +
+"  -s, --ssl                  Use SSL-encrypted connection to server.\n" +
 "  --version                  Show version information.\n"
     );
 

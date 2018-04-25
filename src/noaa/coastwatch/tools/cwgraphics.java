@@ -104,9 +104,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * product files, the default behaviour places latitude/longitude grid
  * graphics in plane 2, coast line graphics in plane 3, and land mask
  * graphics in plane 4.  Coast lines are derived from GSHHS coast line
- * data, and land polygons are filled GSHHS polygons (see
- * http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html).  The default
- * output variable name is 'graphics'.  These defaults may be changed
+ * data, and land polygons are filled GSHHS polygons (see the
+ * <a href="http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html">GSHHS website</a>).
+ * The default output variable name is 'graphics'.  These defaults may be changed
  * using command line options to alter the planes used for each type
  * of annotation, to exclude or add some types of annotation, and to
  * change the output variable name.</p>

@@ -70,6 +70,7 @@ import noaa.coastwatch.tools.ToolServices;
  * -d, --dir=PATH <br>
  * -f, --force <br>
  * -h, --help <br>
+ * -s, --ssl <br>
  * -t, --test <br>
  * -T, --timeout=SECONDS <br>
  * --version <br>
@@ -136,6 +137,11 @@ import noaa.coastwatch.tools.ToolServices;
  *
  *   <dt> -h, --help </dt> 
  *   <dd> Prints a brief help message. </dd>
+ *
+ *   <dt> -s, --ssl </dt>
+ *   <dd> Turns on SSL mode.  This makes the server connection use an
+ *   SSL-encrypted protocol (https).  The default is to use an unsecured
+ *   connection (http). </dd>
  *
  *   <dt> -t, --test </dt> 
  *   <dd> Turns on test mode.  When the test mode is in effect, the
@@ -292,6 +298,7 @@ public final class cwdownload {
     Option helpOpt = cmd.addBooleanOption ('h', "help");
     Option timeoutOpt = cmd.addIntegerOption ('T', "timeout");
     Option projectionOpt = cmd.addStringOption ('p', "projection");
+    Option sslOpt = cmd.addBooleanOption ('s', "ssl");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -343,6 +350,7 @@ public final class cwdownload {
     int timeout = (timeoutObj == null ? STALL_TIME : 
       timeoutObj.intValue()*1000);
     String projection = (String) cmd.getOptionValue (projectionOpt);
+    boolean ssl = (cmd.getOptionValue (sslOpt) != null);
     
     // Create server query keys
     // ------------------------
@@ -390,7 +398,7 @@ public final class cwdownload {
     System.out.println (PROG + ": Contacting " + host);
     queryTimeout.start();
     try {
-      query = new ServerQuery (host, script, queryKeys);
+      query = new ServerQuery ((ssl ? "https" : "http"), host, script, queryKeys);
     } catch (Exception e) { 
       System.err.println (PROG + ": " + e.getMessage());
       System.exit (2);
@@ -495,6 +503,7 @@ public final class cwdownload {
 "  -d, --dir=PATH             Set local directory path.\n" +
 "  -f, --force                Do not check if file already exists locally.\n" +
 "  -h, --help                 Show this help message.\n" +
+"  -s, --ssl                  Use SSL-encrypted connection to server.\n" +
 "  -t, --test                 Do not download, run test mode only.\n" +
 "  -T, --timeout=SECONDS      Set network timeout in seconds.\n" +
 "  --version                  Show version information.\n" +

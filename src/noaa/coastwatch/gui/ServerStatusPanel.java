@@ -79,8 +79,8 @@ public class ServerStatusPanel
 
   // Variables
   // ---------
-  /** The server host and query path. */
-  private String host, path;
+  /** The server protocol, host and query path. */
+  private String protocol, host, path;
 
   /** The current status labels. */
   private JLabel hostLabel;
@@ -123,7 +123,7 @@ public class ServerStatusPanel
    */
   public ServerStatusPanel () {
 
-    this ("", "");
+    this ("", "", "");
 
   } // ServerStatusPanel constructor
 
@@ -133,16 +133,19 @@ public class ServerStatusPanel
    * Sets the panel to query the status from a new data source.  The
    * current status is cleared.
    *
+   * @param protocol the communication protocol.
    * @param host the server host.
    * @param path the query script path.
    */
   public synchronized void setSource (
+    String protocol,
     String host,
     String path
   ) {
 
     // Set host and path
     // -----------------
+    this.protocol = protocol;
     this.host = host;
     this.path = path;
 
@@ -170,12 +173,14 @@ public class ServerStatusPanel
   /**
    * Creates a new status panel using the specified server.
    *
+   * @param protocol the communication protocol.
    * @param host the server host.
    * @param path the query script path.
    *
    * @see ServerQuery
    */
   public ServerStatusPanel (
+    String protocol,
     String host,
     String path
   ) {
@@ -263,7 +268,7 @@ public class ServerStatusPanel
 
     // Set initial source
     // ------------------
-    setSource (host, path);
+    setSource (protocol, host, path);
 
   } // ServerStatusPanel constructor
 
@@ -291,7 +296,7 @@ public class ServerStatusPanel
         ServerQuery tmpQuery;
         HashMap queryKeys = new HashMap();
         queryKeys.put ("query", "serverStatus");
-        try { tmpQuery = new ServerQuery (host, path, queryKeys); }
+        try { tmpQuery = new ServerQuery (protocol, host, path, queryKeys); }
         catch (IOException e) { tmpQuery = null; }
         final ServerQuery query = tmpQuery;
 

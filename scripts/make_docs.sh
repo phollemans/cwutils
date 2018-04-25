@@ -7,7 +7,6 @@
 awk=/opt/local/bin/gawk
 pdflatex=/opt/local/bin/pdflatex
 bibtex=/opt/local/bin/bibtex
-html2latex=/opt/local/bin/html2latex
 saxon_jar=../scripts/saxon9he.jar
 saxon="java -cp ${saxon_jar} net.sf.saxon.Transform"
 
@@ -21,7 +20,7 @@ fi
 
 # Create tool documentation pages
 # -------------------------------
-echo "Making tool usage sections for user's guide ... \c"
+echo "Making tool HTML pages"
 mkdir tools
 
 # Extract HTML from API pages
@@ -32,7 +31,7 @@ for fname in api/noaa/coastwatch/tools/*.html ; do
   if [ $? -ne 0 ] ; then
     continue
   fi
-  echo "$tool \c"
+  echo "--> $tool"
   newfname=tools/$tool.html
   cat > $newfname <<EOF
 <html>
@@ -63,15 +62,16 @@ EOF
   mv $newfname.new $newfname
 done
 
-# Check for conversion script to Latex
-# ------------------------------------
-if [ -z `which html2latex` ] ; then
-  echo "FAILED (no html2latex)"
+# Check for JRE for next part
+# ---------------------------
+if [ -z `which java` ] ; then
+  echo "No Java runtime detected, stopping"
   exit
 fi
 
 # Create manual pages section in Latex
 # ------------------------------------
+echo "Making tool Latex pages"
 manual=users_guide/manual_pages.tex
 cat > $manual <<EOF
 \chapter{Manual Pages}
@@ -79,67 +79,27 @@ cat > $manual <<EOF
 EOF
 for fname in tools/*.html ; do
   tool=`basename $fname .html`
-  $html2latex --border --class=book $fname > /tmp/err$$.txt 2>&1
+  echo "--> $tool"
+  $saxon \
+    tool="$tool" \
+    $fname html2latex.xsl > tools/$tool.tex 2> /tmp/err$$.txt
   if [ $? -ne 0 ] ; then
-    echo "FAILED (making LaTeX from $fname)"
+    echo "Error making Latex from ${fname}, message as follows:"
     cat /tmp/err$$.txt
-    rm -f tools/$tool.tex
     continue
   fi
-  $awk '
-    BEGIN { 
-      document = 0;
-      verbatim = 0;
-    }
-    $0 ~ /\\end{document}/ { document = 0; }
-    $0 ~ /\\begin{verbatim}/ { verbatim = 1; }
-    $0 ~ /\\end{verbatim}/ { verbatim = 0; }
-    $0 ~ /\\begin{tabular}/ { tabular = 1; tabularhead = 1; }
-    $0 !~ /\\begin{tabular}/ { tabularhead = 0; }
-    $0 ~ /\\end{tabular}/ { tabular = 0; }
-    { 
-      if (document == 1) {
-        if (verbatim == 1) {
-          print $0;
-        }
-        else {
-          output = $0;
-          output = gensub ("\\\\subsection\\*{(.*)}", "\\\\subsection*{\\\\underline{\\1}}", "g", output);
-          output = gensub ("\\\\section\\*{.*: (.*)}", "\\\\section{\\1} \\\\hypertarget{\\1}{}", "g", output);
-          if (tabularhead != 1) { 
-            output = gensub ("\\|", "$|$", "g", output); 
-            if (tabular == 1) {
-              output = gensub ("^([^&]+)\\\\\\\\$", "\\1 \\& \\\\\\\\", "g", output);
-            }
-          }
-          output = gensub ("\\-\\-", "-{-}", "g", output);
-          output = gensub ("]]", "{]}]", "g", output);
-          print output;
-        }
-      }
-    }
-    $0 ~ /\\begin{document}/ { document = 1; }
-  ' tools/$tool.tex >> $manual
-  echo '\\newpage' >> $manual
-  rm -f tools/$tool.tex
+  cat tools/$tool.tex >> $manual
 done
 
-echo "OK"
-
-# Create manual pages in Unix troff format
-# ----------------------------------------
-echo "Making tool Unix manual pages ... \c"
-if [ -z `which java` ] ; then
-  echo "FAILED (no java)"
-  exit
-fi
+# Create manual pages in Unix mdoc format
+# ---------------------------------------
+echo "Making tool Unix man pages"
 mkdir -p man/man1
+date="`date +'%b %e, %Y'`"
+package="CoastWatch Utilities"
 for fname in tools/*.html ; do
-#for fname in tools/cwexport.html ; do
   tool=`basename $fname .html`
-  echo "$tool \c"
-  date="`date +'%b %e, %Y'`"
-  package="CoastWatch Utilities"
+  echo "--> $tool"
   $saxon \
     tool="$tool" \
     date="$date" \
@@ -147,7 +107,7 @@ for fname in tools/*.html ; do
     version="$version" \
     $fname html2mdoc.xsl > man/man1/$tool.1 2> /tmp/err$$.txt
   if [ $? -ne 0 ] ; then
-    echo "FAILED (making troff from $fname)"
+    echo "Error making man page from ${fname}, message as follows:"
     cat /tmp/err$$.txt
     rm -f man/man1/$tool.1
     continue
@@ -155,28 +115,28 @@ for fname in tools/*.html ; do
   awk '{if ($0 == "BLANKLINE") {print ""} else if ($0 !~ /^[ ]*$/) {print}}' man/man1/$tool.1 | gzip -c > man/man1/$tool.1.gz
   rm -f man/man1/$tool.1
 done
-echo "OK"
 
+# Comment this out for debugging
 rm -rf tools
 
 # Create user guide
 # -----------------
-echo "Making user's guide ... \c"
+echo "Making user's guide"
 cd users_guide
 guide_version=`echo $version | sed -e 's/\./_/g'`
 guide_name="cwutils_users_guide"
 guide_name_with_verson="cwutils_ug_${guide_version}"
 $pdflatex --interaction batchmode ${guide_name}.tex > /dev/null 2>&1
 if [ $? -ne 0 ] ; then
-  echo "FAILED1"
+  echo "Error running pdflatex"
 else
   $bibtex $guide_name > /dev/null 2>&1
   if [ $? -ne 0 ] ; then
-    echo "FAILED2"
+    echo "Error running bibtex"
   else
     $pdflatex --interaction batchmode ${guide_name}.tex > /dev/null 2>&1
     $pdflatex --interaction batchmode ${guide_name}.tex > /dev/null 2>&1
     cp ${guide_name}.pdf ../${guide_name_with_verson}.pdf
-    echo "OK"
-  fi 
+    echo "Copied finished user's guide to ${guide_name_with_verson}.pdf"
+  fi
 fi

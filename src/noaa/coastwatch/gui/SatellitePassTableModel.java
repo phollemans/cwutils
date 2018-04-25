@@ -86,8 +86,8 @@ public class SatellitePassTableModel
   /** The ordered set of pass info objects. */
   private TreeSet passSet;
 
-  /** The host and path to use for updating the pass table model. */
-  private String host, path;
+  /** The protocol, host and path to use for updating the pass table model. */
+  private String protocol, host, path;
 
   /** The current sorting column index. */
   private int sortColumn;
@@ -104,7 +104,7 @@ public class SatellitePassTableModel
    */
   public SatellitePassTableModel () {
 
-    this ("", "");
+    this ("", "", "");
 
   } // SatellitePassTableModel
 
@@ -114,12 +114,14 @@ public class SatellitePassTableModel
    * Creates a new pass table model based on data from the specified
    * server.
    *
+   * @param protocol the communication protocol.
    * @param host the server host.
    * @param path the query script path.
    *
    * @see ServerQuery
    */
   public SatellitePassTableModel (
+    String protocol,
     String host,
     String path
   ) {
@@ -128,6 +130,7 @@ public class SatellitePassTableModel
     // ----------
     passMap = new TreeMap();
     passSet = new TreeSet();
+    this.protocol = protocol;
     this.host = host;
     this.path = path;
     sortColumn = DATE;
@@ -140,16 +143,19 @@ public class SatellitePassTableModel
    * Sets the model to read data from a new data source.  The current
    * table model entries are cleared.
    *
+   * @param protocol the communication protocol.
    * @param host the server host.
    * @param path the query script path.
    */
   public synchronized void setSource (
+    String protocol,
     String host,
     String path
   ) {
 
     passMap = new TreeMap();
     passSet = new TreeSet();
+    this.protocol = protocol;
     this.host = host;
     this.path = path;
     fireTableChanged (new TableModelEvent (this));
@@ -271,7 +277,7 @@ public class SatellitePassTableModel
 
     // Perform server query
     // --------------------
-    ServerQuery query = new ServerQuery (host, path, queryKeys);
+    ServerQuery query = new ServerQuery (protocol, host, path, queryKeys);
 
     // Create pass set
     // ---------------
@@ -355,7 +361,7 @@ public class SatellitePassTableModel
           queryKeys.put ("query", "datasetDetails");
           queryKeys.put ("projection_type", "swath");
           queryKeys.put ("details", "file_name");
-          try { query = new ServerQuery (host, path, queryKeys); }
+          try { query = new ServerQuery (protocol, host, path, queryKeys); }
           catch (IOException e) { return; }
 
           // Create hash set of pass IDs

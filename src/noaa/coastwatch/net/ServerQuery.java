@@ -199,7 +199,7 @@ public class ServerQuery {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new server query using the server host, query path, and
+   * Creates a new server query using the server protocol, host, query path, and
    * query key/value set.
    *
    * @param host the server host name to use for the query.  The
@@ -211,6 +211,34 @@ public class ServerQuery {
    * the server responded with an error.
    */
   public ServerQuery (
+    String host,
+    String path,
+    Map query
+  ) throws IOException {
+
+    this ("http", host, path, query);
+
+  } // ServerQuery constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a new server query using the server host, query path, and
+   * query key/value set.
+   *
+   * @param protocol the connection protocol, either 'http' or 'https'.
+   * @param host the server host name to use for the query.  The
+   * host name must be a valid Internet domain name.
+   * @param path the absolute path to the query program.
+   * @param query a map containing the query key/value pairs.
+   *
+   * @throws IOException if the host, path, or query were not valid or
+   * the server responded with an error.
+   *
+   * @since 3.4.1
+   */
+  public ServerQuery (
+    String protocol,
     String host,
     String path,
     Map query
@@ -231,7 +259,7 @@ public class ServerQuery {
     // ---------------------
     InputStream in;
     try {  
-      url = new URL ("http://" + host + path + "?" + queryString);
+      url = new URL (protocol + "://" + host + path + "?" + queryString);
       in = url.openStream();
     } catch (Exception e) { 
       throw new IOException ("Error in URL connection");

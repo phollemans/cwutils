@@ -72,7 +72,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * must have matching earth transforms and dates.  The utility loops
  * over all input files and creates a single CoastWatch HDF output
  * file.  The utility does not handle multiple variables with the same
- * name -- if a variable in an input file is encountered with the same
+ * name &#8212; if a variable in an input file is encountered with the same
  * name as an existing variable from a previous input file, the new
  * variable is skipped.  Options are available to alter verbosity and
  * variable name matching. </p>

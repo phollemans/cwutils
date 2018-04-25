@@ -121,7 +121,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * navigation but GIS-derived variables such as coastline and lat/lon
  * grid graphics should not be corrected.  Setting the navigation
  * transform simply establishes a mapping between desired and actual
- * data coordinates -- it does not change the gridded data values
+ * data coordinates &#8212; it does not change the gridded data values
  * themselves.  Once a navigation transform has been set, other
  * CoastWatch tools in this package will take the transform into
  * account when reading the data. </p>

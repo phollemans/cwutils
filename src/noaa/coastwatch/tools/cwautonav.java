@@ -143,7 +143,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * should be corrected with navigation but GIS-derived variables such
  * as coastline and lat/lon grid graphics should not be corrected.
  * Applying a navigation correction simply establishes a mapping
- * between desired and actual data coordinates -- it does not change
+ * between desired and actual data coordinates &#8212; it does not change
  * the gridded data values themselves.  Once a data file has been
  * autonavigated successfully, other CoastWatch tools in this package
  * will take the correction into account when reading the data.</p>

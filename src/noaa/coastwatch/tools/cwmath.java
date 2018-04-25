@@ -134,7 +134,7 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  * legacy syntax as originally supported by the math tool,
  * or Java syntax that takes advantage of the full java.lang.Math function
  * library and in some cases allows for simpler expressions.  See
- * http://docs.oracle.com/javase/8/docs/api/java/lang/Math.html
+ * the <a href="http://docs.oracle.com/javase/8/docs/api/java/lang/Math.html">Java API documentation</a>
  * for a full list of java.lang.Math functions.  A comparison of
  * the most common language features is as follows:</p>
  *

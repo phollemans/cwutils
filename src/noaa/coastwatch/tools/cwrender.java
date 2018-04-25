@@ -197,7 +197,7 @@ import ucar.units.Unit;
  * converting 2D data sets in the input file to color images.
  * The data values are converted from scientific units to a color
  * using either an enhancement function and color palette or by
- * performing a color composite of three data variables -- one
+ * performing a color composite of three data variables &#8212; one
  * for each of the red, green, and blue color components.  The
  * resulting earth data plot may have legends displaying the
  * color scale, data origin, date, time, projection info, as well

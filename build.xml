@@ -256,7 +256,7 @@
 
     <!-- Tag the package version -->
     <if>
-      <equals arg1="tag" arg2="true"/>
+      <equals arg1="${tag}" arg2="true"/>
       <then>
         <exec executable="git">
           <arg line="tag ${version.full}"/>
