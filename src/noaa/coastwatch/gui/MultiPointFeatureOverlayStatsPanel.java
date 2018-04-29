@@ -30,6 +30,12 @@ import java.awt.Graphics;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.Color;
+import java.awt.Cursor;
 
 import javax.swing.JButton;
 import javax.swing.Box;
@@ -47,6 +53,14 @@ import javax.swing.SwingConstants;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.SwingWorker;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.Timer;
+import javax.swing.InputVerifier;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.BorderFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -82,7 +96,7 @@ import noaa.coastwatch.gui.visual.MultiPointFeatureOverlayPropertyChooser;
  * @since 3.3.2
  */
 public class MultiPointFeatureOverlayStatsPanel
-  extends JPanel {
+  extends JLayeredPane {
   
   // Constants
   // ---------
@@ -96,10 +110,13 @@ public class MultiPointFeatureOverlayStatsPanel
   /** The overlay to user for feature data in this panel. */
   private MultiPointFeatureOverlay<? extends PointFeatureSymbol> multiPointOverlay;
 
-  /** The earth area for feaure data computation. */
+  /** The earth area for feature data computation. */
   private EarthArea featureArea;
 
-  /** The list of matching features. */
+  /**
+   * The list of matching features.  When null, it means that we need to
+   * update the list of matching features from the overlay.
+   */
   private List<Feature> matchingFeatures;
 
   /** The model used by the table of feature statistics values. */
@@ -108,10 +125,19 @@ public class MultiPointFeatureOverlayStatsPanel
   /** The table of feature statistics values. */
   private JTable statsTable;
 
-  /** The map of expression to computed stats object. */
-  private Map<String, Statistics> expressionStatsMap;
+  /**
+   * The map of expression to computed stats result.  There may be expressions
+   * in the list that have no corresponding stats result in the map,
+   * because their stats have not been computed yet.
+   */
+  private Map<String, StatsResult> expressionStatsResultMap;
 
-  /** The list of expressions to compute. */
+  /**
+   * The list of expressions in the table. This list may include expressions
+   * that are invalid, for example if the user entered an expression with
+   * invalid attributes.  In that case the  corresponding entry in the result
+   * map may be marked with an error string.
+   */
   private List<String> expressionList;
 
   /** The buttons for manipulating expressions in the table. */
@@ -119,6 +145,160 @@ public class MultiPointFeatureOverlayStatsPanel
   private JButton editButton;
   private JButton dupButton;
   private JButton removeButton;
+
+  /** The worker used for computing stats in the background. */
+  private StatsComputation statsWorker;
+
+  /** The panel used to block inputs during stats computation. */
+  private JPanel glassPanel;
+
+  /** The computing stats label. */
+  private JLabel computingLabel;
+
+  ////////////////////////////////////////////////////////////
+
+  /** Holds a statistics computation result and its originating expression. */
+  private static class StatsResult {
+
+    /** The expression being calculated. */
+    public String expression;
+
+    /** The expression stats or null on error. */
+    public Statistics stats;
+
+    /** The error string if the stats failed to compute. */
+    public String error;
+
+  } // StatsResult
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Implements the statistics computation as a combination of background
+   * task and Swing event thread updates.  Each time an expression has its
+   * statistics computed, the computation delivers the stats result object for
+   * display in the data table.  Only expressions with no valid stats are
+   * computed.
+   *
+   * @since 3.4.1
+   */
+  private class StatsComputation extends SwingWorker<Void, StatsResult> {
+
+    /** The expressions that will be computed by this computation run. */
+    private List<String> expressionsToCompute;
+
+    /** The computation message timer. */
+    private Timer messageTimer;
+
+    ////////////////////////////////////////////////////////
+
+    /** Shows the stats computation message and input blocker. */
+    private void showComputationMessage () {
+
+      glassPanel.setVisible (true);
+      computingLabel.setText ("Computing statistics ...");
+
+    } // showComputationMessage
+
+    ////////////////////////////////////////////////////////
+
+    /** Hides the stats computation message and input blocker. */
+    private void hideComputationMessage () {
+
+      glassPanel.setVisible (false);
+      computingLabel.setText (" ");
+
+    } // hideComputationMessage
+
+    ////////////////////////////////////////////////////////
+
+    /** Creates a new stats computation. */
+    public StatsComputation() {
+
+      // Build list of expressions that need stats
+      // -----------------------------------------
+      expressionsToCompute = new ArrayList<>();
+      for (String expression : expressionList) {
+        if (!expressionStatsResultMap.containsKey (expression))
+          expressionsToCompute.add (expression);
+      } // for
+
+      // Create a message timer to inform the user of computation
+      // --------------------------------------------------------
+      messageTimer = new Timer (500, event -> showComputationMessage());
+      messageTimer.setRepeats (false);
+
+    } // StatsComputation constructor
+
+    ////////////////////////////////////////////////////////
+
+    @Override
+    public Void doInBackground() {
+    
+      messageTimer.start();
+      
+      for (String expression : expressionsToCompute) {
+
+        // Check if we are cancelled
+        // -------------------------
+        if (isCancelled()) break;
+
+        // Get matching features if needed
+        // -------------------------------
+        if (matchingFeatures == null) {
+          matchingFeatures = multiPointOverlay.getMatchingFeatures (featureArea);
+        } // if
+
+        // Compute stats and report
+        // ------------------------
+        StatsResult result = new StatsResult();
+        result.expression = expression;
+        try {
+          result.stats = computeStatsForExpression (expression);
+        } // try
+        catch (Exception e) {
+          result.error = e.getMessage();
+        } // catch
+        publish (result);
+
+      } // for
+
+      return (null);
+
+    } // doInBackground
+
+    ////////////////////////////////////////////////////////
+
+    @Override
+    protected void process (List<StatsResult> resultList) {
+
+      // Update map of expression to stats
+      // ---------------------------------
+      for (StatsResult result : resultList) {
+        expressionStatsResultMap.put (result.expression, result);
+      } // for
+
+      // Signal changes to model
+      // -----------------------
+      statsModel.fireTableDataChanged();
+    
+    } // process
+
+    ////////////////////////////////////////////////////////
+
+    @Override
+    protected void done() {
+
+      if (messageTimer.isRunning())
+        messageTimer.stop();
+      else
+        hideComputationMessage();
+        
+      statsWorker = null;
+
+    } // done
+  
+  } // StatsComputation class
 
   ////////////////////////////////////////////////////////////
 
@@ -228,6 +408,52 @@ public class MultiPointFeatureOverlayStatsPanel
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * A table cell renderer that handles expressions, either showing the
+   * expression normally when the expression has valid statistics, or
+   * an error mode when the expression had an error parsing.
+   *
+   * @since 3.4.1
+   */
+  private class ExpressionCellRenderer extends DefaultTableCellRenderer {
+
+    @Override
+    public Component getTableCellRendererComponent (
+      JTable table,
+      Object value,
+      boolean isSelected,
+      boolean hasFocus,
+      int row,
+      int column
+    ) {
+
+      JLabel label = (JLabel) super.getTableCellRendererComponent (table, value,
+        isSelected, hasFocus, row, column);
+
+      String expression = (String) value;
+      StatsResult result = expressionStatsResultMap.get (expression);
+      if (result != null && result.error != null) {
+        label.setText (null);
+        label.setIcon (GUIServices.getIcon ("table.error"));
+        label.setHorizontalAlignment (SwingConstants.CENTER);
+        label.setVerticalAlignment (SwingConstants.TOP);
+        label.setToolTipText (result.error);
+      } // if
+      else {
+        label.setIcon (null);
+        label.setHorizontalAlignment (SwingConstants.LEADING);
+        label.setVerticalAlignment (SwingConstants.CENTER);
+        label.setToolTipText (null);
+      } // else
+
+      return (label);
+
+    } // getTableCellRendererComponent
+    
+  } // ExpressionCellRenderer class
+
+  ////////////////////////////////////////////////////////////
+
   /** Provides data for the stats table display. */
   private class StatsTableModel
     extends AbstractTableModel {
@@ -243,22 +469,11 @@ public class MultiPointFeatureOverlayStatsPanel
 
       String expression = (String) value;
       String lastExpression = expressionList.get (rowIndex);
-      Statistics lastStats = expressionStatsMap.get (lastExpression);
       
-      if (value.equals (NEW_EXPRESSION_PROMPT)) {
+      if (value.equals (NEW_EXPRESSION_PROMPT))
         expressionList.remove (rowIndex);
-      } // if
-      else {
-        try {
-          setExpression (rowIndex, (expression));
-        } // try
-        catch (Exception e) {
-          showError (e.getMessage());
-          expressionList.remove (rowIndex);
-          expressionList.add (rowIndex, expression);
-          expressionStatsMap.remove (expression);
-        } // catch
-      } // else
+      else
+        setExpression (rowIndex, expression);
 
     } // setValueAt
 
@@ -299,7 +514,8 @@ public class MultiPointFeatureOverlayStatsPanel
       if (columnObj.equals (Column.EXPRESSION))
         value = expression;
       else {
-        Statistics stats = expressionStatsMap.get (expression);
+        StatsResult result = expressionStatsResultMap.get (expression);
+        Statistics stats = (result != null ? result.stats : null);
         if (stats != null) {
           switch (columnObj) {
           case COUNT: value = stats.getValues(); break;
@@ -390,12 +606,6 @@ public class MultiPointFeatureOverlayStatsPanel
     keySet.remove ("pi");
     keySet.remove ("nan");
 
-    // Check if matching features is initialized
-    // -----------------------------------------
-    if (matchingFeatures == null) {
-      matchingFeatures = multiPointOverlay.getMatchingFeatures (featureArea);
-    } // if
-    
     // Compute expression values
     // -------------------------
     int valueCount = matchingFeatures.size();
@@ -431,28 +641,6 @@ public class MultiPointFeatureOverlayStatsPanel
     return (stats);
 
   } // computeStatsForExpression
-
-  ////////////////////////////////////////////////////////////
-
-  /** Updates the stats table based on the currently visible point overlays. */
-  private void updateStats () {
-
-    if (expressionList.size() != 0) {
-
-      // Update expression stats
-      // -----------------------
-      matchingFeatures = multiPointOverlay.getMatchingFeatures (featureArea);
-      expressionList.forEach (expression -> {
-        expressionStatsMap.put (expression, computeStatsForExpression (expression));
-      });
-
-      // Signal changes to model
-      // -----------------------
-      statsModel.fireTableDataChanged();
-
-    } // if
-  
-  } // updateMatchingFeatures
 
   ////////////////////////////////////////////////////////////
 
@@ -572,16 +760,58 @@ public class MultiPointFeatureOverlayStatsPanel
 
     } // for
 
+    // Set renderer for invalid expressions
+    // ------------------------------------
+    TableColumn expressionColumn = statsTable.getColumnModel().getColumn (Column.EXPRESSION.ordinal());
+    expressionColumn.setCellRenderer (new ExpressionCellRenderer());
+
   } // initTableColumns
+
+  ////////////////////////////////////////////////////////////
+
+  /** Determines if a stats computation is in progress. */
+  private boolean isComputationRunning() {
+  
+    return (statsWorker != null && !statsWorker.isDone());
+  
+  } // isComputationRunning
+
+  ////////////////////////////////////////////////////////////
+
+  /** Stops any stats computation in progress. */
+  private void stopComputation() {
+
+    if (isComputationRunning()) {
+      statsWorker.cancel (false);
+    } // if
+  
+  } // stopComputation
+
+  ////////////////////////////////////////////////////////////
+
+  /** Starts a new stats computation. */
+  private void startComputation() {
+
+    statsWorker = new StatsComputation();
+    statsWorker.execute();
+    
+  } // startComputation
 
   ////////////////////////////////////////////////////////////
 
   /** 
    * Signals that the feature overlay has changed in some way, and to update
-   * the panel accordingly.
+   * the stats panel accordingly.
    */
-  public void overlayChanged () { updateStats(); }
+  public void overlayChanged() {
 
+    stopComputation();
+    matchingFeatures = null;
+    expressionStatsResultMap.clear();
+    if (this.isShowing()) startComputation();
+  
+  } // overlayChanged
+  
   ////////////////////////////////////////////////////////////
 
   /**
@@ -646,7 +876,7 @@ public class MultiPointFeatureOverlayStatsPanel
     
     for (int i = rows.length-1; i >= 0; i--) {
       String expression = expressionList.remove (rows[i]);
-      expressionStatsMap.remove (expression);
+      expressionStatsResultMap.remove (expression);
     } // for
 
     statsModel.fireTableDataChanged();
@@ -654,7 +884,65 @@ public class MultiPointFeatureOverlayStatsPanel
   } // removeExpression
 
   ////////////////////////////////////////////////////////////
+
+  /**
+   * Updates the panel contents if needed after the panel has
+   * been made visible.  This could include the case of expressions that
+   * need stats to be calculated for the first time, or possibly a change in
+   * the set of features.
+   *
+   * @since 3.4.1
+   */
+  private void updateContentsAfterShown() {
+
+    if (!isComputationRunning()) {
+
+      boolean needsUpdate = false;
+
+      // Need tp update if the features have been invalidated
+      // ----------------------------------------------------
+      if (matchingFeatures == null)
+        needsUpdate = true;
+
+      // Need to update if one of the expressions has no valid stats
+      // -----------------------------------------------------------
+      else {
+        for (String expression : expressionList) {
+          StatsResult result = expressionStatsResultMap.get (expression);
+          if (result == null) {
+            needsUpdate = true;
+            break;
+          } // if
+        } // for
+      } // else
+
+      // Start computation if any updating needed
+      // ----------------------------------------
+      if (needsUpdate) startComputation();
+
+    } // if
   
+  } // updateContentsAfterShown
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public void doLayout () {
+
+    // We do this because the layered pane doesn't manage the layout of
+    // its layers.  We have to explicitly set the bounds of all the children
+    // layers to the size of the pane.
+
+    Rectangle bounds = new Rectangle (0, 0, getWidth(), getHeight());
+    Component[] componentArray = getComponents();
+    for (Component component : componentArray) component.setBounds (bounds);
+
+    super.doLayout();
+
+  } // doLayout
+
+  ////////////////////////////////////////////////////////////
+
   /** 
    * Creates a new expression statistics display panel.
    *
@@ -665,30 +953,43 @@ public class MultiPointFeatureOverlayStatsPanel
     MultiPointFeatureOverlay<? extends PointFeatureSymbol> multiPointOverlay,
     EarthArea area
   ) {
-
+ 
     this.multiPointOverlay = multiPointOverlay;
     this.featureArea = area;
     this.matchingFeatures = null;
 
-    this.expressionStatsMap = new LinkedHashMap<>();
+    this.expressionStatsResultMap = new LinkedHashMap<>();
     this.expressionList = new ArrayList<>();
+  
+    // Update panel contents when shown
+    // --------------------------------
+    this.addComponentListener (new ComponentAdapter() {
+      public void componentShown (ComponentEvent e) { updateContentsAfterShown(); }
+    });
 
     // Setup layout
     // ------------
-    setLayout (new BorderLayout());
+    JPanel contentPanel = new JPanel (new BorderLayout());
+    this.add (contentPanel, JLayeredPane.DEFAULT_LAYER);
 
     // Create center panel
     // -------------------
     JPanel centerPanel = new JPanel (new BorderLayout());
-    this.add (centerPanel, BorderLayout.CENTER);
+    contentPanel.add (centerPanel, BorderLayout.CENTER);
     statsModel = new StatsTableModel();
     statsTable = new JTable (statsModel);
     statsTable.setAutoCreateRowSorter (true);
     JScrollPane tableScroller = new JScrollPane (statsTable,
       JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     statsTable.setAutoResizeMode (JTable.AUTO_RESIZE_OFF);
-    centerPanel.add (tableScroller, BorderLayout.CENTER);
+    JPanel tablePanel = new JPanel (new BorderLayout());
+    tablePanel.add (tableScroller, BorderLayout.CENTER);
+    tablePanel.setBorder (BorderFactory.createEmptyBorder (3, 3, 3, 3));
+    centerPanel.add (tablePanel, BorderLayout.CENTER);
     initTableColumns();
+
+    computingLabel = new JLabel (" ");
+    tablePanel.add (computingLabel, BorderLayout.SOUTH);
 
     statsTable.getSelectionModel().addListSelectionListener (
       new ListSelectionListener() {
@@ -728,9 +1029,22 @@ public class MultiPointFeatureOverlayStatsPanel
     GUIServices.setConstraints (gc, 0, yPos++, 1, 1, GridBagConstraints.BOTH, 0, 1);
     sidePanel.add (new JPanel(), gc);
     
-    this.add (sidePanel, BorderLayout.EAST);
+    contentPanel.add (sidePanel, BorderLayout.EAST);
 
     updateButtons();
+
+    // Create input blocking panel
+    // ---------------------------
+    glassPanel = new JPanel();
+    glassPanel.setCursor (Cursor.getPredefinedCursor (Cursor.WAIT_CURSOR));
+    glassPanel.setOpaque (false);
+    glassPanel.addMouseListener (new MouseAdapter() {});
+    glassPanel.setInputVerifier (new InputVerifier() {
+      public boolean verify (JComponent input) { return (false); }
+    });
+    glassPanel.setVisible (false);
+    add (glassPanel, JLayeredPane.POPUP_LAYER);
+
 
   } // MultiPointFeatureOverlayStatsPanel constructor
   
@@ -769,21 +1083,15 @@ public class MultiPointFeatureOverlayStatsPanel
    *
    * @param index the index to set the expression.
    * @param expression the expression to set.
-   *
-   * @throws IllegalArgumentException if an error occurred parsing the
-   * expression, or the expression contained an unknown attribute name or
-   * invalid type.
    */
-  public void setExpression (
+  private void setExpression (
     int index,
     String expression
   ) {
 
-    Statistics stats = computeStatsForExpression (expression);
     if (index < expressionList.size()) expressionList.remove (index);
     expressionList.add (index, expression);
-    expressionStatsMap.put (expression, stats);
-    statsModel.fireTableDataChanged();
+    if (this.isShowing()) startComputation();
 
   } // setExpression
 
@@ -793,10 +1101,6 @@ public class MultiPointFeatureOverlayStatsPanel
    * Adds an expression to the end of the statistics table.
    *
    * @param expression the expression to add.
-   *
-   * @throws IllegalArgumentException if an error occurred parsing the
-   * expression, or the expression contained an unknown attribute name or
-   * invalid type.
    */
   public void addExpression (
     String expression

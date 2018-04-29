@@ -291,6 +291,12 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
     EarthDataView view
   ) {
 
+// Can we do this instead ??
+//    overlayList
+//      .stream()
+//      .filter (overlay -> overlay.getVisible())
+//      .forEach (overlay -> overlay.prepare (g, view));
+
     overlayList.forEach (overlay -> overlay.prepare (g, view));
 
   } // prepare
@@ -299,44 +305,95 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
 
   /** 
    * Defines a filter that produces the intersection between the set
-   * of features that satisfy the global filter and the set of features
-   * that satisfy the overlay filter.  The intersection filter can be used
-   * to filter a number of different overlays without inucrring the overhead
-   * of re-filtering the base set of features each time.
+   * of features that satisfy the global and group filters in this multipoint
+   * overlay, and the set of features that satisfy a secondary filter.
+   * The intersection filter can be used to filter a number of different
+   * overlays without incurring the overhead of re-filtering the base set
+   * of features each time.
    */
   private class IntersectionFilter extends SelectionRuleFilter {
   
-    /** The result list for use by each intersection. */
-    private List<Feature> preFilterResultList = null;
+    /** The primary result list for use by each intersection. */
+    private List<Feature> primaryResultList = null;
 
-    /** The overlay filter for a specific overlay. */
-    private SelectionRuleFilter overlayFilter;
+    /** The secondary filter to use (we allow for null). */
+    private SelectionRuleFilter secondaryFilter;
+
+    ////////////////////////////////////////////////////////
 
     @Override
     public List<Feature> filter (List<Feature> features) {
-      if (preFilterResultList == null) {
+
+      // Create a primary list of features first
+      // ---------------------------------------
+      if (primaryResultList == null) {
 
         // Apply global filter first
         // -------------------------
-        preFilterResultList = features;
+        primaryResultList = features;
         if (globalFilter.size() != 0)
-          preFilterResultList = globalFilter.filter (preFilterResultList);
+          primaryResultList = globalFilter.filter (primaryResultList);
 
         // Apply group filter second
         // -------------------------
         if (groupFilter != null && isGroupFilterActive)
-          preFilterResultList = groupFilter.filter (preFilterResultList);
+          primaryResultList = groupFilter.filter (primaryResultList);
 
       } // if
 
-      List<Feature> overlayResultList = overlayFilter.filter (preFilterResultList);
-      return (overlayResultList);
+      // Now filter using the secondary filter
+      // -------------------------------------
+      List<Feature> secondaryResultList = (secondaryFilter == null ?
+        primaryResultList : secondaryFilter.filter (primaryResultList));
+
+      return (secondaryResultList);
 
     } // filter
-  
-    public void setOverlayFilter (SelectionRuleFilter filter) { this.overlayFilter = filter; }
-  
+
+    ////////////////////////////////////////////////////////
+
+    /**
+     * Sets the secondary filter.
+     *
+     * @param filter the secondary filter to use in the intersection.
+     */
+    public void setSecondaryFilter (SelectionRuleFilter filter) { this.secondaryFilter = filter; }
+
+    ////////////////////////////////////////////////////////
+
   } // IntersectionFilter class
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the matching point features for this overlay.
+   *
+   * @param overlay the overlay to get the list of matching features, and to
+   * use for the intersection secondary filter.
+   * @param area the earth area to use for feature matching.
+   * @param intersect the intersection filter to use for matching.
+   *
+   * @return the list of features from the specified overlay that match the
+   * intersection filter.
+   */
+  private List<Feature> getMatchingFeatures (
+    PointFeatureOverlay overlay,
+    EarthArea area,
+    IntersectionFilter intersect
+  ) {
+
+    List<Feature> resultList;
+    synchronized (overlay) {
+      SelectionRuleFilter overlayFilter = overlay.getFilter();
+      intersect.setSecondaryFilter (overlayFilter);
+      overlay.setFilter (intersect);
+      resultList = overlay.getMatchingFeatures (area);
+      overlay.setFilter (overlayFilter);
+    } // synchronized
+
+    return (resultList);
+
+  } // getMatchingFeatures
 
   ////////////////////////////////////////////////////////////
 
@@ -352,24 +409,13 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
     EarthArea area
   ) {
 
-    // Create intersection filter
-    // --------------------------
-    IntersectionFilter intersectionFilter = new IntersectionFilter();
-
-    // Get features for each overlay using the intersection filter
-    // -----------------------------------------------------------
-    Set<Feature> featureSet = new LinkedHashSet<Feature>();
+    IntersectionFilter intersect = new IntersectionFilter();
+    Set<Feature> featureSet = new LinkedHashSet<Feature>(); // to avoid duplicate features
     overlayList
       .stream()
       .filter (overlay -> overlay.getVisible())
-      .forEach (overlay -> {
-        SelectionRuleFilter overlayFilter = overlay.getFilter();
-        intersectionFilter.setOverlayFilter (overlayFilter);
-        overlay.setFilter (intersectionFilter);
-        featureSet.addAll (overlay.getMatchingFeatures (area));
-        overlay.setFilter (overlayFilter);
-      });
-        
+      .forEach (overlay -> featureSet.addAll (getMatchingFeatures (overlay, area, intersect)));
+
     return (new ArrayList<Feature> (featureSet));
 
   } // getMatchingFeatures
@@ -392,19 +438,7 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
     EarthArea area
   ) {
 
-    // Create the intersection filter
-    // ------------------------------
-    IntersectionFilter intersectionFilter = new IntersectionFilter();
-    SelectionRuleFilter overlayFilter = overlay.getFilter();
-    intersectionFilter.setOverlayFilter (overlayFilter);
-    overlay.setFilter (intersectionFilter);
-
-    // Get matching features in overlay
-    // --------------------------------
-    List<Feature> featureList = overlay.getMatchingFeatures (area);
-    overlay.setFilter (overlayFilter);
-
-    return (featureList);
+    return (getMatchingFeatures (overlay, area, new IntersectionFilter()));
 
   } // getMatchingFeatures
 
@@ -418,7 +452,7 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
   
     // Create intersection filter
     // --------------------------
-    IntersectionFilter intersectionFilter = new IntersectionFilter();
+    IntersectionFilter intersect = new IntersectionFilter();
 
     // Draw each overlay using the intersection filter
     // -----------------------------------------------
@@ -426,11 +460,13 @@ public class MultiPointFeatureOverlay<T extends PointFeatureSymbol>
       .stream()
       .filter (overlay -> overlay.getVisible())
       .forEach (overlay -> {
-        SelectionRuleFilter overlayFilter = overlay.getFilter();
-        intersectionFilter.setOverlayFilter (overlayFilter);
-        overlay.setFilter (intersectionFilter);
-        overlay.draw (g, view);
-        overlay.setFilter (overlayFilter);
+        synchronized (overlay) {
+          SelectionRuleFilter overlayFilter = overlay.getFilter();
+          intersect.setSecondaryFilter (overlayFilter);
+          overlay.setFilter (intersect);
+          overlay.draw (g, view);
+          overlay.setFilter (overlayFilter);
+        } // synchronized
       });
     
   } // draw

@@ -177,6 +177,27 @@ public class PointFeatureOverlay<T extends PointFeatureSymbol>
   ////////////////////////////////////////////////////////////
 
   /**
+   * Selects an earth area in the source by first checking to see if
+   * the currently selected earth area is the same as the desired one.
+   *
+   * @param area the earth area to use for features.
+   */
+  private void selectAreaInSource (
+    EarthArea area
+  ) {
+
+    if (!area.equals (source.getArea())) {
+      try { source.select (area); }
+      catch (IOException e) {
+        throw new RuntimeException (e);
+      } // catch
+    } // if
+
+  } // selectAreaInSource
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Gets the matching point features in this overlay for the specified area.
    *
    * @param area the earth area to use for features.
@@ -190,20 +211,13 @@ public class PointFeatureOverlay<T extends PointFeatureSymbol>
     EarthArea area
   ) {
 
-    // Select the features from the source by area
-    // -------------------------------------------
-    if (!area.equals (source.getArea())) {
-      try { source.select (area); }
-      catch (IOException e) {
-        throw new RuntimeException (e);
-      } // catch
-    } // if
-
-    // Get the features from the source
-    // --------------------------------
-    source.setFilter (filter);
-    List<Feature> featureList = new ArrayList<>();
-    for (Feature feature : source) featureList.add (feature);
+    List<Feature> featureList;
+    synchronized (source) {
+      selectAreaInSource (area);
+      source.setFilter (filter);
+      featureList = new ArrayList<>();
+      for (Feature feature : source) featureList.add (feature);
+    } // synchronized
 
     return (featureList);
 
@@ -217,15 +231,12 @@ public class PointFeatureOverlay<T extends PointFeatureSymbol>
     EarthDataView view
   ) {
 
-    // Select data from the source
-    // ---------------------------
-    EarthArea viewArea = view.getArea();
-    if (!viewArea.equals (source.getArea())) {
-      try { source.select (viewArea); }
-      catch (IOException e) {
-        throw new RuntimeException (e);
-      } // catch
-    } // if
+    // Do nothing here.  We used to prepare the source with the view earth area,
+    // but that doesn't allow us to render in one thread and safely call
+    // getMatchingFeatures() in another thread.  For thread safety we need
+    // to prepare and draw in one step.  It helps that we check the earth area
+    // in the view for a match, so that in general rendering multiple times
+    // doesn't require that the source has to reselect the area every time.
 
   } // prepare
 
@@ -237,17 +248,25 @@ public class PointFeatureOverlay<T extends PointFeatureSymbol>
     EarthDataView view
   ) {
 
-    // Prepare symbol
-    // --------------
-    g.setStroke (getStroke());
-    symbol.setBorderColor (getColorWithAlpha());
-    symbol.setFillColor (getFillColorWithAlpha());
+    synchronized (source) {
 
-    // Perform rendering
-    // -----------------
-    source.setFilter (filter);
-    rectToFeatureMap = new LinkedHashMap<Rectangle, PointFeature>();
-    source.render (g, view.getTransform(), symbol, rectToFeatureMap);
+      // Prepare the source
+      // ------------------
+      selectAreaInSource (view.getArea());
+
+      // Prepare symbol
+      // --------------
+      g.setStroke (getStroke());
+      symbol.setBorderColor (getColorWithAlpha());
+      symbol.setFillColor (getFillColorWithAlpha());
+
+      // Perform rendering
+      // -----------------
+      source.setFilter (filter);
+      rectToFeatureMap = new LinkedHashMap<Rectangle, PointFeature>();
+      source.render (g, view.getTransform(), symbol, rectToFeatureMap);
+
+    } // synchronized
 
   } // draw
 
@@ -295,8 +314,11 @@ public class PointFeatureOverlay<T extends PointFeatureSymbol>
               valueStr.append (DateFormatter.formatDate ((Date) attValue, DATE_TIME_FMT));
             else
               valueStr.append (attValue.toString());
-            if (attUnits != null)
-              valueStr.append (" (" + attUnits + ")");
+            if (attUnits != null) {
+              attUnits = attUnits.trim();
+              if (!attUnits.equals (""))
+                valueStr.append (" (" + attUnits + ")");
+            } // if
             metadataMap.put (attName, valueStr.toString());
           } // if
         } // for
