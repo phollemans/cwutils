@@ -101,6 +101,9 @@ public class MultiPointFeatureOverlayStatsPanel
   // Constants
   // ---------
   
+  /** The property change event for the expresion list. */
+  public static final String EXPRESSION_LIST_PROPERTY = "expressionList";
+
   /** The prompt text for new expressions. */
   private static final String NEW_EXPRESSION_PROMPT = "New expression";
 
@@ -468,10 +471,11 @@ public class MultiPointFeatureOverlayStatsPanel
     ) {
 
       String expression = (String) value;
-      String lastExpression = expressionList.get (rowIndex);
       
-      if (value.equals (NEW_EXPRESSION_PROMPT))
+      if (expression.equals (NEW_EXPRESSION_PROMPT)) {
         expressionList.remove (rowIndex);
+        signalExpressionListChanged();
+      } // if
       else
         setExpression (rowIndex, expression);
 
@@ -842,7 +846,9 @@ public class MultiPointFeatureOverlayStatsPanel
     expressionList.add (NEW_EXPRESSION_PROMPT);
     statsModel.fireTableDataChanged();
     setRowEditing (expressionList.size()-1);
-    
+
+    signalExpressionListChanged();
+
   } // addExpression
 
   ////////////////////////////////////////////////////////////
@@ -865,6 +871,8 @@ public class MultiPointFeatureOverlayStatsPanel
     statsModel.fireTableDataChanged();
     setRowEditing (row+1);
   
+    signalExpressionListChanged();
+
   } // dupExpression
 
   ////////////////////////////////////////////////////////////
@@ -880,7 +888,8 @@ public class MultiPointFeatureOverlayStatsPanel
     } // for
 
     statsModel.fireTableDataChanged();
-    
+    signalExpressionListChanged();
+
   } // removeExpression
 
   ////////////////////////////////////////////////////////////
@@ -1078,6 +1087,15 @@ public class MultiPointFeatureOverlayStatsPanel
 
   ////////////////////////////////////////////////////////////
 
+  /** Sends a signal that the expression list has changed. */
+  private void signalExpressionListChanged() {
+
+    firePropertyChange (EXPRESSION_LIST_PROPERTY, null, new ArrayList<String> (expressionList));
+
+  } // signalExpressionListChanged
+
+  ////////////////////////////////////////////////////////////
+
   /**
    * Sets the value of an expression in the statistics table.
    *
@@ -1092,6 +1110,8 @@ public class MultiPointFeatureOverlayStatsPanel
     if (index < expressionList.size()) expressionList.remove (index);
     expressionList.add (index, expression);
     if (this.isShowing()) startComputation();
+
+    signalExpressionListChanged();
 
   } // setExpression
 
@@ -1109,6 +1129,19 @@ public class MultiPointFeatureOverlayStatsPanel
     setExpression (expressionList.size(), expression);
 
   } // addExpression
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the list of expressions computed by the panel.
+   *
+   * @return a copy of the expression list.
+   */
+  public List<String> getExpressionList() {
+  
+    return (new ArrayList<String>(expressionList));
+
+  } // getExpressionList
 
   ////////////////////////////////////////////////////////////
 

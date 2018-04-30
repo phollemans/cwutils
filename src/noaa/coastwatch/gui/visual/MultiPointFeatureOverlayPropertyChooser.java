@@ -271,6 +271,8 @@ public class MultiPointFeatureOverlayPropertyChooser
     if (expressionListHint != null) {
       expressionListHint.forEach (expression -> statsPanel.addExpression (expression));
     } // if
+    statsPanel.addPropertyChangeListener (MultiPointFeatureOverlayStatsPanel.EXPRESSION_LIST_PROPERTY,
+      event -> overlay.setExpressionListHint ((List<String>) event.getNewValue()));
 
   } // MultiPointFeatureOverlayPropertyChooser constructor
   
@@ -327,7 +329,7 @@ public class MultiPointFeatureOverlayPropertyChooser
 
   /** Signals that the overlay contained in the chooser has been altered. */
   private void signalOverlayChanged() {
-  
+
     firePropertyChange (OVERLAY_PROPERTY, null, overlay);
     featurePanel.overlayChanged();
     statsPanel.overlayChanged();

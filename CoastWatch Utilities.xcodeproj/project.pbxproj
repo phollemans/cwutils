@@ -22,6 +22,8 @@
 		E91FD1B61B1003BA0096CCA3 /* html2mdoc.xsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = html2mdoc.xsl; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xml; };
 		E92229931AF4937B00E392D0 /* ScriptConsole.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ScriptConsole.java; sourceTree = "<group>"; };
 		E929B1F11F8DC77E000BB7CF /* version.tex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = version.tex; sourceTree = "<group>"; };
+		E92EB0172095C6DA00F0FB58 /* warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warning.png; sourceTree = "<group>"; };
+		E92EB0182095C6DA00F0FB58 /* warning@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "warning@2x.png"; sourceTree = "<group>"; };
 		E9306F211FD2D2C800AAC2DF /* ChunkDataModifier.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ChunkDataModifier.java; sourceTree = "<group>"; };
 		E9339BBF16D1F0740019383B /* logging.properties */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = logging.properties; sourceTree = "<group>"; };
 		E93AE8821FAA9FAF00D3D699 /* ChunkCollector.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ChunkCollector.java; sourceTree = "<group>"; };
@@ -1731,6 +1733,8 @@
 				E99D69781C50264B00F4A238 /* text_rich_colored@2x.png */,
 				E96D89C3161661420009B833 /* text_rich.png */,
 				E99D69791C50264B00F4A238 /* text_rich@2x.png */,
+				E92EB0172095C6DA00F0FB58 /* warning.png */,
+				E92EB0182095C6DA00F0FB58 /* warning@2x.png */,
 				E96D89C5161661420009B833 /* window_colors.png */,
 				E99D697A1C50264B00F4A238 /* window_colors@2x.png */,
 			);
