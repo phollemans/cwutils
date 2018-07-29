@@ -48,7 +48,7 @@ import noaa.coastwatch.io.EarthDataReader;
  *   <li>HDF formats:<ul>
  *     <li> {@link noaa.coastwatch.io.CWHDFReader} </li>
  *     <li> {@link noaa.coastwatch.io.TSHDFReader} </li>
- *     <li> {@link noaa.coastwatch.io.ACSPOHDFReader} </li>
+ *     <!-- <li> {@link noaa.coastwatch.io.ACSPOHDFReader} </li> -->
  *   </ul></li>
  *
  *   <li>NOAA 1b formats:<ul>
@@ -61,8 +61,8 @@ import noaa.coastwatch.io.EarthDataReader;
  *   </ul></li>
  *
  *   <li>NetCDF formats:<ul>
- *     <li> {@link noaa.coastwatch.io.ACSPONCReader} </li>
- *     <li> {@link noaa.coastwatch.io.ACSPONCCFReader} </li>
+ *     <!-- <li> {@link noaa.coastwatch.io.ACSPONCReader} </li> -->
+ *     <!-- <li> {@link noaa.coastwatch.io.ACSPONCCFReader} </li> -->
  *     <li> {@link noaa.coastwatch.io.CWNCReader} </li>
  *     <li> {@link noaa.coastwatch.io.CWCFNCReader} </li>
  *     <li> {@link noaa.coastwatch.io.CommonDataModelNCReader} </li>
@@ -107,7 +107,7 @@ public class EarthDataReaderFactory {
     // ----------------
     readerList.add (thisPackage + ".CWHDFReader");
     readerList.add (thisPackage + ".TSHDFReader");
-    readerList.add (thisPackage + ".ACSPOHDFReader");
+// Deprecated   readerList.add (thisPackage + ".ACSPOHDFReader");
 
     // Add NOAA 1b variants
     // --------------------
@@ -120,8 +120,8 @@ public class EarthDataReaderFactory {
 
     // Add NetCDF variants
     // -------------------
-    readerList.add (thisPackage + ".ACSPONCReader");
-    readerList.add (thisPackage + ".ACSPONCCFReader");
+// Deprecated    readerList.add (thisPackage + ".ACSPONCReader");
+// Deprecated    readerList.add (thisPackage + ".ACSPONCCFReader");
     readerList.add (thisPackage + ".CWNCReader");
     readerList.add (thisPackage + ".CWCFNCReader");
     readerList.add (thisPackage + ".CommonDataModelNCReader");

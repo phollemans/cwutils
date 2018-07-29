@@ -308,10 +308,12 @@ public class SwathProjection
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public String describe () { return (DESCRIPTION); }
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void transformImpl (
     DataLocation dataLoc,
     EarthLocation earthLoc
@@ -359,6 +361,7 @@ public class SwathProjection
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void transformImpl (
     EarthLocation earthLoc,
     DataLocation dataLoc
@@ -392,10 +395,12 @@ public class SwathProjection
     // Initialize search using last or seed value
     // ------------------------------------------
     DataLocation testDataLoc = null;
+    EarthLocation testEarthLoc = new EarthLocation();
     double d = Double.MAX_VALUE;
     if (lastDataLoc != null) {
       testDataLoc = lastDataLoc;
-      d = earthLoc.distance (transform (testDataLoc));
+      transform (testDataLoc, testEarthLoc);
+      d = earthLoc.distance (testEarthLoc);
     } // if
     for (int i = 0; i < seedEarthLocations.length; i++) {
       double seedDist = earthLoc.distance (seedEarthLocations[i]);
@@ -405,48 +410,58 @@ public class SwathProjection
     double[] inc = {0.5, 0.5};
     int iter = 0;
 
+    // Create iteration objects
+    // ------------------------
+    DataLocation x1 = new DataLocation (2);
+    DataLocation x2 = new DataLocation (2);
+    DataLocation y1 = new DataLocation (2);
+    DataLocation y2 = new DataLocation (2);
+    EarthLocation x1Geo = new EarthLocation();
+    EarthLocation x2Geo = new EarthLocation();
+    EarthLocation y1Geo = new EarthLocation();
+    EarthLocation y2Geo = new EarthLocation();
+    double[] res = new double[2];
+    double[] grad = new double[2];
+    double[] correction = new double[2];
+
     // Search until tolerance or max iterations hit
     // --------------------------------------------
     while (d > tolerance && iter < MAX_ITERATIONS) {
 
       // Compute increments in x and y
       // -----------------------------
-      DataLocation x1 = testDataLoc.translate (-inc[0], 0).truncate (dims);
-      DataLocation x2 = testDataLoc.translate (+inc[0], 0).truncate (dims);
-      DataLocation y1 = testDataLoc.translate (0, -inc[1]).truncate (dims);
-      DataLocation y2 = testDataLoc.translate (0, +inc[1]).truncate (dims);
-      EarthLocation x1Geo = transform (x1);
-      EarthLocation x2Geo = transform (x2);
-      EarthLocation y1Geo = transform (y1);
-      EarthLocation y2Geo = transform (y2);
+      testDataLoc.translate (-inc[0], 0, x1); x1.truncateInPlace (dims);
+      testDataLoc.translate (+inc[0], 0, x2); x2.truncateInPlace (dims);
+      testDataLoc.translate (0, -inc[1], y1); y1.truncateInPlace (dims);
+      testDataLoc.translate (0, +inc[1], y2); y2.truncateInPlace (dims);
+      transform (x1, x1Geo);
+      transform (x2, x2Geo);
+      transform (y1, y1Geo);
+      transform (y2, y2Geo);
       double dx = x2.get(0) - x1.get(0);
       double dy = y2.get(1) - y1.get(1);
 
       // Calculate resolution in km/pixel
       // --------------------------------
-      double[] res = new double[] {
-        x1Geo.distance (x2Geo) / dx,
-        y1Geo.distance (y2Geo) / dy
-      };
+      res[0] = x1Geo.distance (x2Geo) / dx;
+      res[1] = y1Geo.distance (y2Geo) / dy;
 
       // Calculate unit gradient
       // -----------------------
-      double[] grad = new double[] {
-        (earthLoc.distance (x2Geo) - earthLoc.distance (x1Geo)) / dx,
-        (earthLoc.distance (y2Geo) - earthLoc.distance (y1Geo)) / dy
-      };
+      grad[0] = (earthLoc.distance (x2Geo) - earthLoc.distance (x1Geo)) / dx;
+      grad[1] = (earthLoc.distance (y2Geo) - earthLoc.distance (y1Geo)) / dy;
       double mag = Math.sqrt (Math.pow (grad[0],2) + Math.pow (grad[1],2));
       grad[0] /= mag;
       grad[1] /= mag;
 
       // Estimate new coordinates
       // ------------------------
-      double[] correction = new double[] {
-        -(d/res[0]) * grad[0], 
-        -(d/res[1]) * grad[1]
-      };
-      testDataLoc = testDataLoc.translate (correction).truncate (dims);
-      d = earthLoc.distance (transform (testDataLoc));
+      correction[0] = -(d/res[0]) * grad[0];
+      correction[1] = -(d/res[1]) * grad[1];
+      testDataLoc.translate (correction[0], correction[1], testDataLoc);
+      testDataLoc.truncateInPlace (dims);
+      transform (testDataLoc, testEarthLoc);
+      d = earthLoc.distance (testEarthLoc);
 
       // Test for convergence
       // --------------------

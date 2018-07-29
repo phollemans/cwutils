@@ -172,10 +172,39 @@ public class EarthContextElement
 
   /** The context size to total size factor. */
   private double sizeFactor = SIZE_FACTOR;
+  
+  /** The resolution limit flag, true to limit the minimum resolution. */
+  private boolean hasResolutionLimit = true;
 
   /** The font for drawing bounding box labels. */
   private Font labelFont = new Font (null, Font.PLAIN, 12);
 
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the flag to limit the minimum pixel resolution in the context
+   * element (defaults to true).  When true, the resolution (km/pixel) of the context element
+   * has a lower limit so that at least 1/4 width of the earth is shown in
+   * the orthographic projection.  This way there are likely to be at least some
+   * coastlines visible for context.  Setting this resolution limit flag to
+   * false removes this lower limit so that much smaller areas of the earth may
+   * be shown, at the risk of having no coastlines or grid lines visible in the
+   * context element's area.
+   *
+   * @param flag the new resolution limit flag value.
+   *
+   * @see #setContextArea
+   *
+   * @since 3.4.1
+   */
+  public void setResolutionLimit (
+    boolean flag
+  ) {
+
+    hasResolutionLimit = flag;
+
+  } // setResolutionLimit
+  
   ////////////////////////////////////////////////////////////
 
   /** Gets the font for rendering bounding box labels. */
@@ -340,8 +369,8 @@ public class EarthContextElement
     // Get context area center and size
     // --------------------------------
     int[] extremes = area.getExtremes();
-    EarthLocation center = new EarthLocation ((extremes[0] + extremes[1])/2,
-      (extremes[2] + extremes[3])/2);
+    EarthLocation center = new EarthLocation ((extremes[0] + extremes[1])/2.0,
+      (extremes[2] + extremes[3])/2.0);
     double contextSize = Math.max (
       new EarthLocation (center.lat, extremes[2]).distance (
         new EarthLocation (center.lat, extremes[3])),
@@ -416,7 +445,7 @@ public class EarthContextElement
     else {
       res = contextSize/(rect.width * sizeFactor);
       if (res > maxRes) res = maxRes;
-      else if (res < minRes) res = minRes;
+      else if (hasResolutionLimit && res < minRes) res = minRes;
     } // else
 
     // Create map projection
@@ -567,6 +596,7 @@ public class EarthContextElement
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void setPreferredSize (
     Dimension size
   ) {
@@ -682,6 +712,18 @@ public class EarthContextElement
 
   } // getCenter
 
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a new earth context element showing the entire Earth centered
+   * at (0'N, 0'E).
+   */
+  public EarthContextElement () {
+
+    this (new EarthLocation (0, 0));
+
+  } // EarthContextElement
+  
   ////////////////////////////////////////////////////////////
 
   /**
@@ -1046,6 +1088,7 @@ public class EarthContextElement
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public Area getArea (
     Graphics2D g
   ) {

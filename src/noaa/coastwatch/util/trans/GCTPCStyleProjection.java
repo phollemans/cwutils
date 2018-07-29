@@ -126,7 +126,7 @@ public abstract class GCTPCStyleProjection
   /**
    * Performs the actual forward calculation as specified in the
    * GCTP C code.  This method is as close as possible to the native
-   * C function signature as possible.
+   * C function signature.
    * 
    * @param lat the latitude to convert.
    * @param lon the longitude to convert.
@@ -168,7 +168,7 @@ public abstract class GCTPCStyleProjection
   /**
    * Performs the actual inverse calculation as specified in the
    * GCTP C code.  This method is as close as possible to the native
-   * C function signature as possible.
+   * C function signature.
    * 
    * @param lat the latitude to convert.
    * @param lon the longitude to convert.

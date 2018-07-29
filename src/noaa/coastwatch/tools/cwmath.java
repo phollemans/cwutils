@@ -986,7 +986,10 @@ public final class cwmath {
     // -----------------------------
     String[] expressionArray = expression.split (" *= *", 2);
     if (expressionArray.length != 2) {
-      System.err.println (PROG + ": Invalid expression '" + expression + "'");
+      if (expressionArray.length == 1)
+        System.err.println (PROG + ": Missing equals sign in '" + expression + "'");
+      else
+        System.err.println (PROG + ": Too many equals signs in '" + expression + "'");
       System.exit (1);
     } // if
     String outputVarName = expressionArray[0];

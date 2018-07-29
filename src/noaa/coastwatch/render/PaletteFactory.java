@@ -47,8 +47,10 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * The <code>PaletteFactory</code> class handles written tables of
- * predefined index color models.  Each model has a maximum of 256
- * colors and is associated with a descriptive name.  The palette file
+ * predefined index color models.  Each model has a number of color entries
+ * and is associated with a descriptive name.  The number of entries can vary
+ * from 1 up to 65536, although in practice the palette will be remapped to
+ * 256 colors for use with 8-bit images.  The palette file
  * has an XML format, as follows:
  * <pre>
  *   &lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
@@ -123,6 +125,24 @@ import org.xml.sax.helpers.DefaultHandler;
  *   53 CRW_DHW
  *   54 StepSeq25
  *   55 HSB-Cycle
+ *   56 Ocean-algae
+ *   57 Ocean-amp
+ *   58 Ocean-balance
+ *   59 Ocean-curl
+ *   60 Ocean-deep
+ *   61 Ocean-delta
+ *   62 Ocean-dense
+ *   63 Ocean-gray
+ *   64 Ocean-haline
+ *   65 Ocean-ice
+ *   66 Ocean-matter
+ *   67 Ocean-oxy
+ *   68 Ocean-phase
+ *   69 Ocean-solar
+ *   70 Ocean-speed
+ *   71 Ocean-tempo
+ *   72 Ocean-thermal
+ *   73 Ocean-turbid
  * </pre> 
  *
  * @author Peter Hollemans
@@ -190,8 +210,26 @@ public class PaletteFactory {
     "CRW_HOTSPOT",
     "CRW_DHW",
     "StepSeq25",
-    "HSB-Cycle"
-  };    
+    "HSB-Cycle",
+    "Ocean-algae",
+    "Ocean-amp",
+    "Ocean-balance",
+    "Ocean-curl",
+    "Ocean-deep",
+    "Ocean-delta",
+    "Ocean-dense",
+    "Ocean-gray",
+    "Ocean-haline",
+    "Ocean-ice",
+    "Ocean-matter",
+    "Ocean-oxy",
+    "Ocean-phase",
+    "Ocean-solar",
+    "Ocean-speed",
+    "Ocean-tempo",
+    "Ocean-thermal",
+    "Ocean-turbid"
+  };
 
   /** The palette DTD URL. */
   private static final String DTD_URL = 
@@ -421,7 +459,8 @@ public class PaletteFactory {
       // Create color model
       // ------------------
       if (qName.equals ("palette")) {
-        model = new IndexColorModel (8, red.length, red, green, blue);
+        int bits = (red.length <= 256 ? 8 : 16);
+        model = new IndexColorModel (bits, red.length, red, green, blue);
       } // if
 
     } // endElement

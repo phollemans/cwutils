@@ -77,11 +77,15 @@ public class BivariateEstimator
 
   // Variables
   // ---------
-  /** Polynomial terms. */
+
+  /** The number of terms in each polynomial. */
   private int terms;
 
-  /** Estimator matrix. */
+  /** The estimator coefficient matrix created at construction time. */
   private Matrix est;
+
+  /** The flattened coefficient matrix used for quadratic evaluation. */
+  private double[] a;
 
   ////////////////////////////////////////////////////////////
 
@@ -157,6 +161,10 @@ public class BivariateEstimator
       } // for
     } // for
 
+    // Save flattened version of matrix
+    // --------------------------------
+    a = est.getRowPackedCopy();
+
   } // BivariateEstimator constructor
 
   ////////////////////////////////////////////////////////////
@@ -180,27 +188,72 @@ public class BivariateEstimator
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Evaluates the expression value for a 3-term estimator (quadratic in each
+   * variable).
+   *
+   * @param variables the input variable value array.
+   */
+  private double evaluateQuadratic (
+    double[] variables
+  ) {
+
+    // Setup for direct evaluation
+    // ---------------------------
+    double x = variables[0];
+    double x2 = x*x;
+    double y = variables[1];
+    double y2 = y*y;
+
+    // Estimate function value f = xT E y
+    // ----------------------------------
+    double value =
+      (a[0] + a[1]*y + a[2]*y2) +
+      x*(a[3] + a[4]*y + a[5]*y2) +
+      x2*(a[6] + a[7]*y + a[8]*y2);
+
+    return (value);
+    
+  } // evaluate
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
   public double evaluate (
     double[] variables
   ) {
 
-    // Create polynomial vectors
-    // -------------------------
-    double[][] x = new double[terms][1];
-    double[][] y = new double[terms][1];
-    x[0][0] = 1; y[0][0] = 1;
-    x[1][0] = variables[0]; y[1][0] = variables[1];
-    for (int i = 2; i < terms; i++) { 
-      x[i][0] = variables[0] * x[i-1][0];
-      y[i][0] = variables[1] * y[i-1][0];
-    } // for
+    double value;
 
-    // Estimate function value f = xT E y
-    // ----------------------------------
-    Matrix xp = new Matrix (x, terms, 1);
-    Matrix yp = new Matrix (y, terms, 1);
-    Matrix f = xp.transpose ().times (est.times (yp));
-    return (f.get (0,0));
+    // Evaluate a quadratic-based estimator
+    // ------------------------------------
+    if (terms == 3) {
+      value = evaluateQuadratic (variables);
+    } // if
+
+    else {
+
+      // Create polynomial vectors
+      // -------------------------
+      double[][] x = new double[terms][1];
+      double[][] y = new double[terms][1];
+      x[0][0] = 1; y[0][0] = 1;
+      x[1][0] = variables[0]; y[1][0] = variables[1];
+      for (int i = 2; i < terms; i++) {
+        x[i][0] = variables[0] * x[i-1][0];
+        y[i][0] = variables[1] * y[i-1][0];
+      } // for
+
+      // Estimate function value f = xT E y
+      // ----------------------------------
+      Matrix xp = new Matrix (x, terms, 1);
+      Matrix yp = new Matrix (y, terms, 1);
+      Matrix f = xp.transpose ().times (est.times (yp));
+      value = f.get (0, 0);
+      
+    } // else
+
+    return (value);
 
   } // evaluate
 

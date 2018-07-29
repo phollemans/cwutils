@@ -91,16 +91,32 @@
 
 <!-- Special fonts -->
 
-<xsl:template match="b|code">
-.Bf -symbolic
-<xsl:value-of select="concat (normalize-space (.), '&#xa;')"/>
-.Ef
+<xsl:template match="b[following-sibling::text()[matches (string (.), '^[.,:;]')]]">
+\fB<xsl:apply-templates select="child::node()"/>\fR</xsl:template>
+
+<xsl:template match="b">
+\fB<xsl:apply-templates select="child::node()"/>\fR
 </xsl:template>
 
-<xsl:template match="i|u">
-.Bf -emphasis
-<xsl:value-of select="concat (normalize-space (.), '&#xa;')"/>
-.Ef
+<xsl:template match="code[following-sibling::text()[matches (string (.), '^[.,:;]')]]">
+\fB<xsl:apply-templates select="child::node()"/>\fR</xsl:template>
+
+<xsl:template match="code">
+\fB<xsl:apply-templates select="child::node()"/>\fR
+</xsl:template>
+
+<xsl:template match="i[following-sibling::text()[matches (string (.), '^[.,:;]')]]">
+\fI<xsl:apply-templates select="child::node()"/>\fR</xsl:template>
+
+<xsl:template match="i">
+\fI<xsl:apply-templates select="child::node()"/>\fR
+</xsl:template>
+
+<xsl:template match="u[following-sibling::text()[matches (string (.), '^[.,:;]')]]">
+\fI<xsl:apply-templates select="child::node()"/>\fR</xsl:template>
+
+<xsl:template match="u">
+\fI<xsl:apply-templates select="child::node()"/>\fR
 </xsl:template>
 
 <!-- Special formatting -->

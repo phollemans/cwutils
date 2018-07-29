@@ -101,6 +101,24 @@
 		E95A3EDC1E8F748700AD8698 /* DataLocationIteratorFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DataLocationIteratorFactory.java; sourceTree = "<group>"; };
 		E95A3EDD1E93049B00AD8698 /* DataLocationConstraints.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DataLocationConstraints.java; sourceTree = "<group>"; };
 		E95A3EDE1E95AAD800AD8698 /* VariableStatisticsGenerator.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = VariableStatisticsGenerator.java; sourceTree = "<group>"; };
+		E95AE39020B9EF8E00E93F6A /* Ocean-algae.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-algae.xml"; sourceTree = "<group>"; };
+		E95AE39120B9EF8E00E93F6A /* Ocean-haline.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-haline.xml"; sourceTree = "<group>"; };
+		E95AE39220B9EF8E00E93F6A /* Ocean-oxy.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-oxy.xml"; sourceTree = "<group>"; };
+		E95AE39320B9EF8E00E93F6A /* Ocean-phase.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-phase.xml"; sourceTree = "<group>"; };
+		E95AE39420B9EF8F00E93F6A /* Ocean-speed.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-speed.xml"; sourceTree = "<group>"; };
+		E95AE39520B9EF8F00E93F6A /* Ocean-deep.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-deep.xml"; sourceTree = "<group>"; };
+		E95AE39620B9EF8F00E93F6A /* Ocean-gray.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-gray.xml"; sourceTree = "<group>"; };
+		E95AE39720B9EF8F00E93F6A /* Ocean-curl.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-curl.xml"; sourceTree = "<group>"; };
+		E95AE39820B9EF8F00E93F6A /* Ocean-thermal.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-thermal.xml"; sourceTree = "<group>"; };
+		E95AE39920B9EF8F00E93F6A /* Ocean-dense.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-dense.xml"; sourceTree = "<group>"; };
+		E95AE39A20B9EF8F00E93F6A /* Ocean-delta.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-delta.xml"; sourceTree = "<group>"; };
+		E95AE39B20B9EF8F00E93F6A /* Ocean-amp.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-amp.xml"; sourceTree = "<group>"; };
+		E95AE39C20B9EF8F00E93F6A /* Ocean-solar.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-solar.xml"; sourceTree = "<group>"; };
+		E95AE39D20B9EF9000E93F6A /* Ocean-balance.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-balance.xml"; sourceTree = "<group>"; };
+		E95AE39E20B9EF9000E93F6A /* Ocean-tempo.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-tempo.xml"; sourceTree = "<group>"; };
+		E95AE39F20B9EF9000E93F6A /* Ocean-turbid.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-turbid.xml"; sourceTree = "<group>"; };
+		E95AE3A020B9EF9000E93F6A /* Ocean-matter.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-matter.xml"; sourceTree = "<group>"; };
+		E95AE3A120B9EF9000E93F6A /* Ocean-ice.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "Ocean-ice.xml"; sourceTree = "<group>"; };
 		E95BB7561E67C56400EB9D6F /* binned_border_c.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_border_c.hdf; path = feature/binned_border_c.hdf; sourceTree = "<group>"; };
 		E95BB7571E67C56400EB9D6F /* binned_border_h.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_border_h.hdf; path = feature/binned_border_h.hdf; sourceTree = "<group>"; };
 		E95BB7581E67C56400EB9D6F /* binned_border_i.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_border_i.hdf; path = feature/binned_border_i.hdf; sourceTree = "<group>"; };
@@ -1061,6 +1079,7 @@
 		E9BC62281FE518BE00A0E8F7 /* IntegerValuedDataChunk.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = IntegerValuedDataChunk.java; sourceTree = "<group>"; };
 		E9BC62291FE66DD800A0E8F7 /* GridChunkConsumer.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = GridChunkConsumer.java; sourceTree = "<group>"; };
 		E9BCD1871E31995600984958 /* DirectGridResampler.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DirectGridResampler.java; sourceTree = "<group>"; };
+		E9BDF4F120ED8CB9001F3579 /* cwscript.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = cwscript.java; sourceTree = "<group>"; };
 		E9C01AD31E3A6C9A00CCAC66 /* SelectionRuleFilterChooser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = SelectionRuleFilterChooser.java; sourceTree = "<group>"; };
 		E9C01AD41E3A843400CCAC66 /* SelectionRuleFilter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = SelectionRuleFilter.java; sourceTree = "<group>"; };
 		E9C43E7D1D358B4800BEC746 /* NumberRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = NumberRule.java; sourceTree = "<group>"; };
@@ -1973,6 +1992,24 @@
 				E96D8A44161661420009B833 /* nws.gif */,
 				E96D8A45161661420009B833 /* nws3d.gif */,
 				E96D8A46161661420009B833 /* Ocean.xml */,
+				E95AE39020B9EF8E00E93F6A /* Ocean-algae.xml */,
+				E95AE39B20B9EF8F00E93F6A /* Ocean-amp.xml */,
+				E95AE39D20B9EF9000E93F6A /* Ocean-balance.xml */,
+				E95AE39720B9EF8F00E93F6A /* Ocean-curl.xml */,
+				E95AE39520B9EF8F00E93F6A /* Ocean-deep.xml */,
+				E95AE39A20B9EF8F00E93F6A /* Ocean-delta.xml */,
+				E95AE39920B9EF8F00E93F6A /* Ocean-dense.xml */,
+				E95AE39620B9EF8F00E93F6A /* Ocean-gray.xml */,
+				E95AE39120B9EF8E00E93F6A /* Ocean-haline.xml */,
+				E95AE3A120B9EF9000E93F6A /* Ocean-ice.xml */,
+				E95AE3A020B9EF9000E93F6A /* Ocean-matter.xml */,
+				E95AE39220B9EF8E00E93F6A /* Ocean-oxy.xml */,
+				E95AE39320B9EF8E00E93F6A /* Ocean-phase.xml */,
+				E95AE39C20B9EF8F00E93F6A /* Ocean-solar.xml */,
+				E95AE39420B9EF8F00E93F6A /* Ocean-speed.xml */,
+				E95AE39E20B9EF9000E93F6A /* Ocean-tempo.xml */,
+				E95AE39820B9EF8F00E93F6A /* Ocean-thermal.xml */,
+				E95AE39F20B9EF9000E93F6A /* Ocean-turbid.xml */,
 				E96D8A47161661420009B833 /* Oceanographic - Cloud Analysis.jso */,
 				E96D8A48161661420009B833 /* Oceanographic - Coral Reef Watch.jso */,
 				E96D8A49161661420009B833 /* Oceanographic.jso */,
@@ -2546,6 +2583,7 @@
 				E96D8C1E161661420009B833 /* cwregister.java */,
 				E96D8C1F161661420009B833 /* cwrender.java */,
 				E96D8C20161661420009B833 /* cwsample.java */,
+				E9BDF4F120ED8CB9001F3579 /* cwscript.java */,
 				E96D8C21161661420009B833 /* cwstats.java */,
 				E96D8C22161661420009B833 /* cwstatus.java */,
 				E96D8C23161661420009B833 /* cwtoolstest.java */,

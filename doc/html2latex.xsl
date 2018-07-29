@@ -42,7 +42,7 @@
   <xsl:variable name="sub2" select="replace ($sub1, '_', '\\_')"/>
   <xsl:variable name="sub3" select="replace ($sub2, '\{', '\\{')"/>
   <xsl:variable name="sub4" select="replace ($sub3, '\}', '\\}')"/>
-  <xsl:variable name="sub5" select="replace ($sub4, '--', '-{-}')"/>
+  <xsl:variable name="sub5" select="replace ($sub4, '--([^ ]+)', '\\mbox{-{-}$1}')"/>
   <xsl:variable name="sub6" select="replace ($sub5, '&gt;', '\$&gt;\$')"/>
   <xsl:variable name="sub7" select="replace ($sub6, '&lt;', '\$&lt;\$')"/>
   <xsl:variable name="sub8" select="replace ($sub7, '%', '\\%')"/>
@@ -94,17 +94,29 @@
 
 <!-- Special fonts -->
 
+<xsl:template match="b[following-sibling::text()[matches (string (.), '^[.,:;]')]]">
+\textbf{<xsl:apply-templates select="child::node()"/>}</xsl:template>
+
 <xsl:template match="b">
 \textbf{<xsl:apply-templates select="child::node()"/>}
 </xsl:template>
 
+<xsl:template match="code[following-sibling::text()[matches (string (.), '^[.,:;]')]]">
+{\tt <xsl:apply-templates select="child::node()"/>}</xsl:template>
+
 <xsl:template match="code">
-<xsl:apply-templates select="child::node()"/>
+{\tt <xsl:apply-templates select="child::node()"/>}
 </xsl:template>
+
+<xsl:template match="i[following-sibling::text()[matches (string (.), '^[.,:;]')]]">
+\emph{<xsl:apply-templates select="child::node()"/>}</xsl:template>
 
 <xsl:template match="i">
 \emph{<xsl:apply-templates select="child::node()"/>}
 </xsl:template>
+
+<xsl:template match="u[following-sibling::text()[matches (string (.), '^[.,:;]')]]">
+\underline{<xsl:apply-templates select="child::node()"/>}</xsl:template>
 
 <xsl:template match="u">
 \underline{<xsl:apply-templates select="child::node()"/>}

@@ -445,16 +445,24 @@ public class EarthDataViewPanel
    */
   private void resize () {
 
-    // TODO: There may be a better way to perform resizing.  As it is,
-    // if the window is made smaller, the view scaling factor is
-    // changed accordingly so that approximately the same view
-    // contents appear.  But when made bigger, the scaling factor is
-    // kept the same, and a larger area around the center is shown.
-
     stopRendering();
-    try { 
-      view.resize (getSize());
-      if (!isStaticView) view.setSize (getSize());
+    try {
+      Dimension dims = getSize();
+      if (isStaticView) {
+        view.resize (dims);
+      } // if
+      else {
+        // If the panel dimensions are not set here, we assume that this
+        // is the first time that the view is being shown, and resize
+        // completely.  If the panel dimensions are set, we assume that we
+        // are doing a resize because of a change in panel size, and we
+        // resize the view by adjusting the width only.
+        if (panelDims != null)
+          view.resizeWidth (dims.width);
+        else
+          view.resize (dims);
+        view.setSize (dims);
+      } // else
       updateDimensions();
       bufferImage = new BufferedImage (panelDims.width, panelDims.height, 
         BufferedImage.TYPE_INT_RGB);
@@ -558,8 +566,7 @@ public class EarthDataViewPanel
 
     // Check for resize
     // ----------------
-    if (wasResized || bufferImage == null || origin == null || 
-      viewDims == null) { 
+    if (wasResized || bufferImage == null || origin == null || viewDims == null) {
       resize(); 
       wasResized = false; 
     } // if

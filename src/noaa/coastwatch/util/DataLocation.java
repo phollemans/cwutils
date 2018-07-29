@@ -39,6 +39,7 @@ public class DataLocation
 
   // Variables
   // ---------
+  
   /** The data location coordinates. */
   private double[] coords;
 
@@ -430,6 +431,30 @@ public class DataLocation
   ////////////////////////////////////////////////////////////
 
   /**
+   * Truncates the data location to the nearest edge.  If the location
+   * has any components outside [0..n-1] for each dimension size n,
+   * then they are truncated to the nearest dimension bound.
+   *
+   * @param dims the dimension sizes.
+   *
+   * @since 3.4.1
+   */
+  public void truncateInPlace (
+    int[] dims
+  ) {
+
+    // Truncate to each dimension edge
+    // -------------------------------
+    for (int i = 0; i < coords.length; i++) {
+      if (coords[i] < 0) coords[i] = 0;
+      else if (coords[i] > dims[i]-1) coords[i] = dims[i]-1;
+    } // for
+
+  } // truncateInPlace
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Creates a data location from an integer index and a set of
    * dimensions.  
    *
@@ -566,6 +591,32 @@ public class DataLocation
   ) {
 
     return (translate (new double[] {trans0, trans1}));
+
+  } // translate
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Performs a 2D translation on this data location.
+   *
+   * @param trans0 the translation for index 0.
+   * @param trans1 the translation for index 1.
+   * @param outputLoc the output translated data location.  This location
+   * and the output data location are assumed to both be 2D.  It is safe to
+   * pass this location as the output location, in which case the translation
+   * is performed in-place.
+   *
+   * @since 3.4.1
+   */
+  public void translate (
+    double trans0,
+    double trans1,
+    DataLocation outputLoc
+  ) {
+
+    outputLoc.coords[0] = this.coords[0] + trans0;
+    outputLoc.coords[1] = this.coords[1] + trans1;
+    outputLoc.isHashed = false;
 
   } // translate
 

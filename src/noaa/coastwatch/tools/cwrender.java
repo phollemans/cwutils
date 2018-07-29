@@ -746,8 +746,9 @@ import ucar.units.Unit;
  *   <dt>-P, --palette=NAME</dt>
  *
  *   <dd>The color palette for converting data values to colors.  The
- *   color palettes are derived in part from the Interactive Data
- *   Language (IDL) v5.4 palettes and have similar names.  The valid
+ *   color palettes have been derived from a number of sources including
+ *   SeaSpace Terascan, Interactive Data Language (IDL) v5.4, and the Python
+ *   matplotlib cmocean package, and have similar names.  The valid
  *   color palette names are as follows (line indexes are simply for
  *   reference):
  *   <pre>
@@ -807,6 +808,24 @@ import ucar.units.Unit;
  *     53 CRW_DHW
  *     54 StepSeq25
  *     55 HSB-Cycle
+ *     56 Ocean-algae
+ *     57 Ocean-amp
+ *     58 Ocean-balance
+ *     59 Ocean-curl
+ *     60 Ocean-deep
+ *     61 Ocean-delta
+ *     62 Ocean-dense
+ *     63 Ocean-gray
+ *     64 Ocean-haline
+ *     65 Ocean-ice
+ *     66 Ocean-matter
+ *     67 Ocean-oxy
+ *     68 Ocean-phase
+ *     69 Ocean-solar
+ *     70 Ocean-speed
+ *     71 Ocean-tempo
+ *     72 Ocean-thermal
+ *     73 Ocean-turbid
  *   </pre>
  *   By default, the 'BW-Linear' palette is used which is a gray scale
  *   color ramp from black to white.</dd>

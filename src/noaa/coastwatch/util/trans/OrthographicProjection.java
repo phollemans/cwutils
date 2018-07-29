@@ -166,7 +166,7 @@ public class OrthographicProjection
   ) throws NoninvertibleTransformException {
 
     this (SpheroidConstants.STD_RADIUS*1000, dimensions, new AffineTransform(),
-      centerLoc.lon, centerLoc.lat, 0, 0);
+      Math.toRadians (centerLoc.lon), Math.toRadians (centerLoc.lat), 0, 0);
     setAffine (centerLoc, pixelDims);
 
   } // OrthographicProjection constructor

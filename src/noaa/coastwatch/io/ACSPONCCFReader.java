@@ -58,7 +58,11 @@ import ucar.nc2.dataset.NetcdfDataset;
  *
  * @author Peter Hollemans
  * @since 3.3.0
+ *
+ * @deprecated As of version 3.4.1, format is not produced anymore, replaced
+ * by {@link CommonDataModelNCReader} compatible files.
  */
+@Deprecated
 public class ACSPONCCFReader
   extends NCReader {
 

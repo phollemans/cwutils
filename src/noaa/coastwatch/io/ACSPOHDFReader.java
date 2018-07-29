@@ -60,7 +60,11 @@ import noaa.coastwatch.util.trans.SwathProjection;
  *
  * @author Peter Hollemans
  * @since 3.2.2
+ *
+ * @deprecated As of version 3.4.1, format is not produced anymore, replaced
+ * by {@link CommonDataModelNCReader} compatible files.
  */
+@Deprecated
 public class ACSPOHDFReader
   extends HDFReader {
 

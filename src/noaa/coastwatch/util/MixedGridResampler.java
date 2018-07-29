@@ -197,6 +197,7 @@ public class MixedGridResampler
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void perform (
     boolean verbose
   ) {
