@@ -56,6 +56,7 @@ import noaa.coastwatch.gui.TabComponent;
 import noaa.coastwatch.render.EnhancementFunction;
 import noaa.coastwatch.render.LinearEnhancement;
 import noaa.coastwatch.render.LogEnhancement;
+import noaa.coastwatch.render.GammaEnhancement;
 import noaa.coastwatch.render.Palette;
 import noaa.coastwatch.render.PaletteFactory;
 import noaa.coastwatch.render.StepEnhancement;
@@ -101,6 +102,9 @@ public class EnhancementChooser
 
   /** The enhancement function type log base 10. */
   private static final String FUNCTION_LOG = "Log10";
+
+  /** The enhancement function type gamma. */
+  private static final String FUNCTION_GAMMA = "Gamma";
 
   /** The enhancement range commands. */
   private static final String NORMALIZE_COMMAND = "Norm";
@@ -304,7 +308,7 @@ public class EnhancementChooser
     functionButtonPanel.add (functionLabel, gc);
     gc.insets = new Insets (2, 0, 2, 0);
     functionCombo = new JComboBox (new Object[] {
-      FUNCTION_LINEAR, FUNCTION_STEP, FUNCTION_LOG});
+      FUNCTION_LINEAR, FUNCTION_STEP, FUNCTION_LOG, FUNCTION_GAMMA});
     GUIServices.setConstraints (gc, 1, 0, 1, 1, GridBagConstraints.HORIZONTAL, 
       0, 0);
     functionButtonPanel.add (functionCombo, gc);
@@ -504,6 +508,17 @@ public class EnhancementChooser
         setFunction (new LogEnhancement (actualRange));
       } // else if
 
+      // Convert to gamma function
+      // -------------------------
+      else if (functionType == FUNCTION_GAMMA) {
+        if (func instanceof GammaEnhancement) return;
+        if (lastAllowedRange != null) {
+          allowedRange = lastAllowedRange;
+          lastAllowedRange = null;
+        } // if
+        setFunction (new GammaEnhancement (actualRange));
+      } // if
+
       else
         throw new UnsupportedOperationException ("Unrecognized function type");
 
@@ -686,6 +701,10 @@ public class EnhancementChooser
     } // else if
     else if (func instanceof LogEnhancement) {
       functionCombo.setSelectedItem (FUNCTION_LOG);
+      stepsSpinner.setEnabled (false);
+    } // else if
+    else if (func instanceof GammaEnhancement) {
+      functionCombo.setSelectedItem (FUNCTION_GAMMA);
       stepsSpinner.setEnabled (false);
     } // else if
     else

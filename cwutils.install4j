@@ -39,18 +39,20 @@
     <entries>
       <dirEntry mountPoint="1" file="." overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="CoastWatch Utilities" excludeSuffixes="*~,.DS_Store,*#, .git*, .gitignore*, *.swp,.project,.classpath,*.xcodeproj,*.numbers" dirMode="755" overrideDirMode="true">
         <exclude>
-          <entry location="build.number" fileType="regular" />
+          <entry location="cwutils.install4j" fileType="regular" />
           <entry location="build.xml" fileType="regular" />
           <entry location="classes" fileType="regular" />
-          <entry location="cwutils.install4j" fileType="regular" />
           <entry location="cwutils.properties" fileType="regular" />
-          <entry location="data/noaa/coastwatch/tools/test" fileType="regular" />
-          <entry location="doc/api" fileType="regular" />
+          <entry location="resources" fileType="regular" />
+          <entry location="build.number" fileType="regular" />
+          <entry location="scripts" fileType="regular" />
+          <entry location="doc/users_guide" fileType="regular" />
+          <entry location="doc/.DS_Store" fileType="regular" />
           <entry location="doc/html2mdoc.xsl" fileType="regular" />
           <entry location="doc/tool_categories.txt" fileType="regular" />
-          <entry location="doc/users_guide" fileType="regular" />
-          <entry location="resources" fileType="regular" />
-          <entry location="scripts" fileType="regular" />
+          <entry location="doc/api" fileType="regular" />
+          <entry location="doc/html2latex.xsl" fileType="regular" />
+          <entry location="data/noaa/coastwatch/tools/test" fileType="regular" />
           <entry location="src" fileType="regular" />
         </exclude>
       </dirEntry>
@@ -64,7 +66,7 @@
           <entry location="bin/${compiler:cwstatusName}" fileType="launcher" />
           <entry location="extensions" fileType="regular" />
           <entry location="lib" fileType="regular" />
-          <entry location="doc/cwutils_ug_3_4_0.pdf" fileType="regular" />
+          <entry location="doc/cwutils_ug_3_4_1.pdf" fileType="regular" />
           <entry location="doc/license.txt" fileType="regular" />
           <entry location="data" fileType="regular" />
         </include>
@@ -89,6 +91,7 @@
           <entry location="bin/cwstats" fileType="launcher" />
           <entry location="bin/cwautonav" fileType="launcher" />
           <entry location="bin/hdatt" fileType="launcher" />
+          <entry location="bin/cwscript" fileType="launcher" />
           <entry location="doc/man" fileType="regular" />
         </include>
         <dependencies />

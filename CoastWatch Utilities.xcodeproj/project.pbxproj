@@ -974,6 +974,7 @@
 		E96D8C74161661420009B833 /* VariableEstimator.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = VariableEstimator.java; sourceTree = "<group>"; };
 		E96D8C75161661420009B833 /* overview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = overview.html; sourceTree = "<group>"; };
 		E9721ED818B89BAD0073918D /* OrientationAffineFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = OrientationAffineFactory.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E973CD6C212BAFD80055D725 /* GammaEnhancement.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = GammaEnhancement.java; sourceTree = "<group>"; };
 		E9749CF31FDE2C2700B6EA90 /* GridChunkProducer.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = GridChunkProducer.java; sourceTree = "<group>"; };
 		E9862E051FB421E300824C7D /* JELParser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = JELParser.java; sourceTree = "<group>"; };
 		E9875CC6161E652F00C423BB /* license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = license.txt; sourceTree = "<group>"; };
@@ -2518,6 +2519,7 @@
 				E96D8BD8161661420009B833 /* ExpressionMaskOverlay.java */,
 				E9E058FF1D19F46F00DA53C5 /* feature */,
 				E96D8BDB161661420009B833 /* FilledShapeOverlay.java */,
+				E973CD6C212BAFD80055D725 /* GammaEnhancement.java */,
 				E96D8BDC161661420009B833 /* GraphicsServices.java */,
 				E96D8BDD161661420009B833 /* GridContainerOverlay.java */,
 				E96D8BE2161661420009B833 /* IconElement.java */,

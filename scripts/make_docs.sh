@@ -73,22 +73,41 @@ fi
 # ------------------------------------
 echo "Making tool Latex pages"
 manual=users_guide/manual_pages.tex
+
 cat > $manual <<EOF
 \chapter{Manual Pages}
 \label{manual}
 EOF
-for fname in tools/*.html ; do
-  tool=`basename $fname .html`
-  echo "--> $tool"
-  $saxon \
-    tool="$tool" \
-    $fname html2latex.xsl > tools/$tool.tex 2> /tmp/err$$.txt
-  if [ $? -ne 0 ] ; then
-    echo "Error making Latex from ${fname}, message as follows:"
-    cat /tmp/err$$.txt
-    continue
-  fi
-  cat tools/$tool.tex >> $manual
+
+categories=`cat tool_categories.txt | wc -l`
+
+for (( n = 1; n <= $categories; n++ )) do
+  category="`awk -F '|' '{ print $1 }' tool_categories.txt | head -$n | tail -1`"
+  tools="`awk -F '|' '{ print $2 }' tool_categories.txt | head -$n | tail -1`"
+  echo "Formatting category $category"
+  cat >> $manual <<EOF
+\section{$category}
+EOF
+  for tool in $tools ; do
+    fname="tools/$tool.html"
+    if [ ! -f $fname ] ; then
+      echo "Skipping $tool, no HTML file ..."
+    else
+      echo "--> $tool"
+      $saxon \
+        tool="$tool" \
+        $fname html2latex.xsl > tools/$tool.tex 2> /tmp/err$$.txt
+      if [ $? -ne 0 ] ; then
+        echo "Error making Latex from ${fname}, message as follows:"
+        cat /tmp/err$$.txt
+        continue
+      fi
+      cat tools/$tool.tex >> $manual
+      cat >> $manual <<EOF
+  \newpage
+EOF
+    fi
+  done
 done
 
 # Create manual pages in Unix mdoc format
@@ -112,7 +131,33 @@ for fname in tools/*.html ; do
     rm -f man/man1/$tool.1
     continue
   fi
-  awk '{if ($0 == "BLANKLINE") {print ""} else if ($0 !~ /^[ ]*$/) {print}}' man/man1/$tool.1 | gzip -c > man/man1/$tool.1.gz
+  # We do some post-processing here because mdoc format is sensitive to
+  # spaces and blank lines.  So we remove leading and trailing spaces in
+  # the text, and blank lines outside of the "literal" blocks which should
+  # be left as verbatim text.  Also a single quote at the beginning of a line
+  # must be escaped.
+  gawk '
+    BEGIN { verbatim = 0; }
+    {
+      if (match ($0, "^\\.Bd -literal") != 0) {
+        verbatim = 1;
+      } # if
+      else if (verbatim == 1 && match ($0, "^\\.Ed") != 0) {
+        verbatim = 0;
+      } # else if
+      if (verbatim == 0) {
+        if (match ($0, "^[ ]*$") == 0) {
+          line = gensub ("^[ ]*", "", 1, $0);
+          line = gensub ("[ ]*$", "", 1, line);
+          line = gensub ("^'\''", "\\\\'\''", 1, line);
+          print line;
+        } # if
+      } # if
+      else {
+        print
+      } # else
+    } # main
+  ' man/man1/$tool.1 | gzip -c > man/man1/$tool.1.gz
   rm -f man/man1/$tool.1
 done
 

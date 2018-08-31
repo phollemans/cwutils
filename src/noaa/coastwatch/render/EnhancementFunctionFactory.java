@@ -67,6 +67,9 @@ public class EnhancementFunctionFactory {
     else if (functionType.startsWith ("step")) {
       function = new StepEnhancement (range, getSteps (functionType));
     } // else if
+    else if (functionType.startsWith ("gamma")) {
+      function = new GammaEnhancement (range);
+    } // else if
     else {
       throw new IllegalArgumentException ("Invalid function '" + 
         functionType + "'");

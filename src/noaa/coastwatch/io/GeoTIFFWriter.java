@@ -720,7 +720,8 @@ public class GeoTIFFWriter {
    * 
    * @param output the output stream for writing.
    * @param trans the earth image transform for earth location metadata.
-   * @param compress the TIFF compression type.
+   * @param compress the TIFF compression type, either COMP_NONE, COMP_DEFLATE,
+   * or COMP_PACK.
    *
    * @throws IOException if an error occurred writing to the output
    * stream.

@@ -292,7 +292,7 @@ import ucar.units.Unit;
  *
  *   <dd>Specifies color composite mode using the named variables.
  *   The data variable values are converted to colors using an
- *   individual linear enhancement function for each variable.  The
+ *   individual enhancement function for each variable.  The
  *   data values are scaled to the range [0..255] and used as the red,
  *   green, and blue components of each pixel's color.  Either this
  *   option or <b>--enhance</b> must be specified, but not both.</dd>
@@ -719,8 +719,8 @@ import ucar.units.Unit;
  *   <dd>The color enhancement function.  Data values are mapped to
  *   the range [0..255] by the enhancement function and range, and
  *   then to colors using the color palette.  The valid enhancement
- *   function types are 'linear', 'boolean', 'stepN', 'log', 'linear-reverse',
- *   'stepN-reverse', and 'log-reverse' where N is the number of steps
+ *   function types are 'linear', 'boolean', 'stepN', 'log', 'gamma', 'linear-reverse',
+ *   'stepN-reverse','log-reverse', and 'gamma-reverse' where N is the number of steps
  *   in the function, for example 'step10'.  The 'boolean' function is a
  *   shorthand way of specifying 'step2' as the function, and '0/1' 
  *   as the range, useful for data with only 0 and 1 as data values.  The 
@@ -729,7 +729,9 @@ import ucar.units.Unit;
  *   enhancement function is 'linear'.  A log enhancement may be
  *   necessary when the data value range does not scale well with a
  *   linear enhancement such as with chlorophyll concentration derived
- *   from ocean color data. </dd>
+ *   from ocean color data. A gamma enhancement may be needed when the data
+ *   values represent a brightness from 0% to 100% and compensates for the
+ *   gamma correction in computer displays. </dd>
  *
  *   <dt>-k, --background=COLOR</dt>
  *
@@ -879,10 +881,8 @@ import ucar.units.Unit;
  *   and 'fahrenheit' for temperature data, 'knots', 'meters per
  *   second' or 'm/s' for windspeed, and 'mg per m^-3' or 'kg/m-3' for
  *   concentration.  For other possible unit names, see the
- *   conventions used by the <a
- *   href="http://my.unidata.ucar.edu/content/software/udunits/index.html">Unidata
- *   UDUNITS package</a> and its <a
- *   href="http://my.unidata.ucar.edu/content/software/udunits/udunits.txt">supported
+ *   conventions used by the <a href="https://www.google.com/search?q=udunits">Unidata
+ *   UDUNITS package</a> and its <a href="https://www.google.com/search?q=udunits.txt">supported
  *   units</a> file.</dd>
  *
  * </dl>
@@ -2023,8 +2023,9 @@ public class cwrender {
 "                              pixels.\n" +
 "  -F, --function=TYPE        Set color enhancement function.  TYPE\n" +
 "                              may be 'linear', 'boolean', 'stepN', 'log',\n" +
-"                              'linear-reverse', 'stepN-reverse',\n" +
-"                              'log-reverse' where N is an integer.\n" +
+"                              'gamma', 'linear-reverse', 'stepN-reverse',\n" +
+"                              'log-reverse', 'gamma-reverse' where N is an\n" +
+"                              integer.\n" +
 "  -k, --background=COLOR     Set background color for vector plots.\n" +
 "  -M, --missing=COLOR        Draw missing data with specified color.\n" +
 "  -P, --palette=NAME         Set palette used to map data to color.\n" +

@@ -49,7 +49,7 @@ import noaa.coastwatch.util.Statistics;
  */
 public abstract class EnhancementFunction 
   extends Function 
-  implements Cloneable,java.io.Serializable {
+  implements Cloneable, Serializable {
 
   // Variables
   // ---------
@@ -189,7 +189,9 @@ public abstract class EnhancementFunction
 
   /**
    * Resets the enhancement function.  This method performs no
-   * operation, but should be overridden by the subclass.
+   * operation, but should be overridden by the subclass to set up
+   * internal variables according to the new range values and reverse
+   * flag.
    */
   protected void reset () { }
 

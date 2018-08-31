@@ -9,144 +9,224 @@
 
 <!-- Ignore these tags -->
 
-<xsl:template match="head|h1"></xsl:template>
+<xsl:template match="head|h1">
+</xsl:template>
 
 <!-- Main page header -->
 
 <xsl:template match="html">
-\newpage
-\section{<xsl:value-of select="$tool"/>} \hypertarget{<xsl:value-of select="$tool"/>}{}
-<xsl:apply-templates/>
+  <xsl:text>\subsection{</xsl:text>
+  <xsl:value-of select="$tool"/>
+  <xsl:text>} \hypertarget{</xsl:text>
+  <xsl:value-of select="$tool"/>
+  <xsl:text>}{}&#xa;</xsl:text>
+  <xsl:apply-templates/>
 </xsl:template>
 
 <!-- Section and subsection headers -->
 
 <xsl:template match="h2">
-\subsection*{\underline{<xsl:value-of select="."/>}}
+  <xsl:text>\subsubsection*{\underline{</xsl:text>
+  <xsl:value-of select="."/>
+  <xsl:text>}}&#xa;</xsl:text>
 </xsl:template>
 
 <xsl:template match="h3">
-\subsubsection*{<xsl:value-of select="."/>}
+  <xsl:text>\subsubsection*{</xsl:text>
+  <xsl:value-of select="."/>
+  <xsl:text>}&#xa;</xsl:text>
 </xsl:template>
 
 <!-- Regular paragraphs -->
 
 <xsl:template match="p">
-<xsl:apply-templates select="child::node()"/>
+  <xsl:text>\par </xsl:text>
+  <xsl:apply-templates/>
+  <xsl:text>&#xa;</xsl:text>
 </xsl:template>
 
-<!-- Special characters -->
+<!-- Replace special characters -->
 
 <xsl:template match="text()">
-  <xsl:variable name="sub1" select="replace (., '\|', '\$|\$')"/>
-  <xsl:variable name="sub2" select="replace ($sub1, '_', '\\_')"/>
-  <xsl:variable name="sub3" select="replace ($sub2, '\{', '\\{')"/>
-  <xsl:variable name="sub4" select="replace ($sub3, '\}', '\\}')"/>
-  <xsl:variable name="sub5" select="replace ($sub4, '--([^ ]+)', '\\mbox{-{-}$1}')"/>
-  <xsl:variable name="sub6" select="replace ($sub5, '&gt;', '\$&gt;\$')"/>
-  <xsl:variable name="sub7" select="replace ($sub6, '&lt;', '\$&lt;\$')"/>
-  <xsl:variable name="sub8" select="replace ($sub7, '%', '\\%')"/>
-  <xsl:variable name="sub9" select="replace ($sub8, '&amp;', '\\&amp;')"/>
-  <xsl:variable name="sub10" select="replace ($sub9, '&quot;([^&quot;]+)&quot;', '``$1&apos;&apos;&apos;&apos;')"/>
-  <xsl:variable name="sub11" select="replace ($sub10, '\^', '\\^{}')"/>
-  <xsl:variable name="sub12" select="replace ($sub11, '\]', '{]}')"/>
-  <xsl:variable name="sub13" select="replace ($sub12, '\[', '{[}')"/>
-  <xsl:variable name="sub14" select="replace ($sub13, '&#8212;', '--')"/>
-  <xsl:value-of select="normalize-space ($sub14)"/>
+  <xsl:variable name="result" select="."/>
+
+  <!-- Transform | to $|$ -->
+  <xsl:variable name="result" select="replace ($result, '\|', '\$|\$')"/>
+
+  <!-- Transform _ to \_ -->
+  <xsl:variable name="result" select="replace ($result, '_', '\\_')"/>
+
+  <!-- Transform { to \{ -->
+  <xsl:variable name="result" select="replace ($result, '\{', '\\{')"/>
+
+  <!-- Transform } to \} -->
+  <xsl:variable name="result" select="replace ($result, '\}', '\\}')"/>
+
+  <!-- Transform (dash)(dash)WORD to \mbox{-{-}WORD} -->
+  <xsl:variable name="result" select="replace ($result, '--([^ ]+)', '\\mbox{-{-}$1}')"/>
+
+  <!-- Transform > to $>$ -->
+  <xsl:variable name="result" select="replace ($result, '&gt;', '\$&gt;\$')"/>
+
+  <!-- Transform < to $<$ -->
+  <xsl:variable name="result" select="replace ($result, '&lt;', '\$&lt;\$')"/>
+
+  <!-- Transform % to \% -->
+  <xsl:variable name="result" select="replace ($result, '%', '\\%')"/>
+
+  <!-- Transform % to \% -->
+  <xsl:variable name="result" select="replace ($result, '&amp;', '\\&amp;')"/>
+
+  <!-- Transform "WORD" to ``WORD'' -->
+  <xsl:variable name="result" select="replace ($result, '&quot;([^&quot;]+)&quot;', '``$1&apos;&apos;&apos;&apos;')"/>
+
+  <!-- Transform ^ to \^{} -->
+  <xsl:variable name="result" select="replace ($result, '\^', '\\^{}')"/>
+
+  <!-- Transform ] to {]} -->
+  <xsl:variable name="result" select="replace ($result, '\]', '{]}')"/>
+
+  <!-- Transform [ to {[} -->
+  <xsl:variable name="result" select="replace ($result, '\[', '{[}')"/>
+
+  <!-- Transform (emdash) to (dash)(dash) -->
+  <xsl:variable name="result" select="replace ($result, '&#8212;', '--')"/>
+
+  <!-- Transform ~ to \textasciitilde{} -->
+  <xsl:variable name="result" select="replace ($result, '&#126;', '\\textasciitilde{}')"/>
+
+  <xsl:value-of select="$result"/>
 </xsl:template>
 
 <!-- Unordered and ordered lists -->
 
 <xsl:template match="ul">
-\begin{itemize}
-<xsl:apply-templates select="child::node()"/>
-\end{itemize}
+  <xsl:text>\begin{itemize}&#xa;</xsl:text>
+  <xsl:apply-templates/>
+  <xsl:text>\end{itemize}&#xa;</xsl:text>
 </xsl:template>
 
 <xsl:template match="ol">
-\begin{enumerate}
-<xsl:apply-templates select="child::node()"/>
-\end{enumerate}
+  <xsl:text>\begin{enumerate}&#xa;</xsl:text>
+  <xsl:apply-templates/>
+  <xsl:text>\end{enumerate}&#xa;</xsl:text>
 </xsl:template>
 
 <xsl:template match="li">
-\item <xsl:apply-templates select="child::node()"/>
-
+  <xsl:text>\item </xsl:text>
+  <xsl:apply-templates/>
+  <xsl:text>&#xa;</xsl:text>
 </xsl:template>
 
 <!-- Tables -->
 
 <xsl:template match="table">
 
-\begin{tabular}{<xsl:for-each select="tr/th">|l</xsl:for-each>|}
-\hline
-<xsl:for-each select="tr/th[position() &lt; last()]">\textbf{<xsl:apply-templates select="child::node()"/>} &amp; </xsl:for-each>
-<xsl:for-each select="tr/th[last()]">\textbf{<xsl:apply-templates select="child::node()"/>} \\ </xsl:for-each>
-\hline
-<xsl:for-each select="tr[td]">
-<xsl:for-each select="td[position() &lt; last()]"><xsl:apply-templates select="child::node()"/> &amp; </xsl:for-each>
-<xsl:for-each select="td[last()]"><xsl:apply-templates select="child::node()"/> \\ </xsl:for-each>
-\hline
-</xsl:for-each>
-\end{tabular}
+  <xsl:text>\begin{tabular}{</xsl:text>
+  <xsl:for-each select="tr/th">
+    <xsl:text>|l</xsl:text>
+  </xsl:for-each>
+  <xsl:text>|}&#xa;</xsl:text>
+  <xsl:text>\hline&#xa;</xsl:text>
+
+  <xsl:for-each select="tr/th[position() &lt; last()]">
+    <xsl:text>\textbf{</xsl:text>
+    <xsl:apply-templates/>
+    <xsl:text>} &amp; </xsl:text>
+  </xsl:for-each>
+
+  <xsl:for-each select="tr/th[last()]">
+    <xsl:text>\textbf{</xsl:text>
+    <xsl:apply-templates/>
+    <xsl:text>} \\&#xa;</xsl:text>
+  </xsl:for-each>
+
+  <xsl:text>\hline&#xa;</xsl:text>
+
+  <xsl:for-each select="tr[td]">
+
+    <xsl:for-each select="td[position() &lt; last()]">
+      <xsl:apply-templates/>
+      <xsl:text> &amp; </xsl:text>
+    </xsl:for-each>
+
+    <xsl:for-each select="td[last()]">
+      <xsl:apply-templates/>
+      <xsl:text> \\&#xa;</xsl:text>
+    </xsl:for-each>
+
+  </xsl:for-each>
+
+  <xsl:text>\hline&#xa;</xsl:text>
+  <xsl:text>\end{tabular}&#xa;</xsl:text>
 
 </xsl:template>
 
 <!-- Special fonts -->
 
-<xsl:template match="b[following-sibling::text()[matches (string (.), '^[.,:;]')]]">
-\textbf{<xsl:apply-templates select="child::node()"/>}</xsl:template>
-
 <xsl:template match="b">
-\textbf{<xsl:apply-templates select="child::node()"/>}
+  <xsl:text>\textbf{</xsl:text>
+  <xsl:apply-templates/>
+  <xsl:text>}</xsl:text>
 </xsl:template>
-
-<xsl:template match="code[following-sibling::text()[matches (string (.), '^[.,:;]')]]">
-{\tt <xsl:apply-templates select="child::node()"/>}</xsl:template>
 
 <xsl:template match="code">
-{\tt <xsl:apply-templates select="child::node()"/>}
+  <xsl:text>{\tt </xsl:text>
+  <xsl:apply-templates/>
+  <xsl:text>}</xsl:text>
 </xsl:template>
-
-<xsl:template match="i[following-sibling::text()[matches (string (.), '^[.,:;]')]]">
-\emph{<xsl:apply-templates select="child::node()"/>}</xsl:template>
 
 <xsl:template match="i">
-\emph{<xsl:apply-templates select="child::node()"/>}
+  <xsl:text>\emph{</xsl:text>
+  <xsl:apply-templates/>
+  <xsl:text>}</xsl:text>
 </xsl:template>
 
-<xsl:template match="u[following-sibling::text()[matches (string (.), '^[.,:;]')]]">
-\underline{<xsl:apply-templates select="child::node()"/>}</xsl:template>
-
 <xsl:template match="u">
-\underline{<xsl:apply-templates select="child::node()"/>}
+  <xsl:text>\underline{</xsl:text>
+  <xsl:apply-templates/>
+  <xsl:text>}</xsl:text>
 </xsl:template>
 
 <!-- Special formatting -->
 
-<xsl:template match="br">\\
+<xsl:template match="br">
+  <xsl:text>\\</xsl:text>
 </xsl:template>
 
 <xsl:template match="pre">
-\begin{verbatim}
-<xsl:value-of select="."/>
-\end{verbatim}
+  <xsl:text>\begin{verbatim}</xsl:text>
+  <xsl:value-of select="."/>
+  <xsl:text>\end{verbatim}&#xa;</xsl:text>
 </xsl:template>
 
 <!-- Definition lists -->
 
 <xsl:template match="dl">
-\begin{description}
-<xsl:apply-templates select="child::node()"/>
-\end{description}
+  <xsl:text>\begin{description}&#xa;</xsl:text>
+  <xsl:apply-templates/>
+  <xsl:text>\end{description}&#xa;</xsl:text>
 </xsl:template>
 
 <xsl:template match="dt">
-\item[<xsl:apply-templates select="child::node()"/>] </xsl:template>
-<xsl:template match="dd"><xsl:apply-templates select="child::node()"/></xsl:template>
+  <xsl:text>\item[</xsl:text>
+  <xsl:apply-templates/>
+  <xsl:text>] </xsl:text>
+</xsl:template>
+
+<xsl:template match="dd">
+  <xsl:apply-templates/>
+  <xsl:text>&#xa;</xsl:text>
+</xsl:template>
+
+<!-- Hypertext references -->
 
 <xsl:template match="a">
-\href{<xsl:value-of select="@href"/>}{<xsl:apply-templates select="child::node()"/>}
+  <xsl:text>\href{</xsl:text>
+  <xsl:value-of select="@href"/>
+  <xsl:text>}{</xsl:text>
+  <xsl:apply-templates/>
+  <xsl:text>}</xsl:text>
 </xsl:template>
 
 </xsl:stylesheet>

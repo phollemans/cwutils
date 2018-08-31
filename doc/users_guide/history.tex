@@ -1,668 +1,576 @@
 \chapter{History of Changes}
 \label{history}
 
-\section*{Version 1, 1997/10/01 (internal release)}
-
-\section*{Version 2, 1998/09/09 (first public release)}
-
+\renewcommand{\thesection}{}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\makeatletter
+\def\@seccntformat#1{\csname #1ignore\expandafter\endcsname\csname the#1\endcsname\quad}
+\let\sectionignore\@gobbletwo
+\let\latex@numberline\numberline
+\def\numberline#1{\if\relax#1\relax\else\latex@numberline{#1}\fi}
+\makeatother
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Version 3.4.1 -- October 2018}
 
-\section*{Version 2.2, 1999/01/19}
-
+\hspace{0.4cm} {\bf Graphical tools}
 \begin{itemize}
 
-  \item cwf.c:\\ 
-  Fixed file close bug in decompression routine\\ 
-  Added more NOAA satellite codes (NOAA-15, -16, -17) 
+  \item CDAT now computes point data overlay statistics in a background thread
+  for a faster user experience.
 
-  \item Created composite program, cwfcomp
+  \item CDAT has new oceanographic palettes derived from the Python matplotlib
+  cmocean package.
 
-  \item cwftoarc.c:\\ 
-  Corrected lower-left pixel position and cell size\\ 
-  Added binary output option\\ 
-  Added polar projection conversion\\ 
-  Added projection specifications note 
+  \item The CDAT color enhancement functions have a new option ``Gamma" for
+  displaying visible band satellite data.  The gamma function accounts for
+  computer display gamma correction when showing visible data scaled between
+  0% and 100% intensity values.
 
-  \item cwftogif.c:\\ 
-  Changed IR default min\\ 
-  Changed brightness temperature legend 
 
-  \item cwproj.c:\\ 
-  Modified polar projection calculation for Alaska file bugs\\ 
+
+
+
+
 
 \end{itemize}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section*{Version 2.3, 1999/10/18}
-
+\hspace{0.4cm} {\bf Command line tools}
 \begin{itemize}
 
-  \item cwfcomp.c:\\ 
-   Added -b option to allow badval specification\\ 
-   Changed output file date to match last file 
+    \item The cwdownload and cwstatus tools now support SSL network connections
+    via the HTTPS protocol.
 
-  \item cwf.c:\\ 
-   Added f to various float constants\\ 
-   Added test for near-zero IR values\\ 
-   Simplified round function\\ 
-   Fixed bug in cw\_compress for files with cols $<$ 512\\ 
-   Added calibration guess for older WCRN files 
+    \item A new tool called {\em cwscript} is available for running scripts
+    in BeanShell (\url{http://beanshell.org}) that can make calls to the
+    CoastWatch Utilities API.
 
-  \item cwfnav.c:\\ 
-   Fixed usage message 
+    \item The cwregister tool has been improved and now runs up to 1.9x faster.
 
-  \item cwftogif.c cwftohdf.c cwftonc.c cwftoraw.c cwfval.c cwproj.c:\\ 
-   Simplified round function 
+    \item The cwrender tool has a new enhancement type 'gamma' for use with
+    visible band satellite data.
 
-  \item cwproj.c:\\ 
-   Added corrections for WCRN's linear files 
 
-  \item cwftogif.c: \\ 
-  Modified graphics plane layering, reformatted and commented\\ 
-  Added ramsdis color palette for CH4 IR 
 
-  \item cwftohdf.c: Completely rewritten
 
-  \item Created new HDF information routine: hdfinfo
-
-  \item Created new land masking routine, cwflmask
-
-  \item Updated Makefile for new HDF and netCDF releases
 
 \end{itemize}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section*{Version 2.4, 2001/06/21 (internal release)}
-
+\subsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
-  \item Changed Makefile to include cwproj.c in libcwf.a
+  \item The CDAT window had an issue preserving the view contents after
+  resizing -- it now works more like Google Earth.
 
-  \item Created cwflmaskdb routine
+  \item CDAT point data overlay display now correctly saves overlay changes
+  when the point data chooser dialog window is closed.
 
-  \item cwproj.c: Modified for linear lat/lon header errors
+  \item The automatic documentation generation system was re-written to
+  correct various user's guide and manual page formatting issues.
 
-  \item Fixed hdfinfo and cwftohdf usage messages
 
-  \item cwf.c: Added orbit\_type ``both'' and channel\_number
-  ``sst\_multi''
 
-  \item cwftohdf.c: Added orbit\_type ``both'' and channel\_number
-  ``sst\_multi''
 
-  \item cwf.c: Added flat file support, reading only
-
-  \item Moved cwftohdf to cwftocwhdf
-
-  \item Moved hdfinfo to cwhdfinfo
-
-  \item Fixed CWclone bug in hcwf library
-
-  \item Added Julian day printing to cwhdfinfo
 
 \end{itemize}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Version 3.4.0 -- March 2018}
 
-\section*{Version 3.1.0, 2002/07/19}
+\subsection*{\bigicon{box_software} Updates}
 
+\hspace{0.4cm} {\bf Graphical tools}
 \begin{itemize}
 
-  \item Implemented in Java using Java native interface to CWF and
-  GCTP code.
+  \item CDAT has a new menu item {\gui Open Recent} under the {\gui File} menu,
+  with a list of recently opened files for quick access.
 
-  \item Now uses HDF4 via the HDF JNI calls.
+  \item CDAT has new items in the {\gui View} menu for controlling the data
+  view, copying the view zoom between tabs, and showing/hiding the top toolbar
+  and left-side control tabs.
 
-  \item Now supports swath data.
+  \item Tabs in CDAT now have a little x close button built into the tab.
+
+  \item The documentation for CDAT now has a section on setting memory limits
+  in the user preferences.
 
 \end{itemize}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section*{Version 3.1.1, 2002/10/17}
-
+\hspace{0.4cm} {\bf Command line tools}
 \begin{itemize}
 
-  \item Added rendering.
- 
-  \item Compiled shared libraries for Windows and Solaris.
+  \item The cwmath tool has been largely re-written to improve performance.
+  The tool now processes 2D chunks of data rather than individual rows, and
+  uses a new Java Language math expression syntax.  An emulation parser mode
+  supports legacy expressions.  New options can be used to fully take advantage
+  of the performance increase and specify a greater variety of output variable
+  types without having to use a template variable: -{-}scale none,
+  -{-}skip-missing, -{-}missing, -{-}parser, and -{-}size int/uint/long/ulong/double.
+
+  \item The cwrender tool now has a -{-}font option to set the legend and overlay
+  font and a -{-}font-list option to list system-specific fonts available.
+
+  \item The user's guide now has a section on hidden command line options for
+  the command line tools (after the tool manual pages), to be used for
+  performance tuning.
 
 \end{itemize}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section*{Version 3.1.2, 2002/12/30}
-
+\subsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
-  \item Optimized coordinate translation code, rendering now runs 20\%
-  faster.
+  \item CDAT full screen mode now works correctly on multi-monitor setups.
 
-  \item Modified rendering normalization for viewable data only.
+  \item Reading of time axis metadata is now more complete for NetCDF 4 files.
 
-  \item Added grid overlay label drop shadows for better label
-  legibility.
+  \item The cwgraphics tool now correctly omits the scale factor and offset
+  for the graphics byte variable it creates.  Scale and offset are reserved
+  for packed data only.
 
-  \item Removed miter problems in shape drawings and coast lines.
+  \item The cwregister tool now distinguishes between a file not found error
+  and a format error for the master file.
 
-  \item Added gridded dataset tile read/write caching for improved
-  memory performance.
+  \item Detection of link errors with the native HDF library code is now more
+  user-friendly.
 
-  \item Added NDVI palette.
-
-  \item Corrected bitmask rendering for PDF files.
-
-  \item Added registration tool for mapping between projections.
-
-  \item Added generic bitmask rendering.
-
-  \item Added navigation, master, sampling tools.
-
-  \item Modified download tool command line parameters for regular
-  expression matching.
-
-  \item Added angle calculation tool.
-
-  \item Improved coastline selection and rendering performance using
-  binned GMT HDF dataset.
+  \item The bundled Java VM version has been updated to 1.8.0\_162.
 
 \end{itemize}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Version 3.3.2 -- October 2017}
 
-\section*{Version 3.1.3, 2003/03/31}
+\subsection*{\bigicon{box_software} Updates}
+
+\hspace{0.4cm} {\bf Graphical tools}
 
 \begin{itemize}
 
-  \item Added new tool for server status monitoring.
+  \item CDAT optionally checks on startup if software update is available.
 
-  \item Optimized download and status tools for database usage and
-  updated command line options.
-
-  \item Added GeoTIFF output for mapped projection data to cwrender.
-
-  \item Added NOAA 1b GAC/LAC AVHRR input.
-
-  \item Fixed various bugs and made performance improvements.
-
-  \item Updated Unix startup script for headless operations.
+  \item CDAT now displays iQuam SST quality monitoring point data files and
+  computes the statistics between image and point data attributes.  Use
+  by adding a shape overlay to an image and selecting an iQuam SST data file.
 
 \end{itemize}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section*{Version 3.1.4, 2003/05/16}
+\hspace{0.4cm} {\bf File formats and I/O}
 
 \begin{itemize}
 
-  \item Added two new tools: cwmath and cwcomposite.
+  \item GeoTIFF, JPEG, GIF, PNG, and PDF rendered files have extra metadata tags
+  that describe the software version and options used.
 
-  \item Added MacOS X support in the dynamic JNI libraries and wrapper
-  script.
+  \item New support for NetCDF 4 files in level 2 swath projection and
+  non-geographic dimensions.
 
-  \item Fixed dateline crossing navigation problems in NOAA 1b readers
-  -- still needs refinement for near-polar areas.
+  \item NetCDF 4 files now have better support for grid mapped projections in
+  the CF metadata.
 
-  \item Added basic GSHHS polygon rendering code to BinnedGSHHSReader
-  -- still needs refinement for bin boundaries and polygons broken by
-  projection distortion.
+  \item HDF is now updated to the HDF Java 3.2.1 version.
 
-  \item Added support for rendering progress to EarthDataView in
-  preparation for CDAT operations.
+  \item Data file opening now correctly reports an out of memory issue if it
+  occurs while identifying the file type.
 
-  \item Added GLERL palettes ``GLERL-Archive'' and
-  ``GLERL-30-Degrees'' palettes to the rendering tool and ``NDVI''
-  palette.
-
-  \item Added ``-{-}age'' option to download tool for specifying the
-  desired maximum age of the data in hours.
-
-  \item Added file chooser filters for ``.hdf'' and ``.cwf'' files in
-  the cwmaster tool for easier use.
-
-  \item Added 3D logos to rendering output.
+  \item GeoTIFF output now supports UTM projection data.
 
 \end{itemize}
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section*{Version 3.1.5, 2003/09/03}
+\hspace{0.4cm} {\bf Command line tools}
 
 \begin{itemize}
 
-  \item Extended GeoTIFF output in cwrender to generate a paletted
-  file when no overlays are used, and such that the ImageDescription
-  TIFF tag contains a mapping equation from palette index to data
+  \item Manual page for cwsample now correctly shows how to output to the
+  terminal.
+
+  \item Manual page for cwcomposite clarifies use of -{-}method option.
+
+  \item The cwregister tool has two new options -{-}srcfilter and -{-}srcexpr
+  to limit pixels used from the source data in registration.
+
+  \item The cwrender tool now has a -{-}date option to override the plot legend
+  date in cases where the file metadata is incorrect or unavailable.
+
+  \item The cwstats tool now has a -{-}polygon option that computes statistics
+  within a polygon boundary.
+
+  \item The cwrender tool has a new -{-}scalewidth option to explicitly set the
+  width of the color scale legend.  This is useful so that a series of plots
+  match in overall width.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+  \item Long text lines in plot legends are now wrapped.
+
+  \item NetCDF 4 file writing now properly includes missing value attribute
+  for variable data.
+
+  \item NetCDF 4 float and double types now read with full precision formatting.
+
+  \item NetCDF 4 files with 4D and 5D variables are read more reliably.
+
+  \item GRIB files with variables names containing double underscores now read
+  correctly.
+
+  \item The cwregister tool performance is now greatly improved in some cases
+  where source and destination data is chunked.
+
+  \item Topographic and other lines are now drawn more reliably on plots in
+  geographic projection.
+
+  \item NetCDF 4 data is now correctly displayed in the case where a
+  cylindrical projection is used with irregularly spaced latitude and longitude
+  axes.
+
+  \item The color scale legend in PDF output plots has an improved appearance
+  in onscreen PDF readers.
+
+  \item Open NetCDF files that are no longer needed are now properly closed.
+
+  \item GeoTIFF ModelTransformationTag values have been updated to correct
+  a 0.5 pixel error.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 3.3.1 -- January 2016}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\hspace{0.4cm} {\bf Graphical tools}
+
+\begin{itemize}
+
+  \item Added ability in CDAT to save/recall window size since the last time
+  the application was run.  Also added menu options to set window to various
+  predefined sizes or a custom size.
+
+  \item Added preference options in CDAT to allow the user to specify the
+  maximum Java Virtual Machine heap size for dynamic memory allocation, and
+  a cache size for data tiles read from HDF and NetCDF files.  This allows CDAT
+  to better read files with large compressed data chunks, and users who need to
+  have many files open at once to better manage their memory requirements.
+
+  \item Bitmask overlays in CDAT now handle up to 32-bit integer mask values.
+  This is much better for cloud mask testing than the original maximum value
+  of 255.
+
+  \item Updated latitude/longitude line labelling algorithm to handle full-disk
+  projections such as orthographic and near-size perspective.  The new
+  algorithm places line labels in the center of the image rather than at the
+  edges.
+
+  \item Added an experimental scripting console to CDAT that allows users to
+  run their own custom code within CDAT using Java language syntax.  All the
+  APIs documented in the CoastWatch Utilities are available.
+
+\end{itemize}
+
+\hspace{0.4cm} {\bf File formats and I/O}
+
+\begin{itemize}
+
+  \item Added NetCDF 4 file saving from cwexport and CDAT.  NetCDF 4 files are
+  written with CF-1.4 metadata, and compressed in chunks.  This is an
+  alternative to NetCDF 3 files which do not support compression.
+
+  \item Improvements for reading ACSPO NetCDF and HDF format files, both
+  polar orbiting and geostationary data.
+
+  \item Added end of data capture to time period read from NOAA 1b format
+  files.  Previously only start of data capture was read.
+
+  \item Added support for reading data that is written from south to north
+  and west to east.  Some data providers prefer this order, and data appeared
+  upside-down in CDAT and other tools.
+
+\end{itemize}
+
+\hspace{0.4cm} {\bf Command line tools}
+
+\begin{itemize}
+
+  \item Added Unix man pages for all tools.
+
+  \item Added identification of file reading module used to recognize a file
+  format to the output of cwinfo.  Also improved output spacing when
+  encountering long variable names.
+
+  \item Improved the output of registration in cwregister when time-sequential
+  swaths are being registered to the same master and then combined with
+  cwcomposite.  Previously, single-pixel gaps existed between time-sequential
+  swaths.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+  \item Fixed issues with memory leaking when closing some file formats.  This
+  was resulting in an ``out of heap space'' error message.
+
+  \item Many internal documentation and unit testing updates.
+
+  \item Fixed Java VM splash screen in graphical tools to reliably indicate
+  loading delays.
+
+  \item Fixed issue with Java VM crashing due to multiple threads accessing
+  native HDF 4 and 5 libraries.
+
+  \item Fixed error when performing a point survey.
+
+  \item Fixed startup issue on some Windows machines when attempting to
+  read user preferences file.
+
+  \item Fixed numerical issues in registration when the source file contains
+  data on either side of the -180/+180 longitude boundary.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 3.3.0 -- October 2013}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\hspace{0.4cm} {\bf Graphical tools}
+
+\begin{itemize}
+
+  \item Added support for loading and saving of {\em profiles} in CDAT --
+  groups of enhancements and overlays.
+
+%%  \item Added clipboard support in CDAT for matching view scale parameters.
+
+\end{itemize}
+
+\hspace{0.4cm} {\bf File formats and I/O}
+
+\begin{itemize}
+
+  \item Updated file handling for Mac OS X 10.5+ operating system.
+
+  \item Removed read support for the CoastWatch IMGMAP file format.
+
+  \item Updated ACSPO HDF 4 reading for new VIIRS sensor and non-chunked
+  compressed data files.
+
+  \item Added ability to read ACSPO NetCDF 4 data files.
+
+  \item Added NetCDF 3 with CF-1.4 metadata as an export data format in
+  cwexport with (optional CW and DCS metadata).
+
+  \item Added read support in all tools for data files in NetCDF 4 with CF-1.4
+  variable and CW metadata.
+
+  \item Updated to use the new Java HDF 2.9 interface with native 32- and
+  64-bit HDF 4 and 5 libraries.
+
+  \item Added read support in all tools for data files in NetCDF 4 with L2P
+  metadata.
+
+  \item Added support for memory caching when reading NetCDF 4 data files.
+
+\end{itemize}
+
+\hspace{0.4cm} {\bf Command line tools}
+
+\begin{itemize}
+
+  \item Added a print option to cwinfo for Common Data Model coordinate
+  system information (if available).
+
+  \item Added extra options to cwrender for: (i) rendering with custom color
+  palettes specified by a file or directly on the command line, (ii) adding
+  watermark text to the image, and (iii) manually specifying the data scale
+  tick marks.
+
+  \item Converted all GCTP coordinate transform code to Java to run on 64-bit
+  Java VMs for all tools.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+  \item Fixed the error message ``no parent window'' when opening data files.
+
+  \item Fixed problem with reliably closing HDF 4 files.
+
+  \item Corrected direction error in vector symbols (winds, currents, etc).
+
+  \item Fixed non-functional State Plane Coordinate System support.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 3.2.3 -- March 2009}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\begin{itemize}
+
+  \item Added support for NOAA 1b KLMN data files with AMSU-A,
+    AMSU-B, and MHS sensor data.
+
+  \item Added informational ``Reading file information'' message
+    when opening large files in CDAT.
+
+  \item Updated to use the netCDF Java library 2.2.22 for
+    improved GRIB 2 file support.
+
+  \item Improved expression parsing in cwmath to allow for symbol
+    characters in variable names, such as minus signs.
+
+  \item Added geometric mean composite and explicit command line
+    ordering options in cwcomposite tool.
+
+  \item Added 64-bit IEEE floating point output option in
+    cwangles tool.
+
+  \item Created tool to automatically test command line tools and
+    options (work in progress).
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+  \item Corrected problem with reading CoastWatch HDF swath
+    geolocation data.  This was causing an error when displaying
+    or working with CoastWatch HDF swath projection data files.
+
+  \item Regenerated HDF land mask files for use with
+    autonavigation.  The cwautonav tool was failing when
+    encountering navigation points with latitude $>$ 45 degrees.
+
+  \item Fixed problem with ACSPO HDF file buoy data variables
+    being read and displayed in CDAT.
+
+  \item Fixed problem with full orbit FRAC data files from Metop.
+    Opening a full orbit file was resulting in a very long wait
+    and CDAT becoming unresponsive.
+
+  \item Fixed out of memory problems with opening and closing
+    many large files in CDAT.
+
+  \item Fixed unsupported file format error when reading TOVS
+    data files with no archive header.
+
+  \item Corrected ACSPO file I/O routines to read both orbit and
+    granule metadata conventions.
+
+  \item Corrected overflow error in cwdownload byte count for
+    large file transfers.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 3.2.2 -- November 2007}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\hspace{0.4cm} {\bf Graphical tools}
+
+\begin{itemize}
+
+  \item Improved visibility of shape drawing in CDAT during zoom and
+  annotation operations.
+
+  \item Added full screen data view mode in CDAT.
+
+  \item Added navigation analysis panel in CDAT.
+
+  \item Added data reference grid overlays for drawing lines at
+  regular image row and column spacings.
+
+  \item Added a warning dialog in CDAT when navigation correction is
+  about to modify a data file.
+
+  \item Improved file open/save functionality in the CoastWatch Master
+  Tool (cwmaster).
+
+\end{itemize}
+
+\hspace{0.4cm} {\bf File formats and I/O}
+
+\begin{itemize}
+
+  \item Added support for reading NOAA/NESDIS AVHRR Clear-Sky
+  Processor for Oceans (ACSPO) HDF data files.
+
+  \item Modified ArcGIS binary grid header writer to include ``nbits''
   value.
 
-  \item Corrected cwimport so that the ``pass\_type'' attribute is
-  correctly written when the metadata version is $<$ 3.
+  \item Added support for reading NOAA 1b High Resolution Infrared
+  Radiation Sounder (HIRS) data from NOAA KLMNN' satellites.
 
-  \item Corrected the text output from cwexport to write ``NaN'' for
-  invalid values.
+  \item Modified CoastWatch HDF writing to handle writing explicit
+  lat/lon values for earth location data.
 
-  \item Corrected a 0.5 pixel offset problem in image overlay
-  rendering.
+  \item Modified netCDF file reading to handle data with greater than
+  two dimensions as a set of 2D arrays.
 
-  \item Added land polygon filling algorithms for cwmaster (by
-  default) and cwrender (by using -{-}coast).
+  \item Added ``scan\_time'' variable to NOAA 1b file variables.
 
-  \item Added -{-}operator option in cwstatus for verbose operator
-  messages.
+  \item Modified NOAA 1b file reading to read only the largest
+  contiguous run of valid scan lines.
 
-  \item Added bitwise or/and functions in cwmath.
+  \item Added support for reading erroneous NOAA-15 data files from
+  CLASS that indicate the wrong file version in the header.
 
-  \item Added new ``cwgraphics'' tool to generate standard CoastWatch
-  graphics overlays.
-
-  \item Modified cwdownload to more gracefully handle connection
-  errors and network timeouts.
+  \item Added checks for spheroid compatibility in GCTP map
+  projections.
 
 \end{itemize}
 
+\hspace{0.4cm} {\bf Command line tools}
+
+\begin{itemize}
+
+  \item Added step sequential color palette for East Coast Node
+  chlorophyll data.
+
+  \item Added version printing option ``-{-}version'' to all command
+  line tools.
+
+  \item Added the ``-{-}copy'' option to cwimport so that entire
+  variables can be copied from one file to another.
+
+  \item Added median value computation results to the output of the
+  cwstats command.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+  \item Fixed problem with overlay groups not updating between CDAT
+  tabs.
+
+  \item Fixed problem with directory refresh on file open in CDAT.
+
+  \item Fixed problems with box surveys in CDAT that were not
+  correctly surveying very small boxes of pixels.
+
+  \item Fixed some problems with earth location reverse lookup in full
+  orbit swath datasets.
+
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Version 3.2.1 -- November 2006}
 
-\section*{Version 3.1.6, 2003/12/06}
-
-\begin{itemize}
-
-  \item Fixed space in resource path problem in Windows.
-
-  \item Added support for AIX and IRIX.
-
-  \item Added a resize bar for cwstatus between the online data list
-  and data coverage / data preview panels.
-
-  \item Added the cwcoverage tool for showing region coverage plots
-  (need to add ground station coverage circle feature).
-
-\end{itemize}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section*{Version 3.1.7, 2004/06/19}
-
-\begin{itemize}
-
-  \item Updated TeraScan HDF import for equirectangular projections
-  and spheroid detection.
-
-  \item Changed EarthVectorReader to EarthVectorSource.
-
-  \item Moved file path creation to IOServices.
-
-  \item Created ContourGenerator and TopographyOverlay classes and
-  added contouring to cwrender.
-
-  \item Changed command line tools to split multi-parameter options on
-  regular expression, including ',' and '/'.
-
-  \item Added splash screen for cwmaster and cwstatus.
-
-  \item Added support in CWHDFReader for explicit lat/lon data rather
-  than polynomial coefficients.
-
-  \item Changed use of Vector in many classes to ArrayList for better
-  performance.
-
-  \item Added support for unsigned HDF and CWF variable data.
-
-  \item Modified data color scale in cwrender for better log scale
-  behaviour.
-
-  \item Modified cwmaster and cwstatus batch files to run with the
-  Windows look and feel.
-
-  \item Fixed automatic center calculation problem in cwcoverage.
-
-  \item Fixed rounding problem in EarthDataViewPanel.TrackBar.
-
-  \item Added build file for ant.
-
-  \item Now using the Java install4j wizard to create
-  installation packages.
-
-  \item Re-coded and extended the CoastWatch Data Analysis Tool to
-  work with the Java API. In addition to its 0.7a version, CDAT now
-  has annotation and navigation capabilities, online help, GeoTIFF
-  output, topography overlays, generic bitmask overlays, overlay
-  groups, support for swath files, and more. CDAT is now an integrated
-  part of the package.
-
-  \item Modified the cwstatus menus to allow users to connect to a
-  different server.
-
-  \item Removed the cwrender preview option -- it was causing problems
-  with headless operations.
-
-  \item Updated online documentation in cwstatus and cwmaster.
-
-  \item Replaced palette and RGB database files with XML versions.
-
-  \item Added the -{-}template option to cwmath so that users may use an
-  existing variable as a template for the new variable rather than
-  having to specify all of its properties.
-
-  \item Added an update agent to graphical tools that informs the user
-  if a software update is available.
-
-\end{itemize}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section*{Version 3.1.8, 2004/11/25}
-
-\subsection*{Updates}
-\begin{itemize}
-
-  \item Extended data caching in I/O routines to handle arbitrary size
-  data arrays. Previously, some utilities would memory-thrash when
-  faced with a large column count.
-
-  \item Renamed various SatelliteXXX classes to EarthXXX to mirror
-  more generality in metadata.
-
-  \item Updated I/O for new metadata specifications, including
-  multiple time periods and composite attributes.
-
-  \item Modified the default metadata version to 3.2. Now by default,
-  new files created with the utilities are no longer compatible with
-  the older CDAT version 0.7a and earlier.
-
-  \item Updated coastline data files to GSHHS v1.3 and corrected known
-  polygon fill problems on the US East Coast, Africa, and South
-  America.
-
-  \item Updated ETOPO5 topography database and corrected problems with
-  contours fills producing strange bullseye artifacts.
-
-  \item Added a -{-}timeout option to cwdownload to allow the user to
-  select a network timeout value.
-
-  \item Added a -{-}transform option to cwinfo to print earth transform
-  information.
-
-  \item Modified the behaviour of cwcomposite to append dataset
-  metadata together rather than simply use the last file's global
-  metadata (time, satellite, etc). The -{-}pedantic option was also
-  added to allow exact tracking of source dataset metadata.
-
-  \item Added a -{-}inputs option to cwcomposite to allow the user to
-  specify a list of files in a text file rather than on the command
-  line.
-
-  \item Recompiled the HDF library for Linux to allow up to 256 open
-  files. This allows the cwcomposite to handle more than 31 input
-  datasets which was the previous limit.
-
-  \item Modified cwmath to allow multiple input files, and output to
-  an existing file that is not an input file.
-
-  \item Updated to new install4j installation package wizard to fix
-  various bugs and allow the user to select components during a
-  graphical installation.
-
-  \item Added various option to cwcoverage tool for plotting ground
-  station coverage circles.
-
-\end{itemize}
-
-\subsection*{Bug fixes}
-\begin{itemize}
-
-  \item Fixed stall problem in cwdownload when data server is
-  unavailable or not responding within a certain timeout period.
-
-  \item Fixed spelling problems with GCTP sinusoidal projection.
-
-  \item Fixed swath reverse-lookup problems for non-AVHRR data.
-
-  \item Fixed registration problems with partially swath-covered
-  partitions in the output dataset.
-
-  \item Fixed bitmask overlay navigation problem in CDAT.
-
-  \item Fixed font problems in overlay group loading in CDAT on MacOS
-  X.
-
-  \item Fixed small polygons bug in CDAT coastline overlay.
-
-  \item Fixed legend bounding rectangle line style problems in output
-  from CDAT and cwrender.
-
-  \item Fixed bitmask overlay rendering problems in CDAT on MacOS X.
-
-  \item Fixed step color scale problems in image file output from
-  CDAT.
-
-  \item Fixed printing problems in cwinfo and cwstats.
-
-  \item Fixed CDAT data view size change when many files are opened.
-
-  \item Fixed CDAT data view so that if multiple file tabs are open
-  and the user switches tabs, the data view does not continue to
-  render to the wrong tab.
-
-  \item Fixed CDAT problem with allowing multiple overlay property
-  control dialogs.
-
-  \item Fixed CDAT problem with contour level deletion causing a
-  stall.
-
-  \item Fixed stall problems in CDAT related to delayed rendering.
-
-  \item Fixed stall problems in cwstatus when server is not
-  responding.
-
-\end{itemize}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section*{Version 3.1.9, 2005/04/07}
-
-\subsection*{Updates}
-\begin{itemize}
-
-  \item Updated NOAA 1b AVHRR reading for version 3 format.
-
-  \item Added support in metadata and CW HDF reading/writing for
-  sensor scan geometry geostationary satellite data.
-
-  \item Added LZW compressed GIF output for CDAT and cwrender.
-
-  \item Added mixed resampling method to cwregister for handling
-  discontinuities in the source data, such as in MODIS sensor data.
-
-  \item Added cwautonav tool for estimating navigational corrections
-  using image data.
-
-  \item Added transparent overlay color rendering in CDAT and
-  cwrender, specifically for overlaying user-specified polygon data
-  without obscuring the background image.
-
-  \item Modified graphical tools to output error messages that would
-  normally go to the terminal to a dialog. Now users will be able to
-  see ``uncaught'' exceptions and decide to ignore them or file a bug
-  report.
-
-  \item Added standard palettes specific to chlorophyll data.
-
-  \item Added basic ESRI shapefile rendering support in CDAT and
-  cwrender.
-
-  \item Reformatted all tool manual pages and usage notes for clarity,
-  as well as adding the equivalent one-letter options for all
-  word-length options.
-
-  \item Added general settings section in CDAT user preferences,
-  initially for lat/lon format preferences.
-
-  \item Modified all tools to clean up partially written data files
-  after unexpected errors have occurred.
-
-  \item Modified cwexport and cwrender to detect the desired file
-  format based on the output file extension.
-
-  \item Added -{-}nostates (don't plot state border, just international
-  borders) and -{-}logo (plot a user-specified logo) options to
-  cwrender.
-
-  \item Added -{-}imagecoords (print image row and column coordinates)
-  to cwsample.
-
-  \item Added log scale enhancements to CDAT.
-
-  \item Updated graphical tool icons, menus, help pages, and Unix
-  look-and-feel.
-
-  \item Modified drop shadow rendering in CDAT and cwrender for better
-  text readability.
-
-  \item Added -{-}projection option to cwdownload to allow the user to
-  download only mapped or swath data files.
-
-\end{itemize}
-
-\subsection*{Bug fixes}
-\begin{itemize}
-
-  \item Fixed overflow problem when writing HDF attribute data beyond
-  65535 values long.
-
-  \item Fixed registration problem with navigationally corrected data.
-
-  \item Fixed inappropriate missing value problem in ESRI ArcGIS grid
-  and raw float output.
-
-  \item Fixed ``almost equals'' problem with map projection parameter
-  comparisons.
-
-  \item Fixed background fill problem in CDAT data view when
-  performing navigation.
-
-  \item Fixed CDAT image saving bug; data view changed or became
-  unusable after saving.
-
-  \item Fixed problem with CDAT leaving files open even when user has
-  closed file.
-
-  \item Fixed PDF page size problem.
-
-\end{itemize}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section*{Version 3.2.0, 2005/10/08}
-  
-\subsection*{Updates}
-\begin{itemize}
-
-  \item Added RasterPixelIsPoint style earth location code for wind
-  data.
-
-  \item Improved speed of NOAA 1b reading by caching scan lines rather
-  than tiles, as this reflects the actual file organization.
-
-  \item Added support for OPeNDAP-accessible datasets with CoastWatch
-  HDF metadata.
-
-  \item Updated to perform datum shifting between Earth
-  transforms of different datums.
-
-  \item Changed ``datum'' terminology to ``spheroid'' in various
-  locations.
-
-  \item Added support for abstract GIS features to help in ESRI
-  shapefile processing.
-
-  \item Added spectrum and wind palettes for cwrender and CDAT.
-
-  \item Added -{-}limits option in cwstats.
-
-  \item Added check for incompatible overlay group files in CDAT.
-
-  \item Added support in cwrender for overlay group rendering, world
-  files, vector data rendering, and units conversion.
-
-  \item Updated CDAT to have a special interface for opening OPeNDAP
-  connections and datasets, moved file information to a full size
-  window, and added 1:1 toolbar button.
-
-  \item Added various detailed control options in cwautonav.
-
-  \item Added hdatt tool for direct manipulation of HDF attribute
-  information.
-
-\end{itemize}
-
-\subsection*{Bug fixes}
-\begin{itemize}
-
-  \item Corrected NOAA 1b longitude interpolation in polar regions.
-
-  \item Modified to ignore coordinate variables in HDF files (for
-  compliance with CF metadata conventions).
-
-  \item Relaxed NOAA 1b format description check for varying
-  descriptions in CLASS data files.
-
-  \item Fixed unreliable convergence problem in swath earth location
-  reverse lookup algorithm.
-
-  \item Fixed dropouts between rectangles in mixed resampling method
-  for cwregister.
-
-  \item Fixed earth context element in output from cwrender to not
-  draw coverage polygon when area is larger than orthographic
-  projection area.
-
-  \item Fixed problem with minimized window icons in graphical tools.
-
-  \item Modified cwmaster so that map projections that support only
-  sphere Earth models cannot be saved with an ellipsoid model.
-
-  \item Modified the default locale for number formatting and printing
-  to English/US to resolve problems with inconsistent parsing of
-  numbers formatted in other countries.
-
-\end{itemize}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section*{Version 3.2.1, 2006/11/21}
-  
 \subsection*{Updates}
 \begin{itemize}
 
@@ -799,7 +707,7 @@
   \item Fixed error with retrieving chunks lengths while reading
   netCDF files, since netCDF has no chunking or compression
   support.
-  
+
   \item Fixed null line color errors in CDAT overlays.
 
   \item Fixed problem with rendering text shadows for black grid
@@ -819,498 +727,635 @@
 
 \end{itemize}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Version 3.2.0 -- October 2005}
 
-\section*{Version 3.2.2, 2007/11/06}
-  
-\subsection*{\bigicon{box_software} Updates}
-
-\hspace{0.4cm} {\bf Graphical tools}
-
+\subsection*{Updates}
 \begin{itemize}
 
-  \item Improved visibility of shape drawing in CDAT during zoom and
-  annotation operations.
+  \item Added RasterPixelIsPoint style earth location code for wind
+  data.
 
-  \item Added full screen data view mode in CDAT.
+  \item Improved speed of NOAA 1b reading by caching scan lines rather
+  than tiles, as this reflects the actual file organization.
 
-  \item Added navigation analysis panel in CDAT.
+  \item Added support for OPeNDAP-accessible datasets with CoastWatch
+  HDF metadata.
 
-  \item Added data reference grid overlays for drawing lines at
-  regular image row and column spacings.
+  \item Updated to perform datum shifting between Earth
+  transforms of different datums.
 
-  \item Added a warning dialog in CDAT when navigation correction is
-  about to modify a data file.
+  \item Changed ``datum'' terminology to ``spheroid'' in various
+  locations.
 
-  \item Improved file open/save functionality in the CoastWatch Master
-  Tool (cwmaster).
+  \item Added support for abstract GIS features to help in ESRI
+  shapefile processing.
+
+  \item Added spectrum and wind palettes for cwrender and CDAT.
+
+  \item Added -{-}limits option in cwstats.
+
+  \item Added check for incompatible overlay group files in CDAT.
+
+  \item Added support in cwrender for overlay group rendering, world
+  files, vector data rendering, and units conversion.
+
+  \item Updated CDAT to have a special interface for opening OPeNDAP
+  connections and datasets, moved file information to a full size
+  window, and added 1:1 toolbar button.
+
+  \item Added various detailed control options in cwautonav.
+
+  \item Added hdatt tool for direct manipulation of HDF attribute
+  information.
 
 \end{itemize}
 
-\hspace{0.4cm} {\bf File formats and I/O}
+\subsection*{Bug fixes}
+\begin{itemize}
+
+  \item Corrected NOAA 1b longitude interpolation in polar regions.
+
+  \item Modified to ignore coordinate variables in HDF files (for
+  compliance with CF metadata conventions).
+
+  \item Relaxed NOAA 1b format description check for varying
+  descriptions in CLASS data files.
+
+  \item Fixed unreliable convergence problem in swath earth location
+  reverse lookup algorithm.
+
+  \item Fixed dropouts between rectangles in mixed resampling method
+  for cwregister.
+
+  \item Fixed earth context element in output from cwrender to not
+  draw coverage polygon when area is larger than orthographic
+  projection area.
+
+  \item Fixed problem with minimized window icons in graphical tools.
+
+  \item Modified cwmaster so that map projections that support only
+  sphere Earth models cannot be saved with an ellipsoid model.
+
+  \item Modified the default locale for number formatting and printing
+  to English/US to resolve problems with inconsistent parsing of
+  numbers formatted in other countries.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 3.1.9 -- April 2005}
+
+\subsection*{Updates}
+\begin{itemize}
+
+  \item Updated NOAA 1b AVHRR reading for version 3 format.
+
+  \item Added support in metadata and CW HDF reading/writing for
+  sensor scan geometry geostationary satellite data.
+
+  \item Added LZW compressed GIF output for CDAT and cwrender.
+
+  \item Added mixed resampling method to cwregister for handling
+  discontinuities in the source data, such as in MODIS sensor data.
+
+  \item Added cwautonav tool for estimating navigational corrections
+  using image data.
+
+  \item Added transparent overlay color rendering in CDAT and
+  cwrender, specifically for overlaying user-specified polygon data
+  without obscuring the background image.
+
+  \item Modified graphical tools to output error messages that would
+  normally go to the terminal to a dialog. Now users will be able to
+  see ``uncaught'' exceptions and decide to ignore them or file a bug
+  report.
+
+  \item Added standard palettes specific to chlorophyll data.
+
+  \item Added basic ESRI shapefile rendering support in CDAT and
+  cwrender.
+
+  \item Reformatted all tool manual pages and usage notes for clarity,
+  as well as adding the equivalent one-letter options for all
+  word-length options.
+
+  \item Added general settings section in CDAT user preferences,
+  initially for lat/lon format preferences.
+
+  \item Modified all tools to clean up partially written data files
+  after unexpected errors have occurred.
+
+  \item Modified cwexport and cwrender to detect the desired file
+  format based on the output file extension.
+
+  \item Added -{-}nostates (don't plot state border, just international
+  borders) and -{-}logo (plot a user-specified logo) options to
+  cwrender.
+
+  \item Added -{-}imagecoords (print image row and column coordinates)
+  to cwsample.
+
+  \item Added log scale enhancements to CDAT.
+
+  \item Updated graphical tool icons, menus, help pages, and Unix
+  look-and-feel.
+
+  \item Modified drop shadow rendering in CDAT and cwrender for better
+  text readability.
+
+  \item Added -{-}projection option to cwdownload to allow the user to
+  download only mapped or swath data files.
+
+\end{itemize}
+
+\subsection*{Bug fixes}
+\begin{itemize}
+
+  \item Fixed overflow problem when writing HDF attribute data beyond
+  65535 values long.
+
+  \item Fixed registration problem with navigationally corrected data.
+
+  \item Fixed inappropriate missing value problem in ESRI ArcGIS grid
+  and raw float output.
+
+  \item Fixed ``almost equals'' problem with map projection parameter
+  comparisons.
+
+  \item Fixed background fill problem in CDAT data view when
+  performing navigation.
+
+  \item Fixed CDAT image saving bug; data view changed or became
+  unusable after saving.
+
+  \item Fixed problem with CDAT leaving files open even when user has
+  closed file.
+
+  \item Fixed PDF page size problem.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 3.1.8 -- November 2004}
+
+\subsection*{Updates}
+\begin{itemize}
+
+  \item Extended data caching in I/O routines to handle arbitrary size
+  data arrays. Previously, some utilities would memory-thrash when
+  faced with a large column count.
+
+  \item Renamed various SatelliteXXX classes to EarthXXX to mirror
+  more generality in metadata.
+
+  \item Updated I/O for new metadata specifications, including
+  multiple time periods and composite attributes.
+
+  \item Modified the default metadata version to 3.2. Now by default,
+  new files created with the utilities are no longer compatible with
+  the older CDAT version 0.7a and earlier.
+
+  \item Updated coastline data files to GSHHS v1.3 and corrected known
+  polygon fill problems on the US East Coast, Africa, and South
+  America.
+
+  \item Updated ETOPO5 topography database and corrected problems with
+  contours fills producing strange bullseye artifacts.
+
+  \item Added a -{-}timeout option to cwdownload to allow the user to
+  select a network timeout value.
+
+  \item Added a -{-}transform option to cwinfo to print earth transform
+  information.
+
+  \item Modified the behaviour of cwcomposite to append dataset
+  metadata together rather than simply use the last file's global
+  metadata (time, satellite, etc). The -{-}pedantic option was also
+  added to allow exact tracking of source dataset metadata.
+
+  \item Added a -{-}inputs option to cwcomposite to allow the user to
+  specify a list of files in a text file rather than on the command
+  line.
+
+  \item Recompiled the HDF library for Linux to allow up to 256 open
+  files. This allows the cwcomposite to handle more than 31 input
+  datasets which was the previous limit.
+
+  \item Modified cwmath to allow multiple input files, and output to
+  an existing file that is not an input file.
+
+  \item Updated to new install4j installation package wizard to fix
+  various bugs and allow the user to select components during a
+  graphical installation.
+
+  \item Added various option to cwcoverage tool for plotting ground
+  station coverage circles.
+
+\end{itemize}
+
+\subsection*{Bug fixes}
+\begin{itemize}
+
+  \item Fixed stall problem in cwdownload when data server is
+  unavailable or not responding within a certain timeout period.
+
+  \item Fixed spelling problems with GCTP sinusoidal projection.
+
+  \item Fixed swath reverse-lookup problems for non-AVHRR data.
+
+  \item Fixed registration problems with partially swath-covered
+  partitions in the output dataset.
+
+  \item Fixed bitmask overlay navigation problem in CDAT.
+
+  \item Fixed font problems in overlay group loading in CDAT on MacOS
+  X.
+
+  \item Fixed small polygons bug in CDAT coastline overlay.
+
+  \item Fixed legend bounding rectangle line style problems in output
+  from CDAT and cwrender.
+
+  \item Fixed bitmask overlay rendering problems in CDAT on MacOS X.
+
+  \item Fixed step color scale problems in image file output from
+  CDAT.
+
+  \item Fixed printing problems in cwinfo and cwstats.
+
+  \item Fixed CDAT data view size change when many files are opened.
+
+  \item Fixed CDAT data view so that if multiple file tabs are open
+  and the user switches tabs, the data view does not continue to
+  render to the wrong tab.
+
+  \item Fixed CDAT problem with allowing multiple overlay property
+  control dialogs.
+
+  \item Fixed CDAT problem with contour level deletion causing a
+  stall.
+
+  \item Fixed stall problems in CDAT related to delayed rendering.
+
+  \item Fixed stall problems in cwstatus when server is not
+  responding.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 3.1.5 -- September 2003}
 
 \begin{itemize}
 
-  \item Added support for reading NOAA/NESDIS AVHRR Clear-Sky
-  Processor for Oceans (ACSPO) HDF data files.
-
-  \item Modified ArcGIS binary grid header writer to include ``nbits''
+  \item Extended GeoTIFF output in cwrender to generate a paletted
+  file when no overlays are used, and such that the ImageDescription
+  TIFF tag contains a mapping equation from palette index to data
   value.
 
-  \item Added support for reading NOAA 1b High Resolution Infrared
-  Radiation Sounder (HIRS) data from NOAA KLMNN' satellites.
+  \item Corrected cwimport so that the ``pass\_type'' attribute is
+  correctly written when the metadata version is $<$ 3.
 
-  \item Modified CoastWatch HDF writing to handle writing explicit
-  lat/lon values for earth location data.
+  \item Corrected the text output from cwexport to write ``NaN'' for
+  invalid values.
 
-  \item Modified netCDF file reading to handle data with greater than
-  two dimensions as a set of 2D arrays.
+  \item Corrected a 0.5 pixel offset problem in image overlay
+  rendering.
 
-  \item Added ``scan\_time'' variable to NOAA 1b file variables.
+  \item Added land polygon filling algorithms for cwmaster (by
+  default) and cwrender (by using -{-}coast).
 
-  \item Modified NOAA 1b file reading to read only the largest
-  contiguous run of valid scan lines.
+  \item Added -{-}operator option in cwstatus for verbose operator
+  messages.
 
-  \item Added support for reading erroneous NOAA-15 data files from
-  CLASS that indicate the wrong file version in the header.
+  \item Added bitwise or/and functions in cwmath.
 
-  \item Added checks for spheroid compatibility in GCTP map
-  projections.
+  \item Added new ``cwgraphics'' tool to generate standard CoastWatch
+  graphics overlays.
 
-\end{itemize}
-
-\hspace{0.4cm} {\bf Command line tools}
-
-\begin{itemize}
-
-  \item Added step sequential color palette for East Coast Node
-  chlorophyll data.
-
-  \item Added version printing option ``-{-}version'' to all command
-  line tools.
-
-  \item Added the ``-{-}copy'' option to cwimport so that entire
-  variables can be copied from one file to another.
-
-  \item Added median value computation results to the output of the
-  cwstats command.
-
-\end{itemize}
-
-\subsection*{\bigicon{bug_yellow} Bug fixes}
-\begin{itemize}
-
-  \item Fixed problem with overlay groups not updating between CDAT
-  tabs.
-
-  \item Fixed problem with directory refresh on file open in CDAT.
-  
-  \item Fixed problems with box surveys in CDAT that were not
-  correctly surveying very small boxes of pixels.
-
-  \item Fixed some problems with earth location reverse lookup in full
-  orbit swath datasets.
-
-\end{itemize}
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section*{Version 3.2.3, 2009/03/31}
-  
-\subsection*{\bigicon{box_software} Updates}
-
-\begin{itemize}
-
-  \item Added support for NOAA 1b KLMN data files with AMSU-A,
-    AMSU-B, and MHS sensor data.
-
-  \item Added informational ``Reading file information'' message
-    when opening large files in CDAT.
-
-  \item Updated to use the netCDF Java library 2.2.22 for
-    improved GRIB 2 file support.
-
-  \item Improved expression parsing in cwmath to allow for symbol
-    characters in variable names, such as minus signs.
-
-  \item Added geometric mean composite and explicit command line
-    ordering options in cwcomposite tool.
-
-  \item Added 64-bit IEEE floating point output option in
-    cwangles tool.
-
-  \item Created tool to automatically test command line tools and
-    options (work in progress).
-
-\end{itemize}
-
-\subsection*{\bigicon{bug_yellow} Bug fixes}
-\begin{itemize}
-
-  \item Corrected problem with reading CoastWatch HDF swath
-    geolocation data.  This was causing an error when displaying
-    or working with CoastWatch HDF swath projection data files.
-
-  \item Regenerated HDF land mask files for use with
-    autonavigation.  The cwautonav tool was failing when
-    encountering navigation points with latitude $>$ 45 degrees.
-
-  \item Fixed problem with ACSPO HDF file buoy data variables
-    being read and displayed in CDAT.
-
-  \item Fixed problem with full orbit FRAC data files from Metop.
-    Opening a full orbit file was resulting in a very long wait
-    and CDAT becoming unresponsive.
-
-  \item Fixed out of memory problems with opening and closing
-    many large files in CDAT.
-
-  \item Fixed unsupported file format error when reading TOVS
-    data files with no archive header.
-
-  \item Corrected ACSPO file I/O routines to read both orbit and
-    granule metadata conventions.
-
-  \item Corrected overflow error in cwdownload byte count for
-    large file transfers.
+  \item Modified cwdownload to more gracefully handle connection
+  errors and network timeouts.
 
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section*{Version 3.3.0, 2013/10/22}
-
-\subsection*{\bigicon{box_software} Updates}
-
-\hspace{0.4cm} {\bf Graphical tools}
+\section{Version 3.1.6 -- December 2003}
 
 \begin{itemize}
 
-  \item Added support for loading and saving of {\em profiles} in CDAT -- 
-  groups of enhancements and overlays.
+  \item Fixed space in resource path problem in Windows.
 
-%%  \item Added clipboard support in CDAT for matching view scale parameters.
+  \item Added support for AIX and IRIX.
 
-\end{itemize}
+  \item Added a resize bar for cwstatus between the online data list
+  and data coverage / data preview panels.
 
-\hspace{0.4cm} {\bf File formats and I/O}
-
-\begin{itemize}
-
-  \item Updated file handling for Mac OS X 10.5+ operating system.
-
-  \item Removed read support for the CoastWatch IMGMAP file format.
-
-  \item Updated ACSPO HDF 4 reading for new VIIRS sensor and non-chunked 
-  compressed data files.
-
-  \item Added ability to read ACSPO NetCDF 4 data files.
-
-  \item Added NetCDF 3 with CF-1.4 metadata as an export data format in 
-  cwexport with (optional CW and DCS metadata).
-
-  \item Added read support in all tools for data files in NetCDF 4 with CF-1.4 
-  variable and CW metadata.
-
-  \item Updated to use the new Java HDF 2.9 interface with native 32- and 
-  64-bit HDF 4 and 5 libraries.
-  
-  \item Added read support in all tools for data files in NetCDF 4 with L2P
-  metadata.
-
-  \item Added support for memory caching when reading NetCDF 4 data files.
-
-\end{itemize}
-
-\hspace{0.4cm} {\bf Command line tools}
-
-\begin{itemize}
-
-  \item Added a print option to cwinfo for Common Data Model coordinate 
-  system information (if available).
-  
-  \item Added extra options to cwrender for: (i) rendering with custom color
-  palettes specified by a file or directly on the command line, (ii) adding
-  watermark text to the image, and (iii) manually specifying the data scale
-  tick marks.
-
-  \item Converted all GCTP coordinate transform code to Java to run on 64-bit
-  Java VMs for all tools.
-
-\end{itemize}
-
-\subsection*{\bigicon{bug_yellow} Bug fixes}
-\begin{itemize}
-
-  \item Fixed the error message ``no parent window'' when opening data files.
-
-  \item Fixed problem with reliably closing HDF 4 files.
-  
-  \item Corrected direction error in vector symbols (winds, currents, etc).
-
-  \item Fixed non-functional State Plane Coordinate System support.
+  \item Added the cwcoverage tool for showing region coverage plots
+  (need to add ground station coverage circle feature).
 
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section*{Version 3.3.1, 2016/01/20}
-
-\subsection*{\bigicon{box_software} Updates}
-
-\hspace{0.4cm} {\bf Graphical tools}
+\section{Version 3.1.7 -- June 2004}
 
 \begin{itemize}
 
-  \item Added ability in CDAT to save/recall window size since the last time
-  the application was run.  Also added menu options to set window to various
-  predefined sizes or a custom size.
+  \item Updated TeraScan HDF import for equirectangular projections
+  and spheroid detection.
 
-  \item Added preference options in CDAT to allow the user to specify the
-  maximum Java Virtual Machine heap size for dynamic memory allocation, and
-  a cache size for data tiles read from HDF and NetCDF files.  This allows CDAT
-  to better read files with large compressed data chunks, and users who need to
-  have many files open at once to better manage their memory requirements.
+  \item Changed EarthVectorReader to EarthVectorSource.
 
-  \item Bitmask overlays in CDAT now handle up to 32-bit integer mask values.
-  This is much better for cloud mask testing than the original maximum value
-  of 255.
+  \item Moved file path creation to IOServices.
 
-  \item Updated latitude/longitude line labelling algorithm to handle full-disk
-  projections such as orthographic and near-size perspective.  The new
-  algorithm places line labels in the center of the image rather than at the
-  edges.
+  \item Created ContourGenerator and TopographyOverlay classes and
+  added contouring to cwrender.
 
-  \item Added an experimental scripting console to CDAT that allows users to
-  run their own custom code within CDAT using Java language syntax.  All the
-  APIs documented in the CoastWatch Utilities are available.
+  \item Changed command line tools to split multi-parameter options on
+  regular expression, including ',' and '/'.
 
-\end{itemize}
+  \item Added splash screen for cwmaster and cwstatus.
 
-\hspace{0.4cm} {\bf File formats and I/O}
+  \item Added support in CWHDFReader for explicit lat/lon data rather
+  than polynomial coefficients.
 
-\begin{itemize}
+  \item Changed use of Vector in many classes to ArrayList for better
+  performance.
 
-  \item Added NetCDF 4 file saving from cwexport and CDAT.  NetCDF 4 files are
-  written with CF-1.4 metadata, and compressed in chunks.  This is an
-  alternative to NetCDF 3 files which do not support compression.
+  \item Added support for unsigned HDF and CWF variable data.
 
-  \item Improvements for reading ACSPO NetCDF and HDF format files, both
-  polar orbiting and geostationary data.
+  \item Modified data color scale in cwrender for better log scale
+  behaviour.
 
-  \item Added end of data capture to time period read from NOAA 1b format
-  files.  Previously only start of data capture was read.
+  \item Modified cwmaster and cwstatus batch files to run with the
+  Windows look and feel.
 
-  \item Added support for reading data that is written from south to north
-  and west to east.  Some data providers prefer this order, and data appeared
-  upside-down in CDAT and other tools.
+  \item Fixed automatic center calculation problem in cwcoverage.
 
-\end{itemize}
+  \item Fixed rounding problem in EarthDataViewPanel.TrackBar.
 
-\hspace{0.4cm} {\bf Command line tools}
+  \item Added build file for ant.
 
-\begin{itemize}
+  \item Now using the Java install4j wizard to create
+  installation packages.
 
-  \item Added Unix man pages for all tools.
+  \item Re-coded and extended the CoastWatch Data Analysis Tool to
+  work with the Java API. In addition to its 0.7a version, CDAT now
+  has annotation and navigation capabilities, online help, GeoTIFF
+  output, topography overlays, generic bitmask overlays, overlay
+  groups, support for swath files, and more. CDAT is now an integrated
+  part of the package.
 
-  \item Added identification of file reading module used to recognize a file
-  format to the output of cwinfo.  Also improved output spacing when
-  encountering long variable names.
+  \item Modified the cwstatus menus to allow users to connect to a
+  different server.
 
-  \item Improved the output of registration in cwregister when time-sequential
-  swaths are being registered to the same master and then combined with
-  cwcomposite.  Previously, single-pixel gaps existed between time-sequential
-  swaths.
+  \item Removed the cwrender preview option -- it was causing problems
+  with headless operations.
 
-\end{itemize}
+  \item Updated online documentation in cwstatus and cwmaster.
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
-\begin{itemize}
+  \item Replaced palette and RGB database files with XML versions.
 
-  \item Fixed issues with memory leaking when closing some file formats.  This
-  was resulting in an ``out of heap space'' error message.
+  \item Added the -{-}template option to cwmath so that users may use an
+  existing variable as a template for the new variable rather than
+  having to specify all of its properties.
 
-  \item Many internal documentation and unit testing updates.
-
-  \item Fixed Java VM splash screen in graphical tools to reliably indicate
-  loading delays.
-
-  \item Fixed issue with Java VM crashing due to multiple threads accessing
-  native HDF 4 and 5 libraries.
-
-  \item Fixed error when performing a point survey.
-
-  \item Fixed startup issue on some Windows machines when attempting to
-  read user preferences file.
-
-  \item Fixed numerical issues in registration when the source file contains
-  data on either side of the -180/+180 longitude boundary.
+  \item Added an update agent to graphical tools that informs the user
+  if a software update is available.
 
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section*{Version 3.3.2, 2017/10/10}
-
-\subsection*{\bigicon{box_software} Updates}
-
-\hspace{0.4cm} {\bf Graphical tools}
+\section{Version 3.1.4 -- May 2003}
 
 \begin{itemize}
 
-  \item CDAT optionally checks on startup if software update is available.
+  \item Added two new tools: cwmath and cwcomposite.
 
-  \item CDAT now displays iQuam SST quality monitoring point data files and
-  computes the statistics between image and point data attributes.  Use
-  by adding a shape overlay to an image and selecting an iQuam SST data file.
+  \item Added MacOS X support in the dynamic JNI libraries and wrapper
+  script.
 
-\end{itemize}
+  \item Fixed dateline crossing navigation problems in NOAA 1b readers
+  -- still needs refinement for near-polar areas.
 
-\hspace{0.4cm} {\bf File formats and I/O}
+  \item Added basic GSHHS polygon rendering code to BinnedGSHHSReader
+  -- still needs refinement for bin boundaries and polygons broken by
+  projection distortion.
 
-\begin{itemize}
+  \item Added support for rendering progress to EarthDataView in
+  preparation for CDAT operations.
 
-  \item GeoTIFF, JPEG, GIF, PNG, and PDF rendered files have extra metadata tags
-  that describe the software version and options used.
+  \item Added GLERL palettes ``GLERL-Archive'' and
+  ``GLERL-30-Degrees'' palettes to the rendering tool and ``NDVI''
+  palette.
 
-  \item New support for NetCDF 4 files in level 2 swath projection and
-  non-geographic dimensions.
+  \item Added ``-{-}age'' option to download tool for specifying the
+  desired maximum age of the data in hours.
 
-  \item NetCDF 4 files now have better support for grid mapped projections in
-  the CF metadata.
+  \item Added file chooser filters for ``.hdf'' and ``.cwf'' files in
+  the cwmaster tool for easier use.
 
-  \item HDF is now updated to the HDF Java 3.2.1 version.
-
-  \item Data file opening now correctly reports an out of memory issue if it
-  occurs while identifying the file type.
-
-  \item GeoTIFF output now supports UTM projection data.
-
-\end{itemize}
-
-\hspace{0.4cm} {\bf Command line tools}
-
-\begin{itemize}
-
-  \item Manual page for cwsample now correctly shows how to output to the
-  terminal.
-
-  \item Manual page for cwcomposite clarifies use of -{-}method option.
-
-  \item The cwregister tool has two new options -{-}srcfilter and -{-}srcexpr
-  to limit pixels used from the source data in registration.
-
-  \item The cwrender tool now has a -{-}date option to override the plot legend
-  date in cases where the file metadata is incorrect or unavailable.
-
-  \item The cwstats tool now has a -{-}polygon option that computes statistics
-  within a polygon boundary.
-
-  \item The cwrender tool has a new -{-}scalewidth option to explicitly set the
-  width of the color scale legend.  This is useful so that a series of plots
-  match in overall width.
-
-\end{itemize}
-
-\subsection*{\bigicon{bug_yellow} Bug fixes}
-\begin{itemize}
-
-  \item Long text lines in plot legends are now wrapped.
-
-  \item NetCDF 4 file writing now properly includes missing value attribute
-  for variable data.
-
-  \item NetCDF 4 float and double types now read with full precision formatting.
-
-  \item NetCDF 4 files with 4D and 5D variables are read more reliably.
-
-  \item GRIB files with variables names containing double underscores now read
-  correctly.
-
-  \item The cwregister tool performance is now greatly improved in some cases
-  where source and destination data is chunked.
-
-  \item Topographic and other lines are now drawn more reliably on plots in
-  geographic projection.
-
-  \item NetCDF 4 data is now correctly displayed in the case where a
-  cylindrical projection is used with irregularly spaced latitude and longitude
-  axes.
-
-  \item The color scale legend in PDF output plots has an improved appearance
-  in onscreen PDF readers.
-
-  \item Open NetCDF files that are no longer needed are now properly closed.
-
-  \item GeoTIFF ModelTransformationTag values have been updated to correct
-  a 0.5 pixel error.
+  \item Added 3D logos to rendering output.
 
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section*{Version 3.4.0, 2018/03/27}
+\section{Version 3.1.3 -- March 2003}
 
-\subsection*{\bigicon{box_software} Updates}
-
-\hspace{0.4cm} {\bf Graphical tools}
 \begin{itemize}
 
-  \item CDAT has a new menu item {\gui Open Recent} under the {\gui File} menu,
-  with a list of recently opened files for quick access.
+  \item Added new tool for server status monitoring.
 
-  \item CDAT has new items in the {\gui View} menu for controlling the data
-  view, copying the view zoom between tabs, and showing/hiding the top toolbar
-  and left-side control tabs.
+  \item Optimized download and status tools for database usage and
+  updated command line options.
 
-  \item Tabs in CDAT now have a little x close button built into the tab.
+  \item Added GeoTIFF output for mapped projection data to cwrender.
 
-  \item The documentation for CDAT now has a section on setting memory limits
-  in the user preferences.
+  \item Added NOAA 1b GAC/LAC AVHRR input.
+
+  \item Fixed various bugs and made performance improvements.
+
+  \item Updated Unix startup script for headless operations.
 
 \end{itemize}
 
-\hspace{0.4cm} {\bf Command line tools}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 3.1.2 -- December 2002}
+
 \begin{itemize}
 
-  \item The cwmath tool has been largely re-written to improve performance.
-  The tool now processes 2D chunks of data rather than individual rows, and
-  uses a new Java Language math expression syntax.  An emulation parser mode
-  supports legacy expressions.  New options can be used to fully take advantage
-  of the performance increase and specify a greater variety of output variable
-  types without having to use a template variable: -{-}scale none,
-  -{-}skip-missing, -{-}missing, -{-}parser, and -{-}size int/uint/long/ulong/double.
+  \item Optimized coordinate translation code, rendering now runs 20\%
+  faster.
 
-  \item The cwrender tool now has a -{-}font option to set the legend and overlay
-  font and a -{-}font-list option to list system-specific fonts available.
+  \item Modified rendering normalization for viewable data only.
 
-  \item The user's guide now has a section on hidden command line options for
-  the command line tools (after the tool manual pages), to be used for
-  performance tuning.
+  \item Added grid overlay label drop shadows for better label
+  legibility.
+
+  \item Removed miter problems in shape drawings and coast lines.
+
+  \item Added gridded dataset tile read/write caching for improved
+  memory performance.
+
+  \item Added NDVI palette.
+
+  \item Corrected bitmask rendering for PDF files.
+
+  \item Added registration tool for mapping between projections.
+
+  \item Added generic bitmask rendering.
+
+  \item Added navigation, master, sampling tools.
+
+  \item Modified download tool command line parameters for regular
+  expression matching.
+
+  \item Added angle calculation tool.
+
+  \item Improved coastline selection and rendering performance using
+  binned GMT HDF dataset.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 3.1.1 -- October 2002}
+
 \begin{itemize}
 
-  \item CDAT full screen mode now works correctly on multi-monitor setups.
+  \item Added rendering.
 
-  \item Reading of time axis metadata is now more complete for NetCDF 4 files.
-
-  \item The cwgraphics tool now correctly omits the scale factor and offset
-  for the graphics byte variable it creates.  Scale and offset are reserved
-  for packed data only.
-
-  \item The cwregister tool now distinguishes between a file not found error
-  and a format error for the master file.
-
-  \item Detection of link errors with the native HDF library code is now more
-  user-friendly.
-
-  \item The bundled Java VM version has been updated to 1.8.0\_162.
+  \item Compiled shared libraries for Windows and Solaris.
 
 \end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 3.1.0 -- July 2002}
+
+\begin{itemize}
+
+  \item Implemented in Java using Java native interface to CWF and
+  GCTP code.
+
+  \item Now uses HDF4 via the HDF JNI calls.
+
+  \item Now supports swath data.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 2.4 -- June 2001 (internal release)}
+
+\begin{itemize}
+
+  \item Changed Makefile to include cwproj.c in libcwf.a
+
+  \item Created cwflmaskdb routine
+
+  \item cwproj.c: Modified for linear lat/lon header errors
+
+  \item Fixed hdfinfo and cwftohdf usage messages
+
+  \item cwf.c: Added orbit\_type ``both'' and channel\_number
+  ``sst\_multi''
+
+  \item cwftohdf.c: Added orbit\_type ``both'' and channel\_number
+  ``sst\_multi''
+
+  \item cwf.c: Added flat file support, reading only
+
+  \item Moved cwftohdf to cwftocwhdf
+
+  \item Moved hdfinfo to cwhdfinfo
+
+  \item Fixed CWclone bug in hcwf library
+
+  \item Added Julian day printing to cwhdfinfo
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 2.3 -- October 1999}
+
+\begin{itemize}
+
+  \item cwfcomp.c:\\
+   Added -b option to allow badval specification\\
+   Changed output file date to match last file
+
+  \item cwf.c:\\
+   Added f to various float constants\\
+   Added test for near-zero IR values\\
+   Simplified round function\\
+   Fixed bug in cw\_compress for files with cols $<$ 512\\
+   Added calibration guess for older WCRN files
+
+  \item cwfnav.c:\\
+   Fixed usage message
+
+  \item cwftogif.c cwftohdf.c cwftonc.c cwftoraw.c cwfval.c cwproj.c:\\
+   Simplified round function
+
+  \item cwproj.c:\\
+   Added corrections for WCRN's linear files
+
+  \item cwftogif.c: \\
+  Modified graphics plane layering, reformatted and commented\\
+  Added ramsdis color palette for CH4 IR
+
+  \item cwftohdf.c: Completely rewritten
+
+  \item Created new HDF information routine: hdfinfo
+
+  \item Created new land masking routine, cwflmask
+
+  \item Updated Makefile for new HDF and netCDF releases
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 2.2 -- January 1999}
+
+\begin{itemize}
+
+  \item cwf.c:\\
+  Fixed file close bug in decompression routine\\
+  Added more NOAA satellite codes (NOAA-15, -16, -17)
+
+  \item Created composite program, cwfcomp
+
+  \item cwftoarc.c:\\
+  Corrected lower-left pixel position and cell size\\
+  Added binary output option\\
+  Added polar projection conversion\\
+  Added projection specifications note
+
+  \item cwftogif.c:\\
+  Changed IR default min\\
+  Changed brightness temperature legend
+
+  \item cwproj.c:\\
+  Modified polar projection calculation for Alaska file bugs\\
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 2 -- September 1998 (first public release)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 1 -- October 1997 (internal release)}
+

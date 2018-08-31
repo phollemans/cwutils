@@ -76,6 +76,7 @@ import noaa.coastwatch.render.EnhancementFunction;
 import noaa.coastwatch.render.EnhancementFunctionFactory;
 import noaa.coastwatch.render.LinearEnhancement;
 import noaa.coastwatch.render.LogEnhancement;
+import noaa.coastwatch.render.GammaEnhancement;
 import noaa.coastwatch.render.Palette;
 import noaa.coastwatch.render.PaletteFactory;
 import noaa.coastwatch.render.StepEnhancement;
@@ -510,6 +511,9 @@ public class PreferencesChooser
     /** The enhancement function type log base 10. */
     private static final String FUNCTION_LOG = "Log10";
 
+    /** The enhancement function type gamma. */
+    private static final String FUNCTION_GAMMA = "Gamma";
+
     // Variables
     // ---------
 
@@ -743,7 +747,7 @@ public class PreferencesChooser
       gcSub.insets = new Insets (2, 0, 2, 10);
       functionControlPanel.add (new JLabel ("Function:"), gcSub);
       functionCombo = new JComboBox (new Object[] {
-        FUNCTION_LINEAR, FUNCTION_STEP, FUNCTION_LOG});
+        FUNCTION_LINEAR, FUNCTION_STEP, FUNCTION_LOG, FUNCTION_GAMMA});
       functionCombo.addActionListener (new FunctionComboListener());
       GUIServices.setConstraints (gcSub, 1, 5, 1, 1, 
         GridBagConstraints.NONE, 0, 0);
@@ -871,7 +875,9 @@ public class PreferencesChooser
           functionType = "log";
         else if (selected == FUNCTION_STEP) 
           functionType = "step" + stepsSpinner.getValue().toString();
-        
+        else if (selected == FUNCTION_GAMMA)
+          functionType = "gamma";
+
         // Convert to new function
         // -----------------------
         EnhancementFunction currentFunc = settings.getFunction();
@@ -894,6 +900,8 @@ public class PreferencesChooser
             functionCombo.setSelectedItem (FUNCTION_LINEAR);
           else if (currentFunc instanceof LogEnhancement)
             functionCombo.setSelectedItem (FUNCTION_LOG);
+          else if (currentFunc instanceof GammaEnhancement)
+            functionCombo.setSelectedItem (FUNCTION_GAMMA);
           listenersDisabled = false;
           return;
         } // catch
@@ -1019,6 +1027,11 @@ public class PreferencesChooser
           } // else if
           else if (func instanceof LogEnhancement) {
             functionCombo.setSelectedItem (FUNCTION_LOG);
+            stepsSpinner.setValue (new Integer (10));
+            stepsSpinner.setEnabled (false);
+          } // else if
+          else if (func instanceof GammaEnhancement) {
+            functionCombo.setSelectedItem (FUNCTION_GAMMA);
             stepsSpinner.setValue (new Integer (10));
             stepsSpinner.setEnabled (false);
           } // else if

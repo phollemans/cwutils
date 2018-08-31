@@ -27,6 +27,11 @@ package noaa.coastwatch.io;
 // -------
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+
 import hdf.hdflib.HDFChunkInfo;
 import hdf.hdflib.HDFConstants;
 import hdf.hdflib.HDFDeflateCompInfo;
@@ -123,7 +128,36 @@ public class HDFLib {
   } // ANselect
   
   public synchronized boolean Hishdf (String arg0) throws HDFException {
-    return (HDFLibrary.Hishdf (arg0));
+
+    /**
+     * We override here because on Mac OS X, there's an issue with this routine
+     * which throws an exception on trying to check a NetCDF 3 file and then later
+     * on causes the Java VM to seg fault when running SDstart.  So we do our
+     * own check here so that we never get into the HDF library code at all
+     * when checking for an HDF 4 file.
+     */
+
+//    return (HDFLibrary.Hishdf (arg0));
+
+    long magic = 0x0e031301;
+    boolean retValue;
+    DataInputStream input = null;
+
+    try {
+      input = new DataInputStream (new FileInputStream (arg0));
+      long longValue = (long) (input.readInt() & 0xffffffff);
+      retValue = (magic == longValue);
+    } // try
+    catch (IOException e) {
+      throw new HDFException ("Error reading magic number");
+    } // catch
+    finally {
+      try { if (input != null) input.close(); }
+      catch (IOException e2) { throw new HDFException ("Error closing file"); }
+    } // finally
+
+    return (retValue);
+
   } // Hishdf
   
   public synchronized boolean ANend (int arg0) throws HDFException {

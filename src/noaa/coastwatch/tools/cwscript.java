@@ -98,9 +98,79 @@ import bsh.EvalError;
  * </ul>
  *
  * <h2>Examples</h2>
- * <p>
+ * <p>The following script prints the start time of a data file:</p>
+ * <pre>
+ * import noaa.coastwatch.io.EarthDataReaderFactory;
  *
- * </p>
+ * reader = EarthDataReaderFactory.create (args[0]);
+ * print (reader.getInfo().getStartDate());
+ * </pre>
+ * <p>A sample run on a CoastWatch HDF file:</p>
+ * <pre>
+ * phollema$ cwscript start_time.bsh 2018_217_0309_n18_wj.hdf
+ * Sat Aug 04 20:09:27 PDT 2018
+ * </pre>
+ * <p>Another example script prints out the latitude and longitude values
+ * along the satellite subpoint of a data file:</p>
+ * <pre>
+ * import noaa.coastwatch.io.EarthDataReaderFactory;
+ * import noaa.coastwatch.util.DataLocation;
+ *
+ * input = args[0];
+ * reader = EarthDataReaderFactory.create (input);
+ * lat = reader.getVariable ("latitude");
+ * lon = reader.getVariable ("longitude");
+ * dims = lat.getDimensions();
+ *
+ * rows = dims[0];
+ * cols = dims[1];
+ * print (rows);
+ * print (cols);
+ *
+ * for (int i = 0; i &lt; rows; i++) {
+ *   loc = new DataLocation (i, cols/2);
+ *   print (lat.getValue (loc) + " " + lon.getValue (loc));
+ * } // for
+ * </pre>
+ * <p>The output from running on a NOAA 1b format Metop-2 FRAC file:</p>
+ * <pre>
+ * phollema$ cwscript sat_subpoint.bsh NSS.FRAC.M2.D10206.S1053.E1235.B1953132.SV
+ * 4733
+ * 2048
+ * 66.71659851074219 -1.3313000202178955
+ * 66.7074966430664 -1.341499924659729
+ * 66.69829559326172 -1.351599931716919
+ * 66.68930053710938 -1.3616999387741089
+ * 66.68009948730469 -1.3717999458312988
+ * 66.6709976196289 -1.3819999694824219
+ * 66.66189575195312 -1.3919999599456787
+ * ...
+ * </pre>
+ * <p>A third example script below shows how to use the new <i>noaa.coastwatch.util.chunk</i>
+ * API to retrieve chunks of data from a data variable in any file:</p>
+ * <pre>
+ * import noaa.coastwatch.io.EarthDataReader;
+ * import noaa.coastwatch.io.EarthDataReaderFactory;
+ * import noaa.coastwatch.util.chunk.DataChunk;
+ * import noaa.coastwatch.util.chunk.ChunkPosition;
+ * import noaa.coastwatch.util.chunk.GridChunkProducer;
+ *
+ * reader = EarthDataReaderFactory.create (args[0]);
+ * lat = reader.getVariable ("latitude");
+ * producer = new GridChunkProducer (lat);
+ * pos = new ChunkPosition (2);
+ * pos.start[0] = 0;
+ * pos.start[1] = 0;
+ * pos.length[0] = pos.length[1] = 16;
+ * chunk = producer.getChunk (pos);
+ *
+ * print (chunk);
+ * </pre>
+ * <p> Running this script on a CoastWatch HDF format VIIRS granule produces:</p>
+ * <pre>
+ * phollema$ cwscript chunk_type.bsh VXSRCW.B2018205.180733.hdf
+ * noaa.coastwatch.util.chunk.FloatChunk@edf4efb
+ * </pre>
  *
  * <!-- END MAN PAGE -->
  *

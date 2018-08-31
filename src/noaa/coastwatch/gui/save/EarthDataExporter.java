@@ -238,6 +238,7 @@ public class EarthDataExporter
 
         } // run
       });
+    
     optionDialog = GUIServices.createDialog (
       saveDialog, "Options", true, optionPanel,
       null, new Action[] {okAction},

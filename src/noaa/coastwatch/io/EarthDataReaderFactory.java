@@ -107,6 +107,7 @@ public class EarthDataReaderFactory {
     // ----------------
     readerList.add (thisPackage + ".CWHDFReader");
     readerList.add (thisPackage + ".TSHDFReader");
+
 // Deprecated   readerList.add (thisPackage + ".ACSPOHDFReader");
 
     // Add NOAA 1b variants
