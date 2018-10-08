@@ -35,6 +35,8 @@ import java.util.Arrays;
 import bsh.Interpreter;
 import bsh.EvalError;
 
+import java.awt.Window;
+
 /**
  * <p>The script tool runs a shell script written in BeanShell syntax.</p>
  *
@@ -244,7 +246,13 @@ public final class cwscript {
     catch (Exception e) {
       System.err.println (PROG + ": " + e.getMessage());
     } // catch
-    System.exit (0);
+
+    // Check if the script created any windows
+    // ---------------------------------------
+    Window[] windows = Window.getWindows();
+    boolean hasWindows = (windows.length != 0);
+
+    if (!hasWindows) System.exit (0);
 
   } // main
 

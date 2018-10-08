@@ -48,17 +48,20 @@ public class BinnedGSHHSReaderFactory {
   // Constants
   // ---------
 
+  /** Full resolution (less than 0.2 km). */
+  public final static int FULL = 0;
+
   /** High resolution (0.2 km) database level. */
-  public final static int HIGH = 0;
+  public final static int HIGH = 1;
 
   /** Intermediate resolution (1.0 km) database level. */
-  public final static int INTERMEDIATE = 1;
+  public final static int INTERMEDIATE = 2;
 
   /** Low resolution (5.0 km) database level. */
-  public final static int LOW = 2;
+  public final static int LOW = 3;
 
   /** Crude resolution (25 km) database level. */
-  public final static int CRUDE = 3;
+  public final static int CRUDE = 4;
 
   /** The coastline database type. */
   public final static int COAST = 0;
@@ -144,15 +147,39 @@ public class BinnedGSHHSReaderFactory {
 
     // Choose most appropriate database
     // --------------------------------
-    double resolutions[] = {0.2, 1, 5, 25};
-    int index = -1;
-    double minDiff = Double.POSITIVE_INFINITY;
-    for (int i = 0; i < resolutions.length; i++) {
-      double diff = Math.abs (resolutions[i] - resolution);
-      if (diff < minDiff) { minDiff = diff; index = i; }
-    } // for
-    if (index == -1) return (CRUDE);
-    else return (index);
+//    double resolutions[] = {0.2, 1, 5, 25};
+//    int index = -1;
+//    double minDiff = Double.POSITIVE_INFINITY;
+//    for (int i = 0; i < resolutions.length; i++) {
+//      double diff = Math.abs (resolutions[i] - resolution);
+//      if (diff < minDiff) { minDiff = diff; index = i; }
+//    } // for
+//    if (index == -1) return (CRUDE);
+
+    /**
+     * We're trying this new algorithm for selecting the coastline
+     * resolution below.  There were some complaints about coastlines
+     * looking blocky, so we added the full resolution GSHHS database
+     * and also adjusted the database selection algorithm.  Rather
+     * than selecting the database with the closest resolution to the
+     * screen pixels, we select the database with the next highest
+     * resolution, ie:
+     *
+     * < 0.2 km: Full (no decimation)
+     * >= 0.2 km and < 1 km: High (0.2 km decimation)
+     * >= 1 km and < 5 km: Intermediate (1 km decimation)
+     * >= 5 km and < 25 km: Low (5 km decimation)
+     * > 25 km: Crude (25 km decimation)
+     */
+
+    int level;
+    if (resolution < 0.2) level = FULL;
+    else if (resolution < 1) level = HIGH;
+    else if (resolution < 5) level = INTERMEDIATE;
+    else if (resolution < 25) level = LOW;
+    else level = CRUDE;
+
+    return (level);
 
   } // getDatabaseLevel
 
@@ -184,6 +211,7 @@ public class BinnedGSHHSReaderFactory {
 
     String levelString;
     switch (level) {
+    case FULL: levelString = "f"; break;
     case HIGH: levelString = "h"; break;
     case INTERMEDIATE: levelString = "i"; break;
     case LOW: levelString = "l"; break;

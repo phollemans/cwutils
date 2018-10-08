@@ -980,6 +980,8 @@
 		E9875CC6161E652F00C423BB /* license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = license.txt; sourceTree = "<group>"; };
 		E9875CC7161E652F00C423BB /* tool_categories.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tool_categories.txt; sourceTree = "<group>"; };
 		E988D82D200AD3A100B038E5 /* TimeAccumulator.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; name = TimeAccumulator.java; path = test/TimeAccumulator.java; sourceTree = "<group>"; };
+		E9964339216C17EF002D01BF /* binned_border_f.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_border_f.hdf; path = feature/binned_border_f.hdf; sourceTree = "<group>"; };
+		E996433A216C17EF002D01BF /* binned_GSHHS_f.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; name = binned_GSHHS_f.hdf; path = feature/binned_GSHHS_f.hdf; sourceTree = "<group>"; };
 		E99D694F1C50264B00F4A238 /* about@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "about@2x.png"; sourceTree = "<group>"; };
 		E99D69501C50264B00F4A238 /* add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "add@2x.png"; sourceTree = "<group>"; };
 		E99D69511C50264B00F4A238 /* arrow_down_green@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "arrow_down_green@2x.png"; sourceTree = "<group>"; };
@@ -1314,10 +1316,12 @@
 			isa = PBXGroup;
 			children = (
 				E95BB7561E67C56400EB9D6F /* binned_border_c.hdf */,
+				E9964339216C17EF002D01BF /* binned_border_f.hdf */,
 				E95BB7571E67C56400EB9D6F /* binned_border_h.hdf */,
 				E95BB7581E67C56400EB9D6F /* binned_border_i.hdf */,
 				E95BB7591E67C56400EB9D6F /* binned_border_l.hdf */,
 				E95BB75A1E67C56400EB9D6F /* binned_GSHHS_c.hdf */,
+				E996433A216C17EF002D01BF /* binned_GSHHS_f.hdf */,
 				E95BB75B1E67C56400EB9D6F /* binned_GSHHS_h.hdf */,
 				E95BB75C1E67C56400EB9D6F /* binned_GSHHS_i.hdf */,
 				E95BB75D1E67C56400EB9D6F /* binned_GSHHS_l.hdf */,

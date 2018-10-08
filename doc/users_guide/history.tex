@@ -28,12 +28,6 @@
   computer display gamma correction when showing visible data scaled between
   0% and 100% intensity values.
 
-
-
-
-
-
-
 \end{itemize}
 
 \hspace{0.4cm} {\bf Command line tools}
@@ -42,18 +36,15 @@
     \item The cwdownload and cwstatus tools now support SSL network connections
     via the HTTPS protocol.
 
-    \item A new tool called {\em cwscript} is available for running scripts
-    in BeanShell (\url{http://beanshell.org}) that can make calls to the
-    CoastWatch Utilities API.
+    \item A new tool {\em cwscript} is available for running scripts in
+    BeanShell (\url{http://beanshell.org}) that can make calls to the
+    CoastWatch Utilities API.  An extra launcher {\em cwgscript}
+    is also available to run scripts that create GUI windows.
 
     \item The cwregister tool has been improved and now runs up to 1.9x faster.
 
     \item The cwrender tool has a new enhancement type 'gamma' for use with
     visible band satellite data.
-
-
-
-
 
 \end{itemize}
 
@@ -69,9 +60,10 @@
   \item The automatic documentation generation system was re-written to
   correct various user's guide and manual page formatting issues.
 
-
-
-
+  \item In some cases, coastlines plotted on images in CDAT and cwrender
+  looked low-resolution.  This has been corrected by adding a new higher
+  resolution coastline database, and adjusting the algorithm that selects
+  the coastline detail level to use for a scene being displayed.
 
 \end{itemize}
 

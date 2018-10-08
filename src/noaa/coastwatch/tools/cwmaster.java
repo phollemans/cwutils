@@ -223,14 +223,13 @@ public final class cwmaster
   private static final String REVERT_COMMAND = "Revert";
 
   /** The view panel colors. */
-  private static final Color VIEW_SOLID = 
-    ColorLookup.getInstance().getColor ("water");
+  private static final Color VIEW_SOLID = ColorLookup.getInstance().getColor ("LightBlue3");
   private static final Color VIEW_BACK = Color.BLACK;
-  private static final Color VIEW_FORE = Color.WHITE;
-  private static final Color VIEW_FILL = 
-    ColorLookup.getInstance().getColor ("land");
+  private static final Color VIEW_GRID = Color.WHITE; //Color.WHITE;
+  private static final Color VIEW_FILL = ColorLookup.getInstance().getColor ("tan");
   private static final Color VIEW_POLITICAL = Color.RED;
   private static final Color VIEW_STATE = VIEW_FILL.darker();
+  private static final Color VIEW_COAST = Color.BLACK;
 
   /** The view commands. */
   private static final String ZOOMIN_COMMAND = "Magnify";
@@ -545,7 +544,7 @@ public final class cwmaster
     // Create view
     // -----------
     EarthDataView view = createView (proj, dims);
-    coastOverlay = new CoastOverlay (VIEW_FORE);
+    coastOverlay = new CoastOverlay (VIEW_COAST);
     ((PolygonOverlay) coastOverlay).setFillColor (VIEW_FILL);
     coastOverlay.setLayer (1);
     view.addOverlay (coastOverlay);
@@ -563,7 +562,7 @@ public final class cwmaster
       stateOverlay.setVisible (false);
       view.addOverlay (stateOverlay);
     } catch (Exception e) { }
-    gridOverlay = new LatLonOverlay (VIEW_FORE);
+    gridOverlay = new LatLonOverlay (VIEW_GRID);
     gridOverlay.setLayer (4);
     view.addOverlay (gridOverlay);
 

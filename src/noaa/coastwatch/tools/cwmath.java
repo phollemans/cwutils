@@ -430,9 +430,22 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  *
  * </table>
  *
- * <p>Note that in legacy parser expressions, boolean result values are
- * evaluated to either 1.0 (true) or 0.0 (false).
- * </p>
+ * <p>Note that in legacy parser expressions, boolean result values from
+ * operators (==, !=, &gt;, &lt;, &gt;=, &lt;=, &amp;&amp;, ||, !)
+ * evaluated to either 1.0 (true) or 0.0 (false).  As a result, legacy parser
+ * expressions could treat boolean values as numbers in arithmatic expressions
+ * such as addition, subtraction, etc.  This is not the case with the Java
+ * parser, and even when emulating the legacy parser, arithmatic operations
+ * on boolean values generate a parsing error.  The only solution for this is
+ * to modify the expression.  For example:</p>
+ * <pre>
+ *   result = (var1 != 0) + (var2 != 0)
+ * </pre>
+ * <p>should be modified to:</p>
+ * <pre>
+ *   result = (var1 != 0 ? 1 : 0) + (var2 != 0 ? 1 : 0)
+ * </pre>
+ * <p>and the new Java parser used (see the <b>--parser</b> option below).</p>
  *
  * <h2>Parameters</h2>
  *

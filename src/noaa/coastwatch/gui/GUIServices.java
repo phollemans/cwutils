@@ -527,6 +527,25 @@ public class GUIServices {
   ////////////////////////////////////////////////////////////
 
   /**
+   * Shows the specified frame in the AWT event dispatching thread.
+   *
+   * @param frame the frame to show.
+   */
+  public static void showFrame (
+    Frame frame
+  ) {
+
+    SwingUtilities.invokeLater (new Runnable () {
+      public void run () {
+        frame.setVisible (true);
+      } // run
+    });
+
+  } // showFrame
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Creates a dialog with similar layout to dialogs produced by
    * <code>JOptionPane</code>.  The dialog has a main message area,
    * and a set of buttons.
