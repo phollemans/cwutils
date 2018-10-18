@@ -14,6 +14,8 @@
 
 \section{Version 3.4.1 -- October 2018}
 
+\subsection*{\bigicon{box_software} Updates}
+
 \hspace{0.4cm} {\bf Graphical tools}
 \begin{itemize}
 
@@ -39,12 +41,16 @@
     \item A new tool {\em cwscript} is available for running scripts in
     BeanShell (\url{http://beanshell.org}) that can make calls to the
     CoastWatch Utilities API.  An extra launcher {\em cwgscript}
-    is also available to run scripts that create GUI windows.
+    is also available to run scripts that create GUI windows.  The cwscript
+    manual page gives several examples of scripts.
 
     \item The cwregister tool has been improved and now runs up to 1.9x faster.
 
     \item The cwrender tool has a new enhancement type 'gamma' for use with
     visible band satellite data.
+
+    \item The cwrender tool has a new -{-}palettelist option that prints a list
+    of valid palette names that can be specified for color enhancement.
 
 \end{itemize}
 
@@ -60,10 +66,14 @@
   \item The automatic documentation generation system was re-written to
   correct various user's guide and manual page formatting issues.
 
-  \item In some cases, coastlines plotted on images in CDAT and cwrender
-  looked low-resolution.  This has been corrected by adding a new higher
+  \item The visual appearance of coastlines plotted on images in CDAT and
+  cwrender has been improved in some cases by adding a new higher
   resolution coastline database, and adjusting the algorithm that selects
-  the coastline detail level to use for a scene being displayed.
+  the coastline detail level to use for the scene being displayed.
+
+  \item The cwrender tool no longer creates a 'palette' directory in the
+  user resources if the directory is not found.  This was causing issues
+  on some systems.
 
 \end{itemize}
 
@@ -102,7 +112,7 @@
   -{-}skip-missing, -{-}missing, -{-}parser, and -{-}size int/uint/long/ulong/double.
 
   \item The cwrender tool now has a -{-}font option to set the legend and overlay
-  font and a -{-}font-list option to list system-specific fonts available.
+  font and a -{-}fontlist option to list system-specific fonts available.
 
   \item The user's guide now has a section on hidden command line options for
   the command line tools (after the tool manual pages), to be used for

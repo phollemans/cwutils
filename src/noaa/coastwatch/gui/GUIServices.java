@@ -530,6 +530,8 @@ public class GUIServices {
    * Shows the specified frame in the AWT event dispatching thread.
    *
    * @param frame the frame to show.
+   *
+   * @since 3.4.1
    */
   public static void showFrame (
     Frame frame

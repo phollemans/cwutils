@@ -153,6 +153,43 @@ public class ResourceManager {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Sets up the user-specified palettes.  If the palette resource
+   * directory does not exist, it is created depending on the specified
+   * creation flag.  If the directory already exists and contains user-defined
+   * palettes, they are added to the palatte factory.
+   *
+   * @param create true to create the diretory if it doesn't exist, or false
+   * to not create the directory.
+   *
+   * @throws IOException if an error occurred setting up the palettes.
+   *
+   * @see noaa.coastwatch.render.PaletteFactory#getPredefined
+   * @see #setupPalettes()
+   *
+   * @since 3.4.1
+   */
+  public static void setupPalettes (
+    boolean create
+  ) throws IOException {
+
+    // Create palette directory
+    // ------------------------
+    boolean dirExists = PALETTES_DIR.exists();
+    if (!dirExists && create) {
+      if (!PALETTES_DIR.mkdirs())
+        throw new IOException ("Cannot create resource directory " + PALETTES_DIR);
+      dirExists = true;
+    } // if
+
+    // Add palette files to factory
+    // ----------------------------
+    if (dirExists) PaletteFactory.addPredefined (PALETTES_DIR);
+
+  } // setupPalettes
+
+  ////////////////////////////////////////////////////////////
+
   /** 
    * Sets up the user-specified palettes.  If the palette resource
    * directory does not exist, it is created.  Any user-defined
@@ -161,21 +198,12 @@ public class ResourceManager {
    * @throws IOException if an error occurred setting up the palettes.
    *
    * @see noaa.coastwatch.render.PaletteFactory#getPredefined
+   * @see #setupPalettes(boolean)
    */
   public static void setupPalettes () throws IOException {
 
-    // Create palette directory
-    // ------------------------
-    if (!PALETTES_DIR.exists()) {
-      if (!PALETTES_DIR.mkdirs())
-        throw new IOException ("Cannot create resource directory " + 
-          PALETTES_DIR);
-    } // if
-
-    // Add palette files to factory
-    // ----------------------------
-    PaletteFactory.addPredefined (PALETTES_DIR);
-
+    setupPalettes (true);
+    
   } // setupPalettes
 
   ////////////////////////////////////////////////////////////

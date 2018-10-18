@@ -148,7 +148,7 @@ import java.awt.Window;
  * 66.66189575195312 -1.3919999599456787
  * ...
  * </pre>
- * <p>A third example script below shows how to use the new <i>noaa.coastwatch.util.chunk</i>
+ * <p>The example script below shows how to use the new <i>noaa.coastwatch.util.chunk</i>
  * API to retrieve chunks of data from a data variable in any file:</p>
  * <pre>
  * import noaa.coastwatch.io.EarthDataReader;
@@ -172,6 +172,50 @@ import java.awt.Window;
  * <pre>
  * phollema$ cwscript chunk_type.bsh VXSRCW.B2018205.180733.hdf
  * noaa.coastwatch.util.chunk.FloatChunk@edf4efb
+ * </pre>
+ * <p>Graphics windows can also be created from a script, using the
+ * <b>cwgscript</b> launcher which properly sets up a graphics environment.
+ * The following script run with <b>cwgscript</b> displays a view of a variable
+ * in an input file:</p>
+ * <pre>
+ * import java.awt.Color;
+ * import javax.swing.JFrame;
+ *
+ * import noaa.coastwatch.gui.EarthDataViewFactory;
+ * import noaa.coastwatch.gui.EarthDataViewPanel;
+ * import noaa.coastwatch.gui.GUIServices;
+ * import noaa.coastwatch.gui.WindowMonitor;
+ * import noaa.coastwatch.io.EarthDataReader;
+ * import noaa.coastwatch.io.EarthDataReaderFactory;
+ * import noaa.coastwatch.render.CoastOverlay;
+ * import noaa.coastwatch.render.LatLonOverlay;
+ *
+ * file = args[0];
+ * var = args[1];
+ *
+ * // Set up the view
+ * reader = EarthDataReaderFactory.create (file);
+ * view = EarthDataViewFactory.create (reader, var);
+ * view.addOverlay (new CoastOverlay (Color.WHITE));
+ * view.addOverlay (new LatLonOverlay (Color.WHITE));
+ * view.resizeHeight (600);
+ *
+ * // Create a panel
+ * panel = new EarthDataViewPanel (view);
+ * panel.setPreferredSize (view.getSize (null));
+ *
+ * // Create a graphics frame to show
+ * frame = new JFrame (file);
+ * frame.setContentPane (panel);
+ * frame.addWindowListener (new WindowMonitor());
+ * frame.pack();
+ *
+ * // Show the frame onscreen
+ * GUIServices.showFrame (frame);
+ * </pre>
+ * <p>A sample call on a NetCDF file to display SST data is as follows:</p>
+ * <pre>
+ * phollema$ cwgscript view.bsh ncdcOisst2Agg_7a1d_a943_b8c6.nc sst
  * </pre>
  *
  * <!-- END MAN PAGE -->

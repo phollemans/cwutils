@@ -39,6 +39,7 @@ import java.awt.image.IndexColorModel;
 import java.awt.GraphicsEnvironment;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.text.ParseException;
@@ -172,6 +173,7 @@ import ucar.units.Unit;
  * -P, --palette=NAME <br>
  * --palettefile=FILE <br>
  * --palettecolors=COLOR1[/COLOR2[/COLOR3...]] <br>
+ * --palettelist <br>
  * -r, --range=MIN/MAX <br>
  * --scalewidth=PIXELS <br>
  * --ticklabels=LABEL1[/LABEL2[/LABEL3/...]] <br>
@@ -844,6 +846,11 @@ import ucar.units.Unit;
  *   colors may be specified by name or hexadecimal value (see above).
  *   By default, the 'BW-Linear' palette is used.</dd>
  *
+ *   <dt>--palettelist</dt>
+ *
+ *   <dd>Lists the palette names available on the system, including any
+ *   palettes in the user's resource directory.</dd>
+ *
  *   <dt>-r, --range=MIN/MAX</dt>
  *
  *   <dd>The color enhancement range.  Data values are mapped to
@@ -1113,6 +1120,7 @@ public class cwrender {
     Option scalewidthOpt = cmd.addIntegerOption ("scalewidth");
     Option fontOpt = cmd.addStringOption ("font");
     Option fontlistOpt = cmd.addBooleanOption ("fontlist");
+    Option palettelistOpt = cmd.addBooleanOption ("palettelist");
     try { cmd.parse (argv); }
     catch (OptionException e) {
       System.err.println (PROG + ": " + e.getMessage());
@@ -1123,7 +1131,7 @@ public class cwrender {
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
+      usage();
       System.exit (0);
     } // if  
 
@@ -1142,6 +1150,20 @@ public class cwrender {
         getAvailableFontFamilyNames();
       for (int i = 0; i < families.length; i++)
         System.out.println (families[i]);
+      System.exit (0);
+    } // if
+
+    // Print palette list
+    // ------------------
+    if (cmd.getOptionValue (palettelistOpt) != null) {
+      try { ResourceManager.setupPalettes (false); }
+      catch (IOException e) {
+        System.err.println (PROG + ": Error initializing palettes");
+        System.exit (2);
+      } // catch
+      List<String> paletteList = (List<String>) PaletteFactory.getPredefined();
+      for (String name : paletteList)
+        System.out.println (name);
       System.exit (0);
     } // if
 
@@ -1303,11 +1325,10 @@ public class cwrender {
         // Get palette from palette name
         // -----------------------------
         else {
-          ResourceManager.setupPalettes();
+          ResourceManager.setupPalettes (false);
           List paletteList = PaletteFactory.getPredefined();
           if (!paletteList.contains (paletteName)) {
-            System.err.println (PROG + ": Palette '" + paletteName + 
-              "' not found");
+            System.err.println (PROG + ": Palette '" + paletteName + "' not found");
             System.exit (2);
           } // if
           palette = PaletteFactory.create (paletteName);
@@ -2032,6 +2053,7 @@ public class cwrender {
 "  --palettefile=FILE         Set palette XML file used to map data to color.\n" +
 "  --palettecolors=COLOR1[/COLOR2[/COLOR3...]]\n" +
 "                             Set palette colors used to map data to color.\n" +
+"  --palettelist              Print list of valid palette names.\n" +
 "  -r, --range=MIN/MAX        Set enhancement minimum and maximum.\n" +
 "  --scalewidth=PIXELS        Set data color scale width.\n" +
 "  --ticklabels=LABEL1[/LABEL2[/LABEL3/...]]\n" +
