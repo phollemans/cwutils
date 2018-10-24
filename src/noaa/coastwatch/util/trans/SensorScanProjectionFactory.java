@@ -42,6 +42,8 @@ import noaa.coastwatch.util.trans.SensorScanProjection;
  *     <li>Distance of satellite from center of Earth in kilometers.</li>
  *     <li>Scan step angle in row direction in radians.</li>
  *     <li>Scan step angle in column direction in radians.</li>
+ *     <li>Vertical scan flag, non-zero for vertical (optional).  If not
+ *     included, a horizontal Meteosat/Himawari style scanner is assumed.</li>
  *   </ol></li>
  *
  * </ul>

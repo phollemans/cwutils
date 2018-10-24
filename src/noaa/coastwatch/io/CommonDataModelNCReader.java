@@ -385,9 +385,9 @@ utilities when:
     
 /**
  * Here we have a very nasty hack in order to get the transform information
- * correct for Himawari data.  The issue is that we cannot get the CDM class
+ * correct for Himawari and GOES data.  The issue is that we cannot get the CDM class
  * for geostationary data to produce the correct lat/lon transformation.
- * So we insert our own detection of Himawari geostationary parameters in the
+ * So we insert our own detection of Himawari and GOES geostationary parameters in the
  * global metadata, and create an EllipsoidPerspectiveProjection in response
  * This is very similar to the code in the ACSPONCReader.
  */
@@ -449,6 +449,7 @@ utilities when:
 */
 
     try {
+      
       double subpointLon = ((Number) getAttribute ("Sub_Lon")).doubleValue();
       double satDist = ((Number) getAttribute ("Dist_Virt_Sat")).doubleValue();
       int columnFactor = ((Number) getAttribute ("CFAC")).intValue();
@@ -457,21 +458,37 @@ utilities when:
       double polarRadius = ((Number) getAttribute ("Earth_Radius_Polar")).doubleValue();
       double columnOffset = ((Number) getAttribute ("COFF")).doubleValue();
       double lineOffset = ((Number) getAttribute ("LOFF")).doubleValue();
+      String sensor = (String) getAttribute ("sensor");
+      double isVertical = (sensor.equals ("ABI") ? 1 : 0);
+
       CoordinateAxis xHorizAxis = coordSystem.getXHorizAxis();
       int[] dims = xHorizAxis.getShape();
+
+      if (dims.length == 1) {
+        int[] xDims = dims;
+        CoordinateAxis yHorizAxis = coordSystem.getYHorizAxis();
+        int[] yDims = yHorizAxis.getShape();
+        dims = new int[] {yDims[0], xDims[0]};
+      } // if
+      
+      double rowStep = Math.toRadians (65536.0/lineFactor);
+      double colStep = Math.toRadians (65536.0/columnFactor);
       trans = new EllipsoidPerspectiveProjection (
         new double[] {
           0,
           subpointLon,
           satDist,
-          Math.toRadians (65536.0/lineFactor),
-          Math.toRadians (65536.0/columnFactor)
+          rowStep,
+          colStep,
+          isVertical
         },
         dims
       );
+      
       return (trans);
+
     } // try
-    catch (Exception e) { }
+    catch (Exception e) {    }
     
     
     

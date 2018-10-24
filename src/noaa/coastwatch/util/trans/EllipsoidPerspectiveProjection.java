@@ -40,6 +40,12 @@ import noaa.coastwatch.util.trans.SensorScanProjection;
  * of the Earth.  A WGS 84 earth model is used to perform ellipsoid
  * intersection and geodetic latitude calculations.
  *
+ * As of version 3.4.1, two types of scanners are supported: a GOES-style scanner
+ * which scans each column of the image in a vertical north/south direction,
+ * and a Meteosat/Himawari-style scanner which scans each row in the
+ * horizontal east-west direction.  Previously only Meteosat/Himawari style
+ * scanners were supported.
+ *
  * @author Peter Hollemans
  * @since 3.1.9
  */
@@ -133,6 +139,9 @@ public class EllipsoidPerspectiveProjection
 
   /** The quadratic equation (alpha*t^2 + beta*t + gamma = 0) gamma value. */
   private double gamma;
+
+  /** The vertical scanner flag, true for vertical scanner or false for horizontal. */
+  private boolean isVerticalScanner;
 
   /** Various temporary computation arrays. */
   private double[] locVector, dirVector, surfaceNormal, dirVectorP, 
@@ -493,19 +502,19 @@ public class EllipsoidPerspectiveProjection
     double cos_theta = Math.cos (-theta);
     switch (axis) {
     case X:
-      output[0][0] = 1; output[0][1] = 0; output[0][2] = 0;
-      output[1][0] = 0; output[1][1] = cos_theta; output[1][2] = sin_theta;
+      output[0][0] = 1; output[0][1] = 0;          output[0][2] = 0;
+      output[1][0] = 0; output[1][1] = cos_theta;  output[1][2] = sin_theta;
       output[2][0] = 0; output[2][1] = -sin_theta; output[2][2] = cos_theta;
       break;
     case Y:
       output[0][0] = cos_theta; output[0][1] = 0; output[0][2] = -sin_theta;
-      output[1][0] = 0; output[1][1] = 1; output[1][2] = 0;
+      output[1][0] = 0;         output[1][1] = 1; output[1][2] = 0;
       output[2][0] = sin_theta; output[2][1] = 0; output[2][2] = cos_theta;
       break;
     case Z:
-      output[0][0] = cos_theta; output[0][1] = sin_theta; output[0][2] = 0;
+      output[0][0] = cos_theta;  output[0][1] = sin_theta; output[0][2] = 0;
       output[1][0] = -sin_theta; output[1][1] = cos_theta; output[1][2] = 0;
-      output[2][0] = 0; output[2][1] = 0; output[2][2] = 1;
+      output[2][0] = 0;          output[2][1] = 0;         output[2][2] = 1;
       break;
     } // switch
     return (output);
@@ -587,13 +596,15 @@ public class EllipsoidPerspectiveProjection
    * is located at the specified geocentric location and radius, and is
    * pointed towards the center of the Earth.
    *
-   * @param parameters the array of sensor parameters:
+   * @param parameters the array of sensor parameters (either 5 or 6 values):
    * <ol>
    *   <li>Subpoint latitude in degrees (geocentric).</li>
    *   <li>Subpoint longitude in degrees.</li>
    *   <li>Distance of satellite from center of earth in kilometers.</li>
    *   <li>Scan step angle in row direction in radians.</li>
    *   <li>Scan step angle in column direction in radians.</li>
+   *   <li>Vertical scan flag, non-zero for vertical (optional).  If not
+   *   included, a horizontal Meteosat/Himawari style scanner is assumed.</li>
    * </ol>
    * @param dimensions the total grid dimensions as [rows, columns].
    */
@@ -609,6 +620,7 @@ public class EllipsoidPerspectiveProjection
     EarthLocation satLoc = new EarthLocation (parameters[0], parameters[1]);
     double radius = parameters[2];
     double[] scannerSteps = new double[] {parameters[3], parameters[4]};
+    if (parameters.length == 6) isVerticalScanner = (parameters[5] != 0);
 
     // Convert sat location and radius to ECEF (x,y,z)
     // -----------------------------------------------
@@ -622,7 +634,26 @@ public class EllipsoidPerspectiveProjection
     // -----------------------------
     /**
      * The scanner affine transforms image (row, column) to
-     * sensor scan angles (rowAngle, colAngle).
+     * sensor scan angles (rowAngle, colAngle).  These angles work similarly
+     * between the vertical versus horizontal scanners.  For example if
+     * [row col] = [0 0 1] (upper-left corner of the image), then the scanner
+     * affine yields:
+     *
+     * [ rowStep 0      -rowStep*(rows-1)/2 ] [ 0 ]   [ -rowStep*(rows-1)/2 ]   [ phi   ]
+     * [ 0      -colStep colStep*(cols-1)/2 ] [ 0 ] = [ colStep*(cols-1)/2  ] = [ theta ]
+     * [ 0       0       1                  ] [ 1 ]   [ 1                   ]   [       ]
+     *
+     * In the case of a horizontal scanner, the rotation angles are used to
+     * compute a view direction vector from a unit x-axis vector xhat as follows:
+     *
+     * 1) Rotate xhat by phi around the y-axis --> Ry(phi) xhat
+     * 2) Rotate Ry(phi) xhat by theta around the z-axis --> Rz(theta) Ry(phi) xhat
+     *
+     * In the case of a vertical scanner, the rotation angles are used to
+     * compute a view direction vector as follows:
+     *
+     * 1) Rotate xhat by theta around the z-axis --> Rz(theta) xhat
+     * 2) Rotate Rz(theta) xhat around the y-axis --> Ry(phi) Rz(theta) xhat
      */
     scannerAffine = new double[3][3];
     scannerAffine[0][0] = scannerSteps[ROW];
@@ -734,11 +765,28 @@ public class EllipsoidPerspectiveProjection
     // Compute row and column angles
     // -----------------------------
     /**
-     * Row and column angles are computed as if in spherical
-     * coordinates.
+     * Row and column angles are computed as if in spherical coordinates,
+     * slightly differently for the different scanner types:
+     *
+     * 1) For horizontal scanners, the components of the direction vector
+     * are used to compute the angles as:
+     *
+     *   sin (-phi) = dz / |d|
+     *   tan (theta) = dy / dx
+     *
+     * 2) For vertical scanners, a similar computation:
+     *
+     *   sin (theta) = dy / |d|
+     *   tan (-phi) = dz / dx
      */
-    scanAngles[ROW] = -Math.asin (dirVectorP[Z] / magnitude (dirVectorP)); 
-    scanAngles[COL] = Math.atan2 (dirVectorP[Y], dirVectorP[X]);
+    if (isVerticalScanner) {
+      scanAngles[ROW] = -Math.atan2 (dirVectorP[Z], dirVectorP[X]);
+      scanAngles[COL] = Math.asin (dirVectorP[Y] / magnitude (dirVectorP));
+    } // if
+    else {
+      scanAngles[ROW] = -Math.asin (dirVectorP[Z] / magnitude (dirVectorP));
+      scanAngles[COL] = Math.atan2 (dirVectorP[Y], dirVectorP[X]);
+    } // else
     scanAngles[2] = 1;
 
     // Compute image row and column
@@ -766,13 +814,25 @@ public class EllipsoidPerspectiveProjection
     // Compute scan rotation matrix
     // ----------------------------
     /** 
-     * The scan rotation matrix is computed by rotation around the
-     * y axis to get the sensor elevation, and then rotation about the
-     * z axis for the sensor azimuth.
+     * The scan rotation matrix is computed as follows:
+     *
+     * 1) For horizontal scanners, rotation around the
+     * y axis by the sensor elevation, and then rotation about the
+     * z axis by the sensor azimuth.
+     *
+     * 2) For vertical scanners, rotation around the
+     * z axis by get the sensor azimuth, and then rotation about the
+     * y axis by the sensor elevation.
+     *
+     * The difference in order of operations results in a slightly different
+     * view direction vector.
      */
     rotationMatrix (Y, scanAngles[ROW], ry);
     rotationMatrix (Z, scanAngles[COL], rz);
-    multiply (rz, ry, scanRotation);
+    if (isVerticalScanner)
+      multiply (ry, rz, scanRotation);
+    else
+      multiply (rz, ry, scanRotation);
 
     // Compute direction vector
     // ------------------------
@@ -828,10 +888,19 @@ public class EllipsoidPerspectiveProjection
     int cols = 5632;
     EarthLocation center = new EarthLocation (10, 74);
     double scanStep = 56e-6;
-    EllipsoidPerspectiveProjection trans = 
+
+    EllipsoidPerspectiveProjection transHorizontal =
       new EllipsoidPerspectiveProjection (
       new double[] {center.lat, center.lon, 6.61*REM/1000, scanStep, scanStep},
       new int[] {rows, cols});
+
+    EllipsoidPerspectiveProjection transVertical =
+      new EllipsoidPerspectiveProjection (
+      new double[] {center.lat, center.lon, 6.61*REM/1000, scanStep, scanStep, 1},
+      new int[] {rows, cols});
+
+    EarthTransform[] transArray = new EarthTransform[] {transHorizontal, transVertical};
+
     DataLocation[] locArray = new DataLocation[] {
       new DataLocation ((rows-1)/2.0, (cols-1)/2.0),
       new DataLocation ((rows-1)/2.0 - 1000, (cols-1)/2.0 - 1000),
@@ -839,18 +908,28 @@ public class EllipsoidPerspectiveProjection
       new DataLocation ((rows-1)/2.0 + 1000, (cols-1)/2.0 - 1000),
       new DataLocation ((rows-1)/2.0 + 1000, (cols-1)/2.0 + 1000)
     };
-    for (int i = 0; i < locArray.length; i++) {
-      System.out.println ("***********************************");
-      System.out.println ("i = " + i);
-      System.out.println ("  loc          = " + locArray[i]);
-      EarthLocation earthLoc = trans.transform (locArray[i]);
-      System.out.println ("  t(loc)       = " + earthLoc);
-      DataLocation dataLoc = trans.transform (earthLoc);
-      System.out.println ("  t^-1(t(loc)) = " + dataLoc);
-    } // for
 
-    EarthLocation testLoc = new EarthLocation (-10, -106);
-    System.out.println (testLoc + " -> " + trans.transform (testLoc));
+    for (int k = 0; k < transArray.length; k++) {
+
+      EarthTransform trans = transArray[k];
+      System.out.println ("-----------------------------------------");
+      System.out.println ("trans = " + trans);
+      System.out.println ("-----------------------------------------");
+
+      for (int i = 0; i < locArray.length; i++) {
+        System.out.println ("************************");
+        System.out.println ("i = " + i);
+        System.out.println ("  loc          = " + locArray[i]);
+        EarthLocation earthLoc = trans.transform (locArray[i]);
+        System.out.println ("  t(loc)       = " + earthLoc);
+        DataLocation dataLoc = trans.transform (earthLoc);
+        System.out.println ("  t^-1(t(loc)) = " + dataLoc);
+      } // for
+
+      EarthLocation testLoc = new EarthLocation (-10, -106);
+      System.out.println (testLoc + " -> " + trans.transform (testLoc));
+
+    } // for
 
   } // main
 
