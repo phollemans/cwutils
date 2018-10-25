@@ -315,8 +315,11 @@
 
   <target name="clean-packages"
     description="Deletes all packages">
-    <delete>
-      <fileset dir="${pkg.dir}" includes="**/*"/>
+    <delete verbose="true" quiet="true">
+      <fileset dir="${pkg.dir}" includes="cwutils*.*"/>
+      <fileset file="${pkg.dir}/output.txt"/>
+      <fileset file="${pkg.dir}/md5sums"/>
+      <fileset file="${pkg.dir}/updates.xml"/>
     </delete>
   </target>
 
