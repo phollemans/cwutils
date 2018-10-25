@@ -679,6 +679,8 @@ public final class cwinfo {
     EarthTransform trans = info.getTransform();
     valueMap.put ("Projection type", (trans == null ? "Unknown" : 
       trans.describe()));
+    valueMap.put ("Transform ident", (trans == null ? "null" :
+      trans.getClass().getName()));
 
     // Add map projection info
     // -----------------------    

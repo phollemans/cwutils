@@ -61,6 +61,9 @@ public class cwtoolstest {
   /** The name of a second test file available. */
   private static final String TEST_FILE2 = "2009_045_0958_n18_wj.hdf";
 
+  /** The name of a third test file available. */
+  private static final String TEST_FILE3 = "2007_127_1024_n18_mo.hdf";
+
   // Variables
   // ---------
   
@@ -199,7 +202,7 @@ public class cwtoolstest {
         "--labels", "ER/SR", 
         getTestFile (TEST_FILE1, "cwcoverage"),
         getTestFile (TEST_FILE2, "cwcoverage"),
-        getOutputName ("cwcoverage", "pdf", true)
+        getOutputName ("cwcoverage", "png", true)
       }));
 
       // Run download tests
@@ -219,6 +222,17 @@ public class cwtoolstest {
       sysOut.println (runTest ("cwinfo", false, new String[] {
         getTestFile (TEST_FILE1, "cwinfo")
       }));
+      sysOut.println (runTest ("cwinfo", false, new String[] {
+        getTestFile (TEST_FILE3, "cwinfo")
+      }));
+
+      // Run registration tests
+      // ----------------------
+      sysOut.println (runTest ("cwregister", false, new String[] {
+        getTestFile (TEST_FILE1, "cwregister"),
+        getTestFile (TEST_FILE3, "cwregister"),
+        getOutputName ("cwregister", "hdf", true)
+      }));
 
       // TODO Run more tests
       // -------------------
@@ -228,7 +242,6 @@ public class cwtoolstest {
       // sysOut.println (runTest ("cwimport", false, new String[]{}));
       // sysOut.println (runTest ("cwmath", false, new String[]{}));
       // sysOut.println (runTest ("cwnavigate", false, new String[]{}));
-      // sysOut.println (runTest ("cwregister", false, new String[]{}));
       // sysOut.println (runTest ("cwrender", false, new String[]{}));
       // sysOut.println (runTest ("cwsample", false, new String[]{}));
       // sysOut.println (runTest ("cwstats", false, new String[]{}));

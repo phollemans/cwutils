@@ -292,6 +292,7 @@ public class BivariateEstimator
     double[] coefs = (double[]) obj;
     terms = (int) Math.round (Math.sqrt (coefs.length));
     est = new Matrix (coefs, terms);
+    a = est.getRowPackedCopy();
 
   } // useEncoding
 

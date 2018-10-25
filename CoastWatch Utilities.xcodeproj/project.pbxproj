@@ -13,6 +13,7 @@
 		E90956531E4FBFCD000F6B70 /* MultiPointFeatureOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = MultiPointFeatureOverlay.java; sourceTree = "<group>"; };
 		E90956541E5140AC000F6B70 /* MultiPointFeatureOverlayPropertyChooser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = MultiPointFeatureOverlayPropertyChooser.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E909C8571FB247D4003A1281 /* JEPParser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = JEPParser.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E909F91C21823211002BE7D0 /* 2007_127_1024_n18_mo.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2007_127_1024_n18_mo.hdf; sourceTree = "<group>"; };
 		E91669291C2CD994005D76EB /* CDMGridMappedProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CDMGridMappedProjection.java; sourceTree = "<group>"; };
 		E916692A1C370E5D005D76EB /* TestLogger.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TestLogger.java; path = test/TestLogger.java; sourceTree = "<group>"; };
 		E916692B1C371B08005D76EB /* TerminalColors.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TerminalColors.java; path = test/TerminalColors.java; sourceTree = "<group>"; };
@@ -1375,6 +1376,7 @@
 		E96D87C9161661420009B833 /* test */ = {
 			isa = PBXGroup;
 			children = (
+				E909F91C21823211002BE7D0 /* 2007_127_1024_n18_mo.hdf */,
 				E96D87CA161661420009B833 /* 2009_045_0958_n18_wj.hdf */,
 				E96D87CB161661420009B833 /* 2009_054_1004_n18_wj.hdf */,
 			);
