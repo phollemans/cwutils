@@ -200,7 +200,7 @@
   </target>
 
   <target name="packages" depends="all"
-    description="Creates package files specified by ${builds}, or default set if no builds specified">
+    description="Creates package files specified by ${builds}, or default set if no builds specified (-Dtag=true tags the build)">
 
     <!-- Check builds -->
     <if>
