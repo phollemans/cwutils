@@ -722,16 +722,11 @@ public final class cdat
 
     // Add file open support
     // ---------------------
-    if (GUIServices.IS_MAC) {
-      ActionListener listener = new ActionListener () {
-          public void actionPerformed (ActionEvent event) {
-            String name = event.getActionCommand();
-            if (name != null) 
-              openFile (new File (name));
-          } // actionPerformed
-        };
-      GUIServices.addMacOpenFileListener (listener);
-    } // if
+    GUIServices.addOpenFileListener (event -> {
+      String name = event.getActionCommand();
+      if (name != null)
+        openFile (new File (name));
+    });
 
   } // cdat constructor
 

@@ -96,6 +96,8 @@ import noaa.coastwatch.gui.HTMLPanel;
 import noaa.coastwatch.gui.PanelOutputStream;
 import noaa.coastwatch.tools.ToolServices;
 
+import com.install4j.api.launcher.StartupNotification;
+
 // Testing
 import noaa.coastwatch.test.TestLogger;
 
@@ -1089,7 +1091,10 @@ public class GUIServices {
    * @throws RuntimeException if called on a non-Mac platform.
    *
    * @see noaa.coastwatch.gui.MacGUIServices
+   *
+   * @deprecated As of version 3.4.1, use {@link #addOpenFileListener} instead.
    */
+  @Deprecated
   public static void addMacOpenFileListener (
     ActionListener listener
   ) {
@@ -1118,6 +1123,50 @@ public class GUIServices {
     } // catch
 
   } // addMacOpenFileListener
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Handles a startup event by invoking an action listener.
+   *
+   * @since 3.4.1
+   */
+  private static class StartupListener implements StartupNotification.Listener {
+
+    private ActionListener action;
+    
+    public StartupListener (ActionListener action) { this.action = action; }
+    
+    @Override
+    public void startupPerformed (String parameters) {
+
+      if (parameters != null && !parameters.isEmpty()) {
+        String[] paramArray = parameters.split ("\" \"");
+        String file = paramArray[0].replaceAll ("\"", "");
+        action.actionPerformed (new ActionEvent (this, 0, file));
+      } // if
+  
+    } // startupPerformed
+    
+  } // StartupListener class
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Adds a listener that executes when a file is double-clicked on
+   * Mac or Windows.
+   *
+   * @param listener the listener to call.
+   *
+   * @since 3.4.1
+   */
+  public static void addOpenFileListener (
+    ActionListener listener
+  ) {
+
+    StartupNotification.registerStartupListener (new StartupListener (listener));
+
+  } // addOpenFileListener
 
   ////////////////////////////////////////////////////////////
 

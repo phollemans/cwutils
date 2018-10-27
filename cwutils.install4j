@@ -111,7 +111,7 @@
   </files>
   <launchers>
     <launcher name="cdat" id="7" customizedId="" external="false" excludeFromMenu="false" unixMode="755" menuName="CoastWatch Data Analysis Tool" icnsFile="${compiler:iconDir}/cdat.icns" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
-      <executable name="${compiler:cdatName}" type="1" iconSet="true" iconFile="${compiler:iconDir}/cdat.ico" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true">
+      <executable name="${compiler:cdatName}" type="1" iconSet="true" iconFile="${compiler:iconDir}/cdat.ico" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="false" workingDirectory="." singleInstance="true" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true">
         <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
       </executable>
       <splashScreen show="true" autoOff="true" alwaysOnTop="true" width="400" height="220" bitmapFile="./resources/noaa/coastwatch/gui/cwf_splash_2_export.png" java6SplashScreen="true">
@@ -2896,7 +2896,7 @@ if (context.isUnattended()) {
         <variable name="osName" value="linux" description="" category="" />
         <variable name="arch" value="x86_64" description="" category="" />
         <variable name="vmOptionsFile" value="${HOME}/.coastwatch/cwutils.vmoptions" description="" category="" />
-        <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel -Dalloy.theme=glass" description="" category="" />
+        <variable name="vmLafOptions" value="-Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
         <commentFiles />
@@ -2924,8 +2924,8 @@ if (context.isUnattended()) {
         <variable name="osName" value="linux" description="" category="" />
         <variable name="arch" value="x86_64" description="" category="" />
         <variable name="vmOptionsFile" value="${HOME}/.coastwatch/cwutils.vmoptions" description="" category="" />
-        <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.incors.plaf.alloy.AlloyLookAndFeel -Dalloy.theme=glass" description="" category="" />
         <variable name="novm" value="-novm" description="" category="" />
+        <variable name="vmLafOptions" value="-Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel" description="" category="" />
       </variables>
       <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
         <commentFiles />

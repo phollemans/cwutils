@@ -46,6 +46,7 @@
   <path id="cp">
     <!-- The main libraries used by the code. -->
     <fileset dir="lib/java" includes="**/*.jar,**/*.zip"/>
+    <pathelement location="${install4j.dir}/resource/i4jruntime.jar"/>
   </path>
 
   <!-- Add to default excludes -->
@@ -336,6 +337,7 @@
     <pathelement location="data"/>
     <pathelement location="extensions"/>
     <pathelement location="${java.home}/lib/plugin.jar"/>
+    <pathelement location="${install4j.dir}/resource/i4jruntime.jar"/>
   </path>
 
   <target name="test" depends="classes"

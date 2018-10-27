@@ -30,6 +30,11 @@
   computer display gamma correction when showing visible data scaled between
   0\% and 100\% intensity values.
 
+  \item The visual appearance of coastlines plotted on images in CDAT and
+  cwrender has been improved in some cases by adding a new higher
+  resolution coastline database, and adjusting the algorithm that selects
+  the coastline detail level to use for the scene being displayed.
+
 \end{itemize}
 
 \hspace{0.4cm} {\bf Command line tools}
@@ -66,17 +71,19 @@
   \item The automatic documentation generation system was re-written to
   correct various user's guide and manual page formatting issues.
 
-  \item The visual appearance of coastlines plotted on images in CDAT and
-  cwrender has been improved in some cases by adding a new higher
-  resolution coastline database, and adjusting the algorithm that selects
-  the coastline detail level to use for the scene being displayed.
-
   \item The cwrender tool no longer creates a 'palette' directory in the
   user resources if the directory is not found.  This was causing issues
   on some systems.
 
   \item GOES-style geostationary projection is now computed correctly.
   Previously only Meteosat/Himawari scanners were supported.
+
+  \item CDAT on Windows now correctly detects when a user double-clicks
+  a file in the Windows file explorer, and opens the file in the currently
+  running CDAT instance, rather than creating a new CDAT window.
+
+  \item CDAT on Linux uses a new GUI theme as a workaround for a tab bar
+  issue.  When many file tabs were opened, the tab bar became unusable.
 
 \end{itemize}
 

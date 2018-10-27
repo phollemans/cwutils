@@ -41,7 +41,12 @@ import java.util.List;
  *
  * @author Peter Hollemans
  * @since 3.2.1
+ *
+ * @deprecated Since version 3.4.1, this class is not needed and the
+ * functionality is replaced by cross platform functionality in
+ * {@link GUIServices#addOpenFileListener}.
  */
+@Deprecated
 public class MacGUIServices {
 
   ////////////////////////////////////////////////////////////
