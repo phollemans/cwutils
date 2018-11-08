@@ -636,7 +636,7 @@ public class MultiPointFeatureOverlayStatsPanel
     Statistics stats = new Statistics (new DataIterator () {
       private int index = 0;
       public boolean hasNext() { return (index < valueArray.length); }
-      public Double next() { return (new Double (nextDouble())); }
+      public Double next() { return (Double.valueOf (nextDouble())); }
       public double nextDouble () { return (valueArray[index++]); }
       public void reset() { index = 0; }
       public void remove () { throw new UnsupportedOperationException(); }

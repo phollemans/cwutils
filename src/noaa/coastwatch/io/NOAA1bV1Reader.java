@@ -565,34 +565,34 @@ public class NOAA1bV1Reader
 
       // Standard attributes
       // -------------------
-      case SCAN_LINE_NUMBER: return (new Integer (getUShort (data, 0)));
-      case QUALITY_INDICATOR: return (new Long (getUInt (data, 8)));
-      case CH3_SELECT: return (new Integer (0));
+      case SCAN_LINE_NUMBER: return (Integer.valueOf (getUShort (data, 0)));
+      case QUALITY_INDICATOR: return (Long.valueOf (getUInt (data, 8)));
+      case CH3_SELECT: return (Integer.valueOf (0));
       case SCAN_LINE_YEAR:
         int year = getUByte (data, 2) >>> 1;
         if (year > 70) year = 1900 + year;
         else year = 2000 + year;
-        return (new Integer (year));
-      case SCAN_LINE_DAY: return (new Integer (getUShort (data, 2) & 0x01ff));
-      case SCAN_LINE_MILLISECOND: return (new Long (getUInt (data, 4)));
+        return (Integer.valueOf (year));
+      case SCAN_LINE_DAY: return (Integer.valueOf (getUShort (data, 2) & 0x01ff));
+      case SCAN_LINE_MILLISECOND: return (Long.valueOf (getUInt (data, 4)));
 
       // Format specific attributes
       // --------------------------
-      case CH1_SLOPE: return (new Float (getInt (data, 12)/SLOPE_SCALE));
-      case CH1_INTERCEPT: return (new Float (getInt (data, 16)/INTER_SCALE));
-      case CH2_SLOPE: return (new Float (getInt (data, 20)/SLOPE_SCALE));
-      case CH2_INTERCEPT: return (new Float (getInt (data, 24)/INTER_SCALE));
-      case CH3_SLOPE: return (new Float (getInt (data, 28)/SLOPE_SCALE));
-      case CH3_INTERCEPT: return (new Float (getInt (data, 32)/INTER_SCALE));
-      case CH4_SLOPE: return (new Float (getInt (data, 36)/SLOPE_SCALE));
-      case CH4_INTERCEPT: return (new Float (getInt (data, 40)/INTER_SCALE));
-      case CH5_SLOPE: return (new Float (getInt (data, 44)/SLOPE_SCALE));
-      case CH5_INTERCEPT: return (new Float (getInt (data, 48)/INTER_SCALE));
-      case PRT_READING_1: return (new Integer ((int) (getUInt (data, 
+      case CH1_SLOPE: return (Float.valueOf (getInt (data, 12)/SLOPE_SCALE));
+      case CH1_INTERCEPT: return (Float.valueOf (getInt (data, 16)/INTER_SCALE));
+      case CH2_SLOPE: return (Float.valueOf (getInt (data, 20)/SLOPE_SCALE));
+      case CH2_INTERCEPT: return (Float.valueOf (getInt (data, 24)/INTER_SCALE));
+      case CH3_SLOPE: return (Float.valueOf (getInt (data, 28)/SLOPE_SCALE));
+      case CH3_INTERCEPT: return (Float.valueOf (getInt (data, 32)/INTER_SCALE));
+      case CH4_SLOPE: return (Float.valueOf (getInt (data, 36)/SLOPE_SCALE));
+      case CH4_INTERCEPT: return (Float.valueOf (getInt (data, 40)/INTER_SCALE));
+      case CH5_SLOPE: return (Float.valueOf (getInt (data, 44)/SLOPE_SCALE));
+      case CH5_INTERCEPT: return (Float.valueOf (getInt (data, 48)/INTER_SCALE));
+      case PRT_READING_1: return (Integer.valueOf ((int) (getUInt (data, 
         HRPT_TELEMETRY_OFFSET+20) & 0x03ff)));
-      case PRT_READING_2: return (new Integer ((int) (getUInt (data, 
+      case PRT_READING_2: return (Integer.valueOf ((int) (getUInt (data, 
         HRPT_TELEMETRY_OFFSET+24) >>> 20)));
-      case PRT_READING_3: return (new Integer ((int) ((getUInt (data, 
+      case PRT_READING_3: return (Integer.valueOf ((int) ((getUInt (data, 
         HRPT_TELEMETRY_OFFSET+24) >>> 10) & 0x03ff)));
 
       default:
@@ -1012,18 +1012,18 @@ public class NOAA1bV1Reader
         int startYear = getUByte (data, 2) >>> 1;
         if (startYear > 70) startYear = 1900 + startYear;
         else startYear = 2000 + startYear;
-        return (new Integer (startYear));
-      case START_DAY: return (new Integer (getUShort (data, 2) & 0x01ff));
-      case START_MILLISECOND: return (new Long (getUInt (data, 4)));
+        return (Integer.valueOf (startYear));
+      case START_DAY: return (Integer.valueOf (getUShort (data, 2) & 0x01ff));
+      case START_MILLISECOND: return (Long.valueOf (getUInt (data, 4)));
       case END_YEAR:
         int endYear = getUByte (data, 10) >>> 1;
         if (endYear > 70) endYear = 1900 + endYear;
         else endYear = 2000 + endYear;
-        return (new Integer (endYear));
-      case END_DAY: return (new Integer (getUShort (data, 10) & 0x01ff));
-      case END_MILLISECOND: return (new Long (getUInt (data, 12)));
-      case DATA_RECORDS: return (new Integer (getUShort (data, 8)));
-      case DATA_GAPS: return (new Integer (getUShort (data, 24)));
+        return (Integer.valueOf (endYear));
+      case END_DAY: return (Integer.valueOf (getUShort (data, 10) & 0x01ff));
+      case END_MILLISECOND: return (Long.valueOf (getUInt (data, 12)));
+      case DATA_RECORDS: return (Integer.valueOf (getUShort (data, 8)));
+      case DATA_GAPS: return (Integer.valueOf (getUShort (data, 24)));
       case DATASET_NAME: 
         try { return (new String (getBytes (data, 40, 44), "Cp500").trim()); }
         catch (UnsupportedEncodingException e) { 
@@ -1100,16 +1100,16 @@ public class NOAA1bV1Reader
       // -------------------
       case DATASET_NAME: return (new String (getBytes (data, 30, 44)).trim());
       case START_HOUR: 
-        return (new Integer (Integer.parseInt (new String (getBytes (data, 89, 
+        return (Integer.valueOf (Integer.parseInt (new String (getBytes (data, 89, 
           2)).trim())));
       case START_MINUTE: 
-        return (new Integer (Integer.parseInt (new String (getBytes (data, 91, 
+        return (Integer.valueOf (Integer.parseInt (new String (getBytes (data, 91, 
           2)).trim())));
       case DURATION_MINUTES: 
-        return (new Integer (Integer.parseInt (new String (getBytes (data, 93, 
+        return (Integer.valueOf (Integer.parseInt (new String (getBytes (data, 93, 
           3)).trim())));
       case SENSOR_DATA_WORD_SIZE: 
-        return (new Integer (Integer.parseInt (new String (getBytes (data, 
+        return (Integer.valueOf (Integer.parseInt (new String (getBytes (data, 
           117, 2)).trim())));
 
       // Format specific attributes

@@ -51,7 +51,7 @@ public class ByteValuePanel
 
     Byte parsedValue;
     try {
-      parsedValue = new Byte (field.getText());
+      parsedValue = Byte.valueOf (field.getText());
     } // try
     catch (NumberFormatException e) {
       parsedValue = null;

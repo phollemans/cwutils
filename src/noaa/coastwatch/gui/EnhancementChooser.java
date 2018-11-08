@@ -692,7 +692,7 @@ public class EnhancementChooser
     // --------------------------
     if (func instanceof StepEnhancement) {
       functionCombo.setSelectedItem (FUNCTION_STEP);
-      stepsSpinner.setValue (new Integer (((StepEnhancement)func).getSteps()));
+      stepsSpinner.setValue (Integer.valueOf (((StepEnhancement)func).getSteps()));
       stepsSpinner.setEnabled (true);
     } // if
     else if (func instanceof LinearEnhancement) {

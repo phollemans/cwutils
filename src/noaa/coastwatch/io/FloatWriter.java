@@ -101,7 +101,7 @@ public class FloatWriter
   
   ////////////////////////////////////////////////////////////
 
-  public Number getDefaultMissing () { return (new Float (Float.NaN)); }
+  public Number getDefaultMissing () { return (Float.valueOf (Float.NaN)); }
 
   ////////////////////////////////////////////////////////////
 

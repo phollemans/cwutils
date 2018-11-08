@@ -20,9 +20,9 @@
 </head>
 <body bgcolor="white">
 
-Provides a number of classes used for rendering data to images.<p>
+<p>Provides a number of classes used for rendering data to images.</p>
 
-The top-level rendering class {@link
+<p>The top-level rendering class {@link
 noaa.coastwatch.render.EarthDataView} uses the data values from one or
 more {@link noaa.coastwatch.util.DataVariable} objects to create an
 image.  A number of {@link noaa.coastwatch.render.EarthDataOverlay}
@@ -31,28 +31,28 @@ lines on the main view image.  Legends may be rendered on or beside
 the view image using {@link noaa.coastwatch.render.Legend} objects.
 The {@link noaa.coastwatch.render.EarthDataPlot} class groups an
 <code>EarthDataView</code> and various legends to produce a standard
-presentation quality data plot.<p>
+presentation quality data plot.</p>
 
-The subclass {@link noaa.coastwatch.render.ColorEnhancement} is an
+<p>The subclass {@link noaa.coastwatch.render.ColorEnhancement} is an
 <code>EarthDataView</code> which assigns colors to data values based
 on {@link noaa.coastwatch.render.Palette} and {@link
 noaa.coastwatch.render.EnhancementFunction} objects.  The
 <code>Palette</code> class represents an indexed set of colors read
 from a special format data file.  The <code>EnhancementFunction</code>
-class determines the mapping of data values to colors.<p>
+class determines the mapping of data values to colors.</p>
 
-The subclass {@link noaa.coastwatch.render.ColorComposite} is an
+<p>The subclass {@link noaa.coastwatch.render.ColorComposite} is an
 <code>EarthDataView</code> that creates an image using three data
 values for the red, green, and blue components of each pixel.  A color
 composite may be used to emphasize certain spectral features in a
-satellite image that can only be seen using multiple data channels.<p>
+satellite image that can only be seen using multiple data channels.</p>
 
-The {@link noaa.coastwatch.render.LineFeatureSource} and {@link
+<p>The {@link noaa.coastwatch.render.feature.LineFeatureSource} and {@link
 noaa.coastwatch.render.feature.LineFeature} classes combine to allow the
 reading and rendering of earth polyline data such as coast lines and
 political boundaries.  <code>LineFeature</code> objects are normally
 used in conjunction with <code>EarthDataOverlay</code> objects to
-provide line annotation for data views.<p>
+provide line annotation for data views.</p>
 
 </body>
 </html>

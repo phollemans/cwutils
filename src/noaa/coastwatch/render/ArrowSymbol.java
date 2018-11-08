@@ -244,7 +244,7 @@ public class ArrowSymbol
     double v = Double.parseDouble (argv[1]);
     final int size = Integer.parseInt (argv[2]);
     PointFeature feature = new PointFeature (new EarthLocation (0, 0), 
-      new Object[] {new Double (u), new Double (v)});
+      new Object[] {Double.valueOf (u), Double.valueOf (v)});
     final ArrowSymbol symbol = new ArrowSymbol (0, 1);
     symbol.setBorderColor (Color.BLACK); 
     symbol.setFeature (feature);

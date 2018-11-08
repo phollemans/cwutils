@@ -64,7 +64,7 @@ public class ShortWriter
 
   ////////////////////////////////////////////////////////////
 
-  public Number getDefaultMissing () { return (new Short ((short)-32768)); }
+  public Number getDefaultMissing () { return (Short.valueOf ((short)-32768)); }
 
   ////////////////////////////////////////////////////////////
 

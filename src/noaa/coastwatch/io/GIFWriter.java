@@ -108,7 +108,7 @@ public class GIFWriter {
       Set colorSet = new HashSet (256);
       image_loop: for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-          Integer color = new Integer (image.getRGB (x, y));
+          Integer color = Integer.valueOf (image.getRGB (x, y));
           colorSet.add (color);
           if (colorSet.size() > 256) {
             needsQuantization = true;

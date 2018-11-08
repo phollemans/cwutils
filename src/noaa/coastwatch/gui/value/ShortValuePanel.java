@@ -51,7 +51,7 @@ public class ShortValuePanel
 
     Short parsedValue;
     try {
-      parsedValue = new Short (field.getText());
+      parsedValue = Short.valueOf (field.getText());
     } // try
     catch (NumberFormatException e) {
       parsedValue = null;

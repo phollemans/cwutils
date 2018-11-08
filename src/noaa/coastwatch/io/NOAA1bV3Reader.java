@@ -121,8 +121,8 @@ public class NOAA1bV3Reader
     ) {
 
       switch (index) {
-      case CH4_COEFFICIENT3: return (new Float (getInt (data, 260) * 1e-7));
-      case CH5_COEFFICIENT3: return (new Float (getInt (data, 284) * 1e-7));
+      case CH4_COEFFICIENT3: return (Float.valueOf (getInt (data, 260) * 1e-7f));
+      case CH5_COEFFICIENT3: return (Float.valueOf (getInt (data, 284) * 1e-7f));
       default: return (super.getAttribute (index));
       } // switch
 

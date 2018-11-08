@@ -287,7 +287,7 @@ public class ServerQuery {
     keyNames = line.split ("\\|");
     valueKeyMap = new HashMap();
     for (int i = 0; i < keyNames.length; i++) 
-      valueKeyMap.put (keyNames[i], new Integer (i));
+      valueKeyMap.put (keyNames[i], Integer.valueOf (i));
 
     // Read result lines
     // -----------------

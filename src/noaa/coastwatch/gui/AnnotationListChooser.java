@@ -555,7 +555,7 @@ public class AnnotationListChooser
       panel.add (new JLabel ("Transparency:"), gc);
       gc.insets = new Insets (2, 0, 2, 0);
 
-      visualTransparency = new VisualInteger (new Integer (0));
+      visualTransparency = new VisualInteger (Integer.valueOf (0));
       visualTransparency.setRestrictions (new int[] {0, 100, 5});
       GUIServices.setConstraints (gc, 1, 4, 1, 1, 
         GridBagConstraints.NONE, 1, 0);

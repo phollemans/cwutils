@@ -127,7 +127,7 @@ public class LocalDirectoryLister
       String name = entry.getName();
       String date = DateFormatter.formatDate (entry.getModified(), 
         "yyyy/MM/dd HH:mm", zone);
-      Long size = new Long (entry.getSize());
+      Long size = Long.valueOf (entry.getSize());
       Format.printf ("%5s %-10d %-18s %s\n", 
         new Object[] {dir, size, date, name});
     } // for

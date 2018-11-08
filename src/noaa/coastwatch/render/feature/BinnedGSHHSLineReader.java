@@ -567,7 +567,7 @@ public abstract class BinnedGSHHSLineReader
       for (int i = 0; i < bin.getSegments(); i++) {
         Bin.Segment segment = bin.getSegment (i); 
         featureList.add (segment.getLineFeature());
-        levelList.add (new Integer (segment.getLevel()));
+        levelList.add (Integer.valueOf (segment.getLevel()));
       } // for
 
     } // while
@@ -621,7 +621,7 @@ public abstract class BinnedGSHHSLineReader
       // Get bin index
       // -------------
       int[] square = (int[]) iter.next(); 
-      Integer binIndex = new Integer (getBinIndex (new EarthLocation (
+      Integer binIndex = Integer.valueOf (getBinIndex (new EarthLocation (
         square[0]+0.5, square[1]+0.5)));
 
       // Add index to hash set

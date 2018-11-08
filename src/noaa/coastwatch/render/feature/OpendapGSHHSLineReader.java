@@ -104,7 +104,7 @@ public class OpendapGSHHSLineReader
 
     // Make sure bin cache contains data
     // ---------------------------------
-    if (!binDataCache.containsKey (new Integer (index)))
+    if (!binDataCache.containsKey (Integer.valueOf (index)))
       throw new RuntimeException ("Bin cache does not contain bin " + index);
 
     // Set next bin index
@@ -124,7 +124,7 @@ public class OpendapGSHHSLineReader
 
     // Get cached bin data
     // -------------------
-    BinData binData = (BinData) binDataCache.get (new Integer (nextBin));
+    BinData binData = (BinData) binDataCache.get (Integer.valueOf (nextBin));
     if (binData == null)
       throw new IOException ("Bin cache does not contain bin " + nextBin);
 
@@ -323,7 +323,7 @@ public class OpendapGSHHSLineReader
           firstBinPoint-firstReadPoint, dx, 0, binPoints);
         System.arraycopy (dySpec.data, 
           firstBinPoint-firstReadPoint, dy, 0, binPoints);
-        binDataCache.put (new Integer (i), 
+        binDataCache.put (Integer.valueOf (i), 
           new BinData (segmentLevel, segmentPoints, dx, dy));
 
       } // for
@@ -371,14 +371,14 @@ public class OpendapGSHHSLineReader
       // ------------------------------------
       while (firstReadBin <= lastReadBin) {
         if (numSegments[firstReadBin] == 0 ||
-            binDataCache.containsKey (new Integer (firstReadBin)))
+            binDataCache.containsKey (Integer.valueOf (firstReadBin)))
           firstReadBin++;
         else 
           break;
       } // while
       while (lastReadBin >= firstReadBin) {
         if (numSegments[lastReadBin] == 0 ||
-          binDataCache.containsKey (new Integer (lastReadBin))) 
+          binDataCache.containsKey (Integer.valueOf (lastReadBin))) 
           lastReadBin--;
         else 
           break;

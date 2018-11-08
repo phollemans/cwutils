@@ -644,12 +644,12 @@ public class EarthImageWriter {
       // Check for duplicate color
       // -------------------------
       int colorRGB = colorModel.getRGB (i);
-      Integer mapKey = new Integer (colorRGB);
+      Integer mapKey = Integer.valueOf (colorRGB);
       if (colorMap.containsKey (mapKey)) continue;
 
       // Add entry to hash map
       // ---------------------
-      Byte colorIndex = new Byte ((byte) i);
+      Byte colorIndex = Byte.valueOf ((byte) i);
       colorMap.put (mapKey, colorIndex);
 
       // Add entry to color tree
@@ -684,7 +684,7 @@ public class EarthImageWriter {
         // Get color index from hash map
         // -----------------------------
         int colorRGB = image.getRGB (x, y);
-        Integer mapKey = new Integer (colorRGB);
+        Integer mapKey = Integer.valueOf (colorRGB);
         Byte colorIndex = (Byte) colorMap.get (mapKey);
 
         // If that fails, get closest index from color tree

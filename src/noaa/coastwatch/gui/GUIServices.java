@@ -1081,52 +1081,6 @@ public class GUIServices {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Adds a listener that executes when a file is opened on a Mac via
-   * the Finder (for example by double-clicking).  This requires a
-   * call to the <code>MacGUIServices</code> class via reflection so
-   * that it will run correctly no matter the platform.
-   *
-   * @param listener the listener to call.
-   *
-   * @throws RuntimeException if called on a non-Mac platform.
-   *
-   * @see noaa.coastwatch.gui.MacGUIServices
-   *
-   * @deprecated As of version 3.4.1, use {@link #addOpenFileListener} instead.
-   */
-  @Deprecated
-  public static void addMacOpenFileListener (
-    ActionListener listener
-  ) {
-
-    try {
-
-      // Get the add method
-      // ------------------
-      Class services = ClassLoader.getSystemClassLoader().loadClass (
-        "noaa.coastwatch.gui.MacGUIServices");
-      Class[] classes = {ActionListener.class};
-      Method addMethod = services.getDeclaredMethod ("addOpenFileListener", 
-        classes);
-
-      // Add the listener
-      // ----------------
-      if (addMethod != null) {
-        Object[] args = {listener};
-        addMethod.invoke (services, args);
-      } // if
-      
-    } catch (NoClassDefFoundError e1) {
-      throw new RuntimeException ("Not running on a Mac platform");
-    } catch (Exception e2) {
-      throw new RuntimeException (e2.getMessage());
-    } // catch
-
-  } // addMacOpenFileListener
-
-  ////////////////////////////////////////////////////////////
-
-  /**
    * Handles a startup event by invoking an action listener.
    *
    * @since 3.4.1

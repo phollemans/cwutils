@@ -146,7 +146,7 @@ public class TextWriter
    */
   public void setMissing (Number missing) { 
 
-    this.missing = (missing == null ? new Double (Double.NaN) : missing);
+    this.missing = (missing == null ? Double.valueOf (Double.NaN) : missing);
 
   } // setNissing
 
@@ -182,7 +182,7 @@ public class TextWriter
     setReverse (false);
     setDelimiter (" ");
     setHeader (false);
-    setMissing (new Double (Double.NaN));
+    setMissing (Double.valueOf (Double.NaN));
 
     // Create output file
     // ------------------

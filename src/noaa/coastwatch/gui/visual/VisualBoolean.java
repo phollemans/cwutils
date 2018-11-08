@@ -77,7 +77,7 @@ public class VisualBoolean
   ////////////////////////////////////////////////////////////
 
   /** Gets the Boolean value. */
-  public Object getValue () { return (new Boolean (checkBox.isSelected())); }
+  public Object getValue () { return (Boolean.valueOf (checkBox.isSelected())); }
 
   ////////////////////////////////////////////////////////////
 
@@ -89,7 +89,7 @@ public class VisualBoolean
   public static void main (String argv[]) {
   
     JPanel panel = new JPanel();
-    panel.add (new VisualBoolean (new Boolean (true)).getComponent());
+    panel.add (new VisualBoolean (Boolean.valueOf (true)).getComponent());
     noaa.coastwatch.gui.TestContainer.showFrame (panel);
 
   } // main

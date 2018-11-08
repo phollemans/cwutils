@@ -87,7 +87,7 @@ public class TextSavePanel
     // -----------
     writer.setCoords (textPanel.getCoords());
     writer.setHeader (textPanel.getHeader());
-    writer.setMissing (new Double (textPanel.getMissing()));
+    writer.setMissing (Double.valueOf (textPanel.getMissing()));
     boolean isReverse = 
       (textPanel.getCoordOrder() == TextOptionPanel.ORDER_LONLAT);
     writer.setReverse (isReverse);

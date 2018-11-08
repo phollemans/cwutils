@@ -364,19 +364,19 @@ public class NOAA1bFileReader extends EarthDataReader {
       data = new float[1];
       format = new DecimalFormat ("0.####");
       scaling = new double[] {1, 0};
-      missing = new Float (Float.NaN);
+      missing = Float.valueOf (Float.NaN);
     } // if
     else if (varName.equals ("scan_time")) {
       data = new long[1];
       format = new DecimalFormat ("0");
       scaling = new double[] {1, 0};
-      missing = new Long (-1L);
+      missing = Long.valueOf (-1L);
     } // else if
     else {
       data = new short[1];
       format = new DecimalFormat ("0.##");
       scaling = new double[] {0.01, 0};
-      missing = new Short ((short) -32768);
+      missing = Short.valueOf ((short) -32768);
     } // else
  
     return (new Grid (varName, longName, varUnits, lines, 

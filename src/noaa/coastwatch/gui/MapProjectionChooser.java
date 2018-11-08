@@ -584,7 +584,7 @@ public class MapProjectionChooser
 
       if (spheroidCombo.getItemCount() != GCTP.MAX_SPHEROIDS) {
         if (lastSpheroid == null)
-          lastSpheroid = new Integer (currentSpheroid);
+          lastSpheroid = Integer.valueOf (currentSpheroid);
       } // if
       else {
         if (lastSpheroid != null) {
@@ -781,7 +781,7 @@ public class MapProjectionChooser
                 JOptionPane.showMessageDialog (dialog, 
                   "A problem occurred parsing the projection parameters.\n" + 
                   error.toString(), "Error", JOptionPane.ERROR_MESSAGE);
-                optionPane.setValue (new Integer (JOptionPane.DEFAULT_OPTION));
+                optionPane.setValue (Integer.valueOf (JOptionPane.DEFAULT_OPTION));
                 return;
               } // catch
             } // if

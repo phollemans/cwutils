@@ -411,7 +411,7 @@ public final class cdat
 
     FileMenuListener fileListener = new FileMenuListener();
     JMenuItem menuItem;
-    int keymask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+    int keymask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 //    menuItem = new JMenuItem (OPEN_COMMAND, GUIServices.getIcon ("menu.open"));
     menuItem = new JMenuItem (OPEN_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_O);

@@ -44,22 +44,25 @@ import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.EarthLocation;
 
 /**
- * The GSHHS reader class reads Global Self-consistent Hierarchical
+ * <p>The GSHHS reader class reads Global Self-consistent Hierarchical
  * High-resolution Shorelines (GSHHS) binary data files.  GSHHS is
  * distributed as a set of data files and routines that provide
  * worldwide vector coastline data in a closed polygon format.  GSHHS
- * is descibed in:
+ * is descibed in:</p>
+ *
  * <blockquote>
  *   Wessel, P., and W. H. F. Smith, 1996, <i>A global self-consistent,
  *   hierarchical, high-resolution shoreline database</i>, J. Geophys.
  *   Res., 101, 8741-8743.
  * </blockquote>
- * and is available from:
+ *
+ * <p>and is available from:</p>
+ *
  * <blockquote>
  *   http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html
- * </blockquote><p>
+ * </blockquote>
  *
- * The GSHHS reader can read GSHHS data files either from a set of
+ * <p>The GSHHS reader can read GSHHS data files either from a set of
  * predefined resource data files or from a user supplied data file.
  * The predefined resources have been passed through a precomputation
  * routine that creates an index of the files based on a 1x1 degree
@@ -68,7 +71,7 @@ import noaa.coastwatch.util.EarthLocation;
  * quick selection of polygons via the {@link #select} routine.  If
  * the GSHHS reader is created from a user file, the entire set of
  * GSHHS polygons is read into memory and the selection method
- * performs no operation.<p>
+ * performs no operation.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.0
@@ -81,7 +84,7 @@ import noaa.coastwatch.util.EarthLocation;
  * access routines and polygon assembly methods.  The new class uses a
  * reduced data file size and is faster at handling small sections of
  * polygons with a large number of points outside the area of
- * interest.<p>
+ * interest.
  */
 @Deprecated
 public class GSHHSReader
@@ -443,7 +446,7 @@ public class GSHHSReader
       int polygons = index.readShort();
       for (int k = 0; k < polygons; k++) {
         int offset = index.readInt();
-        offsets.add (new Integer (offset));
+        offsets.add (Integer.valueOf (offset));
       } // for
 
     } // while

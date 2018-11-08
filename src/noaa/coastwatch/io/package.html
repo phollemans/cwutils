@@ -17,13 +17,16 @@
   license.txt file.
 
 -->
+<style type="text/css">
+table, th, td, tr {border: 1px solid black; border-collapse:collapse;}
+</style>
 </head>
 <body bgcolor="white">
 
-Provides classes for reading and writing satellite data in a variety
-of formats.<p>
+<p>Provides classes for reading and writing satellite data in a variety
+of formats.</p>
 
-The basis of all satellite data input functionality in the CW
+<p>The basis of all satellite data input functionality in the CW
 software library is the {@link noaa.coastwatch.io.EarthDataReader}
 class and subclasses.  The reader classes provide generic methods for
 reading metadata and data variables one at a time from CoastWatch HDF
@@ -32,20 +35,18 @@ TeraScan HDF files ({@link noaa.coastwatch.io.TSHDFReader}) which have
 a similar format to CoastWatch HDF but with different earth location
 metadata.  To open a new file of unknown format, the {@link
 noaa.coastwatch.io.EarthDataReaderFactory} attempts to guess the
-file format and provide an <code>EarthDataReader</code> object.<p>
+file format and provide an <code>EarthDataReader</code> object.</p>
 
-The reader classes can be grouped by format and capabilities as follows:
-
-<style type="text/css">
-table, th, td, tr {border: 1px solid black; border-collapse:collapse;}
-</style>
+<p>The reader classes can be grouped by format and capabilities as follows:</p>
 
 <table>
+
+<caption>Reader Classes</caption>
 
 <tr style="background-color:rgb(198,133,11); color:white">
 <th>Class</th>
 <th>Metadata</th>
-<th>earth Tranform</th>
+<th>Earth Tranform</th>
 <th>Data Buffering</th>
 </tr>
 
@@ -149,14 +150,14 @@ same CDM grid coordinates</td>
 
 </table>
 
-The writer classes, subclasses of {@link
+<p>The writer classes, subclasses of {@link
 noaa.coastwatch.io.EarthDataWriter}, support the creation of many
 different output file formats.  In particular, the {@link
 noaa.coastwatch.io.BinaryWriter} classes write data variables as a
 stream of binary data values, the {@link
 noaa.coastwatch.io.TextWriter} class handles the writing of ASCII text
 files, and the {@link noaa.coastwatch.io.CWHDFWriter} writes
-CoastWatch HDF format.<p>
+CoastWatch HDF format.</p>
 
 </body>
 </html>

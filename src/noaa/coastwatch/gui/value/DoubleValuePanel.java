@@ -55,7 +55,7 @@ public class DoubleValuePanel
 
     Double parsedValue;
     try {
-      parsedValue = new Double (field.getText());
+      parsedValue = Double.valueOf (field.getText());
     } // try
     catch (NumberFormatException e) {
       parsedValue = null;

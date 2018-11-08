@@ -287,7 +287,7 @@ public final class cwstatus
 
     AbstractAction connectAction = new ConnectAction();
     JMenuItem menuItem;
-    int keymask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+    int keymask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 
     menuItem = new JMenuItem (SERVER_COMMAND,
       GUIServices.getIcon ("menu.server"));

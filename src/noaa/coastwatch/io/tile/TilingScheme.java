@@ -665,7 +665,7 @@ public class TilingScheme {
     
     logger.test ("Tile");
     
-    Object data = new Integer (38);
+    Object data = Integer.valueOf (38);
     Tile tile = scheme.new Tile (pos, data);
     assert (tile.getData().equals (data));
     tile.setData (null);

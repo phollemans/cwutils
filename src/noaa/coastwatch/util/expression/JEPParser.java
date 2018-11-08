@@ -441,7 +441,7 @@ public class JEPParser implements ExpressionParser {
       if ((maskData.longValue() & maskValue.longValue()) == 0)
         inStack.push (value);
       else
-        inStack.push (new Double (Double.NaN));
+        inStack.push (Double.valueOf (Double.NaN));
 
     } // run
 
@@ -474,7 +474,7 @@ public class JEPParser implements ExpressionParser {
 
       // Perform bitwise or
       // ------------------
-      Long val = new Long (value1.longValue() | value2.longValue());
+      Long val = Long.valueOf (value1.longValue() | value2.longValue());
       inStack.push (val);
 
     } // run
@@ -507,7 +507,7 @@ public class JEPParser implements ExpressionParser {
 
       // Perform bitwise and
       // ------------------
-      Long val = new Long (value1.longValue() & value2.longValue());
+      Long val = Long.valueOf (value1.longValue() & value2.longValue());
       inStack.push (val);
 
     } // run
@@ -541,7 +541,7 @@ public class JEPParser implements ExpressionParser {
 
       // Perform bitwise xor
       // -------------------
-      Long val = new Long (value1.longValue() ^ value2.longValue());
+      Long val = Long.valueOf (value1.longValue() ^ value2.longValue());
       inStack.push (val);
 
     } // run
@@ -574,7 +574,7 @@ public class JEPParser implements ExpressionParser {
 
       // Perform bitwise not
       // -------------------
-      Long val = new Long (~value1.longValue());
+      Long val = Long.valueOf (~value1.longValue());
       inStack.push (val);
 
     } // run

@@ -51,7 +51,7 @@ public class IntegerValuePanel
 
     Integer parsedValue;
     try {
-      parsedValue = new Integer (field.getText());
+      parsedValue = Integer.valueOf (field.getText());
     } // try
     catch (NumberFormatException e) {
       parsedValue = null;

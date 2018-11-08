@@ -946,9 +946,9 @@ public abstract class AbstractOverlayListPanel
 
     Integer count = (Integer) counterMap.get (overlayKey);
     if (count == null) {
-      count = new Integer (0);
+      count = Integer.valueOf (0);
     } // if
-    count = new Integer (count.intValue() + 1);
+    count = Integer.valueOf (count.intValue() + 1);
     counterMap.put (overlayKey, count);
     return (count.intValue());
 

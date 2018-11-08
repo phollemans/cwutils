@@ -136,7 +136,10 @@ import noaa.coastwatch.util.MetadataServices;
  *   <dd> The attribute data type (write mode only).  The valid types and
  *   their HDF equivalents are as follows:
  *
- *   <table style="border-spacing: 50px 2px" summary="Attribute Types">
+ *   <table style="border-spacing: 50px 2px">
+ *
+ *     <caption>Attribute Types</caption>
+ *
  *     <tr>
  *       <th abbr="Type name">Type name</th>
  *       <th abbr="DFNT_FLOAT64">HDF type</th>

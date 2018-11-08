@@ -82,6 +82,7 @@ import noaa.coastwatch.util.EarthLocation;
  * @author Peter Hollemans
  * @since 3.1.1
  */
+@Deprecated
 public class TSVectorReader
   extends LineFeatureSource {
 

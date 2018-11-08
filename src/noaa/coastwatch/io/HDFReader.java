@@ -502,15 +502,15 @@ public abstract class HDFReader
     // ------------------------
     if (attLength == 1) {
       if (attClass.equals (Byte.TYPE))
-        return (new Byte (((byte[])attData)[0]));
+        return (Byte.valueOf (((byte[])attData)[0]));
       else if (attClass.equals (Short.TYPE))
-        return (new Short (((short[])attData)[0]));
+        return (Short.valueOf (((short[])attData)[0]));
       else if (attClass.equals (Integer.TYPE))
-        return (new Integer (((int[])attData)[0]));
+        return (Integer.valueOf (((int[])attData)[0]));
       else if (attClass.equals (Float.TYPE))
-        return (new Float (((float[])attData)[0]));
+        return (Float.valueOf (((float[])attData)[0]));
       else if (attClass.equals (Double.TYPE))
-        return (new Double (((double[])attData)[0]));
+        return (Double.valueOf (((double[])attData)[0]));
       else
         throw new ClassNotFoundException ("Unsupported attribute class");
     } // if
@@ -692,15 +692,15 @@ public abstract class HDFReader
         if (!missingClass.equals (varClass)) {
           Number missingNumber = (Number) missing;
           if (varClass.equals (Byte.TYPE))
-            missing = new Byte (missingNumber.byteValue());
+            missing = Byte.valueOf (missingNumber.byteValue());
           else if (varClass.equals (Short.TYPE))
-            missing = new Short (missingNumber.shortValue());
+            missing = Short.valueOf (missingNumber.shortValue());
           else if (varClass.equals (Integer.TYPE))
-            missing = new Integer (missingNumber.intValue());
+            missing = Integer.valueOf (missingNumber.intValue());
           else if (varClass.equals (Float.TYPE))
-            missing = new Float (missingNumber.floatValue());
+            missing = Float.valueOf (missingNumber.floatValue());
           else if (varClass.equals (Double.TYPE))
-            missing = new Double (missingNumber.doubleValue());
+            missing = Double.valueOf (missingNumber.doubleValue());
           else
             throw new ClassNotFoundException ("Unsupported variable class");
         } // if

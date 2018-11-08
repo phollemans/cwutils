@@ -327,7 +327,7 @@ public class cwgraphics {
       NumberFormat format = NumberFormat.getInstance();
       format.setMaximumFractionDigits (0);
       Grid gridVar = new Grid (variable, "graphics overlay planes", null, rows, cols,
-        new byte[0], format, null, new Byte ((byte)0));
+        new byte[0], format, null, Byte.valueOf ((byte)0));
       gridVar.setUnsigned (true);
       Grid outputVar = new HDFCachedGrid (gridVar, writer);
 
@@ -350,26 +350,26 @@ public class cwgraphics {
       List bits = new ArrayList();
       if (grid > 0) {
         overlays.add (new LatLonOverlay (Color.WHITE));
-        bits.add (new Integer (grid));
+        bits.add (Integer.valueOf (grid));
       } // if
       if (coast > 0) { 
         CoastOverlay coastOverlay = new CoastOverlay (Color.WHITE);
         coastOverlay.setSmallPolygons (true);
         overlays.add (coastOverlay);
-        bits.add (new Integer (coast));
+        bits.add (Integer.valueOf (coast));
       } // if
       if (land > 0) {
         CoastOverlay coastOverlay = new CoastOverlay (Color.WHITE);
         coastOverlay.setSmallPolygons (true);
         coastOverlay.setFillColor (Color.WHITE);
         overlays.add (coastOverlay);
-        bits.add (new Integer (land));
+        bits.add (Integer.valueOf (land));
       } // if
       if (political > 0) {
         PoliticalOverlay poliOverlay = new PoliticalOverlay (Color.WHITE);
         poliOverlay.setState (true);
         overlays.add (poliOverlay);
-        bits.add (new Integer (political));
+        bits.add (Integer.valueOf (political));
       } // if
 
       // Render overlays

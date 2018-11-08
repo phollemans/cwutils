@@ -95,7 +95,7 @@ public class Statistics {
     Statistics stats = new Statistics (new DataIterator () {
         private int i = 0;
         public boolean hasNext() { return (i < 1000); }
-        public Double next() { return (new Double (nextDouble())); }
+        public Double next() { return (Double.valueOf (nextDouble())); }
         public double nextDouble () {
           i++;
           return (50+rand.nextGaussian()*10);
@@ -418,7 +418,7 @@ public class Statistics {
         public void reset () { index = 0; }
         public boolean hasNext() { return (index < data.length); }
         public void remove () { throw new RuntimeException(); }
-        public Double next () { return (new Double (nextDouble())); }
+        public Double next () { return (Double.valueOf (nextDouble())); }
       });
     System.out.println (stats);
 

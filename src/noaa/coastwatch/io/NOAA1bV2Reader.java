@@ -635,48 +635,48 @@ public class NOAA1bV2Reader
 
       // Standard attributes
       // -------------------
-      case SCAN_LINE_NUMBER: return (new Integer (getUShort (data, 0)));
-      case QUALITY_INDICATOR: return (new Long (getUInt (data, 24)));
-      case CH3_SELECT: return (new Integer (getUShort (data, 12) & 0x0f));
-      case SCAN_LINE_YEAR: return (new Integer (getUShort (data, 2)));
-      case SCAN_LINE_DAY: return (new Integer (getUShort (data, 4)));
-      case SCAN_LINE_MILLISECOND: return (new Long (getUInt (data, 8)));
+      case SCAN_LINE_NUMBER: return (Integer.valueOf (getUShort (data, 0)));
+      case QUALITY_INDICATOR: return (Long.valueOf (getUInt (data, 24)));
+      case CH3_SELECT: return (Integer.valueOf (getUShort (data, 12) & 0x0f));
+      case SCAN_LINE_YEAR: return (Integer.valueOf (getUShort (data, 2)));
+      case SCAN_LINE_DAY: return (Integer.valueOf (getUShort (data, 4)));
+      case SCAN_LINE_MILLISECOND: return (Long.valueOf (getUInt (data, 8)));
 
       // Format specific attributes
       // --------------------------
-      case CH1_SLOPE1: return (new Float (getInt (data, 48) * 1e-7));
-      case CH1_INTERCEPT1: return (new Float (getInt (data, 52) * 1e-6));
-      case CH1_SLOPE2: return (new Float (getInt (data, 56) * 1e-7));
-      case CH1_INTERCEPT2: return (new Float (getInt (data, 60) * 1e-6));
-      case CH1_INTERSECTION: return (new Long (getInt (data, 64)));
-      case CH2_SLOPE1: return (new Float (getInt (data, 108) * 1e-7));
-      case CH2_INTERCEPT1: return (new Float (getInt (data, 112) * 1e-6));
-      case CH2_SLOPE2: return (new Float (getInt (data, 116) * 1e-7));
-      case CH2_INTERCEPT2: return (new Float (getInt (data, 120) * 1e-6));
-      case CH2_INTERSECTION: return (new Long (getInt (data, 124)));
-      case CH3A_SLOPE1: return (new Float (getInt (data, 168) * 1e-7));
-      case CH3A_INTERCEPT1: return (new Float (getInt (data, 172) * 1e-6));
-      case CH3A_SLOPE2: return (new Float (getInt (data, 176) * 1e-7));
-      case CH3A_INTERCEPT2: return (new Float (getInt (data, 180) * 1e-6));
-      case CH3A_INTERSECTION: return (new Long (getInt (data, 184)));
-      case CH3B_COEFFICIENT1: return (new Float (getInt (data, 228) * 1e-6));
-      case CH3B_COEFFICIENT2: return (new Float (getInt (data, 232) * 1e-6));
-      case CH3B_COEFFICIENT3: return (new Float (getInt (data, 236) * 1e-6));
-      case CH4_COEFFICIENT1: return (new Float (getInt (data, 252) * 1e-6));
-      case CH4_COEFFICIENT2: return (new Float (getInt (data, 256) * 1e-6));
-      case CH4_COEFFICIENT3: return (new Float (getInt (data, 260) * 1e-6));
-      case CH5_COEFFICIENT1: return (new Float (getInt (data, 276) * 1e-6));
-      case CH5_COEFFICIENT2: return (new Float (getInt (data, 280) * 1e-6));
-      case CH5_COEFFICIENT3: return (new Float (getInt (data, 284) * 1e-6));
-      case SCAN_LINE_QUALITY: return (new Long (getUInt (data, 28)));
-      case CALIBRATION_QUALITY_CH3B: return (new Integer (getUShort (data, 
+      case CH1_SLOPE1: return (Float.valueOf (getInt (data, 48) * 1e-7f));
+      case CH1_INTERCEPT1: return (Float.valueOf (getInt (data, 52) * 1e-6f));
+      case CH1_SLOPE2: return (Float.valueOf (getInt (data, 56) * 1e-7f));
+      case CH1_INTERCEPT2: return (Float.valueOf (getInt (data, 60) * 1e-6f));
+      case CH1_INTERSECTION: return (Long.valueOf (getInt (data, 64)));
+      case CH2_SLOPE1: return (Float.valueOf (getInt (data, 108) * 1e-7f));
+      case CH2_INTERCEPT1: return (Float.valueOf (getInt (data, 112) * 1e-6f));
+      case CH2_SLOPE2: return (Float.valueOf (getInt (data, 116) * 1e-7f));
+      case CH2_INTERCEPT2: return (Float.valueOf (getInt (data, 120) * 1e-6f));
+      case CH2_INTERSECTION: return (Long.valueOf (getInt (data, 124)));
+      case CH3A_SLOPE1: return (Float.valueOf (getInt (data, 168) * 1e-7f));
+      case CH3A_INTERCEPT1: return (Float.valueOf (getInt (data, 172) * 1e-6f));
+      case CH3A_SLOPE2: return (Float.valueOf (getInt (data, 176) * 1e-7f));
+      case CH3A_INTERCEPT2: return (Float.valueOf (getInt (data, 180) * 1e-6f));
+      case CH3A_INTERSECTION: return (Long.valueOf (getInt (data, 184)));
+      case CH3B_COEFFICIENT1: return (Float.valueOf (getInt (data, 228) * 1e-6f));
+      case CH3B_COEFFICIENT2: return (Float.valueOf (getInt (data, 232) * 1e-6f));
+      case CH3B_COEFFICIENT3: return (Float.valueOf (getInt (data, 236) * 1e-6f));
+      case CH4_COEFFICIENT1: return (Float.valueOf (getInt (data, 252) * 1e-6f));
+      case CH4_COEFFICIENT2: return (Float.valueOf (getInt (data, 256) * 1e-6f));
+      case CH4_COEFFICIENT3: return (Float.valueOf (getInt (data, 260) * 1e-6f));
+      case CH5_COEFFICIENT1: return (Float.valueOf (getInt (data, 276) * 1e-6f));
+      case CH5_COEFFICIENT2: return (Float.valueOf (getInt (data, 280) * 1e-6f));
+      case CH5_COEFFICIENT3: return (Float.valueOf (getInt (data, 284) * 1e-6f));
+      case SCAN_LINE_QUALITY: return (Long.valueOf (getUInt (data, 28)));
+      case CALIBRATION_QUALITY_CH3B: return (Integer.valueOf (getUShort (data, 
         32)));
-      case CALIBRATION_QUALITY_CH4: return (new Integer (getUShort (data, 
+      case CALIBRATION_QUALITY_CH4: return (Integer.valueOf (getUShort (data, 
         34)));
-      case CALIBRATION_QUALITY_CH5: return (new Integer (getUShort (data, 
+      case CALIBRATION_QUALITY_CH5: return (Integer.valueOf (getUShort (data, 
         36)));
-      case NAVIGATION_STATUS: return (new Long (getUInt (data, 312)));
-      case SPACECRAFT_ALTITUDE: return (new Float (getUShort (data, 326)*0.1));
+      case NAVIGATION_STATUS: return (Long.valueOf (getUInt (data, 312)));
+      case SPACECRAFT_ALTITUDE: return (Float.valueOf (getUShort (data, 326)*0.1f));
 
       default:
         throw new IllegalArgumentException ("Unsupported attribute index");
@@ -1136,34 +1136,34 @@ public class NOAA1bV2Reader
         case 11: return (new String ("amsu-b"));
         default: return (new String ("Unknown"));
         } // switch
-      case START_YEAR: return (new Integer (getUShort (data, 84)));
-      case START_DAY: return (new Integer (getUShort (data, 86)));
-      case START_MILLISECOND: return (new Long (getUInt (data, 88)));
-      case END_YEAR: return (new Integer (getUShort (data, 96)));
-      case END_DAY: return (new Integer (getUShort (data, 98)));
-      case END_MILLISECOND: return (new Long (getUInt (data, 100)));
-      case DATA_RECORDS: return (new Integer (getUShort (data, 128)));
-      case DATA_GAPS: return (new Integer (getUShort (data, 134)));
+      case START_YEAR: return (Integer.valueOf (getUShort (data, 84)));
+      case START_DAY: return (Integer.valueOf (getUShort (data, 86)));
+      case START_MILLISECOND: return (Long.valueOf (getUInt (data, 88)));
+      case END_YEAR: return (Integer.valueOf (getUShort (data, 96)));
+      case END_DAY: return (Integer.valueOf (getUShort (data, 98)));
+      case END_MILLISECOND: return (Long.valueOf (getUInt (data, 100)));
+      case DATA_RECORDS: return (Integer.valueOf (getUShort (data, 128)));
+      case DATA_GAPS: return (Integer.valueOf (getUShort (data, 134)));
       case DATASET_NAME: return (new String (getBytes (data, 22, 42)).trim());
 
       // Format specific attributes
       // --------------------------
       case CREATION_SITE: return (new String (getBytes (data, 0, 3)).trim());
-      case FORMAT_VERSION: return (new Integer (getUShort (data, 4)));
-      case INSTRUMENT_STATUS: return (new Long (getUInt (data, 116)));
-      case CALIBRATED_LINES: return (new Integer (getUShort (data, 130)));
-      case MISSING_LINES: return (new Integer (getUShort (data, 132)));
-      case CH3B_CENTRAL_WAVE: return (new Float (getInt (data, 280)*1e-2));
-      case CH3B_CONSTANT1: return (new Float (getInt (data, 284)*1e-5)); 
-      case CH3B_CONSTANT2: return (new Float (getInt (data, 288)*1e-6)); 
-      case CH4_CENTRAL_WAVE: return (new Float (getInt (data, 292)*1e-3));
-      case CH4_CONSTANT1: return (new Float (getInt (data, 296)*1e-5)); 
-      case CH4_CONSTANT2: return (new Float (getInt (data, 300)*1e-6)); 
-      case CH5_CENTRAL_WAVE: return (new Float (getInt (data, 304)*1e-3));
-      case CH5_CONSTANT1: return (new Float (getInt (data, 308)*1e-5)); 
-      case CH5_CONSTANT2: return (new Float (getInt (data, 312)*1e-6)); 
+      case FORMAT_VERSION: return (Integer.valueOf (getUShort (data, 4)));
+      case INSTRUMENT_STATUS: return (Long.valueOf (getUInt (data, 116)));
+      case CALIBRATED_LINES: return (Integer.valueOf (getUShort (data, 130)));
+      case MISSING_LINES: return (Integer.valueOf (getUShort (data, 132)));
+      case CH3B_CENTRAL_WAVE: return (Float.valueOf (getInt (data, 280)*1e-2f));
+      case CH3B_CONSTANT1: return (Float.valueOf (getInt (data, 284)*1e-5f));
+      case CH3B_CONSTANT2: return (Float.valueOf (getInt (data, 288)*1e-6f));
+      case CH4_CENTRAL_WAVE: return (Float.valueOf (getInt (data, 292)*1e-3f));
+      case CH4_CONSTANT1: return (Float.valueOf (getInt (data, 296)*1e-5f));
+      case CH4_CONSTANT2: return (Float.valueOf (getInt (data, 300)*1e-6f));
+      case CH5_CENTRAL_WAVE: return (Float.valueOf (getInt (data, 304)*1e-3f));
+      case CH5_CONSTANT1: return (Float.valueOf (getInt (data, 308)*1e-5f));
+      case CH5_CONSTANT2: return (Float.valueOf (getInt (data, 312)*1e-6f));
       case ELLIPSOID: return (new String (getBytes (data, 328, 8)));
-      case HEADER_RECORDS: return (new Integer (getUShort (data, 14)));
+      case HEADER_RECORDS: return (Integer.valueOf (getUShort (data, 14)));
 
       default:
         throw new IllegalArgumentException ("Unsupported attribute index");
@@ -1233,31 +1233,31 @@ public class NOAA1bV2Reader
       // -------------------
       case DATASET_NAME: return (new String (getBytes (data, 30, 42)).trim());
       case START_HOUR: 
-        return (new Integer (Integer.parseInt (new String (getBytes (data, 89, 
+        return (Integer.valueOf (Integer.parseInt (new String (getBytes (data, 89, 
           2)).trim())));
       case START_MINUTE: 
-        return (new Integer (Integer.parseInt (new String (getBytes (data, 91, 
+        return (Integer.valueOf (Integer.parseInt (new String (getBytes (data, 91, 
           2)).trim())));
       case DURATION_MINUTES: 
-        return (new Integer (Integer.parseInt (new String (getBytes (data, 93, 
+        return (Integer.valueOf (Integer.parseInt (new String (getBytes (data, 93, 
           3)).trim())));
       case SENSOR_DATA_WORD_SIZE: 
-        return (new Integer (Integer.parseInt (new String (getBytes (data, 
+        return (Integer.valueOf (Integer.parseInt (new String (getBytes (data, 
           117, 2)).trim())));
 
       // Format specific attributes
       // --------------------------
       case ORDER_CREATION_YEAR: 
-        return (new Integer (Integer.parseInt (new String (getBytes (data, 14, 
+        return (Integer.valueOf (Integer.parseInt (new String (getBytes (data, 14, 
           4)).trim())));
       case ORDER_CREATION_DAY: 
-        return (new Integer (Integer.parseInt (new String (getBytes (data, 18, 
+        return (Integer.valueOf (Integer.parseInt (new String (getBytes (data, 18, 
           3)).trim())));
       case PROCESSING_SITE: return (new String (getBytes (data, 21, 1)));
       case ORBIT_TYPE: return (new String (getBytes (data, 146, 1)));
       case DATA_FORMAT: return (new String (getBytes (data, 161, 20)).trim());
       case RECORD_SIZE: 
-        return (new Integer (Integer.parseInt (new String (getBytes (data, 
+        return (Integer.valueOf (Integer.parseInt (new String (getBytes (data, 
           181, 6)).trim())));
 
       default:

@@ -289,7 +289,7 @@ public class ACSPONCCFReader
         missing = null;
       else {
         String missingStr = (String) getAttribute ("missing_value_int1");
-        missing = new Byte ((byte) (Short.valueOf (missingStr) & 0xff));
+        missing = Byte.valueOf ((byte) (Short.valueOf (missingStr) & 0xff));
       } // else
       format = new DecimalFormat ("0");
     } // if

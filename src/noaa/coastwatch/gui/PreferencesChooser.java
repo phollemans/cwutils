@@ -1017,22 +1017,22 @@ public class PreferencesChooser
           if (func instanceof StepEnhancement) {
             functionCombo.setSelectedItem (FUNCTION_STEP);
             stepsSpinner.setValue (
-              new Integer (((StepEnhancement)func).getSteps()));
+              Integer.valueOf (((StepEnhancement)func).getSteps()));
             stepsSpinner.setEnabled (true);
           } // if
           else if (func instanceof LinearEnhancement) {
             functionCombo.setSelectedItem (FUNCTION_LINEAR);
-            stepsSpinner.setValue (new Integer (10));
+            stepsSpinner.setValue (Integer.valueOf (10));
             stepsSpinner.setEnabled (false);
           } // else if
           else if (func instanceof LogEnhancement) {
             functionCombo.setSelectedItem (FUNCTION_LOG);
-            stepsSpinner.setValue (new Integer (10));
+            stepsSpinner.setValue (Integer.valueOf (10));
             stepsSpinner.setEnabled (false);
           } // else if
           else if (func instanceof GammaEnhancement) {
             functionCombo.setSelectedItem (FUNCTION_GAMMA);
-            stepsSpinner.setValue (new Integer (10));
+            stepsSpinner.setValue (Integer.valueOf (10));
             stepsSpinner.setEnabled (false);
           } // else if
         } // if
@@ -1044,7 +1044,7 @@ public class PreferencesChooser
           dataUnitsRadio.setSelected (true);
           unitsCombo.setSelectedIndex (0);
           functionCombo.setSelectedItem (FUNCTION_LINEAR);
-          stepsSpinner.setValue (new Integer (10));
+          stepsSpinner.setValue (Integer.valueOf (10));
         } // else
         listenersDisabled = false;
   

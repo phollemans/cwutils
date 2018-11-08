@@ -55,7 +55,7 @@ public class LongValuePanel
 
     Long parsedValue;
     try {
-      parsedValue = new Long (field.getText());
+      parsedValue = Long.valueOf (field.getText());
     } // try
     catch (NumberFormatException e) {
       parsedValue = null;

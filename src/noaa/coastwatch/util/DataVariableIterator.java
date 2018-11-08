@@ -101,7 +101,7 @@ public class DataVariableIterator
   ////////////////////////////////////////////////////////////
 
   @Override
-  public Double next () { return (new Double (nextDouble())); }
+  public Double next () { return (Double.valueOf (nextDouble())); }
 
   ////////////////////////////////////////////////////////////
 

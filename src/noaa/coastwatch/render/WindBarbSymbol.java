@@ -346,7 +346,7 @@ public class WindBarbSymbol
     double dir = Double.parseDouble (argv[1]);
     final int size = Integer.parseInt (argv[2]);
     PointFeature feature = new PointFeature (new EarthLocation (0, 0), 
-      new Object[] {new Double (speed), new Double (dir)});
+      new Object[] {Double.valueOf (speed), Double.valueOf (dir)});
 
 
 

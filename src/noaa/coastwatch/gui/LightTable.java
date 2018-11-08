@@ -339,7 +339,7 @@ public class LightTable
     // Initialize
     // ----------
     this.component = component;
-    add (component, new Integer (0));
+    add (component, Integer.valueOf (0));
     drawingMode = Mode.POINT;
     dragging = false;
     active = false;
@@ -352,7 +352,7 @@ public class LightTable
     glassPane = new GlassPane();
     glassPane.setOpaque (false);
     glassPane.setBackground (new Color (0, 0, 0, 0));
-    add (glassPane, new Integer (1));
+    add (glassPane, Integer.valueOf (1));
     glassPane.setVisible (false);
     MouseHandler handler = new MouseHandler();
     glassPane.addMouseListener (handler);

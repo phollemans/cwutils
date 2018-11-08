@@ -431,7 +431,7 @@ public final class cwmaster
 
     AbstractAction fileAction = new FileAction();
     JMenuItem menuItem;
-    int keymask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+    int keymask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
     menuItem = new JMenuItem (OPEN_COMMAND, 
       GUIServices.getIcon ("menu.open"));
     menuItem.setMnemonic (KeyEvent.VK_O);

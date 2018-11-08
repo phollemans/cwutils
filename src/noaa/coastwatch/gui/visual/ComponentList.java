@@ -313,8 +313,8 @@ public class ComponentList<E extends ComponentProducer>
       checkBounds (end);
       selectionSet.clear();
       for (int i = start; i <= end; i++)
-        selectionSet.add (new Integer (i));
-      lastIndex = new Integer (start);
+        selectionSet.add (Integer.valueOf (i));
+      lastIndex = Integer.valueOf (start);
       updateBackgrounds();
     } // if
     
@@ -447,7 +447,7 @@ public class ComponentList<E extends ComponentProducer>
 
     for (int i = 0; i < producerList.size(); i++) {
       Component component = producerList.get (i).getComponent();
-      if (selectionSet.contains (new Integer (i)))
+      if (selectionSet.contains (Integer.valueOf (i)))
         component.setBackground (selectionBackground);
       else
         component.setBackground (defaultBackground);
@@ -472,7 +472,7 @@ public class ComponentList<E extends ComponentProducer>
         // -------------------
         Component component = findComponentAt (e.getPoint());
         Integer index = 
-          new Integer (producerList.indexOf (componentMap.get (component)));
+          Integer.valueOf (producerList.indexOf (componentMap.get (component)));
         if (index.intValue() == -1) return;
 
         // Respond to single click
@@ -496,7 +496,7 @@ public class ComponentList<E extends ComponentProducer>
             int end = Math.max (lastIndex.intValue(), index.intValue());
             selectionSet.clear();
             for (int i = start; i <= end; i++)
-              selectionSet.add (new Integer (i));
+              selectionSet.add (Integer.valueOf (i));
           } // else if
 
           // Create new selection

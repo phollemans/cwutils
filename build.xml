@@ -67,9 +67,7 @@
       classpathref="cp" 
       debug="on" 
       deprecation="on"
-      includeantruntime="false"
-      target="${java.source.version}"
-      source="${java.source.version}">
+      includeantruntime="false">
       <compilerarg line="${javac.args}"/>
     </javac>
     <echo
@@ -91,9 +89,7 @@
       classpathref="cp" 
       debug="on" 
       deprecation="on"
-      includeantruntime="false"
-      target="${java.source.version}"
-      source="${java.source.version}">
+      includeantruntime="false">
       <compilerarg line="${javac.args}"/>
       <compilerarg value="-Xlint:unchecked"/>
     </javac>
@@ -175,25 +171,13 @@
 
   <!-- Define package targets -->
   <!-- ********************** -->
-
-  <!--
-    For now we leave out Solaris support, because we have no way of testing it.
-    If a user asks for it, we can provide a package.
-  -->
-  <!--  <property name="builds.all" value="linux32,linux64,windows32,windows64,macosx64,solaris32,solaris64"/> -->
-
   <property name="builds.default" value="linux64,linux64.novm,windows64,macosx64"/>
-  <property name="builds.all" value="linux32,linux64,linux64.novm,windows32,windows64,macosx64,solaris32,solaris64"/>
-  <property name="build.id.linux32" value="88"/>
+  <property name="builds.all" value="linux64,linux64.novm,windows64,macosx64"/>
   <property name="build.id.linux64" value="288"/>
   <property name="build.id.linux64.novm" value="710"/>
-  <property name="build.id.linux64.gui" value="701"/>
-  <property name="build.id.windows32" value="10"/>
   <property name="build.id.windows64" value="278"/>
   <property name="build.id.macosx64" value="276"/>
   <property name="build.id.macosx64.tgz" value="528"/>
-  <property name="build.id.solaris32" value="93"/>
-  <property name="build.id.solaris64" value="292"/>
 
   <target name="packages-help" description="Lists packages available to build">
     <echo>Default build set: ${builds.default}</echo>

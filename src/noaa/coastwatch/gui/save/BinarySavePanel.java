@@ -132,7 +132,7 @@ public class BinarySavePanel
 
     // Set missing
     // -----------
-    writer.setMissing (new Double (binaryPanel.getMissing()));
+    writer.setMissing (Double.valueOf (binaryPanel.getMissing()));
 
     // Set byte order
     // --------------

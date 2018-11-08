@@ -257,7 +257,7 @@ public class FullScreenWindow {
     // Add component to frame
     // ----------------------
     JLayeredPane layeredPane = new JLayeredPane();
-    layeredPane.add (component, new Integer (0));
+    layeredPane.add (component, Integer.valueOf (0));
     component.setBounds (bounds);
     layeredPane.setOpaque (true);
     frame.setContentPane (layeredPane);
@@ -265,7 +265,7 @@ public class FullScreenWindow {
     // Add toolbar to frame
     // --------------------
     if (toolbar != null) {
-      layeredPane.add (toolbar, new Integer (1));
+      layeredPane.add (toolbar, Integer.valueOf (1));
       Dimension size = toolbar.getPreferredSize();
       toolbar.setBounds (
         bounds.width/2 - size.width/2, 

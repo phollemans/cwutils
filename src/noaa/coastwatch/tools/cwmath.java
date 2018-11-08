@@ -138,7 +138,9 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  * for a full list of java.lang.Math functions.  A comparison of
  * the most common language features is as follows:</p>
  *
- * <table style="border-spacing: 50px 2px" summary="Parser Expressions">
+ * <table style="border-spacing: 50px 2px">
+ *
+ *   <caption>Parser Expressions</caption>
  *
  *   <tr>
  *     <th abbr="Inverse hyperbolic tangent">Language Feature</th>
@@ -1181,8 +1183,8 @@ public final class cwmath {
             else missing = Byte.parseByte (missingStr);
           } // if
           else {
-            if (isUnsigned) missing = new Byte ((byte) 0);
-            else missing = new Byte (Byte.MIN_VALUE);
+            if (isUnsigned) missing = Byte.valueOf ((byte) 0);
+            else missing = Byte.valueOf (Byte.MIN_VALUE);
           } // else
           format = NumberFormat.getInstance();
           int digits = (scaling == null ? 0 :
@@ -1197,8 +1199,8 @@ public final class cwmath {
             else missing = Short.parseShort (missingStr);
           } // if
           else {
-            if (isUnsigned) missing = new Short ((short) 0);
-            else missing = new Short (Short.MIN_VALUE);
+            if (isUnsigned) missing = Short.valueOf ((short) 0);
+            else missing = Short.valueOf (Short.MIN_VALUE);
           } // else
           format = NumberFormat.getInstance();
           int digits = (scaling == null ? 0 :
@@ -1213,8 +1215,8 @@ public final class cwmath {
             else missing = Integer.parseInt (missingStr);
           } // if
           else {
-            if (isUnsigned) missing = new Integer (0);
-            else missing = new Integer (Integer.MIN_VALUE);
+            if (isUnsigned) missing = Integer.valueOf (0);
+            else missing = Integer.valueOf (Integer.MIN_VALUE);
           } // else
           format = NumberFormat.getInstance();
           int digits = (scaling == null ? 0 :
@@ -1229,8 +1231,8 @@ public final class cwmath {
             missing = Long.parseLong (missingStr);
           } // if
           else {
-            if (isUnsigned) missing = new Long (0);
-            else missing = new Long (Long.MIN_VALUE);
+            if (isUnsigned) missing = Long.valueOf (0);
+            else missing = Long.valueOf (Long.MIN_VALUE);
           } // else
           format = NumberFormat.getInstance();
           int digits = (scaling == null ? 0 :
@@ -1241,7 +1243,7 @@ public final class cwmath {
         else if (size.equals ("float")) {
           scaling = null;
           data = new float[0];
-          missing = new Float (Float.NaN);
+          missing = Float.valueOf (Float.NaN);
           format = NumberFormat.getInstance();
           int digits = 6;
           format.setMaximumFractionDigits (digits);
@@ -1250,7 +1252,7 @@ public final class cwmath {
         else if (size.equals ("double")) {
           scaling = null;
           data = new float[] {};
-          missing = new Double (Double.NaN);
+          missing = Double.valueOf (Double.NaN);
           format = NumberFormat.getInstance();
           int digits = 10;
           format.setMaximumFractionDigits (digits);

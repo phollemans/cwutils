@@ -203,7 +203,7 @@ public abstract class BinnedGSHHSReader
       int offset
     ) {
   
-      return (new Integer ((side << 16) + offset));
+      return (Integer.valueOf ((side << 16) + offset));
 
     } // getSegmentKey
 
@@ -258,7 +258,7 @@ public abstract class BinnedGSHHSReader
       int keyValue = key.intValue();
       if (reverse && keyValue == 0) return (getSegmentKey (WEST, 65535));
       else if (keyValue == 0x3ffff) return (getSegmentKey (SOUTH, 0));
-      else return (new Integer (keyValue + (reverse ? -1 : 1)));
+      else return (Integer.valueOf (keyValue + (reverse ? -1 : 1)));
 
     } // successorSegmentKey
 
@@ -1337,7 +1337,7 @@ public abstract class BinnedGSHHSReader
       // Get bin index
       // -------------
       int[] square = (int[]) iter.next(); 
-      Integer binIndex = new Integer (getBinIndex (new EarthLocation (
+      Integer binIndex = Integer.valueOf (getBinIndex (new EarthLocation (
         square[0]+0.5, square[1]+0.5)));
 
       // Add index to hash set

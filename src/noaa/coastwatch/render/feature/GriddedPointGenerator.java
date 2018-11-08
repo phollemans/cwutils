@@ -193,7 +193,7 @@ public class GriddedPointGenerator
           // --------------
           Object[] attributeArray = new Object[gridArray.length];
           for (int k = 0; k < attributeArray.length; k++)
-            attributeArray[k] = new Double (gridArray[k].getValue (dataLoc));
+            attributeArray[k] = Double.valueOf (gridArray[k].getValue (dataLoc));
           PointFeature feature = new PointFeature (pointLoc, attributeArray);
           featureList.add (feature);
 

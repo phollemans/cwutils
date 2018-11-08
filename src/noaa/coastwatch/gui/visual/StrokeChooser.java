@@ -348,7 +348,7 @@ public class StrokeChooser
       // Modify components
       // -----------------
       dashStyleCombo.setSelectedItem (dashPattern);
-      lineThicknessSpinner.setValue (new Integer (lineThickness));
+      lineThicknessSpinner.setValue (Integer.valueOf (lineThickness));
 
       // Update sample
       // -------------

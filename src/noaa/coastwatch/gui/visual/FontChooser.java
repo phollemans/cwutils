@@ -279,7 +279,7 @@ public class FontChooser
        familyCombo.setSelectedIndex (getFamilyIndex (newFont));
        boldCheck.setSelected (newFont.isBold());
        italicCheck.setSelected (newFont.isItalic());
-       sizeSpinner.setValue (new Integer (newFont.getSize()));
+       sizeSpinner.setValue (Integer.valueOf (newFont.getSize()));
 
       // Update sample
       // -------------

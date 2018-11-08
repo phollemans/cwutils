@@ -359,7 +359,7 @@ abstract public class BinaryWriter
       // ----------
       byte[] array;
       if (Double.isNaN (value)) array = missingBytes;
-      else array = convertValue (new Double (value));
+      else array = convertValue (Double.valueOf (value));
       if (order == LSB) array = byteSwap (array);
       out.write (array);
 

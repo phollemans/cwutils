@@ -64,7 +64,7 @@ public class ByteWriter
 
   ////////////////////////////////////////////////////////////
 
-  public Number getDefaultMissing () { return (new Byte ((byte)0)); }
+  public Number getDefaultMissing () { return (Byte.valueOf ((byte)0)); }
 
   ////////////////////////////////////////////////////////////
 

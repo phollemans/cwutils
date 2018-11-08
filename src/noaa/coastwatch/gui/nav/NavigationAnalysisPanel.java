@@ -600,8 +600,8 @@ public class NavigationAnalysisPanel
 
     // Reset spinner values
     // --------------------
-    rowSpinner.setValue (new Double (0));
-    colSpinner.setValue (new Double (0));
+    rowSpinner.setValue (Double.valueOf (0));
+    colSpinner.setValue (Double.valueOf (0));
 
     // Disable buttons
     // ---------------

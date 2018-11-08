@@ -218,7 +218,7 @@ public class CompositeChooser
     modeCheck.addActionListener (new ActionListener () {
         public void actionPerformed (ActionEvent event) {
           firePropertyChange (COMPOSITE_MODE_PROPERTY, null, 
-            new Boolean (modeCheck.isSelected()));
+            Boolean.valueOf (modeCheck.isSelected()));
         } // actionPerformed
       });
     GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.NONE,

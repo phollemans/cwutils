@@ -14,6 +14,29 @@
 		E90956541E5140AC000F6B70 /* MultiPointFeatureOverlayPropertyChooser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = MultiPointFeatureOverlayPropertyChooser.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E909C8571FB247D4003A1281 /* JEPParser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = JEPParser.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E909F91C21823211002BE7D0 /* 2007_127_1024_n18_mo.hdf */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2007_127_1024_n18_mo.hdf; sourceTree = "<group>"; };
+		E909F9362189655B002BE7D0 /* cdat_16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cdat_16.png; sourceTree = "<group>"; };
+		E909F9372189655B002BE7D0 /* cwstatus_128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cwstatus_128.png; sourceTree = "<group>"; };
+		E909F9382189655B002BE7D0 /* cwstatus.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = cwstatus.ico; sourceTree = "<group>"; };
+		E909F9392189655B002BE7D0 /* cwstatus_16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cwstatus_16.png; sourceTree = "<group>"; };
+		E909F93A2189655B002BE7D0 /* cwmaster_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cwmaster_64.png; sourceTree = "<group>"; };
+		E909F93B2189655B002BE7D0 /* cwmaster_128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cwmaster_128.png; sourceTree = "<group>"; };
+		E909F93C2189655B002BE7D0 /* software_128x128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = software_128x128.png; sourceTree = "<group>"; };
+		E909F93D2189655B002BE7D0 /* software.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = software.icns; sourceTree = "<group>"; };
+		E909F93E2189655B002BE7D0 /* software_64x64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = software_64x64.png; sourceTree = "<group>"; };
+		E909F93F2189655B002BE7D0 /* cwstatus_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cwstatus_64.png; sourceTree = "<group>"; };
+		E909F9402189655B002BE7D0 /* software.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = software.ico; sourceTree = "<group>"; };
+		E909F9412189655B002BE7D0 /* cwmaster_16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cwmaster_16.png; sourceTree = "<group>"; };
+		E909F9422189655B002BE7D0 /* cdat_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cdat_64.png; sourceTree = "<group>"; };
+		E909F9432189655B002BE7D0 /* software_32x32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = software_32x32.png; sourceTree = "<group>"; };
+		E909F9442189655B002BE7D0 /* cdat.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = cdat.ico; sourceTree = "<group>"; };
+		E909F9452189655B002BE7D0 /* cwstatus.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = cwstatus.icns; sourceTree = "<group>"; };
+		E909F9462189655B002BE7D0 /* cwmaster_32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cwmaster_32.png; sourceTree = "<group>"; };
+		E909F9472189655B002BE7D0 /* cdat.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = cdat.icns; sourceTree = "<group>"; };
+		E909F9482189655B002BE7D0 /* cwmaster.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = cwmaster.icns; sourceTree = "<group>"; };
+		E909F9492189655B002BE7D0 /* cwmaster.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = cwmaster.ico; sourceTree = "<group>"; };
+		E909F94A2189655B002BE7D0 /* cwstatus_32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cwstatus_32.png; sourceTree = "<group>"; };
+		E909F94B2189655B002BE7D0 /* cdat_32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cdat_32.png; sourceTree = "<group>"; };
+		E909F94C2189655B002BE7D0 /* cdat_128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cdat_128.png; sourceTree = "<group>"; };
 		E91669291C2CD994005D76EB /* CDMGridMappedProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CDMGridMappedProjection.java; sourceTree = "<group>"; };
 		E916692A1C370E5D005D76EB /* TestLogger.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TestLogger.java; path = test/TestLogger.java; sourceTree = "<group>"; };
 		E916692B1C371B08005D76EB /* TerminalColors.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TerminalColors.java; path = test/TerminalColors.java; sourceTree = "<group>"; };
@@ -47,7 +70,6 @@
 		E93C27B51E274015008A698D /* libjhdf.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libjhdf.dylib; sourceTree = "<group>"; };
 		E93C27B61E274015008A698D /* libjhdf5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libjhdf5.dylib; sourceTree = "<group>"; };
 		E93C27B71E274058008A698D /* alloy.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = alloy.jar; path = ../../../../Libraries/misc/alloy.jar; sourceTree = "<group>"; };
-		E93C27B81E274058008A698D /* AppleJavaExtensions.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = AppleJavaExtensions.jar; path = ../../../../Libraries/stubs/AppleJavaExtensions.jar; sourceTree = "<group>"; };
 		E93C27B91E274058008A698D /* bsh-2.1.8.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "bsh-2.1.8.jar"; path = "../../../../Libraries/misc/bsh-2.1.8.jar"; sourceTree = "<group>"; };
 		E93C27BA1E274058008A698D /* geoapi-1.1.0alpha.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "geoapi-1.1.0alpha.jar"; path = "../../../../Libraries/geotools/geoapi-1.1.0alpha.jar"; sourceTree = "<group>"; };
 		E93C27BB1E274058008A698D /* gifencoder.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = gifencoder.jar; path = ../../../../Libraries/gif/gifencoder.jar; sourceTree = "<group>"; };
@@ -615,7 +637,6 @@
 		E96D8AE0161661420009B833 /* LegendPanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = LegendPanel.java; sourceTree = "<group>"; };
 		E96D8AE1161661420009B833 /* LightTable.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = LightTable.java; sourceTree = "<group>"; };
 		E96D8AE2161661420009B833 /* LineStatisticsPanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = LineStatisticsPanel.java; sourceTree = "<group>"; };
-		E96D8AE3161661420009B833 /* MacGUIServices.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = MacGUIServices.java; sourceTree = "<group>"; };
 		E96D8AE4161661420009B833 /* MapProjectionChooser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = MapProjectionChooser.java; sourceTree = "<group>"; };
 		E96D8AE6161661420009B833 /* CSVPointWriter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CSVPointWriter.java; sourceTree = "<group>"; };
 		E96D8AE7161661420009B833 /* NavigationAnalysisPanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = NavigationAnalysisPanel.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
@@ -1189,6 +1210,36 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		E909F9352189655B002BE7D0 /* icons */ = {
+			isa = PBXGroup;
+			children = (
+				E909F9362189655B002BE7D0 /* cdat_16.png */,
+				E909F9372189655B002BE7D0 /* cwstatus_128.png */,
+				E909F9382189655B002BE7D0 /* cwstatus.ico */,
+				E909F9392189655B002BE7D0 /* cwstatus_16.png */,
+				E909F93A2189655B002BE7D0 /* cwmaster_64.png */,
+				E909F93B2189655B002BE7D0 /* cwmaster_128.png */,
+				E909F93C2189655B002BE7D0 /* software_128x128.png */,
+				E909F93D2189655B002BE7D0 /* software.icns */,
+				E909F93E2189655B002BE7D0 /* software_64x64.png */,
+				E909F93F2189655B002BE7D0 /* cwstatus_64.png */,
+				E909F9402189655B002BE7D0 /* software.ico */,
+				E909F9412189655B002BE7D0 /* cwmaster_16.png */,
+				E909F9422189655B002BE7D0 /* cdat_64.png */,
+				E909F9432189655B002BE7D0 /* software_32x32.png */,
+				E909F9442189655B002BE7D0 /* cdat.ico */,
+				E909F9452189655B002BE7D0 /* cwstatus.icns */,
+				E909F9462189655B002BE7D0 /* cwmaster_32.png */,
+				E909F9472189655B002BE7D0 /* cdat.icns */,
+				E909F9482189655B002BE7D0 /* cwmaster.icns */,
+				E909F9492189655B002BE7D0 /* cwmaster.ico */,
+				E909F94A2189655B002BE7D0 /* cwstatus_32.png */,
+				E909F94B2189655B002BE7D0 /* cdat_32.png */,
+				E909F94C2189655B002BE7D0 /* cdat_128.png */,
+			);
+			path = icons;
+			sourceTree = "<group>";
+		};
 		E93AE88F1FB14EC900D3D699 /* expression */ = {
 			isa = PBXGroup;
 			children = (
@@ -1250,6 +1301,7 @@
 				E96D87BB161661420009B833 /* data */,
 				E96D87DB161661420009B833 /* doc */,
 				E96D888C161661420009B833 /* extensions */,
+				E909F9352189655B002BE7D0 /* icons */,
 				E96D888E161661420009B833 /* lib */,
 				E96D8992161661420009B833 /* resources */,
 				E93DCCB718DCCDDA0075CF38 /* scripts */,
@@ -2220,7 +2272,6 @@
 				E96D8AE0161661420009B833 /* LegendPanel.java */,
 				E96D8AE1161661420009B833 /* LightTable.java */,
 				E96D8AE2161661420009B833 /* LineStatisticsPanel.java */,
-				E96D8AE3161661420009B833 /* MacGUIServices.java */,
 				E96D8AE4161661420009B833 /* MapProjectionChooser.java */,
 				E962FABD1F05D67B003D971B /* MultiPointFeatureOverlayStatsPanel.java */,
 				E9A081041ED1083400EADC83 /* MultiPointFeatureOverlaySymbolPanel.java */,
@@ -2817,7 +2868,6 @@
 			isa = PBXGroup;
 			children = (
 				E93C27B71E274058008A698D /* alloy.jar */,
-				E93C27B81E274058008A698D /* AppleJavaExtensions.jar */,
 				E93C27B91E274058008A698D /* bsh-2.1.8.jar */,
 				E93C27BA1E274058008A698D /* geoapi-1.1.0alpha.jar */,
 				E93C27BB1E274058008A698D /* gifencoder.jar */,

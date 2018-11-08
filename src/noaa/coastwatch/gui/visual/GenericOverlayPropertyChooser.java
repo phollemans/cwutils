@@ -156,42 +156,42 @@ public class GenericOverlayPropertyChooser
     // ---------------
     orderMap = new HashMap<String, Integer>();
     int n = 0;
-    orderMap.put ("gridName", new Integer (n++));
-    orderMap.put ("color", new Integer (n++));
-    orderMap.put ("stroke", new Integer (n++));
-    orderMap.put ("fillColor", new Integer (n++));
-    orderMap.put ("transparency", new Integer (n++));
-    orderMap.put ("dropShadow", new Integer (n++));
-    orderMap.put ("manualIncrement", new Integer (n++));
-    orderMap.put ("increment", new Integer (n++));
-    orderMap.put ("manualLines", new Integer (n++));
-    orderMap.put ("rows", new Integer (n++));
-    orderMap.put ("cols", new Integer (n++));
-    orderMap.put ("drawLabels", new Integer (n++));
-    orderMap.put ("font",new Integer (n++));
-    orderMap.put ("textDropShadow",new Integer (n++));
-    orderMap.put ("smallPolygons", new Integer (n++));
-    orderMap.put ("levels", new Integer (n++));
-    orderMap.put ("mask", new Integer (n++));
-    orderMap.put ("inverse", new Integer (n++));
-    orderMap.put ("state", new Integer (n++));
-    orderMap.put ("international", new Integer (n++));
+    orderMap.put ("gridName", Integer.valueOf (n++));
+    orderMap.put ("color", Integer.valueOf (n++));
+    orderMap.put ("stroke", Integer.valueOf (n++));
+    orderMap.put ("fillColor", Integer.valueOf (n++));
+    orderMap.put ("transparency", Integer.valueOf (n++));
+    orderMap.put ("dropShadow", Integer.valueOf (n++));
+    orderMap.put ("manualIncrement", Integer.valueOf (n++));
+    orderMap.put ("increment", Integer.valueOf (n++));
+    orderMap.put ("manualLines", Integer.valueOf (n++));
+    orderMap.put ("rows", Integer.valueOf (n++));
+    orderMap.put ("cols", Integer.valueOf (n++));
+    orderMap.put ("drawLabels", Integer.valueOf (n++));
+    orderMap.put ("font",Integer.valueOf (n++));
+    orderMap.put ("textDropShadow",Integer.valueOf (n++));
+    orderMap.put ("smallPolygons", Integer.valueOf (n++));
+    orderMap.put ("levels", Integer.valueOf (n++));
+    orderMap.put ("mask", Integer.valueOf (n++));
+    orderMap.put ("inverse", Integer.valueOf (n++));
+    orderMap.put ("state", Integer.valueOf (n++));
+    orderMap.put ("international", Integer.valueOf (n++));
 
     // Setup restriction map
     // ---------------------
     restrictionMap = new HashMap<String, Object>();
     restrictionMap.put ("increment", new Object[] {
-      new Integer (1),
-      new Integer (30),
-      new Integer (1)});
+      Integer.valueOf (1),
+      Integer.valueOf (30),
+      Integer.valueOf (1)});
     restrictionMap.put ("mask", new Object[] {
-      new Integer (0),
-      new Integer (Integer.MAX_VALUE),
-      new Integer (1)});
+      Integer.valueOf (0),
+      Integer.valueOf (Integer.MAX_VALUE),
+      Integer.valueOf (1)});
     restrictionMap.put ("transparency", new Object[] {
-      new Integer (0),
-      new Integer (100),
-      new Integer (5)});
+      Integer.valueOf (0),
+      Integer.valueOf (100),
+      Integer.valueOf (5)});
 
   } // static
 

@@ -1041,15 +1041,15 @@ utilities when:
         if (!missingClass.equals (varClass)) {
           Number missingNumber = (Number) missing;
           if (varClass.equals (Byte.TYPE))
-            missing = new Byte (missingNumber.byteValue());
+            missing = Byte.valueOf (missingNumber.byteValue());
           else if (varClass.equals (Short.TYPE))
-            missing = new Short (missingNumber.shortValue());
+            missing = Short.valueOf (missingNumber.shortValue());
           else if (varClass.equals (Integer.TYPE))
-            missing = new Integer (missingNumber.intValue());
+            missing = Integer.valueOf (missingNumber.intValue());
           else if (varClass.equals (Float.TYPE))
-            missing = new Float (missingNumber.floatValue());
+            missing = Float.valueOf (missingNumber.floatValue());
           else if (varClass.equals (Double.TYPE))
-            missing = new Double (missingNumber.doubleValue());
+            missing = Double.valueOf (missingNumber.doubleValue());
           else
             throw new UnsupportedEncodingException ("Unsupported variable class");
         } // if

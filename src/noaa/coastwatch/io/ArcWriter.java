@@ -105,7 +105,7 @@ public class ArcWriter
    */
   public void setMissing (Number missing) { 
 
-    super.setMissing (new Float (-3.4e38f));
+    super.setMissing (Float.valueOf (-3.4e38f));
 
   } // setMissing
 

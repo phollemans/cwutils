@@ -51,7 +51,7 @@ public class FloatValuePanel
 
     Float parsedValue;
     try {
-      parsedValue = new Float (field.getText());
+      parsedValue = Float.valueOf (field.getText());
     } // try
     catch (NumberFormatException e) {
       parsedValue = null;

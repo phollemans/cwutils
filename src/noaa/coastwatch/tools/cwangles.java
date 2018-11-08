@@ -354,13 +354,13 @@ public final class cwangles {
       
       if (floatData) {
         scaling = null;
-        missing = new Float (Float.NaN);
+        missing = Float.valueOf (Float.NaN);
         digits = 6;
         data = new float[] {};
       } // if
       else if (doubleData) {
         scaling = null;
-        missing = new Double (Double.NaN);
+        missing = Double.valueOf (Double.NaN);
         digits = 10;
         data = new double[] {};
       } // else if
@@ -369,7 +369,7 @@ public final class cwangles {
           Double.parseDouble (scaleArray[0]),
           Double.parseDouble (scaleArray[1])
         };
-        missing = new Short (Short.MIN_VALUE);
+        missing = Short.valueOf (Short.MIN_VALUE);
         digits = DataVariable.getDecimals (
           Double.toString (Short.MAX_VALUE*scaling[0]));
         data = new short[] {};

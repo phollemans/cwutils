@@ -113,7 +113,7 @@ public class VisualInteger
   public static void main (String argv[]) {
   
     JPanel panel = new JPanel();
-    panel.add (new VisualInteger (new Integer (5)).getComponent());
+    panel.add (new VisualInteger (Integer.valueOf (5)).getComponent());
     noaa.coastwatch.gui.TestContainer.showFrame (panel);
 
   } // main

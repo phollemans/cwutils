@@ -418,10 +418,10 @@ public class CWHDFWriter
 
       // Set GCTP paramters
       // ------------------
-      setAttribute (sdid, "gctp_sys", new Integer (map.getSystem()));
-      setAttribute (sdid, "gctp_zone", new Integer (map.getZone()));
+      setAttribute (sdid, "gctp_sys", Integer.valueOf (map.getSystem()));
+      setAttribute (sdid, "gctp_zone", Integer.valueOf (map.getZone()));
       setAttribute (sdid, "gctp_parm", map.getParameters());
-      setAttribute (sdid, "gctp_datum", new Integer (map.getSpheroid()));
+      setAttribute (sdid, "gctp_datum", Integer.valueOf (map.getSpheroid()));
 
       // Set affine transform
       // --------------------
@@ -510,7 +510,7 @@ public class CWHDFWriter
       SensorScanProjection scan = (SensorScanProjection) trans;
       setAttribute (sdid, "projection_type", scan.describe());
       setAttribute (sdid, "sensor_type", scan.getSensorType());
-      setAttribute (sdid, "sensor_code", new Integer (scan.getSensorCode()));
+      setAttribute (sdid, "sensor_code", Integer.valueOf (scan.getSensorCode()));
       setAttribute (sdid, "sensor_parm", scan.getParameters());
     } // else if
 
@@ -532,8 +532,8 @@ public class CWHDFWriter
     // Write transform dimensions
     // --------------------------
     int[] dims = trans.getDimensions();
-    setAttribute (sdid, "rows", new Integer (dims[0]));
-    setAttribute (sdid, "cols", new Integer (dims[1]));
+    setAttribute (sdid, "rows", Integer.valueOf (dims[0]));
+    setAttribute (sdid, "cols", Integer.valueOf (dims[1]));
 
     // Write earth polygon data
     // ------------------------
@@ -624,9 +624,9 @@ public class CWHDFWriter
     if (missing == null) {
       Class dataClass = var.getDataClass();
       if (dataClass.equals (Float.TYPE))
-        missing = new Float (Float.NaN);
+        missing = Float.valueOf (Float.NaN);
       else if (dataClass.equals (Double.TYPE))
-        missing = new Double (Double.NaN);
+        missing = Double.valueOf (Double.NaN);
     } // if
     if (missing != null) {
       Object fillValue = MetadataServices.toArray (missing);
@@ -655,7 +655,7 @@ public class CWHDFWriter
     Class c = var.getDataClass();
     if (scaling != null || c.equals (Float.TYPE) || c.equals (Double.TYPE)) {
       setAttribute (sdsid, "fraction_digits", 
-        new Integer (var.getFormat().getMaximumFractionDigits()));
+        Integer.valueOf (var.getFormat().getMaximumFractionDigits()));
     } // if
 
     // Set user metadata

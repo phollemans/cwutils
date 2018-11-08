@@ -57,9 +57,9 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * The <code>BinaryStreamReader</code> class reads streams of
+ * <p>The <code>BinaryStreamReader</code> class reads streams of
  * binary data described by an XML template.  The following is an
- * example binary stream template for a NOAA-1b AMSU header record:<p>
+ * example binary stream template for a NOAA-1b AMSU header record:</p>
  *
  * <pre>
  *   &lt;?xml version="1.0"?&gt;
@@ -589,18 +589,18 @@ public class BinaryStreamReader {
 
     switch (type) {
     case BYTE: case BYTEARRAY:
-      return (new Byte (text));
+      return (Byte.valueOf (text));
     case SHORT: case SHORTARRAY: case UBYTE: case UBYTEARRAY:
-      return (new Short (text));
+      return (Short.valueOf (text));
     case INT: case INTARRAY: case USHORT: case USHORTARRAY:
-      return (new Integer (text));
+      return (Integer.valueOf (text));
     case LONG: case LONGARRAY: case UINT: case UINTARRAY: 
     case ULONG: case ULONGARRAY:
-      return (new Long (text));
+      return (Long.valueOf (text));
     case FLOAT: case FLOATARRAY:
-      return (new Float (text));
+      return (Float.valueOf (text));
     case DOUBLE: case DOUBLEARRAY:
-      return (new Double (text));
+      return (Double.valueOf (text));
     case STRING: 
       return (text);
     default:
@@ -910,12 +910,12 @@ public class BinaryStreamReader {
     // ----------------
     case BYTE:
       byte byteValue = inputBuffer.get (info.offset);
-      value = new Byte (byteValue);
+      value = Byte.valueOf (byteValue);
       break;
 
     case UBYTE:
       short ubyteValue = (short) (inputBuffer.get (info.offset) & 0xff);
-      value = new Short (ubyteValue);
+      value = Short.valueOf (ubyteValue);
       break;
 
     case BYTEARRAY:
@@ -939,12 +939,12 @@ public class BinaryStreamReader {
     // -----------------
     case SHORT:
       short shortValue = inputBuffer.getShort (info.offset);
-      value = new Short (shortValue);
+      value = Short.valueOf (shortValue);
       break;
 
     case USHORT:
       int ushortValue = inputBuffer.getShort (info.offset) & 0xffff;
-      value = new Integer (ushortValue);
+      value = Integer.valueOf (ushortValue);
       break;
       
     case SHORTARRAY: 
@@ -968,12 +968,12 @@ public class BinaryStreamReader {
     // ---------------
     case INT:
       int intValue = inputBuffer.getInt (info.offset);
-      value = new Integer (intValue);
+      value = Integer.valueOf (intValue);
       break;
 
     case UINT:
       long uintValue = inputBuffer.getInt (info.offset) & 0xffffffffL;
-      value = new Long (uintValue);
+      value = Long.valueOf (uintValue);
       break;
 
     case INTARRAY:
@@ -1004,7 +1004,7 @@ public class BinaryStreamReader {
 
     case LONG: case ULONG:
       long longValue = inputBuffer.getLong (info.offset);
-      value = new Long (longValue);
+      value = Long.valueOf (longValue);
       break;
 
     case LONGARRAY: case ULONGARRAY:
@@ -1018,7 +1018,7 @@ public class BinaryStreamReader {
     // --------------------------
     case FLOAT: 
       float floatValue = inputBuffer.getFloat (info.offset);
-      value = new Float (floatValue);
+      value = Float.valueOf (floatValue);
       break;
 
     case FLOATARRAY:
@@ -1059,14 +1059,14 @@ public class BinaryStreamReader {
     if (label != null) {
       long longValue = ((Number) value).longValue();
       long labelBits = (longValue & label.mask) >>> label.rightShift;
-      value = new Long (labelBits);
+      value = Long.valueOf (labelBits);
     } // if
 
     // Get scaled value
     // ----------------
     else if (!Double.isNaN (info.scale)) {
       long longValue = ((Number) value).longValue();
-      value = new Double (longValue*info.scale);
+      value = Double.valueOf (longValue*info.scale);
     } // else if
 
     // Get mapped value
