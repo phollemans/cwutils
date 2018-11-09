@@ -46,6 +46,8 @@
 		E91FD1B61B1003BA0096CCA3 /* html2mdoc.xsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = html2mdoc.xsl; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xml; };
 		E92229931AF4937B00E392D0 /* ScriptConsole.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ScriptConsole.java; sourceTree = "<group>"; };
 		E929B1F11F8DC77E000BB7CF /* version.tex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = version.tex; sourceTree = "<group>"; };
+		E92A197F21952B9500CA4ADD /* hb16.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = hb16.jar; path = ../../../../Libraries/misc/hb16.jar; sourceTree = "<group>"; };
+		E92A198021952B9500CA4ADD /* jel-2.1.1.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "jel-2.1.1.jar"; path = "../../../../Libraries/misc/jel-2.1.1.jar"; sourceTree = "<group>"; };
 		E92EB0172095C6DA00F0FB58 /* warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warning.png; sourceTree = "<group>"; };
 		E92EB0182095C6DA00F0FB58 /* warning@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "warning@2x.png"; sourceTree = "<group>"; };
 		E9306F211FD2D2C800AAC2DF /* ChunkDataModifier.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ChunkDataModifier.java; sourceTree = "<group>"; };
@@ -75,7 +77,6 @@
 		E93C27BB1E274058008A698D /* gifencoder.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = gifencoder.jar; path = ../../../../Libraries/gif/gifencoder.jar; sourceTree = "<group>"; };
 		E93C27BC1E274058008A698D /* gt2-main-nojai.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "gt2-main-nojai.jar"; path = "../../../../Libraries/geotools/gt2-main-nojai.jar"; sourceTree = "<group>"; };
 		E93C27BD1E274058008A698D /* gt2-shapefile.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "gt2-shapefile.jar"; path = "../../../../Libraries/geotools/gt2-shapefile.jar"; sourceTree = "<group>"; };
-		E93C27BE1E274058008A698D /* hb16.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = hb16.zip; path = ../../../../Libraries/misc/hb16.zip; sourceTree = "<group>"; };
 		E93C27BF1E274058008A698D /* HDFView.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = HDFView.jar; path = ../../../../Libraries/hdf/HDFView.jar; sourceTree = "<group>"; };
 		E93C27C01E274058008A698D /* hrpt.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = hrpt.jar; path = ../../../../Libraries/misc/hrpt.jar; sourceTree = "<group>"; };
 		E93C27C11E274058008A698D /* itext-1.2.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "itext-1.2.jar"; path = "../../../../Libraries/misc/itext-1.2.jar"; sourceTree = "<group>"; };
@@ -2873,8 +2874,8 @@
 				E93C27BB1E274058008A698D /* gifencoder.jar */,
 				E93C27BC1E274058008A698D /* gt2-main-nojai.jar */,
 				E93C27BD1E274058008A698D /* gt2-shapefile.jar */,
-				E93C27BE1E274058008A698D /* hb16.zip */,
 				E93C27BF1E274058008A698D /* HDFView.jar */,
+				E92A197F21952B9500CA4ADD /* hb16.jar */,
 				E93C27C01E274058008A698D /* hrpt.jar */,
 				E93C27C11E274058008A698D /* itext-1.2.jar */,
 				E93C27C21E274058008A698D /* jai_codec.jar */,
@@ -2884,6 +2885,7 @@
 				E93C27C61E274058008A698D /* jarhdf5-3.2.1.jar */,
 				E93C27C71E274058008A698D /* javassist-3.16.1-GA.jar */,
 				E93C27C81E274058008A698D /* jaxen-full.jar */,
+				E92A198021952B9500CA4ADD /* jel-2.1.1.jar */,
 				E93C27C91E274058008A698D /* jep-2.24.jar */,
 				E93C27CA1E274058008A698D /* JTS-1.4.jar */,
 				E93C27CB1E274058008A698D /* kd.jar */,
