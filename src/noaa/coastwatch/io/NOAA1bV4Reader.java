@@ -103,6 +103,9 @@ public class NOAA1bV4Reader
     /** The Metop-2 spacecraft ID code. */
     public static final int METOP_2_ID = 12;
 
+    /** The Metop-2 spacecraft ID code. */
+    public static final int METOP_3_ID = 13;
+
     ////////////////////////////////////////////////////////
 
     /**
@@ -136,6 +139,7 @@ public class NOAA1bV4Reader
         case NOAA_19_ID: return (new String ("noaa-19"));
         case METOP_1_ID: return (new String ("metop-1"));
         case METOP_2_ID: return (new String ("metop-2"));
+        case METOP_3_ID: return (new String ("metop-3"));
         default: return (new String ("Unknown"));
         } // switch
 
