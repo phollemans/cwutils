@@ -39,6 +39,9 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.Statistics;
 import ucar.nc2.dataset.CoordinateSystem;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * All earth data readers obtain earth data from a data source and
  * provide it to the user in a consistent format.  An earth data reader
@@ -69,6 +72,8 @@ import ucar.nc2.dataset.CoordinateSystem;
  * @since 3.1.0
  */
 public abstract class EarthDataReader {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthDataReader.class.getName());
 
   // Variables
   // ---------
@@ -315,8 +320,7 @@ public abstract class EarthDataReader {
         preview.convertUnits ((String) unitsMap.get (varName));
       } // try
       catch (IllegalArgumentException e) {
-        System.err.println (this.getClass() + 
-          ": Warning: " + e.getMessage() + ", units conversion failed");
+        LOGGER.warning (e.getMessage() + ", units conversion failed");
       } // catch
     } // if
 

@@ -44,13 +44,16 @@ public class ChunkingScheme implements Iterable<ChunkPosition> {
   // ---------
   
   /** The global dimensions of the space of chunks. */
-  private long[] dims;
+  private int[] dims;
   
   /** The size of each chunk in the space (some chunks may be truncated). */
-  private long[] chunkSize;
-  
+  private int[] chunkSize;
+
+  /** The number of chunks along each dimension. */
+  private int[] chunkCounts;
+
   /** The number of chunks in total, including truncated chunks. */
-  private int chunkCount;
+  private int totalChunks;
   
   ////////////////////////////////////////////////////////////
 
@@ -62,19 +65,26 @@ public class ChunkingScheme implements Iterable<ChunkPosition> {
    * truncated).
    */
   public ChunkingScheme (
-    long[] dims,
-    long[] chunkSize
+    int[] dims,
+    int[] chunkSize
   ) {
 
     this.dims = dims;
     this.chunkSize = chunkSize;
-    
-    chunkCount = 1;
+
+    // Compute chunks along each dimension
+    // -----------------------------------
+    chunkCounts = new int[dims.length];
     for (int i = 0; i < dims.length; i++) {
-      int thisChunkCount = (int) (dims[i] / chunkSize[i]);
-      if (dims[i] % chunkSize[i] != 0) thisChunkCount++;
-      chunkCount *= thisChunkCount;
+      chunkCounts[i] = dims[i] / chunkSize[i];
+      if (dims[i] % chunkSize[i] != 0) chunkCounts[i]++;
     } // for
+    
+    // Compute total chunks
+    // --------------------
+    totalChunks = 1;
+    for (int i = 0; i < dims.length; i++)
+      totalChunks *= chunkCounts[i];
 
   } // ChunkingScheme constructor
 
@@ -85,7 +95,7 @@ public class ChunkingScheme implements Iterable<ChunkPosition> {
    *
    * @return the global dimensions.
    */
-  public long[] getDims() { return (dims); }
+  public int[] getDims() { return ((int[]) dims.clone()); }
 
   ////////////////////////////////////////////////////////////
 
@@ -94,7 +104,7 @@ public class ChunkingScheme implements Iterable<ChunkPosition> {
    *
    * @return the chunk size.
    */
-  public long[] getChunkSize() { return (chunkSize); }
+  public int[] getChunkSize() { return ((int[]) chunkSize.clone()); }
 
   ////////////////////////////////////////////////////////////
 
@@ -185,7 +195,7 @@ public class ChunkingScheme implements Iterable<ChunkPosition> {
       for (int i = index+1; i < dims.length; i++)
         pos.start[i] = 0;
       for (int i = index; i < dims.length; i++) {
-        long end = pos.start[i] + chunkSize[i];
+        int end = pos.start[i] + chunkSize[i];
         if (end > dims[i]) end = dims[i];
         pos.length[i] = end - pos.start[i];
       } // for
@@ -201,8 +211,57 @@ public class ChunkingScheme implements Iterable<ChunkPosition> {
    * Gets the total count of chunks in this scheme.
    *
    * @return the total number of chunks.
+   *
+   * @since 3.5.0
    */
-  public int getChunkCount() { return (chunkCount); }
+  public int getTotalChunks() { return (totalChunks); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the number of chunks along a dimension.
+   *
+   * @param index the index of the dimension to get the chunk count.
+   *
+   * @return the total number of chunks along the specified dimension,
+   * including any truncated chunks.
+   *
+   * @since 3.5.0
+   */
+  public int getChunkCount (
+    int index
+  ) {
+  
+    return (chunkCounts[index]);
+        
+  } // getChunkCount
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the chunk position for a specified set of coordinates.
+   *
+   * @param coords the coordinates contained by the chunk.
+   *
+   * @return pos the chunk position that contains the specified coordinates.
+   *
+   * @since 3.5.0
+   */
+  public ChunkPosition getPosition (
+    int[] coords
+  ) {
+
+    ChunkPosition pos = new ChunkPosition (dims.length);
+    for (int i = 0; i < dims.length; i++) {
+      pos.start[i] = (coords[i]/chunkSize[i]) * chunkSize[i];
+      int end = pos.start[i] + chunkSize[i];
+      if (end > dims[i]) end = dims[i];
+      pos.length[i] = end - pos.start[i];
+    } // for
+
+    return (pos);
+
+  } // getPosition
 
   ////////////////////////////////////////////////////////////
 

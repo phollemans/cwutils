@@ -143,11 +143,6 @@ public class EllipsoidPerspectiveProjection
   /** The vertical scanner flag, true for vertical scanner or false for horizontal. */
   private boolean isVerticalScanner;
 
-  /** Various temporary computation arrays. */
-  private double[] locVector, dirVector, surfaceNormal, dirVectorP, 
-    scanAngles, imageCoords, solution, tempVector;
-  private double[][] ry, rz, scanRotation;
-
   ////////////////////////////////////////////////////////////
 
   /**
@@ -686,20 +681,6 @@ public class EllipsoidPerspectiveProjection
     // ---------------------------------------------------------
     gamma = ELL_C + dot (satVector, multiply (ELL_A, satVector, null));
 
-    // Initialize temporary computation arrays
-    // ---------------------------------------
-    locVector = new double[3];
-    dirVector = new double[3];
-    tempVector = new double[3];
-    surfaceNormal = new double[3];
-    dirVectorP = new double[3];
-    scanAngles = new double[3];
-    imageCoords = new double[3];
-    solution = new double[2];
-    ry = new double[3][3];
-    rz = new double[3][3];
-    scanRotation = new double[3][3];
-
   } // EllipsoidPerspectiveProjection constructor
 
   ////////////////////////////////////////////////////////////
@@ -728,6 +709,7 @@ public class EllipsoidPerspectiveProjection
 
     // Convert earth location to ECEF (x,y,z)
     // --------------------------------------
+    double[] locVector = new double[3];
     GDToECEF (earthLoc, 0, locVector);
 
     // Compute direction vector
@@ -736,6 +718,7 @@ public class EllipsoidPerspectiveProjection
      * The direction vector points from the satellite towards the
      * location on the surface of the ellipsoid.
      */
+    double[] dirVector = new double[3];
     subtract (locVector, satVector, dirVector);
 
     // Check for back-facing surface vector
@@ -745,6 +728,7 @@ public class EllipsoidPerspectiveProjection
      * not visible to the satellite, then the dot product of the
      * direction vector with the surface normal will be positive.
      */
+    double[] surfaceNormal = new double[3];
     surfaceNormal[X] = locVector[X]/RE;
     surfaceNormal[Y] = locVector[Y]/RE;
     surfaceNormal[Z] = locVector[Z]/RP;
@@ -760,6 +744,7 @@ public class EllipsoidPerspectiveProjection
      * Once rotated, the direction vector will be relative to the
      * satellite coordinate so that we may compute the view angles.
      */
+    double[] dirVectorP = new double[3];
     multiply (satRotationInv, dirVector, dirVectorP);
 
     // Compute row and column angles
@@ -779,6 +764,7 @@ public class EllipsoidPerspectiveProjection
      *   sin (theta) = dy / |d|
      *   tan (-phi) = dz / dx
      */
+    double[] scanAngles = new double[3];
     if (isVerticalScanner) {
       scanAngles[ROW] = -Math.atan2 (dirVectorP[Z], dirVectorP[X]);
       scanAngles[COL] = Math.asin (dirVectorP[Y] / magnitude (dirVectorP));
@@ -791,6 +777,7 @@ public class EllipsoidPerspectiveProjection
 
     // Compute image row and column
     // ----------------------------
+    double[] imageCoords = new double[3];
     multiply (scannerAffineInv, scanAngles, imageCoords);
     dataLoc.set (Grid.ROWS, imageCoords[ROW]);
     dataLoc.set (Grid.COLS, imageCoords[COL]);
@@ -806,9 +793,11 @@ public class EllipsoidPerspectiveProjection
 
     // Convert image row and column to scan angles
     // -------------------------------------------
+    double[] imageCoords = new double[3];
     imageCoords[ROW] = dataLoc.get (Grid.ROWS);
     imageCoords[COL] = dataLoc.get (Grid.COLS);
     imageCoords[2] = 1;
+    double[] scanAngles = new double[3];
     multiply (scannerAffine, imageCoords, scanAngles);
 
     // Compute scan rotation matrix
@@ -827,6 +816,9 @@ public class EllipsoidPerspectiveProjection
      * The difference in order of operations results in a slightly different
      * view direction vector.
      */
+    double[][] ry = new double[3][3];
+    double[][] rz = new double[3][3];
+    double[][] scanRotation = new double[3][3];
     rotationMatrix (Y, scanAngles[ROW], ry);
     rotationMatrix (Z, scanAngles[COL], rz);
     if (isVerticalScanner)
@@ -840,7 +832,9 @@ public class EllipsoidPerspectiveProjection
      * Given the scan rotation matrix, the scan direction is computed
      * by transforming the unit x direction of the sensor.
      */
+    double[] dirVectorP = new double[3];
     multiply (scanRotation, XHAT, dirVectorP);
+    double[] dirVector = new double[3];
     multiply (satRotation, dirVectorP, dirVector);
 
     // Compute intersection with ellipsoid
@@ -850,8 +844,10 @@ public class EllipsoidPerspectiveProjection
      * is computed using a quadratic equation in the parameter t, which is
      * the multiplier of the direction vector: x(t) = e + td.
      */
+    double[] tempVector = new double[3];
     double alpha = dot (dirVector, multiply (ELL_A, dirVector, tempVector));
     double beta = 2*dot (dirVector, multiply (ELL_A, satVector, tempVector));
+    double[] solution = new double[2];
     qsolve (alpha, beta, gamma, solution);
     double t = Math.min (solution[0], solution[1]);
 
@@ -864,6 +860,7 @@ public class EllipsoidPerspectiveProjection
     // Convert final position vector to geodetic coordinates
     // -----------------------------------------------------
     else {
+      double[] locVector = new double[3];
       multiply (dirVector, t, locVector);
       add (satVector, locVector, locVector);
       ECEFToGD (locVector, 0, earthLoc);

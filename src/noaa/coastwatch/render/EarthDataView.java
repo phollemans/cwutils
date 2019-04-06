@@ -59,6 +59,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.EarthTransform2D;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 // Testing
 import noaa.coastwatch.test.TestLogger;
 
@@ -133,6 +136,9 @@ import noaa.coastwatch.test.TestLogger;
 @noaa.coastwatch.test.Testable
 public abstract class EarthDataView
   implements Renderable, Cloneable {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthDataView.class.getName());
+  private static final Logger VERBOSE = Logger.getLogger (EarthDataView.class.getName() + ".verbose");
 
   // Constants
   // ---------
@@ -290,6 +296,9 @@ public abstract class EarthDataView
    */
   private AffineTransform orientationAffine;
 
+  /** The default log level for the verbose logger. */
+  private Level defaultLevel;
+
   ////////////////////////////////////////////////////////////
 
   /**
@@ -394,7 +403,14 @@ public abstract class EarthDataView
   ////////////////////////////////////////////////////////////
 
   /** Sets the verbose mode flag. */
-  public void setVerbose (boolean flag) { verbose = flag; }
+  public void setVerbose (boolean flag) {
+    
+    if (defaultLevel == null) defaultLevel = VERBOSE.getLevel();
+    verbose = flag;
+    if (verbose) VERBOSE.setLevel (Level.INFO);
+    else VERBOSE.setLevel (defaultLevel);
+
+  } // setVerbose
 
   ////////////////////////////////////////////////////////////
   
@@ -1226,7 +1242,7 @@ public abstract class EarthDataView
     // Prepare data image
     // ------------------
     if (image == null) {
-      if (verbose) System.out.println ("EarthDataView: Preparing data image");
+      VERBOSE.info ("Preparing data image");
       prepare (g);
       if (stopRendering) { postRendering (true); return; }
     } // if
@@ -1289,9 +1305,7 @@ public abstract class EarthDataView
         Graphics2D gImage = image.createGraphics();
         for (int i = 0; i < overlaysArray.length; i++) {
           if (preDrawSet.contains (overlaysArray[i])) {
-            if (verbose) 
-              System.out.println ("EarthDataView: Rendering overlay " +
-                overlaysArray[i].getName());
+            VERBOSE.info ("Rendering overlay " + overlaysArray[i].getName());
             if (stopRendering) { postRendering (false); return; }
             overlaysArray[i].render (gImage, this);
           } // if
@@ -1320,8 +1334,7 @@ public abstract class EarthDataView
     // ---------------
     for (int i = 0; i < overlaysArray.length; i++) {
       if (!preDrawSet.contains (overlaysArray[i])) {
-        if (verbose) System.out.println ("EarthDataView: Rendering overlay " +
-          overlaysArray[i].getName());
+        VERBOSE.info ("Rendering overlay " + overlaysArray[i].getName());
         if (stopRendering) { postRendering (false); return; }
         overlaysArray[i].render (g, this);
       } // if

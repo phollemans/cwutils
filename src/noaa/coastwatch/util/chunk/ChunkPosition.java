@@ -41,10 +41,10 @@ public class ChunkPosition {
   // ---------
 
   /** The start coordinates of the chunk within the chunk space. */
-  public long[] start;
+  public int[] start;
 
   /** The length of the chunk along each dimension. */
-  public long[] length;
+  public int[] length;
 
   ////////////////////////////////////////////////////////
 
@@ -56,8 +56,8 @@ public class ChunkPosition {
    */
   public ChunkPosition (int rank) {
   
-    start = new long[rank];
-    length = new long[rank];
+    start = new int[rank];
+    length = new int[rank];
 
   } // ChunkPosition constructor
 

@@ -29,6 +29,7 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * The <code>CleanupHook</code> class may be used by programs to clean
@@ -44,11 +45,13 @@ import java.util.Set;
 public class CleanupHook 
   implements Runnable {
 
+  private static final Logger LOGGER = Logger.getLogger (CleanupHook.class.getName());
+
   // Variables
   // ---------
 
   /** The set of files to delete. */
-  private Set deleteSet;
+  private Set<String> deleteSet;
 
   /** The single instance of this class. */
   private static CleanupHook instance;
@@ -156,21 +159,25 @@ public class CleanupHook
     // ---------------------------
     boolean isNeeded = !deleteSet.isEmpty();
     if (isNeeded) {
-      System.out.println (this.getClass() + 
-        ": Caught Java VM exit with cleanup required");
-    } // if
 
-    // Perform file deletions
-    // ----------------------
-    for (Iterator iter = deleteSet.iterator(); iter.hasNext(); ) {
-      String fileName = (String) iter.next();
-      File file = new File (fileName);
-      if (file.exists()) {
-        System.out.println (this.getClass() + ": Removing " + fileName);
-        try { file.delete(); }
-        catch (Exception e) { }
-      } // if
-    } // for
+      LOGGER.warning ("Caught command exit, cleaning up ...");
+
+      // Perform file deletions
+      // ----------------------
+      for (String fileName : deleteSet) {
+        File file = new File (fileName);
+        if (file.exists()) {
+          LOGGER.warning ("Removing " + fileName);
+          try { file.delete(); }
+          catch (Exception e) { }
+        } // if
+      } // for
+
+      // Clear the list
+      // --------------
+      deleteSet.clear();
+      
+    } // if
 
   } // run
 

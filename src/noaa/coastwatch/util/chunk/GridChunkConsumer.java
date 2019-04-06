@@ -26,10 +26,14 @@ package noaa.coastwatch.util.chunk;
 // Imports
 // -------
 import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.chunk.ChunkingScheme;
+import noaa.coastwatch.util.chunk.DataChunkFactory;
+import noaa.coastwatch.io.tile.TilingScheme;
+import java.lang.reflect.Array;
 
 /**
- * The <code>GridChunkConsumer</code> class consumes data chunks into a
- * {@link noaa.coastwatch.util.Grid} object.
+ * The <code>GridChunkConsumer</code> class consumes data chunks and places
+ * the chunk data into a {@link noaa.coastwatch.util.Grid} object.
  *
  * @author Peter Hollemans
  * @since 3.4.0
@@ -41,6 +45,12 @@ public class GridChunkConsumer implements ChunkConsumer {
 
   /** The grid to use as a sink for data chunks. */
   private Grid grid;
+
+  /** The chunking scheme used or null for none. */
+  private ChunkingScheme scheme;
+
+  /** The prototype chunk consumed. */
+  private DataChunk protoChunk;
 
   ////////////////////////////////////////////////////////////
 
@@ -54,6 +64,32 @@ public class GridChunkConsumer implements ChunkConsumer {
   ) {
   
     this.grid = grid;
+
+    // Create chunking scheme
+    // ----------------------
+    TilingScheme tiling = grid.getTilingScheme();
+    if (tiling != null) {
+      int[] chunkingDims = tiling.getDimensions();
+      int[] chunkSize = tiling.getTileDimensions();
+      scheme = new ChunkingScheme (chunkingDims, chunkSize);
+    } // if
+
+    // Create packing scheme
+    // ---------------------
+    PackingScheme packing = null;
+    double[] scaling = grid.getScaling();
+    if (scaling != null && !(scaling[0] == 1 && scaling[1] == 0)) {
+      DoublePackingScheme doublePacking = new DoublePackingScheme();
+      doublePacking.scale = scaling[0];
+      doublePacking.offset = scaling[1];
+      packing = doublePacking;
+    } // if
+
+    // Create the prototype chunk
+    // --------------------------
+    Object data = Array.newInstance (grid.getDataClass(), 0);
+    protoChunk = DataChunkFactory.getInstance().create (data,
+      grid.getUnsigned(), grid.getMissing(), packing);
 
   } // GridChunkConsumer constructor
 
@@ -69,6 +105,20 @@ public class GridChunkConsumer implements ChunkConsumer {
     } // synchronized
 
   } // putChunk
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public ChunkingScheme getNativeScheme() { return (scheme); }
+  
+  ////////////////////////////////////////////////////////////
+  
+  @Override
+  public DataChunk getPrototypeChunk() {
+
+    return (protoChunk.blankCopy());
+
+  } // getPrototypeChunk
 
   ////////////////////////////////////////////////////////////
 

@@ -309,7 +309,7 @@ public class MultiPointFeatureOverlayStatsPanel
    * The <code>Column</code> class is used to enumerate the columns
    * of the statistics table.
    */
-  private enum Column {
+  private static enum Column {
 
     // The column enum values
     // ----------------------

@@ -57,11 +57,18 @@ public class Grid
 
   // Constants
   // ---------
+
   /** Index of rows dimension. */
   public final static int ROWS = 0;
 
   /** Index of columns dimension. */
   public final static int COLS = 1;
+
+  /** Index of rows dimension (singular). */
+  public final static int ROW = 0;
+
+  /** Index of columns dimension (singular). */
+  public final static int COL = 1;
 
   // Variables
   // ---------

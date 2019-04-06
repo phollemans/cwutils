@@ -78,12 +78,12 @@ public class NOAA1bFileReader extends EarthDataReader {
   private static final int DEFAULT_CACHE_SIZE = (4*1024)*1024;
 
   /** The type of variable. */
-  private enum VariableType {
+  private static enum VariableType {
     CHANNEL, NAVIGATION, SCAN_TIME
   };
 
   /** The navigation variable type. */
-  private enum NavigationType {
+  private static enum NavigationType {
     LATITUDE, LONGITUDE, SAT_ZENITH, SUN_ZENITH, REL_AZIMUTH
   };
 

@@ -36,6 +36,9 @@ import noaa.coastwatch.util.GridResampler;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.LocationFilter;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * The <code>MixedGridResampler</code> class performs generic data
  * resampling between 2D earth transforms using a mix of forward and
@@ -60,6 +63,9 @@ import noaa.coastwatch.util.LocationFilter;
  */
 public class MixedGridResampler
   extends GridResampler {
+
+  private static final Logger LOGGER = Logger.getLogger (MixedGridResampler.class.getName());
+  private static final Logger VERBOSE = Logger.getLogger (MixedGridResampler.class.getName() + ".verbose");
 
   // Constants
   // ---------
@@ -202,12 +208,12 @@ public class MixedGridResampler
     boolean verbose
   ) {
 
+    if (verbose) VERBOSE.setLevel (Level.INFO);
+    
     // Check grid count
     // ----------------
     int grids = sourceGrids.size();
-    if (verbose) 
-      System.out.println (this.getClass() + ": Found " + grids + 
-        " grid(s) for resampling");
+    VERBOSE.info ("Found " + grids + " grid(s) for resampling");
     if (grids == 0) return;
 
     // Get grid arrays
@@ -219,10 +225,9 @@ public class MixedGridResampler
     // -------------------------------------
     int[] sourceDims = sourceArray[0].getDimensions();
     int[] destDims = destArray[0].getDimensions();
-    if (verbose) 
-      System.out.println (this.getClass() + ": Resampling to " + 
-        destDims[Grid.ROWS] + "x" + destDims[Grid.COLS] + " from " +
-        sourceDims[Grid.ROWS] + "x" + sourceDims[Grid.COLS]);
+    VERBOSE.info ("Resampling to " +
+      destDims[Grid.ROWS] + "x" + destDims[Grid.COLS] + " from " +
+      sourceDims[Grid.ROWS] + "x" + sourceDims[Grid.COLS]);
 
     // Get source navigation
     // ---------------------
@@ -262,9 +267,9 @@ public class MixedGridResampler
         // Print message
         // -------------
         rectangle++;
-        if (verbose && rectangle%(rectangles/10) == 0) {
+        if (rectangle%(rectangles/10) == 0) {
           int percentComplete = (int) Math.round (rectangle*100.0/rectangles);
-          System.out.println (this.getClass() + ": " + percentComplete + "% complete");
+          VERBOSE.info (percentComplete + "% complete");
         } // if
 
         // Set source coordinate sampling points (center of pixels)
@@ -512,9 +517,7 @@ public class MixedGridResampler
 
     // Correct single pixel resampling failures
     // ----------------------------------------
-    if (verbose)
-      System.out.println (this.getClass() + 
-        ": Interpolating single pixel gaps");
+    VERBOSE.info ("Interpolating single pixel gaps");
     for (int i = 0; i < destDims[Grid.ROWS]; i++) {
       for (int j = 0; j < destDims[Grid.COLS]; j++) {
         if (!target[i][j]) {

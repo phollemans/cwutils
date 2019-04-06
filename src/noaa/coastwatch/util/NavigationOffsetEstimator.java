@@ -35,6 +35,9 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.LandMask;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * The <code>NavigationOffsetEstimator</code> class uses image and
  * land mask data to estimate the navigation error in a small tile of
@@ -52,6 +55,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * @since 3.1.9
  */
 public class NavigationOffsetEstimator {
+
+  private static final Logger LOGGER = Logger.getLogger (NavigationOffsetEstimator.class.getName());
+  private static final Logger VERBOSE = Logger.getLogger (NavigationOffsetEstimator.class.getName() + ".verbose");
 
   // Constants
   // ---------
@@ -73,6 +79,9 @@ public class NavigationOffsetEstimator {
 
   /** The verbose flag, true to print verbose output during estimation. */
   private boolean verbose;
+
+  /** The default log level for the verbose logger. */
+  private Level defaultLevel;
 
   ////////////////////////////////////////////////////////////
 
@@ -125,7 +134,14 @@ public class NavigationOffsetEstimator {
   ////////////////////////////////////////////////////////////
 
   /** Sets the verbose flag to print verbose output during estimation. */
-  public void setVerbose (boolean flag) { verbose = flag; }
+  public void setVerbose (boolean flag) {
+    
+    if (defaultLevel == null) defaultLevel = VERBOSE.getLevel();
+    verbose = flag;
+    if (verbose) VERBOSE.setLevel (Level.INFO);
+    else VERBOSE.setLevel (defaultLevel);
+
+  } // setVerbose
 
   ////////////////////////////////////////////////////////////
 
@@ -138,7 +154,6 @@ public class NavigationOffsetEstimator {
    * @param thresh the histogram splitting threshold.
    * @param stats the statistics array (modified) as [u1, s1, u2, s2].
    */
-  /** Gets the bimodal histogram statistics. */
   private void getBimodalStats (
     double[][] data, 
     int rows, 
@@ -360,13 +375,9 @@ public class NavigationOffsetEstimator {
     // Check for sufficient distance
     // -----------------------------
     DecimalFormat fmt = new DecimalFormat ("0.###");
-    if (verbose) {
-      System.out.println (this.getClass() + 
-        ": Land/water class separation distance = " + fmt.format (dist));
-    } // if
+    VERBOSE.info ("Land/water class separation distance = " + fmt.format (dist));
     if (Double.isNaN (dist) || Double.isInfinite (dist) || dist<minStdevDist) {
-      if (verbose)
-        System.out.println (this.getClass() + ": Insufficient separation");
+      VERBOSE.info ("Insufficient separation");
       return (Double.NaN);
     } // if
 
@@ -383,15 +394,10 @@ public class NavigationOffsetEstimator {
     int totalCount = boxWidth*boxHeight;
     classFraction[0] = (double) classCount[0] / totalCount;
     classFraction[1] = (double) classCount[1] / totalCount;
-    if (verbose) {
-      System.out.println (this.getClass() + 
-        ": Class fraction = (" + fmt.format (classFraction[0]) + ", " + 
-        fmt.format (classFraction[1]) + ")");
-    } // if
-    if (classFraction[0] < minClassFraction || classFraction[1] < 
-      minClassFraction) {
-      if (verbose)
-        System.out.println (this.getClass() + ": Insufficient class fraction");
+    VERBOSE.info ("Class fraction = (" + fmt.format (classFraction[0]) + ", " +
+      fmt.format (classFraction[1]) + ")");
+    if (classFraction[0] < minClassFraction || classFraction[1] < minClassFraction) {
+      VERBOSE.info ("Insufficient class fraction");
       return (Double.NaN);
     } // if
 
@@ -471,20 +477,13 @@ public class NavigationOffsetEstimator {
     // Check correlation threshold
     // ---------------------------
     DecimalFormat fmt = new DecimalFormat ("0.###");
-    if (verbose) {
-      System.out.println (this.getClass() + ": Image correlation = " + 
-        fmt.format (finalCorr) + " at " + (maxOffsetProblem ? "max offset" : 
-        "offset = (" + finalRowOffset + ", " + finalColOffset + ")"));
-    } // if
+    VERBOSE.info ("Image correlation = " +
+      fmt.format (finalCorr) + " at " + (maxOffsetProblem ? "max offset" :
+      "offset = (" + finalRowOffset + ", " + finalColOffset + ")"));
     if (finalCorr > minCorrelation && !maxOffsetProblem)
       return (new int[] {finalRowOffset, finalColOffset});
     else {
-      if (verbose) {
-        if (maxOffsetProblem) 
-          System.out.println (this.getClass() + ": Rejected max offset");
-        else
-          System.out.println (this.getClass() + ": Insufficient correlation");
-      } // if
+      VERBOSE.info (maxOffsetProblem ? "Rejected max offset" : "Insufficient correlation");
       return (null);
     } // else
 
@@ -568,9 +567,7 @@ public class NavigationOffsetEstimator {
       // Get pixel data
       // --------------
       int[] guessOffset = (int[]) guessOffsetList.get (i);
-      if (verbose)
-        System.out.println (this.getClass() + ": Rough navigation offset = (" +
-          guessOffset[0] + ", " + guessOffset[1] + ")");
+      VERBOSE.info ("Rough navigation offset = (" + guessOffset[0] + ", " + guessOffset[1] + ")");
       grid.setNavigation ((AffineTransform) guessNavList.get (i));
       data = getPixelData (grid, min, boxHeight, boxWidth);
 
@@ -578,8 +575,7 @@ public class NavigationOffsetEstimator {
       // ------------------------------
       double thresh = getClassThreshold (data, boxHeight, boxWidth);
       if (Double.isNaN (thresh)) {
-        if (verbose)
-          System.out.println (this.getClass() + ": Class separation failed");
+        VERBOSE.info ("Class separation failed");
         continue;
       } // if
     
@@ -593,8 +589,7 @@ public class NavigationOffsetEstimator {
       int[] offset = getMaxCorrelationOffset (data, thresh, boxHeight, 
         boxWidth, land, maxRowOffset, maxColOffset, corr);
       if (offset == null) {
-        if (verbose)
-          System.out.println (this.getClass() + ": Image correlation failed");
+        VERBOSE.info ("Image correlation failed");
         continue;
       } // if
 
@@ -622,8 +617,7 @@ public class NavigationOffsetEstimator {
         boxWidth, 0);
       verbose = savedVerbose;
       if (testOffset == null) {
-        if (verbose)
-          System.out.println (this.getClass() + ": Search sanity test failed");
+        VERBOSE.info ("Search sanity test failed");
         bestOffset = null;
       } // if
     } // if

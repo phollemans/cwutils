@@ -435,7 +435,7 @@ public abstract class CachedGrid
     try { tile = readTile (pos); }
     catch (IOException e) {
 
-      e.printStackTrace();
+//      e.printStackTrace();
       
       throw new RuntimeException (e.getMessage());
     } // catch

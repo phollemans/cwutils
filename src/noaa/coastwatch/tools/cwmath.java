@@ -44,6 +44,8 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import noaa.coastwatch.io.CWHDFReader;
 import noaa.coastwatch.io.CWHDFWriter;
@@ -430,6 +432,12 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  *     <td>isNaN (x)</td>
  *   </tr>
  *
+ *   <tr>
+ *     <td>Haversine distance (km)</td>
+ *     <td>Unsupported</td>
+ *     <td>dist (lat1, lon1, lat2, lon2)</td>
+ *   </tr>
+ *
  * </table>
  *
  * <p>Note that in legacy parser expressions, boolean result values from
@@ -716,14 +724,15 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  */
 public final class cwmath {
 
+  private static final String PROG = cwmath.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
+
   // Constants
   // ---------
 
   /** Minimum required command line parameters. */
   private static final int NARGS = 1;
-
-  /** Name of program. */
-  private static final String PROG = "cwmath";
 
   // Variables
   // ---------
@@ -768,14 +777,12 @@ public final class cwmath {
       // Check format
       // ------------
       if (!exprVarName.matches ("^file[1-9]+_.+$")) {
-        throw new RuntimeException ("Invalid expression variable name: " + 
-          exprVarName);
+        throw new RuntimeException ("Invalid expression variable " + exprVarName);
       } // if
       
       // Get file index and variable name
       // --------------------------------
-      fileIndex = Integer.parseInt (
-        exprVarName.replaceFirst ("^file([1-9]+)_.+$", "$1")) - 1;
+      fileIndex = Integer.parseInt (exprVarName.replaceFirst ("^file([1-9]+)_.+$", "$1")) - 1;
       fileVarName = exprVarName.replaceFirst ("^file[1-9]+_(.+)$", "$1");
 
     } // if
@@ -787,8 +794,8 @@ public final class cwmath {
       fileVarName = exprVarName;
     } // else
 
-    // Get variable
-    // ------------
+    // Get actual variable name in file
+    // --------------------------------
     if (newNameMap.containsKey (fileVarName))
       fileVarName = newNameMap.get (fileVarName);
 
@@ -799,8 +806,11 @@ public final class cwmath {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets a list of allowed input variable names.
-   * 
+   * Gets a list of allowed input variable names.  This method has the
+   * side-effect of building a map of variable names with illegal characters
+   * that are not in the set [a-zA-Z0-9_] with an underscore so that they
+   * don't interfere with expression parsing.
+   *
    * @param readers the array of readers to select the variable from.
    *
    * @return the list of available variables.
@@ -828,10 +838,12 @@ public final class cwmath {
 
     // Remove disallowed characters
     // ----------------------------
-    for (ListIterator<String> iter = varNames.listIterator();iter.hasNext();) {
+    ListIterator<String> iter = varNames.listIterator();
+    while (iter.hasNext()) {
       String name = iter.next();
       String newName = name.replaceAll ("[^0-9a-zA-Z_]", "_");
       if (!newName.equals (name)) {
+        LOGGER.fine ("Replacing variable name " + name + " with " + newName);
         newNameMap.put (newName, name);
         iter.set (newName);
       } // if
@@ -870,11 +882,12 @@ public final class cwmath {
 
     @Override
     public int indexOfVariable (String varName) {
+
       Integer index = variableMap.get (varName);
       if (index == null) {
         DataVariable inputVar;
         try { inputVar = getInputVariable (readers, varName); }
-        catch (IOException e) { inputVar = null; }
+        catch (Exception e) { inputVar = null; }
         if (inputVar == null)
           index = -1;
         else {
@@ -885,11 +898,14 @@ public final class cwmath {
           variableMap.put (varName, index);
         } // else
       } // if
+
       return (index);
+
     } // indexOfVariable
 
     @Override
     public String typeOfVariable (String varName) {
+
       Integer index = indexOfVariable (varName);
       String typeName;
       if (index == -1)
@@ -906,7 +922,9 @@ public final class cwmath {
         default: typeName = null;
         } // switch
       } // else
+      
       return (typeName);
+
     } // typeOfVariable
 
   } // ReaderParseImp
@@ -920,6 +938,7 @@ public final class cwmath {
    */
   public static void main (String argv[]) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -940,33 +959,36 @@ public final class cwmath {
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
-      System.exit (0);
-    } // if  
+      usage();
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
-    } // if  
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
-      usage ();
-      System.exit (1);
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String[] input;
     String output;
@@ -992,8 +1014,9 @@ public final class cwmath {
       try { expression = in.readLine(); }
       catch (IOException e) { }
       if (expression == null || expression.equals ("")) {
-        System.err.println (PROG + ": Error reading expression");
-        System.exit (2);
+        LOGGER.severe ("Error reading expression");
+        ToolServices.exitWithCode (2);
+        return;
       } // if
     } // if
 
@@ -1001,11 +1024,14 @@ public final class cwmath {
     // -----------------------------
     String[] expressionArray = expression.split (" *= *", 2);
     if (expressionArray.length != 2) {
+      String message;
       if (expressionArray.length == 1)
-        System.err.println (PROG + ": Missing equals sign in '" + expression + "'");
+        message = "Missing equals sign in '" + expression + "'";
       else
-        System.err.println (PROG + ": Too many equals signs in '" + expression + "'");
-      System.exit (1);
+        message = "Too many equals signs in '" + expression + "'";
+      LOGGER.severe (message);
+      ToolServices.exitWithCode (2);
+      return;
     } // if
     String outputVarName = expressionArray[0];
     String outputExpression = expressionArray[1];
@@ -1013,6 +1039,7 @@ public final class cwmath {
     // Set defaults
     // ------------
     boolean verbose = (cmd.getOptionValue (verboseOpt) != null);
+    if (verbose) VERBOSE.setLevel (Level.INFO);
     String template = (String) cmd.getOptionValue (templateOpt);
     boolean fullTemplate = (cmd.getOptionValue (fulltemplateOpt) != null);
     boolean skipMissing = (cmd.getOptionValue (skipmissingOpt) != null);
@@ -1032,23 +1059,22 @@ public final class cwmath {
       boolean singleFile = (input.length == 1 && input[0].equals (output));
       File outputFile = new File (output);
       if (!singleFile && outputFile.exists()) {
-        if (verbose) System.out.println (PROG + ": Checking output " + output);
+        VERBOSE.info ("Checking output " + output);
         CWHDFReader outputReader = new CWHDFReader (output);
         outputTransform = outputReader.getInfo().getTransform();
         outputReader.close();
       } // if
 
-      // Open input files
-      // ----------------
+      // Create array of readers
+      // -----------------------
       EarthDataReader[] readers = new EarthDataReader[input.length];
       CWHDFWriter writer = null;
       for (int i = 0; i < input.length; i++) {
 
-        // Open file for input and output
-        // ------------------------------
+        // Open file for both input and output
+        // -----------------------------------
         if (input[i].equals (output)) {
-          if (verbose) 
-            System.out.println (PROG + ": Opening input/output " + input[i]);
+          VERBOSE.info ("Opening input/output " + input[i]);
           writer = new CWHDFWriter (output);
           readers[i] = new CWHDFReader (writer);
         } // if
@@ -1056,17 +1082,14 @@ public final class cwmath {
         // Open file for input only and check transform
         // --------------------------------------------
         else {
-          if (verbose) 
-            System.out.println (PROG + ": Opening input " + input[i]);
+          VERBOSE.info ("Opening input " + input[i]);
           readers[i] = EarthDataReaderFactory.create (input[i]);
           if (outputTransform != null) {
-            EarthTransform inputTransform = 
-              readers[i].getInfo().getTransform();
+            EarthTransform inputTransform = readers[i].getInfo().getTransform();
             if (!inputTransform.equals (outputTransform)) {
-              System.err.println (PROG + 
-                ": Earth transforms do not match for " + input[i] + " and " + 
-                output);
-              System.exit (2);
+              LOGGER.severe ("Earth transforms do not match for " + input[i] + " and " + output);
+              ToolServices.exitWithCode (2);
+              return;
             } // if
           } // if
         } // else
@@ -1077,13 +1100,11 @@ public final class cwmath {
       // ----------------
       if (writer == null) {
         if (outputFile.exists()) {
-          if (verbose) 
-            System.out.println (PROG + ": Opening output " + output);
+          VERBOSE.info ("Opening output " + output);
           writer = new CWHDFWriter (output);
         } // if
         else {
-          if (verbose) 
-            System.out.println (PROG + ": Creating output " + output);
+          VERBOSE.info ("Creating output " + output);
           CleanupHook.getInstance().scheduleDelete (output);
           writer = new CWHDFWriter (readers[0].getInfo(), output);
         } // else
@@ -1092,11 +1113,12 @@ public final class cwmath {
       // Get input variable names and modify expression
       // ----------------------------------------------
       List<String> nameList = getInputVariables (readers);
-      for (Map.Entry<String,String> entry : newNameMap.entrySet()) {
-        String newOutputExpression = 
-          outputExpression.replaceAll (entry.getValue(), entry.getKey());
-        if (!newOutputExpression.equals (outputExpression))
-          outputExpression = newOutputExpression;
+      nameList.forEach (name -> LOGGER.fine ("Found input variable " + name));
+
+      for (String newName : newNameMap.keySet()) {
+        String newExpression = outputExpression.replaceAll (newNameMap.get (newName), newName);
+        if (!newExpression.equals (outputExpression))
+          outputExpression = newExpression;
       } // for
 
       // Create parser
@@ -1112,8 +1134,9 @@ public final class cwmath {
       else if (parserType.equals ("java"))
         parserStyle = ParserStyle.JAVA;
       else {
-        System.err.println (PROG + ": Invalid parser type, " + parserType);
-        System.exit (2);
+        LOGGER.severe ("Invalid parser type, " + parserType);
+        ToolServices.exitWithCode (2);
+        return;
       } // else
 
       // Parse expression
@@ -1122,9 +1145,7 @@ public final class cwmath {
         ExpressionParser emulationParser = ExpressionParserFactory.getFactoryInstance().create (ParserStyle.LEGACY_EMULATED);
         emulationParser.init (parseImp);
         outputExpression = emulationParser.translate (outputExpression);
-        if (verbose) {
-          System.out.println (PROG + ": Using expression '" + outputExpression + "'");
-        } // if
+        VERBOSE.info ("Using expression '" + outputExpression + "'");
       } // if
       ExpressionParser parser = ExpressionParserFactory.getFactoryInstance().create (ParserStyle.JAVA);
       parser.init (parseImp);
@@ -1139,7 +1160,13 @@ public final class cwmath {
 
       // Get dimensions of output grid
       // -----------------------------
-      int[] dims = chunkProducerList.get (0).getGrid().getDimensions();
+      int producers = chunkProducerList.size();
+      if (producers == 0) {
+        LOGGER.severe ("Expression contains no input variables");
+        ToolServices.exitWithCode (2);
+        return;
+      }// if
+      int[] dims = readers[0].getInfo().getTransform().getDimensions();
       
       // Get output data scaling
       // -----------------------
@@ -1151,8 +1178,9 @@ public final class cwmath {
         if (!scale.equals ("none")) {
           String[] scaleArray = scale.split (ToolServices.SPLIT_REGEX);
           if (scaleArray.length != 2) {
-            System.err.println (PROG + ": Invalid scale '" + scale + "'");
-            System.exit (1);
+            LOGGER.severe ("Invalid scale '" + scale + "'");
+            ToolServices.exitWithCode (2);
+            return;
           } // if
           double factor = Double.parseDouble (scaleArray[0]);
           double offset = Double.parseDouble (scaleArray[1]);
@@ -1251,7 +1279,7 @@ public final class cwmath {
 
         else if (size.equals ("double")) {
           scaling = null;
-          data = new float[] {};
+          data = new double[0];
           missing = Double.valueOf (Double.NaN);
           format = NumberFormat.getInstance();
           int digits = 10;
@@ -1259,8 +1287,9 @@ public final class cwmath {
         } // else if
 
         else {
-          System.err.println (PROG + ": Invalid size '" + size + "'");
-          System.exit (2);
+          LOGGER.severe ("Invalid size '" + size + "'");
+          ToolServices.exitWithCode (2);
+          return;
         } // else
 
       } // else
@@ -1277,10 +1306,7 @@ public final class cwmath {
 
       // Create output variable
       // ----------------------
-      if (verbose) {
-        System.out.println (PROG + ": Creating " + outputVarName 
-          + " variable");
-      } // if
+      VERBOSE.info ("Creating " + outputVarName + " variable");
       Grid grid = new Grid (outputVarName, longName, units, dims[Grid.ROWS],
         dims[Grid.COLS], data, format, scaling, missing);
       grid.setUnsigned (isUnsigned);
@@ -1297,61 +1323,51 @@ public final class cwmath {
       } // if
       Grid outputVar = new HDFCachedGrid (grid, writer);
 
-      // Set up chunking structures
-      // --------------------------
+      // Set up chunk producers
+      // ----------------------
       ChunkCollector collector = new ChunkCollector();
       chunkProducerList.forEach (collector::addProducer);
+
+      // Set up chunk consumer
+      // ---------------------
       ChunkConsumer consumer = new GridChunkConsumer (outputVar);
+      ChunkingScheme scheme = consumer.getNativeScheme();
+      DataChunk prototypeChunk = consumer.getPrototypeChunk();
 
-      TilingScheme tiling = outputVar.getTilingScheme();
-      int[] tilingDims = tiling.getDimensions();
-      long[] chunkingDims = new long[] {tilingDims[0], tilingDims[1]};
-      int[] tileDims = tiling.getTileDimensions();
-      long[] chunkSize = new long[] {tileDims[0], tileDims[1]};
-      ChunkingScheme scheme = new ChunkingScheme (chunkingDims, chunkSize);
-
-      ExpressionFunction function = new ExpressionFunction();
-      function.setSkipMissing (skipMissing);
-      PackingScheme packing = null;
-      if (scaling != null) {
-        DoublePackingScheme doublePacking = new DoublePackingScheme();
-        doublePacking.scale = scaling[0];
-        doublePacking.offset = scaling[1];
-        packing = doublePacking;
-      } // if
-      DataChunk prototypeChunk = DataChunkFactory.getInstance().create (
-        data, isUnsigned, missing, packing);
-
-      // Adapt parser if needed
-      // ----------------------
+      // Check if we need to adapt parse output type
+      // -------------------------------------------
       String resultType = parser.getResultType().toString().toLowerCase();
       String chunkType = prototypeChunk.getExternalType().toString().toLowerCase();
       if (!resultType.equals (chunkType)) {
-        System.out.println (PROG + ": Warning - casting " + resultType + " expression result to " + chunkType);
+        LOGGER.warning ("Casting " + resultType + " expression result to " + chunkType);
         parser.adapt (ResultType.valueOf (chunkType.toUpperCase()));
       } // if
+
+      // Create chunk function
+      // ---------------------
+      ExpressionFunction function = new ExpressionFunction();
+      function.setSkipMissing (skipMissing);
       function.init (parser, prototypeChunk);
 
+      // Create chunk computation
+      // ------------------------
       ChunkComputation op = new ChunkComputation (collector, consumer, function);
-      // For testing
-      //op.setIsTracked (true);
-
+      //op.setIsTracked (true); // testing
       List<ChunkPosition> positions = new ArrayList<>();
       scheme.forEach (positions::add);
 
       // Perform chunk processing
       // ------------------------
       boolean isParallel = parser.isThreadSafe();
-      if (verbose) {
-        System.out.println (PROG + ": Total grid size is " + chunkingDims[0] +
-          "x" + chunkingDims[1]);
-        if (isParallel) {
-          int processors = Runtime.getRuntime().availableProcessors();
-          System.out.println (PROG + ": Found " + processors + " processor(s) to use");
-        } // if
-        System.out.println (PROG + ": Processing " + positions.size() +
-          " data chunks of size " + chunkSize[0] + "x" + chunkSize[1]);
+      int[] chunkingDims = scheme.getDims();
+      VERBOSE.info ("Total grid size is " + chunkingDims[0] + "x" + chunkingDims[1]);
+      if (isParallel) {
+        int processors = Runtime.getRuntime().availableProcessors();
+        VERBOSE.info ("Found " + processors + " processor(s) to use");
       } // if
+      int[] chunkSize = scheme.getChunkSize();
+      VERBOSE.info ("Processing " + positions.size() +
+        " data chunks of size " + chunkSize[0] + "x" + chunkSize[1]);
       if (isParallel) {
         PoolProcessor processor = new PoolProcessor();
         processor.init (positions, op);
@@ -1376,53 +1392,49 @@ public final class cwmath {
 
     } // try
     catch (Exception e) {
-      e.printStackTrace();
-      System.exit (2);
+      LOGGER.log (Level.SEVERE, "Aborting", e);
+      ToolServices.exitWithCode (2);
+      return;
     } // catch
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwmath [OPTIONS] input\n" +
-"       cwmath [OPTIONS] input1 [input2 ...] output\n" +
-"Combines earth data using a mathematical expression.\n" +
-"\n" +
-"Main parameters:\n" +
-"  input                      The single input/output data file name.\n" +
-"  input1 [input2 ...]        The input data file name(s)\n" +
-"  output                     The output data file name.\n" + 
-"\n" +
-"Options:\n" +
-"  -c, --scale=FACTOR/OFFSET | none\n" +
-"                             Set scale factor and offset for packing data\n" +
-"                              to integer values.\n" +
-"  -e, --expr=EXPRESSION      Compute output variable using expression.\n" +
-"  -p, --parser=TYPE          Set parser type for expression.  TYPE may be\n" +
-"                              'emulated' or 'java'.\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -k, --skip-missing         Skip computation for missing input values.\n" +
-"  -l, --longname=STRING      Set long name of output variable.\n" +
-"  -m, --missing=VALUE        Set missing value in output variable data.\n" +
-"  -s, --size=TYPE            Set binary type of output variable.  TYPE\n" +
-"                              may be 'byte', 'ubyte', 'short', 'ushort',\n" +
-"                              'int', 'uint', 'long', 'ulong', 'float', or\n" +
-"                              'double'.\n" +
-"  -t, --template=VARIABLE    Use attributes of template variable for\n" +
-"                              output variable.\n" +
-"  -f, --full-template        Copy full attribute set for template variable.\n" +
-"  -u, --units=STRING         Set units of output variable.\n" +
-"  -v, --verbose              Print verbose messages.\n" +
-"  --version                  Show version information.\n"
-    );
+  ////////////////////////////////////////////////////////////
 
-  } // usage
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwmath");
+
+    info.func ("Combines earth data using a mathematical expression");
+
+    info.param ("input", "Single data file for input and output", 1);
+    info.param ("input1 [input2 ...]", "Input data file(s)", 2);
+    info.param ("output", "Output data file", 2);
+
+    info.option ("-c, --scale=FACTOR/OFFSET", "Set integer packing parameters");
+    info.option ("-e, --expr=EXPRESSION", "Compute output using expression");
+    info.option ("-h, --help", "Show help message");
+    info.option ("-p, --parser=TYPE", "Set parser type for expression");
+    info.option ("-k, --skip-missing", "Skip output for missing input values");
+    info.option ("-l, --longname=STRING", "Set output variable long name");
+    info.option ("-m, --missing=VALUE", "Set output variable missing value");
+    info.option ("-s, --size=TYPE", "Set output variable binary type");
+    info.option ("-t, --template=VARIABLE", "Use template for output attributes");
+    info.option ("-f, --full-template", "Use all template variable attributes");
+    info.option ("-u, --units=STRING", "Set output variable units");
+    info.option ("-v, --verbose", "Print verbose messages");
+    info.option ("--version", "Show version information");
+
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 

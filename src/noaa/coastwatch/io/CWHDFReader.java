@@ -56,6 +56,9 @@ import noaa.coastwatch.util.trans.SensorScanProjection;
 import noaa.coastwatch.util.trans.SensorScanProjectionFactory;
 import noaa.coastwatch.util.trans.SwathProjection;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * A CWHDF reader is an earth data reader that reads CoastWatch
  * HDF format files using the HDF library class.
@@ -65,6 +68,8 @@ import noaa.coastwatch.util.trans.SwathProjection;
  */
 public class CWHDFReader
   extends HDFReader {
+
+  private static final Logger LOGGER = Logger.getLogger (CWHDFReader.class.getName());
 
   // Constants
   // ---------
@@ -453,13 +458,9 @@ public class CWHDFReader
           } // else
         } // try
         catch (Exception e) {
-          System.err.println (this.getClass() + 
-            ": Warning: Problems encountered using earth location data");
-          e.printStackTrace();
+          LOGGER.log (Level.WARNING, "Problems encountered using earth location data", e);
           if (lat != null && lon != null) {
-            System.err.println (this.getClass() + 
-              ": Warning: Falling back on data-only projection, " +
-              "earth location reverse lookup will not function");
+            LOGGER.warning ("No (lat,lon) --> (row,col) transform available");
             trans = new DataProjection (lat, lon);
           } // if
         } // catch
@@ -529,9 +530,7 @@ public class CWHDFReader
       // ----------------------
       double version = getMetaVersion (sdid);
       if (version < 3) {
-        System.err.println (this.getClass() + 
-          ": Warning: Writing navigation transform to file with " +
-          "metadata version " + version);
+        LOGGER.warning ("Writing navigation transform to file with metadata version " + version);
       } // if
 
       // TODO: This should be fixed so that if the file fails to open

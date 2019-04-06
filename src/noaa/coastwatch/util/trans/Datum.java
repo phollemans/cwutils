@@ -40,6 +40,14 @@ import noaa.coastwatch.util.trans.SpheroidConstants;
 public class Datum 
   implements SpheroidConstants {
 
+  // Constants
+  // ---------
+
+  /** The coordinate axis indices for ECF coordinates. */
+  private static final int X = 0;
+  private static final int Y = 1;
+  private static final int Z = 2;
+
   // Variables
   // ---------
 
@@ -66,6 +74,9 @@ public class Datum
 
   /** The z-axis shift (meters). */
   private double dz;
+
+  /** The values needed for ECF computations. */
+  private double rp, rp2, re, re2_over_rp2;
 
   ////////////////////////////////////////////////////////////
 
@@ -99,7 +110,12 @@ public class Datum
     this.dx = dx;
     this.dy = dy;
     this.dz = dz;
-    
+
+    re = axis;
+    rp = re*(1-flat);
+    rp2 = rp*rp;
+    re2_over_rp2 = (re*re)/rp2;
+
   } // Datum constructor
 
   ////////////////////////////////////////////////////////////
@@ -129,7 +145,12 @@ public class Datum
     this.dx = dx;
     this.dy = dy;
     this.dz = dz;
-    
+
+    re = axis;
+    rp = re*(1-flat);
+    rp2 = rp*rp;
+    re2_over_rp2 = (re*re)/rp2;
+
   } // Datum constructor
 
   ////////////////////////////////////////////////////////////
@@ -164,7 +185,8 @@ public class Datum
    * <code>from</code> locations may be the same, in which case the
    * location is modified in-place.
    *
-   * @return the new or modified earth location.
+   * @return the new or modified earth location.  The returned location will
+   * have its datum set to the new datum.
    */
   public static EarthLocation transform (
     EarthLocation from,
@@ -209,6 +231,42 @@ public class Datum
     return (to);
 
   } // transform
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Converts an earth location to Earth-Centered-Fixed (ECF).  This
+   * is a right-handed cartesian coordinate system centered at the center
+   * of the Earth ellipsoid, with its x-axis pointing towards (0N, 0E), its
+   * y-axis pointing towards (0N, 90E), and its z-axis pointing at the
+   * north pole.
+   *
+   * @param lat the latitude in the range [-90..90].
+   * @param lon the longitude in the range [-180..180].
+   * @param ecf the output ECF coordinates in meters.
+   *
+   * @since 3.5.0
+   */
+  public void computeECF (
+    double lat,
+    double lon,
+    double[] ecf
+  ) {
+
+    lat = Math.toRadians (lat);
+    lon = Math.toRadians (lon);
+    double cosLat = Math.cos (lat);
+    double sinLat = Math.sin (lat);
+    double cos2Lat = cosLat*cosLat;
+    double sin2Lat = sinLat*sinLat;
+    double beta = rp*Math.sqrt (re2_over_rp2 * cos2Lat + sin2Lat);
+    double cosLon = Math.cos (lon);
+    double sinLon = Math.sin (lon);
+    ecf[X] = (re * cosLat * cosLon)/beta;
+    ecf[Y] = (re * cosLat * sinLon)/beta;
+    ecf[Z] = (rp2 * sinLat)/(re*beta);
+
+  } // computeECF
 
   ////////////////////////////////////////////////////////////
 

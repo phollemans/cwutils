@@ -33,6 +33,9 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.GridResampler;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * <p>The <code>DirectGridResampler</code> class performs generic data
  * resampling between 2D Earth transforms using a direct location
@@ -59,6 +62,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
 public class DirectGridResampler 
   extends GridResampler {
 
+  private static final Logger LOGGER = Logger.getLogger (DirectGridResampler.class.getName());
+  private static final Logger VERBOSE = Logger.getLogger (DirectGridResampler.class.getName() + ".verbose");
+
   ////////////////////////////////////////////////////////////
 
   /**
@@ -81,16 +87,17 @@ public class DirectGridResampler
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void perform (
     boolean verbose
   ) {
 
+    if (verbose) VERBOSE.setLevel (Level.INFO);
+
     // Check grid count
     // ----------------
     int grids = sourceGrids.size();
-    if (verbose) 
-      System.out.println (this.getClass() + ": Found " + grids + 
-        " grid(s) for resampling");
+    VERBOSE.info ("Found " + grids + " grid(s) for resampling");
     if (grids == 0) return;
 
     // Get grid arrays
@@ -102,10 +109,9 @@ public class DirectGridResampler
 
     // Loop over each destination location
     // -----------------------------------
-    if (verbose) 
-      System.out.println (this.getClass() + ": Resampling to " + 
-        destDims[Grid.ROWS] + "x" + destDims[Grid.COLS] + " from " +
-        sourceDims[Grid.ROWS] + "x" + sourceDims[Grid.COLS]);
+    VERBOSE.info ("Resampling to " +
+      destDims[Grid.ROWS] + "x" + destDims[Grid.COLS] + " from " +
+      sourceDims[Grid.ROWS] + "x" + sourceDims[Grid.COLS]);
     DataLocation destLoc = new DataLocation (2);
     DataLocation sourceLoc = new DataLocation (2);
     EarthLocation earthLoc = new EarthLocation();
@@ -113,9 +119,9 @@ public class DirectGridResampler
 
       // Print progress
       // --------------
-      if (verbose && (i+1)%(destDims[Grid.ROWS]/10) == 0) {
+      if ((i+1)%(destDims[Grid.ROWS]/10) == 0) {
         int percentComplete = (int) Math.round (((i+1)*100.0/destDims[Grid.ROWS]));
-        System.out.println (this.getClass() + ": " + percentComplete + "% complete");
+        VERBOSE.info (percentComplete + "% complete");
       } // if
 
       for (int j = 0; j < destDims[Grid.COLS]; j++) {

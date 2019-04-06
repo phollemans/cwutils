@@ -25,6 +25,8 @@ package noaa.coastwatch.util.trans;
 
 // Imports
 // -------
+import java.util.Arrays;
+
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform2D;
@@ -179,6 +181,36 @@ public class GeoVectorProjection
 
   } // transformImpl
 
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean equals (
+    Object obj
+  ) {
+
+    // Check object instance
+    // ---------------------
+    if (!(obj instanceof GeoVectorProjection)) return (false);
+
+    // Check datum
+    // -----------
+
+    /**
+     * We current don't need to check the datum here, because all GeoVectorProjection
+     * instances use WGS84.
+     */
+
+    GeoVectorProjection otherObject = (GeoVectorProjection) obj;
+
+    // Check lat/long arrays
+    // ---------------------
+    if (!Arrays.equals (this.latArray, otherObject.latArray)) return (false);
+    if (!Arrays.equals (this.lonArray, otherObject.lonArray)) return (false);
+
+    return (true);
+    
+  } // equals
+  
   ////////////////////////////////////////////////////////////
 
 } // GeoVectorProjection class

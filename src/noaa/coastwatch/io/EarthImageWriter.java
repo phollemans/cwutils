@@ -80,6 +80,9 @@ import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.Grid;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * The <code>EarthImageWriter</code> has a single static method that writes
  * image data from an {@link EarthDataView} to one of various formats.
@@ -88,6 +91,9 @@ import noaa.coastwatch.util.Grid;
  * @since 3.2.2
  */
 public class EarthImageWriter {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthImageWriter.class.getName());
+  private static final Logger VERBOSE = Logger.getLogger (EarthImageWriter.class.getName() + ".verbose");
 
   // Variables
   // ---------
@@ -190,6 +196,8 @@ public class EarthImageWriter {
     String tiffComp,
     int imageColors
   ) throws IllegalArgumentException, IOException {
+
+    if (isVerbose) VERBOSE.setLevel (Level.INFO);
 
     // Create renderable object
     // ------------------------
@@ -398,8 +406,7 @@ public class EarthImageWriter {
 
       // Print writing message
       // ---------------------
-      if (isVerbose) 
-        System.out.println ("EarthImageWriter: Writing output " + file);
+      VERBOSE.info ("Writing output " + file);
 
       // Write GeoTIFF file
       // ------------------
@@ -539,9 +546,7 @@ public class EarthImageWriter {
       if (worldFile != null && !format.equals ("tif")) {
         WorldFileWriter worldWriter = new WorldFileWriter (
           new FileOutputStream (worldFile), view.getTransform());
-        if (isVerbose) 
-          System.out.println ("EarthImageWriter: Writing world file " + 
-            worldFile);
+        VERBOSE.info ("Writing world file " + worldFile);
         worldWriter.write();
       } // if
 
@@ -602,8 +607,7 @@ public class EarthImageWriter {
       // ----------------------
       int xoffset = (int) page.width() / 2 - renderSize.width / 2;
       int yoffset = (int) page.height() / 2 - renderSize.height / 2;
-      if (isVerbose)
-        System.out.println ("EarthImageWriter: Writing output " + file);
+      VERBOSE.info ("Writing output " + file);
       content.addTemplate (template, xoffset, yoffset);
       document.close();
 

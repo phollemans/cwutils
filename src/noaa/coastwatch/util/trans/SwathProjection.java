@@ -28,6 +28,8 @@ package noaa.coastwatch.util.trans;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthArea;
@@ -49,14 +51,16 @@ import noaa.coastwatch.util.DataLocationConstraints;
 import noaa.coastwatch.util.DataLocationIteratorFactory;
 
 /**
- * The <code>SwathProjection</code> class implements earth transform
+ * <p>The <code>SwathProjection</code> class implements earth transform
  * calculations for satellite swath (also called sensor scan) 2D
  * projections.  Swaths may be created by supplying a field of
  * latitude and longitude values -- one for each data value location.
  * The swath projection uses polynomial estimator objects for
  * estimating the latitude and longitude values in order to perform an
  * accurate reverse lookup (ie: computing the data location for a
- * given latitude and longitude).
+ * given latitude and longitude).</p>
+ *
+ * <p><b>This class is thread-safe as of version 3.5.0.</b></p>
  *
  * @author Peter Hollemans
  * @since 3.1.0
@@ -78,6 +82,7 @@ public class SwathProjection
 
   // Variables
   // ---------
+  
   /** Latitude and longitude variable estimators. */
   private VariableEstimator latEst, lonEst;  
 
@@ -99,9 +104,10 @@ public class SwathProjection
    * transform to use as a starting point for the next transform.
    * Generally, locations are transformed in polylines of Earth
    * locations that are fairly close together both on the earth and in
-   * the data location space.
+   * the data location space.  We keep a hash map here to handle coordinate
+   * transforms happening from multiple threads.
    */
-  private DataLocation lastDataLoc = null;
+  private Map<Long, DataLocation> lastDataLocMap = new HashMap<>();
 
   /** The list of seed data locations to try. */
   private DataLocation[] seedDataLocations;
@@ -114,6 +120,11 @@ public class SwathProjection
   
   /** The data projection used to create the lat/lon estimators. */
   private EarthTransform dataTrans;
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean isInvertible () { return (false); }
 
   ////////////////////////////////////////////////////////////
 
@@ -361,6 +372,47 @@ public class SwathProjection
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the last valid data location for this thread.
+   *
+   * @return the last valid data location or null for none.
+   *
+   * @since 3.5.0
+   */
+  private DataLocation getLastDataLoc () {
+  
+    DataLocation dataLoc;
+    long id = Thread.currentThread().getId();
+    synchronized (lastDataLocMap) {
+      dataLoc = lastDataLocMap.get (id);
+    } // synchronized
+
+    return (dataLoc);
+  
+  } // getLastDataLoc
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the last valid data location for this thread.
+   *
+   * @param dataLoc the new last valid data location or null for none.
+   *
+   * @since 3.5.0
+   */
+  private void setLastDataLoc (
+    DataLocation dataLoc
+  ) {
+
+    long id = Thread.currentThread().getId();
+    synchronized (lastDataLocMap) {
+      lastDataLocMap.put (id, dataLoc);
+    } // synchronized
+  
+  } // setLastDataLoc
+
+  ////////////////////////////////////////////////////////////
+
   @Override
   protected void transformImpl (
     EarthLocation earthLoc,
@@ -385,33 +437,40 @@ public class SwathProjection
 
     // Check for containment
     // ---------------------
-    if (area != null && !area.contains (earthLoc)) {
-      lastDataLoc = null;
-      dataLoc.set (Grid.ROWS, Double.NaN);
-      dataLoc.set (Grid.COLS, Double.NaN);
-      return;
+    if (area != null) {
+      boolean isContained = area.contains (earthLoc);
+      if (!isContained) {
+        setLastDataLoc (null);
+        dataLoc.set (Grid.ROWS, Double.NaN);
+        dataLoc.set (Grid.COLS, Double.NaN);
+        return;
+      } // if
     } // if
 
     // Initialize search using last or seed value
     // ------------------------------------------
-    DataLocation testDataLoc = null;
     EarthLocation testEarthLoc = new EarthLocation();
-    double d = Double.MAX_VALUE;
-    if (lastDataLoc != null) {
-      testDataLoc = lastDataLoc;
-      transform (testDataLoc, testEarthLoc);
-      d = earthLoc.distance (testEarthLoc);
-    } // if
-    for (int i = 0; i < seedEarthLocations.length; i++) {
-      double seedDist = earthLoc.distance (seedEarthLocations[i]);
-      if (seedDist < d) { testDataLoc = seedDataLocations[i]; d = seedDist; }
-    } // for
-    double lastd = d;
-    double[] inc = {0.5, 0.5};
-    int iter = 0;
+    double distProxy = Double.MAX_VALUE;
+    DataLocation initDataLoc = null;
 
+    DataLocation lastDataLoc = getLastDataLoc();
+    if (lastDataLoc != null) {
+      initDataLoc = lastDataLoc;
+      transform (initDataLoc, testEarthLoc);
+      distProxy = earthLoc.distanceProxy (testEarthLoc);
+    } // if
+
+    for (int i = 0; i < seedEarthLocations.length; i++) {
+      double seedDistProxy = earthLoc.distanceProxy (seedEarthLocations[i]);
+      if (seedDistProxy < distProxy) {
+        initDataLoc = seedDataLocations[i];
+        distProxy = seedDistProxy;
+      } // if
+    } // for
+    
     // Create iteration objects
     // ------------------------
+    DataLocation testDataLoc = (DataLocation) initDataLoc.clone();
     DataLocation x1 = new DataLocation (2);
     DataLocation x2 = new DataLocation (2);
     DataLocation y1 = new DataLocation (2);
@@ -423,9 +482,14 @@ public class SwathProjection
     double[] res = new double[2];
     double[] grad = new double[2];
     double[] correction = new double[2];
-
+    
     // Search until tolerance or max iterations hit
     // --------------------------------------------
+    double d = EarthLocation.distanceProxyToDistance (distProxy);
+    double lastd = d;
+    double[] inc = {0.5, 0.5};
+    int iter = 0;
+
     while (d > tolerance && iter < MAX_ITERATIONS) {
 
       // Compute increments in x and y
@@ -492,7 +556,7 @@ public class SwathProjection
     // Check for convergence
     // ---------------------
     if (d > tolerance) {
-      lastDataLoc = null;
+      setLastDataLoc (null);
       dataLoc.set (Grid.ROWS, Double.NaN);
       dataLoc.set (Grid.COLS, Double.NaN);
     } // if
@@ -500,10 +564,10 @@ public class SwathProjection
     // Return data coordinate
     // ----------------------
     else {
-      lastDataLoc = testDataLoc;
+      setLastDataLoc (testDataLoc);
       dataLoc.setCoords (testDataLoc);
     } // else
- 
+
   } // transformImpl
 
   ////////////////////////////////////////////////////////////

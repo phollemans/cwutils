@@ -46,6 +46,9 @@ import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.util.DataLocationConstraints;
 import noaa.coastwatch.util.VariableStatisticsGenerator;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * The <code>EarthDataViewFactory</code> uses an {@link
  * EarthDataReader} and variable name to create an {@link
@@ -55,6 +58,8 @@ import noaa.coastwatch.util.VariableStatisticsGenerator;
  * @since 3.2.0
  */
 public class EarthDataViewFactory {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthDataViewFactory.class.getName());
 
   // Variables
   // ---------
@@ -171,11 +176,8 @@ public class EarthDataViewFactory {
     } // try
 
     catch (Exception e) { 
-
-      System.out.println ("Sending back null view");
-      e.printStackTrace (System.out);
-
-      return (null); 
+      LOGGER.log (Level.WARNING, "Failed to create view from reader and variable", e);
+      return (null);
     } // catch
 
   } // create

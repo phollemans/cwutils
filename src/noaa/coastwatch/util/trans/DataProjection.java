@@ -88,10 +88,12 @@ public class DataProjection
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public String describe () { return (DESCRIPTION); }
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void transformImpl (
     DataLocation dataLoc,
     EarthLocation earthLoc
@@ -103,6 +105,7 @@ public class DataProjection
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void transformImpl (
     EarthLocation earthLoc,
     DataLocation dataLoc
@@ -112,6 +115,11 @@ public class DataProjection
     dataLoc.set (Grid.COLS, Double.NaN);
 
   } // transformImpl
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean isInvertible () { return (false); }
 
   ////////////////////////////////////////////////////////////
 
@@ -125,6 +133,7 @@ public class DataProjection
    * @return true if the data projections are equivalent, or false if
    * not.  
    */
+  @Override
   public boolean equals (
     Object obj
   ) {

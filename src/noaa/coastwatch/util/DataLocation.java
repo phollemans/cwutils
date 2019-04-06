@@ -192,6 +192,7 @@ public class DataLocation
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public Object clone () {
 
     return (new DataLocation (coords));
@@ -608,7 +609,7 @@ public class DataLocation
    *
    * @since 3.4.1
    */
-  public void translate (
+  public DataLocation translate (
     double trans0,
     double trans1,
     DataLocation outputLoc
@@ -618,6 +619,8 @@ public class DataLocation
     outputLoc.coords[1] = this.coords[1] + trans1;
     outputLoc.isHashed = false;
 
+    return (outputLoc);
+    
   } // translate
 
   ////////////////////////////////////////////////////////////

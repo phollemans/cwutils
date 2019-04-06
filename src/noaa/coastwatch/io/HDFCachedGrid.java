@@ -40,6 +40,9 @@ import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
 import noaa.coastwatch.io.tile.TilingScheme.Tile;
 import noaa.coastwatch.util.Grid;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * The HDF cached grid class is a cached grid that understands how to
  * read variable data from HDF files.
@@ -49,6 +52,8 @@ import noaa.coastwatch.util.Grid;
  */
 public class HDFCachedGrid
   extends CachedGrid {
+
+  private static final Logger LOGGER = Logger.getLogger (HDFCachedGrid.class.getName());
 
   // Constants
   // ---------
@@ -240,7 +245,9 @@ public class HDFCachedGrid
       if (chunked || compressed) {
         int[] tileDims = null;
         if (chunked) {
-          tileDims = CachedGrid.getTileDims (writer.getChunkSize(), grid);
+          tileDims = writer.getTileDims();
+          if (tileDims == null)
+            tileDims = CachedGrid.getTileDims (writer.getChunkSize(), grid);
           super.setTileDims (tileDims);
           super.setOptimizedCacheSize (DEFAULT_CACHE_SIZE);
         } // if
@@ -367,13 +374,8 @@ public class HDFCachedGrid
     } // try
 
     catch (Exception e) {
-
-
-      System.err.println ("Error getting data for " + getName());
-      e.printStackTrace();
-
-
-      throw new IOException (e.getMessage ());
+      LOGGER.warning ("Error getting data tile at " + pos + " for " + getName());
+      throw new IOException (e.getMessage());
     } // catch
 
   } // readTile

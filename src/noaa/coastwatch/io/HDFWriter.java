@@ -47,6 +47,9 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.Line;
 import noaa.coastwatch.util.MetadataServices;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * An HDF writer is an earth data writer that writes HDF format
  * files using the HDF library class.  The HDF writer class is
@@ -58,6 +61,8 @@ import noaa.coastwatch.util.MetadataServices;
 public abstract class HDFWriter
   extends EarthDataWriter 
   implements HDFSD {
+
+  private static final Logger LOGGER = Logger.getLogger (HDFWriter.class.getName());
 
   // Constants
   // ---------
@@ -80,6 +85,40 @@ public abstract class HDFWriter
 
   /** Flag to signify that the file is closed. */
   protected boolean closed;
+
+  /** The tile dimensions for 2D chunked variables. */
+  private int[] tileDims;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the tile dimensions for grid variables passed to the
+   * {@link #writeVariable} method. Setting the tile dimensions
+   * explicitly overrides any chunk size set.
+   *
+   * @param tileDims the tile dimensions to use.
+   *
+   * @since 3.5.0
+   */
+  public void setTileDims (int[] tileDims) {
+  
+    this.tileDims = (tileDims == null ? null : (int[]) tileDims.clone());
+    
+  } // setTileDims
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the current tile dimensions.
+   *
+   * @return the tile dimesions or null if the chunk size is being used
+   * instead.
+   *
+   * @see #setChunkSize
+   *
+   * @since 3.5.0
+   */
+  public int[] getTileDims () { return (tileDims == null ? null : (int[]) tileDims.clone()); }
 
   ////////////////////////////////////////////////////////////
 
@@ -231,8 +270,7 @@ public abstract class HDFWriter
      * warning.
      */
     if (attLength > 65535) {
-      System.err.println (HDFWriter.class + ": Warning: Truncating '" + name +
-        "' attribute to 65535 values");
+      LOGGER.warning ("Truncating '" + name + "' attribute to 65535 values");
       attLength = 65535;
     } // if
 
@@ -337,7 +375,7 @@ public abstract class HDFWriter
     // --------
     this.info = null;
 
-  } // HDFWriter
+  } // HDFWriter constructor
 
   ////////////////////////////////////////////////////////////
 
@@ -466,8 +504,7 @@ public abstract class HDFWriter
       throw new UnsupportedEncodingException (
         "Unsupported variable class for writing");
     if (chunked && !(var instanceof Grid))
-      System.err.println (this.getClass() + 
-        ": Warning: Chunking request ignored for '" + varName + "'");
+      LOGGER.warning ("Chunking request ignored for '" + varName + "'");
 
     // Write chunked
     // -------------
@@ -475,7 +512,7 @@ public abstract class HDFWriter
 
       // Create tiling scheme
       // --------------------
-      int[] tileDims = CachedGrid.getTileDims (chunkSize, (Grid) var);
+      int[] tileDims = (this.tileDims != null ? this.tileDims : CachedGrid.getTileDims (chunkSize, (Grid) var));
       TilingScheme tiling = new TilingScheme (dims, tileDims);
       int values = tileDims[Grid.ROWS] * tileDims[Grid.COLS];
 

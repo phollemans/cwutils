@@ -32,8 +32,13 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Map;
+import java.util.HashMap;
+
 import noaa.coastwatch.util.MetadataServices;
 import noaa.coastwatch.io.IOServices;
+
+import java.util.logging.Logger;
 
 /**
  * The tool services class defines various static methods relating
@@ -43,6 +48,8 @@ import noaa.coastwatch.io.IOServices;
  * @since 3.1.2
  */
 public class ToolServices {
+
+  private static final Logger LOGGER = Logger.getLogger (ToolServices.class.getName());
 
   // Constants
   // ---------
@@ -64,7 +71,7 @@ public class ToolServices {
 
   /** The software copyright. */
   public static final String COPYRIGHT = 
-    "(c) 1998-2018 National Oceanic and Atmospheric Administration";
+    "(c) 1998-2019 National Oceanic and Atmospheric Administration";
 
   /** The software copyright (short version). */
   public static final String COPYRIGHT_SHORT = COPYRIGHT;
@@ -96,6 +103,73 @@ public class ToolServices {
   
   /** The current splitting regular expression. */
   private static String splitRegex = SPLIT_REGEX;
+
+  /** The system exit mode, true to perform an ectual System.exit() call. */
+  private static boolean isSystemExit = true;
+
+  /** The last exit code reported. */
+  private static int exitCode;
+  
+  /** The tool starting time when startExec() was called. */
+  private static Map<String, Long> startTimeMap = new HashMap<>();
+  
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Logs a starting time for a executable task.
+   *
+   * @param name the name of the task starting.
+   *
+   * @since 3.5.0
+   */
+  public static void startExecution (
+    String name
+  ) {
+  
+    LOGGER.fine ("Started execution of " + name);
+    startTimeMap.put (name, System.currentTimeMillis());
+
+  } // startExecution
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Logs a finishing time for a executable task.
+   *
+   * @param name the name of the task finishing.
+   *
+   * @since 3.5.0
+   */
+  public static void finishExecution (
+    String name
+  ) {
+
+    LOGGER.fine ("Finished execution of " + name);
+    long startTime = startTimeMap.get (name);
+    long elapsedMillis = System.currentTimeMillis() - startTime;
+    LOGGER.fine ("Elapsed time = " + (elapsedMillis*1e-3) + " s");
+
+    startTimeMap.remove (name);
+
+  } // startExecution
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the system exit flag.
+   *
+   * @param flag the exit flag, true to actually exit the system on a call to
+   * {@link #exitWithCode} or false to not.
+   *
+   * @since 3.5.0
+   */
+  public static void setSystemExit (
+    boolean flag
+  ) {
+
+    isSystemExit = flag;
+
+  } // setSystemExit
 
   ////////////////////////////////////////////////////////////
 
@@ -249,9 +323,32 @@ public class ToolServices {
     String tool
   ) {
 
+    tool = getClassName (tool);
     return (getToolVersion (tool) + "\n" + getJavaVersion());
 
   } // getFullVersion
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the final class name without any package qualifier.
+   *
+   * @param name the name with possible package prefix.
+   *
+   * @return the class name without package qualifier.
+   */
+  private static String getClassName (
+    String name
+  ) {
+
+    if (name.contains (".")) {
+      int lastDot = name.lastIndexOf (".");
+      name = name.substring (lastDot + 1, name.length());
+    } // if
+
+    return (name);
+  
+  } // getClassName
 
   ////////////////////////////////////////////////////////////
 
@@ -263,7 +360,8 @@ public class ToolServices {
    * that writers can insert the command line into the data file
    * history.
    *
-   * @param command the command or program name.
+   * @param command the command or program name.  If this is a class name,
+   * only the final part of the class name is retained as the program name.
    * @param argv an array of command line arguments.
    */
   public static void setCommandLine (
@@ -271,7 +369,10 @@ public class ToolServices {
     String[] argv
   ) {
 
+    command = getClassName (command);
     commandLine = MetadataServices.getCommandLine (command, argv);
+
+    LOGGER.fine ("Command line was " + commandLine);
 
   } // setCommandLine
 
@@ -342,6 +443,33 @@ public class ToolServices {
     return (err);
 
   } // checkSetup
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Performs an exit of a tool with the specified code.  The exit
+   * may be a system exit, or a soft exit depending on the exit mode.  The
+   * default is to actually perform a system exit.
+   *
+   * @param code the code to use for exiting.
+   *
+   * @since 3.5.0
+   *
+   * @see #setSystemExit
+   */
+  public static void exitWithCode (int code) {
+  
+    CleanupHook.getInstance().run();
+    LOGGER.fine ("Exiting with code " + code);
+
+    if (isSystemExit) {
+      System.exit (code);
+    } // if
+    else {
+      exitCode = code;
+    } // else
+  
+  } // exitWithCode
 
   ////////////////////////////////////////////////////////////
 

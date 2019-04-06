@@ -79,8 +79,8 @@ public abstract class GridResampler {
     // ----------  
     this.sourceTrans = sourceTrans;
     this.destTrans = destTrans;
-    sourceGrids = new ArrayList();
-    destGrids = new ArrayList();
+    sourceGrids = new ArrayList<>();
+    destGrids = new ArrayList<>();
 
   } // GridResampler constructor
 

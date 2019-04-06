@@ -76,8 +76,7 @@ public class EarthLocation
   public static final int LON = 1;
 
   /** The instance of WGS84. */
-  private static final Datum WGS84 = 
-    DatumFactory.create (SpheroidConstants.WGS84);
+  private static final Datum WGS84 = DatumFactory.create (SpheroidConstants.WGS84);
 
   // Variables
   // ---------
@@ -314,7 +313,7 @@ public class EarthLocation
 
   } // distance
 
-  ////////////////////////////////////////////////////////////
+ ////////////////////////////////////////////////////////////
 
   /**
    * Calculates the great circle distance from this location to another.
@@ -332,6 +331,109 @@ public class EarthLocation
     return (distance (this.lat, this.lon, loc.lat, loc.lon));
     
   } // distance
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Converts a distance proxy to an actual distance.
+   *
+   * @param distProxy the distance proxy value from
+   * {@link #distanceProxy(EarthLocation)}.
+   *
+   * @return the distance in kilometres.
+   *
+   * @since 3.5.0
+   */
+  public static double distanceProxyToDistance (
+    double distProxy
+  ) {
+
+    double c = 2 * Math.asin (Math.min (1, Math.sqrt (distProxy)));
+    double d = SpheroidConstants.STD_RADIUS * c;
+    return (d);
+
+  } // distanceProxyToDistance
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Computes a distance proxy between two locations.  The distance proxy can
+   * be used as measurement of the distance between two locations for the
+   * purposes of distance comparison, without the computational overhead of
+   * having to compute the actual distance.
+   *
+   * @param latA the latitude of point A in degrees.
+   * @param lonA the longitude of point A in degrees.
+   * @param latB the latitude of point B in degrees.
+   * @param lonB the longitude of point B in degrees.
+   *
+   * @return the proxy for the distance between the two locations.
+   *
+   * @since 3.5.0
+   */
+  public double distanceProxy (
+    double latA,
+    double lonA,
+    double latB,
+    double lonB
+  ) {
+
+    // Convert to radians
+    // ------------------
+    double lat1 = Math.toRadians (latA);
+    double lon1 = Math.toRadians (lonA);
+    double lat2 = Math.toRadians (latB);
+    double lon2 = Math.toRadians (lonB);
+
+    // Calculate proxy distance
+    // ------------------------
+    double dlon = lon2 - lon1;
+    double dlat = lat2 - lat1;
+    double a = Math.pow (Math.sin (dlat/2), 2) +
+      Math.cos (lat1) * Math.cos (lat2) * Math.pow (Math.sin (dlon/2), 2);
+
+    return (a);
+    
+  } // distanceProxy
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Calculates the great circle distance proxy from this location to another.
+   *
+   * @param loc the location for which to calculate the distance.
+   *
+   * @return the distance proxy between points in kilometres.
+   *
+   * @see #distanceProxy(double,double,double,double)
+   *
+   * @since 3.5.0
+   */
+  public double distanceProxy (
+    EarthLocation loc
+  ) {
+
+    return (distanceProxy (this.lat, this.lon, loc.lat, loc.lon));
+    
+  } // distanceProxy
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Converts this earth location to Earth-Centered-Fixed (ECF) coordinates as
+   * described in {@link Datum#computeECF}.
+   *
+   * @param ecf the output ECF coordinates in meters.
+   *
+   * @since 3.5.0
+   */
+  public void computeECF (
+    double[] ecf
+  ) {
+
+    datum.computeECF (lat, lon, ecf);
+    
+  } // computeECF
 
   ////////////////////////////////////////////////////////////
 

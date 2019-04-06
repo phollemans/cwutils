@@ -59,6 +59,9 @@ import noaa.coastwatch.util.trans.DataProjection;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.SwathProjection;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * A NOAA 1b reader is an earth data reader that reads NOAA 1b
  * format GAC/LAC/HRPT data files available from the NOAA/NESDIS
@@ -79,6 +82,8 @@ import noaa.coastwatch.util.trans.SwathProjection;
  */
 public abstract class NOAA1bReader
   extends EarthDataReader {
+
+  private static final Logger LOGGER = Logger.getLogger (NOAA1bReader.class.getName());
 
   // Constants
   // ---------
@@ -741,13 +746,9 @@ public abstract class NOAA1bReader
       } // else
     } // try
     catch (Exception e) {
-      System.err.println (this.getClass() + 
-        ": Warning: Problems encountered using earth location data");
-      e.printStackTrace();
+      LOGGER.log (Level.WARNING, "Problems encountered using earth location data", e);
       if (lat != null && lon != null) {
-        System.err.println (this.getClass() + 
-          ": Warning: Falling back on data-only projection, " +
-          "earth location reverse lookup will not function");
+        LOGGER.warning ("No (lat,lon) --> (row,col) transform available");
         trans = new DataProjection (lat, lon);
       } // if
     } // catch

@@ -30,7 +30,11 @@ import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.MetadataContainer;
 import noaa.coastwatch.util.trans.Datum;
 import noaa.coastwatch.util.trans.DatumFactory;
-import noaa.coastwatch.util.trans.SpheroidConstants;
+
+import static noaa.coastwatch.util.trans.SpheroidConstants.WGS84;
+import static noaa.coastwatch.util.trans.SpheroidConstants.SPHEROID_SEMI_MAJOR;
+import static noaa.coastwatch.util.trans.SpheroidConstants.SPHEROID_SEMI_MINOR;
+import static noaa.coastwatch.util.trans.SpheroidConstants.SPHEROID_NAMES;
 
 /**
  * The earth transform class translates between data coordinates and
@@ -40,18 +44,16 @@ import noaa.coastwatch.util.trans.SpheroidConstants;
  * @since 3.1.0
  */
 public abstract class EarthTransform
-  extends MetadataContainer
-  implements SpheroidConstants {
+  extends MetadataContainer {
 
   // Constants
   // ---------
   
   /** The instance of WGS84. */
-  private static final Datum WGS84 = 
-    DatumFactory.create (SpheroidConstants.WGS84);
+  private static final Datum WGS84_DATUM = DatumFactory.create (WGS84);
 
 /*
-  
+ 
 TODO - This is a possible location for a set of transform types, to be used
 in conjunction with whatever convention replaces instanceof calls for this
 class.
@@ -65,6 +67,22 @@ public enum TransformType {
   private TransformType (String name) { this.name = name; }
   public String toString () { return (name); }
 };
+
+We could do a Visitor pattern:
+
+public interface EarthTransformVisitor {
+  default public void visitMapProjection (MapProjection proj) { }
+  default public void visitSwathProjection (SwathProjection proj) { }
+  default public void visitDataProjection (DataProjection proj) { }
+  default public void visitSensorScanProjection (SensorScanProjection proj) { }
+  default public void visitGeoVectorProjection (GeoVectorProjection proj) { }
+  default public void visitCDMGridMappedProjection (CDMGridMappedProjection proj) { }
+} // EarthTransformVisitor interface
+
+But the issue here is, that we may have more projection classes, and they
+could be updated and added.  The Visitor pattern is best suited to a set
+of classes that doesn't change, but which we have various concrete-specific
+operations to perform.
 
 */
 
@@ -80,9 +98,9 @@ public enum TransformType {
    * Gets a version of this transform that can be used with 2D data
    * locations.
    *
-   * @since 3.3.1
-   *
    * @return the 2D version of this transform.
+   *
+   * @since 3.3.1
    */
   public abstract EarthTransform2D get2DVersion ();
 
@@ -94,7 +112,22 @@ public enum TransformType {
    * 
    * @return the geodetic datum.
    */
-  public Datum getDatum () { return (WGS84); }
+  public Datum getDatum () { return (WGS84_DATUM); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Determines if this transform is invertible.  All transforms should
+   * translate from data location to geographic location.  But to be invertible,
+   * the transform must also translate from geographic location back to
+   * data location.  This method returns true unless overridden by the child
+   * class.
+   *
+   * @return true if this transform is invertible or false if not.
+   *
+   * @since 3.5.0
+   */
+  public boolean isInvertible () { return (true); }
 
   ////////////////////////////////////////////////////////////
 
@@ -238,7 +271,7 @@ public enum TransformType {
     DataLocation loc1,
     DataLocation loc2
   ) {
-
+  
     return (transform (loc1).distance (transform (loc2)));
 
   } // distance

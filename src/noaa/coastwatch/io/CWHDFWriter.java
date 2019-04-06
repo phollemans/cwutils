@@ -58,6 +58,9 @@ import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.util.trans.SensorScanProjection;
 import noaa.coastwatch.util.trans.SwathProjection;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * A CoastWatch HDF writer is an earth data writer that writes
  * CoastWatch HDF format files using the HDF library class.
@@ -67,6 +70,8 @@ import noaa.coastwatch.util.trans.SwathProjection;
  */
 public class CWHDFWriter 
   extends HDFWriter {
+
+  private static final Logger LOGGER = Logger.getLogger (CWHDFWriter.class.getName());
 
   // Constants
   // ---------
@@ -311,9 +316,7 @@ public class CWHDFWriter
       (version < 3.3 && info.getTransform() instanceof SensorScanProjection)
     );
     if (needsMetadataUpgrade) {
-      System.err.println (this.getClass() + 
-        ": Warning: Upgrading metadata version from " + version + " to " + 
-        CURRENT_METADATA_VERSION);
+      LOGGER.warning ("Upgrading metadata version from " + version + " to " + CURRENT_METADATA_VERSION);
       setMetaVersion (CURRENT_METADATA_VERSION);
     } // if
 

@@ -195,7 +195,7 @@ public class BinaryStreamReader {
   // ---------
 
   /** The enumeration of allowed binary types for reading. */
-  private enum ValueType {
+  private static enum ValueType {
     BYTE,
     UBYTE,
     SHORT,
@@ -220,7 +220,7 @@ public class BinaryStreamReader {
   };
 
   /** The enumeration of allowed label types for reading. */
-  private enum LabelType {
+  private static enum LabelType {
     BITLABEL,
     NBITLABEL
   };

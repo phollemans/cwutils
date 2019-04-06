@@ -40,6 +40,28 @@ public interface ChunkConsumer {
    */
   public void putChunk (ChunkPosition pos, DataChunk chunk);
 
+  /**
+   * Gets the native chunking scheme for chunks accepted by this producer.
+   * Calls to {@link #putChunk} are optimized to use chunk positions obtained
+   * from the native scheme.
+   *
+   * @return the native chunking scheme used by this consumer, or null if
+   * no native chunking scheme is used.
+   *
+   * @since 3.5.0
+   */
+  public ChunkingScheme getNativeScheme();
+
+  /**
+   * Gets a prototype chunk for this consumer.  Chunks passed to the
+   * {@link #putChunk} method must conform to the prototype.
+   *
+   * @return a prototype chunk for chunks accepted by this consumer.
+   *
+   * @since 3.5.0
+   */
+  public DataChunk getPrototypeChunk();
+
 } // ChunkConsumer interface
 
 ////////////////////////////////////////////////////////////////////////

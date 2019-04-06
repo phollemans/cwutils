@@ -25,7 +25,11 @@ package noaa.coastwatch.util.chunk;
 
 // Imports
 // -------
+import noaa.coastwatch.io.tile.TilingScheme;
 import noaa.coastwatch.util.chunk.DataChunk.DataType;
+import noaa.coastwatch.util.chunk.ChunkingScheme;
+import noaa.coastwatch.util.chunk.PackingScheme;
+import noaa.coastwatch.util.chunk.DoublePackingScheme;
 import noaa.coastwatch.util.Grid;
 import java.lang.reflect.Array;
 
@@ -48,6 +52,12 @@ public class GridChunkProducer implements ChunkProducer {
 
   /** The packing scheme for new chunks. */
   private PackingScheme packing;
+  
+  /** The chunking scheme used or null for none. */
+  private ChunkingScheme scheme;
+
+  /** The prototype chunk produced. */
+  private DataChunk protoChunk;
 
   ////////////////////////////////////////////////////////////
 
@@ -62,6 +72,15 @@ public class GridChunkProducer implements ChunkProducer {
   
     this.grid = grid;
 
+    // Create chunking scheme
+    // ----------------------
+    TilingScheme tiling = grid.getTilingScheme();
+    if (tiling != null) {
+      int[] chunkingDims = tiling.getDimensions();
+      int[] chunkSize = tiling.getTileDimensions();
+      scheme = new ChunkingScheme (chunkingDims, chunkSize);
+    } // if
+
     // Create packing scheme
     // ---------------------
     double[] scaling = grid.getScaling();
@@ -71,6 +90,12 @@ public class GridChunkProducer implements ChunkProducer {
       doublePacking.offset = scaling[1];
       packing = doublePacking;
     } // if
+
+    // Create the prototype chunk
+    // --------------------------
+    Object data = Array.newInstance (grid.getDataClass(), 0);
+    protoChunk = DataChunkFactory.getInstance().create (data,
+      grid.getUnsigned(), grid.getMissing(), packing);
 
   } // GridChunkProducer constructor
 
@@ -88,11 +113,7 @@ public class GridChunkProducer implements ChunkProducer {
   @Override
   public DataType getExternalType() {
 
-    Object data = Array.newInstance (grid.getDataClass(), 0);
-    DataChunk chunk = DataChunkFactory.getInstance().create (data,
-      grid.getUnsigned(), grid.getMissing(), packing);
-    
-    return (chunk.getExternalType());
+    return (protoChunk.getExternalType());
 
   } // getExternalType
 
@@ -113,6 +134,20 @@ public class GridChunkProducer implements ChunkProducer {
     return (chunk);
 
   } // getChunk
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public ChunkingScheme getNativeScheme() { return (scheme); }
+  
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public DataChunk getPrototypeChunk() {
+
+    return (protoChunk.blankCopy());
+
+  } // getPrototypeChunk
 
   ////////////////////////////////////////////////////////////
 

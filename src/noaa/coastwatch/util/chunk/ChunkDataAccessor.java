@@ -270,9 +270,13 @@ public class ChunkDataAccessor implements ChunkVisitor {
       // Convert unsigned data to long
       // -----------------------------
       if (chunk.isUnsigned()) {
-        longArray = new long[longArray.length];
-        for (int i = 0; i < longArray.length; i++) { longArray[i] = (long) (longArray[i] & 0xffffffff); }
-        longArray = null;
+
+// TODO: Should we issue a warning here that Java doesn't support unsigned long?
+
+//        longArray = new long[longArray.length];
+//        for (int i = 0; i < longArray.length; i++) { longArray[i] = (long) (longArray[i] & 0xffffffff); }
+//        longArray = null;
+
       } // if
 
     } // else

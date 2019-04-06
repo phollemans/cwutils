@@ -331,7 +331,7 @@
       classpathref="test.class.path"
       fork="true">
       <env key="${ld.var}" value="${basedir}/lib/native/${os.libs}"/>
-      <jvmarg line="${vm.args} -Djna.library.path='${basedir}/lib/native/${os.libs}' -ea:noaa.coastwatch..."/>
+      <jvmarg line="${vm.args} -Dcw.debug=true -Djna.library.path='${basedir}/lib/native/${os.libs}' -ea:noaa.coastwatch..."/>
       <arg line="${args}"/>
     </java>
   </target>

@@ -27,6 +27,8 @@ package noaa.coastwatch.tools;
 // --------
 import java.io.FileNotFoundException;
 
+import java.text.NumberFormat;
+
 import jargs.gnu.CmdLineParser;
 import jargs.gnu.CmdLineParser.Option;
 import jargs.gnu.CmdLineParser.OptionException;
@@ -48,6 +50,12 @@ import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.LocationFilter;
 import noaa.coastwatch.util.VIIRSBowtieFilter;
 import noaa.coastwatch.util.ExpressionFilter;
+
+import static noaa.coastwatch.util.Grid.ROW;
+import static noaa.coastwatch.util.Grid.COL;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * <p>The registration tool resamples gridded earth data to a master
@@ -248,25 +256,25 @@ import noaa.coastwatch.util.ExpressionFilter;
  *   phollema$ cwregister -v --match avhrr_ch2 ws_master.hdf 2002_318_1826_n17_mo.hdf
  *     2002_318_1826_n17_ws.hdf
  *
- *   cwregister: Reading master ws_master.hdf
- *   cwregister: Reading input 2002_318_1826_n17_mo.hdf
- *   cwregister: Creating output 2002_318_1826_n17_ws.hdf
- *   cwregister: Adding avhrr_ch2 to resampled grids
- *   GridResampler: Found 1 grid(s) for resampling
- *   GridResampler: Resampling 4788x2048 to 1024x1024
- *   GridResampler: Creating location estimators
- *   GridResampler: Computing row 0
- *   GridResampler: Computing row 100
- *   GridResampler: Computing row 200
- *   GridResampler: Computing row 300
- *   GridResampler: Computing row 400
- *   GridResampler: Computing row 500
- *   GridResampler: Computing row 600
- *   GridResampler: Computing row 700
- *   GridResampler: Computing row 800
- *   GridResampler: Computing row 900
- *   GridResampler: Computing row 1000
- *   cwregister: Closing files
+ *   [INFO] Reading master ws_master.hdf
+ *   [INFO] Reading input 2002_318_1826_n17_mo.hdf
+ *   [INFO] Creating output 2002_318_1826_n17_ws.hdf
+ *   [INFO] Adding avhrr_ch2 to resampled grids
+ *   [INFO] Found 1 grid(s) for resampling
+ *   [INFO] Resampling 4788x2048 to 1024x1024
+ *   [INFO] Creating location estimators
+ *   [INFO] Computing row 0
+ *   [INFO] Computing row 100
+ *   [INFO] Computing row 200
+ *   [INFO] Computing row 300
+ *   [INFO] Computing row 400
+ *   [INFO] Computing row 500
+ *   [INFO] Computing row 600
+ *   [INFO] Computing row 700
+ *   [INFO] Computing row 800
+ *   [INFO] Computing row 900
+ *   [INFO] Computing row 1000
+ *   [INFO] Closing files
  * </pre>
  *
  * <!-- END MAN PAGE -->
@@ -276,13 +284,14 @@ import noaa.coastwatch.util.ExpressionFilter;
  */
 public final class cwregister {
 
+  private static final String PROG = cwregister.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
+
   // Constants
   // ---------
   /** Minimum required command line parameters. */
   private static final int NARGS = 3;
-
-  /** Name of program. */
-  private static final String PROG = "cwregister";
 
   ////////////////////////////////////////////////////////////
 
@@ -293,7 +302,10 @@ public final class cwregister {
    */
   public static void main (String argv[]) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
+
+    LOGGER.warning ("This program is DEPRECATED -- as of version 3.5.0, use cwregister2");
 
     // Parse command line
     // ------------------
@@ -307,36 +319,40 @@ public final class cwregister {
     Option overwriteOpt = cmd.addStringOption ('O', "overwrite");
     Option srcexprOpt = cmd.addStringOption ('s', "srcexpr");
     Option srcfilterOpt = cmd.addStringOption ('f', "srcfilter");
+    Option savemapOpt = cmd.addBooleanOption ('S', "savemap");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
-      System.exit (0);
+      usage();
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
-      usage ();
-      System.exit (1);
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String master = remain[0];
     String input = remain[1];
@@ -345,6 +361,7 @@ public final class cwregister {
     // Set defaults
     // ------------
     boolean verbose = (cmd.getOptionValue (verboseOpt) != null);
+    if (verbose) VERBOSE.setLevel (Level.INFO);
     String match = (String) cmd.getOptionValue (matchOpt);
     Integer polysizeObj = (Integer) cmd.getOptionValue (polysizeOpt);
     int polysize = (polysizeObj == null ? 100 : polysizeObj.intValue());
@@ -356,6 +373,7 @@ public final class cwregister {
     if (overwrite == null) overwrite = "always";
     String srcexpr = (String) cmd.getOptionValue (srcexprOpt);
     String srcfilter = (String) cmd.getOptionValue (srcfilterOpt);
+    boolean saveMap = (cmd.getOptionValue (savemapOpt) != null);
 
     // Detect method subtype
     // ---------------------
@@ -376,7 +394,7 @@ public final class cwregister {
 
       // Get master earth info
       // ---------------------
-      if (verbose) System.out.println (PROG + ": Reading master " + master);
+      VERBOSE.info ("Reading master " + master);
       EarthDataInfo masterInfo = null;
       int rows = 0, cols = 0;
       EarthTransform masterTrans = null;
@@ -390,24 +408,26 @@ public final class cwregister {
         masterReader.close();
       } // try
       catch (FileNotFoundException fnf) {
-        fnf.printStackTrace();
-        System.exit (2);
+        LOGGER.log (Level.SEVERE, fnf.getMessage());
+        ToolServices.exitWithCode (2);
+        return;
       } // catch
       catch (Exception e) {
-        System.err.println (PROG + ": Error reading master file " + master + ", " + e);
-        System.exit (2);
+        LOGGER.log (Level.SEVERE, "Error reading master file " + master, e);
+        ToolServices.exitWithCode (2);
+        return;
       } // catch
 
       // Get input earth info
       // --------------------
-      if (verbose) System.out.println (PROG + ": Reading input " + input);
+      VERBOSE.info ("Reading input " + input);
       if (method.equals ("mixed")) EarthDataReader.setDataProjection (true);
       EarthDataReader reader = EarthDataReaderFactory.create (input);
       EarthDataInfo inputInfo = reader.getInfo();
 
       // Create output file
       // ------------------
-      if (verbose) System.out.println (PROG + ": Creating output " + output);
+      VERBOSE.info ("Creating output " + output);
       EarthDataInfo outputInfo = (EarthDataInfo) inputInfo.clone();
       outputInfo.setTransform (masterTrans);
       CleanupHook.getInstance().scheduleDelete (output);
@@ -429,9 +449,9 @@ public final class cwregister {
         // ------------------
         String[] rectsizeArray = rectsize.split (ToolServices.SPLIT_REGEX);
         if (rectsizeArray.length != 2) {
-          System.err.println (PROG + ": Invalid rectangle size '" + rectsize + 
-            "'");
-          System.exit (2);
+          LOGGER.severe ("Invalid rectangle size '" + rectsize + "'");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         int rectWidth = Integer.parseInt (rectsizeArray[0]);
         int rectHeight = Integer.parseInt (rectsizeArray[1]);
@@ -446,13 +466,14 @@ public final class cwregister {
         // -------------------
         if (methodSubtype.equals ("acspo")) {
           srcfilter = "viirs";
-          System.out.println ("Detected deprecated method subtype 'acspo', activating source filter 'viirs'.");
-          System.out.println ("In the future, use --srcfilter viirs to avoid this warning.");
+          LOGGER.warning ("Detected deprecated method subtype 'acspo', activating source filter 'viirs'.");
+          LOGGER.warning ("In the future, use --srcfilter viirs to avoid this warning.");
         } // if
         
         if (srcexpr != null && srcfilter != null) {
-          System.err.println (PROG + ": Cannot specify *both* source filter and expression");
-          System.exit (2);
+          LOGGER.severe ("Cannot specify *both* source filter and expression");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
 
         LocationFilter filter = null;
@@ -464,8 +485,9 @@ public final class cwregister {
             filter = VIIRSBowtieFilter.getInstance();
           } // if
           else {
-            System.err.println (PROG + ": Invalid source filter");
-            System.exit (2);
+            LOGGER.severe ("Invalid source filter");
+            ToolServices.exitWithCode (2);
+            return;
           } // else
         } // else if
 
@@ -481,8 +503,9 @@ public final class cwregister {
         else if (overwrite.equals ("closer"))
           overwriteMode = MixedGridResampler.OVERWRITE_IF_CLOSER;
         else {
-          System.err.println (PROG + ": Invalid overwrite mode");
-          System.exit (2);
+          LOGGER.severe ("Invalid overwrite mode");
+          ToolServices.exitWithCode (2);
+          return;
         } // else
         mixed.setOverwriteMode (overwriteMode);
         
@@ -503,8 +526,9 @@ public final class cwregister {
       // Invalid method
       // --------------
       else {
-        System.err.println (PROG + ": Invalid registration method");
-        System.exit (2);
+        LOGGER.severe ("Invalid registration method");
+        ToolServices.exitWithCode (2);
+        return;
       } // else
      
       // Loop over each variable
@@ -531,8 +555,7 @@ public final class cwregister {
         // Add grid to resampler
         // ---------------------
         if (var instanceof Grid) {
-          if (verbose) System.out.println (PROG + ": Adding " + 
-            var.getName() + " to resampled grids");
+          VERBOSE.info ("Adding " + var.getName() + " to resampled grids");
           Grid inputGrid = (Grid) var;
           Grid outputGrid = new Grid (inputGrid, rows, cols);
           outputGrid.setNavigation (null);
@@ -540,63 +563,104 @@ public final class cwregister {
           resampler.addGrid (inputGrid, outputGrid);
         } // if
         else {
-          if (verbose) System.out.println (PROG + 
-            ": Skipping non-grid variable " + var.getName());
+          VERBOSE.info ("Skipping non-grid variable " + var.getName());
         } // else 
 
       } // for
 
+      // Create source coordinate map variables
+      // --------------------------------------
+      if (saveMap) {
+
+        VERBOSE.info ("Creating mapping variable source_row");
+        int[] sourceDims = inputInfo.getTransform().getDimensions();
+        Grid sourceRowInputGrid = new Grid (
+          "source_row",
+          "Row from source coordinate system",
+          "",
+          sourceDims[ROW],
+          sourceDims[COL],
+          new int[0],
+          NumberFormat.getIntegerInstance(),
+          null,
+          Integer.MIN_VALUE
+        ) {
+          public double getValue (int sourceRow, int sourceCol) { return (sourceRow); }
+        };
+        Grid sourceRowOutputGrid = new Grid (sourceRowInputGrid, rows, cols);
+        sourceRowOutputGrid = new HDFCachedGrid (sourceRowOutputGrid, writer);
+        resampler.addGrid (sourceRowInputGrid, sourceRowOutputGrid);
+
+        VERBOSE.info ("Creating mapping variable source_col");
+        Grid sourceColInputGrid = new Grid (
+          "source_col",
+          "Column from source coordinate system",
+          "",
+          sourceDims[ROW],
+          sourceDims[COL],
+          new int[0],
+          NumberFormat.getIntegerInstance(),
+          null,
+          Integer.MIN_VALUE
+        ) {
+          public double getValue (int sourceRow, int sourceCol) { return (sourceCol); }
+        };
+        Grid sourceColOutputGrid = new Grid (sourceColInputGrid, rows, cols);
+        sourceColOutputGrid = new HDFCachedGrid (sourceColOutputGrid, writer);
+        resampler.addGrid (sourceColInputGrid, sourceColOutputGrid);
+
+      } // if
+
       // Perform resampling and close
       // ----------------------------
       resampler.perform (verbose);
-      if (verbose) System.out.println (PROG + ": Closing files");
+      VERBOSE.info ("Closing files");
       writer.close();
       CleanupHook.getInstance().cancelDelete (output);
       reader.close();
 
     } // try
     catch (Exception e) {
-      e.printStackTrace();
-      System.exit (2);
+      LOGGER.log (Level.SEVERE, "Aborting", e);
+      ToolServices.exitWithCode (2);
+      return;
     } // catch
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwregister [OPTIONS] master input output\n" +
-"Resamples gridded earth data to a master projection.\n" +
-"\n" +
-"Main parameters:\n" +
-"  master                     The master projection data file name.\n" +
-"  input                      The input data file name.\n" +
-"  output                     The output data file name.\n" +
-"\n" +
-"Options:\n" +
-"  -f, --srcfilter=TYPE       Filter the source pixels.  TYPE may be 'viirs'.\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -m, --match=PATTERN        Register only variables matching the pattern.\n"+
-"  -M, --method=TYPE          Set resampling method.  TYPE may be\n" +
-"                              'inverse', 'mixed', or 'direct'.\n" +
-"  -O, --overwrite=TYPE       Set overwrite method.  TYPE may be 'always',\n" +
-"                              'never', or 'closer' (advanced users).\n" +
-"  -p, --polysize=KILOMETERS  Set polynomial rectangle width and height\n" +
-"                              in kilometers for inverse resampling.\n" +
-"  -r, --rectsize=WIDTH/HEIGHT\n" +
-"                             Set rectangle size in pixels for mixed\n" +
-"                              resampling.\n" +
-"  -s, --srcexpr=EXPRESSION   Use only source pixels matching an expression.\n" +
-"  -v, --verbose              Print verbose messages.\n" +
-"  --version                  Show version information.\n"
-    );
+  ////////////////////////////////////////////////////////////
 
-  } // usage
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwregister");
+
+    info.func ("Resamples gridded earth data to a master projection");
+
+    info.param ("master", "Master projection file");
+    info.param ("input", "Input data file");
+    info.param ("output", "Output data file");
+
+    info.option ("-f, --srcfilter=TYPE", "Filter source pixels using filter type");
+    info.option ("-h, --help", "Show help message");
+    info.option ("-m, --match=PATTERN", "Register only variables matching pattern");
+    info.option ("-M, --method=TYPE", "Use resampling algorithm");
+    info.option ("-O, --overwrite=TYPE", "Overwrite destination pixels upon condition");
+    info.option ("-p, --polysize=KILOMETERS", "Set rectangle size for inverse method");
+    info.option ("-r, --rectsize=WIDTH/HEIGHT", "Set rectangle size for mixed method");
+    info.option ("-s, --srcexpr=EXPRESSION", "Filter source pixels using expression");
+    info.option ("-v, --verbose", "Print verbose messages");
+    info.option ("--version", "Show version information");
+
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 

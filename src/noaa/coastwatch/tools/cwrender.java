@@ -48,6 +48,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.util.Arrays;
 
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
@@ -123,6 +126,7 @@ import ucar.units.Unit;
  * -h, --help <br>
  * -v, --verbose <br>
  * --version <br>
+ * --split=EXPRESSION <br>
  * </p>
  *
  * <h3>Output content and format options:</h3>
@@ -961,12 +965,12 @@ import ucar.units.Unit;
  *   phollema$ cwrender --verbose --enhance avhrr_ch2 --coast red --grid red 
  *     2002_288_1435_n17_er.hdf 2002_288_1435_n17_er_ch2.png
  *
- *   cwrender: Reading input 2002_288_1435_n17_er.hdf
- *   cwrender: Normalizing color enhancement
- *   EarthDataView: Preparing data image
- *   EarthDataView: Rendering overlay noaa.coastwatch.render.CoastOverlay
- *   EarthDataView: Rendering overlay noaa.coastwatch.render.LatLonOverlay
- *   cwrender: Writing output 2002_288_1435_n17_er_ch2.png
+ *   [INFO] Reading input 2002_288_1435_n17_er.hdf
+ *   [INFO] Normalizing color enhancement
+ *   [INFO] Preparing data image
+ *   [INFO] Rendering overlay noaa.coastwatch.render.CoastOverlay
+ *   [INFO] Rendering overlay noaa.coastwatch.render.LatLonOverlay
+ *   [INFO] Writing output 2002_288_1435_n17_er_ch2.png
  * </pre>
  * <p>For a color composite of the same file, the following command shows
  * the rendering of AVHRR channels 1, 2, and 4 to a PNG image.  Again,
@@ -979,14 +983,14 @@ import ucar.units.Unit;
  *     --bluefunction reverse-linear --coast black --grid gray 
  *     2002_288_1435_n17_er.hdf 2002_288_1435_n17_er_ch124.png
  *
- *   cwrender: Reading input 2002_288_1435_n17_er.hdf
- *   cwrender: Normalizing red enhancement
- *   cwrender: Normalizing green enhancement
- *   cwrender: Normalizing blue enhancement
- *   EarthDataView: Preparing data image
- *   EarthDataView: Rendering overlay noaa.coastwatch.render.CoastOverlay
- *   EarthDataView: Rendering overlay noaa.coastwatch.render.LatLonOverlay
- *   cwrender: Writing output 2002_288_1435_n17_er_ch124.png
+ *   [INFO] Reading input 2002_288_1435_n17_er.hdf
+ *   [INFO] Normalizing red enhancement
+ *   [INFO] Normalizing green enhancement
+ *   [INFO] Normalizing blue enhancement
+ *   [INFO] Preparing data image
+ *   [INFO] Rendering overlay noaa.coastwatch.render.CoastOverlay
+ *   [INFO] Rendering overlay noaa.coastwatch.render.LatLonOverlay
+ *   [INFO] Writing output 2002_288_1435_n17_er_ch124.png
  * </pre>
  * <p>A further example below shows the rendering of AVHRR derived
  * sea-surface-temperature data from the same file with a cloud mask
@@ -997,12 +1001,12 @@ import ucar.units.Unit;
  *     --palette HSL256 --range 5/20 --cloud gray 2002_288_1435_n17_er.hdf
  *     2002_288_1435_n17_er_sst.png
  *
- *   cwrender: Reading input 2002_288_1435_n17_er.hdf
- *   EarthDataView: Preparing data image
- *   EarthDataView: Rendering overlay noaa.coastwatch.render.BitmaskOverlay
- *   EarthDataView: Rendering overlay noaa.coastwatch.render.CoastOverlay
- *   EarthDataView: Rendering overlay noaa.coastwatch.render.LatLonOverlay
- *   cwrender: Writing output 2002_288_1435_n17_er_sst.png
+ *   [INFO] Reading input 2002_288_1435_n17_er.hdf
+ *   [INFO] Preparing data image
+ *   [INFO] Rendering overlay noaa.coastwatch.render.BitmaskOverlay
+ *   [INFO] Rendering overlay noaa.coastwatch.render.CoastOverlay
+ *   [INFO] Rendering overlay noaa.coastwatch.render.LatLonOverlay
+ *   [INFO] Writing output 2002_288_1435_n17_er_sst.png
  * </pre>
  * <p>An example usage of the <b>--magnify</b> option is shown below to
  * create a plot of cloud masked sea-surface-temperature data off Nova
@@ -1012,12 +1016,12 @@ import ucar.units.Unit;
  *     --palette HSL256 --range 5/20 --cloud gray --magnify 43/-66/1
  *     2002_288_1435_n17_er.hdf 2002_288_1435_n17_er_sst_mag.png
  *
- *   cwrender: Reading input 2002_288_1435_n17_er.hdf
- *   EarthDataView: Preparing data image
- *   EarthDataView: Rendering overlay noaa.coastwatch.render.BitmaskOverlay
- *   EarthDataView: Rendering overlay noaa.coastwatch.render.CoastOverlay
- *   EarthDataView: Rendering overlay noaa.coastwatch.render.LatLonOverlay
- *   cwrender: Writing output 2002_288_1435_n17_er_sst_mag.png
+ *   [INFO] Reading input 2002_288_1435_n17_er.hdf
+ *   [INFO] Preparing data image
+ *   [INFO] Rendering overlay noaa.coastwatch.render.BitmaskOverlay
+ *   [INFO] Rendering overlay noaa.coastwatch.render.CoastOverlay
+ *   [INFO] Rendering overlay noaa.coastwatch.render.LatLonOverlay
+ *   [INFO] Writing output 2002_288_1435_n17_er_sst_mag.png
  * </pre>
  *
  * <h2>Known Bugs</h2>
@@ -1038,6 +1042,10 @@ import ucar.units.Unit;
  */
 public class cwrender {
 
+  private static final String PROG = cwrender.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
+
   // Constants
   // ---------
   /** Minimum required command line parameters. */
@@ -1052,9 +1060,6 @@ public class cwrender {
   /** ISO date format. */
   private static final String ISO_DATE_FMT = "yyyy-MM-dd'T'HH:mm:ssX";
 
-  /** Name of program. */
-  private static final String PROG = "cwrender";
-
   ////////////////////////////////////////////////////////////
 
   /**
@@ -1064,6 +1069,7 @@ public class cwrender {
    */
   public static void main (String argv[]) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -1123,24 +1129,27 @@ public class cwrender {
     Option palettelistOpt = cmd.addBooleanOption ("palettelist");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
       usage();
-      System.exit (0);
-    } // if  
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
-    } // if  
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Print font list
     // ---------------
@@ -1150,7 +1159,8 @@ public class cwrender {
         getAvailableFontFamilyNames();
       for (int i = 0; i < families.length; i++)
         System.out.println (families[i]);
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if
 
     // Print palette list
@@ -1158,23 +1168,25 @@ public class cwrender {
     if (cmd.getOptionValue (palettelistOpt) != null) {
       try { ResourceManager.setupPalettes (false); }
       catch (IOException e) {
-        System.err.println (PROG + ": Error initializing palettes");
-        System.exit (2);
+        LOGGER.severe ("Error initializing palettes");
+        ToolServices.exitWithCode (2);
+        return;
       } // catch
       List<String> paletteList = (List<String>) PaletteFactory.getPredefined();
       for (String name : paletteList)
         System.out.println (name);
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
-      usage ();
-      System.exit (1);
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String input = remain[0];
     String output = remain[1];
@@ -1191,9 +1203,9 @@ public class cwrender {
     if (format.equals ("auto")) {
       int index = output.lastIndexOf ('.');
       if (index == -1) {
-        System.err.println (PROG + 
-          ": Cannot find output file extension and no format specified");
-        System.exit (2);
+        LOGGER.severe ("Cannot find output file extension and no format specified");
+        ToolServices.exitWithCode (2);
+        return;
       } // if
       String ext = output.substring (index+1);
       if (ext.equalsIgnoreCase ("png"))
@@ -1207,15 +1219,16 @@ public class cwrender {
       else if (ext.equalsIgnoreCase ("gif"))
         format = "gif";
       else {
-        System.err.println (PROG + 
-          ": Cannot determine output format from extension '" + ext + "'");
-        System.exit (2);
+        LOGGER.severe ("Cannot determine output format from extension '" + ext + "'");
+        ToolServices.exitWithCode (2);
+        return;
       } // else
     } // if
 
     // Set defaults
     // ------------
     boolean verbose = (cmd.getOptionValue (verboseOpt) != null);
+    if (verbose) VERBOSE.setLevel (Level.INFO);
     String enhance = (String) cmd.getOptionValue (enhanceOpt);
     String composite = (String) cmd.getOptionValue (compositeOpt);
     String coast = (String) cmd.getOptionValue (coastOpt);
@@ -1287,7 +1300,7 @@ public class cwrender {
 
       // Open input file
       // ---------------
-      if (verbose) System.out.println (PROG + ": Reading input " + input);
+      VERBOSE.info ("Reading input " + input);
       EarthDataReader reader = EarthDataReaderFactory.create (input);
       EarthDataInfo info = reader.getInfo();
       EarthTransform2D trans2d = (EarthTransform2D) info.getTransform();
@@ -1328,8 +1341,9 @@ public class cwrender {
           ResourceManager.setupPalettes (false);
           List paletteList = PaletteFactory.getPredefined();
           if (!paletteList.contains (paletteName)) {
-            System.err.println (PROG + ": Palette '" + paletteName + "' not found");
-            System.exit (2);
+            LOGGER.severe ("Palette '" + paletteName + "' not found");
+            ToolServices.exitWithCode (2);
+            return;
           } // if
           palette = PaletteFactory.create (paletteName);
         } // else
@@ -1340,8 +1354,9 @@ public class cwrender {
         if (range != null) {
           String[] rangeArray = range.split (ToolServices.getSplitRegex());
           if (rangeArray.length != 2) {
-            System.err.println (PROG + ": Invalid range '" + range + "'");
-            System.exit (2);
+            LOGGER.severe ("Invalid range '" + range + "'");
+            ToolServices.exitWithCode (2);
+            return;
           } // if
           min = Double.parseDouble (rangeArray[0]);
           max = Double.parseDouble (rangeArray[1]);
@@ -1357,9 +1372,9 @@ public class cwrender {
         // -----------------------------------
         String[] enhanceArray = enhance.split (ToolServices.getSplitRegex());
         if (enhanceArray.length > 2) {
-          System.err.println (PROG + ": Invalid enhancement '" + enhance + 
-            "'");
-          System.exit (2);
+          LOGGER.severe ("Invalid enhancement '" + enhance + "'");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
 
         // Create scalar enhancement view
@@ -1382,27 +1397,27 @@ public class cwrender {
           String[] vectorArray = 
             enhancevector.split (ToolServices.getSplitRegex());
           if (vectorArray.length < 2) {
-            System.err.println (PROG + ": Invalid vector specification '" + 
-              enhancevector + "'");
-            System.exit (2);
+            LOGGER.severe ("Invalid vector specification '" + enhancevector + "'");
+            ToolServices.exitWithCode (2);
+            return;
           } // if
 
           // Get vector style
           // ----------------
           String style = vectorArray[0];
           if (!style.equals ("magdir") && !style.equals ("uvcomp")) {
-            System.err.println (PROG + ": Invalid vector style '" + 
-              style + "'");
-            System.exit (2);
+            LOGGER.severe ("Invalid vector style '" + style + "'");
+            ToolServices.exitWithCode (2);
+            return;
           } // if
 
           // Get vector symbol
           // -----------------
           String symbol = vectorArray[1];
           if (!symbol.equals ("barb") && !symbol.equals ("arrow")) {
-            System.err.println (PROG + ": Invalid vector symbol '" + 
-              symbol + "'");
-            System.exit (2);
+            LOGGER.severe ("Invalid vector symbol '" + symbol + "'");
+            ToolServices.exitWithCode (2);
+            return;
           } // if
 
           // Get vector size
@@ -1441,9 +1456,9 @@ public class cwrender {
             else if (unit.equals (UnitFactory.create ("m/s")))
               windUnits = WindBarbSymbol.SPEED_METERS_PER_SECOND;
             else {
-              System.err.println (PROG + ": Cannot draw wind barbs with " +
-                "units in '" + var1.getUnits() + "'");
-              System.exit (2);
+              LOGGER.severe ("Cannot draw wind barbs with units in '" + var1.getUnits() + "'");
+              ToolServices.exitWithCode (2);
+              return;
             } // else
 
             // Create symbol
@@ -1453,9 +1468,9 @@ public class cwrender {
                 palette, function);
             } // if
             else {
-              System.err.println (PROG + ": U,V component mode not currently "+
-                "supported for drawing wind barbs");
-              System.exit (2);
+              LOGGER.severe ("U,V component mode not currently supported for drawing wind barbs");
+              ToolServices.exitWithCode (2);
+              return;
             } // else
 
           } // if
@@ -1504,9 +1519,9 @@ public class cwrender {
         // -------------
         String[] compositeArray = composite.split (ToolServices.getSplitRegex());
         if (compositeArray.length != 3) {
-          System.err.println (PROG + ": Composite '" + composite + 
-            "' must contain 3 variables");
-          System.exit (2);
+          LOGGER.severe ("Composite '" + composite + "' must contain 3 variables");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         Grid[] grids = new Grid[3]; 
         for (int i = 0; i < 3; i++)
@@ -1522,9 +1537,9 @@ public class cwrender {
           if (ranges[i] != null) {
             String[] rangeArray = ranges[i].split (ToolServices.getSplitRegex());
             if (rangeArray.length != 2) {
-              System.err.println (PROG + ": Invalid range '" + 
-                ranges[i] + "'");
-              System.exit (2);
+              LOGGER.severe ("Invalid range '" + ranges[i] + "'");
+              ToolServices.exitWithCode (2);
+              return;
             } // if
             min[i] = Double.parseDouble (rangeArray[0]);
             max[i] = Double.parseDouble (rangeArray[1]);
@@ -1551,16 +1566,18 @@ public class cwrender {
       // Data view type not specified
       // ----------------------------
       else {
-        System.err.println (PROG + ": Must specify --enhance or --composite");
-        System.exit (2);
+        LOGGER.severe ("Must specify --enhance or --composite");
+        ToolServices.exitWithCode (2);
+        return;
       } // else
 
       // Get font
       // --------
       String[] fontArray = fontStr.split (ToolServices.getSplitRegex());
       if (fontArray.length < 1 || fontArray.length > 3) {
-        System.err.println (PROG + ": Invalid font '" + fontStr + "'");
-        System.exit (2);
+        LOGGER.severe ("Invalid font '" + fontStr + "'");
+        ToolServices.exitWithCode (2);
+        return;
       } // if
       String family = fontArray[0];
       String fontStyleStr = (fontArray.length >= 2 ? fontArray[1] : "plain");
@@ -1570,8 +1587,9 @@ public class cwrender {
       else if (fontStyleStr.equals ("italic")) fontStyle = Font.ITALIC;
       else if (fontStyleStr.equals ("bold-italic")) fontStyle = Font.BOLD + Font.ITALIC;
       else {
-        System.err.println (PROG + ": Invalid font style '" + fontStyleStr + "'");
-        System.exit (2);
+        LOGGER.severe ("Invalid font style '" + fontStyleStr + "'");
+        ToolServices.exitWithCode (2);
+        return;
       } // else
       String fontSizeStr = (fontArray.length == 3 ? fontArray[2] : "9");
       int fontSize = Integer.parseInt (fontSizeStr);
@@ -1609,17 +1627,17 @@ public class cwrender {
           // ----------------------
           String[] bitmaskArray = bitmask.split (ToolServices.getSplitRegex());
           if (bitmaskArray.length != 3) {
-            System.err.println (PROG + ": Invalid bitmask parameters '" + 
-              bitmask + "'");
-            System.exit (2);
+            LOGGER.severe ("Invalid bitmask parameters '" + bitmask + "'");
+            ToolServices.exitWithCode (2);
+            return;
           } // if
           String maskVarName = bitmaskArray[0];
           int maskVal = 0;
           try { maskVal = Integer.decode(bitmaskArray[1]).intValue(); }
           catch (NumberFormatException e) { 
-            System.err.println (PROG + ": Invalid bitmask value '" + 
-              bitmaskArray[1] + "'");
-            System.exit (2);
+            LOGGER.severe ("Invalid bitmask value '" + bitmaskArray[1] + "'");
+            ToolServices.exitWithCode (2);
+            return;
           } // catch
           Color maskColor = lookup.convert (bitmaskArray[2]);
 
@@ -1641,9 +1659,9 @@ public class cwrender {
           // ------------------------------
           int index = exprmask.lastIndexOf ("/");
           if (index == -1) {
-            System.err.println (PROG + 
-              ": Invalid expression mask parameters '" + exprmask + "'");
-            System.exit (2);
+            LOGGER.severe ("Invalid expression mask parameters '" + exprmask + "'");
+            ToolServices.exitWithCode (2);
+            return;
           } // if
           String expression = exprmask.substring (0, index);
           Color maskColor = lookup.convert (exprmask.substring (index+1));
@@ -1742,9 +1760,9 @@ public class cwrender {
           // --------------------
           String[] shapeArray = shape.split (ToolServices.getSplitRegex());
           if (shapeArray.length < 2) {
-            System.err.println (PROG + ": Invalid shape parameters '" + 
-              shape + "'");
-            System.exit (2);
+            LOGGER.severe ("Invalid shape parameters '" + shape + "'");
+            ToolServices.exitWithCode (2);
+            return;
           } // if
           URL url = new File (shapeArray[0]).toURI().toURL();
           Color lineColor = lookup.convert (shapeArray[1]);
@@ -1788,9 +1806,9 @@ public class cwrender {
       // -------------
       boolean isFullSize = (sizeStr != null && sizeStr.equals ("full"));
       if (magnify != null && isFullSize) {
-        System.err.println (PROG + 
-          ": Cannot specify full size with magnification parameters");
-        System.exit (2);
+        LOGGER.severe ("Cannot specify full size with magnification parameters");
+        ToolServices.exitWithCode (2);
+        return;
       } // if
       int size = 512;
       if (isFullSize) { 
@@ -1809,24 +1827,24 @@ public class cwrender {
         // ----------------------------
         String[] magnifyArray = magnify.split (ToolServices.getSplitRegex());
         if (magnifyArray.length != 3) {
-          System.err.println (PROG + ": Invalid magnification parameters '" + 
-            magnify + "'");
-          System.exit (2);
+          LOGGER.severe ("Invalid magnification parameters '" + magnify + "'");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
 
         // Check magnification parameters
         // ------------------------------
         double lat = Double.parseDouble (magnifyArray[0]);
         if (lat < -90 || lat > 90) {
-          System.err.println (PROG + ": Invalid magnification latitude: " +
-            lat);
-          System.exit (2);
+          LOGGER.severe ("Invalid magnification latitude: " + lat);
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         double lon = Double.parseDouble (magnifyArray[1]);
         if (lon < -180 || lon > 180) {
-          System.err.println (PROG + ": Invalid magnification longitude: " + 
-            lon);
-          System.exit (2);
+          LOGGER.severe ("Invalid magnification longitude: " + lon);
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         EarthLocation center = new EarthLocation (lat, lon,trans2d.getDatum());
         double factor = Double.parseDouble (magnifyArray[2]);
@@ -1835,9 +1853,9 @@ public class cwrender {
         // --------------------------
         DataLocation loc = trans2d.transform (center);
         if (loc == null) {
-          System.err.println (PROG + ": Magnification center " + center + 
-            " does not transform to a valid data location");
-          System.exit (2);
+          LOGGER.severe ("Magnification center " + center + " does not transform to a valid data location");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         view.magnify (loc, factor);
         view.setSize (new Dimension (size, size));
@@ -1873,14 +1891,10 @@ public class cwrender {
       // --------------------------------
       if (view instanceof ColorEnhancement && range == null) {
         ColorEnhancement colorEnhance = (ColorEnhancement) view;
-        if (verbose)
-          System.out.println (PROG + ": Normalizing color enhancement");
+        VERBOSE.info ("Normalizing color enhancement");
         colorEnhance.normalize (STDEV_UNITS);
-        if (verbose) {
-          double[] funcRange = colorEnhance.getFunction().getRange();
-          System.out.println (PROG + ": Normalized range = [" + funcRange[0] +
-            ", " + funcRange[1] + "]");
-        } // if
+        double[] funcRange = colorEnhance.getFunction().getRange();
+        VERBOSE.info ("Normalized range = " + Arrays.toString (funcRange));
       } // if
 
       // Normalize view color composite
@@ -1893,15 +1907,11 @@ public class cwrender {
         String[] compRangeVars = new String[] {redrange, greenrange, bluerange};
         for (int i = 0; i < 3; i++) {
           if (compRangeVars[i] == null) {
-            if (verbose)
-              System.out.println (PROG + ": Normalizing " + compNames[i] + " component");
+            VERBOSE.info ("Normalizing " + compNames[i] + " component");
             colorComp.normalize (components[i], STDEV_UNITS);
-            if (verbose) {
-              EnhancementFunction func = colorComp.getFunctions()[components[i]];
-              double[] funcRange = func.getRange();
-              System.out.println (PROG + ": Normalized range = [" + funcRange[0] +
-                ", " + funcRange[1] + "]");
-            } // if
+            EnhancementFunction func = colorComp.getFunctions()[components[i]];
+            double[] funcRange = func.getRange();
+            VERBOSE.info ("Normalized range = " + Arrays.toString (funcRange));
           } // if
         } // for
       } // else if
@@ -1921,16 +1931,18 @@ public class cwrender {
         String[] dateArray = date.split (ToolServices.getSplitRegex());
         ArrayList<TimePeriod> periodList = new ArrayList<TimePeriod>();
         if (dateArray.length > 2) {
-          System.err.println (PROG + ": Invalid start/end date specification: " + date);
-          System.exit (2);
+          LOGGER.severe ("Invalid start/end date specification: " + date);
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         for (String dateStr : dateArray) {
           Date dateValue = null;
           try { dateValue = DateFormatter.parseDate (dateStr, ISO_DATE_FMT); }
           catch (ParseException e) { }
           if (dateValue == null) {
-            System.err.println (PROG + ": Error parsing date: " + dateStr);
-            System.exit (2);
+            LOGGER.severe ("Error parsing date: " + dateStr);
+            ToolServices.exitWithCode (2);
+            return;
           } // if
           periodList.add (new TimePeriod (dateValue, 0));
         } // for
@@ -1946,133 +1958,98 @@ public class cwrender {
 
     } // try
     catch (Exception e) {
-      e.printStackTrace();
-      System.exit (2);
+      LOGGER.log (Level.SEVERE, "Aborting", e);
+      ToolServices.exitWithCode (2);
+      return;
     } // catch
 
-    // Exit
-    // ----
-    System.exit (0);
+    ToolServices.finishExecution (PROG);
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwrender {-c, --composite=RED/GREEN/BLUE} [OPTIONS] input output\n" +
-"       cwrender {-e, --enhance=VARIABLE1[/VARIABLE2]} [OPTIONS] input output\n" +
-"Performs Earth data visualization by converting 2D data sets in the\n" +
-"input file to color images.\n" +
-"\n" +
-"Main parameters:\n" +
-"  -c, --composite=RED/GREEN/BLUE\n" +
-"                             Create three color RGB composite image.\n" +
-"  -e, --enhance=VARIABLE1[/VARIABLE2]\n" +
-"                             Create color palette enhancement image (one\n" +
-"                              variable) or vector plot (two variables).\n" +
-"  input                      The input data file name.\n" +
-"  output                     The output image file name.\n" +
-"\n" +
-"General options:\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -v, --verbose              Print verbose messages.\n" +
-"  --version                  Show version information.\n" +
-"  --split=EXPRESSION         Set the command line parameter split expression.\n" +
-"                              EXPRESSION may be any regular expression.\n" +
-"\n" +
-"Output content and format options:\n" +
-"  -a, --noantialias          Do not smooth lines and fonts.\n" +
-"  -D, --date=STARTDATE[/ENDDATE]\n" +
-"                             Set the plot legend start and end date in ISO\n" +
-"                              format 'yyyy-mm-ddThh:mm:ssZ'\n" +
-"  --font=FAMILY[/STYLE[/SIZE]]\n" +
-"                             Set the legend and overlay text font.\n" +
-"  --fontlist                 Print system font family names.\n" +
-"  -f, --format=TYPE          Set the output format.  TYPE may be\n" +
-"                              'png', 'gif', 'jpg', 'tif', 'pdf', or\n" +
-"                              'auto'.\n" +
-"  -i, --indexed              Short for --imagecolors 256.\n" +
-"  -I, --imagecolors=NUMBER   Write index color mapped image with\n" +
-"                              restricted color count.\n" +
-"  -l, --nolegends            Do not draw color scale and info legends.\n" +
-"  -m, --magnify=LATITUDE/LONGITUDE/FACTOR\n" +
-"                             Magnify and center the view on a location.\n" +
-"  -o, --logo=NAME            Set the logo plotted in the legends.\n" +
-"                              NAME may be 'noaa3d', 'nasa3d', 'nws3d',\n" +
-"                              'doc3d', 'noaa', 'nasa', 'nws', 'doc',\n" +
-"                              or any PNG, GIF, or JPEG file.\n" +
-"  -s, --size=PIXELS | full   Set the maximum data view width and height.\n" +
-"  -T, --tiffcomp=TYPE        Set the TIFF compression.  TYPE may be\n" +
-"                              'none', 'deflate', or 'pack'.\n" +
-"  -W, --worldfile=FILE       Write a text world file for georeferencing\n" +
-"                              image data.\n" +
-"\n" +
-"Plot overlay options:\n" +
-"  -A, --bath=COLOR[/LEVEL1/LEVEL2/...]\n" +
-"                             Draw bathymetric contours.\n" +
-"  -b, --bitmask=VARIABLE/MASK/COLOR\n" +
-"                             Draw bitmask based on variable data.\n" +
-"  -C, --coast=COLOR[/FILL]   Draw coastlines with optional fill.\n" +
-"  -d, --cloud=COLOR          Draw cloud mask.\n" +
-"  -g, --grid=COLOR           Draw latitude/longitude grid lines.\n" +
-"  -H, --shape=FILE/COLOR[/FILL]\n" +
-"                             Draw shapes with optional fill.\n" +
-"  -L, --land=COLOR           Draw land mask.\n" +
-"  -p, --political=COLOR      Draw international and state boundaries.\n" +
-"  -S, --nostates             Do not draw state boundaries if --political\n" +
-"                              is set.\n" +
-"  -t, --topo=COLOR[/LEVEL1/LEVEL2/...]\n" +
-"                             Draw topographic contours.\n" +
-"  -u, --group=GROUP          Draw overlay group from CDAT saved overlays.\n" +
-"  -w, --water=COLOR          Draw water mask.\n" +
-"  -X, --exprmask=EXPRESSION/COLOR\n" +
-"                             Draw expression mask.\n" +
-"  --watermark=TEXT[/COLOR[/SIZE[/ANGLE]]]\n" +
-"                             Draw watermark in center of plot.\n" +
-"  --watermarkshadow          Add drop shadow to watermark.\n" +
-"\n" +
-"Color enhancement options\n" +
-"  -E, --enhancevector=STYLE/SYMBOL[/SIZE]\n" +
-"                             Set color-enhanced vector specifications.\n" +
-"                              STYLE may be 'uvcomp' or 'magdir', SYMBOL\n" +
-"                              may be 'arrow' or 'barb', and SIZE is in\n" +
-"                              pixels.\n" +
-"  -F, --function=TYPE        Set color enhancement function.  TYPE\n" +
-"                              may be 'linear', 'boolean', 'stepN', 'log',\n" +
-"                              'gamma', 'linear-reverse', 'stepN-reverse',\n" +
-"                              'log-reverse', 'gamma-reverse' where N is an\n" +
-"                              integer.\n" +
-"  -k, --background=COLOR     Set background color for vector plots.\n" +
-"  -M, --missing=COLOR        Draw missing data with specified color.\n" +
-"  -P, --palette=NAME         Set palette used to map data to color.\n" +
-"  --palettefile=FILE         Set palette XML file used to map data to color.\n" +
-"  --palettecolors=COLOR1[/COLOR2[/COLOR3...]]\n" +
-"                             Set palette colors used to map data to color.\n" +
-"  --palettelist              Print list of valid palette names.\n" +
-"  -r, --range=MIN/MAX        Set enhancement minimum and maximum.\n" +
-"  --scalewidth=PIXELS        Set data color scale width.\n" +
-"  --ticklabels=LABEL1[/LABEL2[/LABEL3/...]]\n" +
-"                             Set tick mark labels.\n" +
-"  -U, --units=UNITS          Set range and color scale units.\n" +
-"\n" +
-"Color composite options:\n" +
-"  -B, --bluerange=MIN/MAX    Set blue component enhancement range.\n" +
-"  -G, --greenrange=MIN/MAX   Set green component enhancement range.\n" +
-"  -R, --redrange=MIN/MAX     Set red component enhancement range.\n" +
-"  -x, --redfunction=TYPE     Set red component enhancement function.\n" +
-"                              TYPE has same values as for --function.\n" +
-"  -y, --greenfunction=TYPE   Set green component enhancement function.\n" +
-"                              TYPE has same values as for --function.\n" +
-"  -z, --bluefunction=TYPE    Set blue component enhancement function.\n" +
-"                              TYPE has same values as for --function.\n"
-    );
+  ////////////////////////////////////////////////////////////
 
-  } // usage
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwrender");
+
+    info.func ("Performs earth data visualization");
+
+    info.param ("input", "Input data file");
+    info.param ("output", "Output image file");
+
+    info.section ("Rendering type");
+    info.option ("-c, --composite=R/G/B", "Create red/green/blue composite");
+    info.option ("-e, --enhance=VAR1[/VAR2]", "Create color enhancement");
+
+    info.section ("General");
+    info.option ("-h, --help", "Show help message");
+    info.option ("-v, --verbose", "Print verbose messages");
+    info.option ("--version", "Show version information");
+    info.option ("--split=EXPRESSION", "Set command parameter split expression");
+
+    info.section ("Content and format");
+    info.option ("-a, --noantialias", "Do not smooth lines and fonts");
+    info.option ("-D, --date=STARTDATE[/ENDDATE]", "Set legend date(s)");
+    info.option ("--font=FAMILY[/STYLE[/SIZE]]", "Set font properties");
+    info.option ("--fontlist", "Print system fonts");
+    info.option ("-f, --format=TYPE", "Set output format");
+    info.option ("-i, --indexed", "Set image colors to 256");
+    info.option ("-I, --imagecolors=NUMBER", "Set number of image colors");
+    info.option ("-l, --nolegends", "Do not draw legends");
+    info.option ("-m, --magnify=LAT/LON/FACTOR", "Center and magnify location");
+    info.option ("-o, --logo=NAME", "Set legend logo");
+    info.option ("-s, --size=PIXELS | full", "Set maximum data view size");
+    info.option ("-T, --tiffcomp=TYPE", "Set TIFF compression type");
+    info.option ("-W, --worldfile=FILE", "Write georeferencing world file");
+
+    info.section ("Overlays");
+    info.option ("-A, --bath=COLOR[/LEVEL1/LEVEL2/...] ", "Render bathymetric contours");
+    info.option ("-b, --bitmask=VAR/MASK/COLOR", "Render variable bitmask");
+    info.option ("-C, --coast=COLOR[/FILL]", "Render coastlines");
+    info.option ("-d, --cloud=COLOR", "Render cloud mask");
+    info.option ("-g, --grid=COLOR", "Render lat/lon grid");
+    info.option ("-H, --shape=FILE/COLOR[/FILL]", "Render shape file");
+    info.option ("-L, --land=COLOR", "Render land mask");
+    info.option ("-p, --political=COLOR", "Render politial boundaries");
+    info.option ("-S, --nostates", "Do not render state boundaries");
+    info.option ("-t, --topo=COLOR[/LEVEL1/LEVEL2/...]", "Render topographic contours");
+    info.option ("-u, --group=GROUP", "Render overlay group from CDAT");
+    info.option ("-w, --water=COLOR", "Render water mask");
+    info.option ("-X, --exprmask=EXPRESSION/COLOR", "Render expression mask");
+    info.option ("--watermark=TEXT[/COLOR[/SIZE[/ANGLE]]]", "Render watermark");
+    info.option ("--watermarkshadow", "Add drop shadow to watermark");
+ 
+    info.section ("Color enhancement");
+    info.option ("-E, --enhancevector=STYLE/SYMBOL[/SIZE]", "Set vector style");
+    info.option ("-F, --function=TYPE", "Set color enhancement function type");
+    info.option ("-k, --background=COLOR", "Set vector background color");
+    info.option ("-M, --missing=COLOR", "Set missing data color");
+    info.option ("-P, --palette=NAME", "Set color enhancment palette");
+    info.option ("--palettefile=FILE", "Use palette XML file");
+    info.option ("--palettecolors=COLOR1[/COLOR2[/COLOR3...]]", "Use palette colors");
+    info.option ("--palettelist", "Print palette names");
+    info.option ("-r, --range=MIN/MAX", "Set color enhancement range");
+    info.option ("--scalewidth=PIXELS", "Set color scale width");
+    info.option ("--ticklabels=LABEL1[/LABEL2[/LABEL3/...]]", "Set color scale tick labels");
+    info.option ("-U, --units=UNITS", "Set range and color scale units");
+
+    info.section ("Color composite");
+    info.option ("-B, --bluerange=MIN/MAX", "Set blue component range");
+    info.option ("-G, --greenrange=MIN/MAX", "Set green component range");
+    info.option ("-R, --redrange=MIN/MAX", "Set red component range");
+    info.option ("-x, --redfunction=TYPE", "Set red component function type");
+    info.option ("-y, --greenfunction=TYPE", "Set green component function type");
+    info.option ("-z, --bluefunction=TYPE", "Set blue component function type");
+
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 

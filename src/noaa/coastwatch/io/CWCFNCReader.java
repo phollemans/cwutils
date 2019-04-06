@@ -58,6 +58,9 @@ import ucar.nc2.Variable;
 import ucar.nc2.Dimension;
 import ucar.nc2.dataset.NetcdfDataset;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /** 
  * The <code>CWCFNCReader</code> class reads Java NetCDF accessible
  * datasets and uses the CoastWatch HDF metadata conventions to parse
@@ -68,6 +71,8 @@ import ucar.nc2.dataset.NetcdfDataset;
  */
 public class CWCFNCReader
   extends NCReader {
+
+  private static final Logger LOGGER = Logger.getLogger (CWCFNCReader.class.getName());
 
   // Constants
   // ---------
@@ -253,9 +258,7 @@ public class CWCFNCReader
         } // try
       
         catch (Exception e) {
-          System.err.println (this.getClass() + 
-            ": Warning: Problems encountered using earth location data");
-          e.printStackTrace();
+          LOGGER.log (Level.WARNING, "Problems encountered using earth location data", e);
         } // catch
 
         return (trans);

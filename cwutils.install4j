@@ -15,7 +15,7 @@
       <variable name="osName" value="" description="" category="" />
       <variable name="vm32BitOption" value="" description="" category="" />
       <variable name="vmLafOptions" value="" description="" category="" />
-      <variable name="vmLogOptions" value="-Djava.util.logging.config.file=logging.properties" description="" category="" />
+      <variable name="vmLogOptions" value="-Djava.util.logging.config.class=noaa.coastwatch.tools.LoggingConfig" description="" category="" />
       <variable name="iconDir" value="icons" description="" category="" />
       <variable name="baseInstallDir" value="${compiler:sys.shortName}_${compiler:sys.version}" description="" category="" />
       <variable name="arch" value="generic" description="" category="" />
@@ -90,6 +90,7 @@
           <entry location="bin/cwmath" fileType="launcher" />
           <entry location="bin/cwnavigate" fileType="launcher" />
           <entry location="bin/cwregister" fileType="launcher" />
+          <entry location="bin/cwregister2" fileType="launcher" />
           <entry location="bin/cwrender" fileType="launcher" />
           <entry location="bin/cwsample" fileType="launcher" />
           <entry location="bin/cwstats" fileType="launcher" />
@@ -633,6 +634,42 @@
       </infoPlist>
       <iconImageFiles />
     </launcher>
+    <launcher name="cwregister2" id="1652" customizedId="" external="false" excludeFromMenu="true" unixMode="755" unixAutoStart="true" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="" useCustomMacosExecutableName="false" customMacosExecutableName="" useJavaMinVersionOverride="false" javaMinVersionOverride="" useJavaMaxVersionOverride="false" javaMaxVersionOverride="" checkUpdater="false" updateExecutionMode="unattendedProgress" unattendedUpdateTitle="${i18n:updater.WindowTitle(&quot;${compiler:sys.fullName}&quot;)}">
+      <executable name="cwregister2" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="java9+">
+        <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
+      </executable>
+      <splashScreen show="false" width="0" height="0" bitmapFile="" textOverlay="false">
+        <text>
+          <statusLine x="20" y="20" text="" fontSize="8" fontColor="0,0,0" bold="false" />
+          <versionLine x="20" y="40" text="version ${compiler:sys.version}" fontSize="8" fontColor="0,0,0" bold="false" />
+        </text>
+      </splashScreen>
+      <java mainClass="noaa.coastwatch.tools.cwregister2" mainMode="1" vmParameters="-Djava.awt.headless=true -Xmx2048m ${compiler:vm32BitOption} ${compiler:vmLogOptions}" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib/java" failOnError="false" />
+          <scanDirectory location="lib/java/depend" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <modulePath />
+        <nativeLibraryDirectories>
+          <directory name="lib/native/${compiler:libDir}" />
+        </nativeLibraryDirectories>
+        <vmOptions />
+      </java>
+      <includedFiles />
+      <unextractableFiles />
+      <vmOptionsFile mode="none" overwriteMode="0" fileMode="644">
+        <content />
+      </vmOptionsFile>
+      <customScript mode="1" file="">
+        <content />
+      </customScript>
+      <infoPlist mode="1" file="">
+        <content />
+      </infoPlist>
+      <iconImageFiles />
+    </launcher>
     <launcher name="cwrender" id="75" customizedId="" external="false" excludeFromMenu="true" unixMode="755" unixAutoStart="true" menuName="" icnsFile="" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="" useCustomMacosExecutableName="false" customMacosExecutableName="" useJavaMinVersionOverride="false" javaMinVersionOverride="" useJavaMaxVersionOverride="false" javaMaxVersionOverride="" checkUpdater="false" updateExecutionMode="unattendedProgress" unattendedUpdateTitle="${i18n:updater.WindowTitle(&quot;${compiler:sys.fullName}&quot;)}">
       <executable name="cwrender" type="1" iconSet="false" iconFile="" executableDir="bin" redirectStderr="false" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="2" changeWorkingDirectory="false" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="java9+">
         <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
@@ -1083,7 +1120,7 @@ return console.askOkCancel(message, true);
                       <void property="displayedText">
                         <string>&lt;html&gt;
 &lt;p&gt;
-&lt;b&gt;Copyright (c) 1998-2018 National Oceanic and Atmospheric Administration&lt;br&gt;
+&lt;b&gt;Copyright (c) 1998-2019 National Oceanic and Atmospheric Administration&lt;br&gt;
 All rights reserved.&lt;/b&gt;
 &lt;/p&gt;
 

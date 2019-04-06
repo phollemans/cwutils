@@ -52,7 +52,7 @@ public class TimeWindowValuePanel
   // ---------
   
   /** The units for time length. */
-  private enum Units {
+  private static enum Units {
     SECONDS,
     MINUTES,
     HOURS,

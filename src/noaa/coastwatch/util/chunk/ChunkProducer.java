@@ -54,6 +54,28 @@ public interface ChunkProducer {
    */
   public DataChunk getChunk (ChunkPosition pos);
 
+  /**
+   * Gets the native chunking scheme for chunks obtained from this producer.
+   * Calls to {@link #getChunk} are optimized to use chunk positions obtained
+   * from the native scheme.
+   *
+   * @return the native chunking scheme used by this producer, or null if
+   * no native chunking scheme is used.
+   *
+   * @since 3.5.0
+   */
+  public ChunkingScheme getNativeScheme();
+
+  /**
+   * Gets a prototype chunk for this producer.  Chunks received from the
+   * {@link #getChunk} method conform to the prototype.
+   *
+   * @return a prototype chunk for chunks produced by this producer.
+   *
+   * @since 3.5.0
+   */
+  public DataChunk getPrototypeChunk();
+
 } // ChunkProducer interface
 
 ////////////////////////////////////////////////////////////////////////

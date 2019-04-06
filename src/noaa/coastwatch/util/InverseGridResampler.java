@@ -34,6 +34,9 @@ import noaa.coastwatch.util.GridResampler;
 import noaa.coastwatch.util.LocationEstimator;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * The <code>InverseGridResampler</code> class performs generic data
  * resampling between 2D earth transforms using an inverse location
@@ -60,6 +63,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
  */
 public class InverseGridResampler 
   extends GridResampler {
+
+  private static final Logger LOGGER = Logger.getLogger (InverseGridResampler.class.getName());
+  private static final Logger VERBOSE = Logger.getLogger (InverseGridResampler.class.getName() + ".verbose");
 
   // Variables
   // ---------
@@ -92,16 +98,17 @@ public class InverseGridResampler
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void perform (
     boolean verbose
   ) {
 
+    if (verbose) VERBOSE.setLevel (Level.INFO);
+
     // Check grid count
     // ----------------
     int grids = sourceGrids.size();
-    if (verbose) 
-      System.out.println (this.getClass() + ": Found " + grids + 
-        " grid(s) for resampling");
+    VERBOSE.info ("Found " + grids + " grid(s) for resampling");
     if (grids == 0) return;
 
     // Get grid arrays
@@ -113,18 +120,15 @@ public class InverseGridResampler
     // -------------------------
     int[] sourceDims = sourceArray[0].getDimensions();
     int[] destDims = destArray[0].getDimensions();
-    if (verbose) 
-      System.out.println (this.getClass() + ": Resampling to " + 
-        destDims[Grid.ROWS] + "x" + destDims[Grid.COLS] + " from " +
-        sourceDims[Grid.ROWS] + "x" + sourceDims[Grid.COLS]);
+    VERBOSE.info ("Resampling to " +
+      destDims[Grid.ROWS] + "x" + destDims[Grid.COLS] + " from " +
+      sourceDims[Grid.ROWS] + "x" + sourceDims[Grid.COLS]);
     AffineTransform sourceNav = sourceArray[0].getNavigation();
     if (sourceNav.isIdentity()) sourceNav = null;
-    if (verbose) 
-      System.out.println (this.getClass() + ": Creating location estimators with poly size " + polySize + " km");
+    VERBOSE.info ("Creating location estimators with poly size " + polySize + " km");
     LocationEstimator estimator = new LocationEstimator (destTrans,
       destDims, sourceTrans, sourceDims, sourceNav, polySize);
-    if (verbose) 
-      System.out.println (this.getClass() + ": Location estimators complete, starting resampling");
+    VERBOSE.info ("Location estimators complete, starting resampling");
 
     // Set up source location bounds
     // -----------------------------
@@ -150,9 +154,9 @@ public class InverseGridResampler
 
       // Print progress
       // --------------
-      if (verbose && (i+1)%(destDims[Grid.ROWS]/10) == 0) {
+      if ((i+1)%(destDims[Grid.ROWS]/10) == 0) {
         int percentComplete = (int) Math.round (((i+1)*100.0/destDims[Grid.ROWS]));
-        System.out.println (this.getClass() + ": " + percentComplete + "% complete");
+        VERBOSE.info (percentComplete + "% complete");
       } // if
 
       for (int j = 0; j < destDims[Grid.COLS]; j++) {

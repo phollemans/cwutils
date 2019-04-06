@@ -39,6 +39,7 @@ import noaa.coastwatch.util.expression.ExpressionParser;
 import noaa.coastwatch.util.expression.ParseImp;
 import noaa.coastwatch.util.expression.EvaluateImp;
 import noaa.coastwatch.util.expression.ExpressionTest;
+import noaa.coastwatch.util.EarthLocation;
 
 // Testing
 import noaa.coastwatch.test.TestLogger;
@@ -330,6 +331,11 @@ public class JELParser implements ExpressionParser {
 
     /** Determines if a double is the NaN value. */
     public static boolean isNaN (double value) { return (Double.isNaN (value)); }
+
+    /** Computes the physical distance between two locations in kilometers. */
+    public static double dist (double lat1, double lon1, double lat2, double lon2) {
+      return (EarthLocation.distance (lat1, lon1, lat2, lon2));
+    } // dist
 
   } // ExtrasLibrary class
 

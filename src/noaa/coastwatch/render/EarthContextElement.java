@@ -68,6 +68,9 @@ import noaa.coastwatch.util.trans.ProjectionConstants;
 import noaa.coastwatch.util.trans.SpheroidConstants;
 import noaa.coastwatch.util.trans.SwathProjection;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * The earth context element is a picture element that renders a
  * simplified view of the earth with coastlines and the bounding boxes
@@ -96,6 +99,8 @@ import noaa.coastwatch.util.trans.SwathProjection;
  */
 public class EarthContextElement
   extends PictureElement {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthContextElement.class.getName());
 
   // Constants
   // ---------
@@ -668,8 +673,8 @@ public class EarthContextElement
     // Print warning when not available
     // --------------------------------
     catch (IOException e) { 
-      System.out.println (this.getClass() + ": Warning: " + e.toString());
-      return (null); 
+      LOGGER.warning ("Failed to get coastline data for context view: " + e.toString());
+      return (null);
     } // catch
 
   } // getCoast

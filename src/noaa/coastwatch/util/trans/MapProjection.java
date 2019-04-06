@@ -35,6 +35,8 @@ import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.EarthTransform2D;
 import noaa.coastwatch.util.trans.ProjectionConstants;
 
+import static noaa.coastwatch.util.trans.SpheroidConstants.SPHEROID_NAMES;
+
 /**
  * The <code>MapProjection</code> class is the abstract parent of
  * all map projections that implement coordinate conversions for
@@ -293,11 +295,7 @@ public abstract class MapProjection
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Creates a subset version of this map projection. 
-   * 
-   * @see EarthTransform#getSubset
-   */
+  @Override
   public EarthTransform getSubset (
     DataLocation newOrigin,
     int[] newDims

@@ -47,6 +47,8 @@ import noaa.coastwatch.io.tile.TilingScheme.Tile;
 import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
 import noaa.coastwatch.io.HDF5Lib;
 
+import java.util.logging.Logger;
+
 // Testing
 import noaa.coastwatch.test.TestLogger;
 
@@ -61,6 +63,8 @@ import noaa.coastwatch.test.TestLogger;
 public class NCTileSource
   implements TileSource {
 
+  private static final Logger LOGGER = Logger.getLogger (NCTileSource.class.getName());
+
   // Constants
   // ---------
   
@@ -69,6 +73,9 @@ public class NCTileSource
 
   // Variables
   // ---------
+  
+  /** The NetCDF file to read. */
+  private NetcdfFile file;
   
   /** The NetCDF variable to read. */
   private Variable var;
@@ -112,8 +119,12 @@ public class NCTileSource
     int[] start
   ) throws IOException {
 
+    LOGGER.fine ("Creating NetCDF tile source for file = " +
+      "0x" + Integer.toHexString (file.hashCode()) + ", varName = " + varName);
+
     // Get NetCDF variable
     // -------------------
+    this.file = file;
     var = file.findVariable (varName);
     if (var == null)
       throw new IOException ("Cannot access variable " + varName);
@@ -283,7 +294,11 @@ public class NCTileSource
     // Read data
     // ---------
     Object data;
-    try { data = var.read (start, length).getStorage(); }
+    try {
+      synchronized (file) {
+        data = var.read (start, length).getStorage();
+      } // synchronized
+    } // try
     catch (InvalidRangeException e) {
       throw new IOException ("Invalid start/length reading tile");
     } // catch

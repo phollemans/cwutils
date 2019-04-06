@@ -84,6 +84,9 @@ import ucar.nc2.time.CalendarDateRange;
 import ucar.nc2.dataset.CoordinateAxisTimeHelper;
 import ucar.nc2.time.Calendar;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /** 
  * The <code>CommonDataModelNCReader</code> class reads Java NetCDF API
  * accessible datasets and attempts to use any metadata and
@@ -104,6 +107,8 @@ import ucar.nc2.time.Calendar;
  */
 public class CommonDataModelNCReader 
   extends NCReader {
+
+  private static final Logger LOGGER = Logger.getLogger (CommonDataModelNCReader.class.getName());
 
   // Constants
   // ---------
@@ -589,13 +594,9 @@ utilities when:
           } // else
         } // try
         catch (Exception e) {
-          System.err.println (this.getClass() + 
-            ": Warning: Problems encountered using earth location data");
-          e.printStackTrace();
+          LOGGER.log (Level.WARNING, "Problems encountered using earth location data", e);
           if (lat != null && lon != null) {
-            System.err.println (this.getClass() + 
-              ": Warning: Falling back on data-only projection, " +
-              "earth location reverse lookup will not function");
+            LOGGER.warning ("No (lat,lon) --> (row,col) transform available");
             trans = new DataProjection (lat, lon);
           } // if
         } // catch

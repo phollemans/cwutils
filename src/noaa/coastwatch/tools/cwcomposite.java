@@ -51,6 +51,9 @@ import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * <p>The composite tool combines a time series of earth data.</p>
  *
@@ -66,7 +69,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * <h2>Synopsis</h2>
  * <p>
  *   cwcomposite [OPTIONS] input [input2 ...] output<br>
- *   cwcomposite [OPTIONS] {-i, --inputs=FILE} output
+ *   cwcomposite [OPTIONS] --inputs=FILE output
  * </p>
  *
  * <h3>Options:</h3>
@@ -109,7 +112,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   unless the <b>--inputs</b> option is used.  If multiple files
  *   are specified, they must have matching earth transforms. </dd>
  *
- *   <dt> -i, --inputs=FILE </dt>
+ *   <dt> --inputs=FILE </dt>
  *   <dd> The file name containing a list of input data files.  The file
  *   must be an ASCII text file containing input file names, one per
  *   line.  If multiple files are listed, they must have matching
@@ -222,24 +225,24 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * </ul>
  *
  * <h2>Examples</h2>
- * <p> The following shows the combination of several Earth
+ * <p> The following shows the combination of several earth
  * datasets into one using the 'latest' composite method:</p>
  * <pre>
  *   phollema$ cwcomposite -v --method latest 2003_097_1428_n17_wi_na.hdf
  *     2003_097_1607_n17_wi_na.hdf 2003_097_1751_n17_mo_na.hdf
  *     2003_097_1931_n17_mo_na.hdf 2003_097_n17_na.hdf
  *
- *  cwcomposite: Reading input 2003_097_1428_n17_wi_na.hdf
- *  cwcomposite: Adding avhrr_ch1 to composite variables
- *  cwcomposite: Adding avhrr_ch2 to composite variables
- *  cwcomposite: Adding avhrr_ch4 to composite variables
- *  cwcomposite: Reading input 2003_097_1607_n17_wi_na.hdf
- *  cwcomposite: Reading input 2003_097_1751_n17_mo_na.hdf
- *  cwcomposite: Reading input 2003_097_1931_n17_mo_na.hdf
- *  cwcomposite: Creating output 2003_097_n17_na.hdf
- *  cwcomposite: Writing avhrr_ch1
- *  cwcomposite: Writing avhrr_ch2
- *  cwcomposite: Writing avhrr_ch4
+ *  [INFO] Reading input 2003_097_1428_n17_wi_na.hdf
+ *  [INFO] Adding avhrr_ch1 to composite variables
+ *  [INFO] Adding avhrr_ch2 to composite variables
+ *  [INFO] Adding avhrr_ch4 to composite variables
+ *  [INFO] Reading input 2003_097_1607_n17_wi_na.hdf
+ *  [INFO] Reading input 2003_097_1751_n17_mo_na.hdf
+ *  [INFO] Reading input 2003_097_1931_n17_mo_na.hdf
+ *  [INFO] Creating output 2003_097_n17_na.hdf
+ *  [INFO] Writing avhrr_ch1
+ *  [INFO] Writing avhrr_ch2
+ *  [INFO] Writing avhrr_ch4
  * </pre>
  *
  * <!-- END MAN PAGE -->
@@ -249,13 +252,14 @@ import noaa.coastwatch.util.trans.EarthTransform;
  */
 public final class cwcomposite {
 
+  private static final String PROG = cwcomposite.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
+
   // Constants
   // ---------
   /** Minimum required command line parameters. */
   private static final int NARGS = 1;
-
-  /** Name of program. */
-  private static final String PROG = "cwcomposite";
 
   ////////////////////////////////////////////////////////////
 
@@ -266,6 +270,7 @@ public final class cwcomposite {
    */
   public static void main (String argv[]) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -282,39 +287,43 @@ public final class cwcomposite {
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
-      System.exit (0);
+      usage();
+      ToolServices.exitWithCode (0);
+      return;
     } // if
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS +
-        " argument(s) required");
-      usage ();
-      System.exit (1);
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String output = remain[remain.length-1];
 
     // Set defaults
     // ------------
     boolean verbose = (cmd.getOptionValue (verboseOpt) != null);
+    if (verbose) VERBOSE.setLevel (Level.INFO);
     String match = (String) cmd.getOptionValue (matchOpt);
     String method = (String) cmd.getOptionValue (methodOpt);
     if (method == null) method = "mean";
@@ -326,11 +335,10 @@ public final class cwcomposite {
 
     // Check for coherent mode
     // -----------------------
-    if (coherent != null && 
-        !(method.equals ("latest") || method.equals("explicit"))) {
-      System.err.println (PROG + ": Coherent mode can only be used with " +
-        "--method latest or --method explicit");
-      System.exit (2);
+    if (coherent != null && !(method.equals ("latest") || method.equals("explicit"))) {
+      LOGGER.severe ("Coherent mode can only be used with --method latest or --method explicit");
+      ToolServices.exitWithCode (2);
+      return;
     } // if
 
     // Read inputs from file
@@ -351,9 +359,9 @@ public final class cwcomposite {
         reader.close();
       } // try
       catch (IOException e) {
-        System.err.println (PROG + ": Error parsing inputs file");
-        e.printStackTrace();
-        System.exit (2);
+        LOGGER.log (Level.SEVERE, "Error parsing inputs file", e);
+        ToolServices.exitWithCode (2);
+        return;
       } // catch
       input = (String[]) fileNameList.toArray (new String[] {});
     } // if
@@ -368,9 +376,9 @@ public final class cwcomposite {
     // Check input file count
     // ----------------------
     if (input.length == 0) {
-      System.err.println (PROG + ": At least one input file" +
-        " must be specified");
-      System.exit (2);
+      LOGGER.severe ("At least one input file must be specified");
+      ToolServices.exitWithCode (2);
+      return;
     } // if
 
     try {
@@ -384,7 +392,7 @@ public final class cwcomposite {
 
         // Open file
         // ---------
-        if (verbose) System.out.println (PROG + ": Reading input " + input[i]);
+        VERBOSE.info ("Reading input " + input[i]);
         readers[i] = EarthDataReaderFactory.create (input[i]);
 
         // Check transform
@@ -392,9 +400,9 @@ public final class cwcomposite {
         if (i == 0)
           trans = readers[i].getInfo().getTransform();
         else if (!trans.equals (readers[i].getInfo().getTransform())) {
-          System.err.println (PROG + ": Earth transforms do not match for " +
-            input[i] + " and " + input[0]);
-          System.exit (2);
+          LOGGER.severe ("Earth transforms do not match for " + input[i] + " and " + input[0]);
+          ToolServices.exitWithCode (2);
+          return;
         } // else if
 
         // Get variable names
@@ -405,8 +413,7 @@ public final class cwcomposite {
             String varName = var.getName();
             if (match != null && !varName.matches (match)) continue;
             if (variableNames.contains (varName)) continue;
-            if (verbose) System.out.println (PROG + ": Adding " + varName +
-              " to composite variables");
+            VERBOSE.info ("Adding " + varName + " to composite variables");
             variableNames.add (varName);
           } // if
         } // for
@@ -416,8 +423,9 @@ public final class cwcomposite {
       // Check variable names
       // --------------------
       if (variableNames.size() == 0) {
-        System.err.println (PROG + ": No valid variables found in input");
-        System.exit (2);
+        LOGGER.severe ("No valid variables found in input");
+        ToolServices.exitWithCode (2);
+        return;
       } // if
 
       // Sort readers by date if the latest method is specified
@@ -431,7 +439,7 @@ public final class cwcomposite {
       EarthDataInfo info = readers[0].getInfo();
       for (int i = 1; i < readers.length; i++)
         info = info.append (readers[i].getInfo(), pedantic);
-      if (verbose) System.out.println (PROG + ": Creating output " + output);
+      VERBOSE.info ("Creating output " + output);
       CleanupHook.getInstance().scheduleDelete (output);
 
       // TODO: There is a problem here when the history of the output
@@ -452,9 +460,10 @@ public final class cwcomposite {
         String[] coherentVarNames = coherent.split (ToolServices.SPLIT_REGEX);
         for (int i = 0; i < coherentVarNames.length; i++) {
           if (!variableNames.contains (coherentVarNames[i])) {
-            System.err.println (PROG + ": Cannot find coherent mode " +
-              "variable '" + coherentVarNames[i] + "' among input variables");
-            System.exit (2);
+            LOGGER.severe ("Cannot find coherent mode variable '" +
+              coherentVarNames[i] + "' among input variables");
+            ToolServices.exitWithCode (2);
+            return;
           } // if
         } // for
 
@@ -491,12 +500,8 @@ public final class cwcomposite {
 
         // Compute composite
         // -----------------
-        if (verbose) {
-          System.out.println (PROG + ": Computing coherent composite using " +
-            coherent);
-        } // if
-        computeCoherentComposite (inputVarArrays, coherentVarIndicies,
-          outputVars);
+        VERBOSE.info ("Computing coherent composite using " + coherent);
+        computeCoherentComposite (inputVarArrays, coherentVarIndicies, outputVars);
         for (int i = 0; i < numVars; i++)
           ((HDFCachedGrid) outputVars[i]).flush();
 
@@ -518,7 +523,7 @@ public final class cwcomposite {
           // Create composite variable
           // -------------------------
           HDFCachedGrid var = new HDFCachedGrid ((Grid) vars[0], writer);
-          if (verbose) System.out.println (PROG + ": Writing "+var.getName());
+          VERBOSE.info ("Writing " + var.getName());
           computeComposite (vars, var, method, valid);
           var.flush();
 
@@ -534,9 +539,12 @@ public final class cwcomposite {
 
     } // try
     catch (Exception e) {
-      e.printStackTrace();
-      System.exit (2);
+      LOGGER.log (Level.SEVERE, "Aborting", e);
+      ToolServices.exitWithCode (2);
+      return;
     } // catch
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
@@ -709,6 +717,23 @@ public final class cwcomposite {
 
     // Compute minimum
     // ---------------
+    
+    
+/*
+
+To perform these calculations as chunk operators, we need an operator
+for each composite type, that for each external chunk type:
+
+- runs an accessor on the source chunks
+- performs their operation on the unpacked data (while checking for missing)
+- runs a modifier on the destination chunk (or a copy?)
+
+For something like this, see the ExpressionFunction
+
+*/
+    
+    
+    
     if (method.equals ("min")) {
       do {
         double min = Double.MAX_VALUE;
@@ -737,7 +762,7 @@ public final class cwcomposite {
 
     // Compute latest
     // --------------
-    else if (method.equals ("latest") || method.equals("explicit")) {
+    else if (method.equals ("latest") || method.equals ("explicit")) {
       do {
         double latest = Double.NaN;
         for (int j = inputVars.length-1; j >= 0; j--) {
@@ -820,39 +845,35 @@ public final class cwcomposite {
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwcomposite [OPTIONS] input [input2 ...] output\n" +
-"       cwcomposite [OPTIONS] {-i, --inputs=FILE} output\n" +
-"Combines a time series of earth data.\n" +
-"\n" +
-"Main parameters:\n" +
-"  input [input2 ...]         The input data file name(s).\n" +
-"  -i, --inputs=FILE          The text file containing input file name(s)\n" +
-"                              or '-' for stdin.\n" +
-"  output                     The output data file name.\n" +
-"\n" +
-"Options:\n" +
-"  -c, --coherent=VARIABLE1[/VARIABLE2[...]]\n" +
-"                             Perform coherent mode composite.\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -m, --match=PATTERN        Compute only variable names matching the\n" +
-"                              pattern.\n" +
-"  -M, --method=TYPE          Set composite method.  TYPE may be 'mean',\n" +
-"                              'median', 'min', 'max', 'explicit' or \n" +
-"                              'latest'.\n" +
-"  -p, --pedantic             Retain all repeated metadata values.\n" +
-"  -v, --verbose              Print verbose messages.\n" +
-"  -V, --valid=COUNT          Set minimum valid value count to compute\n" +
-"                              composite at each pixel.\n" +
-"  --version                  Show version information.\n"
-    );
+  ////////////////////////////////////////////////////////////
 
-  } // usage
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwregister2");
+
+    info.func ("Combines a time series of earth data");
+
+    info.param ("input [input2 ...]", "Input data file(s)", 1);
+    info.param ("output", "Output data file", 1);
+
+    info.param ("--inputs=FILE", "Text file of input data file(s)", 2);
+    info.param ("output", "Output data file", 2);
+
+    info.option ("-c, --coherent=VAR1[/VAR2[...]]", "Use coherent mode with variables");
+    info.option ("-h, --help", "Show help message");
+    info.option ("-m, --match=PATTERN", "Composite only variables matching pattern");
+    info.option ("-M, --method=TYPE", "Set composite type");
+    info.option ("-p, --pedantic", "Retain repeated metadata values");
+    info.option ("-v, --verbose", "Print verbose messages");
+    info.option ("-V, --valid=COUNT", "Set minimum valid values");
+    info.option ("--version", "Show version information");
+
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 

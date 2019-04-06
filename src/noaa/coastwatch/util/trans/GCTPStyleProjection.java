@@ -32,6 +32,13 @@ import noaa.coastwatch.util.trans.DatumFactory;
 import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.util.trans.SpheroidConstants;
 
+import static noaa.coastwatch.util.trans.SpheroidConstants.CLARKE1866;
+import static noaa.coastwatch.util.trans.SpheroidConstants.SPHERE;
+import static noaa.coastwatch.util.trans.SpheroidConstants.SPHEROID_SEMI_MAJOR;
+import static noaa.coastwatch.util.trans.SpheroidConstants.SPHEROID_SEMI_MINOR;
+import static noaa.coastwatch.util.trans.SpheroidConstants.SPHEROID_NAMES;
+import static noaa.coastwatch.util.trans.SpheroidConstants.MAX_SPHEROIDS;
+
 /**
  * The <code>GCTPStyleProjection</code> class provides various static
  * constants and functions for classes that perform GCTP style
