@@ -32,12 +32,49 @@ package noaa.coastwatch.util.chunk;
  * @since 3.4.0
  */
 public interface ChunkVisitor {
+  
+  /**
+   * Visits a chunk of native byte data.
+   *
+   * @param chunk the byte chunk to visit.
+   */
   default public void visitByteChunk (ByteChunk chunk) { }
+
+  /**
+   * Visits a chunk of native short data.
+   *
+   * @param chunk the short chunk to visit.
+   */
   default public void visitShortChunk (ShortChunk chunk) { }
+
+  /**
+   * Visits a chunk of native int data.
+   *
+   * @param chunk the int chunk to visit.
+   */
   default public void visitIntChunk (IntChunk chunk) { }
+
+  /**
+   * Visits a chunk of native long data.
+   *
+   * @param chunk the long chunk to visit.
+   */
   default public void visitLongChunk (LongChunk chunk) { }
+
+  /**
+   * Visits a chunk of native float data.
+   *
+   * @param chunk the float chunk to visit.
+   */
   default public void visitFloatChunk (FloatChunk chunk) { }
+
+  /**
+   * Visits a chunk of native double data.
+   *
+   * @param chunk the double chunk to visit.
+   */
   default public void visitDoubleChunk (DoubleChunk chunk) { }
+
 } // ChunkVisitor interface
 
 ////////////////////////////////////////////////////////////////////////

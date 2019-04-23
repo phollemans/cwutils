@@ -303,6 +303,7 @@ public class CWHDFWriter
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void setGlobalInfo ()
     throws HDFException, IOException, ClassNotFoundException, 
     UnsupportedEncodingException {
@@ -568,6 +569,7 @@ public class CWHDFWriter
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void setVariableInfo (
     int sdsid,
     DataVariable var
@@ -669,9 +671,7 @@ public class CWHDFWriter
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Overrides the parent close to append the history before closing.
-   */ 
+  @Override
   public void close () throws IOException {
 
     // Check if already closed

@@ -94,9 +94,9 @@ import java.awt.Window;
  * <h2>Exit status</h2>
  * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Invalid input file name. </li>
- *   <li> Error encountered running the shell script. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Invalid input file name </li>
+ *   <li> Error encountered running the shell script </li>
  * </ul>
  *
  * <h2>Examples</h2>

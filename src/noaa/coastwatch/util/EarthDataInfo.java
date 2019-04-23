@@ -450,21 +450,55 @@ public class EarthDataInfo
   ////////////////////////////////////////////////////////////
 
   /**
+   * Appends another info object to this one in duplicate removal mode.
+   *
+   * @see #append(EarthDataInfo, boolean)
+   *
+   * @since 3.5.0
+   */
+  public EarthDataInfo appendWithoutDuplicates (
+    EarthDataInfo appendInfo
+  ) {
+  
+    return (append (appendInfo, false));
+  
+  } // appendWithoutDuplicates
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Appends another info object to this one in duplicate preserving mode.
+   *
+   * @see #append(EarthDataInfo, boolean)
+   *
+   * @since 3.5.0
+   */
+  public EarthDataInfo appendWithDuplicates (
+    EarthDataInfo appendInfo
+  ) {
+  
+    return (append (appendInfo, true));
+  
+  } // appendWithDuplicates
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Appends another info object to this one.
    * 
    * @param appendInfo the info object to append.
-   * @param pedantic the pedantic flag, true if metadata should be
+   * @param duplicatePreserving the dupicate mode flag, true if metadata should be
    * appended exactly so that duplicate values are preserved, false if
    * not.
    * 
    * @return the newly created object.
    *
-   * @throws IllegalArgumentException if the classes or Earth
+   * @throws IllegalArgumentException if the classes or earth
    * transforms for this object and the object to append do not match.
    */
   public EarthDataInfo append (
     EarthDataInfo appendInfo,
-    boolean pedantic
+    boolean duplicatePreserving
   ) {
 
     // Check types
@@ -483,17 +517,14 @@ public class EarthDataInfo
 
     // Append standard attributes
     // --------------------------
-    newInfo.source = MetadataServices.append (newInfo.source, 
-      appendInfo.source);
-    if (!pedantic) 
+    newInfo.source = MetadataServices.append (newInfo.source, appendInfo.source);
+    if (!duplicatePreserving)
       newInfo.source = MetadataServices.collapse (newInfo.source);
     newInfo.periodList.addAll (appendInfo.periodList);
-    newInfo.origin = MetadataServices.append (newInfo.origin, 
-      appendInfo.origin);
-    if (!pedantic) 
+    newInfo.origin = MetadataServices.append (newInfo.origin, appendInfo.origin);
+    if (!duplicatePreserving)
       newInfo.origin = MetadataServices.collapse (newInfo.origin);
-    newInfo.history = MetadataServices.append (newInfo.history, 
-      appendInfo.history);
+    newInfo.history = MetadataServices.append (newInfo.history, appendInfo.history);
 
     // Append user attributes
     // ----------------------
@@ -502,7 +533,7 @@ public class EarthDataInfo
       Map.Entry entry = (Map.Entry) iter.next();
       Object newValue = MetadataServices.append (entry.getValue(), 
         appendInfo.getMetadataMap().get (entry.getKey()));
-      if (!pedantic) newValue = MetadataServices.collapse (newValue);
+      if (!duplicatePreserving) newValue = MetadataServices.collapse (newValue);
       entry.setValue (newValue);
     } // for
 

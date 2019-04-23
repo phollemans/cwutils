@@ -108,9 +108,9 @@ import java.util.logging.Level;
  * -D, --diagnostic-long <br>
  * -M, --master=FILE <br>
  * -m, --match=PATTERN <br>
- * --maxops=N <br>
  * -p, --proj=SYSTEM <br>
  * -S, --savemap <br>
+ * --serial <br>
  * -t, --tiledims=ROWS/COLS <br>
  * -u, --usemap=FILE <br>
  * -v, --verbose <br>
@@ -222,12 +222,6 @@ import java.util.logging.Level;
  *   expression that determines which variables to register, otherwise all
  *   variables are registered.</dd>
  *
- *   <dt>--maxops=N</dt>
- *
- *   <dd>The maximum number of parallel resampling operations.  By default
- *   the program will try to use all of the available processors that are detected
- *   on the machine in parallel to process chunks of data.</dd>
- *
  *   <dt>-p, --proj=SYSTEM</dt>
  *
  *   <dd>The projection system to use for a master.  This can be 'geo'
@@ -246,6 +240,11 @@ import java.util.logging.Level;
  *   The variables 'source_row' and 'source_col' are added to the output
  *   file, and specify for each destination pixel, which source row and column
  *   they were mapped from.</dd>
+ *
+ *   <dt>--serial</dt>
+ *
+ *   <dd>Turns on serial processing mode.  By default the program will
+ *   use multiple processors in parallel to process chunks of data.</dd>
  *
  *   <dt>-t, --tiledims=ROWS/COLS</dt>
  *
@@ -274,14 +273,14 @@ import java.util.logging.Level;
  * <h2>Exit status</h2>
  * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Invalid master, input or output file names. </li>
- *   <li> Unsupported master or input file format. </li>
- *   <li> Output file already exists. </li>
- *   <li> Invalid tile dimensions. </li>
- *   <li> No variables found for registration. </li>
- *   <li> Projection system specified is unsupported. </li>
- *   <li> Error during registration computation. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Invalid master, input or output file names </li>
+ *   <li> Unsupported master or input file format </li>
+ *   <li> Output file already exists </li>
+ *   <li> Invalid tile dimensions </li>
+ *   <li> No variables found for registration </li>
+ *   <li> Projection system specified is unsupported </li>
+ *   <li> Error during registration computation </li>
  * </ul>
  *
  * <h2>Examples</h2>
@@ -494,7 +493,7 @@ public final class cwregister2 {
     Option clobberOpt = cmd.addBooleanOption ('c', "clobber");
     Option matchOpt = cmd.addStringOption ('m', "match");
     Option masterOpt = cmd.addStringOption ('M', "master");
-    Option maxopsOpt = cmd.addStringOption ("maxops");
+    Option serialOpt = cmd.addBooleanOption ("serial");
     Option diagnosticOpt = cmd.addBooleanOption ('d', "diagnostic");
     Option diagnosticlongOpt = cmd.addBooleanOption ('D', "diagnostic-long");
     Option tiledimsOpt = cmd.addStringOption ('t', "tiledims");
@@ -553,12 +552,12 @@ public final class cwregister2 {
     String master = (String) cmd.getOptionValue (masterOpt);
     String proj = (String) cmd.getOptionValue (projOpt);
     if (proj == null) proj = "ortho";
-    boolean clobber = (cmd.getOptionValue (clobberOpt) != null);
-    String maxopsStr = (String) cmd.getOptionValue (maxopsOpt);
+    boolean clobberOutput = (cmd.getOptionValue (clobberOpt) != null);
+    boolean serialOperations = (cmd.getOptionValue (serialOpt) != null);
 
     // Check output
     // ------------
-    if (new File (output).exists() && !clobber) {
+    if (new File (output).exists() && !clobberOutput) {
       LOGGER.severe ("Output file already exists and --clobber not specified");
       ToolServices.exitWithCode (2);
       return;
@@ -825,39 +824,32 @@ public final class cwregister2 {
       scheme.forEach (positions::add);
 
       int[] sourceDims = sourceTrans.getDimensions();
-      VERBOSE.info ("Source has size " + sourceDims[0] + "x" + sourceDims[1]);
+      VERBOSE.info ("Source has size " + sourceDims[ROW] + "x" + sourceDims[COL]);
       int[] chunkingDims = scheme.getDims();
-      VERBOSE.info ("Destination has size " + chunkingDims[0] + "x" + chunkingDims[1]);
-      int processors = Runtime.getRuntime().availableProcessors();
-      VERBOSE.info ("Found " + processors + " processor(s) to use");
+      VERBOSE.info ("Destination has size " + chunkingDims[ROW] + "x" + chunkingDims[COL]);
+
+      if (!serialOperations) {
+        int processors = Runtime.getRuntime().availableProcessors();
+        VERBOSE.info ("Found " + processors + " processor(s) to use");
+      } // if
+
       int[] chunkSize = scheme.getChunkSize();
       VERBOSE.info ("Processing " + (positions.size() * consumerList.size()) +
-        " chunks of size " + chunkSize[0] + "x" + chunkSize[1]);
+        " chunks of size " + chunkSize[ROW] + "x" + chunkSize[COL]);
 
-      ChunkOperation op = new ResamplingOperation (producerList, consumerList, mapFactory);
-      PoolProcessor processor = new PoolProcessor();
-      processor.init (positions, op);
-
-      // Set max operations
-      // ------------------
-      if (maxopsStr != null) {
-        int maxops = Integer.parseInt (maxopsStr);
-        if (maxops < 1) {
-          LOGGER.log (Level.SEVERE, "Invalid max operations: " + maxops);
-          ToolServices.exitWithCode (2);
-        } // if
-        if (maxops > processors) {
-          LOGGER.warning ("Max limit is " + processors + " operation(s)");
-          maxops = processors;
-        } // if
-        VERBOSE.info ("Running " + maxops + " parallel operation(s)");
-        processor.setMaxOperations (maxops);
-      } // if
-      
       // Perform resampling
       // ------------------
-      processor.start();
-      processor.waitForCompletion();
+      ChunkOperation op = new ResamplingOperation (producerList, consumerList, mapFactory);
+
+      if (serialOperations) {
+        positions.forEach (pos -> op.perform (pos));
+      } // if
+      else {
+        PoolProcessor processor = new PoolProcessor();
+        processor.init (positions, op);
+        processor.start();
+        processor.waitForCompletion();
+      } // if
 
       // Perform diagnostic
       // ------------------
@@ -940,9 +932,9 @@ public final class cwregister2 {
     info.option ("-h, --help", "Show help message");
     info.option ("-M, --master=FILE", "Use file for output projection");
     info.option ("-m, --match=PATTERN", "Register only variables matching pattern");
-    info.option ("--maxops=N", "Limit maximum number of parallel operations");
     info.option ("-p, --proj=SYSTEM", "Set output projection system");
     info.option ("-S, --savemap", "Save resampling map");
+    info.option ("--serial", "Perform serial operations");
     info.option ("-t, --tiledims=ROWS/COLS", "Set written tile dimensions");
     info.option ("-u, --usemap=FILE", "Use precomputed remapping");
     info.option ("-v, --verbose", "Print verbose messages");

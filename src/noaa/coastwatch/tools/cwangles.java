@@ -147,9 +147,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  * <p>0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Invalid input file name. </li>
- *   <li> No angle computations specified. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Invalid input file name </li>
+ *   <li> No angle computations specified </li>
  * </ul>
  *
  * <h2>Examples</h2>

@@ -20,14 +20,10 @@
 </head>
 <body bgcolor="white">
 
-Provides a number of data container, earth coordinate transformation,
-and polynomial approximation classes for use with earth locatable
-data.<p>
+<p>Provides utility classes for holding data, map projection,
+coordinate transform, resampling, statistics, and others.</p>
 
-In order to manipulate satellite data in a generic way, it is useful
-to have the notion of a data variable -- a container that holds the
-data and any attributes it might have.  The {@link
-noaa.coastwatch.util.DataVariable} class and its subclasses function
+<p>The {@link noaa.coastwatch.util.DataVariable} class and its subclasses function
 as generic data containers.  They allow the data values, name, units,
 scaling factors, and other attributes to be associated together in a
 single structure.  The dimensions of a data variable depend on the
@@ -40,9 +36,9 @@ that may be used to set and retrieve values within a data variable.
 The {@link noaa.coastwatch.util.EarthDataInfo} class binds a
 number of common <code>DataVariable</code> objects by providing the
 originating satellite, sensor, date, time, geolocation, and other
-common attributes.<p>
+common attributes.</p>
 
-The {@link noaa.coastwatch.util.trans.EarthTransform} and subclasses {@link
+<p>The {@link noaa.coastwatch.util.trans.EarthTransform} and subclasses {@link
 noaa.coastwatch.util.trans.DataProjection}, {@link
 noaa.coastwatch.util.trans.MapProjection}, and {@link
 noaa.coastwatch.util.trans.SwathProjection} provide coordinate
@@ -60,9 +56,9 @@ with a number of <code>DataVariable</code> objects to translate
 between data and geographic coordinates.  The {@link
 noaa.coastwatch.util.EarthArea} class may be used in conjunction with
 an <code>EarthTransform</code> to represent irregularly shaped areas
-on the Earth.<p>
+on the Earth.</p>
 
-In some cases it may be necessary to approximate the value of a smooth
+<p>In some cases it may be necessary to approximate the value of a smooth
 function between a number of known function data values.  The {@link
 noaa.coastwatch.util.UnivariateEstimator}, {@link
 noaa.coastwatch.util.BivariateEstimator}, and {@link
@@ -74,7 +70,7 @@ satellite zenith, and other angle data.  To aid in approximating
 smooth data fields with an appropriate number of known data points,
 the {@link noaa.coastwatch.util.EarthPartition} can be used to divide
 earth locatable data variables into subsections of a specified
-physical size.<p>
+physical size.</p>
 
 </body>
 </html>

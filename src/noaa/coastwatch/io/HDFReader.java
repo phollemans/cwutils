@@ -38,9 +38,11 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import hdf.hdflib.HDFChunkInfo;
 import hdf.hdflib.HDFConstants;
 import hdf.hdflib.HDFException;
+
 import noaa.coastwatch.io.HDFLib;
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.HDFCachedGrid;
@@ -50,6 +52,15 @@ import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.Line;
+
+import noaa.coastwatch.util.chunk.DataChunk;
+import noaa.coastwatch.util.chunk.ChunkPosition;
+import noaa.coastwatch.util.chunk.ChunkProducer;
+import noaa.coastwatch.util.chunk.GridChunkProducer;
+import noaa.coastwatch.util.chunk.DataChunkFactory;
+
+import static noaa.coastwatch.util.Grid.ROW;
+import static noaa.coastwatch.util.Grid.COL;
 
 /**
  * An HDF reader is an earth data reader that reads HDF format
@@ -797,6 +808,90 @@ public abstract class HDFReader
     } // catch
 
   } // getPreviewImpl
+
+  ////////////////////////////////////////////////////////////
+
+  /** Produces data chunks directly from this reader. */
+  private class HDFChunkProducer extends GridChunkProducer {
+  
+    public HDFChunkProducer (Grid grid) { super (grid); }
+
+    public DataChunk getChunk (ChunkPosition pos) {
+
+      DataChunk chunk;
+
+      // Get a non-native chunk
+      // ----------------------
+      if (!scheme.isNativePosition (pos)) {
+        chunk = super.getChunk (pos);
+      } // if
+
+      // Get a native chunk
+      // ------------------
+      else {
+
+        try {
+
+          // Read chunk from HDF file
+          // ------------------------
+          String name = grid.getName();
+          int varIndex = HDFLib.getInstance().SDnametoindex (sdid, name);
+          if (varIndex < 0) throw new RuntimeException ("SDnametoindex failed for " + name);
+          int sdsid = HDFLib.getInstance().SDselect (sdid, varIndex);
+          if (sdsid < 0) throw new RuntimeException ("SDselect failed for " + name);
+          int[] size = scheme.getChunkSize();
+          int values = size[ROW] * size[COL];
+          Object data = Array.newInstance (grid.getDataClass(), values);
+          int[] start = new int[2];
+          for (int i = 0; i < 2; i++) start[i] = pos.start[i] / size[i];
+          boolean success = HDFLib.getInstance().SDreadchunk (sdsid, start, data);
+          if (!success) throw new RuntimeException ("SDreadchunk failed at chunk " + Arrays.toString (start) + " for " + name);
+          HDFLib.getInstance().SDendaccess (sdsid);
+
+          // Remove ghost area if needed
+          // ---------------------------
+          if (pos.length[ROW] != size[ROW] || pos.length[COL] != size[COL]) {
+            int chunkValues = pos.length[ROW] * pos.length[COL];
+            Object newData = Array.newInstance (grid.getDataClass(), chunkValues);
+            Grid.arraycopy (data, size, new int[] {0,0}, newData,
+              pos.length, new int[] {0,0}, pos.length);
+            data = newData;
+          } // if
+
+          // Create chunk using data
+          // -----------------------
+          chunk = DataChunkFactory.getInstance().create (data,
+            grid.getUnsigned(), grid.getMissing(), packing);
+
+        } // try
+        catch (Exception e) { throw new RuntimeException (e); }
+
+      } // else
+
+      return (chunk);
+
+    } // getChunk
+
+  } // HDFChunkProducer
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public ChunkProducer getChunkProducer (
+    String name
+  ) throws IOException {
+
+    ChunkProducer producer;
+
+    DataVariable var = getVariable (name);
+    if (var instanceof Grid)
+      producer = new HDFChunkProducer ((Grid) var);
+    else
+      throw new IOException ("Chunk producer not available for variable " + name);
+
+    return (producer);
+
+  } // getChunkProducer
 
   ////////////////////////////////////////////////////////////
 

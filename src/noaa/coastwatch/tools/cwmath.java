@@ -625,14 +625,14 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  * <h2>Exit status</h2>
  * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Invalid input or output file names. </li>
- *   <li> Unsupported input file format. </li>
- *   <li> Invalid mathematical expression. </li>
- *   <li> Output variable already exists in input file. </li>
- *   <li> Invalid scale or size specified. </li>
- *   <li> Unsupported variable rank detected. </li>
- *   <li> Invalid expression variable name. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Invalid input or output file names </li>
+ *   <li> Unsupported input file format </li>
+ *   <li> Invalid mathematical expression </li>
+ *   <li> Output variable already exists in input file </li>
+ *   <li> Invalid scale or size specified </li>
+ *   <li> Unsupported variable rank detected </li>
+ *   <li> Invalid expression variable name </li>
  * </ul>
  *
  * <h2>Examples</h2>
@@ -642,30 +642,28 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  * <pre>
  *   phollema$ cwmath -v --units "percent" --longname "AVHRR channel 2 corrected"
  *     --expr "avhrr_ch2_corr = avhrr_ch2/cos(sun_zenith*pi/180)" 
- *     2003_104_1513_n17_er.hdf
+ *     2019_015_2121_n19_er.hdf
  *
- *   cwmath: Reading input 2003_104_1513_n17_er.hdf
- *   cwmath: Creating avhrr_ch2_corr variable
- *   cwmath: Computing row 0
- *   cwmath: Computing row 100
- *   cwmath: Computing row 200
- *   cwmath: Computing row 300
- *   ...
+ *   [INFO] Opening input/output 2019_015_2121_n19_er.hdf
+ *   [INFO] Using expression '(avhrr_ch2 / cos ((sun_zenith * PI) / 180))'
+ *   [INFO] Creating avhrr_ch2_corr variable
+ *   [INFO] Total grid size is 1401x1302
+ *   [INFO] Found 8 processor(s) to use
+ *   [INFO] Processing 9 data chunks of size 512x512
  * </pre>
  * <p>Another example below shows the computation of Normalized
  * Difference Vegetation Index (NDVI):</p>
  * <pre>
  *   phollema$ cwmath -v --longname "Normalized Difference Vegetation Index"
  *     --expr "ndvi = (avhrr_ch2 - avhrr_ch1)/(avhrr_ch2 + avhrr_ch1)" 
- *     2003_104_1513_n17_er.hdf
+ *     2019_015_2121_n19_er.hdf
  *
- *   cwmath: Reading input 2003_104_1513_n17_er.hdf
- *   cwmath: Creating ndvi variable
- *   cwmath: Computing row 0
- *   cwmath: Computing row 100
- *   cwmath: Computing row 200
- *   cwmath: Computing row 300
- *   ...
+ *   [INFO] Opening input/output 2019_015_2121_n19_er.hdf
+ *   [INFO] Using expression '((avhrr_ch2 - avhrr_ch1) / (avhrr_ch2 + avhrr_ch1))'
+ *   [INFO] Creating ndvi variable
+ *   [INFO] Total grid size is 1401x1302
+ *   [INFO] Found 8 processor(s) to use
+ *   [INFO] Processing 9 data chunks of size 512x512
  * </pre>
  * <p>In order to demonstrate the use of the 'mask' function, the example
  * below shows the masking of the 'sst' variable using the 'cloud'
@@ -678,15 +676,14 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  * <pre>
  *   phollema$ cwmath -v --template sst 
  *     --expr 'sst_masked = mask (sst, cloud, hex ("0x6f"))'
- *     2003_104_1513_n17_er.hdf
+ *     2019_015_2121_n19_er.hdf
  *
- *   cwmath: Reading input 2003_104_1513_n17_er.hdf
- *   cwmath: Creating sst_masked variable
- *   cwmath: Computing row 0
- *   cwmath: Computing row 100
- *   cwmath: Computing row 200
- *   cwmath: Computing row 300
- *   ...
+ *   [INFO] Opening input/output 2019_015_2121_n19_er.hdf
+ *   [INFO] Using expression '((((long)cloud & (long) (0x6f)) == 0) ? sst : NaN)'
+ *   [INFO] Creating sst_masked variable
+ *   [INFO] Total grid size is 1401x1302
+ *   [INFO] Found 8 processor(s) to use
+ *   [INFO] Processing 9 data chunks of size 512x512
  * </pre>
  * <p>A final example below shows how the tool may be used to compute
  * complex formulas using a Unix Bourne shell script.  The example
@@ -1352,7 +1349,7 @@ public final class cwmath {
       // Create chunk computation
       // ------------------------
       ChunkComputation op = new ChunkComputation (collector, consumer, function);
-      //op.setIsTracked (true); // testing
+      //op.setTracked (true); // testing
       List<ChunkPosition> positions = new ArrayList<>();
       scheme.forEach (positions::add);
 

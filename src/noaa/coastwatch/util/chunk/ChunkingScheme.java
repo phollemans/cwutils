@@ -27,6 +27,7 @@ package noaa.coastwatch.util.chunk;
 // --------
 import java.util.NoSuchElementException;
 import java.util.Iterator;
+import java.util.Arrays;
 import noaa.coastwatch.util.chunk.ChunkPosition;
 
 /**
@@ -87,6 +88,35 @@ public class ChunkingScheme implements Iterable<ChunkPosition> {
       totalChunks *= chunkCounts[i];
 
   } // ChunkingScheme constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Determines if a chunk position is native to this chunking scheme.
+   *
+   * @param pos the position to check.
+   *
+   * @return true if the position is one in this chunking scheme or
+   * false if not.
+   *
+   * @since 3.5.0
+   */
+  public boolean isNativePosition (
+    ChunkPosition pos
+  ) {
+
+    boolean isNative;
+    
+    if (pos.start.length != dims.length || pos.length.length != dims.length)
+      isNative = false;
+    else {
+      ChunkPosition testPos = getPosition (pos.start);
+      isNative = Arrays.equals (pos.start, testPos.start) && Arrays.equals (pos.length, testPos.length);
+    } // else
+
+    return (isNative);
+
+  } // isNativePosition
 
   ////////////////////////////////////////////////////////////
 

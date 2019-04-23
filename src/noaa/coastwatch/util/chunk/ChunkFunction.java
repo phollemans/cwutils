@@ -45,7 +45,8 @@ public interface ChunkFunction {
    *
    * @param inputChunks the list of chunks as input to the function.
    *
-   * @return the output chunk of the function.
+   * @return the output chunk of the function, or null if no valid output
+   * chunk could be computed.
    */
   public DataChunk apply (List<DataChunk> inputChunks);
 

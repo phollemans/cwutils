@@ -46,6 +46,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import noaa.coastwatch.io.NCReader;
+import noaa.coastwatch.io.tile.TileSource;
+import noaa.coastwatch.io.tile.TilingScheme;
+import noaa.coastwatch.io.tile.TilingScheme.Tile;
+import noaa.coastwatch.io.tile.TilingScheme.TilePosition;
 import noaa.coastwatch.io.tile.NCTileSource;
 import noaa.coastwatch.io.tile.TileCachedGrid;
 import noaa.coastwatch.util.DataVariable;
@@ -63,6 +67,15 @@ import noaa.coastwatch.util.trans.GeoVectorProjection;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
 import noaa.coastwatch.util.trans.SwathProjection;
 import noaa.coastwatch.util.trans.EllipsoidPerspectiveProjection;
+
+import noaa.coastwatch.util.chunk.DataChunk;
+import noaa.coastwatch.util.chunk.ChunkPosition;
+import noaa.coastwatch.util.chunk.ChunkProducer;
+import noaa.coastwatch.util.chunk.GridChunkProducer;
+import noaa.coastwatch.util.chunk.DataChunkFactory;
+
+import static noaa.coastwatch.util.Grid.ROW;
+import static noaa.coastwatch.util.Grid.COL;
 
 import ucar.ma2.DataType;
 import ucar.ma2.InvalidRangeException;
@@ -1151,6 +1164,80 @@ utilities when:
 
   ////////////////////////////////////////////////////////////
 
+  /** Produces data chunks directly from this reader. */
+  private class NCChunkProducer extends GridChunkProducer {
+  
+    private TileSource source;
+  
+    public NCChunkProducer (TileCachedGrid grid) {
+
+      super (grid);
+      source = grid.getSource();
+
+    } // NCChunkProducer
+
+    public DataChunk getChunk (ChunkPosition pos) {
+
+      DataChunk chunk;
+
+      // Get a non-native chunk
+      // ----------------------
+      if (!scheme.isNativePosition (pos)) {
+        chunk = super.getChunk (pos);
+      } // if
+
+      // Get a native chunk
+      // ------------------
+      else {
+
+        try {
+
+          // Read tile
+          // ---------
+          TilePosition tilePos = source.getScheme().createTilePosition (pos.start[ROW], pos.start[COL]);
+          Tile tile = source.readTile (tilePos);
+
+          LOGGER.fine ("Got chunk for " + grid.getName() + " at pos " + pos + " in file " +
+            "0x" + Integer.toHexString (dataset.hashCode()));
+
+          // Create chunk using tile data
+          // ----------------------------
+          chunk = DataChunkFactory.getInstance().create (tile.getData(),
+            grid.getUnsigned(), grid.getMissing(), packing);
+
+        } // try
+        catch (IOException e) { throw new RuntimeException (e); }
+
+      } // else
+
+      return (chunk);
+
+    } // getChunk
+
+  } // NCChunkProducer
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public ChunkProducer getChunkProducer (
+    String name
+  ) throws IOException {
+
+    ChunkProducer producer;
+
+    DataVariable var = getVariable (name);
+    if (var instanceof TileCachedGrid)
+      producer = new NCChunkProducer ((TileCachedGrid) var);
+    else
+      throw new IOException ("Chunk producer not available for variable " + name);
+
+    return (producer);
+
+  } // getChunkProducer
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
   protected DataVariable getActualVariable (
     int index
   ) throws IOException {

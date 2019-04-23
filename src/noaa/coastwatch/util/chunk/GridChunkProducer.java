@@ -48,13 +48,16 @@ public class GridChunkProducer implements ChunkProducer {
   // ---------
 
   /** The grid to use as a source of data. */
-  private Grid grid;
+//  private Grid grid;
+  protected Grid grid;
 
   /** The packing scheme for new chunks. */
-  private PackingScheme packing;
-  
+//  private PackingScheme packing;
+  protected PackingScheme packing;
+
   /** The chunking scheme used or null for none. */
-  private ChunkingScheme scheme;
+//  private ChunkingScheme scheme;
+  protected ChunkingScheme scheme;
 
   /** The prototype chunk produced. */
   private DataChunk protoChunk;
@@ -122,11 +125,9 @@ public class GridChunkProducer implements ChunkProducer {
   @Override
   public DataChunk getChunk (ChunkPosition pos) {
 
-    int[] start = new int[] {(int) pos.start[0], (int) pos.start[1]};
-    int[] length = new int[] {(int) pos.length[0], (int) pos.length[1]};
     Object data;
     synchronized (grid) {
-      data = grid.getData (start, length);
+      data = grid.getData (pos.start, pos.length);
     } // synchronized
     DataChunk chunk = DataChunkFactory.getInstance().create (data,
       grid.getUnsigned(), grid.getMissing(), packing);

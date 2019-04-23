@@ -268,10 +268,10 @@ import noaa.coastwatch.util.trans.SpheroidConstants;
  * <h2>Exit status</h2>
  * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Unrecognized color name. </li>
- *   <li> Invalid map center or station location. </li>
- *   <li> Mismatch between label and file or station count. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Unrecognized color name </li>
+ *   <li> Invalid map center or station location </li>
+ *   <li> Mismatch between label and file or station count </li>
  * </ul>
  *
  * <h2>Examples</h2>

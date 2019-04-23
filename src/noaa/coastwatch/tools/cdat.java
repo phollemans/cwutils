@@ -170,8 +170,8 @@ import noaa.coastwatch.gui.ScriptConsole;
  *
  * <p>0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Invalid input file name. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Invalid input file name </li>
  * </ul>
  *
  * <h2>Examples</h2>

@@ -179,9 +179,9 @@ import ucar.nc2.units.DateUnit;
  * <h2>Exit status</h2>
  * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Invalid input file name. </li>
- *   <li> Unsupported input file format. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Invalid input file name </li>
+ *   <li> Unsupported input file format </li>
  * </ul>
  *
  * <h2>Examples</h2>

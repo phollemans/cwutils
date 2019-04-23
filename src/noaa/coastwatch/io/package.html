@@ -23,18 +23,14 @@ table, th, td, tr {border: 1px solid black; border-collapse:collapse;}
 </head>
 <body bgcolor="white">
 
-<p>Provides classes for reading and writing satellite data in a variety
-of formats.</p>
+<p>Provides classes for reading and writing earth data in a variety of formats.</p>
 
-<p>The basis of all satellite data input functionality in the CW
-software library is the {@link noaa.coastwatch.io.EarthDataReader}
+<p>The basis of all earth data reading functionality in the software
+is the {@link noaa.coastwatch.io.EarthDataReader}
 class and subclasses.  The reader classes provide generic methods for
-reading metadata and data variables one at a time from CoastWatch HDF
-files ({@link noaa.coastwatch.io.CWHDFReader}).  Also supported are
-TeraScan HDF files ({@link noaa.coastwatch.io.TSHDFReader}) which have
-a similar format to CoastWatch HDF but with different earth location
-metadata.  To open a new file of unknown format, the {@link
-noaa.coastwatch.io.EarthDataReaderFactory} attempts to guess the
+reading metadata and data variables one at a time from HDF, NetCDF, and NOAA 1b
+files.  To open a new file of unknown format, use the {@link
+noaa.coastwatch.io.EarthDataReaderFactory}, which attempts to guess the
 file format and provide an <code>EarthDataReader</code> object.</p>
 
 <p>The reader classes can be grouped by format and capabilities as follows:</p>
@@ -57,11 +53,12 @@ file format and provide an <code>EarthDataReader</code> object.</p>
 <tr>
 <td>CommonDataModelNCReader</td>
 <td>CF-1.4</td>
-<td>Equally spaced lat/lon geographic projection; all variables must have the
-same CDM grid coordinates</td>
-<td>None</td>
+<td>Grid mapped projections supported by the Java NetCDF library, also
+lat/lon projections with explicitly specified points.</td>
+<td>Per-variable tile caching</td>
 </tr>
 
+<!--
 <tr>
 <td>ACSPONCReader</td>
 <td>ACSPO-specific</td>
@@ -75,6 +72,8 @@ same CDM grid coordinates</td>
 <td>Satellite swath</td>
 <td>None</td>
 </tr>
+
+-->
 
 <tr>
 <td>CWNCReader</td>
@@ -94,12 +93,16 @@ same CDM grid coordinates</td>
 <td colspan="4">HDF 4 Format (HDFReader subclasses)</td>
 </tr>
 
+<!--
+
 <tr>
 <td>ACSPOHDFReader</td>
 <td>ACSPO-specific</td>
 <td>Satellite swath with null lat/lon data detection</td>
 <td>Per-variable tile caching</td>
 </tr>
+
+-->
 
 <tr>
 <td>CWHDFReader</td>
@@ -115,6 +118,8 @@ same CDM grid coordinates</td>
 <td>Per-variable tile caching</td>
 </tr>
 
+<!--
+
 <tr style="background-color:rgb(222,227,234); font-weight:bold;">
 <td colspan="4">OPeNDAP (OpendapReader subclasses)</td>
 </tr>
@@ -125,6 +130,8 @@ same CDM grid coordinates</td>
 <td>Map projection (GCTP)</td>
 <td>None</td>
 </tr>
+
+-->
 
 <tr style="background-color:rgb(222,227,234); font-weight:bold;">
 <td colspan="4">NOAA 1b AVHRR (NOAA1bReader subclasses)</td>

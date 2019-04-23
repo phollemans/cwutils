@@ -33,18 +33,21 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.Statistics;
+import noaa.coastwatch.util.chunk.ChunkProducer;
+import noaa.coastwatch.util.chunk.GridChunkProducer;
 import ucar.nc2.dataset.CoordinateSystem;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
 /**
- * All earth data readers obtain earth data from a data source and
- * provide it to the user in a consistent format.  An earth data reader
+ * An <code>EarthDataReader</code> obtains earth data from a data source and
+ * provides it to the user in a consistent format.  A reader
  * should do the following:
  * <ul>
  *   <li> Construct from some type of file or data stream </li>
@@ -60,7 +63,7 @@ import java.util.logging.Level;
  * The only methods that child classes must implement are:
  * <ul>
  *   <li>{@link #getDataFormat}</li>
- *   <li>{@link #getPreview(int)}</li>
+ *   <li>{@link #getPreviewImpl(int)}</li>
  *   <li>{@link #getVariable(int)}</li>
  *   <li>{@link #close}</li>
  * </ul>
@@ -269,6 +272,25 @@ public abstract class EarthDataReader {
   ////////////////////////////////////////////////////////////
 
   /**
+   * Determines if a variable exists in the reader.
+   *
+   * @param name the variable name to search for.
+   *
+   * @return true if the variable exists or false if not.
+   *
+   * @since 3.5.0
+   */
+  public boolean containsVariable (
+    String name
+  ) {
+  
+    return (getIndex (name) != -1);
+  
+  } // containsVariable
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Retrieves a variable index based on the name.
    * 
    * @param name the variable name to search for.
@@ -338,6 +360,35 @@ public abstract class EarthDataReader {
   protected abstract DataVariable getPreviewImpl (
     int index
   ) throws IOException;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a chunk producer for the specified variable.
+   *
+   * @param name the variable name.
+   *
+   * @return a chunk producer for the specified variable.
+   *
+   * @since 3.5.0
+   */
+  public ChunkProducer getChunkProducer (
+    String name
+  ) throws IOException {
+
+    ChunkProducer producer;
+
+    DataVariable var = getPreview (name);
+    if (var instanceof Grid) {
+      producer = new GridChunkProducer ((Grid) getVariable (name));
+    } // if
+    else {
+      throw new IOException ("Chunk producer not available for variable " + name);
+    } // else
+  
+    return (producer);
+  
+  } // getChunkProducer
 
   ////////////////////////////////////////////////////////////
 

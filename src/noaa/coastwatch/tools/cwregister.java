@@ -243,9 +243,9 @@ import java.util.logging.Level;
  * <h2>Exit status</h2>
  * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Invalid master, input or output file names. </li>
- *   <li> Unsupported master or input file format. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Invalid master, input or output file names </li>
+ *   <li> Unsupported master or input file format </li>
  * </ul>
  *
  * <h2>Examples</h2>

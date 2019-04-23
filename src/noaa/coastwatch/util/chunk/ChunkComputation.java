@@ -28,6 +28,7 @@ package noaa.coastwatch.util.chunk;
 import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.logging.Logger;
 
 import noaa.coastwatch.util.chunk.DataChunk;
 import noaa.coastwatch.util.chunk.ChunkOperation;
@@ -49,6 +50,8 @@ import noaa.coastwatch.test.TimeAccumulator;
  * @since 3.4.0
  */
 public class ChunkComputation implements ChunkOperation {
+
+  private static final Logger LOGGER = Logger.getLogger (ChunkComputation.class.getName());
 
   /** The collector used as a source of chunks. */
   private ChunkCollector collector;
@@ -101,7 +104,7 @@ public class ChunkComputation implements ChunkOperation {
    * and collector/consumer times or false to not. By default the
    * computation timing is not tracked.
    */
-  public void setIsTracked (
+  public void setTracked (
     boolean isTracked
   ) {
 
@@ -112,7 +115,7 @@ public class ChunkComputation implements ChunkOperation {
       consumerTime = new TimeAccumulator();
     } // if
 
-  } // isTracked
+  } // setTracked
   
   ////////////////////////////////////////////////////////////
 
@@ -151,19 +154,23 @@ public class ChunkComputation implements ChunkOperation {
       acc.end();
       functionTime.add (acc);
 
-      acc.reset();
-      acc.start();
-      consumer.putChunk (pos, result);
-      acc.end();
-      consumerTime.add (acc);
+      if (result != null) {
+        acc.reset();
+        acc.start();
+        consumer.putChunk (pos, result);
+        acc.end();
+        consumerTime.add (acc);
+      } // if
 
     } // if
 
     else {
       List<DataChunk> chunks = collector.getChunks (pos);
       DataChunk result = function.apply (chunks);
-      consumer.putChunk (pos, result);
+      if (result != null) consumer.putChunk (pos, result);
     } // else
+
+    LOGGER.fine ("Finished computation at pos = " + pos);
 
   } // perform
 

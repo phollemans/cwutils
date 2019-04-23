@@ -199,9 +199,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * <h2>Exit status</h2>
  * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Invalid input or output file names. </li>
- *   <li> Invalid sample coordinates file format. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Invalid input or output file names </li>
+ *   <li> Invalid sample coordinates file format </li>
  * </ul>
  *
  * <h2>Examples</h2>

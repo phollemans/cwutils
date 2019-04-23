@@ -86,6 +86,7 @@ public class ACSPOInverseGridResampler
 	  
 	    super (sourceTrans, destTrans);
 	    this.polySize = polySize;
+      
 	  } // ACSPOInverseGridResampler constructor
 	  
 	  ////////////////////////////////////////////////////////////

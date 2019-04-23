@@ -12,21 +12,41 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.5.0 -- ??? 2019}
+\section{Version 3.5.0 -- April 2019}
 
 \subsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
 
-  \item The Java VM on all supported platforms has been upgraded to Java 11
+  \item The Java VMs on all supported platforms have been upgraded to Java 11
   using Oracle OpenJDK 11.0.1, and source code migrated accordingly.
 
   \item The NOAA 1b format AVHRR reading has been updated to handle Metop-3
   files.
 
+  \item Some of the command line and GUI tools have started to be migrated to
+  use a more flexible and standardized event logging system.  The migration
+  will be complete in the next version.
 
+  \item A new tool called cwregister2 is now available to perform fast
+  multithreaded registration with special handling for terrain-corrected data.
 
+  \item Various code modules are being migrated and refactored towards
+  being able to run some of the command line tools from CDAT, based on
+  user requests.
 
+  \item The cwcomposite tool has been completely re-written to process data
+  much more quickly using a multithreaded design.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+  \item The composite tool exited with an error when attempting to combine
+  NetCDF datasets with cylindrical map projections that were not equally
+  spaced, and geostationary satellite projections.  These have been fixed and
+  it now runs correctly.
 
 \end{itemize}
 

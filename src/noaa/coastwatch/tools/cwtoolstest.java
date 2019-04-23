@@ -164,8 +164,10 @@ public class cwtoolstest {
       sysOut.println (runTest ("cwmath", true, new String[] {}));
       sysOut.println (runTest ("cwnavigate", true, new String[] {}));
       sysOut.println (runTest ("cwregister", true, new String[] {}));
+      sysOut.println (runTest ("cwregister2", true, new String[] {}));
       sysOut.println (runTest ("cwrender", true, new String[] {}));
       sysOut.println (runTest ("cwsample", true, new String[] {}));
+      sysOut.println (runTest ("cwscript", true, new String[] {}));
       sysOut.println (runTest ("cwstats", true, new String[] {}));
       sysOut.println (runTest ("hdatt", true, new String[] {}));
 
@@ -208,6 +210,7 @@ public class cwtoolstest {
       // Run download tests
       // ------------------
       sysOut.println (runTest ("cwdownload", false, new String[] {
+        "--ssl",
         "--satellite", "noaa-16", 
         "--scenetime", "day", 
         "--test", 

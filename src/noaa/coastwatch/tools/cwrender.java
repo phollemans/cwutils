@@ -944,13 +944,13 @@ import ucar.units.Unit;
  *
  * <p>0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Invalid input or output file names. </li>
- *   <li> Invalid variable name. </li>
- *   <li> Unrecognized format. </li>
- *   <li> Unrecognized color name. </li>
- *   <li> Invalid palette name. </li>
- *   <li> Invalid magnification center. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Invalid input or output file names </li>
+ *   <li> Invalid variable name </li>
+ *   <li> Unrecognized format </li>
+ *   <li> Unrecognized color name </li>
+ *   <li> Invalid palette name </li>
+ *   <li> Invalid magnification center </li>
  * </ul>
  *
  * <h2>Examples</h2>

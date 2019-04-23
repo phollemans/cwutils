@@ -220,10 +220,10 @@ import noaa.coastwatch.tools.ToolServices;
  * <h2>Exit status</h2>
  * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Cannot contact data server. </li>
- *   <li> Invalid or write-protected download directory. </li>
- *   <li> Error transferring data file. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Cannot contact data server </li>
+ *   <li> Invalid or write-protected download directory </li>
+ *   <li> Error transferring data file </li>
  * </ul>
  *
  * <h2>Examples</h2>

@@ -70,6 +70,17 @@ public class TileCachedGrid
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Get the tile source used by this grid.
+   *
+   * @return the tile source.
+   *
+   * @since 3.5.0
+   */
+  public TileSource getSource() { return (source); }
+
+  ////////////////////////////////////////////////////////////
+
   @Override
   public TilingScheme getTilingScheme () {
   

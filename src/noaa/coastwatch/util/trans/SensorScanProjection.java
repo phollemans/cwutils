@@ -23,6 +23,10 @@
 // -------
 package noaa.coastwatch.util.trans;
 
+// Includes
+// --------
+import java.util.Arrays;
+
 /**
  * The <code>SensorScanProjection</code> is used to provide Earth
  * transform calculations for various types of satellite sensors that
@@ -45,6 +49,34 @@ public abstract class SensorScanProjection
 
   /** The sensor scan parameters. */
   protected double[] parameters;
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean equals (
+    Object o
+  ) {
+
+    boolean isEqual;
+
+    // Check object class
+    // ------------------
+    if (!(o instanceof SensorScanProjection))
+      isEqual = false;
+
+    // Check parameters and dimensions
+    // -------------------------------
+    else {
+      SensorScanProjection proj = (SensorScanProjection) o;
+      isEqual = (
+        Arrays.equals (this.parameters, proj.parameters) &&
+        Arrays.equals (this.dims, proj.dims)
+      );
+    } // else
+    
+    return (isEqual);
+
+  } // equals
 
   ////////////////////////////////////////////////////////////
 

@@ -147,7 +147,7 @@ public class ToolServices {
     LOGGER.fine ("Finished execution of " + name);
     long startTime = startTimeMap.get (name);
     long elapsedMillis = System.currentTimeMillis() - startTime;
-    LOGGER.fine ("Elapsed time = " + (elapsedMillis*1e-3) + " s");
+    LOGGER.fine (String.format ("Elapsed time = %.3f s", elapsedMillis*1e-3));;
 
     startTimeMap.remove (name);
 

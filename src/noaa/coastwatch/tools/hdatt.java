@@ -189,12 +189,12 @@ import noaa.coastwatch.util.MetadataServices;
  *
  * <p>0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Invalid input or output file names. </li>
- *   <li> Invalid variable name. </li>
- *   <li> Invalid attribute name in read mode. </li>
- *   <li> Invalid attribute type in write mode. </li>
- *   <li> Value does not convert to the specified attribute data type. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Invalid input or output file names </li>
+ *   <li> Invalid variable name </li>
+ *   <li> Invalid attribute name in read mode </li>
+ *   <li> Invalid attribute type in write mode </li>
+ *   <li> Value does not convert to the specified attribute data type </li>
  * </ul>
  *
  * <h2>Examples</h2>

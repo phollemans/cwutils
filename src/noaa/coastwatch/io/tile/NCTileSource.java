@@ -128,6 +128,7 @@ public class NCTileSource
     var = file.findVariable (varName);
     if (var == null)
       throw new IOException ("Cannot access variable " + varName);
+    var.setCaching (false);
 
     // Create scheme dimensions
     // ------------------------

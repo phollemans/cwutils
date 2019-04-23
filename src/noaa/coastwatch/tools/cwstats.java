@@ -93,13 +93,13 @@ import noaa.coastwatch.util.trans.Datum;
  * <p> The statistics utility calculates a number of
  * statistics for each variable in an earth data file:</p>
  * <ul>
- *   <li> Count - the count of total data values sampled. </li>
- *   <li> Valid - the number of valid (not missing) data values. </li>
- *   <li> Min - the minimum data value. </li>
- *   <li> Max - the maximum data value. </li>
- *   <li> Mean - the average data value. </li>
- *   <li> Stdev - the standard deviation from the mean. </li>
- *   <li> Median - the median data value. </li>
+ *   <li> Count - the count of total data values sampled </li>
+ *   <li> Valid - the number of valid (not missing) data values </li>
+ *   <li> Min - the minimum data value </li>
+ *   <li> Max - the maximum data value </li>
+ *   <li> Mean - the average data value </li>
+ *   <li> Stdev - the standard deviation from the mean </li>
+ *   <li> Median - the median data value </li>
  * </ul> 
  * <p>To speed up the statistics calculations, a subset of the data values
  * in each variable may be specified using either the <b>--stride</b>
@@ -181,10 +181,10 @@ import noaa.coastwatch.util.trans.Datum;
  * <h2>Exit status</h2>
  * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Invalid input file name. </li>
- *   <li> Unsupported input file format. </li>
- *   <li> Error reading input data values. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Invalid input file name </li>
+ *   <li> Unsupported input file format </li>
+ *   <li> Error reading input data values </li>
  * </ul>
  *
  * <h2>Examples</h2>

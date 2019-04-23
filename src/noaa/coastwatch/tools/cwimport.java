@@ -134,10 +134,10 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * <h2>Exit status</h2>
  * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Invalid input or output file names. </li>
- *   <li> Unsupported input file format. </li>
- *   <li> Input file dates or earth transforms do not match. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Invalid input or output file names </li>
+ *   <li> Unsupported input file format </li>
+ *   <li> Input file dates or earth transforms do not match </li>
  * </ul>
  *
  * <h2>Examples</h2>

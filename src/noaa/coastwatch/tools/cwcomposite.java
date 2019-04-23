@@ -39,10 +39,19 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.stream.Collectors;
+
 import noaa.coastwatch.io.CWHDFWriter;
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.io.CachedGrid;
 import noaa.coastwatch.io.HDFCachedGrid;
+import noaa.coastwatch.io.tile.TilingScheme;
+
 import noaa.coastwatch.tools.CleanupHook;
 import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.DataLocation;
@@ -50,6 +59,29 @@ import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.ArrayReduction;
+import noaa.coastwatch.util.MinReduction;
+import noaa.coastwatch.util.MaxReduction;
+import noaa.coastwatch.util.MeanReduction;
+import noaa.coastwatch.util.GeoMeanReduction;
+import noaa.coastwatch.util.MedianReduction;
+import noaa.coastwatch.util.LastReduction;
+
+import noaa.coastwatch.util.chunk.DataChunk;
+import noaa.coastwatch.util.chunk.ChunkCollector;
+import noaa.coastwatch.util.chunk.ChunkProducer;
+import noaa.coastwatch.util.chunk.ChunkConsumer;
+import noaa.coastwatch.util.chunk.GridChunkProducer;
+import noaa.coastwatch.util.chunk.GridChunkConsumer;
+import noaa.coastwatch.util.chunk.ChunkingScheme;
+import noaa.coastwatch.util.chunk.ChunkComputation;
+import noaa.coastwatch.util.chunk.ChunkPosition;
+import noaa.coastwatch.util.chunk.ChunkFunction;
+import noaa.coastwatch.util.chunk.PoolProcessor;
+import noaa.coastwatch.util.chunk.CompositeFunction;
+
+import static noaa.coastwatch.util.Grid.ROW;
+import static noaa.coastwatch.util.Grid.COL;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -80,6 +112,7 @@ import java.util.logging.Level;
  * -m, --match=PATTERN <br>
  * -M, --method=TYPE <br>
  * -p, --pedantic <br>
+ * --serial <br>
  * -v, --verbose <br>
  * -V, --valid=COUNT <br>
  * --version <br>
@@ -194,6 +227,11 @@ import java.util.logging.Level;
  *   only unique values appear.  By default, pedantic mode is
  *   off.</dd>
  *
+ *   <dt>--serial</dt>
+ *
+ *   <dd>Turns on serial processing mode.  By default the program will
+ *   use multiple processors in parallel to process chunks of data.</dd>
+ *
  *   <dt>-v, --verbose</dt>
  *
  *   <dd>Turns verbose mode on.  The current status of data
@@ -216,34 +254,52 @@ import java.util.logging.Level;
  * <h2>Exit status</h2>
  * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
- *   <li> Invalid input or output file names. </li>
- *   <li> Unsupported input file format. </li>
- *   <li> Input file earth transforms do not match. </li>
- *   <li> No matching variables found. </li>
- *   <li> Unsupported composite method. </li>
+ *   <li> Invalid command line option </li>
+ *   <li> Invalid input or output file names </li>
+ *   <li> Unsupported input file format </li>
+ *   <li> Input file earth transforms do not match </li>
+ *   <li> No matching variables found </li>
+ *   <li> Unsupported composite method </li>
  * </ul>
  *
  * <h2>Examples</h2>
- * <p> The following shows the combination of several earth
- * datasets into one using the 'latest' composite method:</p>
+ * <p> The following shows the combination of 24 hours of Himawari-8 NetCDF
+ * SST data files into one median composite file, using a maximum
+ * heap size of 8 Gb and at least 5 valid pixels per median calculation:</p>
  * <pre>
- *   phollema$ cwcomposite -v --method latest 2003_097_1428_n17_wi_na.hdf
- *     2003_097_1607_n17_wi_na.hdf 2003_097_1751_n17_mo_na.hdf
- *     2003_097_1931_n17_mo_na.hdf 2003_097_n17_na.hdf
- *
- *  [INFO] Reading input 2003_097_1428_n17_wi_na.hdf
- *  [INFO] Adding avhrr_ch1 to composite variables
- *  [INFO] Adding avhrr_ch2 to composite variables
- *  [INFO] Adding avhrr_ch4 to composite variables
- *  [INFO] Reading input 2003_097_1607_n17_wi_na.hdf
- *  [INFO] Reading input 2003_097_1751_n17_mo_na.hdf
- *  [INFO] Reading input 2003_097_1931_n17_mo_na.hdf
- *  [INFO] Creating output 2003_097_n17_na.hdf
- *  [INFO] Writing avhrr_ch1
- *  [INFO] Writing avhrr_ch2
- *  [INFO] Writing avhrr_ch4
- * </pre>
+ *   phollema$ cwcomposite -J-Xmx8g -v --method median --valid=5
+ *     --match sea_surface_temperature 2019*.nc composite.hdf
+ *   [INFO] Checking input file information
+ *   [INFO] Checking input file [1/24] 20190410000000-AHI_H08.nc
+ *   [INFO] Adding sea_surface_temperature to composite output variables
+ *   [INFO] Checking input file [2/24] 20190410010000-AHI_H08.nc
+ *   [INFO] Checking input file [3/24] 20190410020000-AHI_H08.nc
+ *   [INFO] Checking input file [4/24] 20190410030000-AHI_H08.nc
+ *   [INFO] Checking input file [5/24] 20190410040000-AHI_H08.nc
+ *   [INFO] Checking input file [6/24] 20190410050000-AHI_H08.nc
+ *   [INFO] Checking input file [7/24] 20190410060000-AHI_H08.nc
+ *   [INFO] Checking input file [8/24] 20190410070000-AHI_H08.nc
+ *   [INFO] Checking input file [9/24] 20190410080000-AHI_H08.nc
+ *   [INFO] Checking input file [10/24] 20190410090000-AHI_H08.nc
+ *   [INFO] Checking input file [11/24] 20190410100000-AHI_H08.nc
+ *   [INFO] Checking input file [12/24] 20190410110000-AHI_H08.nc
+ *   [INFO] Checking input file [13/24] 20190410120000-AHI_H08.nc
+ *   [INFO] Checking input file [14/24] 20190410130000-AHI_H08.nc
+ *   [INFO] Checking input file [15/24] 20190410140000-AHI_H08.nc
+ *   [INFO] Checking input file [16/24] 20190410150000-AHI_H08.nc
+ *   [INFO] Checking input file [17/24] 20190410160000-AHI_H08.nc
+ *   [INFO] Checking input file [18/24] 20190410170000-AHI_H08.nc
+ *   [INFO] Checking input file [19/24] 20190410180000-AHI_H08.nc
+ *   [INFO] Checking input file [20/24] 20190410190000-AHI_H08.nc
+ *   [INFO] Checking input file [21/24] 20190410200000-AHI_H08.nc
+ *   [INFO] Checking input file [22/24] 20190410210000-AHI_H08.nc
+ *   [INFO] Checking input file [23/24] 20190410220000-AHI_H08.nc
+ *   [INFO] Checking input file [24/24] 20190410230000-AHI_H08.nc
+ *   [INFO] Creating output file composite.hdf
+ *   [INFO] Total grid size is 5500x5500
+ *   [INFO] Found 8 processor(s) to use
+ *   [INFO] Creating sea_surface_temperature variable with chunk size 1834x1834
+  * </pre>
  *
  * <!-- END MAN PAGE -->
  *
@@ -284,6 +340,7 @@ public final class cwcomposite {
     Option pedanticOpt = cmd.addBooleanOption ('p', "pedantic");
     Option inputsOpt = cmd.addStringOption ('i', "inputs");
     Option coherentOpt = cmd.addStringOption ('c', "coherent");
+    Option serialOpt = cmd.addBooleanOption ("serial");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -311,41 +368,49 @@ public final class cwcomposite {
 
     // Get remaining arguments
     // -----------------------
-    String[] remain = cmd.getRemainingArgs();
-    if (remain.length < NARGS) {
+    String[] remainingArgs = cmd.getRemainingArgs();
+    if (remainingArgs.length < NARGS) {
       LOGGER.warning ("At least " + NARGS + " argument(s) required");
       usage();
       ToolServices.exitWithCode (1);
       return;
     } // if
-    String output = remain[remain.length-1];
+    String output = remainingArgs[remainingArgs.length-1];
 
     // Set defaults
     // ------------
-    boolean verbose = (cmd.getOptionValue (verboseOpt) != null);
-    if (verbose) VERBOSE.setLevel (Level.INFO);
+    boolean verbosePrinting = (cmd.getOptionValue (verboseOpt) != null);
+    if (verbosePrinting) VERBOSE.setLevel (Level.INFO);
     String match = (String) cmd.getOptionValue (matchOpt);
     String method = (String) cmd.getOptionValue (methodOpt);
     if (method == null) method = "mean";
     Integer validObj = (Integer) cmd.getOptionValue (validOpt);
-    int valid = (validObj == null? 1 : validObj.intValue());
-    boolean pedantic = (cmd.getOptionValue (pedanticOpt) != null);
+    int minValid = (validObj == null ? 1 : validObj.intValue());
+    boolean pedanticOutput = (cmd.getOptionValue (pedanticOpt) != null);
     String inputs = (String) cmd.getOptionValue (inputsOpt);
-    String coherent = (String) cmd.getOptionValue (coherentOpt);
+    String coherentOutput = (String) cmd.getOptionValue (coherentOpt);
+    boolean serialOperations = (cmd.getOptionValue (serialOpt) != null);
 
     // Check for coherent mode
     // -----------------------
-    if (coherent != null && !(method.equals ("latest") || method.equals("explicit"))) {
+/*
+    if (coherentOutput != null && !(method.equals ("latest") || method.equals ("explicit"))) {
       LOGGER.severe ("Coherent mode can only be used with --method latest or --method explicit");
       ToolServices.exitWithCode (2);
       return;
     } // if
+*/
+    if (coherentOutput != null) {
+      LOGGER.severe ("Coherent mode is temporarily disabled in this version");
+      ToolServices.exitWithCode (2);
+      return;
+    } // if
 
-    // Read inputs from file
-    // ---------------------
-    String[] input;
+    // Read input filenames from file
+    // ------------------------------
+    List<String> inputFileList;
     if (inputs != null) {
-      List fileNameList = new ArrayList();
+      inputFileList = new ArrayList<>();
       try {
         BufferedReader reader;
         if (inputs.equals ("-"))
@@ -354,7 +419,7 @@ public final class cwcomposite {
           reader = new BufferedReader (new FileReader (inputs));
         while (reader.ready()) {
           String fileName = reader.readLine().trim();
-          fileNameList.add (fileName);
+          inputFileList.add (fileName);
         } // while
         reader.close();
       } // try
@@ -363,19 +428,17 @@ public final class cwcomposite {
         ToolServices.exitWithCode (2);
         return;
       } // catch
-      input = (String[]) fileNameList.toArray (new String[] {});
     } // if
 
-    // Get inputs from command line
-    // ----------------------------
+    // Get input filenames from command line
+    // -------------------------------------
     else {
-      input = new String [remain.length-1];
-      System.arraycopy (remain, 0, input, 0, input.length);
+      inputFileList = Arrays.asList (remainingArgs).subList (0, remainingArgs.length-1);
     } // else
 
     // Check input file count
     // ----------------------
-    if (input.length == 0) {
+    if (inputFileList.size() == 0) {
       LOGGER.severe ("At least one input file must be specified");
       ToolServices.exitWithCode (2);
       return;
@@ -385,157 +448,207 @@ public final class cwcomposite {
 
       // Loop over each input file
       // -------------------------
-      EarthDataReader[] readers = new EarthDataReader[input.length];
-      EarthTransform trans = null;
-      TreeSet variableNames = new TreeSet();
-      for (int i = 0; i < input.length; i++) {
+      EarthTransform earthTransform = null;
+      TreeSet<String> variableNames = new TreeSet<>();
+      List<EarthDataInfo> inputInfoList = new ArrayList<>();
+      Map<String, EarthDataReader> readerMap = new HashMap<>();
+      VERBOSE.info ("Checking input file information");
+      int inputNumber = 1;
+      for (String inputFile : inputFileList) {
 
         // Open file
         // ---------
-        VERBOSE.info ("Reading input " + input[i]);
-        readers[i] = EarthDataReaderFactory.create (input[i]);
+        VERBOSE.info ("Checking input file [" + inputNumber + "/" + inputFileList.size() + "] " + inputFile);
+        EarthDataReader reader = EarthDataReaderFactory.create (inputFile);
+        readerMap.put (inputFile, reader);
+  
+        // Get info and add to list
+        // ------------------------
+        EarthDataInfo info = reader.getInfo();
+        inputInfoList.add (info);
 
-        // Check transform
-        // ---------------
-        if (i == 0)
-          trans = readers[i].getInfo().getTransform();
-        else if (!trans.equals (readers[i].getInfo().getTransform())) {
-          LOGGER.severe ("Earth transforms do not match for " + input[i] + " and " + input[0]);
+        // Check earth transform matches
+        // -----------------------------
+        EarthTransform readerTransform = info.getTransform();
+        if (earthTransform == null)
+          earthTransform = readerTransform;
+        else if (!earthTransform.equals (readerTransform)) {
+          LOGGER.severe ("Non-matching earth transforms detected between inputs " + inputFile + " and " + inputFileList.get (0));
           ToolServices.exitWithCode (2);
           return;
         } // else if
 
-        // Get variable names
-        // ------------------
-        for (int j = 0; j < readers[i].getVariables(); j++) {
-          DataVariable var = readers[i].getPreview (j);
-          if (var instanceof Grid) {
-            String varName = var.getName();
-            if (match != null && !varName.matches (match)) continue;
-            if (variableNames.contains (varName)) continue;
-            VERBOSE.info ("Adding " + varName + " to composite variables");
-            variableNames.add (varName);
+        // Get grid names
+        // --------------
+        for (String variableName : reader.getAllGrids()) {
+          boolean nameValid = (match == null ? true : variableName.matches (match));
+          if (nameValid) {
+            if (!variableNames.contains (variableName)) {
+              VERBOSE.info ("Adding " + variableName + " to composite output variables");
+              variableNames.add (variableName);
+            } // if
           } // if
         } // for
+
+        inputNumber++;
 
       } // for
 
       // Check variable names
       // --------------------
       if (variableNames.size() == 0) {
-        LOGGER.severe ("No valid variables found in input");
+        LOGGER.severe ("No valid composite variables found");
         ToolServices.exitWithCode (2);
         return;
       } // if
 
-      // Sort readers by date if the latest method is specified
-      // ------------------------------------------------------
+      // Sort input files by date for latest type composite
+      // --------------------------------------------------
       if (method.equals ("latest")) {
-        Arrays.sort (readers, new ReaderComparator());
+        List<Entry<String, EarthDataInfo>> entryList = new ArrayList<>();
+        for (int i = 0; i < inputFileList.size(); i++)
+          entryList.add (new SimpleEntry (inputFileList.get (i), inputInfoList.get (i)));
+        entryList.sort (Comparator.comparing (Entry::getValue, Comparator.comparing (EarthDataInfo::getDate)));
+        inputFileList = entryList.stream().map (Entry::getKey).collect (Collectors.toList());
       } // if
 
       // Create output file
       // ------------------
-      EarthDataInfo info = readers[0].getInfo();
-      for (int i = 1; i < readers.length; i++)
-        info = info.append (readers[i].getInfo(), pedantic);
-      VERBOSE.info ("Creating output " + output);
+      VERBOSE.info ("Creating output file " + output);
+      EarthDataInfo outputInfo = inputInfoList
+        .stream()
+        .reduce (pedanticOutput ? EarthDataInfo::appendWithDuplicates : EarthDataInfo::appendWithoutDuplicates)
+        .get();
       CleanupHook.getInstance().scheduleDelete (output);
+      CWHDFWriter writer = new CWHDFWriter (outputInfo, output);
 
-      // TODO: There is a problem here when the history of the output
-      // file is too large.  The HDF library complains when there are
-      // more than 65535 values.  The HDFWriter class currently
-      // truncates at 65535, but it would be nice if there was a terse
-      // mode that simply output the input file names rather than
-      // truncating the history.
-
-      CWHDFWriter writer = new CWHDFWriter (info, output);
-
-      // Run in coherent mode
-      // --------------------
-      if (coherent != null) {
-
-        // Check coherent variables
-        // ------------------------
-        String[] coherentVarNames = coherent.split (ToolServices.SPLIT_REGEX);
-        for (int i = 0; i < coherentVarNames.length; i++) {
-          if (!variableNames.contains (coherentVarNames[i])) {
-            LOGGER.severe ("Cannot find coherent mode variable '" +
-              coherentVarNames[i] + "' among input variables");
-            ToolServices.exitWithCode (2);
-            return;
-          } // if
-        } // for
-
-        // Get all input variables
-        // -----------------------
-        int numVars = variableNames.size();
-        DataVariable[][] inputVarArrays = new DataVariable[numVars][];
-        int[] coherentVarIndicies = new int[coherentVarNames.length];
-        int varNameIndex = 0, coherentVarNameIndex = 0;
-        for (Iterator iter = variableNames.iterator(); iter.hasNext();) {
-          String varName = (String) iter.next();
-          DataVariable[] vars = getInputVars (readers, varName, false);
-          inputVarArrays[varNameIndex] = vars;
-          if (varName.equals (coherentVarNames[coherentVarNameIndex])) {
-            coherentVarIndicies[coherentVarNameIndex] = varNameIndex;
-            coherentVarNameIndex++;
-          } // if
-          varNameIndex++;
-        } // for
-
-        // Create output variables
-        // -----------------------
-        DataVariable[] outputVars = new DataVariable[numVars];
-        for (int i = 0; i < numVars; i++) {
-          DataVariable inputVar = null;
-          for (int j = 0; j < readers.length; j++) {
-            if (inputVarArrays[i][j] != null) {
-              inputVar = inputVarArrays[i][j];
-              break;
-            } // if
-          } // for
-          outputVars[i] = new HDFCachedGrid ((Grid) inputVar, writer);
-        } // for
-
-        // Compute composite
-        // -----------------
-        VERBOSE.info ("Computing coherent composite using " + coherent);
-        computeCoherentComposite (inputVarArrays, coherentVarIndicies, outputVars);
-        for (int i = 0; i < numVars; i++)
-          ((HDFCachedGrid) outputVars[i]).flush();
-
-      } // if
-
-      // Run in normal mode
-      // ------------------
+      // Create chunk function
+      // ---------------------
+      ArrayReduction operator = null;
+      if (method.equals ("mean")) operator = new MeanReduction();
+      else if (method.equals ("geomean")) operator = new GeoMeanReduction();
+      else if (method.equals ("median")) operator = new MedianReduction();
+      else if (method.equals ("min")) operator = new MinReduction();
+      else if (method.equals ("max")) operator = new MaxReduction();
+      else if (method.equals ("latest")) operator = new LastReduction();
+      else if (method.equals ("explicit")) operator = new LastReduction();
       else {
-
-        // Loop over each variable
-        // -----------------------
-        for (Iterator iter = variableNames.iterator(); iter.hasNext();) {
-
-          // Get input variables
-          // -------------------
-          String varName = (String) iter.next();
-          DataVariable[] vars = getInputVars (readers, varName, true);
-
-          // Create composite variable
-          // -------------------------
-          HDFCachedGrid var = new HDFCachedGrid ((Grid) vars[0], writer);
-          VERBOSE.info ("Writing " + var.getName());
-          computeComposite (vars, var, method, valid);
-          var.flush();
-
-        } // for
-
+        LOGGER.severe ("Unsupported composite method '" + method + "'");
+        ToolServices.exitWithCode (2);
+        return;
       } // else
+      ChunkFunction function = new CompositeFunction (operator, minValid);
 
-      // Close files
-      // -----------
+      // Report computation properties
+      // -----------------------------
+      int[] dims = earthTransform.getDimensions();
+      VERBOSE.info ("Total grid size is " + dims[ROW] + "x" + dims[COL]);
+      if (!serialOperations) {
+        int processors = Runtime.getRuntime().availableProcessors();
+        VERBOSE.info ("Found " + processors + " processor(s) to use");
+      } // if
+      
+      // Loop over each composite variable
+      // ---------------------------------
+      for (String variableName : variableNames) {
+
+        // Create a chunk collector for the input variable
+        // -----------------------------------------------
+        ChunkCollector collector = new ChunkCollector();
+        DataChunk.DataType externalType = null;
+        Grid prototypeGrid = null;
+        for (String inputFile : inputFileList) {
+          EarthDataReader reader = readerMap.get (inputFile);
+          if (reader.containsVariable (variableName)) {
+
+            // Get prototype grid
+            // ------------------
+            if (prototypeGrid == null)
+              prototypeGrid = (Grid) reader.getVariable (variableName);;
+
+            // Get producer for this reader
+            // ----------------------------
+            ChunkProducer producer = reader.getChunkProducer (variableName);
+
+            // Check producer external type
+            // ----------------------------
+            if (externalType == null) externalType = producer.getExternalType();
+            else if (externalType != producer.getExternalType()) {
+              LOGGER.severe ("Non-matching external data types found between input files for variable " + variableName);
+              ToolServices.exitWithCode (2);
+              return;
+            } // else if
+
+            collector.addProducer (producer);
+
+          } // if
+        } // for
+        
+        // Create a chunk consumer for the output variable
+        // -----------------------------------------------
+        TilingScheme inputTilingScheme = prototypeGrid.getTilingScheme();
+        if (inputTilingScheme != null)
+          writer.setTileDims (inputTilingScheme.getTileDimensions());
+        else
+          writer.setTileDims (null);
+        CachedGrid outputGrid = new HDFCachedGrid (prototypeGrid, writer);
+        ChunkConsumer consumer = new GridChunkConsumer (outputGrid);
+
+        ChunkingScheme outputChunkingScheme = consumer.getNativeScheme();
+        int[] chunkSize = outputChunkingScheme.getChunkSize();
+        VERBOSE.info ("Creating " +  variableName +
+          " variable with chunk size " + chunkSize[ROW] + "x" + chunkSize[COL]);
+
+        // Create chunk computation
+        // ------------------------
+        ChunkComputation op = new ChunkComputation (collector, consumer, function);
+
+        // Debugging
+        if (LOGGER.isLoggable (Level.FINE))
+          op.setTracked (true);
+
+        // Perform chunk processing
+        // ------------------------
+        List<ChunkPosition> positions = new ArrayList<>();
+        outputChunkingScheme.forEach (positions::add);
+
+        if (serialOperations) {
+          positions.forEach (pos -> op.perform (pos));
+        } // if
+        else {
+          PoolProcessor processor = new PoolProcessor();
+          processor.init (positions, op);
+          processor.start();
+          processor.waitForCompletion();
+        } // if
+
+        // Debugging
+        if (LOGGER.isLoggable (Level.FINE)) {
+          StringBuilder types = new StringBuilder();
+          StringBuilder times = new StringBuilder();
+          op.getTrackingData().forEach ((type, time) -> {
+            types.append ((types.length() == 0 ? "" : "/") + type);
+            times.append ((times.length() == 0 ? "" : "/") + String.format ("%.3f", time));
+          });
+          LOGGER.fine ("Computation " + types + " = " + times + " s");
+        } // if
+
+        // Flush any unwritten tiles
+        // -------------------------
+        outputGrid.flush();
+        outputGrid.clearCache();
+
+      } // for
+
+      // Close input files
+      // -----------------
+      for (String inputFile : inputFileList)
+        readerMap.get (inputFile).close();
+
+      // Close output file
+      // -----------------
       writer.close();
       CleanupHook.getInstance().cancelDelete (output);
-      for (int i = 0; i < readers.length; i++) readers[i].close();
 
     } // try
     catch (Exception e) {
@@ -550,301 +663,6 @@ public final class cwcomposite {
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Gets an array of input variables of the same name from the
-   * input files.
-   *
-   * @param readers the data reader to get variables from.
-   * @param varName the variable name to read.
-   * @param condense the condense flag, true to condense null
-   * variables when the variable does not exist in the input
-   * file, or false to preserve nulls.
-   *
-   * @return the array of input variables.
-   *
-   * @throws IOException if an error occurred getting the
-   * variable from a reader.
-   */
-  private static DataVariable[] getInputVars (
-    EarthDataReader[] readers,
-    String varName,
-    boolean condense
-  ) throws IOException {
-
-    // Get variable list
-    // -----------------
-    ArrayList varList = new ArrayList();
-    for (int i = 0; i < readers.length; i++) {
-      int index = readers[i].getIndex (varName);
-      if (index == -1) {
-        if (!condense) varList.add (null);
-      } // if
-      else {
-        varList.add (readers[i].getVariable (index));
-      } // else
-    } // for
-
-    return ((DataVariable[]) varList.toArray (new DataVariable[] {}));
-
-  } // getInputVars
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * A reader comparator compares two earth data readers based on
-   * date.  This is useful for sorting a set of readers into ascending
-   * order by date.
-   */
-  private static class ReaderComparator
-    implements Comparator {
-
-    ////////////////////////////////////////////////////////
-
-    /** Compares two readers by date. */
-    public int compare (
-      Object o1,
-      Object o2
-    ) {
-
-      Date d1 = ((EarthDataReader) o1).getInfo().getDate();
-      Date d2 = ((EarthDataReader) o2).getInfo().getDate();
-      return (d1.compareTo (d2));
-
-    } // compare
-
-    ////////////////////////////////////////////////////////
-
-  } // ReaderComparator
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Computes the coherent composite output variables from the
-   * specified input variables and coherent indices.
-   *
-   * @param inputVarArrays the array of input variable arrays of
-   * size [variables][readers].
-   * @param coIndicies the coherent variables to use as
-   * indicies into the input variable arrays.
-   * @param outputvars the output variables to write to.
-   */
-  private static void computeCoherentComposite (
-    DataVariable[][] inputVarArrays,
-    int[] coIndicies,
-    DataVariable[] outputVars
-  ) {
-
-    // Initialize
-    // ----------
-    int[] dims = outputVars[0].getDimensions();
-    DataLocation start = new DataLocation (dims.length);
-    DataLocation end = new DataLocation (dims.length);
-    for (int i = 0; i < dims.length; i++) end.set (i, dims[i]-1);
-    int[] stride = new int[dims.length];
-    Arrays.fill (stride, 1);
-    DataLocation loc = (DataLocation) start.clone();
-    int coVars = coIndicies.length;
-    int readers = inputVarArrays[0].length;
-
-    // Loop over each location
-    // -----------------------
-    do {
-
-      // Get reader with latest valid value
-      // ----------------------------------
-      int reader = -1;
-      coIndexLoop: for (int coIndex = 0; coIndex < coVars; coIndex++) {
-        for (int rIndex = readers-1; rIndex >= 0; rIndex--) {
-          DataVariable var = inputVarArrays[coIndicies[coIndex]][rIndex];
-          if (var != null && !Double.isNaN (var.getValue (loc))) {
-            reader = rIndex;
-            break coIndexLoop;
-          } // if
-        } // for
-      } // for
-
-      // Write missing value to output
-      // -----------------------------
-      if (reader == -1) {
-        for (int i = 0; i < outputVars.length; i++)
-          outputVars[i].setValue (loc, Double.NaN);
-      } // if
-
-      // Write actual value to output
-      // ----------------------------
-      else {
-        for (int i = 0; i < outputVars.length; i++) {
-          outputVars[i].setValue (loc,
-            inputVarArrays[i][reader].getValue (loc));
-        } // for
-      } // else
-
-    } while (loc.increment (stride, start, end));
-
-  } // computeCoherentComposite
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Computes the composite variable from the specified inputs and
-   * method.
-   *
-   * @param inputVars the input variables.  The variables are assumed to be
-   * sorted in ascending temporal order unless using the 'explicit' method.
-   * @param outputVar the output variable.
-   * @param method the composite method.
-   * @param valid the minimum number of valid values for aggregate methods.
-   *
-   * @throws UnsupportedOperationException is the composite method is not
-   * supported.
-   */
-  private static void computeComposite (
-    DataVariable[] inputVars,
-    DataVariable outputVar,
-    String method,
-    int valid
-  ) {
-
-    // Initialize
-    // ----------
-    int[] dims = outputVar.getDimensions();
-    DataLocation start = new DataLocation (dims.length);
-    DataLocation end = new DataLocation (dims.length);
-    for (int i = 0; i < dims.length; i++) end.set (i, dims[i]-1);
-    int[] stride = new int[dims.length];
-    Arrays.fill (stride, 1);
-    DataLocation loc = (DataLocation) start.clone();
-
-    // Compute minimum
-    // ---------------
-    
-    
-/*
-
-To perform these calculations as chunk operators, we need an operator
-for each composite type, that for each external chunk type:
-
-- runs an accessor on the source chunks
-- performs their operation on the unpacked data (while checking for missing)
-- runs a modifier on the destination chunk (or a copy?)
-
-For something like this, see the ExpressionFunction
-
-*/
-    
-    
-    
-    if (method.equals ("min")) {
-      do {
-        double min = Double.MAX_VALUE;
-        for (int j = 0; j < inputVars.length; j++) {
-          double val = inputVars[j].getValue (loc);
-          if (val < min) min = val;
-        } // for
-        if (min == Double.MAX_VALUE) min = Double.NaN;
-        outputVar.setValue (loc, min);
-      } while (loc.increment (stride, start, end));
-    } // if
-
-    // Compute maximum
-    // ---------------
-    else if (method.equals ("max")) {
-      do {
-        double max = -Double.MAX_VALUE;
-        for (int j = 0; j < inputVars.length; j++) {
-          double val = inputVars[j].getValue (loc);
-          if (val > max) max = val;
-        } // for
-        if (max == -Double.MAX_VALUE) max = Double.NaN;
-        outputVar.setValue (loc, max);
-      } while (loc.increment (stride, start, end));
-    } // else if
-
-    // Compute latest
-    // --------------
-    else if (method.equals ("latest") || method.equals ("explicit")) {
-      do {
-        double latest = Double.NaN;
-        for (int j = inputVars.length-1; j >= 0; j--) {
-          double val = inputVars[j].getValue (loc);
-          if (!Double.isNaN (val)) { latest = val; break; }
-        } // for
-        outputVar.setValue (loc, latest);
-      } while (loc.increment (stride, start, end));
-    } // else if
-
-    // Compute mean
-    // ------------
-    else if (method.equals ("mean")) {
-      do {
-        double sum = 0;
-        int values = 0;
-        for (int j = 0; j < inputVars.length; j++) {
-          double val = inputVars[j].getValue (loc);
-          if (!Double.isNaN (val)) {
-            sum += val;
-            values++;
-          } // if
-        } // for
-        double mean = (values != 0 && values >= valid ? sum/values :
-          Double.NaN);
-        outputVar.setValue (loc, mean);
-      } while (loc.increment (stride, start, end));
-    } // else if
-
-    // Compute geometric mean
-    // ----------------------
-    else if (method.equals ("geomean")) {
-      do {
-        double sum = 0;
-        int values = 0;
-        for (int j = 0; j < inputVars.length; j++) {
-          double val = inputVars[j].getValue (loc);
-          if (val > 0) {
-            sum += Math.log(val);
-            values++;
-          } // if
-        } // for
-        double mean = (values != 0 && values >= valid ? Math.exp (sum/values) :
-          Double.NaN);
-        outputVar.setValue (loc, mean);
-      } while (loc.increment (stride, start, end));
-    } // else if
-
-    // Compute median
-    // --------------
-    else if (method.equals ("median")) {
-      double[] valueArray = new double[inputVars.length];
-      do {
-        int values = 0;
-        for (int j = 0; j < inputVars.length; j++) {
-          double val = inputVars[j].getValue (loc);
-          if (!Double.isNaN (val)) { valueArray[values] = val; values++; }
-        } // for
-        double median;
-        if (values != 0 && values >= valid) {
-          Arrays.sort (valueArray, 0, values);
-          if (values%2 == 0)
-            median = (valueArray[values/2 - 1] + valueArray[values/2]) / 2;
-          else
-            median = valueArray[(values+1)/2 - 1];
-        } // if
-        else
-          median = Double.NaN;
-        outputVar.setValue (loc, median);
-      } while (loc.increment (stride, start, end));
-    } // else if
-
-    // Report unsupported method
-    // -------------------------
-    else
-      throw new UnsupportedOperationException (
-        "Unsupported composite method '" + method + "'");
-
-  } // computeComposite
-
-  ////////////////////////////////////////////////////////////
-
   private static void usage () { System.out.println (getUsage()); }
 
   ////////////////////////////////////////////////////////////
@@ -852,7 +670,7 @@ For something like this, see the ExpressionFunction
   /** Gets the usage info for this tool. */
   private static UsageInfo getUsage () {
 
-    UsageInfo info = new UsageInfo ("cwregister2");
+    UsageInfo info = new UsageInfo ("cwcomposite");
 
     info.func ("Combines a time series of earth data");
 
@@ -867,6 +685,7 @@ For something like this, see the ExpressionFunction
     info.option ("-m, --match=PATTERN", "Composite only variables matching pattern");
     info.option ("-M, --method=TYPE", "Set composite type");
     info.option ("-p, --pedantic", "Retain repeated metadata values");
+    info.option ("--serial", "Perform serial operations");
     info.option ("-v, --verbose", "Print verbose messages");
     info.option ("-V, --valid=COUNT", "Set minimum valid values");
     info.option ("--version", "Show version information");
@@ -884,4 +703,3 @@ For something like this, see the ExpressionFunction
 } // cwcomposite class
 
 ////////////////////////////////////////////////////////////////////////
-

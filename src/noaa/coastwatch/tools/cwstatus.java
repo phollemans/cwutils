@@ -168,7 +168,7 @@ import noaa.coastwatch.util.SatellitePassInfo;
  * <h2>Exit status</h2>
  * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
- *   <li> Invalid command line option. </li>
+ *   <li> Invalid command line option </li>
  * </ul>
  *
  * <h2>Examples</h2>

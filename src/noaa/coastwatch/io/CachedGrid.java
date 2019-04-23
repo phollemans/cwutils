@@ -43,6 +43,8 @@ import noaa.coastwatch.util.Grid;
 // Testing
 import noaa.coastwatch.test.TestLogger;
 
+import java.util.logging.Logger;
+
 /**
  * A <code>CachedGrid</code> is a {@link Grid} that uses temporary caching
  * to reduce the overall memory footprint of gridded data.  The cache
@@ -72,6 +74,8 @@ import noaa.coastwatch.test.TestLogger;
 @noaa.coastwatch.test.Testable
 public abstract class CachedGrid
   extends Grid {
+
+  private static final Logger LOGGER = Logger.getLogger (CachedGrid.class.getName());
 
   // Constants
   // ---------
@@ -157,6 +161,23 @@ public abstract class CachedGrid
    * @return the data stream used for reading and writing data.
    */
   public abstract Object getDataStream();
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Clears the existing cache.  All tiles are removed and the cache set
+   * to empty.  Use this method to release the memory used by the cache
+   * when it won't be needed again.  The same notes in {@link #resetCache}
+   * on using {@link #flush} apply here as well.
+   *
+   * @since 3.5.0
+   */
+  public void clearCache () {
+
+    cache.clear();
+    lastTile = null;
+  
+  } // clearCache
 
   ////////////////////////////////////////////////////////////
 
@@ -250,6 +271,8 @@ public abstract class CachedGrid
     // ----------------
     maxTiles = tiles;
     resetCache();
+
+    LOGGER.fine ("Set max tiles to " + maxTiles + " for " + getName());
 
   } // setMaxTiles
 
