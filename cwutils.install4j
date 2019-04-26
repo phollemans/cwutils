@@ -1433,7 +1433,7 @@ OTHER DEALINGS WITH THE SOFTWARE.
                             </void>
                             <void property="target">
                               <object class="java.io.File">
-                                <string>doc/cwutils_ug_3_4_0.pdf</string>
+                                <string>doc/cwutils_ug_3_5_0.pdf</string>
                               </object>
                             </void>
                           </object>

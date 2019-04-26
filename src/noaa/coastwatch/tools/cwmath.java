@@ -679,7 +679,7 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  *     2019_015_2121_n19_er.hdf
  *
  *   [INFO] Opening input/output 2019_015_2121_n19_er.hdf
- *   [INFO] Using expression '((((long)cloud & (long) (0x6f)) == 0) ? sst : NaN)'
+ *   [INFO] Using expression '((((long)cloud &amp; (long) (0x6f)) == 0) ? sst : NaN)'
  *   [INFO] Creating sst_masked variable
  *   [INFO] Total grid size is 1401x1302
  *   [INFO] Found 8 processor(s) to use

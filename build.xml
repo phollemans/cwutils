@@ -152,6 +152,13 @@
   </target>
 
   <target name="test-man" depends="doc"
+    description="Builds and copies the CW utilities man pages into the install directory">
+    <copy todir="${install.dir}/doc/man">
+      <fileset dir="doc/man"/>
+    </copy>
+  </target>
+
+  <target name="copy-man"
     description="Copies the CW utilities man pages into the install directory">
     <copy todir="${install.dir}/doc/man">
       <fileset dir="doc/man"/>
