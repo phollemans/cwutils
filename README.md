@@ -48,10 +48,10 @@ other similar software.  The CoastWatch Utilities installation packages are crea
 license generously donated by ej-technologies.  To create packages using Ant:
 
 * Modify the install4j.dir path in the cwutils.properties file to your install4j installation path.
-* Modify the pkg.dir path to your preferred papckage destination.
+* Modify the pkg.dir path to your preferred package destination.
 * Type `ant packages` to build the default packages: Linux, Windows, and Mac installations.
-* Type `ant packages -Dbuilds=IDS` where IDS are comma-separated package IDs that you want: linux64, linux64.novm, 
-windows64, maxosx64.
+* Type `ant packages -Dbuilds=IDS` where IDS is a list of comma-separated package IDs that you want: linux64, linux64.novm, 
+windows64, or macosx64.
 
 # Support
 
