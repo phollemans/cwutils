@@ -102,9 +102,11 @@ edit the {\gui Path} variable and add a new entry, for example
 {\tt C:$\backslash$Program Files$\backslash$CoastWatch Utilities$\backslash$bin}.
 Other Windows versions have a similar procedure for adding a path.
 
-\subsection{Installing on Mac}
+\subsection{Installing on Unix}
 
-The MacOS installation package is a disk image (DMG) file that
+\subsubsection{macOS}
+
+The macOS installation package is a disk image (DMG) file that
 contains support for Intel-based Macs only.  Download the DMG file,
 double-click to mount it, and then
 double-click the {\gui CoastWatch Utilities Installer} icon.
@@ -112,26 +114,32 @@ When upgrading, the installer will automatically uninstall an old version if
 it exists.
 
 If you use the command line tools you may want to add the installed
-executable directory to your path for easier command line execution.
+executable and man page directories to your paths for easier command line execution.
 In a Terminal session, add the following lines to the {\tt \~{ }/.profile}
 file:
 \begin{quote}
-  {\tt export PATH=\$\{PATH\}:"/Applications/CoastWatch Utilities/bin"}
+  {\tt export PATH=\$\{PATH\}:"/Applications/CoastWatch Utilities/bin"} \\
+  {\tt export MANPATH=\$\{MANPATH\}:"/Applications/CoastWatch Utilities/doc/man"}
 \end{quote}
 and then open a new Terminal window for the changes to take effect.
 
-\subsection{Installing on Linux}
+\subsubsection{Linux}
 
 The Linux version installs from a tar archive, extracted as follows:
 \begin{quote}
   {\file tar -zxf cwutils-3\_x\_x-linux-x86\_64.tar.gz}
 \end{quote}
-You may also want to add the installed executable directory to
-your {\tt \$PATH} environment variable for easier command line
-execution, for example:
+You may also want to add the installed executable and man page directories to
+your environment variables for easier command line
+execution, for example under CSH and TCSH in the {\tt \~{ }/.cshrc} file:
 \begin{quote}
-  {\tt setenv PATH \$\{PATH\}:\$HOME/cwutils/bin}~~~(in {\tt \~{ }/.cshrc}) \\
-  {\tt export PATH=\$\{PATH\}:\$HOME/cwutils/bin}~~~(in {\tt \~{ }/.bashrc})
+  {\tt setenv PATH \$\{PATH\}:\$HOME/cwutils/bin} \\
+  {\tt setenv MANPATH \$\{MANPATH\}:\$HOME/cwutils/doc/man}
+\end{quote}
+or under BASH in the {\tt \~{ }/.bashrc} file:
+\begin{quote}
+  {\tt export PATH=\$\{PATH\}:\$HOME/cwutils/bin} \\
+  {\tt export MANPATH=\$\{MANPATH\}:\$HOME/cwutils/doc/man}
 \end{quote}
 
 \section{Using the Software}

@@ -36,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.TimeZone;
+
 import noaa.coastwatch.io.DataTransfer;
 import noaa.coastwatch.io.DataTransferAdapter;
 import noaa.coastwatch.io.DataTransferEvent;
@@ -43,8 +44,12 @@ import noaa.coastwatch.io.StallMonitor;
 import noaa.coastwatch.net.ServerQuery;
 import noaa.coastwatch.net.Timeout;
 import noaa.coastwatch.net.URLTransfer;
+import noaa.coastwatch.net.NetworkServices;
 import noaa.coastwatch.tools.CleanupHook;
 import noaa.coastwatch.tools.ToolServices;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * <p>The download tool facilitates the downloading of specific data
@@ -235,12 +240,12 @@ import noaa.coastwatch.tools.ToolServices;
  *   phollema$ cwdownload --satellite noaa-16 --scenetime day 
  *     --region '(er|sr)' --station wi --dir ~/cwatch/satdata frobozz.noaa.gov
  *
- *   cwdownload: Contacting frobozz.noaa.gov
- *   cwdownload: Retrieving 2002_197_1719_n16_er.hdf
- *   cwdownload: Retrieving 2002_197_1719_n16_sr.hdf
- *   cwdownload: Retrieving 2002_197_1900_n16_er.hdf
- *   cwdownload: Retrieving 2002_197_1900_n16_sr.hdf
- *   cwdownload: Transferred 31715 kb in 4 files
+ *   [INFO] Contacting frobozz.noaa.gov via http
+ *   [INFO] Retrieving 2002_197_1719_n16_er.hdf
+ *   [INFO] Retrieving 2002_197_1719_n16_sr.hdf
+ *   [INFO] Retrieving 2002_197_1900_n16_er.hdf
+ *   [INFO] Retrieving 2002_197_1900_n16_sr.hdf
+ *   [INFO] Transferred 31715 kb in 4 files
  * </pre>
  *
  * <!-- END MAN PAGE -->
@@ -250,14 +255,14 @@ import noaa.coastwatch.tools.ToolServices;
  */
 public final class cwdownload {
 
+  private static final String PROG = cwdownload.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+
   // Constants
   // ---------
 
   /** Minimum required command line parameters. */
   private static final int NARGS = 1;
-
-  /** Name of program. */
-  private static final String PROG = "cwdownload";
 
   /** The maximum network stall time in milliseconds. */
   private static final int STALL_TIME = 30*1000;
@@ -280,7 +285,9 @@ public final class cwdownload {
    */
   public static void main (String[] argv) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
+    LOGGER.setLevel (Level.INFO);
 
     // Parse command line
     // ------------------
@@ -302,33 +309,36 @@ public final class cwdownload {
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
-      System.exit (0);
-    } // if  
+      usage();
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
-    } // if  
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
-      usage ();
-      System.exit (1);
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String host = remain[0];
 
@@ -350,7 +360,7 @@ public final class cwdownload {
     int timeout = (timeoutObj == null ? STALL_TIME : 
       timeoutObj.intValue()*1000);
     String projection = (String) cmd.getOptionValue (projectionOpt);
-    boolean ssl = (cmd.getOptionValue (sslOpt) != null);
+    boolean sslMode = (cmd.getOptionValue (sslOpt) != null);
     
     // Create server query keys
     // ------------------------
@@ -376,43 +386,68 @@ public final class cwdownload {
       queryKeys.put ("projection_type", "mapped");
     else if (projection != null) {
       if (!projection.equals ("mapped") && !projection.equals ("swath")) {
-        System.err.println (PROG + ": Invalid projection type '" + 
-          projection + "'");
-        System.exit (2);
+        LOGGER.severe ("Invalid projection type '" + projection + "'");
+        ToolServices.exitWithCode (2);
+        return;
       } // if
       queryKeys.put ("projection_type", projection);
     } // else if
 
     // Create query timeout
     // --------------------
+    int timeoutInSeconds = timeout/1000;
     Timeout queryTimeout = new Timeout (timeout, new Runnable() { 
-       public void run () {
-          System.err.println (PROG + ": Server not responding, aborting");
-          System.exit (2);
-        } // run
-      });
+      public void run () {
+        LOGGER.severe ("Server not responding to query after " + timeoutInSeconds + "s, aborting");
+        ToolServices.exitWithCode (2);
+      } // run
+    });
 
     // Perform server query
     // --------------------
     ServerQuery query = null;
-    System.out.println (PROG + ": Contacting " + host);
+    String protocol = (sslMode ? "https" : "http");
+    LOGGER.info ("Contacting " + host + " via " + protocol);
     queryTimeout.start();
-    try {
-      query = new ServerQuery ((ssl ? "https" : "http"), host, script, queryKeys);
-    } catch (Exception e) { 
-      System.err.println (PROG + ": " + e.getMessage());
-      System.exit (2);
-    } // catch
+    boolean keepTrying = true;
+    
+    while (keepTrying) {
+
+      try {
+        query = new ServerQuery (protocol, host, script, queryKeys);
+        keepTrying = false;
+      } catch (Exception e) {
+
+        // Retry query without SSL certificate verification
+        // ------------------------------------------------
+        if (sslMode) {
+          LOGGER.warning ("Error performing server query in SSL mode, trying without certificate verification");
+          LOGGER.warning ("To avoid these warnings in the future, install host certificates into your Java VM keystore");
+          NetworkServices.setupTrustingSSLManager();
+        } // if
+
+        // Give up on query
+        // ----------------
+        else {
+          LOGGER.severe (e.getMessage());
+          ToolServices.exitWithCode (2);
+          return;
+        } // else
+
+      } // catch
+    
+    } // while
+    
     queryTimeout.cancel();
 
     // Create stall monitor
     // --------------------
     StallMonitor monitor = new StallMonitor (timeout, new Runnable() {
-        public void run () {
-          System.err.println (PROG + ": Network stall detected, aborting");
-          System.exit (2);
-        } // run
-      });
+      public void run () {
+        LOGGER.severe ("Network stall detected after waiting " + timeoutInSeconds + "s, aborting");
+        ToolServices.exitWithCode (2);
+      } // run
+    });
 
     // Loop over each result
     // ---------------------
@@ -427,19 +462,17 @@ public final class cwdownload {
       String outName = dir + "/" + file;
       final File outFile = new File (outName);
       if (!force && outFile.exists()) {
-        System.out.println (PROG + ": File " + file + " exists, skipping");
+        LOGGER.info ("Skipping existing file " + file);
         continue;
       } // if
 
       // Check for test mode
       // -------------------
-      System.out.print (PROG + ": Retrieving " + file);
+      LOGGER.info ("Retrieving " + file + (test ? " in test mode" : ""));
       if (test) {
-        System.out.println (" (test mode)");
         fileCount++;
         continue;
       } // if
-      else System.out.println();
 
       // Create data transfer
       // --------------------
@@ -450,14 +483,15 @@ public final class cwdownload {
         out = new FileOutputStream (outFile);
       } // try
       catch (Exception e) {
-        e.printStackTrace();
-        System.exit (2);
+        LOGGER.log (Level.SEVERE, "Aborting", e);
+        ToolServices.exitWithCode (2);
+        return;
       } // catch
       final DataTransfer transfer = new URLTransfer (url, out);
       transfer.addDataTransferListener (monitor);
       transfer.addDataTransferListener (new DataTransferAdapter () {
           public void transferError (DataTransferEvent e) {
-            System.err.println (PROG + ": Error in data transfer, skipping");
+            LOGGER.warning ("Error in data transfer, skipping file");
             if (outFile.exists()) outFile.delete();
           } // transferError
           public void transferEnded (DataTransferEvent e) {
@@ -477,50 +511,47 @@ public final class cwdownload {
 
     // Print final counts
     // ------------------
-    System.out.println (PROG + ": Transferred " + byteCount/1024 +
-      " kb in " + fileCount + " files");    
-    System.exit (0);
+    LOGGER.info ("Transferred " + byteCount/1024 + " kb in " + fileCount + " files");    
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwdownload [OPTIONS] host\n" +
-"Retrieves a set of user-specified data files from a CoastWatch data\n" +
-"server.\n" +
-"\n" +
-"Main parameters:\n" +
-"  host                       The CoastWatch server host name.\n" +
-"\n" +
-"General options:\n" +
-"  -c, --script=PATH          Set host query script path (advanced users).\n" +
-"  -d, --dir=PATH             Set local directory path.\n" +
-"  -f, --force                Do not check if file already exists locally.\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -s, --ssl                  Use SSL-encrypted connection to server.\n" +
-"  -t, --test                 Do not download, run test mode only.\n" +
-"  -T, --timeout=SECONDS      Set network timeout in seconds.\n" +
-"  --version                  Show version information.\n" +
-"\n" +
-"Data file selection options:\n" +
-"  -a, --age=HOURS            Set maximum data file age in hours.\n" +
-"  -c, --script=PATH          Set host query script path (advanced users).\n" +
-"  -C, --coverage=PERCENT     Set minimum data coverage in percent.\n" +
-"  -G, --station=PATTERN      Set ground station matching pattern.\n" +
-"  -p, --projection=TYPE      Set desired projection type.  TYPE may be\n" +
-"                              'mapped' or 'swath'.\n" +
-"  -r, --region=PATTERN       Set region code matching pattern.\n" +
-"  -s, --satellite=PATTERN    Set satellite name matching pattern.\n" +
-"  -S, --scenetime=PATTERN    Set scene time matching pattern.  Scene times\n"+
-"                              are 'day', 'night', or 'day/night' for\n" +
-"                              mixed scenes.\n"
-    );
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwdownload");
+
+    info.func ("Retrieves a set of data files from a CoastWatch data server");
+
+    info.param ("host", "CoastWatch server host name");
+
+    info.section ("General");
+    info.option ("-c, --script=PATH", "Set host query script path");
+    info.option ("-d, --dir=PATH", "Set local directory path");
+    info.option ("-f, --force", "Overwrite any existing files");
+    info.option ("-h, --help", "Show help message");
+    info.option ("-s, --ssl", "Use SSL-encrypted connection");
+    info.option ("-t, --test", "Test mode");
+    info.option ("-T, --timeout=SECONDS", "Set network timeout in seconds");
+    info.option ("--version", "Show version information");
+
+    info.section ("Data file selection");
+    info.option ("-a, --age=HOURS", "Set maximum data file age in hours");
+    info.option ("-C, --coverage=PERCENT", "Set minimum data coverage in percent");
+    info.option ("-G, --station=PATTERN", "Set ground station matching pattern");
+    info.option ("-p, --projection=TYPE", "Set projection type");
+    info.option ("-r, --region=PATTERN", "Set region code matching pattern");
+    info.option ("-s, --satellite=PATTERN", "Set satellite name matching pattern");
+    info.option ("-S, --scenetime=PATTERN", "Set scene time matching pattern");
+
+    return (info);
 
   } // usage
 

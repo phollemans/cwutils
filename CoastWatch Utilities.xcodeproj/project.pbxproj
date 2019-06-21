@@ -1190,6 +1190,7 @@
 		E9E0591B1D2ECF4D00DA53C5 /* AttributeRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = AttributeRule.java; sourceTree = "<group>"; };
 		E9E0591D1D34132200DA53C5 /* TextRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TextRule.java; sourceTree = "<group>"; };
 		E9E10932225B312C00AFF6CD /* CompositeFunction.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = CompositeFunction.java; sourceTree = "<group>"; };
+		E9E2623622BD92A30011B821 /* NetworkServices.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = NetworkServices.java; sourceTree = "<group>"; };
 		E9E6611E21BCC99E00C55E89 /* EarthLocationSet.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = EarthLocationSet.java; sourceTree = "<group>"; };
 		E9E92A422069968C00D3EBB0 /* errata.tex */ = {isa = PBXFileReference; lastKnownFileType = text; path = errata.tex; sourceTree = "<group>"; };
 		E9E92A4320699C0B00D3EBB0 /* general_prefs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = general_prefs.png; sourceTree = "<group>"; };
@@ -2586,6 +2587,7 @@
 			isa = PBXGroup;
 			children = (
 				E96D8BAE161661420009B833 /* CatalogQueryAgent.java */,
+				E9E2623622BD92A30011B821 /* NetworkServices.java */,
 				E96D8BAF161661420009B833 /* OpendapQueryAgent.java */,
 				E96D8BB0161661420009B833 /* package.html */,
 				E96D8BB1161661420009B833 /* ServerQuery.java */,

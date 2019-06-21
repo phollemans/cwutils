@@ -37,6 +37,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * A server query interfaces to a CoastWatch data server and handles
  * the query URL connection and response text.  The response is read
@@ -79,6 +82,8 @@ import java.util.Vector;
  * @since 3.1.0
  */
 public class ServerQuery {
+
+  private static final Logger LOGGER = Logger.getLogger (ServerQuery.class.getName());
 
   // Variables
   // ---------
@@ -261,7 +266,8 @@ public class ServerQuery {
     try {  
       url = new URL (protocol + "://" + host + path + "?" + queryString);
       in = url.openStream();
-    } catch (Exception e) { 
+    } catch (Exception e) {
+      LOGGER.log (Level.FINE, "Exception when opening data stream from " + url, e);
       throw new IOException ("Error in URL connection");
     } // catch
 
@@ -271,17 +277,23 @@ public class ServerQuery {
     String line;
     try { line = buf.readLine(); }
     catch (Exception e) { 
-      throw new IOException ("Error reading response header"); 
+      LOGGER.log (Level.FINE, "Exception reading line from buffer", e);
+      throw new IOException ("Error reading response header");
     } // catch
-    if (line.startsWith ("+ERR"))
+    if (line.startsWith ("+ERR")) {
+      LOGGER.fine ("Got +ERR in response");
       throw new IOException ("Error in query");
-    else if (!line.startsWith ("+OK"))
+    } // if
+    else if (!line.startsWith ("+OK")) {
+      LOGGER.fine ("No +OK in response, instead found: " + line);
       throw new IOException ("Malformed response header");
-
+    } // else if
+    
     // Read value key names
     // --------------------
     try { line = buf.readLine(); }
-    catch (Exception e) { 
+    catch (Exception e) {
+      LOGGER.log (Level.FINE, "Exception reading key names from buffer", e);
       throw new IOException ("Error reading value key names");
     } // catch
     keyNames = line.split ("\\|");
@@ -295,12 +307,15 @@ public class ServerQuery {
     try {    
       while ((line = buf.readLine ()) != null) {
         String[] values = line.split ("\\|", -1);
-        if (values.length != keyNames.length)
-          throw new IOException();
+        if (values.length != keyNames.length) {
+          LOGGER.fine ("Value count does not match key count in buffer line");
+          throw new IOException ("Error reading result values");
+        } // if
         results.add (values);
       } // while
       buf.close();
-    } catch (Exception e) { 
+    } catch (Exception e) {
+      LOGGER.log (Level.FINE, "Exception reading results from buffer", e);
       throw new IOException ("Error reading response body");
     } // catch
 

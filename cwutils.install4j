@@ -47,6 +47,7 @@
           <entry location="classes" fileType="regular" />
           <entry location="cwutils.properties" fileType="regular" />
           <entry location="resources" fileType="regular" />
+          <entry location="README.md" fileType="regular" />
           <entry location="build.number" fileType="regular" />
           <entry location="icons" fileType="regular" />
           <entry location="scripts" fileType="regular" />
@@ -70,7 +71,7 @@
           <entry location="bin/${compiler:cwstatusExecutable}" fileType="launcher" />
           <entry location="extensions" fileType="regular" />
           <entry location="lib" fileType="regular" />
-          <entry location="doc/cwutils_ug_3_5_0.pdf" fileType="regular" />
+          <entry location="doc/cwutils_ug_3_5_1.pdf" fileType="regular" />
           <entry location="doc/license.txt" fileType="regular" />
           <entry location="data" fileType="regular" />
         </include>
@@ -1433,7 +1434,7 @@ OTHER DEALINGS WITH THE SOFTWARE.
                             </void>
                             <void property="target">
                               <object class="java.io.File">
-                                <string>doc/cwutils_ug_3_5_0.pdf</string>
+                                <string>doc/cwutils_ug_3_5_1.pdf</string>
                               </object>
                             </void>
                           </object>
