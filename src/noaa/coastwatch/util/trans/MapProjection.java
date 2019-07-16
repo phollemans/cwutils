@@ -35,6 +35,8 @@ import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.EarthTransform2D;
 import noaa.coastwatch.util.trans.ProjectionConstants;
 
+import java.util.logging.Logger;
+
 import static noaa.coastwatch.util.trans.SpheroidConstants.SPHEROID_NAMES;
 
 /**
@@ -48,6 +50,8 @@ import static noaa.coastwatch.util.trans.SpheroidConstants.SPHEROID_NAMES;
 public abstract class MapProjection 
   extends EarthTransform2D
   implements ProjectionConstants {
+
+  private static final Logger LOGGER = Logger.getLogger (MapProjection.class.getName());
 
   // Constants
   // ---------
@@ -81,13 +85,6 @@ public abstract class MapProjection
 
   /** The map projection datum. */
   protected Datum datum;
-
-  /** 
-   * The positive longitude flag for geographic projections, true to
-   * convert longitudes to positive only in calls to
-   * transform(EarthLocation).
-   */
-  protected boolean positiveLon;
 
   ////////////////////////////////////////////////////////////
 
@@ -310,6 +307,7 @@ public abstract class MapProjection
     AffineTransform trans = AffineTransform.getTranslateInstance (
       -newOrigin.get (0), -newOrigin.get (1));
     proj.forwardAffine.preConcatenate (trans);
+
     AffineTransform inverseTrans = AffineTransform.getTranslateInstance (
       newOrigin.get (0), newOrigin.get (1));
     proj.inverseAffine.concatenate (inverseTrans);
@@ -370,6 +368,7 @@ public abstract class MapProjection
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void transformImpl (
     DataLocation dataLoc,
     EarthLocation earthLoc
@@ -390,6 +389,7 @@ public abstract class MapProjection
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void transformImpl (
     EarthLocation earthLoc,
     DataLocation dataLoc
@@ -447,12 +447,16 @@ public abstract class MapProjection
    * positive longitude flag is false and longitudes are not modified.
    *
    * @param flag the positive longitude flag.
+   *
+   * @deprecated As of 3.5.1, correct longitude interpretation in geographic
+   * projections are handled internally by the GeographicProjection class.
    */
+  @Deprecated
   public void setPositiveLon (
     boolean flag
   ) {
 
-    positiveLon = flag;
+    //    positiveLon = flag;
 
   } // setPositiveLon
 

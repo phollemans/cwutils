@@ -68,6 +68,8 @@ import noaa.coastwatch.util.trans.VanderGrintenProjection;
 import noaa.coastwatch.util.trans.WagnerIVProjection;
 import noaa.coastwatch.util.trans.WagnerVIIProjection;
 
+import java.util.logging.Logger;
+
 /**
  * The <code>MapProjectionFactory</code> class creates instances
  * of map projections.
@@ -77,6 +79,8 @@ import noaa.coastwatch.util.trans.WagnerVIIProjection;
  */
 public class MapProjectionFactory 
   implements ProjectionConstants {
+
+  private static final Logger LOGGER = Logger.getLogger (MapProjectionFactory.class.getName());
 
   // Variables
   // ---------
@@ -104,34 +108,6 @@ public class MapProjectionFactory
 
   /** Creates a new map projection factory with no GCTP forcing. */
   protected MapProjectionFactory () { }
-
-  ////////////////////////////////////////////////////////////
-
-  /** 
-   * Sets the positive lon flag for geographic projections.  This
-   * is necessary for geographic projections that span the
-   * +180/-180 longitude boundary so that earth locations with
-   * longitudes in the [-180..0] range are converted to be
-   * positive before applying the affine transform so that
-   * positive column values result.
-   *
-   * @param proj the projection to set the longitude flag for.
-   *
-   * @see MapProjection#setPositiveLon
-   */
-  private void setLonFlag (
-    MapProjection proj
-  ) {
-
-    if (proj.getSystem() == GEO) {
-      DataLocation topRight = proj.transform (proj.transform (
-        new DataLocation (0, proj.getDimensions()[Grid.COLS]-1)));
-      if (topRight.get (Grid.COLS) < 0) { 
-        proj.setPositiveLon (true);
-      } // if
-    } // if
-
-  } // setLonFlag
 
   ////////////////////////////////////////////////////////////
 
@@ -178,7 +154,6 @@ public class MapProjectionFactory
     // Modify projection for center and resolution
     // -------------------------------------------
     proj = proj.getModified (centerLoc, pixelDims);
-    setLonFlag (proj);
     return (proj);
 
   } // create
@@ -659,8 +634,7 @@ public class MapProjectionFactory
     // ------------------------
     if (proj == null)
       throw new IllegalArgumentException ("Projection parameter angles invalid");
-    
-    setLonFlag (proj);
+
     proj.setParameters (parameters);
     return (proj);
 

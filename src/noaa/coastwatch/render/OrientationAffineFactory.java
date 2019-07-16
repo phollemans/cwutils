@@ -37,6 +37,9 @@ import noaa.coastwatch.util.trans.PolarStereographicProjection;
 import noaa.coastwatch.util.trans.SpheroidConstants;
 import noaa.coastwatch.util.trans.SwathProjection;
 
+import java.util.Arrays;
+import java.util.logging.Logger;
+
 // Testing
 import noaa.coastwatch.test.TestLogger;
 
@@ -82,6 +85,8 @@ import noaa.coastwatch.test.TestLogger;
 @noaa.coastwatch.test.Testable
 public class OrientationAffineFactory {
 
+  private static final Logger LOGGER = Logger.getLogger (OrientationAffineFactory.class.getName());
+
   ////////////////////////////////////////////////////////////
 
   /**
@@ -109,6 +114,9 @@ public class OrientationAffineFactory {
         (dims[Grid.COLS]-1)/2.0);
       EarthLocation earthLoc = trans.transform (dataLoc);
       trans.getWorldAxes (earthLoc, north, east);
+
+      LOGGER.fine ("World axes north = " + Arrays.toString (north) +
+        ", east = " + Arrays.toString (east));
 
       // Compute cross product term
       // --------------------------

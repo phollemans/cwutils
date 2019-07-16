@@ -151,13 +151,6 @@ public class TopographyOverlay
     // ----------------------
     Grid grid = (Grid) reader.getVariable ("elevation");
     EarthTransform trans = reader.getInfo().getTransform();
-    /**
-     * This next step we do because otherwise the map projection will
-     * return negative column values when the longitude is negative.
-     * This forces the map projection to convert negative longitudes
-     * to positive longitudes before deriving the column value.
-     */
-    ((MapProjection) trans).setPositiveLon (true);
 
     // Create contour generator
     // ------------------------

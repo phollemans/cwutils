@@ -35,6 +35,11 @@ import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.util.trans.PolarStereographicProjection;
 import noaa.coastwatch.util.trans.SpheroidConstants;
 
+import java.util.logging.Logger;
+
+import static noaa.coastwatch.util.Grid.ROW;
+import static noaa.coastwatch.util.Grid.COL;
+
 // Testing
 import noaa.coastwatch.test.TestLogger;
 
@@ -55,6 +60,8 @@ import noaa.coastwatch.test.TestLogger;
 @noaa.coastwatch.test.Testable
 public abstract class EarthTransform2D
   extends EarthTransform {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthTransform2D.class.getName());
 
   // Variables
   // ---------
@@ -130,8 +137,8 @@ public abstract class EarthTransform2D
     for (int i = 0; i < segments; i++) {
       double t = (double) i/segments;
       DataLocation loc = new DataLocation (
-        upperLeft.get(Grid.ROWS),
-        upperLeft.get(Grid.COLS)*(1-t) + lowerRight.get(Grid.COLS)*t
+        upperLeft.get(ROW),
+        upperLeft.get(COL)*(1-t) + lowerRight.get(COL)*t
       );
       polygon.add (transform (loc));
     } // for
@@ -141,8 +148,8 @@ public abstract class EarthTransform2D
     for (int i = 0; i < segments; i++) {
       double t = (double) i/segments;
       DataLocation loc = new DataLocation (
-        upperLeft.get(Grid.ROWS)*(1-t) + lowerRight.get(Grid.ROWS)*t,
-        lowerRight.get(Grid.COLS)
+        upperLeft.get(ROW)*(1-t) + lowerRight.get(ROW)*t,
+        lowerRight.get(COL)
       );
       polygon.add (transform (loc));
     } // for
@@ -152,8 +159,8 @@ public abstract class EarthTransform2D
     for (int i = 0; i < segments; i++) {
       double t = (double) i/segments;
       DataLocation loc = new DataLocation (
-        lowerRight.get(Grid.ROWS),
-        lowerRight.get(Grid.COLS)*(1-t) + upperLeft.get(Grid.COLS)*t
+        lowerRight.get(ROW),
+        lowerRight.get(COL)*(1-t) + upperLeft.get(COL)*t
       );
       polygon.add (transform (loc));
     } // for
@@ -163,8 +170,8 @@ public abstract class EarthTransform2D
     for (int i = 0; i < segments; i++) {
       double t = (double) i/segments;
       DataLocation loc = new DataLocation (
-        lowerRight.get(Grid.ROWS)*(1-t) + upperLeft.get(Grid.ROWS)*t,
-        upperLeft.get(Grid.COLS)
+        lowerRight.get(ROW)*(1-t) + upperLeft.get(ROW)*t,
+        upperLeft.get(COL)
       );
       polygon.add (transform (loc));
     } // for
@@ -212,21 +219,23 @@ public abstract class EarthTransform2D
 
     DataLocation baseLoc = new DataLocation (2);
     DataLocation tipLoc = new DataLocation (2);
-   
+
     // Compute north vector
     // --------------------
     transform (earthLoc.translate (-0.01, 0), baseLoc);
     transform (earthLoc.translate (0.01, 0), tipLoc);
-    northVector[Grid.ROWS] = tipLoc.get (Grid.ROWS) - baseLoc.get (Grid.ROWS);
-    northVector[Grid.COLS] = tipLoc.get (Grid.COLS) - baseLoc.get (Grid.COLS);
+    northVector[ROW] = tipLoc.get (ROW) - baseLoc.get (ROW);
+    northVector[COL] = tipLoc.get (COL) - baseLoc.get (COL);
     norm (northVector);
 
     // Compute east vector
     // -------------------
+    EarthLocation baseEarthLoc = earthLoc.translate (0, -0.01);
+    EarthLocation tipEarthLoc = earthLoc.translate (0, 0.01);
     transform (earthLoc.translate (0, -0.01), baseLoc);
     transform (earthLoc.translate (0, 0.01), tipLoc);
-    eastVector[Grid.ROWS] = tipLoc.get (Grid.ROWS) - baseLoc.get (Grid.ROWS);
-    eastVector[Grid.COLS] = tipLoc.get (Grid.COLS) - baseLoc.get (Grid.COLS);
+    eastVector[ROW] = tipLoc.get (ROW) - baseLoc.get (ROW);
+    eastVector[COL] = tipLoc.get (COL) - baseLoc.get (COL);
     norm (eastVector);
 
   } // getWorldAxes
@@ -277,14 +286,14 @@ public abstract class EarthTransform2D
         DataLocation dataLoc,
         EarthLocation earthLoc
       ) {
-        earthLoc.setCoords (-dataLoc.get (Grid.ROWS), dataLoc.get (Grid.COLS));
+        earthLoc.setCoords (-dataLoc.get (ROW), dataLoc.get (COL));
       }
       protected void transformImpl (
         EarthLocation earthLoc,
         DataLocation dataLoc
       ) {
-        dataLoc.set (Grid.ROWS, -earthLoc.lat);
-        dataLoc.set (Grid.COLS, earthLoc.lon);
+        dataLoc.set (ROW, -earthLoc.lat);
+        dataLoc.set (COL, earthLoc.lon);
       }
       public String describe () { return (null); }
     };
@@ -296,17 +305,17 @@ public abstract class EarthTransform2D
     EarthLocation center = new EarthLocation();
     trans.getWorldAxes (center, north, east);
     double epsilon = 1e-5;
-    assert (Math.abs (north[Grid.ROWS] - (-1)) < epsilon);
-    assert (Math.abs (north[Grid.COLS] - 0) < epsilon);
-    assert (Math.abs (east[Grid.ROWS] - 0) < epsilon);
-    assert (Math.abs (east[Grid.COLS] - 1) < epsilon);
+    assert (Math.abs (north[ROW] - (-1)) < epsilon);
+    assert (Math.abs (north[COL] - 0) < epsilon);
+    assert (Math.abs (east[ROW] - 0) < epsilon);
+    assert (Math.abs (east[COL] - 1) < epsilon);
     
     center.markInvalid();
     trans.getWorldAxes (center, north, east);
-    assert (Double.isNaN (north[Grid.ROWS]));
-    assert (Double.isNaN (north[Grid.COLS]));
-    assert (Double.isNaN (east[Grid.ROWS]));
-    assert (Double.isNaN (east[Grid.COLS]));
+    assert (Double.isNaN (north[ROW]));
+    assert (Double.isNaN (north[COL]));
+    assert (Double.isNaN (east[ROW]));
+    assert (Double.isNaN (east[COL]));
 
     MapProjection map = new PolarStereographicProjection (
       SpheroidConstants.SPHEROID_SEMI_MAJOR[12],
@@ -317,10 +326,10 @@ public abstract class EarthTransform2D
     map = map.getModified (new EarthLocation (90, 0), new double[] {1, 1});
     center.setCoords (45, 45);
     map.getWorldAxes (center, north, east);
-    assert (north[Grid.ROWS] < 0);
-    assert (north[Grid.COLS] < 0);
-    assert (east[Grid.ROWS] < 0);
-    assert (east[Grid.COLS] > 0);
+    assert (north[ROW] < 0);
+    assert (north[COL] < 0);
+    assert (east[ROW] < 0);
+    assert (east[COL] > 0);
 
     logger.passed();
 

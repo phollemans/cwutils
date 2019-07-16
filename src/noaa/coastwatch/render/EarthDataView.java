@@ -1126,6 +1126,32 @@ public abstract class EarthDataView
      */
     EarthTransform2D trans2D = earthTrans.get2DVersion();
     AffineTransform affine = OrientationAffineFactory.create (trans2D);
+
+    /* Log the orientation type */
+    if (LOGGER.isLoggable (Level.FINE)) {
+      if (affine == null)
+        LOGGER.fine ("Orientation affine is null");
+      else {
+        int type = affine.getType();
+        String flags;
+        if (type == AffineTransform.TYPE_IDENTITY)
+          flags = "identity";
+        else if (type == AffineTransform.TYPE_GENERAL_TRANSFORM)
+          flags = "general";
+        else {
+          flags = "";
+          if ((type & AffineTransform.TYPE_FLIP) != 0) flags = flags + " flip";
+          if ((type & AffineTransform.TYPE_GENERAL_ROTATION) != 0) flags = flags + " general_rotation";
+          if ((type & AffineTransform.TYPE_GENERAL_SCALE) != 0) flags = flags + " general_scale";
+          if ((type & AffineTransform.TYPE_QUADRANT_ROTATION) != 0) flags = flags + " quadrant_rotation";
+          if ((type & AffineTransform.TYPE_TRANSLATION) != 0) flags = flags + " translation";
+          if ((type & AffineTransform.TYPE_UNIFORM_SCALE) != 0) flags = flags + " uniform_scale";
+        } // else
+        flags = flags.trim();
+        LOGGER.fine ("Orientation affine type is 0x" + Integer.toHexString (type) + " (" + flags + ")");
+      } // else
+    } // if
+
     if (affine != null) {
       if (affine.getType() == AffineTransform.TYPE_FLIP || trans2D.isOrientable())
         orientationAffine = affine;

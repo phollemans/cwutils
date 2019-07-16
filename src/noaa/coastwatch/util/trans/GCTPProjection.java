@@ -196,22 +196,15 @@ public class GCTPProjection
 
     // Perform conversion
     // ------------------
-    if (system == GEO) {
-      xy[0] = Math.toDegrees (lonLat[0]);
-      xy[1] = Math.toDegrees (lonLat[1]);
-      if (positiveLon && xy[0] < 0) xy[0] = 360 + xy[0];
-    } // if
-    else {
-      try {
-        double[] newXY = GCTP.forward (lonLat, system);
-        xy[0] = newXY[0];
-        xy[1] = newXY[1];
-      } // try
-      catch (Exception e) {
-        xy[0] = Double.NaN;
-        xy[1] = Double.NaN;
-      } // catch
-    } // else        
+    try {
+      double[] newXY = GCTP.forward (lonLat, system);
+      xy[0] = newXY[0];
+      xy[1] = newXY[1];
+    } // try
+    catch (Exception e) {
+      xy[0] = Double.NaN;
+      xy[1] = Double.NaN;
+    } // catch
 
   } // mapTransformFor
 
