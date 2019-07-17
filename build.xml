@@ -413,6 +413,7 @@
     git tag                     - list tags performed
     git tag -a LABEL            - add a tag with label
     git log - -pretty=oneline   - simple log of commits
+    git push origin             - push the new commits to the remote server
   -->
   
   <target name="branch-list"

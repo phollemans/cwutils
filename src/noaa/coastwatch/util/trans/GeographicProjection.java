@@ -54,7 +54,7 @@ public class GeographicProjection
    * These are used to determine how to translate input longitudes
    * into the output column values.
    */
-  public enum LongitudeRange {
+  private enum LongitudeRange {
 
     /*
     +--------------+--------------+--------------+--------------+
@@ -130,6 +130,8 @@ public class GeographicProjection
   /**
    * Updates the internal longitude range using the current affine
    * transform.
+   *
+   * @since 3.5.1
    */
   private void updateLongitudeRange () {
 

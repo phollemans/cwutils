@@ -786,7 +786,7 @@ public final class cwregister2 {
         if (performDiagnostic)
           imp = SensorSourceImpFactory.create (sourceTrans);
       
-      }// if
+      } // if
 
       else {
 
@@ -807,7 +807,7 @@ public final class cwregister2 {
           mapFactory = new BucketResamplingMapFactory (sourceTrans, destTrans, imp);
         } // else
 
-      } // if
+      } // else
 
       // Create diagnostic
       // -----------------
@@ -899,12 +899,14 @@ public final class cwregister2 {
       reader.close();
 
     } // try
-    catch (Exception e) {
+    
+    catch (OutOfMemoryError | Exception e) {
+      ToolServices.warnOutOfMemory (e);
       LOGGER.log (Level.SEVERE, "Aborting", e);
       ToolServices.exitWithCode (2);
       return;
     } // catch
-
+    
     ToolServices.finishExecution (PROG);
 
   } // main

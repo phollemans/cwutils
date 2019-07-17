@@ -473,6 +473,45 @@ public class ToolServices {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Logs a warning to the user if the throwable or any of its causes
+   * is an OutOfMemory error.
+   *
+   * @param th the throwable to check.
+   *
+   * @since 3.5.1
+   */
+  public static void warnOutOfMemory (
+    Throwable th
+  ) {
+  
+    // Check for out of memory
+    // -----------------------
+    boolean isOutOfMemory = false;
+    do {
+      if (th instanceof OutOfMemoryError) {
+        isOutOfMemory = true;
+        break;
+      } // if
+      else {
+        th = th.getCause();
+      } // else
+    } while (th != null);
+
+    // Log warning
+    // -----------
+    if (isOutOfMemory) {
+      long maxHeap = Runtime.getRuntime().maxMemory() / 1024 / 1024;
+      long newMaxHeap = maxHeap*2;
+      LOGGER.warning ("Caught dynamic memory allocation error, heap space is completely used");
+      LOGGER.warning ("Maximum heap size for this run set at " + maxHeap + " MB");
+      LOGGER.warning ("Rerun command with option -J-Xmx" + newMaxHeap + "m to double maximum heap");
+    } // if
+  
+  } // warnOutOfMemory
+  
+  ////////////////////////////////////////////////////////////
+
   private ToolServices () { }
 
   ////////////////////////////////////////////////////////////

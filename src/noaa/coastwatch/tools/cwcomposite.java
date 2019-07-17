@@ -651,7 +651,9 @@ public final class cwcomposite {
       CleanupHook.getInstance().cancelDelete (output);
 
     } // try
-    catch (Exception e) {
+
+    catch (OutOfMemoryError | Exception e) {
+      ToolServices.warnOutOfMemory (e);
       LOGGER.log (Level.SEVERE, "Aborting", e);
       ToolServices.exitWithCode (2);
       return;
