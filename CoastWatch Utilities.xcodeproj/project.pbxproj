@@ -51,7 +51,6 @@
 		E92EB0172095C6DA00F0FB58 /* warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warning.png; sourceTree = "<group>"; };
 		E92EB0182095C6DA00F0FB58 /* warning@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "warning@2x.png"; sourceTree = "<group>"; };
 		E9306F211FD2D2C800AAC2DF /* ChunkDataModifier.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ChunkDataModifier.java; sourceTree = "<group>"; };
-		E9339BBF16D1F0740019383B /* logging.properties */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = logging.properties; sourceTree = "<group>"; };
 		E93AE8821FAA9FAF00D3D699 /* ChunkCollector.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ChunkCollector.java; sourceTree = "<group>"; };
 		E93AE8831FAA9FAF00D3D699 /* ChunkOperation.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ChunkOperation.java; sourceTree = "<group>"; };
 		E93AE8841FAA9FAF00D3D699 /* DataChunk.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = DataChunk.java; sourceTree = "<group>"; };
@@ -996,7 +995,9 @@
 		E96D8C73161661420009B833 /* ValueSource.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ValueSource.java; sourceTree = "<group>"; };
 		E96D8C74161661420009B833 /* VariableEstimator.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = VariableEstimator.java; sourceTree = "<group>"; };
 		E96D8C75161661420009B833 /* overview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = overview.html; sourceTree = "<group>"; };
+		E96EA01722DFC68200315FEA /* logging.properties */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = logging.properties; sourceTree = "<group>"; };
 		E9721ED818B89BAD0073918D /* OrientationAffineFactory.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = OrientationAffineFactory.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E97358C422E524D40085F98F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E973CD6C212BAFD80055D725 /* GammaEnhancement.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = GammaEnhancement.java; sourceTree = "<group>"; };
 		E9749CF31FDE2C2700B6EA90 /* GridChunkProducer.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = GridChunkProducer.java; sourceTree = "<group>"; };
 		E9862E051FB421E300824C7D /* JELParser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = JELParser.java; sourceTree = "<group>"; };
@@ -1338,6 +1339,7 @@
 		E9549082161660FE00BFA76C = {
 			isa = PBXGroup;
 			children = (
+				E97358C422E524D40085F98F /* README.md */,
 				E91D3DDB1C6ACB8600EAFF79 /* build.number */,
 				E96D87B8161661420009B833 /* build.xml */,
 				E96D87B9161661420009B833 /* cwutils.install4j */,
@@ -1722,7 +1724,7 @@
 			children = (
 				E96D8993161661420009B833 /* alloy.properties */,
 				E96D8994161661420009B833 /* log4j.properties */,
-				E9339BBF16D1F0740019383B /* logging.properties */,
+				E96EA01722DFC68200315FEA /* logging.properties */,
 				E96D8995161661420009B833 /* noaa */,
 				E96D8AB7161661420009B833 /* toolstest.policy */,
 				E96D8AB8161661420009B833 /* version.properties */,

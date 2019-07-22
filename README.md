@@ -16,12 +16,17 @@ http://coastwatch.noaa.gov website, with beta and past builds available at http:
 Currently OpenJDK 11 from http://openjdk.java.net is used for development and the Java runtime.  The easiest way to start 
 tinkering with the code and creating your own custom builds is to:
 
-* Install a JDK on your local machine (11 or higher).
+* Install a JDK on your local machine (11 or higher) -- REQUIRED.
+* Install the Apache ant and ant-contrib packages -- REQUIRED.
+* Create a copy of this git repository on your local machine.
+* Install LaTeX and GNU awk if you want to generate the PDF user's guide.  LaTeX and gawk executable paths default to
+/opt/local/bin, modify the header of scripts/make_docs.sh to adjust this.
+* Install the ej-technologies install4j package if you want to generate installation packages (more about this below).  If not, 
+comment out the install4j related definitions and tasks in the build.xml file or the build will fail.
 * Install the latest CoastWatch Utilities release from the CoastWatch or Terrenus site.  Note the installation directory, 
 you'll need this later.
-* Create a copy of this git repository on your local machine.
 * Edit or add various Java source files in the src/ directory in your local copy.
-* Type `ant` (currently tested with Ant 1.10.5) in the root direcotory.  This creates a new lib/java/cwutils.jar file.
+* Type `ant` (currently tested with Ant 1.10.6) in the root direcotory.  This creates a new lib/java/cwutils.jar file.
 * Copy lib/java/cwutils.jar to lib/java in your CoastWatch Utilities installation directory.
 * Run the tool you've modified as normal in your installation, either using the command line launcher scripts or the GUI 
 launchers under Windows and Mac.
@@ -30,7 +35,7 @@ Your new code will then be picked up and run by the launchers in the existing in
 Ant targets (`ant -p` lists all possible build targets):
 
 * `ant api` - Builds the Javadoc API and puts it into doc/api.  
-* `ant doc` - Creates the Javadoc API, manual pages, and user's guide PDF file in doc/.  Requires that Latex is
+* `ant doc` - Creates the Javadoc API, manual pages, and user's guide PDF file in doc/.  Requires that LaTeX and GNU awk is
 installed on your machine.  You may need to adjust the paths at the top of scripts/make_docs.sh to help find various
 programs.
 * `ant test-jar` - Builds the new cwutils.jar file and copies it into directory named by the install.dir property in the
