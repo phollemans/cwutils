@@ -203,7 +203,7 @@ public class CWHDFReader
 
     // Get time period list and transform
     // ----------------------------------
-    List periodList = getPeriodList();
+    List<TimePeriod> periodList = getPeriodList();
     EarthTransform transform = getTransform();
 
     // Create info object
@@ -241,14 +241,13 @@ public class CWHDFReader
    *
    * @see noaa.coastwatch.util.TimePeriod
    */
-  private List getPeriodList () 
+  private List<TimePeriod> getPeriodList ()
     throws HDFException, ClassNotFoundException {
 
     // Read data
     // ---------
     int[] passDateArray = (int[]) getAttributeAsArray (sdid, "pass_date");
-    double[] startTimeArray = (double[]) getAttributeAsArray (sdid, 
-      "start_time");
+    double[] startTimeArray = (double[]) getAttributeAsArray (sdid, "start_time");
     int periods = passDateArray.length;
     double[] extentArray;
     try { 
@@ -264,7 +263,7 @@ public class CWHDFReader
 
     // Create period list
     // ------------------
-    List periodList = new ArrayList();
+    List<TimePeriod> periodList = new ArrayList<>();
     for (int i = 0; i < periods; i++) {
       long msec = (long) passDateArray[i] * MSEC_PER_DAY;
       msec += (long) (startTimeArray[i] * 1000L);

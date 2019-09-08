@@ -27,6 +27,7 @@ package noaa.coastwatch.gui;
 // -------
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.IndexColorModel;
 import java.awt.image.WritableRaster;
@@ -99,9 +100,32 @@ public class PalettePanel
     // -------------
     if (palette == null || func == null || range == null) return;
 
-    // Create buffered image
+    // Render buffered image
     // ---------------------
     Dimension dims = getSize();
+    Image image = createImage (dims);
+    g.drawImage (image, 0, 0, null);
+
+  } // paintComponent
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates an image of the palette for the panel.  This is made public
+   * for use in rendering palette images in other contexts.
+   *
+   * @param dims the dimensions of the image to create.
+   *
+   * @return the palette image of the specified dimensions.
+   *
+   * @since 3.5.1
+   */
+  public Image createImage (
+    Dimension dims
+  ) {
+
+    // Create buffered image
+    // ---------------------
     IndexColorModel colorModel = palette.getModel();
     if (colorModel.getMapSize() > 256) {
       colorModel = palette.remap (256).getModel();
@@ -123,9 +147,10 @@ public class PalettePanel
     } // for
     for (int j = 0; j < dims.height; j++)
       raster.setDataElements (0, j, dims.width, 1, byteRow);
-    g.drawImage (image, 0, 0, null);
 
-  } // paintComponent
+    return (image);
+
+  } // createImage
 
   ////////////////////////////////////////////////////////////
 

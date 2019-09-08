@@ -27,8 +27,10 @@ package noaa.coastwatch.render.feature;
 // -------
 import java.awt.Graphics2D;
 import java.awt.geom.GeneralPath;
+
 import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.render.feature.LineFeature;
+import noaa.coastwatch.render.PathTransformer;
 
 /**
  * The <code>PolygonFeature</code> class is a {@link LineFeature} with
@@ -123,13 +125,28 @@ public class PolygonFeature
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Renders this polygon feature to a graphics context.
-   *
-   * @param g the graphics context for drawing.
-   * @param trans the earth image transform for converting Earth
-   * locations to image points.
-   */
+  @Override
+  public GeneralPath transform (
+    EarthImageTransform imageTrans
+  ) {
+
+    // Transform path
+    // --------------
+    PathTransformer transformer = new PathTransformer();
+    GeneralPath path = transformer.transformPath (points, imageTrans, true, !fastMode);
+    
+    // Record discontinuous status
+    // ---------------------------
+    lastDiscontinuous = (path == null);
+
+    if (path == null) path = new GeneralPath();
+    return (path);
+
+  } // transform
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
   public void render (
     Graphics2D g,
     EarthImageTransform trans

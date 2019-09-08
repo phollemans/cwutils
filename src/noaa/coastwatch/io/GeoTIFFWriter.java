@@ -25,10 +25,38 @@ package noaa.coastwatch.io;
 
 // Imports
 // -------
-import com.sun.media.jai.codec.ImageCodec;
-import com.sun.media.jai.codec.ImageEncoder;
-import com.sun.media.jai.codec.TIFFEncodeParam;
-import com.sun.media.jai.codec.TIFFField;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriter;
+import javax.imageio.metadata.IIOMetadataNode;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.image.BufferedImage;
+
+import java.awt.image.BandedSampleModel;
+import java.awt.image.SampleModel;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferFloat;
+import java.awt.image.WritableRaster;
+import java.awt.image.Raster;
+import java.awt.image.ColorModel;
+import java.awt.image.RenderedImage;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.util.Vector;
+import java.awt.color.ColorSpace;
+import java.awt.image.ComponentColorModel;
+import java.awt.Transparency;
+
+import javax.imageio.plugins.tiff.TIFFField;
+import javax.imageio.plugins.tiff.TIFFTag;
+import javax.imageio.plugins.tiff.TIFFDirectory;
+import javax.imageio.plugins.tiff.GeoTIFFTagSet;
+import javax.imageio.plugins.tiff.BaselineTIFFTagSet;
+import javax.imageio.plugins.tiff.TIFFTagSet;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
@@ -51,59 +79,28 @@ import noaa.coastwatch.util.GCTP;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.MapProjection;
 
-/*
- * A note to the developer: a numer of JAI codec classes are used in this
- * class to store and encode TIFF field values.  The API can be found here:
- *
- * http://docs.oracle.com/cd/E17802_01/products/products/java-media/jai/forDevelopers/jai-apidocs/index.html
- *
- * The TIFFField class in particular is used with the following constructor:
- *
- * public TIFFField (
- *   int tag,
- *   int type,
- *   int count,
- *   Object data)
- *
- * Constructs a TIFFField with arbitrary data. The data parameter must be an 
- * array of a Java type appropriate for the type of the TIFF field. Since 
- * there is no available 32-bit unsigned datatype, long is used. The mapping 
- * between types is as follows:
- *
- *   TIFF type	       Java type
- *   TIFF_BYTE         byte
- *   TIFF_ASCII        String
- *   TIFF_SHORT        char
- *   TIFF_LONG         long
- *   TIFF_RATIONAL     long[2]
- *   TIFF_SBYTE        byte
- *   TIFF_UNDEFINED    byte
- *   TIFF_SSHORT       short
- *   TIFF_SLONG        int
- *   TIFF_SRATIONAL    int[2]
- *   TIFF_FLOAT        float
- *   TIFF_DOUBLE       double
- *
- * Note that the data parameter should always be the actual field value 
- * regardless of the number of bytes required for that value. This is the 
- * case despite the fact that the TIFF IFD Entry corresponding to the field 
- * may actually contain the offset to the field's value rather than the 
- * value itself (the latter occurring if and only if the value fits 
- * into 4 bytes).
- */
+import java.util.logging.Logger;
 
 /**
- * A GeoTIFF writer uses an earth image transform and rendered image
- * to create a TIFF file with extra TIFF tags decribing the Earth
+ * <p>A GeoTIFF writer uses an earth image transform and rendered image
+ * to create a TIFF file with extra TIFF tags decribing the earth
  * location of the image data.  The GeoTIFF content conforms to the
  * GeoTIFF specification version 1.8.2 as obtained from the <a
  * href="http://www.remotesensing.org/geotiff/geotiff.html">RemoteSensing.Org</a>
- * website.
+ * website.  The TIFF tag types and Java types are documented in the
+ * javax.imageio.plugins.tiff.TIFFField class and extra notes on encoding
+ * TIFF metadata linked from the javax.imageio package Javadoc.</p>
+ *
+ * <p>As of version 3.5.1, this class was re-written to use the javax.imageio
+ * API rather than Java Advanced Imaging (JAI), due to conflicts between
+ * JAI and JDK 11.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.3
  */
 public class GeoTIFFWriter {
+
+  private static final Logger LOGGER = Logger.getLogger (GeoTIFFWriter.class.getName());
 
   // Constants
   // ---------
@@ -137,38 +134,27 @@ public class GeoTIFFWriter {
    *                      at the time of image creation.
    */
 
-  /** The TIFF Artist tag value. */
-  private static final int TIFFTAG_ARTIST = 315; 
-
-  /** The TIFF DateTime tag value. */
-  private static final int TIFFTAG_DATE_TIME = 306;
-
   /** The TIFF DateTime field format. */
   private static final String TIFF_DATE_TIME_FMT = "yyyy:MM:dd HH:mm:ss";
 
-  /** The TIFF ImageDescription tag value. */
-  private static final int TIFFTAG_IMAGE_DESCRIPTION = 270;
-
-  /** The TIFF Software tag value. */
-  private static final int TIFFTAG_SOFTWARE = 305;
-
-  /** The TIFF HostComputer tag value. */
-  private static final int TIFFTAG_HOST_COMPUTER = 316;
-
   /** The TIFF none compression type. */
-  public static final int COMP_NONE = TIFFEncodeParam.COMPRESSION_NONE;
+  public static final int COMP_NONE = 0;
 
   /** The TIFF deflate compression type. */
-  public static final int COMP_DEFLATE = TIFFEncodeParam.COMPRESSION_DEFLATE;
+  public static final int COMP_DEFLATE = 1;
 
   /** The TIFF PackBits compression type. */
-  public static final int COMP_PACK = TIFFEncodeParam.COMPRESSION_PACKBITS;
+  public static final int COMP_PACK = 2;
 
   // Variables
   // ---------
-  /** The TIFF image encoder. */
-  private ImageEncoder encoder;
-
+  
+  /** The TIFF image writer */
+  private ImageWriter tiffWriter;
+  
+  /** The TIFF directory of fields to use for encoding the file. */
+  private TIFFDirectory tiffDir;
+  
   /** The properties used for GeoTIFF values. */
   private static Properties props = null;
 
@@ -247,20 +233,68 @@ public class GeoTIFFWriter {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * A <code>GeoKey</code> holds data for a single key of geographic
+   * information.  Similar in some ways to a TIFF field.  But in the end,
+   * a series of GeoKey data is encoded into TIFFField objects.
+   *
+   * @since 3.5.1
+   */
+  private static class GeoKey implements Comparable<GeoKey> {
+  
+    private int key;
+    private int type;
+    private int count;
+    private Object data;
+  
+    public GeoKey (int key, int type, int count, Object data) {
+      this.key = key;
+      this.type = type;
+      this.count = count;
+      this.data = data;
+    } // GeoKey
+  
+    public int getKey () { return (key); }
+    public int getType () { return (type); }
+    public int getCount () { return (count); }
+    public String getAsString (int index) { return (((String[])data)[index]); }
+    public int getAsInt (int index) { return ((int) (((char[])data)[index])); }
+    public double getAsDouble (int index) { return (((double[])data)[index]); }
+    
+    @Override
+    public boolean equals (Object obj) {
+      boolean isEqual = false;
+      if (obj != null && obj instanceof GeoKey) {
+        GeoKey otherKey = (GeoKey) obj;
+        isEqual = (this.key == otherKey.key);
+      } // if
+      return (isEqual);
+    } // equals
+
+    @Override
+    public int hashCode() { return (Integer.hashCode (this.key)); }
+
+    @Override
+    public int compareTo​ (GeoKey otherKey) { return (Integer.compare (this.key, otherKey.key)); }
+
+  } // GeoKey class
+
+  ////////////////////////////////////////////////////////////
+
   /** 
    * Gets the GeoTIFF keys representing the specified UTM map projection
-   * system as TIFF field objects.
+   * system.
    *
    * @param map the UTM map projection to convert.
    *
-   * @return a vector of GeoTIFF keys as TIFF field objects.
+   * @return the list of GeoTIFF keys.
    *
    * @throws IllegalArgumentException if the map projection system is
    * not UTM.
    *
    * @since 3.3.2
    */
-  private List<TIFFField> getUTMKeys (
+  private List<GeoKey> getUTMKeys (
     MapProjection map
   ) {
 
@@ -291,13 +325,15 @@ public class GeoTIFFWriter {
         pcsCitation + "'");
     } // catch
 
+    LOGGER.fine ("UTM zone = " + zoneKey);
+
     // Create key list
     // ---------------
-    List<TIFFField> keyList = new ArrayList<>();
-    keyList.add (new TIFFField (getIntValue ("ProjectedCSTypeGeoKey"),
-      TIFFField.TIFF_SHORT, 1, new char[] {(char) pcsTypeValue}));
-    keyList.add (new TIFFField (getIntValue ("PCSCitationGeoKey"),
-      TIFFField.TIFF_ASCII, 1, new String[] {pcsCitation}));
+    List<GeoKey> keyList = new ArrayList<>();
+    keyList.add (new GeoKey (getIntValue ("ProjectedCSTypeGeoKey"),
+      TIFFTag.TIFF_SHORT, 1, new char[] {(char) pcsTypeValue}));
+    keyList.add (new GeoKey (getIntValue ("PCSCitationGeoKey"),
+      TIFFTag.TIFF_ASCII, 1, new String[] {pcsCitation}));
 
     return (keyList);
 
@@ -307,16 +343,16 @@ public class GeoTIFFWriter {
 
   /** 
    * Gets the GeoTIFF keys representing the specified map projection
-   * system as TIFF field objects.
+   * system.
    *
    * @param map the map projection to convert.
    *
-   * @return a vector of GeoTIFF keys as TIFF field objects.
+   * @return the list of GeoTIFF keys.
    *
    * @throws IllegalArgumentException if the map projection system is
    * not supported.
    */
-  private List<TIFFField> getProjectionSystemKeys (
+  private List<GeoKey> getProjectionSystemKeys (
     MapProjection map
   ) {
 
@@ -340,23 +376,22 @@ public class GeoTIFFWriter {
 
     // Initialize key list
     // -------------------
-    List<TIFFField> keyList = new ArrayList<>();
+    List<GeoKey> keyList = new ArrayList<>();
 
     // Set projection system and citation
     // ----------------------------------
-    keyList.add (new TIFFField (getIntValue ("ProjectedCSTypeGeoKey"),
-      TIFFField.TIFF_SHORT, 1, 
-      new char[] {(char) getIntValue ("KvUserDefined")}));
-    keyList.add (new TIFFField (getIntValue ("ProjectionGeoKey"),
-      TIFFField.TIFF_SHORT, 1, 
-      new char[] {(char) getIntValue ("KvUserDefined")}));
-    keyList.add (new TIFFField (getIntValue ("ProjCoordTransGeoKey"),
-      TIFFField.TIFF_SHORT, 1, new char[] {(char) coordTrans}));
-    keyList.add (new TIFFField (getIntValue ("ProjLinearUnitsGeoKey"), 
-      TIFFField.TIFF_SHORT, 1, 
-      new char[] {(char) getIntValue ("Linear_Meter")}));
-    keyList.add (new TIFFField (getIntValue ("PCSCitationGeoKey"),
-      TIFFField.TIFF_ASCII, 1, new String[] {systemName}));
+    keyList.add (new GeoKey (getIntValue ("ProjectedCSTypeGeoKey"),
+      TIFFTag.TIFF_SHORT, 1, new char[] {(char) getIntValue ("KvUserDefined")}));
+    keyList.add (new GeoKey (getIntValue ("ProjectionGeoKey"),
+      TIFFTag.TIFF_SHORT, 1, new char[] {(char) getIntValue ("KvUserDefined")}));
+    keyList.add (new GeoKey (getIntValue ("ProjCoordTransGeoKey"),
+      TIFFTag.TIFF_SHORT, 1, new char[] {(char) coordTrans}));
+    keyList.add (new GeoKey (getIntValue ("ProjLinearUnitsGeoKey"),
+      TIFFTag.TIFF_SHORT, 1, new char[] {(char) getIntValue ("Linear_Meter")}));
+    keyList.add (new GeoKey (getIntValue ("PCSCitationGeoKey"),
+      TIFFTag.TIFF_ASCII, 1, new String[] {systemName}));
+
+    LOGGER.fine ("Proj system = " + systemName);
 
     // Add projection system requirements
     // ----------------------------------
@@ -374,8 +409,10 @@ public class GeoTIFFWriter {
       double value = params[i];
       if (require.getUnits(i).equals ("degrees"))
         value = GCTP.unpack_angle (value);
-      keyList.add (new TIFFField (getIntValue ("GCTP_" + shortDesc),
-        TIFFField.TIFF_DOUBLE, 1, new double[] {value}));
+      keyList.add (new GeoKey (getIntValue ("GCTP_" + shortDesc),
+        TIFFTag.TIFF_DOUBLE, 1, new double[] {value}));
+
+      LOGGER.fine ("Proj param " + shortDesc + " = " + value);
 
     } // for
 
@@ -387,16 +424,16 @@ public class GeoTIFFWriter {
 
   /** 
    * Gets the GeoTIFF keys representing the specified map projection
-   * spheroid as TIFF field objects.
+   * spheroid.
    *
    * @param map the map projection to convert.
    *
-   * @return a vector of GeoTIFF keys as TIFF field objects.
+   * @return a list of GeoTIFF keys.
    *
    * @throws IllegalArgumentException if the map projection spheroid is
    * not supported.
    */
-  private List<TIFFField> getSpheroidKeys (
+  private List<GeoKey> getSpheroidKeys (
     MapProjection map
   ) {
 
@@ -431,36 +468,39 @@ public class GeoTIFFWriter {
 
     // Create key list
     // ---------------
-    List<TIFFField> keyList = new ArrayList<>();
+    List<GeoKey> keyList = new ArrayList<>();
 
     // Specify known ellipsoid
     // -----------------------
     if (ellipsoid != -1) {    
-      keyList.add (new TIFFField (getIntValue ("GeographicTypeGeoKey"),
-        TIFFField.TIFF_SHORT, 1, new char[] {(char) ellipsoid}));
+      keyList.add (new GeoKey (getIntValue ("GeographicTypeGeoKey"),
+        TIFFTag.TIFF_SHORT, 1, new char[] {(char) ellipsoid}));
+
+        LOGGER.fine ("Known ellipsoid = " + spheroidName);
+
     } // if
 
     // Specify semi-major and semi-minor axes
     // --------------------------------------
     else {
-      keyList.add (new TIFFField (getIntValue ("GeographicTypeGeoKey"),
-        TIFFField.TIFF_SHORT, 1, 
-        new char[] {(char) getIntValue ("KvUserDefined")}));
-      keyList.add (new TIFFField (getIntValue ("GeogGeodeticDatumGeoKey"),
-        TIFFField.TIFF_SHORT, 1, 
-        new char[] {(char) getIntValue ("KvUserDefined")}));
-      keyList.add (new TIFFField (getIntValue ("GeogCitationGeoKey"),
-        TIFFField.TIFF_ASCII, 1, new String[] {spheroidName}));
-      keyList.add (new TIFFField (getIntValue ("GeogEllipsoidGeoKey"),
-        TIFFField.TIFF_SHORT, 1, 
-        new char[] {(char) getIntValue ("KvUserDefined")}));
-      keyList.add (new TIFFField (getIntValue ("GeogLinearUnitsGeoKey"),
-        TIFFField.TIFF_SHORT, 1, 
-        new char[] {(char) getIntValue ("Linear_Meter")}));
-      keyList.add (new TIFFField (getIntValue ("GeogSemiMajorAxisGeoKey"),
-        TIFFField.TIFF_DOUBLE, 1, new double[] {semiMajor}));
-      keyList.add (new TIFFField (getIntValue ("GeogSemiMinorAxisGeoKey"),
-        TIFFField.TIFF_DOUBLE, 1, new double[] {semiMinor}));
+      keyList.add (new GeoKey (getIntValue ("GeographicTypeGeoKey"),
+        TIFFTag.TIFF_SHORT, 1, new char[] {(char) getIntValue ("KvUserDefined")}));
+      keyList.add (new GeoKey (getIntValue ("GeogGeodeticDatumGeoKey"),
+        TIFFTag.TIFF_SHORT, 1, new char[] {(char) getIntValue ("KvUserDefined")}));
+      keyList.add (new GeoKey (getIntValue ("GeogCitationGeoKey"),
+        TIFFTag.TIFF_ASCII, 1, new String[] {spheroidName}));
+      keyList.add (new GeoKey (getIntValue ("GeogEllipsoidGeoKey"),
+        TIFFTag.TIFF_SHORT, 1, new char[] {(char) getIntValue ("KvUserDefined")}));
+      keyList.add (new GeoKey (getIntValue ("GeogLinearUnitsGeoKey"),
+        TIFFTag.TIFF_SHORT, 1, new char[] {(char) getIntValue ("Linear_Meter")}));
+      keyList.add (new GeoKey (getIntValue ("GeogSemiMajorAxisGeoKey"),
+        TIFFTag.TIFF_DOUBLE, 1, new double[] {semiMajor}));
+      keyList.add (new GeoKey (getIntValue ("GeogSemiMinorAxisGeoKey"),
+        TIFFTag.TIFF_DOUBLE, 1, new double[] {semiMinor}));
+
+      LOGGER.fine ("Custom ellipsoid = " + spheroidName + ", semiMajor = " +
+        semiMajor + ", semiMinor = " + semiMinor);
+
     } // else
 
     return (keyList);
@@ -470,36 +510,40 @@ public class GeoTIFFWriter {
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Translates a set of GeoTIFF keys into TIFF fields.
+   * Translates a set of GeoTIFF keys into TIFF field objects.  This is how
+   * the GeoTIFF standard stores values in a TIFF file, by encoding the
+   * GeoTIFF keys as lists of values within a set of GeoTIFF-specific TIFF
+   * tags.
    * 
-   * @param keyList the list of GeoTIFF keys as TIFF field objects. Only
-   * TIFF types short, ASCII, and double are allowed.
+   * @param keyList the list of GeoTIFF keys. Only TIFF types short,
+   * ASCII, and double are allowed.
    *
-   * @return a vector of TIFF field objects.
+   * @return the list of TIFF field objects to use as metadata in the TIFF
+   * file.
    * 
-   * @throws IllegalArgumentException if a TIFF field type is not among
+   * @throws IllegalArgumentException if a GeoKey type is not among
    * the allowed types for GeoTIFF keys.
    */
   private List<TIFFField> translateKeys (
-    TreeSet<TIFFField> keyList
+    TreeSet<GeoKey> keySet
   ) {
 
     // Count field values
     // ------------------
-    int keys = keyList.size();
+    int keys = keySet.size();
     int doubleValues = 0;
     int asciiValues = 0;
-    Iterator<TIFFField> iter = keyList.iterator();
+    Iterator<GeoKey> iter = keySet.iterator();
     while (iter.hasNext()) {
-      TIFFField field = iter.next();
-      switch (field.getType()) {
-      case TIFFField.TIFF_SHORT: 
+      GeoKey key = iter.next();
+      switch (key.getType()) {
+      case TIFFTag.TIFF_SHORT:
         break;
-      case TIFFField.TIFF_DOUBLE: 
-        doubleValues += field.getCount();
+      case TIFFTag.TIFF_DOUBLE:
+        doubleValues += key.getCount();
         break; 
-      case TIFFField.TIFF_ASCII: 
-        asciiValues += field.getAsString(0).length() + 1; 
+      case TIFFTag.TIFF_ASCII:
+        asciiValues += key.getAsString (0).length() + 1;
         break;
       default:
         throw new IllegalArgumentException (
@@ -532,33 +576,33 @@ public class GeoTIFFWriter {
     int doubleIndex = 0;
     int asciiIndex = 0;    
     int count, i;
-    iter = keyList.iterator();
+    iter = keySet.iterator();
     while (iter.hasNext()) {
-      TIFFField field = iter.next();
-      switch (field.getType()) {
-      case TIFFField.TIFF_SHORT: 
-        directoryArray[directoryIndex*4 + 0] = (char) field.getTag();
+      GeoKey key = iter.next();
+      switch (key.getType()) {
+      case TIFFTag.TIFF_SHORT:
+        directoryArray[directoryIndex*4 + 0] = (char) key.getKey();
         directoryArray[directoryIndex*4 + 1] = (char) 0;
         directoryArray[directoryIndex*4 + 2] = (char) 1;
-        directoryArray[directoryIndex*4 + 3] = (char) field.getAsInt (0);
+        directoryArray[directoryIndex*4 + 3] = (char) key.getAsInt (0);
         break;
-      case TIFFField.TIFF_DOUBLE: 
-        count = field.getCount();
-        directoryArray[directoryIndex*4 + 0] = (char) field.getTag();
+      case TIFFTag.TIFF_DOUBLE:
+        count = key.getCount();
+        directoryArray[directoryIndex*4 + 0] = (char) key.getKey();
         directoryArray[directoryIndex*4 + 1] = (char) doubleTag;
         directoryArray[directoryIndex*4 + 2] = (char) count;
         directoryArray[directoryIndex*4 + 3] = (char) doubleIndex;
         for (i = 0; i < count; i++) 
-          doubleArray[doubleIndex+i] = field.getAsDouble (i);
+          doubleArray[doubleIndex+i] = key.getAsDouble (i);
         doubleIndex += count;
         break; 
-      case TIFFField.TIFF_ASCII: 
-        count = field.getAsString(0).length() + 1;
-        directoryArray[directoryIndex*4 + 0] = (char) field.getTag();
+      case TIFFTag.TIFF_ASCII:
+        count = key.getAsString (0).length() + 1;
+        directoryArray[directoryIndex*4 + 0] = (char) key.getKey();
         directoryArray[directoryIndex*4 + 1] = (char) asciiTag;
         directoryArray[directoryIndex*4 + 2] = (char) count;
         directoryArray[directoryIndex*4 + 3] = (char) asciiIndex;
-        asciiArray[0] += field.getAsString(0) + "|";
+        asciiArray[0] += key.getAsString(0) + "|";
         asciiIndex += count;
         break; 
       } // switch
@@ -567,19 +611,26 @@ public class GeoTIFFWriter {
 
     // Create TIFF fields
     // ------------------
+    GeoTIFFTagSet geotiffSet = GeoTIFFTagSet.getInstance();
+    TIFFTag tag;
+    TIFFField field;
+
     List<TIFFField> tagList = new ArrayList<>();
-    TIFFField directoryField = new TIFFField (directoryTag, 
-      TIFFField.TIFF_SHORT, directoryArray.length, directoryArray);
-    tagList.add (directoryField);
+
+    tag = geotiffSet.getTag ("GeoKeyDirectoryTag");
+    field = new TIFFField (tag, TIFFTag.TIFF_SHORT, directoryArray.length, directoryArray);
+    tagList.add (field);
+
     if (doubleValues != 0) {
-      TIFFField doubleField = new TIFFField (doubleTag, 
-        TIFFField.TIFF_DOUBLE, doubleArray.length, doubleArray);
-      tagList.add (doubleField);
+      tag = geotiffSet.getTag ("GeoDoubleParamsTag");
+      field = new TIFFField (tag, TIFFTag.TIFF_DOUBLE, doubleArray.length, doubleArray);
+      tagList.add (field);
     } // if
+    
     if (asciiValues != 0) {
-      TIFFField asciiField = new TIFFField (asciiTag, 
-        TIFFField.TIFF_ASCII, 1, asciiArray);
-      tagList.add (asciiField);
+      tag = geotiffSet.getTag ("GeoAsciiParamsTag");
+      field = new TIFFField (tag, TIFFTag.TIFF_ASCII, 1, asciiArray);
+      tagList.add (field);
     } // if
 
     return (tagList);
@@ -594,12 +645,14 @@ public class GeoTIFFWriter {
    * 
    * @param trans the earth image transform for encoding.
    *
-   * @return the TIFF fields to use as extra fields.
+   * @return the list of TIFF fields to use as extra fields.
    *
    * @throws RuntimeException if the image affine transform is not
    * invertible.
+   * @throws IllegalArgumentException if the earth transform is not a map
+   * projection.
    */
-  private TIFFField[] getGeoFields (
+  private List<TIFFField> getGeoFields (
     EarthImageTransform trans
   ) {
 
@@ -611,47 +664,43 @@ public class GeoTIFFWriter {
     // Check for map projection
     // ------------------------
     if (!(earthTrans instanceof MapProjection)) 
-      throw new IllegalArgumentException (
-        "Earth transform must be a map projection");
+      throw new IllegalArgumentException ("Earth transform must be a map projection");
     MapProjection map = (MapProjection) earthTrans;
 
     // Create lists of tags and keys
     // -----------------------------
-    TreeSet<TIFFField> tagList = new TreeSet();
-    TreeSet<TIFFField> keyList = new TreeSet();
+    List<TIFFField> tagList = new ArrayList<>();
+    TreeSet<GeoKey> keySet = new TreeSet<>();
 
     // Set main citation
     // -----------------
-    keyList.add (new TIFFField (getIntValue ("GTCitationGeoKey"),
-      TIFFField.TIFF_ASCII, 1, new String[] {GCTP_CITE}));
+    keySet.add (new GeoKey (getIntValue ("GTCitationGeoKey"),
+      TIFFTag.TIFF_ASCII, 1, new String[] {GCTP_CITE}));
 
     // Set raster type
     // ---------------
-    keyList.add (new TIFFField (getIntValue ("GTRasterTypeGeoKey"),
-      TIFFField.TIFF_SHORT, 1, 
-      new char[] {(char) getIntValue ("RasterPixelIsArea")}));
+    keySet.add (new GeoKey (getIntValue ("GTRasterTypeGeoKey"),
+      TIFFTag.TIFF_SHORT, 1, new char[] {(char) getIntValue ("RasterPixelIsArea")}));
 
     // Set geographic keys
     // -------------------
     if (map.getSystem() == GCTP.GEO) {
-      keyList.add (new TIFFField (getIntValue ("GTModelTypeGeoKey"),
-        TIFFField.TIFF_SHORT, 1, 
-        new char[] {(char) getIntValue ("ModelTypeGeographic")}));
-      keyList.addAll (getSpheroidKeys (map));
+      keySet.add (new GeoKey (getIntValue ("GTModelTypeGeoKey"),
+        TIFFTag.TIFF_SHORT, 1, new char[] {(char) getIntValue ("ModelTypeGeographic")}));
+      keySet.addAll (getSpheroidKeys (map));
     } // if
 
     // Set map projection keys
     // -----------------------
     else {
-      keyList.add (new TIFFField (getIntValue ("GTModelTypeGeoKey"),
-        TIFFField.TIFF_SHORT, 1, 
-        new char[] {(char) getIntValue ("ModelTypeProjected")}));
+      keySet.add (new GeoKey (getIntValue ("GTModelTypeGeoKey"),
+        TIFFTag.TIFF_SHORT, 1, new char[] {(char) getIntValue ("ModelTypeProjected")}));
       if (map.getSystem() == GCTP.UTM) {
-        keyList.addAll (getUTMKeys (map));
+        keySet.addAll (getUTMKeys (map));
       } // if
       else {
-        keyList.addAll (getProjectionSystemKeys (map));
-        keyList.addAll (getSpheroidKeys (map));
+        keySet.addAll (getProjectionSystemKeys (map));
+        keySet.addAll (getSpheroidKeys (map));
       } // else
     
     } // if
@@ -681,13 +730,20 @@ public class GeoTIFFWriter {
     modelTrans[5] = matrix[3];
     modelTrans[7] = matrix[5];
     modelTrans[15] = 1;
-    tagList.add (new TIFFField (getIntValue ("ModelTransformationTag"),
-      TIFFField.TIFF_DOUBLE, 16, modelTrans));
+    
+    GeoTIFFTagSet geotiffSet = GeoTIFFTagSet.getInstance();
+    TIFFTag tag;
+    TIFFField field;
+
+    tag = geotiffSet.getTag ("ModelTransformationTag");
+    field = new TIFFField (tag, TIFFTag.TIFF_DOUBLE, 16, modelTrans);
+    tagList.add (field);
 
     // Translate keys to tags
     // ----------------------
-    tagList.addAll (translateKeys (keyList));
-    return (tagList.toArray (new TIFFField[] {}));
+    tagList.addAll (translateKeys (keySet));
+
+    return (tagList);
 
   } // getGeoFields
 
@@ -704,7 +760,7 @@ public class GeoTIFFWriter {
    * stream.
    */
   public GeoTIFFWriter (
-    OutputStream output,
+    ImageOutputStream output,
     EarthImageTransform trans
   ) throws IOException {
 
@@ -723,11 +779,10 @@ public class GeoTIFFWriter {
    * @param compress the TIFF compression type, either COMP_NONE, COMP_DEFLATE,
    * or COMP_PACK.
    *
-   * @throws IOException if an error occurred writing to the output
-   * stream.
+   * @throws IOException if an error occurred setting up the GeoTIFF output.
    */
   public GeoTIFFWriter (
-    OutputStream output,
+    ImageOutputStream output,
     EarthImageTransform trans,
     int compress
   ) throws IOException {
@@ -735,31 +790,51 @@ public class GeoTIFFWriter {
     // Initialize properties
     // ---------------------
     props = new Properties();
-    InputStream stream = getClass().getResourceAsStream (
-      PROPERTIES_FILE);
+    InputStream stream = getClass().getResourceAsStream (PROPERTIES_FILE);
     if (stream == null) {
-      throw new IOException ("Cannot find resource '" + 
-        PROPERTIES_FILE + "'");
+      throw new IOException ("Cannot find resource '" + PROPERTIES_FILE + "'");
     } // if
     props.load (stream);
     stream.close();    
 
-    // Create initial TIFF parameters
-    // ------------------------------
-    TIFFEncodeParam param = new TIFFEncodeParam();
-    param.setCompression (compress);
-    param.setExtraFields (getGeoFields (trans));
-   
-    // Create encoder
-    // --------------
-    encoder = ImageCodec.createImageEncoder ("tiff", output, param);
+    // Create writer
+    // -------------
+    tiffWriter = ImageIO.getImageWritersByFormatName ("tif").next();
+    tiffWriter.setOutput (output);
+
+    // Create directory of TIFF fields
+    // -------------------------------
+    BaselineTIFFTagSet baselineSet = BaselineTIFFTagSet.getInstance();
+    GeoTIFFTagSet geotiffSet = GeoTIFFTagSet.getInstance();
+    tiffDir = new TIFFDirectory (new TIFFTagSet[] {baselineSet, geotiffSet}, null);
 
     // Set encoding date/time
     // ----------------------
-    String dateTime =  new SimpleDateFormat (TIFF_DATE_TIME_FMT).format (
-      new Date());
-    addField (new TIFFField (TIFFTAG_DATE_TIME, TIFFField.TIFF_ASCII,
-      1, new String[] {dateTime}));
+    TIFFTag tag;
+    TIFFField field;
+    
+    String dateTime =  new SimpleDateFormat (TIFF_DATE_TIME_FMT).format (new Date());
+    tag = baselineSet.getTag ("DateTime");
+    field = new TIFFField (tag, TIFFTag.TIFF_ASCII, 1, new String[] {dateTime});
+    addField (field);
+
+    // Set compression
+    // ---------------
+    tag = baselineSet.getInstance().getTag ("Compression");
+    char compressValue;
+    switch (compress) {
+    case COMP_NONE: compressValue = (char) BaselineTIFFTagSet.COMPRESSION_NONE; break;
+    case COMP_PACK: compressValue = (char) BaselineTIFFTagSet.COMPRESSION_PACKBITS; break;
+    case COMP_DEFLATE: compressValue = (char) BaselineTIFFTagSet.COMPRESSION_DEFLATE; break;
+    default: throw new IOException ("Invalid compression type");
+    } // switch
+    field = new TIFFField (tag, TIFFTag.TIFF_SHORT, 1, new char[] {compressValue});
+    addField (field);
+
+    // Set geography
+    // -------------
+    List<TIFFField> geoFields = getGeoFields (trans);
+    geoFields.forEach (this::addField);
 
   } // GeoTIFFWriter
 
@@ -775,21 +850,24 @@ public class GeoTIFFWriter {
     TIFFField field
   ) {
 
-    // Get the existing fields
-    // -----------------------
-    TIFFEncodeParam param = (TIFFEncodeParam) encoder.getParam();
-    TIFFField[] fields = param.getExtraFields();     
-    if (fields == null) fields = new TIFFField[0];
+    tiffDir.addTIFFField (field);
 
-    // Add one more array entry
-    // ------------------------
-    TIFFField[] newFields = new TIFFField[fields.length+1];    
-    System.arraycopy (fields, 0, newFields, 0, fields.length);
-    newFields[fields.length] = field;
+    TIFFTag tag = field.getTag();
+    int count = field.getCount();
+    StringBuffer value = new StringBuffer();
+    for (int i = 0; i < count; i++) {
+      value.append (field.getValueAsString (i));
+      if (field.isIntegral() && tag.hasValueNames()) {
+        String valueName = tag.getValueName (field.getAsInt (i));
+        if (valueName != null) value.append ("(" + valueName + ")");
+      } // if
+      if (i < (count-1)) value.append (", ");
+    } // for
+    if (count > 1) { value.insert (0, "["); value.append ("]"); }
+    String type = TIFFField.getTypeName (field.getType());
 
-    // Set the new fields
-    // ------------------
-    param.setExtraFields (newFields);
+    LOGGER.fine ("TIFF field " + tag.getNumber() + "(" + tag.getName() +
+      "), type = " + type + ", value = " + value);
 
   } // addField
 
@@ -804,8 +882,9 @@ public class GeoTIFFWriter {
     String description
   ) {
 
-    addField (new TIFFField (TIFFTAG_IMAGE_DESCRIPTION,
-      TIFFField.TIFF_ASCII, 1, new String[] {description}));
+    TIFFTag tag = BaselineTIFFTagSet.getInstance().getTag ("ImageDescription");
+    TIFFField field = new TIFFField (tag, TIFFTag.TIFF_ASCII, 1, new String[] {description});
+    addField (field);
 
   } // setDescription
 
@@ -820,8 +899,9 @@ public class GeoTIFFWriter {
     String artist
   ) {
 
-    addField (new TIFFField (TIFFTAG_ARTIST,
-      TIFFField.TIFF_ASCII, 1, new String[] {artist}));
+    TIFFTag tag = BaselineTIFFTagSet.getInstance().getTag ("Artist");
+    TIFFField field = new TIFFField (tag, TIFFTag.TIFF_ASCII, 1, new String[] {artist});
+    addField (field);
 
   } // setArtist
 
@@ -837,8 +917,9 @@ public class GeoTIFFWriter {
     String software
   ) {
 
-    addField (new TIFFField (TIFFTAG_SOFTWARE,
-      TIFFField.TIFF_ASCII, 1, new String[] {software}));
+    TIFFTag tag = BaselineTIFFTagSet.getInstance().getTag ("Software");
+    TIFFField field = new TIFFField (tag, TIFFTag.TIFF_ASCII, 1, new String[] {software});
+    addField (field);
 
   } // setSoftware
 
@@ -854,8 +935,9 @@ public class GeoTIFFWriter {
     String computer
   ) {
 
-    addField (new TIFFField (TIFFTAG_HOST_COMPUTER,
-      TIFFField.TIFF_ASCII, 1, new String[] {computer}));
+    TIFFTag tag = BaselineTIFFTagSet.getInstance().getTag ("HostComputer");
+    TIFFField field = new TIFFField (tag, TIFFTag.TIFF_ASCII, 1, new String[] {computer});
+    addField (field);
 
   } // setComputer
 
@@ -874,9 +956,138 @@ public class GeoTIFFWriter {
     RenderedImage image
   ) throws IOException {
 
-    encoder.encode (image);
+    IIOMetadata metadata = tiffDir.getAsMetadata();
+    IIOImage imageData = new IIOImage (image, null, metadata);
+    tiffWriter.write (metadata, imageData, null);
 
   } // encode
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Holds arbitrary data with fake color model as a rendered image.  The
+   * image is not suitable for display, but rather for passing directly to
+   * the {@link #encode} method.
+   *
+   * @since 3.5.1
+   */
+  private static class DataImage implements RenderedImage {
+
+    private Raster raster;
+    private ColorModel colorModel;
+    
+    public DataImage (Raster raster) {
+
+      this.raster = raster;
+
+      // We trick the writer here and supply a color model that it
+      // will not throw an error on.
+      ColorSpace colorSpace = ColorSpace.getInstance (ColorSpace.CS_GRAY);
+      colorModel = new ComponentColorModel (colorSpace, false, false,
+        Transparency.OPAQUE, DataBuffer.TYPE_FLOAT) {
+          public boolean isCompatibleRaster​ (Raster raster) { return (true); }
+          public boolean isCompatibleSampleModel​ (SampleModel sm) { return (true); }
+      };
+
+    } // DataImage
+
+    public WritableRaster copyData​ (WritableRaster copy) {
+      if (copy == null) copy = raster.createCompatibleWritableRaster();
+      copy.setRect (raster);
+      return (copy);
+    } // copyData
+
+    public ColorModel getColorModel() { return (colorModel); }
+
+    public Raster getData() { return (getData (raster.getBounds())); }
+
+    public Raster getData​ (Rectangle rect) {
+      WritableRaster copy = raster.createCompatibleWritableRaster​ (rect);
+      copy.setRect (raster);
+      return (copy);
+    } // getData
+
+    public int getHeight() { return (raster.getHeight()); }
+    public int getMinTileX() { return (0); }
+    public int getMinTileY() { return (0); }
+    public int getMinX() { return (0); }
+    public int getMinY() { return (0); }
+    public int  getNumXTiles() { return (0); }
+    public int  getNumYTiles() { return (0); }
+    public Object getProperty​ (String name) { return (Image.UndefinedProperty); }
+    public String[] getPropertyNames() { return (null); }
+    public SampleModel getSampleModel() { return (raster.getSampleModel()); }
+    public Vector<RenderedImage> getSources() { return (null); }
+    public Raster getTile​ (int tileX, int tileY) { throw new UnsupportedOperationException(); }
+    public int getTileGridXOffset() { return (0); }
+    public int getTileGridYOffset() { return (0); }
+    public int getTileHeight() { return (0); }
+    public int getTileWidth() { return (0); }
+    public int getWidth() { return (raster.getWidth()); }
+
+  } // DataImage class
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a multibanded image based on data from 32-bit float arrays.
+   *
+   * @param width the image width in pixels.
+   * @param height the image height in pixels.
+   * @param floatDataList the list of float data arrays for the bands, each
+   * of length width*height.
+   *
+   * @return an image suitable for passing directly to the {@link #encode}
+   * method.  The image should not be used for display.
+   *
+   * @since 3.5.1
+   */
+  static public RenderedImage createImageForData (
+    int width,
+    int height,
+    List<float[]> floatDataList
+  ) {
+
+    int bands = floatDataList.size();
+    BandedSampleModel sampleModel =
+      new BandedSampleModel (DataBuffer.TYPE_FLOAT, width, height, bands);
+    float[][] floatData = floatDataList.toArray (new float[0][0]);
+    DataBuffer buffer = new DataBufferFloat (floatData, width*height);
+    WritableRaster raster = Raster.createWritableRaster (sampleModel, buffer, null);
+    RenderedImage dataImage = new DataImage (raster);
+
+    return (dataImage);
+
+  } // createImageForData
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Writes a multi-image GeoTIFF file to the output stream using the
+   * specified image data.
+   *
+   * @param imageList the list of images to write.
+   *
+   * @throws IOException if an error occurred writing to the output
+   * stream.
+   *
+   * @since 3.5.1
+   */
+  public void encodeImages (
+    List<RenderedImage> imageList
+  ) throws IOException {
+
+    IIOMetadata metadata = tiffDir.getAsMetadata();
+    tiffWriter.prepareWriteSequence (metadata);
+
+    for (RenderedImage image : imageList) {
+      IIOImage imageData = new IIOImage (image, null, metadata);
+      tiffWriter.writeToSequence (imageData, null);
+    } // for
+
+    tiffWriter.endWriteSequence();
+    
+  } // encodeImages
 
   ////////////////////////////////////////////////////////////
 

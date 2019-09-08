@@ -51,8 +51,11 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.trans.Datum;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
- * <p>The sampling tool extracts data values at specified Earth
+ * <p>The sampling tool extracts data values at specified earth
  * locations.</p>
  *
  * <!-- START MAN PAGE -->
@@ -65,12 +68,16 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * </p>
  *
  * <h2>Synopsis</h2>
- * <p> 
- *   cwsample {-s, --sample=LATITUDE/LONGITUDE} [OPTIONS] input output <br>
- *   cwsample {-S, --samples=FILE} [OPTIONS] input output <br>
+ * <p>cwsample [OPTIONS] input output</p>
+ *
+ * <h3>Sampling type options:</h3>
+ *
+ * <p>
+ * -s, --sample=LATITUDE/LONGITUDE <br>
+ * -S, --samples=FILE <br>
  * </p>
  *
- * <h3>Options:</h3>
+ * <h3>General options:</h3>
  *
  * <p>
  * -d, --dec=DECIMALS <br>
@@ -104,21 +111,6 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  * <dl>
  *
- *   <dt> -s, --sample=LATITUDE/LONGITUDE </dt>
- *   <dd> The sample point for a single sampling operation.  The point
- *   is specified in terms of earth location latitude and longitude in
- *   the range [-90..90] and [-180..180] with a datum matching that of the 
- *   input file. </dd>
- *
- *   <dt> -S, --samples=FILE </dt>
- *   <dd> The file name containing a list of sample points for
- *   performing multiple sampling operations.  The file must be an
- *   ASCII text file containing sample points as latitude / longitude
- *   pairs, one pair per line, with values separated by spaces or
- *   tabs.  The points are specified in terms of earth location
- *   latitude and longitude in the range [-90..90] and
- *   [-180..180] with a datum matching that of the input file. </dd>
- *
  *   <dt> input </dt>
  *   <dd> The input data file name. </dd>
  *
@@ -130,7 +122,28 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  * </dl>
  *
- * <h3>Options:</h3>
+ * <h3>Sampling type options:</h3>
+ *
+ * <dl>
+ *
+ *   <dt> -s, --sample=LATITUDE/LONGITUDE </dt>
+ *   <dd> The sample point for a single sampling operation.  The point
+ *   is specified in terms of earth location latitude and longitude in
+ *   the range [-90..90] and [-180..180] with a datum matching that of the
+ *   input file. </dd>
+ *
+ *   <dt> -S, --samples=FILE </dt>
+ *   <dd> The file name containing a list of sample points for
+ *   performing multiple sampling operations.  The file must be an
+ *   ASCII text file containing sample points as latitude / longitude
+ *   pairs, one pair per line, with values separated by spaces or
+ *   tabs.  The points are specified in terms of earth location
+ *   latitude and longitude in the range [-90..90] and
+ *   [-180..180] with a datum matching that of the input file. </dd>
+ *
+ * </dl>
+ *
+ * <h3>General options:</h3>
  *
  * <dl>
  *
@@ -257,13 +270,13 @@ import noaa.coastwatch.util.trans.EarthTransform;
  */
 public class cwsample {
 
+  private static final String PROG = cwsample.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  
   // Constants
   // ------------
   /** Minimum required command line parameters. */
   private static final int NARGS = 2;
-
-  /** Name of program. */
-  private static final String PROG = "cwsample";
 
   ////////////////////////////////////////////////////////////
 
@@ -274,6 +287,7 @@ public class cwsample {
    */
   public static void main (String argv[]) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -294,33 +308,36 @@ public class cwsample {
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
-      System.exit (0);
-    } // if  
+      usage();
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
-    } // if  
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
-      usage ();
-      System.exit (1);
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String input = remain[0];
     String output = remain[1];
@@ -346,17 +363,17 @@ public class cwsample {
     // Check for sample option
     // -----------------------
     if (sample == null && samples == null) {
-      System.err.println (PROG + ": At least one sampling option" +
-        " must be specified");
-      System.exit (2);
+      LOGGER.severe ("At least one sampling option must be specified");
+      ToolServices.exitWithCode (2);
+      return;
     } // if
 
     // Check variable and match options
     // --------------------------------
     if (match != null && variable != null) {
-      System.err.println (PROG + ": Cannot specify both --variable and " +
-        "--match options");
-      System.exit (2);
+      LOGGER.severe ("Cannot specify both --variable and --match options");
+      ToolServices.exitWithCode (2);
+      return;
     } // if
 
     try {
@@ -365,6 +382,11 @@ public class cwsample {
       // ---------------
       EarthDataReader reader = EarthDataReaderFactory.create (input);
       EarthTransform trans = reader.getInfo().getTransform();
+      if (!trans.isInvertible()) {
+        LOGGER.severe ("Detected a non-invertible transform in input file");
+        ToolServices.exitWithCode (2);
+        return;
+      } // if
       Datum datum = trans.getDatum();
 
       // Get single sample location
@@ -373,8 +395,9 @@ public class cwsample {
       if (sample != null) {
         String[] sampleArray = sample.split (ToolServices.SPLIT_REGEX);
         if (sampleArray.length != 2) {
-          System.err.println (PROG + ": Invalid sample '" + sample + "'");
-          System.exit (2);
+          LOGGER.severe ("Invalid sample '" + sample + "'");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         double lat = Double.parseDouble (sampleArray[0]);
         double lon = Double.parseDouble (sampleArray[1]);
@@ -394,9 +417,9 @@ public class cwsample {
           } while (!parser.eof());
         } // try
         catch (IOException e) {
-          System.err.println (PROG + ": Error parsing sample points file");
-          e.printStackTrace();
-          System.exit (2);
+          LOGGER.log (Level.SEVERE, "Error parsing sample points file", e);
+          ToolServices.exitWithCode (2);
+          return;
         } // catch
       } // else if
 
@@ -414,9 +437,9 @@ public class cwsample {
         for (int i = 0; i < varNameArray.length; i++) {
           DataVariable var = reader.getPreview (varNameArray[i]);
           if (var.getRank() != 2) {
-            System.err.println (PROG + ": Cannot sample variable '" + 
-              varNameArray[i] + "', rank is not 2");
-            System.exit (2);
+            LOGGER.severe ("Cannot sample variable '" + varNameArray[i] + "', rank is not 2");
+            ToolServices.exitWithCode (2);
+            return;
           } // if
           variables.add (reader.getVariable (varNameArray[i]));
         } // for
@@ -433,8 +456,9 @@ public class cwsample {
           variables.add (reader.getVariable(i));
         } // for      
         if (variables.size() == 0) {
-          System.err.println (PROG + ": No matching variables found");
-          System.exit (2);
+          LOGGER.severe ("No matching variables found");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
       } // else
 
@@ -511,47 +535,53 @@ public class cwsample {
       } // for
 
     } // try
-    catch (Exception e) {
-      e.printStackTrace ();
-      System.exit (2);
+
+    catch (OutOfMemoryError | Exception e) {
+      ToolServices.warnOutOfMemory (e);
+      LOGGER.log (Level.SEVERE, "Aborting", e);
+      ToolServices.exitWithCode (2);
+      return;
     } // catch
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
   ////////////////////////////////////////////////////////////
+  
+  private static void usage () { System.out.println (getUsage()); }
+  
+  ////////////////////////////////////////////////////////////
+  
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+    
+    UsageInfo info = new UsageInfo ("cwsample");
+    
+    info.func ("Extracts data values at specified earth locations");
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+    info.param ("input", "Input data file");
+    info.param ("output", "Output text file name or '-' for stdout");
 
-    System.out.println (
-"Usage: cwsample {-s, --sample=LATITUDE/LONGITUDE} [OPTIONS] input output\n" +
-"       cwsample {-S, --samples=FILE} [OPTIONS] input output\n" +
-"Extracts data values at specified earth locations from 2D data variables.\n" +
-"\n" +
-"Main parameters:\n" +
-"  -s, --sample=LATITUDE/LONGITUDE\n" +
-"                             Sample at single earth location.\n" +
-"  -S, --samples=FILE         Sample at multiple earth locations.\n" +
-"  input                      The input data file name.\n" +
-"  output                     The output text file name or '-' for stdout.\n" +
-"\n" +
-"Options:\n" +
-"  -d, --dec=DECIMALS         Set decimal places in geographic coordinates.\n"+
-"  -D, --delimit=STRING       Set delimiter between data columns.\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -H, --header               Print one line header on output table.\n" +
-"  -i, --imagecoords          Print image row and column coordinates.\n" +
-"  -m, --match=PATTERN        Sample only variables matching the pattern.\n" +
-"  -M, --missing=VALUE        Set value to print for missing data.\n" +
-"  -n, --nocoords             Do not print geographic coordinates.\n" +
-"  -R, --reverse              Reverse order of geographic coordinates.\n" +
-"  -V, --variable=NAME1[/NAME2/...]\n" +
-"                             Sample only variable names listed in order.\n" +
-"  --version                  Show version information.\n"
-    );
+    info.section ("Sampling type");
+    info.option ("-s, --sample=LATITUDE/LONGITUDE", "Sample single location");
+    info.option ("-S, --samples=FILE", "Sample multiple locations");
 
+    info.section ("General");
+    info.option ("-d, --dec=DECIMALS", "Set decimal places in geographic coordinates");
+    info.option ("-D, --delimit=STRING", "Set column delimiter");
+    info.option ("-h, --help", "Show help message");
+    info.option ("-H, --header", "Print output table header");
+    info.option ("-i, --imagecoords", "Print image row/column coordinates");
+    info.option ("-m, --match=PATTERN", "Sample only variables matching regular expression");
+    info.option ("-M, --missing=VALUE", "Set value to print for missing data");
+    info.option ("-n, --nocoords", "Do not print geographic coordinates");
+    info.option ("-R, --reverse", "Reverse order of geographic coordinates");
+    info.option ("-V, --variable=NAME1[/NAME2/...]", "Sample only variables listed");
+    info.option ("--version", "Show version information");
+    
+    return (info);
+    
   } // usage
 
   ////////////////////////////////////////////////////////////

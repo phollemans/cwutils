@@ -33,6 +33,8 @@ import noaa.coastwatch.render.ImageTransform;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+
 /**
  * The earth image transform class translates between 2D geographic
  * coordinates in latitude, longitude and image coordinates in x, y.
@@ -41,6 +43,8 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * @since 3.1.1
  */
 public class EarthImageTransform {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthImageTransform.class.getName());
 
   /** The earth transform for geo<-->data. */
   private EarthTransform earthTrans;

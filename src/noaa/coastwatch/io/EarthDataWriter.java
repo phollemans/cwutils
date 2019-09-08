@@ -32,16 +32,18 @@ import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 
 /**
- * All earth data writers obtain earth data from Earth
- * data info and variable objects and format to a data destination.
- * A earth data writer should do the following:
+ * <p>The <code>EarthDataWriter</code> interface is for classes that obtain data
+ * from {@link EarthDataInfo} and {@link DataVariable} objects and format the
+ * information to some output destination. A writer has the following
+ * lifecycle:</p>
+ *
  * <ul>
- *   <li> construct from some type of file or data stream, and a
- *        {@link noaa.coastwatch.util.EarthDataInfo} object </li>
- *   <li> add {@link noaa.coastwatch.util.DataVariable}
- *        objects to the contents </li>
- *   <li> flush current contents to destination </li>
- *   <li> close the destination when no longer needed </li>
+ *   <li>Constructs from some type of file or data stream, and an
+ *   {@link EarthDataInfo} object.</li>
+ *   <li>Accepts a series of {@link DataVariable} objects to be added to
+ *   the output contents via {@link #addVariable}.</li>
+ *   <li>Flushes the contents to the destination in {@link #flush}.</li>
+ *   <li>Closes the destination when no longer needed in {@link #close}.</li>
  * </ul>
  *
  * @author Peter Hollemans

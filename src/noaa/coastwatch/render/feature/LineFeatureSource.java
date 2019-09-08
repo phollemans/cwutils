@@ -31,6 +31,8 @@ import noaa.coastwatch.render.feature.AbstractFeatureSource;
 import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.render.feature.LineFeature;
 
+import java.util.logging.Logger;
+
 /**
  * The <code>LineFeatureSource</code> class supplies methods that read
  * or generate vector-specified earth data such as coast lines,
@@ -43,6 +45,8 @@ import noaa.coastwatch.render.feature.LineFeature;
  */
 public abstract class LineFeatureSource 
   extends AbstractFeatureSource {
+
+  private static final Logger LOGGER = Logger.getLogger (LineFeatureSource.class.getName());
 
   ////////////////////////////////////////////////////////////
 
@@ -58,8 +62,15 @@ public abstract class LineFeatureSource
     EarthImageTransform trans
   ) {
 
-    for (Iterator iter = iterator(); iter.hasNext(); ) 
-      ((LineFeature) iter.next()).render (g, trans);
+    int featureCount = 0;
+    
+    for (Iterator iter = iterator(); iter.hasNext(); ) {
+      LineFeature line = (LineFeature) iter.next();
+      line.render (g, trans);
+      featureCount++;
+    } // for
+
+    LOGGER.fine ("Rendered " + featureCount + " line features");
 
   } // render
 

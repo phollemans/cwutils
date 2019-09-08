@@ -651,7 +651,7 @@ public final class cwregister {
 
     info.option ("-f, --srcfilter=TYPE", "Filter source pixels using filter type");
     info.option ("-h, --help", "Show help message");
-    info.option ("-m, --match=PATTERN", "Register only variables matching pattern");
+    info.option ("-m, --match=PATTERN", "Register only variables matching regular expression");
     info.option ("-M, --method=TYPE", "Use resampling algorithm");
     info.option ("-O, --overwrite=TYPE", "Overwrite destination pixels upon condition");
     info.option ("-p, --polysize=KILOMETERS", "Set rectangle size for inverse method");

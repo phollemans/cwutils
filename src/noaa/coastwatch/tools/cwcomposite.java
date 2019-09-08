@@ -113,6 +113,7 @@ import java.util.logging.Level;
  * -M, --method=TYPE <br>
  * -p, --pedantic <br>
  * --serial <br>
+ * -t, --collapsetime <br>
  * -v, --verbose <br>
  * -V, --valid=COUNT <br>
  * --version <br>
@@ -232,6 +233,14 @@ import java.util.logging.Level;
  *   <dd>Turns on serial processing mode.  By default the program will
  *   use multiple processors in parallel to process chunks of data.</dd>
  *
+ *   <dt>-t, --collapsetime</dt>
+ *
+ *   <dd>Specifies that the time metadata in the output file
+ *   should be simplified and collapsed into a single period with start
+ *   date/time, and end date/time. By default the output file contains
+ *   the full time period metadata with the time periods from all of the input
+ *   files preserved.</dd>
+ *
  *   <dt>-v, --verbose</dt>
  *
  *   <dd>Turns verbose mode on.  The current status of data
@@ -334,6 +343,7 @@ public final class cwcomposite {
     CmdLineParser cmd = new CmdLineParser();
     Option helpOpt = cmd.addBooleanOption ('h', "help");
     Option verboseOpt = cmd.addBooleanOption ('v', "verbose");
+    Option collapsetimeOpt = cmd.addBooleanOption ('t', "collapsetime");
     Option matchOpt = cmd.addStringOption ('m', "match");
     Option methodOpt = cmd.addStringOption ('M', "method");
     Option validOpt = cmd.addIntegerOption ('V', "valid");
@@ -390,6 +400,7 @@ public final class cwcomposite {
     String inputs = (String) cmd.getOptionValue (inputsOpt);
     String coherentOutput = (String) cmd.getOptionValue (coherentOpt);
     boolean serialOperations = (cmd.getOptionValue (serialOpt) != null);
+    boolean collapseTime = (cmd.getOptionValue (collapsetimeOpt) != null);
 
     // Check for coherent mode
     // -----------------------
@@ -519,6 +530,7 @@ public final class cwcomposite {
         .stream()
         .reduce (pedanticOutput ? EarthDataInfo::appendWithDuplicates : EarthDataInfo::appendWithoutDuplicates)
         .get();
+      if (collapseTime) outputInfo.collapseTimePeriods();
       CleanupHook.getInstance().scheduleDelete (output);
       CWHDFWriter writer = new CWHDFWriter (outputInfo, output);
 
@@ -684,10 +696,11 @@ public final class cwcomposite {
 
     info.option ("-c, --coherent=VAR1[/VAR2[...]]", "Use coherent mode with variables");
     info.option ("-h, --help", "Show help message");
-    info.option ("-m, --match=PATTERN", "Composite only variables matching pattern");
+    info.option ("-m, --match=PATTERN", "Composite only variables matching regular expression");
     info.option ("-M, --method=TYPE", "Set composite type");
     info.option ("-p, --pedantic", "Retain repeated metadata values");
     info.option ("--serial", "Perform serial operations");
+    info.option ("-t, --collapsetime", "Collapse and simplify time metadata");
     info.option ("-v, --verbose", "Print verbose messages");
     info.option ("-V, --valid=COUNT", "Set minimum valid values");
     info.option ("--version", "Show version information");

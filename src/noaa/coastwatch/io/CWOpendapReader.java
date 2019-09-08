@@ -127,7 +127,7 @@ public class CWOpendapReader
 
     // Get time period list and transform
     // ----------------------------------
-    List periodList = getPeriodList();
+    List<TimePeriod> periodList = getPeriodList();
     EarthTransform transform = getTransform();
 
     // Create info object
@@ -153,7 +153,7 @@ public class CWOpendapReader
   ////////////////////////////////////////////////////////////
 
   /** Gets the list of time periods. */
-  private List getPeriodList () {
+  private List<TimePeriod> getPeriodList () {
 
     // Get period data
     // ---------------
@@ -168,7 +168,7 @@ public class CWOpendapReader
 
     // Create period list
     // ------------------
-    List periodList = new ArrayList();
+    List<TimePeriod> periodList = new ArrayList<>();
     for (int i = 0; i < periods; i++) {
       long msec = (long) passDateArray[i] * MSEC_PER_DAY;
       msec += (long) (startTimeArray[i] * 1000L);

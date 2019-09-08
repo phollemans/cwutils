@@ -49,7 +49,7 @@ public abstract class AbstractFeature
   private Object[] attributeArray;
 
   /** The list of feature points. */
-  private List<EarthLocation> points;
+  protected List<EarthLocation> points;
 
   /** The precalculated hash code. */
   private int hash;

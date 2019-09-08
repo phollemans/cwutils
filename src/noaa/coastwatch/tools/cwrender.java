@@ -98,6 +98,14 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.TimePeriod;
 import noaa.coastwatch.util.UnitFactory;
 import noaa.coastwatch.util.trans.EarthTransform2D;
+
+import noaa.coastwatch.gui.PalettePanel;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.awt.Image;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+
 import ucar.units.Unit;
 
 /**
@@ -115,9 +123,13 @@ import ucar.units.Unit;
  *
  * <h2>Synopsis</h2>
  *
+ * <p>cwrender [OPTIONS] input output</p>
+ *
+ * <h3>Rendering type options:</h3>
+ *
  * <p>
- * cwrender {-c, --composite=RED/GREEN/BLUE} [OPTIONS] input output <br>
- * cwrender {-e, --enhance=VARIABLE1[/VARIABLE2]} [OPTIONS] input output
+ * -c, --composite=RED/GREEN/BLUE <br>
+ * -e, --enhance=VARIABLE1[/VARIABLE2] <br>
  * </p>
  *
  * <h3>General options:</h3>
@@ -178,6 +190,7 @@ import ucar.units.Unit;
  * --palettefile=FILE <br>
  * --palettecolors=COLOR1[/COLOR2[/COLOR3...]] <br>
  * --palettelist <br>
+ * --paletteimage=FILE <br>
  * -r, --range=MIN/MAX <br>
  * --scalewidth=PIXELS <br>
  * --ticklabels=LABEL1[/LABEL2[/LABEL3/...]] <br>
@@ -294,6 +307,20 @@ import ucar.units.Unit;
  *
  * <dl>
  *
+ *   <dt>input</dt>
+ *   <dd>The input data file name.</dd>
+ *
+ *   <dt>output</dt>
+ *   <dd>The output image file name.  Unless the <b>--format</b>
+ *   option is used, the file extension indicates the desired output
+ *   format: '.png', '.jpg', '.tif', or '.pdf'.</dd>
+ *
+ * </dl>
+ *
+ * <h3>Rendering type options:</h3>
+ *
+ * <dl>
+ *
  *   <dt>-c, --composite=RED/GREEN/BLUE</dt>
  *
  *   <dd>Specifies color composite mode using the named variables.
@@ -315,14 +342,6 @@ import ucar.units.Unit;
  *   variables as vector components.  See the <b>--enhancevector</b>
  *   and <b>--background</b> options for settings that are specific to
  *   vector plots.</dd>
- *
- *   <dt>input</dt>
- *   <dd>The input data file name.</dd>
- *
- *   <dt>output</dt>
- *   <dd>The output image file name.  Unless the <b>--format</b>
- *   option is used, the file extension indicates the desired output
- *   format: '.png', '.jpg', '.tif', or '.pdf'.</dd>
  *
  * </dl>
  *
@@ -834,6 +853,7 @@ import ucar.units.Unit;
  *     71 Ocean-tempo
  *     72 Ocean-thermal
  *     73 Ocean-turbid
+ *     74 NCCOS-chla
  *   </pre>
  *   By default, the 'BW-Linear' palette is used which is a gray scale
  *   color ramp from black to white.</dd>
@@ -854,6 +874,12 @@ import ucar.units.Unit;
  *
  *   <dd>Lists the palette names available on the system, including any
  *   palettes in the user's resource directory.</dd>
+ *
+ *   <dt>--paletteimage=FILE</dt>
+ *
+ *   <dd>Renders an image of the palette names and color bars available on
+ *   the system, including any palettes in the user's resource directory.  The
+ *   file name can end in '.png', '.jpg', '.tif', or '.bmp'.</dd>
  *
  *   <dt>-r, --range=MIN/MAX</dt>
  *
@@ -1127,6 +1153,7 @@ public class cwrender {
     Option fontOpt = cmd.addStringOption ("font");
     Option fontlistOpt = cmd.addBooleanOption ("fontlist");
     Option palettelistOpt = cmd.addBooleanOption ("palettelist");
+    Option paletteimageOpt = cmd.addStringOption ("paletteimage");
     try { cmd.parse (argv); }
     catch (OptionException e) {
       LOGGER.warning (e.getMessage());
@@ -1163,20 +1190,46 @@ public class cwrender {
       return;
     } // if
 
-    // Print palette list
-    // ------------------
-    if (cmd.getOptionValue (palettelistOpt) != null) {
+    // Handle palette list and image
+    // -----------------------------
+    boolean palettelist = (cmd.getOptionValue (palettelistOpt) != null);
+    String paletteimage = (String) cmd.getOptionValue (paletteimageOpt);
+
+    if (palettelist || paletteimage != null) {
+    
+      // Initialize palette resources
+      // ----------------------------
       try { ResourceManager.setupPalettes (false); }
       catch (IOException e) {
         LOGGER.severe ("Error initializing palettes");
         ToolServices.exitWithCode (2);
         return;
       } // catch
-      List<String> paletteList = (List<String>) PaletteFactory.getPredefined();
-      for (String name : paletteList)
-        System.out.println (name);
+
+      // List palettes to stdout
+      // -----------------------
+      if (palettelist) {
+        List<String> paletteList = (List<String>) PaletteFactory.getPredefined();
+        for (String name : paletteList)
+          System.out.println (name);
+      } // if
+
+      // Write palette image
+      // -------------------
+      else {
+        try {
+          writePaletteImage (paletteimage);
+        } // try
+        catch (IOException e) {
+          LOGGER.log (Level.SEVERE, "Aborting", e);
+          ToolServices.exitWithCode (2);
+          return;
+        } // catch
+      } // else
+
       ToolServices.exitWithCode (0);
       return;
+
     } // if
 
     // Get remaining arguments
@@ -1971,6 +2024,75 @@ public class cwrender {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Writes an image of all palettes available to the specified file.
+   *
+   * @param paletteimage the image file to write.
+   */
+  private static void writePaletteImage (
+    String paletteimage
+  ) throws IOException {
+
+    // Set all dimensions
+    // ------------------
+    List<String> paletteList = (List<String>) PaletteFactory.getPredefined();
+    int paletteCount = paletteList.size();
+    int barHeight = 36;
+    int barWidth = barHeight * 4;
+    int space = 5;
+    int entryWidth = barWidth + space;
+    int textHeight = 16;
+    int entryHeight = textHeight + barHeight + space;
+    int maxHeight = 700;
+    int entriesPerColumn = (maxHeight - space) / entryHeight ;
+    int columns = paletteCount / entriesPerColumn;
+    if (paletteCount % entriesPerColumn != 0) columns++;
+    int height = entriesPerColumn * entryHeight + space;
+    int width = entryWidth * columns + space;
+    int fontSize = textHeight - 4;
+
+    // Create image
+    // ------------
+    BufferedImage image = new BufferedImage (width, height, BufferedImage.TYPE_INT_RGB);
+    Graphics2D g = image.createGraphics();
+    g.setBackground​ (Color.WHITE);
+    g.setColor (Color.BLACK);
+    g.setFont (new Font ("Dialog", Font.PLAIN, fontSize));
+    g.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    g.clearRect (0, 0, width, height);
+
+    // Render palette entries
+    // ----------------------
+    PalettePanel panel = new PalettePanel();
+    Dimension barDims = new Dimension (barWidth, barHeight);
+    int entry = 0;
+    for (String name : paletteList) {
+      int row = entry % entriesPerColumn;
+      int col = entry / entriesPerColumn;
+      int x = space + col*entryWidth;
+      int y = space + row*entryHeight;
+      Palette palette = PaletteFactory.create (name);
+      g.drawString (palette.getName(), x, y + textHeight - 2);
+      panel.setPalette (palette);
+      Image barImage = panel.createImage (barDims);
+      g.drawImage (barImage, x, y + textHeight, null);
+      entry++;
+    } // for
+
+    // Write file
+    // ----------
+    int index = paletteimage.lastIndexOf ('.');
+    if (index == -1)
+      throw new IOException ("No file extension for palette image file");
+    String ext = paletteimage.substring (index+1);
+    boolean written = ImageIO.write (image, ext, new File (paletteimage));
+    if (!written)
+      throw new IOException ("No writer found for format '" + ext + "'");
+
+  } // writePaletteImage
+
+  ////////////////////////////////////////////////////////////
+
   private static void usage () { System.out.println (getUsage()); }
 
   ////////////////////////////////////////////////////////////
@@ -2036,6 +2158,7 @@ public class cwrender {
     info.option ("--palettefile=FILE", "Use palette XML file");
     info.option ("--palettecolors=COLOR1[/COLOR2[/COLOR3...]]", "Use palette colors");
     info.option ("--palettelist", "Print palette names");
+    info.option ("--paletteimage=FILE", "Render image of palette names and colors");
     info.option ("-r, --range=MIN/MAX", "Set color enhancement range");
     info.option ("--scalewidth=PIXELS", "Set color scale width");
     info.option ("--ticklabels=LABEL1[/LABEL2[/LABEL3/...]]", "Set color scale tick labels");

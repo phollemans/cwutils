@@ -35,6 +35,8 @@ import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.render.feature.LineFeatureSource;
 import noaa.coastwatch.render.feature.PolygonFeature;
 
+import java.util.logging.Logger;
+
 /**
  * The <code>PolygonFeatureSource</code> extends the
  * <code>LineFeatureSource</code> class to render filled polygons as
@@ -48,25 +50,22 @@ import noaa.coastwatch.render.feature.PolygonFeature;
 public abstract class PolygonFeatureSource
   extends LineFeatureSource {
 
+  private static final Logger LOGGER = Logger.getLogger (PolygonFeatureSource.class.getName());
+    
   // Variables
   // ---------
 
   /** The currently selected list of polygon features. */
-  protected List polygonList;
+  protected List<PolygonFeature> polygonList;
 
   ////////////////////////////////////////////////////////////
 
   /** Creates a new source with an empty list of polygons. */
   protected PolygonFeatureSource () { 
 
-    polygonList = new ArrayList();
+    polygonList = new ArrayList<>();
 
   } // PolygonFeatureSource constructor
-
-  ////////////////////////////////////////////////////////////
-
-  /** Gets an iterator over the polygon features. */
-  public Iterator polygonIterator () { return (polygonList.iterator()); }
 
   ////////////////////////////////////////////////////////////
 
@@ -77,7 +76,7 @@ public abstract class PolygonFeatureSource
    * <ol>
    *
    *   <li>Groups of polygons are rendered as a batch using a non-zero
-   *   winding rule (see the {@link java.awt.geom.GeneralPath} class
+   *   winding rule (see the {@link java.awt.geom.PathIterator} class
    *   for details).  This is done so that hierarchical levels of
    *   polygons (polygons contained within other polygons) whose
    *   winding orders are different are rendered correctly.</li>
@@ -92,7 +91,7 @@ public abstract class PolygonFeatureSource
    * </ol>
    *
    * @param g the graphics context for drawing.
-   * @param trans the earth image transform for converting Earth
+   * @param trans the earth image transform for converting earth
    * locations to image points.
    */
   public void renderPolygons (
@@ -100,46 +99,63 @@ public abstract class PolygonFeatureSource
     EarthImageTransform trans
   ) {
 
-    // Loop over each polygon
-    // ----------------------
+    // Iterate over polygons
+    // ---------------------
     GeneralPath path = new GeneralPath (GeneralPath.WIND_NON_ZERO);
-    for (Iterator iter = polygonIterator(); iter.hasNext(); ) {
-      PolygonFeature polygon = (PolygonFeature) iter.next();
+    int actualFillCount = 0;
+    int discontinuousCount = 0;
+    Iterator<PolygonFeature> iter = polygonList.iterator();
 
-      // Flush path to graphics
-      // ----------------------
+    while (iter.hasNext()) {
+
+      // Check for end of polygon group
+      // ------------------------------
+      PolygonFeature polygon = iter.next();
       if (polygon.size() == 0) {
         g.fill (path);
-        path = new GeneralPath (GeneralPath.WIND_NON_ZERO);
-        continue;
+        actualFillCount++;
+        path.reset();
       } // if
 
-      // Check for degenerate polygon path
-      // ---------------------------------
-      GeneralPath polygonPath = polygon.getPath (trans);
-      Point2D point = polygonPath.getCurrentPoint();
-      if (point == null) continue;
+      else {
 
-      // Check for discontinuous polygon
-      // -------------------------------
-      if (polygon.isDiscontinuous()) {
-        do {
-          polygon = (PolygonFeature) iter.next();
-        } while (polygon.size() != 0);
-        path = new GeneralPath (GeneralPath.WIND_NON_ZERO);
-        continue;
-      } // if
+        // Check for usable polygon path
+        // -----------------------------
+        GeneralPath polygonPath = polygon.getPath (trans);
+        Point2D point = polygonPath.getCurrentPoint();
+        if (point != null) {
 
-      // Add polygon to path
-      // -------------------
-      path.append (polygon.getPath (trans), false);
-      path.closePath();
+          // Discard current group of polygons if one is discontinuous
+          // ---------------------------------------------------------
+          if (polygon.isDiscontinuous()) {
+            discontinuousCount++;
+            while (iter.hasNext()) {
+              polygon = iter.next();
+              if (polygon.size() == 0) break;
+            } // while
+            path.reset();
+          } // if
 
-    } // for
+          // Add polygon to path
+          // -------------------
+          else {
+            path.append (polygonPath, false);
+            path.closePath();
+          } // else
+
+        } // if
+
+      } // else
+
+    } // while
 
     // Perform final fill
     // ------------------
     g.fill (path);
+    actualFillCount++;
+
+    LOGGER.fine ("Rendered " + actualFillCount + " filled polygons");
+    LOGGER.fine ("Filtered out " + discontinuousCount + " discontinuous polygons");
 
   } // renderPolygons
 
@@ -147,10 +163,10 @@ public abstract class PolygonFeatureSource
 
   /**
    * Renders the selected polygon data to a graphics context as just
-   * the polygons outlines.
+   * the polygon outlines.
    *
    * @param g the graphics context for drawing.
-   * @param trans the earth image transform for converting Earth
+   * @param trans the earth image transform for converting earth
    * locations to image points.
    */
   public void renderOutlines (
@@ -158,9 +174,18 @@ public abstract class PolygonFeatureSource
     EarthImageTransform trans
   ) {
 
-    for (Iterator iter = polygonList.iterator(); iter.hasNext(); )
-      ((PolygonFeature) iter.next()).renderOutline (g, trans);
+    int outlineCount = 0;
+    
+    for (Iterator<PolygonFeature> iter = polygonList.iterator(); iter.hasNext(); ) {
+      PolygonFeature polygon = iter.next();
+      if (polygon.getPath (trans).getCurrentPoint() != null) {
+        polygon.renderOutline (g, trans);
+        outlineCount++;
+      } // if
+    } // for
 
+    LOGGER.fine ("Rendered " + outlineCount + " polygon outlines");
+    
   } // renderOutlines
 
   ////////////////////////////////////////////////////////////

@@ -29,6 +29,7 @@ import jargs.gnu.CmdLineParser;
 import jargs.gnu.CmdLineParser.Option;
 import jargs.gnu.CmdLineParser.OptionException;
 import java.io.IOException;
+
 import noaa.coastwatch.io.ArcWriter;
 import noaa.coastwatch.io.BinaryWriter;
 import noaa.coastwatch.io.ByteWriter;
@@ -44,6 +45,11 @@ import noaa.coastwatch.tools.CleanupHook;
 import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.io.GeoTIFFWriter;
+import noaa.coastwatch.io.GeoTIFFDataWriter;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * <p>The export tool translates earth data into external file
@@ -74,7 +80,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  * --version <br>
  * </p>
  * 
- * <h3>Binary raster specific options:</h3>
+ * <h3>Binary raster options:</h3>
  * 
  * <p> 
  * -c, --scale=FACTOR/OFFSET <br>
@@ -83,7 +89,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  * -s, --size=TYPE <br>
  * </p>
  *
- * <h3>ASCII text specific options:</h3>
+ * <h3>ASCII text options:</h3>
  * 
  * <p> 
  * -d, --dec=DECIMALS <br>
@@ -92,18 +98,24 @@ import noaa.coastwatch.util.EarthDataInfo;
  * -R, --reverse <br>
  * </p>
  *
- * <h3>NetCDF specific options:</h3>
+ * <h3>NetCDF options:</h3>
  * 
  * <p> 
  * -S, --dcs <br>
  * -C, --cw <br>
  * </p>
  *
- * <h2>Description</h2>
+ * <h3>GeoTIFF options:</h3>
+ *
  * <p>
- * The export tool translates earth data into external formats as
+ * -T, --tiffcomp=TYPE <br>
+ * </p>
+ *
+ * <h2>Description</h2>
+ *
+ * <p>The export tool translates earth data into external formats as
  * described below.  In all cases, 2D data sets are exported in row
- * major order starting from row 0.  For example, if the Earth
+ * major order starting from row 0.  For example, if the earth
  * data values form the 2D array:</p>
  * <pre>
  *    0  1  2  3
@@ -116,8 +128,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  *   0 1 2 3 4 5 6 7 ...
  * </pre>
  *
- * <p>
- * In the general case, multiple variables may be exported to the same
+ * <p>In the general case, multiple variables may be exported to the same
  * data file.  The use of the <b>--match</b> option may be used to
  * select a specific variable or subset of variables.</p>
  *
@@ -127,7 +138,8 @@ import noaa.coastwatch.util.EarthDataInfo;
  * The output is a stream of binary data values &#8212; either 8-bit
  * unsigned bytes, 16-bit signed integers, or 32-bit IEEE floating
  * point values.  For 8- and 16-bit output, data values may be scaled
- * to integers using a minimum and maximum or by using a scaling
+ * to integers (essentially a packing scheme to reduce the output file size)
+ * using a minimum and maximum or by using a scaling
  * factor and offset.  For minimum/maximum scaling, integer data is
  * calculated from data values using the equation:</p>
  * <pre>
@@ -167,6 +179,14 @@ import noaa.coastwatch.util.EarthDataInfo;
  * which case the output NetCDF may need to be modified and
  * extended.</p>
  *
+ * <h3>GeoTIFF:</h3>
+ *
+ * <p>The output is a 32-bit floating point TIFF file with GeoTIFF
+ * georeference tags.  The number of samples per pixel in the TIFF image
+ * matches the number of variables exported.  The resulting image file
+ * is not suitable for display as a regular TIFF image, but rather is
+ * meant for import into a GIS package.</p>
+ *
  * <h2>Parameters</h2>
  *
  * <h3>Main parameters:</h3>
@@ -186,6 +206,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  *     <li>filename.flt = ArcGIS</li>
  *     <li>filename.nc = NetCDF 3</li>
  *     <li>filename.nc4 = NetCDF 4</li>
+ *     <li>filename.tif = GeoTIFF</li>
  *   </ul></dd>
  *
  * </dl>
@@ -198,7 +219,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  *   <dd> The output format.  The current formats are 'bin' for
  *   binary raster, 'text' for ASCII text, 'arc' for ArcGIS
  *   binary grid, 'netcdf' for NetCDF 3, 'netcdf4' for NetCDF 4,
- *   or 'auto' to detect the format from the output file name.
+ *   'geotiff' for GeoTIFF, or 'auto' to detect the format from the output file name.
  *   The default is 'auto'.</dd>
  *
  *   <dt> -h, --help </dt>
@@ -224,8 +245,8 @@ import noaa.coastwatch.util.EarthDataInfo;
  *     header file name is created by replacing any '.' followed by an
  *     extension in the output file name with '.hdr'</li>
  *
- *     <li>NetCDF: Not applicable, all metadata in NetCDF is
- *     written into the dataset itself.</li>
+ *     <li>NetCDF, GeoTIFF: Not applicable, all metadata in NetCDF and
+ *     GeoTIFF is written into the dataset itself.</li>
  *
  *   </ul>
  *   By default no header is written. </dd>
@@ -254,6 +275,9 @@ import noaa.coastwatch.util.EarthDataInfo;
  *     <li>NetCDF: Not applicable, the missing values for
  *     variable data are copied from the input data source.</li>
  *
+ *     <li>GeoTIFF: Not applicable, the missing values for variable data
+ *     are written as NaN (not-a-number) in the TIFF image data.</li>
+ *
  *   </ul></dd>
  *
  *   <dt> -v, --verbose </dt>
@@ -267,13 +291,14 @@ import noaa.coastwatch.util.EarthDataInfo;
  *
  * </dl>
  *
- * <h3>Binary raster specific options:</h3>
+ * <h3>Binary raster options:</h3>
  *
  * <dl>
  *
  *   <dt> -c, --scale=FACTOR/OFFSET </dt>
- *   <dd> The data scale factor and offset.  Data values are scaled to
- *   integers using the factor and offset (see the equation above).
+ *   <dd> The data scale factor and offset for integer packing.  Data values
+ *   are scaled to integers using the factor and offset (see the equation in the
+ *   <b>Description</b> section above, under <b>Binary raster</b>).
  *   The default factor is 1 and offset is 0. </dd>
  *
  *   <dt> -o, --byteorder=ORDER </dt>
@@ -283,8 +308,9 @@ import noaa.coastwatch.util.EarthDataInfo;
  *   byte order. </dd>
  *
  *   <dt> -r, --range=MIN/MAX </dt>
- *   <dd> The data scaling range.  Data values are mapped to integers
- *   using the minimum and maximum values (see the equation above).
+ *   <dd> The data scaling range for integer packing.  Data values are mapped to integers
+ *   using the minimum and maximum values (see the equation in the
+ *   <b>Description</b> section above, under <b>Binary raster</b>).
  *   There is no default range. </dd>
  *
  *   <dt> -s, --size=TYPE </dt>
@@ -295,7 +321,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  *
  * </dl>
  *
- * <h3>ASCII text specific options:</h3>
+ * <h3>ASCII text options:</h3>
  *
  * <dl>
  *
@@ -319,7 +345,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  *
  * </dl>
  *
- * <h3>NetCDF specific options:</h3>
+ * <h3>NetCDF options:</h3>
  * 
  * <dl>
  *
@@ -344,6 +370,18 @@ import noaa.coastwatch.util.EarthDataInfo;
  *
  * </dl>
  *
+ * <h3>GeoTIFF options:</h3>
+ *
+ * <dl>
+ *
+ *   <dt>-T, --tiffcomp=TYPE</dt>
+ *
+ *   <dd>The TIFF compression algorithm.  The valid types are 'none'
+ *   for no compression (the default), 'deflate' for ZIP style
+ *   compression, and 'pack' for RLE style PackBits compression.</dd>
+ *
+ * </dl>
+ *
  * <h2>Exit status</h2>
  * <p> 0 on success, &gt; 0 on failure.  Possible causes of errors:</p>
  * <ul>
@@ -355,13 +393,14 @@ import noaa.coastwatch.util.EarthDataInfo;
  *
  * <h2>Examples</h2>
  * <p> The following shows the export of AVHRR channel 1 data
- * from a CoastWatch HDF file with the default 32-bit IEEE floating
+ * from a CoastWatch HDF file with to a binary 32-bit IEEE floating
  * point value format, host byte order, no header, in verbose mode:</p>
  * <pre>
- *   phollema$ cwexport --verbose --match 'avhrr_ch1' 2002_216_1853_n16_gr.hdf 
- *     2002_216_1853_n16_gr.ch1
+ *   phollema$ cwexport -v --match 'avhrr_ch1' 2019_250_2241_n19_mr.hdf
+ *     2019_250_2241_n19_mr_ch1.raw
  *
- *   cwexport: writing 'avhrr_ch1'
+ *   [INFO] Creating output 2019_250_2241_n19_mr_ch1.raw
+ *   [INFO] Writing avhrr_ch1
  * </pre>
  * <p>The example below shows the export of AVHRR channels 1, 2, and
  * 4 to the same output file from a CoastWatch HDF file using 8-bit
@@ -372,70 +411,75 @@ import noaa.coastwatch.util.EarthDataInfo;
  * can range up to 100.  The clipped values are assigned the default
  * missing value, which for byte data is 0.</p>
  * <pre>
- *   phollema$ cwexport --verbose --match 'avhrr_ch[124]' --size byte --range -30/30
- *     2002_216_1853_n16_gr.hdf 2002_216_1853_n16_gr.ch124
+ *   phollema$ cwexport -v --match 'avhrr_ch[124]' --size byte --range -30/30
+ *     2019_250_2241_n19_mr.hdf 2019_250_2241_n19_mr_ch124.raw
  *
- *   cwexport: writing 'avhrr_ch1'
- *   cwexport: writing 'avhrr_ch2'
- *   cwexport: writing 'avhrr_ch4'
+ *   [INFO] Creating output 2019_250_2241_n19_mr_ch124.raw
+ *   [INFO] Writing avhrr_ch1
+ *   [INFO] Writing avhrr_ch2
+ *   [INFO] Writing avhrr_ch4
  * </pre>
- * <p>The example shows the export of AVHRR channel 4 data to an
- * ASCII text file from a CoastWatch IMGMAP file in verbose mode.  The
- * geographic coordinates are printed in the order longitude,
- * latitude, and delimited with a comma character.  Any missing values
+ * <p>The next example shows the export of AVHRR channel 4 data to an
+ * ASCII text file from a CoastWatch HDF file in verbose mode.  The
+ * geographic coordinates are printed in the order (longitude, latitude),
+ * and delimited with a comma character.  Any missing values
  * are denoted with the value -999.  A one line dimension header is
  * prepended to the dataset.</p>
  * <pre>
- *   phollema$ cwexport --verbose --match 'avhrr_ch4' --format text --reverse --delimit ','
- *     --missing -999 --header 2002_214_2057_n16_wv_c4.cwf 
- *     2002_214_2057_n16_wv_c4.txt
+ *   phollema$ cwexport -v --match 'avhrr_ch4' --format text --reverse
+ *     --delimit ',' --missing -999 --header 2019_250_2241_n19_mr.hdf
+ *     2019_250_2241_n19_mr_ch4.txt
  *
- *   cwexport: writing 'avhrr_ch4'
+ *   [INFO] Creating output 2019_250_2241_n19_mr_ch4.txt
+ *   [INFO] Writing avhrr_ch4
  * </pre>
- * <p>The first few lines of the resulting text file are as follows:</p>
+ * <p>The first few lines of the output file are as follows:</p>
  * <pre>
- *   2,512,512
- *   -127.777901,51.212974,13
- *   -127.768008,51.212974,13.75
- *   -127.758116,51.212974,13.75
- *   -127.748224,51.212974,13.1
- *   -127.738332,51.212974,13.1
- *   -127.728439,51.212974,13
- *   -127.718547,51.212974,8.95
- *   -127.708655,51.212974,7.45
- *   -127.698763,51.212974,7.45
+ *   2,1101,1401
+ *   -98.243664,31.051575,31.48
+ *   -98.230459,31.051575,31.59
+ *   -98.217254,31.051575,31.59
+ *   -98.204049,31.051575,31.59
+ *   -98.190843,31.051575,32.03
+ *   -98.177638,31.051575,32.03
+ *   -98.164433,31.051575,32.47
+ *   -98.151228,31.051575,32.25
+ *   -98.138022,31.051575,32.58
  * </pre>
  * <p>The example below shows the export of AVHRR channel 2 data to
- * an ArcGIS binary grid file from a CoastWatch IMGMAP file, verbose
- * mode on.  The binary grid data is written to a '.flt' file and the
+ * an ArcGIS binary grid file from a CoastWatch HDF file in verbose
+ * mode.  The binary grid data is written to a '.flt' file and the
  * header data to a '.hdr' file.</p>
  * <pre>
- *   phollema$ cwexport --verbose --format arc --match 'avhrr_ch2' --header
- *     2002_214_2057_n16_wv_c2.cwf 2002_214_2057_n16_wv_c2.flt
+ *   phollema$ cwexport -v --format arc --match 'avhrr_ch2' --header
+ *     2019_250_2241_n19_mr.hdf 2019_250_2241_n19_mr_ch4.flt
  *
- *   cwexport: writing 'avhrr_ch2'
+ *   [INFO] Creating output 2019_250_2241_n19_mr_ch4.flt
+ *   [INFO] Writing avhrr_ch2
  * </pre>
- * <p>The header file contents are as follows:</p>
+ * <p>The header data is written to <b>2019_250_2241_n19_mr_ch4.hdr</b> as follows:</p>
  * <pre>
- *   nrows 512
- *   ncols 512
- *   xllcorner -14208797.57
- *   yllcorner 6088966.68
- *   cellsize 1099.96
- *   nodata_value 1.4E-45
+ *   nrows 1101
+ *   ncols 1401
+ *   xllcorner -1.0937169680601347E7
+ *   yllcorner 1999676.93911416
+ *   cellsize 1470.0
+ *   nodata_value -3.4E38
  *   byteorder MSBFIRST
+ *   nbits 32
  * </pre>
  * <p>A final example shows the export of SST and cloud data to a
  * NetCDF dataset:</p>
  * <pre>
  *   phollema$ cwexport -v --match '(sst|cloud)' 2010_040_1636_m02_wj.hdf 
- *     2010_040_1636_m02_wj.nc"
+ *     2010_040_1636_m02_wj.nc
  *
- *   cwexport: Creating output 2010_040_1636_m02_wj.nc
- *   cwexport: Writing cloud
- *   cwexport: Writing sst
+ *   [INFO] Creating output 2010_040_1636_m02_wj.nc
+ *   [INFO] Writing cloud
+ *   [INFO] Writing sst
  * </pre>
- * <p>A plain text dump of the file contents:</p>
+ * <p>Running the NetCDF software <code>ncdump -h</code> command shows the
+ * file contents:</p>
  * <pre>
  *   netcdf 2010_040_1636_m02_wj {
  *   dimensions:
@@ -503,13 +547,15 @@ import noaa.coastwatch.util.EarthDataInfo;
  */
 public class cwexport {
 
+  private static final String PROG = cwexport.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
+
   // Constants
   // ------------
+  
   /** Minimum required command line parameters. */
   private static final int NARGS = 2;
-
-  /** Name of program. */
-  private static final String PROG = "cwexport";
 
   ////////////////////////////////////////////////////////////
 
@@ -520,6 +566,7 @@ public class cwexport {
    */
   public static void main (String argv[]) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -541,36 +588,40 @@ public class cwexport {
     Option delimitOpt = cmd.addStringOption ('D', "delimit");
     Option dcsOpt = cmd.addBooleanOption ('S', "dcs");
     Option cwOpt = cmd.addBooleanOption ('C', "cw");
+    Option tiffcompOpt = cmd.addStringOption ('T', "tiffcomp");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
-      System.exit (0);
-    } // if  
+      usage();
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
-    } // if  
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
-      usage ();
-      System.exit (1);
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String input = remain[0];
     String output = remain[1];
@@ -582,9 +633,9 @@ public class cwexport {
     if (format.equals ("auto")) {
       int index = output.lastIndexOf ('.');
       if (index == -1) {
-        System.err.println (PROG + 
-          ": Cannot find output file extension and no format specified");
-        System.exit (2);
+        LOGGER.severe ("Cannot find output file extension and no format specified");
+        ToolServices.exitWithCode (2);
+        return;
       } // if
       String ext = output.substring (index+1);
       if (ext.equalsIgnoreCase ("raw"))
@@ -597,16 +648,19 @@ public class cwexport {
         format = "netcdf";
       else if (ext.equalsIgnoreCase ("nc4"))
         format = "netcdf4";
+      else if (ext.equalsIgnoreCase ("tif"))
+        format = "geotiff";
       else {
-        System.err.println (PROG + 
-          ": Cannot determine output format from extension '" + ext + "'");
-        System.exit (2);
+        LOGGER.severe ("Cannot determine output format from extension '" + ext + "'");
+        ToolServices.exitWithCode (2);
+        return;
       } // else
     } // if
 
     // Set defaults
     // ------------
     boolean verbose = (cmd.getOptionValue (verboseOpt) != null);
+    if (verbose) VERBOSE.setLevel (Level.INFO);
     String match = (String) cmd.getOptionValue (matchOpt);
     String size = (String) cmd.getOptionValue (sizeOpt);
     if (size == null) size = "float";
@@ -624,6 +678,8 @@ public class cwexport {
     boolean cw =  (cmd.getOptionValue (cwOpt) != null);
     String delimit = (String) cmd.getOptionValue (delimitOpt);
     if (delimit == null) delimit = " ";
+    String tiffcomp = (String) cmd.getOptionValue (tiffcompOpt);
+    if (tiffcomp == null) tiffcomp = "none";
 
     // Check range and scaling
     // -----------------------
@@ -632,12 +688,14 @@ public class cwexport {
     String[] scaleArray = (scale != null ? 
       scale.split (ToolServices.SPLIT_REGEX) : null);
     if (rangeArray != null && rangeArray.length != 2) {
-      System.err.println (PROG + ": Invalid range '" + range + "'");
-      System.exit (1);
+      LOGGER.severe ("Invalid range '" + range + "'");
+      ToolServices.exitWithCode (2);
+      return;
     } // if
     if (scaleArray != null && scaleArray.length != 2) {
-      System.err.println (PROG + ": Invalid scale '" + scale + "'");
-      System.exit (1);
+      LOGGER.severe ("Invalid scale '" + scale + "'");
+      ToolServices.exitWithCode (2);
+      return;
     } // if
 
     try {
@@ -647,12 +705,14 @@ public class cwexport {
       EarthDataReader reader = EarthDataReaderFactory.create (input);
       EarthDataInfo info = reader.getInfo();
    
+      // Setup for output
+      // ----------------
+      EarthDataWriter writer = null;
+      VERBOSE.info ("Creating output " + output);
+      CleanupHook.getInstance().scheduleDelete (output);
+
       // Create binary writer
       // --------------------
-      EarthDataWriter writer = null;
-      if (verbose) 
-        System.out.println (PROG + ": Creating output " + output);
-      CleanupHook.getInstance().scheduleDelete (output);
       if (format.equals ("bin")) {
 
         // Create writer based on size
@@ -665,8 +725,9 @@ public class cwexport {
         else if (size.equals ("float"))
           binWriter = new FloatWriter (info, output);
         else {
-          System.err.println (PROG + ": Invalid size '" + size + "'");
-          System.exit (2);
+          LOGGER.severe ("Invalid size '" + size + "'");
+          ToolServices.exitWithCode (2);
+          return;
         } // else
 
         // Set scaling
@@ -695,8 +756,9 @@ public class cwexport {
         else if (byteorder.equals ("msb")) 
           binWriter.setOrder (BinaryWriter.MSB);
         else {
-          System.err.println (PROG + ": Invalid order '" + byteorder + "'");
-          System.exit (2);
+          LOGGER.severe ("Invalid order '" + byteorder + "'");
+          ToolServices.exitWithCode (2);
+          return;
         } // else
 
         // Set header
@@ -742,11 +804,36 @@ public class cwexport {
         writer = nc4Writer;
       } // else if
 
+      // Create GeoTIFF 32-bit writer
+      // ----------------------------
+      else if (format.equals ("geotiff")) {
+
+        // Determine compression
+        // ---------------------
+        int compress = -1;
+        if (tiffcomp.equals ("none"))
+          compress = GeoTIFFWriter.COMP_NONE;
+        else if (tiffcomp.equals ("deflate"))
+          compress = GeoTIFFWriter.COMP_DEFLATE;
+        else if (tiffcomp.equals ("pack"))
+          compress = GeoTIFFWriter.COMP_PACK;
+        else {
+          LOGGER.severe ("Unsupported TIFF compression: " + tiffcomp);
+          ToolServices.exitWithCode (2);
+          return;
+        } // else
+
+        GeoTIFFDataWriter tiffWriter = new GeoTIFFDataWriter (info, output, compress);
+        writer = tiffWriter;
+
+      } // else if
+
       // Report invalid format
       // ---------------------
       else {
-        System.err.println (PROG + ": Invalid format '" + format + "'");
-        System.exit (2);
+        LOGGER.severe ("Invalid format '" + format + "'");
+        ToolServices.exitWithCode (2);
+        return;
       } // else
 
       // Loop over each variable
@@ -763,14 +850,12 @@ public class cwexport {
         // ----------------------
         try {
           DataVariable var = reader.getVariable (i);
-          if (verbose)
-            System.out.println (PROG + ": Writing " + varName); 
+          VERBOSE.info ("Writing " + varName);
           writer.addVariable (var);
           writer.flush(); 
         } // try
         catch (IOException e) { 
-          if (verbose) 
-            System.out.println (PROG + ": " + e.getMessage () +", skipping");
+          LOGGER.warning ("Error writing " + varName + ": " + e.getMessage() + ", skipping variable");
         } // catch
 
       } // for
@@ -782,61 +867,65 @@ public class cwexport {
       CleanupHook.getInstance().cancelDelete (output);
 
     } // try
-    catch (Exception e) {
-      e.printStackTrace ();
-      System.exit (2);
+
+    catch (OutOfMemoryError | Exception e) {
+      ToolServices.warnOutOfMemory (e);
+      LOGGER.log (Level.SEVERE, "Aborting", e);
+      ToolServices.exitWithCode (2);
+      return;
     } // catch
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwexport [OPTIONS] input output\n" +
-"Translates earth data into external formats.\n" +
-"\n" +
-"Main parameters:\n" +
-"  input                      The input data file name.\n" +
-"  output                     The output data file name.\n" +
-"\n" +
-"General options:\n" +
-"  -f, --format=TYPE          Set the output format.  TYPE may be\n" +
-"                              'bin', 'text', 'arc', 'netcdf', 'netcdf4',\n" +
-"                              or 'auto'.\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -H, --header               Write header before data output.\n" +
-"  -m, --match=PATTERN        Write only data whose variable name matches\n" +
-"                              the pattern.\n" +
-"  -M, --missing=VALUE        Set value to write for missing data.\n" +
-"  -v, --verbose              Print verbose messages.\n" +
-"  --version                  Show version information.\n" +
-"\n" +
-"Binary raster specific options:\n" +
-"  -c, --scale=FACTOR/OFFSET  Set scale factor and offset for floating\n" +
-"                              point to integer scaling.\n" +
-"  -o, --byteorder=ORDER      Set byte order for multi-byte output formats.\n"+
-"                              ORDER may be 'host', 'msb', or 'lsb'.\n" +
-"  -r, --range=MIN/MAX        Set range for floating point to integer\n" +
-"                              scaling\n" +
-"  -s, --size=TYPE            Set binary output value size.  TYPE may be\n" +
-"                              'byte', 'short', or 'float'.\n" +
-"\n" +
-"ASCII text specific options:\n" +
-"  -d, --dec=DECIMALS         Set decimal places in geographic coordinates.\n"+
-"  -D, --delimit=STRING       Set delimiter between data columns.\n" +
-"  -n, --nocoords             Do not print geographic coordinates.\n" +
-"  -R, --reverse              Reverse order of geographic coordinates.\n" +
-"NetCDF specific option:\n" +
-"  -S, --dcs                  Write global DCS metadata attributes.\n" +
-"  -C, --cw                   Write CoastWatch metadata attributes.\n"
-    );
+  ////////////////////////////////////////////////////////////
 
-  } // usage
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwexport");
+
+    info.func ("Translates earth data into external formats");
+
+    info.param ("input", "Input data file");
+    info.param ("output", "Output data file");
+
+    info.section ("General");
+    info.option ("-f, --format=TYPE", "Set output format");
+    info.option ("-h, --help", "Show help message");
+    info.option ("-H, --header", "Write header before data");
+    info.option ("-m, --match=PATTERN", "Write only variables matching regular expression");
+    info.option ("-m, --missing=VALUE", "Set value for missing data");
+    info.option ("-v, --verbose", "Print verbose messages");
+    info.option ("--version", "Show version information");
+
+    info.section ("Binary raster");
+    info.option ("-c, --scale=FACTOR/OFFSET", "Set scale-based integer packing parameters");
+    info.option ("-o, --byteorder=ORDER", "Set byte order for multi-byte output");
+    info.option ("-r, --range=MIN/MAX", "Set range-based integer packing parameters");
+    info.option ("-s, --size=TYPE", "Set binary output value size");
+
+    info.section ("ASCII text");
+    info.option ("-d, --dec=DECIMALS", "Set geographic coordinate decimal accuracy");
+    info.option ("-D, --delimit=STRING", "Set data column delimiter");
+    info.option ("-n, --nocoords", "Do not output geographic coordinates");
+    info.option ("-R, --reverse", "Reverse geographic coordinate order");
+
+    info.section ("NetCDF");
+    info.option ("-S, --dcs", "Write global DCS metadata");
+    info.option ("-C, --cw", "Write CoastWatch metadata");
+
+    info.section ("GeoTIFF");
+    info.option ("-T, --tiffcomp=TYPE", "Set TIFF compression type");
+
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 

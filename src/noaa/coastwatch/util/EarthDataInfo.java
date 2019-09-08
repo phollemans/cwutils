@@ -67,7 +67,7 @@ public class EarthDataInfo
   private String source;
 
   /** The time period list. */
-  private ArrayList periodList;
+  private List<TimePeriod> periodList;
 
   /** Earth transform object. */
   private EarthTransform trans;
@@ -85,6 +85,35 @@ public class EarthDataInfo
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Collapses the list of time periods in the metadata to a single
+   * period covering the full time range of data recording.
+   *
+   * @since 3.5.1
+   */
+  public void collapseTimePeriods () {
+
+
+// TODO: What if we have a set of time periods that encompass each other?
+// Then we'd need to set the start date as below, but the end date would
+// need to be determined by looking at all the time periods and selecting
+// the last end date.  Actually, this should be implemented as part of
+// getEndDate().  We have been assuming up until now time periods that don't
+// overlap.
+
+
+
+    TimePeriod fullPeriod = new TimePeriod (
+      getStartDate(),
+      getEndDate()
+    );
+    periodList = new ArrayList<>();
+    periodList.add (fullPeriod);
+
+  } // collapseTimePeriods
+
+  ////////////////////////////////////////////////////////////
+
   /** 
    * Gets the data recording date.  Since data recording may have
    * occurred over a number of different time periods, the date
@@ -94,7 +123,7 @@ public class EarthDataInfo
    */
   public Date getDate () { 
 
-    TimePeriod firstPeriod = (TimePeriod) Collections.min (periodList);
+    TimePeriod firstPeriod = Collections.min (periodList);
     return (firstPeriod.getStartDate());
 
   } // getDate
@@ -119,7 +148,7 @@ public class EarthDataInfo
    */
   public Date getEndDate () { 
 
-    TimePeriod lastPeriod = (TimePeriod) Collections.max (periodList);
+    TimePeriod lastPeriod = Collections.max (periodList);
     return (lastPeriod.getEndDate());
 
   } // getEndDate
@@ -132,8 +161,13 @@ public class EarthDataInfo
    */
   public boolean isInstantaneous () {
 
-    TimePeriod firstPeriod = (TimePeriod) periodList.get (0);
-    return (periodList.size() == 1 && firstPeriod.getDuration() == 0);
+    boolean instantaneous = false;
+    if (periodList.size() == 1) {
+      TimePeriod firstPeriod = periodList.get (0);
+      instantaneous = (firstPeriod.getDuration() == 0);
+    } // if
+
+    return (instantaneous);
 
   } // isInstantaneous
 
@@ -205,7 +239,7 @@ public class EarthDataInfo
    */
   public List<TimePeriod> getTimePeriods () {
 
-    return ((List<TimePeriod>) periodList.clone());
+    return (new ArrayList<> (periodList));
 
   } // getTimePeriods
 
@@ -265,14 +299,14 @@ public class EarthDataInfo
    */
   public EarthDataInfo (
     String source,
-    List periodList,
+    List<TimePeriod> periodList,
     EarthTransform trans,
     String origin,
     String history
   ) {
 
     this.source = source;
-    this.periodList = new ArrayList (periodList);
+    this.periodList = new ArrayList<> (periodList);
     this.trans = trans;
     this.origin = origin;
     this.history = history;
@@ -311,7 +345,7 @@ public class EarthDataInfo
     String history
   ) {
 
-    this (source, Arrays.asList (new Object[] {new TimePeriod (date, 0)}),
+    this (source, Arrays.asList (new TimePeriod[] {new TimePeriod (date, 0)}),
       trans, origin, history);
 
   } // EarthDataInfo constructor
@@ -442,7 +476,7 @@ public class EarthDataInfo
   public Object clone () {
 
     EarthDataInfo info = (EarthDataInfo) super.clone();
-    info.periodList = new ArrayList (periodList);
+    info.periodList = new ArrayList<> (periodList);
     return (info);
 
   } // clone

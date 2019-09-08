@@ -33,7 +33,7 @@ import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
- * The <b>EarthArea</b> class represents irregularly shaped areas on a
+ * The <code>EarthArea</code> class represents irregularly shaped areas on a
  * sphere.  In cases where simple north, south, east, and west bounds
  * are inadequate for describing an area, the earth area class may be
  * used to set up and query if a certain earth location is inside an

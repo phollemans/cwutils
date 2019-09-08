@@ -28,6 +28,7 @@ package noaa.coastwatch.util;
 import java.util.Date;
 import java.util.List;
 import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.util.TimePeriod;
 import noaa.coastwatch.util.MetadataServices;
 import noaa.coastwatch.util.trans.EarthTransform;
 
@@ -133,7 +134,7 @@ public class SatelliteDataInfo
   public SatelliteDataInfo (
     String sat,
     String sensor,
-    List periodList,
+    List<TimePeriod> periodList,
     EarthTransform trans,
     String origin,
     String history

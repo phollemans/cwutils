@@ -25,24 +25,22 @@ package noaa.coastwatch.render.feature;
 
 // Imports
 // -------
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryCollection;
-import com.vividsolutions.jts.geom.GeometryCollectionIterator;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
-import com.vividsolutions.jts.geom.MultiPoint;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import org.nocrala.tools.gis.data.esri.shapefile.ShapeFileReader;
+import org.nocrala.tools.gis.data.esri.shapefile.exception.InvalidShapeFileException;
+import org.nocrala.tools.gis.data.esri.shapefile.shape.AbstractShape;
+import org.nocrala.tools.gis.data.esri.shapefile.shape.shapes.AbstractPolyShape;
+import org.nocrala.tools.gis.data.esri.shapefile.shape.shapes.AbstractPointShape;
+import org.nocrala.tools.gis.data.esri.shapefile.shape.shapes.AbstractMultiPointShape;
+import org.nocrala.tools.gis.data.esri.shapefile.ValidationPreferences;
+import org.nocrala.tools.gis.data.esri.shapefile.shape.ShapeType;
+import org.nocrala.tools.gis.data.esri.shapefile.shape.PointData;
 
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
 
 import noaa.coastwatch.render.EarthDataOverlay;
 import noaa.coastwatch.render.feature.LineFeature;
@@ -55,13 +53,6 @@ import noaa.coastwatch.render.PolygonFeatureOverlay;
 import noaa.coastwatch.render.feature.PolygonFeatureSource;
 import noaa.coastwatch.util.EarthLocation;
 
-import org.geotools.data.FeatureReader;
-import org.geotools.data.FeatureResults;
-import org.geotools.data.FeatureSource;
-import org.geotools.data.shapefile.ShapefileDataStore;
-import org.geotools.feature.Feature;
-import org.geotools.feature.IllegalAttributeException;
-
 /**
  * <p>The <code>ESRIShapefileReader</code> class reads geographic
  * features from ESRI shapefile data and presents the data as an
@@ -71,10 +62,10 @@ import org.geotools.feature.IllegalAttributeException;
  * #getOverlay} method returns an overlay that is appropriate to the
  * feature geometry.</p>
  *
- * <p>This class uses the GeoTools version 2 library for accessing
- * shapefile data.  GeoTools is available from:
+ * <p>As of version 3.5.1, this class uses the Java ESRI Shape File Reader
+ * library available from:
  * <pre>
- *   http://www.geotools.org
+ *   https://sourceforge.net/projects/javashapefilere/
  * </pre>
  * Additional information on ESRI shapefiles and a technical
  * description of the format may be obtained from the ESRI web site:
@@ -93,192 +84,100 @@ public class ESRIShapefileReader {
   /** The overlay created from the shapefile. */
   private EarthDataOverlay overlay;
 
-  /** The feature source used to read shapefile data. */
-  private FeatureSource source;
+  /** The reader for shapefile data. */
+  private ShapeFileReader reader;
+  
+  /** The input stream used for reading shapes. */
+  private InputStream inputStream;
 
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the overlay created from the shapefile.  The same instance
-   * of the overlay is returned each time.
+   * Gets the overlay created from the shapefile.
+   *
+   * @return the overlay created from the shapes read.
    */
   public EarthDataOverlay getOverlay () { return (overlay); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new reader using a URL. */
+  /**
+   * Creates a new shapefile reader using a URL.
+   *
+   * @param shapeURL the URL for the shape file.
+   */
   public ESRIShapefileReader (
     URL shapeURL
   ) throws IOException {
 
-    // Create feature source
-    // ---------------------
-    ShapefileDataStore store = new ShapefileDataStore (shapeURL);
-    String typeName = store.getTypeNames()[0];
-    source = store.getFeatureSource (typeName);
+    try {
+    
+      // Create shape reader
+      // -------------------
+      inputStream = shapeURL.openStream();
+      ValidationPreferences prefs = new ValidationPreferences();
+      prefs.setAllowUnlimitedNumberOfPointsPerShape (true);
+      reader = new ShapeFileReader (inputStream, prefs);
 
-    // Get prototype shape geometry
-    // ----------------------------
-    FeatureReader reader = source.getFeatures().reader();
-    Geometry geom = null;
-    while (geom == null && reader.hasNext()) {
-      Feature feature;
-      try { feature = reader.next(); }
-      catch (IllegalAttributeException e) { continue; }
-      Geometry featureGeom = feature.getDefaultGeometry();
-      if (featureGeom != null) geom = featureGeom;
-    } // while
-    reader.close();
+      // Create overlay based on prototype geometry
+      // ------------------------------------------
+      ShapeType shapeType = reader.getHeader().getShapeType();
+      switch (shapeType) {
 
-    // Check for null prototype geometry
-    // ---------------------------------
-    if (geom == null)
-      throw new IOException ("Shapefile feature geometry is Null");
+      case MULTIPOINT:
+      case MULTIPOINT_M:
+      case MULTIPOINT_Z:
+      case POINT:
+      case POINT_M:
+      case POINT_Z:
+        /*
+        PlotSymbol plotSymbol = new CircleSymbol();
+        plotSymbol.setSize (8);
+        PointFeatureSymbol featureSymbol = new SimpleSymbol (plotSymbol);
+        overlay = new PointFeatureOverlay (featureSymbol, new PointSource());
+        */
+        throw new IOException ("Point and multipoint shapefiles are not supported");
 
-    // Create overlay based on prototype geometry
-    // ------------------------------------------
-    if (geom instanceof Point || geom instanceof MultiPoint) {
+      case POLYGON:
+      case POLYGON_M:
+      case POLYGON_Z:
+        overlay = new PolygonFeatureOverlay (Color.WHITE, new PolygonSource());
+        break;
 
+      case POLYLINE:
+      case POLYLINE_M:
+      case POLYLINE_Z:
+        overlay = new LineFeatureOverlay (Color.WHITE, new LineSource());
+        break;
 
-      /*
-      PlotSymbol plotSymbol = new CircleSymbol();
-      plotSymbol.setSize (8);
-      PointFeatureSymbol featureSymbol = new SimpleSymbol (plotSymbol);
-      overlay = new PointFeatureOverlay (featureSymbol, new PointSource());
-      */
+      default:
+        throw new IOException ("Unsupported shapefile type " + shapeType);
 
+      } // switch
 
-      throw new IOException ("Point data shapefiles not currently supported");
-
-
-    } // if
-    else if (geom instanceof LineString || geom instanceof MultiLineString) {
-      overlay = new LineFeatureOverlay (Color.WHITE, new LineSource());
-    } // if
-    else if (geom instanceof Polygon || geom instanceof MultiPolygon) {
-      overlay = new PolygonFeatureOverlay (Color.WHITE, new PolygonSource());
-    } // else if
+    } // try
+    
+    catch (IOException | InvalidShapeFileException e) {
+      if (inputStream != null) inputStream.close();
+      throw new IOException (e.getMessage());
+    } // catch
 
   } // ESRIShapefileReader constructor
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Iterator over all basic geometries in a feature reader.  Basic
-   * geometries are those that are not collections.  If a collection
-   * is encountered, it is iterated over until all the basic
-   * non-collection geometries are extracted.
-   */
-  private class BasicGeometryIterator 
-    implements Iterator {
-
-    /** The reader used for features. */
-    private FeatureReader reader;
-    
-    /** The next available basic geometry. */
-    private Geometry next;
-
-    /** The current collection iterator, if any. */
-    private GeometryCollectionIterator collectionIter;
-
-    ////////////////////////////////////////////////////////
-
-    /** Gets the next geometry, or null if none available. */
-    private Geometry getNext () throws IOException {
-
-      // Loop until we get the next
-      // --------------------------
-      Geometry thisNext = null;
-      while ((reader.hasNext() || (collectionIter != null && 
-        collectionIter.hasNext())) && thisNext == null) {
-
-        // Check collection iterator
-        // -------------------------
-        if (collectionIter != null) {
-          while (collectionIter.hasNext() && thisNext == null) {
-            Geometry geom = (Geometry) collectionIter.next();
-            if (!(geom instanceof GeometryCollection))
-              thisNext = geom;
-          } // while
-        } // if
-        
-        // Get next from reader
-        // --------------------
-        if (thisNext == null) {
-          if (reader.hasNext()) {
-            Geometry geom;
-            try { geom = reader.next().getDefaultGeometry(); }
-            catch (IllegalAttributeException e) { continue; }
-            if (geom instanceof GeometryCollection) {
-              collectionIter = 
-                new GeometryCollectionIterator ((GeometryCollection) geom); 
-            } // if
-            else {
-              collectionIter = null;
-              thisNext = geom;
-            } // else
-          } // if
-        } // if
-
-      } // while
-
-      return (thisNext);
-
-    } // getNext
-
-    ////////////////////////////////////////////////////////
-
-    /** Create a new iterator from features in the reader. */
-    public BasicGeometryIterator (
-      FeatureReader reader
-    ) {
-
-      this.reader = reader;
-      try { next = getNext(); }
-      catch (IOException e) { next = null; }
-
-    } // BasicGeometryIterator constructor
-
-    ////////////////////////////////////////////////////////
-
-    /** Returns true if there are more basic geometries. */
-    public boolean hasNext () { return (next != null); }
-  
-    ////////////////////////////////////////////////////////
-    
-    /** Returns the next available basic geometry. */
-    public Object next () { 
-
-      Geometry oldNext = next;
-      try { next = getNext(); }
-      catch (IOException e) { next = null; }
-      return (oldNext);
-
-    } // next
-
-    ////////////////////////////////////////////////////////
-
-    /** Throws an error since this operation is not supported. */
-    public void remove () { throw new UnsupportedOperationException(); }
-
-    ////////////////////////////////////////////////////////
-
-  } // BasicGeometryIterator
-
-  ////////////////////////////////////////////////////////////
-
   /**
-   * The <code>LineSource</code> class uses the enclosing reader to
-   * provide line data to an overlay. 
+   * The <code>LineSource</code> class accesses the polyline data in the
+   * shapefile.
    */
-  public class LineSource
-    extends LineFeatureSource {
+  private class LineSource extends LineFeatureSource {
 
     /** The selected flag, true if select was called. */
     private boolean selected;
 
     ////////////////////////////////////////////////////////
 
+    @Override
     protected void select () throws IOException {
 
       // Check if already selected
@@ -286,100 +185,180 @@ public class ESRIShapefileReader {
       if (selected) return;
       selected = true;
 
-      // Get lines
-      // ---------
-      FeatureReader reader = source.getFeatures().reader();
-      BasicGeometryIterator iter = new BasicGeometryIterator (reader);
-      while (iter.hasNext()) {
-        Geometry geom = (Geometry) iter.next();
-        Coordinate[] coords = geom.getCoordinates();
-        LineFeature line = new LineFeature();
-        for (int i = 0; i < coords.length; i++)
-          line.add (new EarthLocation (coords[i].y, coords[i].x));
-        featureList.add (line);
-      } // while
-      reader.close();
+      try {
+
+        // Iterate over each shape part and create line features
+        // -----------------------------------------------------
+        AbstractPolyShape polyShape;
+        while ((polyShape = (AbstractPolyShape) reader.next()) != null) {
+
+          int parts = polyShape.getNumberOfParts();
+
+          for (int i = 0; i < parts; i++) {
+            LineFeature line = new LineFeature();
+            PointData[] points = polyShape.getPointsOfPart (i);
+            for (int j = 0; j < points.length; j++)
+              line.add (new EarthLocation (points[j].getY(), points[j].getX()));
+            featureList.add (line);
+          } // for
+
+        } // while
+
+      } // try
+
+      catch (InvalidShapeFileException e) { throw new IOException (e.getMessage()); }
+
+      finally {
+        inputStream.close();
+      } // finally
 
     } // select
 
     ////////////////////////////////////////////////////////
 
-  } // LineSource
+  } // LineSource class
 
   ////////////////////////////////////////////////////////////
 
   /**
-   * The <code>PolygonSource</code> class uses the enclosing reader to
-   * provide polygon data to an overlay. 
+   * The <code>PolygonSource</code> class accesses the polygon data in the
+   * shapefile.
    */
-  public class PolygonSource
-    extends PolygonFeatureSource {
+  private class PolygonSource extends PolygonFeatureSource {
 
     /** The selected flag, true if select was called. */
     private boolean selected;
 
     ////////////////////////////////////////////////////////
 
-    protected void select () throws java.io.IOException {
+    @Override
+    protected void select () throws IOException {
 
       // Check if already selected
       // -------------------------
       if (selected) return;
       selected = true;
 
-      // Get vectors
-      // -----------
-      FeatureReader reader = source.getFeatures().reader();
-      BasicGeometryIterator iter = new BasicGeometryIterator (reader);
-      while (iter.hasNext()) {
-        Geometry geom = (Geometry) iter.next();
-        Coordinate[] coords = geom.getCoordinates();
-        PolygonFeature polygon = 
-          new PolygonFeature (PolygonFeature.COUNTER_CLOCKWISE);
-        for (int i = 0; i < coords.length; i++)
-          polygon.add (new EarthLocation (coords[i].y, coords[i].x));
-        polygonList.add (polygon);
-      } // while
-      reader.close();
+      try {
+
+        /**
+         * The ESRI documentation for polygon shapefiles says this:
+         *
+         * "A polygon consists of one or more rings. A ring is a connected
+         * sequence of four or more points that form a closed,
+         * non-self-intersecting loop. A polygon may contain multiple
+         * outer rings. The order of vertices or orientation for a ring
+         * indicates which side of the ring is the interior of the polygon.
+         * The neighborhood to the right of an observer walking along the
+         * ring in vertex order is the neighborhood inside the polygon.
+         * Vertices of rings defining holes in polygons are in a
+         * counterclockwise direction. Vertices for a single, ringed polygon
+         * are, therefore, always in clockwise order. The rings of a polygon
+         * are referred to as its parts."
+         *
+         * So in this reading loop, we separate out the parts of an individual
+         * polygon into polygon features and then terminate the list of parts
+         * using a zero-length polygon.  This indicates to the rendering code
+         * that the polygon parts should be rendered together.
+         */
+
+        // Iterate over each shape part and create polygon features
+        // --------------------------------------------------------
+        AbstractPolyShape polyShape;
+        while ((polyShape = (AbstractPolyShape) reader.next()) != null) {
+
+          int parts = polyShape.getNumberOfParts();
+
+          for (int i = 0; i < parts; i++) {
+            PolygonFeature polygon = new PolygonFeature (PolygonFeature.COUNTER_CLOCKWISE);
+            PointData[] points = polyShape.getPointsOfPart (i);
+            for (int j = 0; j < points.length; j++)
+              polygon.add (new EarthLocation (points[j].getY(), points[j].getX()));
+            polygonList.add (polygon);
+          } // for
+
+          polygonList.add (new PolygonFeature (PolygonFeature.COUNTER_CLOCKWISE));
+
+        } // while
+
+      } // try
+
+      catch (InvalidShapeFileException e) { throw new IOException (e.getMessage()); }
+
+      finally {
+        inputStream.close();
+      } // finally
 
     } // select
 
     ////////////////////////////////////////////////////////
 
-  } // PolygonSource
+  } // PolygonSource class
 
   ////////////////////////////////////////////////////////////
 
   /**
-   * The <code>PointSource</code> class uses the enclosing reader to
-   * provide point data to an overlay. 
+   * The <code>PointSource</code> class accesses the point data in the
+   * shapefile.
    */
-  public class PointSource
-    extends PointFeatureSource {
+  private class PointSource extends PointFeatureSource {
 
     /** The selected flag, true if select was called. */
     private boolean selected;
 
     ////////////////////////////////////////////////////////
 
-    protected void select () throws java.io.IOException {
+    @Override
+    protected void select () throws IOException {
 
       // Check if already selected
       // -------------------------
       if (selected) return;
       selected = true;
 
-      // Get points
-      // ----------
-      FeatureReader reader = source.getFeatures().reader();
-      BasicGeometryIterator iter = new BasicGeometryIterator (reader);
-      while (iter.hasNext()) {
-        Geometry geom = (Geometry) iter.next();
-        Coordinate[] coords = geom.getCoordinates();
-        EarthLocation loc = new EarthLocation (coords[0].y, coords[0].x);
-        featureList.add (new PointFeature (loc));
-      } // while
-      reader.close();
+      try {
+
+        ShapeType shapeType = reader.getHeader().getShapeType();
+        switch (shapeType) {
+
+        // Iterate over each multipoint shape and create point features
+        // ------------------------------------------------------------
+        case MULTIPOINT:
+        case MULTIPOINT_M:
+        case MULTIPOINT_Z:
+          AbstractMultiPointShape multiPointShape;
+          while ((multiPointShape = (AbstractMultiPointShape) reader.next()) != null) {
+            PointData[] points = multiPointShape.getPoints();
+            for (int i = 0; i < points.length; i++) {
+              EarthLocation loc = new EarthLocation (points[i].getY(), points[i].getX());
+              featureList.add (new PointFeature (loc));
+            } // for
+          } // while
+          break;
+
+        // Iterate over each point shape and create point features
+        // -------------------------------------------------------
+        case POINT:
+        case POINT_M:
+        case POINT_Z:
+          AbstractPointShape pointShape;
+          while ((pointShape = (AbstractPointShape) reader.next()) != null) {
+            EarthLocation loc = new EarthLocation (pointShape.getY(), pointShape.getX());
+            featureList.add (new PointFeature (loc));
+          } // while
+
+        default:
+          throw new IOException ("Unexpected shape type " + shapeType);
+
+        } // switch
+
+      } // try
+      
+      catch (InvalidShapeFileException e) { throw new IOException (e.getMessage()); }
+      
+      finally {
+        inputStream.close();
+      } // finally
 
     } // select
 
@@ -396,9 +375,11 @@ public class ESRIShapefileReader {
    */
   public static void main (String[] argv) throws Exception {
 
-    ESRIShapefileReader reader = 
-      new ESRIShapefileReader (new File (argv[0]).toURI().toURL());
+    URL url = new File (argv[0]).toURI().toURL();
+    ESRIShapefileReader reader = new ESRIShapefileReader (url);
     EarthDataOverlay overlay = reader.getOverlay();
+    
+    System.out.println ("overlay = " + overlay);
 
   } // main
 

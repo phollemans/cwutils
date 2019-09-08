@@ -228,7 +228,8 @@ public class PaletteFactory {
     "Ocean-speed",
     "Ocean-tempo",
     "Ocean-thermal",
-    "Ocean-turbid"
+    "Ocean-turbid",
+    "NCCOS-chla"
   };
 
   /** The palette DTD URL. */

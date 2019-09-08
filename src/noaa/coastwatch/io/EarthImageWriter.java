@@ -55,6 +55,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 import javax.imageio.metadata.IIOMetadataNode;
@@ -428,8 +429,10 @@ public class EarthImageWriter {
 
         // Create TIFF writer
         // ------------------
-        GeoTIFFWriter writer = new GeoTIFFWriter (
-          new FileOutputStream (file), view.getTransform(), compress);
+        if (file.exists()) file.delete();
+        FileImageOutputStream outputStream = new FileImageOutputStream (file);
+        GeoTIFFWriter writer = new GeoTIFFWriter (outputStream,
+          view.getTransform(), compress);
 
         writer.setArtist (System.getProperty ("user.name"));
         writer.setSoftware (ToolServices.getToolVersion ("") + ToolServices.getCommandLine());
@@ -469,6 +472,7 @@ public class EarthImageWriter {
         // Encode the image
         // ----------------
         writer.encode (image);
+        outputStream.close();
 
       } // if
 
@@ -533,6 +537,20 @@ public class EarthImageWriter {
 
         // Write file
         // ----------
+
+        // We found that if we don't have this next line and the file exists,
+        // the data is written to the image at the beginning of the file
+        // and the rest of the file remains untouched.  So if the existing
+        // file is much larger than the new file, the new file data is written
+        // to the beginning, and the rest of the larger file (garbage at this
+        // point) remains.  The other image file writers work differently,
+        // and seem to delete the larger file's previous contents, maybe
+        // because they're created using FileOutputStream rather than
+        // FileImageOutputStream.  This probably started happening when we
+        // began writing extra metadata into the file headers.
+        
+        if (file.exists()) file.delete();
+
         FileImageOutputStream outputStream = new FileImageOutputStream (file);
         writer.setOutput (outputStream);
         IIOImage imageData = new IIOImage (image, null, metadata);

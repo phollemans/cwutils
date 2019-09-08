@@ -263,15 +263,52 @@ public abstract class HDFWriter
     // Check attribute length
     // ----------------------
     if (attLength == 0) return;
+    
+    // Determine attribute byte length
+    // -------------------------------
+    int typeBytes;
+    switch (attType) {
+
+      case HDFConstants.DFNT_CHAR8:
+      case HDFConstants.DFNT_UINT8:
+      case HDFConstants.DFNT_INT8:
+        typeBytes = 1;
+        break;
+
+      case HDFConstants.DFNT_UINT16:
+      case HDFConstants.DFNT_INT16:
+        typeBytes = 2;
+        break;
+
+      case HDFConstants.DFNT_UINT32:
+      case HDFConstants.DFNT_INT32:
+      case HDFConstants.DFNT_FLOAT32:
+        typeBytes = 4;
+        break;
+
+      case HDFConstants.DFNT_UINT64:
+      case HDFConstants.DFNT_INT64:
+      case HDFConstants.DFNT_FLOAT64:
+        typeBytes = 8;
+        break;
+
+      default:
+        throw new IllegalStateException ("Unknown length for HDF type " + attType);
+
+    } // switch
+    int attBytes = attLength*typeBytes;
+    
     /**
      * We do the following check because the HDF library has a built
-     * in limit of 65535 elements for any attribute.  Currently there
+     * in limit of 65535 bytes for any attribute.  Currently there
      * is no sensible way to handle this except for trunction with a
      * warning.
      */
-    if (attLength > 65535) {
-      LOGGER.warning ("Truncating '" + name + "' attribute to 65535 values");
-      attLength = 65535;
+    if (attBytes > 65535) {
+      attLength = 65535 / typeBytes;
+      LOGGER.warning ("Writing attribute '" + name + "' requires " + attBytes + " bytes");
+      LOGGER.warning ("HDF 4 library limit is 65535 bytes, truncating attribute to " + attLength + " values");
+      LOGGER.warning ("Please note attribute truncation may cause data reading errors further downstream");
     } // if
 
     // Set attribute value

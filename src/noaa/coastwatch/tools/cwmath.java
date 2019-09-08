@@ -116,6 +116,7 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  * -p, --parser=TYPE <br>
  * -s, --size=TYPE <br>
  * -t, --template=VARIABLE <br>
+ * -f, --full-template <br>
  * -u, --units=STRING <br>
  * -v, --verbose <br>
  * --version <br>

@@ -27,13 +27,17 @@ package noaa.coastwatch.render.feature;
 // -------
 import java.awt.Graphics2D;
 import java.awt.geom.GeneralPath;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+
 import noaa.coastwatch.render.feature.AbstractFeature;
 import noaa.coastwatch.render.EarthImageTransform;
+import noaa.coastwatch.render.PathTransformer;
 import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.EarthTransform;
+
+import java.util.logging.Logger;
 
 /**
  * The <code>LineFeature</code> class holds a list of earth location
@@ -46,8 +50,11 @@ import noaa.coastwatch.util.EarthLocation;
 public class LineFeature
   extends AbstractFeature {
 
+  private static final Logger LOGGER = Logger.getLogger (LineFeature.class.getName());
+
   // Variables
   // ---------
+  
   /** The last transformed path. */
   protected GeneralPath lastPath;
 
@@ -60,19 +67,18 @@ public class LineFeature
   /** The fast mode flag. */
   protected static boolean fastMode = false;
 
-  /** The list of geographic points. */
-  protected List points = new ArrayList();
-
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Returns the discontinuous flag.  If during the last transformation
-   * from a set of earth locations to a general path under an Earth
-   * image transform, the vector was discontinuous at some point due
-   * to an invalid transformation, then the path is discontinuous.  If the
-   * fast rendering mode is on, or the vector has never been
-   * transformed to a general path, then the discontinuous flag is
-   * false.
+   * Gets the discontinuous flag from the last call to {@link #getPath} or
+   * {@link #transform}.
+   *
+   * @return the discontinuous flag, true if this line feature was discontinuous
+   * during the last transformation from the set of {@link EarthLocation}
+   * points to a {@link java.awt.geom.GeneralPath} or false if not.  When fast
+   * rendering mode is on (see {@link #setFastMode}), this method will always
+   * return false.  If this line feature has never been transformed, this
+   * method will return false.
    */
   public boolean isDiscontinuous () { 
 
@@ -86,8 +92,10 @@ public class LineFeature
   /** 
    * Gets the fast rendering mode flag.
    *
-   * @return the fast mode flag, true for fast rendering or false for
-   * not.
+   * @return the fast mode flag, true if currently performing fast rendering
+   * or false if not.
+   *
+   * @see #setFastMode
    */
   public static boolean getFastMode () { return (fastMode); }
 
@@ -95,10 +103,12 @@ public class LineFeature
 
   /** 
    * Sets the fast rendering mode flag.  Under fast rendering mode,
-   * the vector is not checked for discontinuities.  By default, fast
-   * rendering is off.
+   * the line feature is not checked for discontinuities.  By default, fast
+   * rendering mode is off.
    *
-   * @param flag the fast mode, true for fast rendering.
+   * @param flag the fast mode, true for fast rendering or false for not.
+   *
+   * @see #getFastMode
    */
   public static void setFastMode (boolean flag) { fastMode = flag; }
 
@@ -133,7 +143,11 @@ public class LineFeature
    * @param area the earth area to use for filtering earth locations.
    *
    * @return the list of features resulting from the filter operation.
+   *
+   * @deprecated This method was used by {@link GSHHSReader} but is no longer
+   * needed.
    */
+  @Deprecated
   public List filter (
     EarthArea area
   ) {
@@ -184,78 +198,32 @@ public class LineFeature
   } // filter
 
   ////////////////////////////////////////////////////////////
-  
+
   /** 
-   * Transforms this feature to a general path.  The earth image
-   * transform is used to eliminate any line segments which do not
-   * transform to valid image points.
+   * Transforms this line feature to a path.  The
+   * {@link EarthImageTransform} is used to eliminate any line
+   * segments which do not transform to valid image points.
    *
-   * @param trans the earth image transform for converting Earth
-   * locations to image points.
+   * @param imageTrans the transform for converting earth locations to image
+   * points.
    *
-   * @return the general path that follows the feature data.
+   * @return the path that follows this feature's points in the
+   * transformed space.
    */
   public GeneralPath transform (
-    EarthImageTransform trans
+    EarthImageTransform imageTrans
   ) {
 
-    // Initialize path
-    // ---------------
-    GeneralPath path = new GeneralPath();
-
-    // Initialize points
-    // -----------------
-    int points = size();
-    EarthLocation e1 = null;
-    Point2D p1 = null;    
-    if (points != 0) {
-      e1 = (EarthLocation) get(0);
-      p1 = trans.transform (e1);
-    } // if
-    EarthLocation e2 = null;
-    Point2D p2 = null;
-
-    // Initialize loop
-    // ---------------
-    boolean discontinuous = true;
-    int moveToCount = 0;
-
-    // Loop over each segment
-    // ----------------------
-    for (int i = 1; i < points; i++) {
-      e2 = (EarthLocation) get(i);
-      p2 = trans.transform (e2);
-
-      // Add segment to path
-      // -------------------
-      boolean jumped;
-      jumped = (fastMode ? false : trans.isDiscontinuous (e1, e2, p1, p2));
-      if (p1 != null && p2 != null && !jumped) {
-        if (discontinuous) {
-          path.moveTo ((float) p1.getX(), (float) p1.getY());          
-          moveToCount++;
-        } // if
-        path.lineTo ((float) p2.getX(), (float) p2.getY());
-        discontinuous = false;
-      } // if
-
-      // Record invalid segment
-      // ----------------------
-      else {
-        discontinuous = true;      
-      } // else
-
-      // Copy values
-      // -----------
-      e1 = e2;
-      p1 = p2;
-
-    } // for
-
+    // Transform path
+    // --------------
+    PathTransformer transformer = new PathTransformer();
+    GeneralPath path = transformer.transformPath (points, imageTrans, false, !fastMode);
+    
     // Record discontinuous status
     // ---------------------------
-    lastDiscontinuous = (moveToCount > 1);
+    lastDiscontinuous = (path == null);
 
+    if (path == null) path = new GeneralPath();
     return (path);
 
   } // transform

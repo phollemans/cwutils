@@ -35,7 +35,7 @@ import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.test.TestLogger;
 
 /**
- * An <b>EarthLocationSet</b> holds a number of earth locations and allows
+ * An <code>EarthLocationSet</code> holds a number of earth locations and allows
  * for fast retrieval of the nearest location in the set to a given point and
  * an associated data object.  The implementation uses bins and assumes that
  * locations are contiguous or highly clustered and that bins that

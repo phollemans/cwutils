@@ -65,6 +65,26 @@ public class TimePeriod implements Comparable {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a new time period.
+   *
+   * @param startDate the time period starting date.
+   * @param endDate the time period ending date.
+   *
+   * @since 3.5.1
+   */
+  public TimePeriod (
+    Date startDate,
+    Date endDate
+  ) {
+
+    this.startDate = (Date) startDate.clone();
+    this.duration = endDate.getTime() - startDate.getTime();
+
+  } // TimePeriod constructor
+
+  ////////////////////////////////////////////////////////////
+
   /** Gets the time period starting date. */
   public Date getStartDate () { return ((Date) startDate.clone()); }
 

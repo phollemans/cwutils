@@ -933,7 +933,7 @@ public final class cwregister2 {
     info.option ("-D, --diagnostic-long", "Perform diagnostics in long form");
     info.option ("-h, --help", "Show help message");
     info.option ("-M, --master=FILE", "Use file for output projection");
-    info.option ("-m, --match=PATTERN", "Register only variables matching pattern");
+    info.option ("-m, --match=PATTERN", "Register only variables matching regular expression");
     info.option ("-p, --proj=SYSTEM", "Set output projection system");
     info.option ("-S, --savemap", "Save resampling map");
     info.option ("--serial", "Perform serial operations");

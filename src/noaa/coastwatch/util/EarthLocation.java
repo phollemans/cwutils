@@ -257,7 +257,7 @@ public class EarthLocation
   ) {
     
     this.lat = lat;
-    this.lon = lonRange(lon);
+    this.lon = lonRange (lon);
 
   } // setCoords
 
@@ -467,7 +467,12 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Returns true if this location is north of the specified location.
+   * Determines if this location is north of the specified location.
+   *
+   * @param loc the location to check.
+   *
+   * @return true if this location is north of the specified location or
+   * false if not.
    */
   public boolean isNorth (
     EarthLocation loc
@@ -480,7 +485,12 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Returns true if this location is south of the specified location.
+   * Determines if this location is south of the specified location.
+   *
+   * @param loc the location to check.
+   *
+   * @return true if this location is south of the specified location or
+   * false if not.
    */
   public boolean isSouth (
     EarthLocation loc
@@ -493,7 +503,12 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Returns true if this location is east of the specified location. 
+   * Determines if this location is east of the specified location.
+   *
+   * @param loc the location to check.
+   *
+   * @return true if this location is east of the specified location or
+   * false if not.
    */
   public boolean isEast (
     EarthLocation loc
@@ -509,7 +524,12 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Returns true if this location is west of the specified location. 
+   * Determines if this location is west of the specified location.
+   *
+   * @param loc the location to check.
+   *
+   * @return true if this location is west of the specified location or
+   * false if not.
    */
   public boolean isWest (
     EarthLocation loc
@@ -523,6 +543,51 @@ public class EarthLocation
   } // isWest
 
   ////////////////////////////////////////////////////////////
+
+  /**
+   * Determines if the shortest line segment joining this location to another
+   * crosses the anti-meridian line at +180/-180 longitude.
+   *
+   * @param loc the earth location to check.
+   *
+   * @return true if the shortest line segment between this location and the
+   * specified location crosses the anti-meridian or false if not.  If both
+   * locations are exactly on the anti-meridian, this method returns false.
+   * However if only one location is exactly on the antimeridian and the
+   * other is not, this method returns false if the location not on the
+   * anti-meridian has longitude in the range (-180, 0], or false if it has
+   * longitude in the range [0, 180).
+   *
+   * @since 3.5.1
+   */
+  public boolean crossesAntiMeridian (
+    EarthLocation loc
+  ) {
+
+    EarthLocation east, west;
+    if (this.isEast (loc)) {
+      east = this;
+      west = loc;
+    } // if
+    else {
+      east = loc;
+      west = this;
+    } // else
+
+    // Longitudes have a range of [-180, 180).  So if the east point has
+    // a lesser longitude than the west point, the segment must cross the
+    // anti-meridian.  Normally east-most longitudes are greater than
+    // west-most longitudes.  This test can probably be done more simply
+    // by collapsing the isEast/isWest test with the longitude comparison,
+    // but this seems easier to understand.
+
+    boolean crosses = east.lon < west.lon;
+    
+    return (crosses);
+  
+  } // crossesAntiMeridian
+
+   ////////////////////////////////////////////////////////////
 
   /**
    * Formats a single coordinate from an earth location to a string.

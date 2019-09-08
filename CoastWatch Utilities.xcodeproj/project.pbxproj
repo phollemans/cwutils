@@ -8,6 +8,8 @@
 
 /* Begin PBXFileReference section */
 		E900A81D1FC3CA4300EC07D3 /* ChunkVisitor.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ChunkVisitor.java; sourceTree = "<group>"; };
+		E905F6422315C0460062E0A0 /* NCCOS-chla.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "NCCOS-chla.xml"; sourceTree = "<group>"; };
+		E905F64323189E600062E0A0 /* PathTransformer.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = PathTransformer.java; sourceTree = "<group>"; };
 		E906137B16B234C50047F604 /* ACSPONCCFReader.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = ACSPONCCFReader.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E90956521E4CE9B4000F6B70 /* PointFeatureOverlayPropertyChooser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = PointFeatureOverlayPropertyChooser.java; sourceTree = "<group>"; };
 		E90956531E4FBFCD000F6B70 /* MultiPointFeatureOverlay.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = MultiPointFeatureOverlay.java; sourceTree = "<group>"; };
@@ -1001,6 +1003,7 @@
 		E973CD6C212BAFD80055D725 /* GammaEnhancement.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = GammaEnhancement.java; sourceTree = "<group>"; };
 		E9749CF31FDE2C2700B6EA90 /* GridChunkProducer.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = GridChunkProducer.java; sourceTree = "<group>"; };
 		E9862E051FB421E300824C7D /* JELParser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = JELParser.java; sourceTree = "<group>"; };
+		E986545A23247E950042CF66 /* GeoTIFFDataWriter.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = GeoTIFFDataWriter.java; sourceTree = "<group>"; };
 		E9875CC6161E652F00C423BB /* license.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = license.txt; sourceTree = "<group>"; };
 		E9875CC7161E652F00C423BB /* tool_categories.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tool_categories.txt; sourceTree = "<group>"; };
 		E988D82D200AD3A100B038E5 /* TimeAccumulator.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; name = TimeAccumulator.java; path = test/TimeAccumulator.java; sourceTree = "<group>"; };
@@ -2061,6 +2064,7 @@
 		E96D8A19161661420009B833 /* render */ = {
 			isa = PBXGroup;
 			children = (
+				E905F6422315C0460062E0A0 /* NCCOS-chla.xml */,
 				E96D8A1A161661420009B833 /* 16-Level.xml */,
 				E96D8A1B161661420009B833 /* Atmospheric.jso */,
 				E96D8A1C161661420009B833 /* Beach.xml */,
@@ -2511,6 +2515,7 @@
 				E96D8B6E161661420009B833 /* EarthImageWriter.java */,
 				E96D8B6F161661420009B833 /* FloatWriter.java */,
 				E96D8B71161661420009B833 /* GeoTIFFWriter.java */,
+				E986545A23247E950042CF66 /* GeoTIFFDataWriter.java */,
 				E96D8B72161661420009B833 /* GIFWriter.java */,
 				E96D8B73161661420009B833 /* GridSubsetReader.java */,
 				E96D8B74161661420009B833 /* HDFCachedGrid.java */,
@@ -2654,6 +2659,7 @@
 				E96D8BF3161661420009B833 /* package.html */,
 				E96D8BF4161661420009B833 /* Palette.java */,
 				E96D8BF5161661420009B833 /* PaletteFactory.java */,
+				E905F64323189E600062E0A0 /* PathTransformer.java */,
 				E96D8BF6161661420009B833 /* PictureElement.java */,
 				E96D8BF7161661420009B833 /* PlotSymbolFactory.java */,
 				E96D8BF9161661420009B833 /* PointFeatureOverlay.java */,
