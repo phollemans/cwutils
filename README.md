@@ -16,13 +16,18 @@ http://coastwatch.noaa.gov website, with beta and past builds available at http:
 Currently OpenJDK 11 from http://openjdk.java.net is used for development and the Java runtime.  The easiest way to start 
 tinkering with the code and creating your own custom builds is to:
 
-* Install a JDK on your local machine (11 or higher) -- REQUIRED.
-* Install the Apache ant and ant-contrib packages -- REQUIRED.
+REQUIRED:
+* Install a JDK on your local machine (11 or higher)
+* Install the Apache ant and ant-contrib packages
 * Create a copy of this git repository on your local machine.
+
+OPTIONAL:
 * Install LaTeX and GNU awk if you want to generate the PDF user's guide.  LaTeX and gawk executable paths default to
 /opt/local/bin, modify the header of scripts/make_docs.sh to adjust this.
 * Install the ej-technologies install4j package if you want to generate installation packages (more about this below).  If not, 
 comment out the install4j related definitions and tasks in the build.xml file or the build will fail.
+
+BUILD AND RUN:
 * Install the latest CoastWatch Utilities release from the CoastWatch or Terrenus site.  Note the installation directory, 
 you'll need this later.
 * Edit or add various Java source files in the src/ directory in your local copy.
