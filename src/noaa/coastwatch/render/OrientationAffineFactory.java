@@ -120,14 +120,47 @@ public class OrientationAffineFactory {
 
       // Compute cross product term
       // --------------------------
+      /**
+       * The cross product here is N x E, which takes the form:
+       *
+       *               | i  j  k  |
+       *     N x E =   | ni nj nk |
+       *               | ei ej ek |
+       *
+       * The z component of the cross product is therefore ni*ej - nj*ei.
+       */
       double z3 = north[Grid.ROWS]*east[Grid.COLS] - north[Grid.COLS]*east[Grid.ROWS];
       
       // Compute affine
       // --------------
+      /**
+       * These next tests correct the orientation so that the north and east
+       * vectors point up and right on the screen:
+       *
+       *    N
+       *    ^    (negative row direction)
+       *    |
+       *    |
+       *    +-----> E     (positive column direction)
+       *
+       * The correct orientation results in N x E being into the screen
+       * (negative value of the z-component).
+       *
+       * Before correction we may have the following cases:
+       *
+       *    N                   N        +-----> E    E <-----+
+       *    ^                   ^        |                    |
+       *    |                   |        |                    |
+       *    |                   |        V                    V
+       *    +-----> E   E <-----+        N                    N
+       *
+       *     z3 < 0       z3 > 0          z3 > 0        z3 < 0
+       */
       if (z3 < 0) {
         /**
          * In this case, the z-axis is into the screen, which is correct.  We
-         * may simply need a rotation.
+         * may simply need a rotation if the north axis is pointing downward
+         * (positive rows direction).
          */
         if (north[Grid.ROWS] > 0)
           affine = AffineTransform.getScaleInstance (-1, -1);
@@ -141,8 +174,13 @@ public class OrientationAffineFactory {
          */
         if (north[Grid.ROWS] > 0)
           affine = AffineTransform.getScaleInstance (-1, 1);
-        else
-          affine = new AffineTransform();
+        else if (east[Grid.COLS] < 0)
+          affine = AffineTransform.getScaleInstance (1, -1);
+        else {
+
+          // Should never have this case!  We return null.
+        
+        }// else
       } // else if
       else {
         /**
@@ -197,7 +235,7 @@ public class OrientationAffineFactory {
       new int[] {512, 512}, new EarthLocation (0, 0),
       new double[] {0.05, -0.05});
     orient = OrientationAffineFactory.create (map);
-    assert (orient.getType() == AffineTransform.TYPE_IDENTITY);
+    assert (orient.getType() == AffineTransform.TYPE_FLIP);
 
     SwathProjection.setNullMode (true);
     SwathProjection swath = new SwathProjection (null);
