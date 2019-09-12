@@ -415,6 +415,7 @@
     git log - -pretty=oneline   - simple log of commits
     git push origin             - push the new commits to the remote server
     git log tag..master         - print the log between tag and current
+    git push - -tags            - push the tags to the remote
     Web: https://github.com/phollemans/cwutils/compare/tag...master
   -->
   

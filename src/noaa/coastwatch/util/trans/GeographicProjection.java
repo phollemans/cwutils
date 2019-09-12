@@ -37,6 +37,7 @@ import noaa.coastwatch.util.trans.GCTPCStyleProjection;
 import noaa.coastwatch.util.trans.ProjectionConstants;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.Topology;
 
 import java.util.logging.Logger;
 
@@ -137,9 +138,6 @@ public class GeographicProjection
 
   } // LongitudeRange
 
-  /** The nudge value for boundary splits. */
-  private static final double BOUNDARY_NUDGE = 1.0e-10;
-
   // Variables
   // ---------
   
@@ -149,7 +147,7 @@ public class GeographicProjection
   /** The angle at the edge of the projection. */
   private double alpha;
 
-  /** The geometry to use for splitting lines and polygons. */
+  /** The geometry to use for boundary splitting. */
   private Geometry splitter;
 
   ////////////////////////////////////////////////////////////
@@ -235,22 +233,22 @@ public class GeographicProjection
 
       } // switch
 
-      GeometryFactory factory = new GeometryFactory();
+      GeometryFactory factory = Topology.getFactory();
 
       Polygon poly = factory.createPolygon (new Coordinate[] {
-        new Coordinate (boundary - BOUNDARY_NUDGE, 90),
-        new Coordinate (boundary + BOUNDARY_NUDGE, 90),
-        new Coordinate (boundary + BOUNDARY_NUDGE, -90),
-        new Coordinate (boundary - BOUNDARY_NUDGE, -90),
-        new Coordinate (boundary - BOUNDARY_NUDGE, 90)
+        Topology.createCoordinate (boundary - Topology.EPSILON, 90),
+        Topology.createCoordinate (boundary + Topology.EPSILON, 90),
+        Topology.createCoordinate (boundary + Topology.EPSILON, -90),
+        Topology.createCoordinate (boundary - Topology.EPSILON, -90),
+        Topology.createCoordinate (boundary - Topology.EPSILON, 90)
       });
       double nextBoundary = boundary + 360;
       Polygon nextPoly = factory.createPolygon (new Coordinate[] {
-        new Coordinate (nextBoundary - BOUNDARY_NUDGE, 90),
-        new Coordinate (nextBoundary + BOUNDARY_NUDGE, 90),
-        new Coordinate (nextBoundary + BOUNDARY_NUDGE, -90),
-        new Coordinate (nextBoundary - BOUNDARY_NUDGE, -90),
-        new Coordinate (nextBoundary - BOUNDARY_NUDGE, 90)
+        Topology.createCoordinate (nextBoundary - Topology.EPSILON, 90),
+        Topology.createCoordinate (nextBoundary + Topology.EPSILON, 90),
+        Topology.createCoordinate (nextBoundary + Topology.EPSILON, -90),
+        Topology.createCoordinate (nextBoundary - Topology.EPSILON, -90),
+        Topology.createCoordinate (nextBoundary - Topology.EPSILON, 90)
       });
       splitter = poly.union (nextPoly);
 
@@ -407,13 +405,20 @@ public class GeographicProjection
 
   ////////////////////////////////////////////////////////////
 
-  protected long projfor (
-    double lat,
-    double lon,
-    double x[],
-    double y[]
+  /**
+   * Adjusts the longitude value to be within the range dictated by the
+   * longitude range type for this projection.
+   *
+   * @param lon the longitude value to adjust.
+   *
+   * @return the adjusted longitude value.
+   *
+   * @since 3.5.1
+   */
+  private double lonAdjust (
+    double lon
   ) {
-
+  
     switch (lonRange) {
 
     case SPANS_PRIME:                   // Lon now in [-180, 180)
@@ -437,7 +442,20 @@ public class GeographicProjection
 
     } // switch
 
-    x[0] = lon;
+    return (lon);
+  
+  } // lonAdjust
+
+  ////////////////////////////////////////////////////////////
+
+  protected long projfor (
+    double lat,
+    double lon,
+    double x[],
+    double y[]
+  ) {
+
+    x[0] = lonAdjust (lon);
     y[0] = lat;
 
     return (OK);
@@ -473,6 +491,11 @@ public class GeographicProjection
     EarthLocation b
   ) {
   
+    // We find out here which of the two locations is the eastern location
+    // and which one is the western.  We define east and west as being related
+    // to the shortest longitude path, ie: the one that takes much less
+    // than 180 degrees of longitude to span the distance between the points.
+  
     EarthLocation east, west;
     if (a.isEast (b)) {
       east = a;
@@ -483,31 +506,16 @@ public class GeographicProjection
       west = a;
     } // else
   
-    boolean boundaryCut = false;
+    // We adjust the longitudes here to the same range and then check what
+    // we expect to be true, which is that if the shortest path stays strictly
+    // within the range, the west value should be strictly less than the east
+    // value.  If not, we must have crossed over the range boundary and wrapped
+    // around.  If the longitudes are identical, we say that no boundary was
+    // crossed.
   
-    switch (lonRange) {
-
-    case SPANS_PRIME:
-      boundaryCut = (west.lon > east.lon);
-      break;
-
-    case SPANS_ANTI_POSITIVE:
-      boundaryCut = (west.lon < 0 && east.lon >= 0);
-      break;
-
-    case SPANS_ANTI_NEGATIVE:
-      boundaryCut = (west.lon < 0 && east.lon >= 0);
-      break;
-
-    case SPANS_PRIME_ANTI_POSITIVE:
-      boundaryCut = (west.lon < alpha && east.lon >= alpha);
-      break;
-
-    case SPANS_PRIME_ANTI_NEGATIVE:
-      boundaryCut = (west.lon < alpha && east.lon >= alpha);
-      break;
-
-    } // switch
+    double westLon = lonAdjust (west.lon);
+    double eastLon = lonAdjust (east.lon);
+    boolean boundaryCut = (westLon > eastLon);
 
     return (boundaryCut);
 

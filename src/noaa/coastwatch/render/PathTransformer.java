@@ -33,12 +33,14 @@ import java.util.ArrayList;
 import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.Topology;
 
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Polygon;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.CoordinateFilter;
+import org.locationtech.jts.geom.CoordinateSequenceFilter;
+import org.locationtech.jts.geom.CoordinateSequence;
 
 import java.util.logging.Logger;
 
@@ -54,6 +56,34 @@ public class PathTransformer {
 
   private static final Logger LOGGER = Logger.getLogger (PathTransformer.class.getName());
 
+  // Variables
+  // ---------
+  
+  /** The diagnostic mode, true to perform extra diagnostics. */
+  private static boolean diagnosticMode = false;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the diagnostic mode.  With diagnostic mode on, an extra step
+   * is performed when transforming the path to check for inconsistencies
+   * in earth transforms that return true from the
+   * {@link EarthTransform#hasBoundaryCheck} method and the actual points
+   * returned to make sure that a discontinuity didn't occur.  If the extra
+   * test reveals a discontinuity, an error is logged with the locations
+   * of the issue.
+   *
+   * @parm flag the diagnostic mode flag, true to perform the diagnostic.
+   * By default, diagnostics are off.
+   */
+  public static void setDiagnosticMode (
+    boolean flag
+  ) {
+
+    diagnosticMode = flag;
+
+  } // setDiagnosticMode
+  
   ////////////////////////////////////////////////////////////
 
   /**
@@ -118,6 +148,63 @@ public class PathTransformer {
   ////////////////////////////////////////////////////////////
 
   /**
+   * Converts a sequence of coordinates to a path of image points. If the
+   * coordinates are found to have invalid image points, the conversion is
+   * terminated.
+   */
+  private static class CoordinateToPathConvertor
+    implements CoordinateSequenceFilter {
+  
+    private boolean pathInvalid = false;
+    private GeneralPath path = new GeneralPath();
+    private EarthImageTransform imageTrans;
+    private EarthLocation loc = new EarthLocation();
+
+    public CoordinateToPathConvertor (
+      EarthImageTransform imageTrans
+    ) {
+    
+      this.imageTrans = imageTrans;
+    
+    } // CoordinateToPathConvertor
+  
+    /**
+     * Gets the path resulting from the conversion.
+     *
+     * @return the path or null if the conversion failed.
+     */
+    public GeneralPath getPath () { return (path); }
+  
+    @Override
+    public void filter (CoordinateSequence sequence, int index) {
+
+      loc.setCoords (sequence.getY (index), sequence.getX (index));
+      Point2D point = imageTrans.transform (loc);
+
+      // If we get a null point here, stop processing
+      
+      if (point == null) {
+        pathInvalid = true;
+        path = null;
+      } // if
+      else if (index == 0)
+        path.moveTo ((float) point.getX(), (float) point.getY());
+      else
+        path.lineTo ((float) point.getX(), (float) point.getY());
+
+    } // filter
+    
+    @Override
+    public boolean isDone() { return (pathInvalid); }
+
+    @Override
+    public boolean isGeometryChanged() { return (false); }
+    
+  } // CoordinateToPathConvertor class
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Transforms the specified list of locations to a path in the image space.
    *
    * @param locList the list of locations to transform.  The locations are
@@ -155,6 +242,7 @@ public class PathTransformer {
     int moveToCount = 0;
 
     EarthTransform earthTrans = imageTrans.getEarthTransform();
+    boolean boundaryCheck = earthTrans.hasBoundaryCheck();
 
     // Loop over each location in the list
     // -----------------------------------
@@ -168,6 +256,17 @@ public class PathTransformer {
       // Detect invalid location transform
       // ---------------------------------
       if (point == null) {
+
+        // Here we conclude that if a boundary checking transform has
+        // returned a null image point, then the point fell outside
+        // of some allowed boundary and therefore a boundary cut should
+        // be applied.
+
+        if (boundaryCheck) {
+          boundaryCut = true;
+          break;
+        } // if
+        
         needsMoveTo = true;
       } // if
 
@@ -179,7 +278,7 @@ public class PathTransformer {
 
         // Perform boundary check
         // ----------------------
-        if (earthTrans.hasBoundaryCheck()) {
+        if (boundaryCheck) {
           if (earthTrans.isBoundaryCut (lastLoc, loc)) {
             boundaryCut = true;
             break;
@@ -191,6 +290,20 @@ public class PathTransformer {
         else {
           pointJumped = (checkDiscontinuous ?
             imageTrans.isDiscontinuous (lastLoc, loc, lastPoint, point) : false);
+        } // if
+
+        // We perform an extra diagnostic here to help solve issues with
+        // earth transforms that perform boundary checks and are
+        // returning false from the isBoundaryCut method but a discontinuity
+        // is detected between two ends of a line segment
+        
+        if (diagnosticMode) {
+          boolean jumped = imageTrans.isDiscontinuous (lastLoc, loc, lastPoint, point);
+          if (boundaryCheck && jumped) {
+            LOGGER.warning ("Earth transform failed diagsnostic, jump detected between " +
+              "(" + lastLoc.format (EarthLocation.RAW) + ") and " +
+              "(" + loc.format (EarthLocation.RAW) + ")");
+          } // if
         } // if
 
         // If jumped, don't append to path
@@ -237,7 +350,7 @@ public class PathTransformer {
 
       // Create geometry for locations
       // -----------------------------
-      GeometryFactory factory = new GeometryFactory();
+      GeometryFactory factory = Topology.getFactory();
       boolean crosses = crossesAntiMeridian (locList);
       int coordCount = locList.size();
       Coordinate[] coords = new Coordinate[coordCount];
@@ -245,7 +358,7 @@ public class PathTransformer {
         EarthLocation loc = locList.get (i);
         double lon = loc.lon;
         if (crosses && lon < 0) lon += 360;
-        coords[i] = new Coordinate (lon, loc.lat);
+        coords[i] = Topology.createCoordinate (lon, loc.lat);
       } // for
 
       // We save the parent polygon winding order here in order to restore
@@ -265,14 +378,23 @@ public class PathTransformer {
       // Split geometry
       // --------------
       Geometry splitter = earthTrans.getBoundarySplitter();
-      Geometry splitGeom = geom.difference (splitter);
 
+      // We do this next line for polygon splits because we were
+      // getting an error thrown in the JTS difference method about
+      // encountering a non-noded intersection.  The advice online
+      // was to fix the polygon first by performing a buffer operation.
+      
+      if (isPolygon) {
+        geom = geom.buffer (0);
+      } // if
+
+      Geometry splitGeom = geom.difference (splitter);
+      
       // Loop over all resulting split components
       // ----------------------------------------
       int geomCount = splitGeom.getNumGeometries();
       GeneralPath geomPath = new GeneralPath();
-      EarthLocation loc = new EarthLocation();
-      
+
       for (int i = 0; i < geomCount; i++) {
 
         Geometry component = splitGeom.getGeometryN (i);
@@ -285,24 +407,21 @@ public class PathTransformer {
             component = component.reverse();
         } // if
 
-        // Convert component to path components
-        // ------------------------------------
-        component.apply (new CoordinateFilter () {
-          boolean firstCoord = true;
-          public void filter (Coordinate coord) {
-            loc.setCoords (coord.getY(), coord.getX());
-            Point2D point = imageTrans.transform (loc);
-            if (firstCoord) {
-              geomPath.moveTo ((float) point.getX(), (float) point.getY());
-              firstCoord = false;
-            } // if
-            else {
-              geomPath.lineTo ((float) point.getX(), (float) point.getY());
-            } // else
-          } // filter
-        });
+        // Convert component to path
+        // -------------------------
+        CoordinateToPathConvertor convertor = new CoordinateToPathConvertor (imageTrans);
+        component.apply (convertor);
+        
+        // If we get a null path here, it means that after splitting
+        // the geometry, there are some invalid components and some
+        // valid components, and we must be inside one of the invalid
+        // components.  So we discard it.
 
-        if (isPolygon) geomPath.closePath();
+        GeneralPath componentPath = convertor.getPath();
+        if (componentPath != null) {
+          if (isPolygon) componentPath.closePath();
+          geomPath.append (componentPath, false);
+        } // if
 
       } // for
 

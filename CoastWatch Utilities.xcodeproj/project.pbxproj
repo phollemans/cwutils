@@ -50,6 +50,7 @@
 		E929B1F11F8DC77E000BB7CF /* version.tex */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = version.tex; sourceTree = "<group>"; };
 		E92A197F21952B9500CA4ADD /* hb16.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = hb16.jar; path = ../../../../Libraries/misc/hb16.jar; sourceTree = "<group>"; };
 		E92A198021952B9500CA4ADD /* jel-2.1.1.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "jel-2.1.1.jar"; path = "../../../../Libraries/misc/jel-2.1.1.jar"; sourceTree = "<group>"; };
+		E92AE82523283B2B005098B2 /* Topology.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = Topology.java; sourceTree = "<group>"; };
 		E92EB0172095C6DA00F0FB58 /* warning.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = warning.png; sourceTree = "<group>"; };
 		E92EB0182095C6DA00F0FB58 /* warning@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "warning@2x.png"; sourceTree = "<group>"; };
 		E9306F211FD2D2C800AAC2DF /* ChunkDataModifier.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ChunkDataModifier.java; sourceTree = "<group>"; };
@@ -2793,6 +2794,7 @@
 				E96D8C58161661420009B833 /* StrideLocationIterator.java */,
 				E96D8C59161661420009B833 /* SubsetGrid.java */,
 				E96D8C5B161661420009B833 /* TimePeriod.java */,
+				E92AE82523283B2B005098B2 /* Topology.java */,
 				E96D8C5C161661420009B833 /* trans */,
 				E96D8C71161661420009B833 /* UnitFactory.java */,
 				E96D8C72161661420009B833 /* UnivariateEstimator.java */,
