@@ -73,7 +73,7 @@ public class PathTransformer {
    * test reveals a discontinuity, an error is logged with the locations
    * of the issue.
    *
-   * @parm flag the diagnostic mode flag, true to perform the diagnostic.
+   * @param flag the diagnostic mode flag, true to perform the diagnostic.
    * By default, diagnostics are off.
    */
   public static void setDiagnosticMode (
