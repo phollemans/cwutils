@@ -163,7 +163,7 @@ public class LambertAzimuthalEqualAreaProjection
     g = sin_lat_o*sin_lat + cos_lat_o*cos_lat*cos_delta_lon;
     if (g == -1.0)
        {
-       sprintf (mess, "Point projects to a circle of radius = %lf\n", 2.0*R);
+       sprintf (mess, "Point projects to a circle of radius = %f\n", 2.0*R);
        p_error (mess, "lamaz-forward");
        return (113);
        }

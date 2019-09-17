@@ -170,7 +170,7 @@ public class AzimuthalEquidistantProjection
        if (g < 0.0)
          {
          con = 2.0*HALF_PI*r_major;
-         sprintf (mess,"Point projects into a circle of radius = %12.2lf", con);
+         sprintf (mess,"Point projects into a circle of radius = %12.2f", con);
          p_error (mess,"azim-for");
          return (123);
          }

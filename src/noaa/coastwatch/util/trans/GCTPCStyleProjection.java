@@ -29,7 +29,11 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.io.PrintStream;
 import java.util.Arrays;
+
 import noaa.coastwatch.util.trans.GCTPStyleProjection;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * The <code>GCTPCStyleProjection</code> class provides method signatures
@@ -41,6 +45,8 @@ import noaa.coastwatch.util.trans.GCTPStyleProjection;
  */
 public abstract class GCTPCStyleProjection
   extends GCTPStyleProjection {
+
+  private static final Logger LOGGER = Logger.getLogger (GCTPCStyleProjection.class.getName());
 
   // Constants
   // ---------
@@ -64,34 +70,6 @@ public abstract class GCTPCStyleProjection
   /** The projection parameters used at initialization. */
   protected double[] params;
   
-  /** The stream to output parameter messages. */
-  private static PrintStream paramStream;
-
-  /** The stream to output error messages. */
-  private static PrintStream errorStream;
-  
-  ////////////////////////////////////////////////////////////
-
-  /** 
-   * Sets the error output stream for use by the error
-   * reporting functions.  By default the error reporting
-   * is disabled.
-   *
-   * @param stream the new stream for error reporting.
-   */
-  public static void setErrorStream (PrintStream stream) { errorStream = stream; }
-
-  ////////////////////////////////////////////////////////////
-
-  /** 
-   * Sets the parameter output stream for use by the parameter
-   * reporting functions.  By default the parameter reporting
-   * is disabled.
-   *
-   * @param stream the new stream for parameter reporting.
-   */
-  public static void setParamStream (PrintStream stream) { paramStream = stream; }
-
   ////////////////////////////////////////////////////////////
 
   /**
@@ -207,83 +185,93 @@ public abstract class GCTPCStyleProjection
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * These are some dummy functions to satify the GCTPC code.  They
-   * currently have no implementation, but may be updated in the future
-   * to format and report GCTP operations.
-   */
-
-  protected static void p_error (char what[], char where[]) { }
-  protected static void p_error (String what, String where) { }
-  protected static void p_error (char what[], String where) { }
-  protected static void sprintf (char buffer[], String format, Object... args) { }
-  protected static void pblank () { }
+  protected static void sprintf (char buffer[], String format, Object... args) {
+    String str = String.format (format, args);
+    str.getChars​ (0, str.length(), buffer, 0);
+  }
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * These are some GCTP error reporting methods that log at the FINER level.
+   * Some of the GCTP functions log errors when a coordinate transform fails
+   * due to not being on the map.  For example a GVNSP coordinate transform logs
+   * an error when the (x,y) to (lat,lon) calculation fails because the (x,y) is
+   * a space view pixel.  In order to keep the coordinate transform
+   * code fast when transforming large numbers of possibly invalid coordinates
+   * and avoid creating new strings whenever an error is found, we
+   * check the logger level first in these method to make sure the creation of a
+   * message string is needed.
+   */
+
+  protected static void p_error (char what[], char where[]) {
+    if (LOGGER.isLoggable (Level.FINER))
+      LOGGER.finer (String.format ("[%s] %s", new String (where), new String (what)));
+  }
+
+  protected static void p_error (String what, String where) {
+    if (LOGGER.isLoggable (Level.FINER))
+      LOGGER.finer (String.format ("[%s] %s", where, what));
+  }
+
+  protected static void p_error (char what[], String where) {
+    if (LOGGER.isLoggable (Level.FINER))
+      LOGGER.finer (String.format ("[%s] %s", where, new String (what)));
+  }
+
+  ////////////////////////////////////////////////////////////
+
+  /** These are some GCTP parameter reporting methods that log at the FINE level. */
+
   protected static void ptitle (String title) {
-    if (paramStream != null) paramStream.printf ("\n%s PROJECTION PARAMETERS:\n\n", title);
+    LOGGER.fine (String.format ("%s PROJECTION PARAMETERS:", title));
   }
 
   protected void radius (double r) {
-    if (paramStream != null)
-      paramStream.printf ("   Radius of Sphere:     %f meters\n", r);
+    LOGGER.fine (String.format ("   Radius of Sphere:     %f meters", r));
   }
   
   protected void radius2 (double rmaj, double  rmin) {
-    if (paramStream != null) {
-      paramStream.printf ("   Semi-Major Axis of Ellipsoid:     %f meters\n", rmaj);
-      paramStream.printf ("   Semi-Minor Axis of Ellipsoid:     %f meters\n", rmin);
-    }
+    LOGGER.fine (String.format ("   Semi-Major Axis of Ellipsoid:     %f meters", rmaj));
+    LOGGER.fine (String.format ("   Semi-Minor Axis of Ellipsoid:     %f meters", rmin));
   }
   
   protected void cenlon (double lon) {
-    if (paramStream != null)
-      paramStream.printf ("   Longitude of Center:     %f degrees\n", lon*R2D);
+    LOGGER.fine (String.format ("   Longitude of Center:     %f degrees", lon*R2D));
   }
   
   protected void cenlonmer (double lon) {
-    if (paramStream != null)
-      paramStream.printf("   Longitude of Central Meridian:     %f degrees\n", lon*R2D);
+    LOGGER.fine (String.format ("   Longitude of Central Meridian:     %f degrees", lon*R2D));
   }
   
   protected void cenlat (double lat) {
-    if (paramStream != null)
-      paramStream.printf ("   Latitude  of Center:     %f degrees\n", lat*R2D);
+    LOGGER.fine (String.format ("   Latitude  of Center:     %f degrees", lat*R2D));
   }
   
   protected void origin (double lat) {
-    if (paramStream != null)
-      paramStream.printf ("   Latitude of Origin:     %f degrees\n", lat*R2D);
+    LOGGER.fine (String.format ("   Latitude of Origin:     %f degrees", lat*R2D));
   }
   
   protected void stanparl (double lat1, double lat2) {
-    if (paramStream != null) {
-      paramStream.printf ("   1st Standard Parallel:     %f degrees\n", lat1*R2D);
-      paramStream.printf ("   2nd Standard Parallel:     %f degrees\n", lat2*R2D);
-    }
+    LOGGER.fine (String.format ("   1st Standard Parallel:     %f degrees", lat1*R2D));
+    LOGGER.fine (String.format ("   2nd Standard Parallel:     %f degrees", lat2*R2D));
   }
   
   protected void stparl1 (double lat) {
-    if (paramStream != null)
-      paramStream.printf ("   Standard Parallel:     %f degrees\n", lat*R2D);
+    LOGGER.fine (String.format ("   Standard Parallel:     %f degrees", lat*R2D));
   }
   
   protected void offsetp (double fe, double fn) {
-    if (paramStream != null) {
-      paramStream.printf ("   False Easting:      %f meters \n", fe);
-      paramStream.printf ("   False Northing:     %f meters \n", fn);
-    }
+    LOGGER.fine (String.format ("   False Easting:      %f meters", fe));
+    LOGGER.fine (String.format ("   False Northing:     %f meters", fn));
   }
   
   protected static void genrpt (double a, String what) {
-    if (paramStream != null)
-      paramStream.printf("   %s %f\n", what, a);
+    LOGGER.fine (String.format ("   %s %f", what, a));
   }
 
   protected static void genrpt_long (long a, String what) {
-    if (paramStream != null)
-      paramStream.printf("   %s %d\n", what, a);
+    LOGGER.fine (String.format ("   %s %d", what, a));
   }
 
   ////////////////////////////////////////////////////////////
