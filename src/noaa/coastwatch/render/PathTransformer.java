@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.trans.BoundaryHandler;
 import noaa.coastwatch.util.Topology;
 
 import org.locationtech.jts.geom.Geometry;
@@ -242,7 +243,8 @@ public class PathTransformer {
     int moveToCount = 0;
 
     EarthTransform earthTrans = imageTrans.getEarthTransform();
-    boolean boundaryCheck = earthTrans.hasBoundaryCheck();
+    BoundaryHandler boundaryHandler = earthTrans.getBoundaryHandler();
+    boolean boundaryCheck = (boundaryHandler != null);
 
     // Loop over each location in the list
     // -----------------------------------
@@ -279,7 +281,7 @@ public class PathTransformer {
         // Perform boundary check
         // ----------------------
         if (boundaryCheck) {
-          if (earthTrans.isBoundaryCut (lastLoc, loc)) {
+          if (boundaryHandler.isBoundaryCut (lastLoc, loc)) {
             boundaryCut = true;
             break;
           } // if
@@ -292,15 +294,14 @@ public class PathTransformer {
             imageTrans.isDiscontinuous (lastLoc, loc, lastPoint, point) : false);
         } // if
 
-        // We perform an extra diagnostic here to help solve issues with
-        // earth transforms that perform boundary checks and are
-        // returning false from the isBoundaryCut method but a discontinuity
-        // is detected between two ends of a line segment
+        // We perform an extra diagnostic here to help solve issues with a
+        // boundary handler that reported false from a call to isBoundaryCut
+        // but a discontinuity is detected between two ends of a line segment
         
         if (diagnosticMode) {
           boolean jumped = imageTrans.isDiscontinuous (lastLoc, loc, lastPoint, point);
           if (boundaryCheck && jumped) {
-            LOGGER.warning ("Earth transform failed diagsnostic, jump detected between " +
+            LOGGER.warning ("Earth transform boundary cut test failed diagnostic, jump detected between " +
               "(" + lastLoc.format (EarthLocation.RAW) + ") and " +
               "(" + loc.format (EarthLocation.RAW) + ")");
           } // if
@@ -377,7 +378,7 @@ public class PathTransformer {
 
       // Split geometry
       // --------------
-      Geometry splitter = earthTrans.getBoundarySplitter();
+      Geometry splitter = boundaryHandler.getSplitter();
 
       // We do this next line for polygon splits because we were
       // getting an error thrown in the JTS difference method about
