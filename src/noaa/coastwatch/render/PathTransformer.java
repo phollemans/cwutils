@@ -35,6 +35,7 @@ import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.BoundaryHandler;
 import noaa.coastwatch.util.Topology;
+import noaa.coastwatch.util.trans.Datum;
 
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.Polygon;
@@ -159,13 +160,14 @@ public class PathTransformer {
     private boolean pathInvalid = false;
     private GeneralPath path = new GeneralPath();
     private EarthImageTransform imageTrans;
-    private EarthLocation loc = new EarthLocation();
+    private EarthLocation loc;
 
     public CoordinateToPathConvertor (
       EarthImageTransform imageTrans
     ) {
     
       this.imageTrans = imageTrans;
+      this.loc = new EarthLocation (imageTrans.getEarthTransform().getDatum());
     
     } // CoordinateToPathConvertor
   
@@ -336,6 +338,22 @@ public class PathTransformer {
     // -------------------------------
     if (boundaryCut) {
 
+      // Check location list datum
+      // -------------------------
+      if (locList.size() > 0) {
+        Datum locDatum = locList.get (0).getDatum();
+        Datum splitterDatum = earthTrans.getDatum();
+        if (!locDatum.equals (splitterDatum)) {
+          List<EarthLocation> shiftedLocList = new ArrayList<>();
+          for (EarthLocation loc : locList) {
+            EarthLocation shiftedLoc = (EarthLocation) loc.clone();
+            shiftedLoc.shiftDatum (splitterDatum);
+            shiftedLocList.add (shiftedLoc);
+          } // for
+          locList = shiftedLocList;
+        } // if
+      } // if
+
       // Check if polygon needs closing (for using JTS)
       // ----------------------------------------------
       if (isPolygon) {
@@ -399,6 +417,7 @@ public class PathTransformer {
       for (int i = 0; i < geomCount; i++) {
 
         Geometry component = splitGeom.getGeometryN (i);
+        if (component.getNumPoints() == 0) continue;
 
         // Restore parent polygon winding order
         // ------------------------------------
