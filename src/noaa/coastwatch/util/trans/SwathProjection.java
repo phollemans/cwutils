@@ -32,12 +32,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.operation.buffer.BufferOp;
-import org.locationtech.jts.operation.buffer.BufferParameters;
-
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthArea;
@@ -49,7 +43,6 @@ import noaa.coastwatch.util.ValueSource;
 import noaa.coastwatch.util.VariableEstimator;
 import noaa.coastwatch.util.trans.DataProjection;
 import noaa.coastwatch.util.trans.EarthTransform2D;
-import noaa.coastwatch.util.Topology;
 
 import java.util.logging.Logger;
 
@@ -136,9 +129,6 @@ public class SwathProjection
   
   /** The data projection used to create the lat/lon estimators. */
   private EarthTransform dataTrans;
-
-  /** The geometry to use for boundary splitting. */
-  private Geometry splitter;
 
   ////////////////////////////////////////////////////////////
 
@@ -318,19 +308,14 @@ public class SwathProjection
     // ----------
     resetTolerance();
     resetArea();
-    splitter = createBoundarySplitter();
+    createBoundaryHandler();
 
   } // SwathProjection constructor
 
   ////////////////////////////////////////////////////////////
 
-  @Override
-  public boolean hasBoundaryCheck () { return (true); }
-
-  ////////////////////////////////////////////////////////////
-
-  @Override
-  public boolean isBoundaryCut (
+  /** The swath implementation of the boundary cut test. */
+  private boolean isBoundaryCut (
     EarthLocation a,
     EarthLocation b
   ) {
@@ -350,11 +335,6 @@ public class SwathProjection
     return (cut);
     
   } // isBoundaryCut
-
-  ////////////////////////////////////////////////////////////
-
-  @Override
-  public Geometry getBoundarySplitter () { return (splitter); }
 
   ////////////////////////////////////////////////////////////
 
@@ -398,138 +378,45 @@ public class SwathProjection
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the geometry corresponding to the list of locations, taking
-   * into account any line segments that cross the anti-meridian.
-   *
-   * @param locList the list of locations to convert to a geometry.
-   *
-   * @return the geometry corresponding to the locations.
-   *
-   * @since 3.5.1
+   * Creates a new handler for the boundaries of this swath.
    */
-  private Geometry getLineGeometry (
-    List<EarthLocation> locList
-  ) {
-  
-    // Detect anti-meridian crossings
-    // ------------------------------
-    List<Integer> crossingList = new ArrayList<>();
-    int count = locList.size();
-    for (int i = 1; i < count; i++) {
-      EarthLocation a = locList.get (i-1);
-      EarthLocation b = locList.get (i);
-      
-      // Store the second location in each crossing
-      
-      if (a.crossesAntiMeridian (b)) crossingList.add (i);
-    } // for
+  private void createBoundaryHandler () {
 
-    // Create location segments
-    // ------------------------
-    
-    // If there are n crossings, there are n+1 segments
-    
-    int crossings = crossingList.size();
-    int segments = crossings + 1;
-    List[] segmentArray = new List[segments];
-
-    // Handles the edge case of segments = 1
-    // Also the case of a crossing at loc = 1
-    // Also the cae of a crossing at loc = count-1
-
-    for (int i = 0; i < segments; i++) {
-      int start = (i == 0 ? 0 : crossingList.get (i-1));
-      int end = (i == (segments-1) ? count : crossingList.get (i));
-      segmentArray[i] = locList.subList (start, end);
-    } // for
-
-    // Convert each segment to geometry
-    // --------------------------------
-    GeometryFactory factory = Topology.getFactory();
-    Geometry geom = null;
-    for (int i = 0; i < segments; i++) {
-
-      // We don't create a line string if the segment length is < 2
-
-      int length = segmentArray[i].size();
-      if (length > 1) {
-        Coordinate[] coords = new Coordinate[length];
-        for (int j = 0; j < length; j++) {
-          EarthLocation loc = (EarthLocation) segmentArray[i].get (j);
-          coords[j] = Topology.createCoordinate (loc.lon, loc.lat);
-        } // for
-        Geometry lineString = factory.createLineString (coords);
-        geom = (geom == null ? lineString : geom.union (lineString));
-      } // if
-    
-    } // for
-
-    return (geom);
-
-  } // getLineGeometry
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Creates a boundary splitting polygon by tracing the edges of the
-   * swath and forming a geometry of a small buffer surrounding the
-   * edge lines.
-   *
-   * @return the splitting polygon.
-   */
-  private Geometry createBoundarySplitter () {
-
-    Geometry splitLines;
-    Geometry lineGeom;
-
-    // Get a union geometry of all swath edges
-    // ---------------------------------------
+    // Trace swath edges
+    // -----------------
     int stride = 10;
+    List<List<EarthLocation>> lineList = new ArrayList<>();
 
-    List<EarthLocation> topEdge = getLineLocations (
+    // Top edge
+
+    lineList.add (getLineLocations (
       new int[] {0, 0},
       new int[] {0, stride}
-    );
-    lineGeom = getLineGeometry (topEdge);
-    splitLines = lineGeom;
+    ));
+    
+    // Bottom edge
 
-    LOGGER.fine ("Top edge locs = " + topEdge.size() + ", geoms = " + lineGeom.getNumGeometries());
-
-    List<EarthLocation> bottomEdge = getLineLocations (
+    lineList.add (getLineLocations (
       new int[] {this.dims[ROW]-1, 0},
       new int[] {0, stride}
-    );
-    lineGeom = getLineGeometry (bottomEdge);
-    splitLines = splitLines.union (lineGeom);
+    ));
 
-    LOGGER.fine ("Bottom edge locs = " + bottomEdge.size() + ", geoms = " + lineGeom.getNumGeometries());
+    // Left edge
 
-    List<EarthLocation> leftEdge = getLineLocations (
+    lineList.add (getLineLocations (
       new int[] {0, 0},
       new int[] {stride, 0}
-    );
-    lineGeom = getLineGeometry (leftEdge);
-    splitLines = splitLines.union (lineGeom);
+    ));
+    
+    // Right edge
 
-    LOGGER.fine ("Left edge locs = " + leftEdge.size() + ", geoms = " + lineGeom.getNumGeometries());
-
-    List<EarthLocation> rightEdge = getLineLocations (
+    lineList.add (getLineLocations (
       new int[] {0, this.dims[COL]-1},
       new int[] {stride, 0}
-    );
-    lineGeom = getLineGeometry (rightEdge);
-    splitLines = splitLines.union (lineGeom);
-
-    LOGGER.fine ("Right edge locs = " + rightEdge.size() + ", geoms = " + lineGeom.getNumGeometries());
-
-    // Expand the geometry into a polygon
-    // ----------------------------------
-    BufferParameters params = new BufferParameters (0,
-      BufferParameters.CAP_SQUARE, BufferParameters.JOIN_BEVEL, 0);
-    Geometry splitPoly = BufferOp.bufferOp (splitLines, Topology.EPSILON*2, params);
+    ));
     
-    return (splitPoly);
-  
+    boundaryHandler = new BoundaryHandler ((a, b) -> isBoundaryCut (a, b), lineList);
+
   } // createBoundarySplitter
 
   ////////////////////////////////////////////////////////////
@@ -866,7 +753,7 @@ public class SwathProjection
     resetTolerance();
     resetArea();
     setNorthFlag (latEst, dims);
-    splitter = createBoundarySplitter();
+    createBoundaryHandler();
 
   } // useEncoding
 

@@ -30,8 +30,7 @@ import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.MetadataContainer;
 import noaa.coastwatch.util.trans.Datum;
 import noaa.coastwatch.util.trans.DatumFactory;
-
-import org.locationtech.jts.geom.Geometry;
+import noaa.coastwatch.util.trans.BoundaryHandler;
 
 import static noaa.coastwatch.util.trans.SpheroidConstants.WGS84;
 import static noaa.coastwatch.util.trans.SpheroidConstants.SPHEROID_SEMI_MAJOR;
@@ -39,7 +38,7 @@ import static noaa.coastwatch.util.trans.SpheroidConstants.SPHEROID_SEMI_MINOR;
 import static noaa.coastwatch.util.trans.SpheroidConstants.SPHEROID_NAMES;
 
 /**
- * The earth transform class translates between data coordinates and
+ * The <code>EarthTransform</code> class translates between data coordinates and
  * geographic coordinates in latitude and longitude degrees.
  *
  * @author Peter Hollemans
@@ -94,6 +93,9 @@ operations to perform.
   /** Data location dimensions. */
   protected int[] dims;
 
+  /** The boundary handler for this transform or null for none. */
+  protected BoundaryHandler boundaryHandler;
+
   ////////////////////////////////////////////////////////////
 
   /**
@@ -134,66 +136,15 @@ operations to perform.
   ////////////////////////////////////////////////////////////
 
   /**
-   * Determines if this transform has a boundary check.
+   * Gets the boundary handler for this transform that handles boundary
+   * checking and splitting.
    *
-   * @return true if the {@link #isBoundaryCut} and {@link #getBoundarySplitter}
-   * methods can be used in this transform or false if not. This method returns
-   * false unless overridden in the child class.  If so, the other two methods
-   * must also be overridden.
-   *
-   * @since 3.5.1
-   */
-  public boolean hasBoundaryCheck () {
-  
-    return (false);
-
-  } // hasBoundaryCheck
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Determines if a line joining two earth locations is cut by a boundary
-   * in the earth transform.  A line cut by a boundary has a segment on
-   * one edge of the transform, and another segment on the opposite edge.
-   *
-   * @param a the first earth location.
-   * @param b the second earth location.
-   *
-   * @return true if the line joining the two locations is cut by a boundary,
-   * or false if not.  By default in {@link EarthTransform} this method
-   * returns false. If subclasses overide this method to return
-   * true in some cases, the {@link #getBoundarySplitter} method must also be
-   * overridden to provide a splitting geometry accordingly.
+   * @return the boundary handler or null if no special bounary handling
+   * is performed by this transform.
    *
    * @since 3.5.1
    */
-  public boolean isBoundaryCut (
-    EarthLocation a,
-    EarthLocation b
-  ) {
-  
-    return (false);
-    
-  } // isBoundaryCut
-  
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Gets the boundary geometry for this transform to perform splits on
-   * earth location lines and polygons.
-   *
-   * @return the geometry to use for splitting.
-   *
-   * @throws UnsupportedOperationException if this method is not implemented
-   * for this class.
-   *
-   * @since 3.5.1
-   */
-  public Geometry getBoundarySplitter () {
-  
-    throw new UnsupportedOperationException();
-
-  } // getBoundarySplitter
+  public BoundaryHandler getBoundaryHandler() { return (boundaryHandler); }
 
   ////////////////////////////////////////////////////////////
 

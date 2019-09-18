@@ -27,17 +27,13 @@ package noaa.coastwatch.util.trans;
 // -------
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
-
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.Polygon;
+import java.util.List;
 
 import noaa.coastwatch.util.trans.GCTPCStyleProjection;
 import noaa.coastwatch.util.trans.ProjectionConstants;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.DataLocation;
-import noaa.coastwatch.util.Topology;
+import noaa.coastwatch.util.trans.BoundaryHandler;
 
 import java.util.logging.Logger;
 
@@ -147,9 +143,6 @@ public class GeographicProjection
   /** The angle at the edge of the projection. */
   private double alpha;
 
-  /** The geometry to use for boundary splitting. */
-  private Geometry splitter;
-
   ////////////////////////////////////////////////////////////
 
   /**
@@ -209,8 +202,8 @@ public class GeographicProjection
       else
         throw new IllegalStateException ("Unsupported longitude range type in geographic projection");
 
-      // Create splitting geometry
-      // -------------------------
+      // Create boundary handler
+      // -----------------------
       double boundary;
       switch (lonRange) {
 
@@ -233,25 +226,14 @@ public class GeographicProjection
 
       } // switch
 
-      GeometryFactory factory = Topology.getFactory();
-
-      Polygon poly = factory.createPolygon (new Coordinate[] {
-        Topology.createCoordinate (boundary - Topology.EPSILON, 90),
-        Topology.createCoordinate (boundary + Topology.EPSILON, 90),
-        Topology.createCoordinate (boundary + Topology.EPSILON, -90),
-        Topology.createCoordinate (boundary - Topology.EPSILON, -90),
-        Topology.createCoordinate (boundary - Topology.EPSILON, 90)
-      });
       double nextBoundary = boundary + 360;
-      Polygon nextPoly = factory.createPolygon (new Coordinate[] {
-        Topology.createCoordinate (nextBoundary - Topology.EPSILON, 90),
-        Topology.createCoordinate (nextBoundary + Topology.EPSILON, 90),
-        Topology.createCoordinate (nextBoundary + Topology.EPSILON, -90),
-        Topology.createCoordinate (nextBoundary - Topology.EPSILON, -90),
-        Topology.createCoordinate (nextBoundary - Topology.EPSILON, 90)
-      });
-      splitter = poly.union (nextPoly);
-
+      List<List<EarthLocation>> lineList = List.of (
+        List.of (new EarthLocation (90, boundary), new EarthLocation (-90, boundary)),
+        List.of (new EarthLocation (90, nextBoundary), new EarthLocation (-90, nextBoundary))
+      );
+      
+      boundaryHandler = new BoundaryHandler ((a, b) -> isBoundaryCut (a, b), lineList);
+      
       LOGGER.fine ("Longitude range type is " + lonRange + " with alpha = " + alpha);
     
     } // else
@@ -480,12 +462,7 @@ public class GeographicProjection
 
   ////////////////////////////////////////////////////////////
 
-  @Override
-  public boolean hasBoundaryCheck () { return (true); }
-
-  ////////////////////////////////////////////////////////////
-
-  @Override
+  /** The geographic implementation of the boundary cut test. */
   public boolean isBoundaryCut (
     EarthLocation a,
     EarthLocation b
@@ -520,11 +497,6 @@ public class GeographicProjection
     return (boundaryCut);
 
   } // isBoundaryCut
-
-  ////////////////////////////////////////////////////////////
-
-  @Override
-  public Geometry getBoundarySplitter () { return (splitter); }
 
   ////////////////////////////////////////////////////////////
 
