@@ -296,8 +296,8 @@ public class GeneralVerticalNearsidePerspectiveProjection
 
       long ret = projinv (x, y, lon, lat);
       if (ret != OK) {
-        throw new IllegalStateException ("Error in projinv computing boundary at theta = " +
-          theta + " and (x,y) = " + x + "," + y);
+        throw new IllegalStateException ("Error in gvnsp projinv computing boundary at theta = " +
+          Math.toDegrees (theta) + " and (x,y) = " + x + "," + y);
       } // if
 
       EarthLocation loc = new EarthLocation (

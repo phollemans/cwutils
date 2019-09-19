@@ -367,87 +367,106 @@ public class PathTransformer {
         } // if
       } // if
 
-      // Create geometry for locations
-      // -----------------------------
-      GeometryFactory factory = Topology.getFactory();
-      boolean crosses = crossesAntiMeridian (locList);
-      int coordCount = locList.size();
-      Coordinate[] coords = new Coordinate[coordCount];
-      for (int i = 0; i < coordCount; i++) {
-        EarthLocation loc = locList.get (i);
-        double lon = loc.lon;
-        if (crosses && lon < 0) lon += 360;
-        coords[i] = Topology.createCoordinate (lon, loc.lat);
-      } // for
+      // Check if we have a valid line or polygon for splitting
+      // ------------------------------------------------------
+      boolean isValidShape;
+      int locCount = locList.size();
+      if (isPolygon)
+        isValidShape = (locCount >= 4);
+      else
+        isValidShape = (locCount >= 2);
 
-      // We save the parent polygon winding order here in order to restore
-      // later in case the split changes the winding order.
+      if (isValidShape) {
 
-      Geometry geom;
-      int parentWinding = 0;
-      if (isPolygon) {
-        Polygon polygon = factory.createPolygon (coords);
-        parentWinding = windingOrder (polygon);
-        geom = polygon;
-      } // if
-      else {
-        geom = factory.createLineString (coords);
-      } // else
+        // Create geometry for locations
+        // -----------------------------
+        GeometryFactory factory = Topology.getFactory();
+        boolean crosses = crossesAntiMeridian (locList);
+        int coordCount = locList.size();
+        Coordinate[] coords = new Coordinate[coordCount];
+        for (int i = 0; i < coordCount; i++) {
+          EarthLocation loc = locList.get (i);
+          double lon = loc.lon;
+          if (crosses && lon < 0) lon += 360;
+          coords[i] = Topology.createCoordinate (lon, loc.lat);
+        } // for
 
-      // Split geometry
-      // --------------
-      Geometry splitter = boundaryHandler.getSplitter();
+        // We save the parent polygon winding order here in order to restore
+        // later in case the split changes the winding order.
 
-      // We do this next line for polygon splits because we were
-      // getting an error thrown in the JTS difference method about
-      // encountering a non-noded intersection.  The advice online
-      // was to fix the polygon first by performing a buffer operation.
-      
-      if (isPolygon) {
-        geom = geom.buffer (0);
-      } // if
-      
-      Geometry splitGeom = geom.difference (splitter);
-
-      // Loop over all resulting split components
-      // ----------------------------------------
-      int geomCount = splitGeom.getNumGeometries();
-      GeneralPath geomPath = new GeneralPath();
-
-      for (int i = 0; i < geomCount; i++) {
-
-        Geometry component = splitGeom.getGeometryN (i);
-        if (component.getNumPoints() == 0) continue;
-
-        // Restore parent polygon winding order
-        // ------------------------------------
+        Geometry geom;
+        int parentWinding = 0;
         if (isPolygon) {
-          int componentWinding = windingOrder ((Polygon) component);
-          if (parentWinding != componentWinding)
-            component = component.reverse();
+          Polygon polygon = factory.createPolygon (coords);
+          parentWinding = windingOrder (polygon);
+          geom = polygon;
         } // if
+        else {
+          geom = factory.createLineString (coords);
+        } // else
 
-        // Convert component to path
-        // -------------------------
-        CoordinateToPathConvertor convertor = new CoordinateToPathConvertor (imageTrans);
-        component.apply (convertor);
+        // Split geometry
+        // --------------
+        Geometry splitter = boundaryHandler.getSplitter();
+
+        // We do this next line for polygon splits because we were
+        // getting an error thrown in the JTS difference method about
+        // encountering a non-noded intersection.  The advice online
+        // was to fix the polygon first by performing a buffer operation.
         
-        // If we get a null path here, it means that after splitting
-        // the geometry, there are some invalid components and some
-        // valid components, and we must be inside one of the invalid
-        // components.  So we discard it.
-
-        GeneralPath componentPath = convertor.getPath();
-        if (componentPath != null) {
-          if (isPolygon) componentPath.closePath();
-          geomPath.append (componentPath, false);
+        if (isPolygon) {
+          geom = geom.buffer (0);
         } // if
+        
+        Geometry splitGeom = geom.difference (splitter);
 
-      } // for
+        // Loop over all resulting split components
+        // ----------------------------------------
+        int geomCount = splitGeom.getNumGeometries();
+        GeneralPath geomPath = new GeneralPath();
 
-      // Save path to return
-      // -------------------
-      path = geomPath;
+        for (int i = 0; i < geomCount; i++) {
+
+          Geometry component = splitGeom.getGeometryN (i);
+          if (component.getNumPoints() == 0) continue;
+
+          // Restore parent polygon winding order
+          // ------------------------------------
+          if (isPolygon) {
+            int componentWinding = windingOrder ((Polygon) component);
+            if (parentWinding != componentWinding)
+              component = component.reverse();
+          } // if
+
+          // Convert component to path
+          // -------------------------
+          CoordinateToPathConvertor convertor = new CoordinateToPathConvertor (imageTrans);
+          component.apply (convertor);
+          
+          // If we get a null path here, it means that after splitting
+          // the geometry, there are some invalid components and some
+          // valid components, and we must be inside one of the invalid
+          // components.  So we ignore the component.
+
+          GeneralPath componentPath = convertor.getPath();
+          if (componentPath != null) {
+            if (isPolygon) componentPath.closePath();
+            geomPath.append (componentPath, false);
+          } // if
+
+        } // for
+
+        // Save path to return
+        // -------------------
+        path = geomPath;
+
+      } // if
+
+      // Invalid shape for splitting
+      // ---------------------------
+      else {
+        path = new GeneralPath();
+      } // else
 
     } // if
 

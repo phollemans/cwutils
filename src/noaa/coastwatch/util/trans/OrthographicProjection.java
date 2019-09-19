@@ -27,7 +27,11 @@ package noaa.coastwatch.util.trans;
 // -------
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
+import java.util.List;
+import java.util.ArrayList;
+
 import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.trans.GCTPCStyleProjection;
 import noaa.coastwatch.util.trans.GCTPStyleProjection;
 import noaa.coastwatch.util.trans.ProjectionConstants;
@@ -137,6 +141,7 @@ public class OrthographicProjection
       falseEast, falseNorth);
     if (result != OK) 
       throw new IllegalArgumentException ("Projection parameter inconsistency detected");
+    createBoundaryHandler();
 
   } // OrthographicProjection constructor
 
@@ -201,7 +206,7 @@ public class OrthographicProjection
       }
     else
       {
-      p_error ("Point can not be projected","orth-for");
+      p_error ("Point cannot be projected","orth-for");
       return (143);
       }
     return (OK);
@@ -263,6 +268,75 @@ public class OrthographicProjection
     return (OK);
 
   } // projinv
+
+  ////////////////////////////////////////////////////////////
+
+  /** The orthographic implementation of the boundary cut test. */
+  private boolean isBoundaryCut (
+    EarthLocation a,
+    EarthLocation b
+  ) {
+
+    boolean cut;
+
+    DataLocation dataLoc = new DataLocation (2);
+
+    transform (a, dataLoc);
+    boolean aValid = dataLoc.isValid();
+    transform (b, dataLoc);
+    boolean bValid = dataLoc.isValid();
+
+    cut = (!aValid || !bValid);
+
+    return (cut);
+    
+  } // isBoundaryCut
+
+  ////////////////////////////////////////////////////////////
+
+  /** Creates a boundary handler for this projection. */
+  private void createBoundaryHandler () {
+
+    List<EarthLocation> locList = new ArrayList<>();
+
+    // What we do here is trace out a circle of maximum radius in (x,y)
+    // map space and then transform each map coordiante to (lat,lon) and
+    // build a list of (lat,lon) locations for the boundary. We trace out
+    // the points at a spacing of about 1/2 degree.
+
+    double rMax = (r_major + .0000001) * (1.0 - EPSLN);
+
+    double[] lon = new double[1];
+    double[] lat = new double[1];
+
+    int points = 720;
+    double dtheta = 2*Math.PI / points;
+
+    for (int point = 0; point <= points; point++) {
+
+      double theta = dtheta * point;
+      double x = rMax * Math.cos (theta);
+      double y = rMax * Math.sin (theta);
+
+      long ret = projinv (x, y, lon, lat);
+      if (ret != OK) {
+        throw new IllegalStateException ("Error in ortho projinv computing boundary at theta = " +
+          Math.toDegrees (theta) + " and (x,y) = " + x + "," + y);
+      } // if
+
+      EarthLocation loc = new EarthLocation (
+        Math.toDegrees (lat[0]),
+        Math.toDegrees (lon[0]),
+        datum
+      );
+
+      locList.add (loc);
+    
+    } // for
+
+    boundaryHandler = new BoundaryHandler ((a, b) -> isBoundaryCut (a, b), List.of (locList));
+
+  } // createBoundaryHandler
 
   ////////////////////////////////////////////////////////////
 
