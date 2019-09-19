@@ -338,8 +338,8 @@ public class PathTransformer {
     // -------------------------------
     if (boundaryCut) {
 
-      // Check location list datum
-      // -------------------------
+      // Convert locations to splitter datum if needed
+      // ---------------------------------------------
       if (locList.size() > 0) {
         Datum locDatum = locList.get (0).getDatum();
         Datum splitterDatum = earthTrans.getDatum();
@@ -406,9 +406,9 @@ public class PathTransformer {
       if (isPolygon) {
         geom = geom.buffer (0);
       } // if
-
-      Geometry splitGeom = geom.difference (splitter);
       
+      Geometry splitGeom = geom.difference (splitter);
+
       // Loop over all resulting split components
       // ----------------------------------------
       int geomCount = splitGeom.getNumGeometries();

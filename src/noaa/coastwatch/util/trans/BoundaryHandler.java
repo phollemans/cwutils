@@ -93,13 +93,7 @@ public class BoundaryHandler {
   private void addCutLine (
     List<EarthLocation> locList
   ) {
-
-
-    // TODO: What happens if the cut lines are specified using a different
-    // datum than the lines that the splitter is used to split?
-
-
-
+  
     Geometry geom = getLineGeometry (locList);
     cutLines = (cutLines == null ? geom : cutLines.union (geom));
 
