@@ -64,6 +64,8 @@ import java.util.Formatter;
 import noaa.coastwatch.util.trans.SpheroidConstants;
 import noaa.coastwatch.test.TestLogger;
 
+import java.util.logging.Logger;
+
 /**
  * The <code>CDMGridMappedProjection</code> class wraps a Java NetCDF
  * CDM projection and allows access to transform calculations through the 
@@ -75,6 +77,8 @@ import noaa.coastwatch.test.TestLogger;
 @noaa.coastwatch.test.Testable
 public class CDMGridMappedProjection
   extends EarthTransform2D {
+
+  private static final Logger LOGGER = Logger.getLogger (CDMGridMappedProjection.class.getName());
 
   // Constants
   // ---------
@@ -100,6 +104,15 @@ public class CDMGridMappedProjection
   ////////////////////////////////////////////////////////////
 
   public String describe () { return (DESCRIPTION); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public String toString () {
+
+    return ("CDMGridMappedProjection[proj=" + proj + ",datum=" + datum + "]");
+
+  } // toString
 
   ////////////////////////////////////////////////////////////
 
@@ -252,8 +265,9 @@ public class CDMGridMappedProjection
     // Create custom spheroid
     // ----------------------
     else {
-      datum = new Datum ("User defined", "User defined", rMajor, invFlat,
-        0, 0, 0);
+      datum = new Datum ("User defined", "User defined", rMajor, invFlat, 0, 0, 0);
+      LOGGER.warning ("Grid mapped projection using unknown datum: semi-major axis = " +
+        rMajor + " m, semi-minor axis = " + rMinor + " m");
     } // else
 
     return (datum);
@@ -414,16 +428,6 @@ public class CDMGridMappedProjection
     // Check object instance
     // ---------------------
     if (!(obj instanceof CDMGridMappedProjection)) return (false);
-
-    /*
-     * TODO: The datum check here could fail to detect two identical datums.
-     * Normally datums are created by the DatumFactory class, in which case
-     * we can be assured that their references match.  But this class creates custom
-     * datums if it needs to, so we could be trying to compare two custom
-     * datums, and since the Datum class only compares references for equality,
-     * the Datum.equals() method could return false, even if the datums have
-     * identical values.  This should be fixed.
-     */
 
     // Check projection and datum
     // --------------------------

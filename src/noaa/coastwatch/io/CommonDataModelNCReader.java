@@ -317,7 +317,21 @@ public class CommonDataModelNCReader
     // ----------------------
     List<EarthTransform> transList = new ArrayList<EarthTransform>();
     for (VariableGroup group : groupList) {
-      transList.add (getTransform (group.gridset));
+      EarthTransform trans = getTransform (group.gridset);
+      transList.add (trans);
+      
+      // Log the list of grid names and the transform for each one here.
+      // This is useful for debugging issues with the EarthTransform objects
+      // not all matching.
+      
+      if (LOGGER.isLoggable (Level.FINE)) {
+        List<GridDatatype> grids = group.gridset.getGrids();
+        StringBuffer names = new StringBuffer();
+        for (GridDatatype grid : grids)
+          names.append ((names.length() != 0 ? "," : "") + grid.getName());
+        LOGGER.fine ("Got transform = " + trans + " for grid names = " + names);
+      } // if
+
     } // for
 
     // Check that all transforms are equal
@@ -326,8 +340,9 @@ public class CommonDataModelNCReader
     for (EarthTransform trans : transList) {
       if (firstTrans == null)
         firstTrans = trans;
-      else if (!firstTrans.equals (trans))
+      else if (!firstTrans.equals (trans)) {
         throw new IOException ("Earth transforms are not equal in all grids");
+      } // else if
     } // for
 
     return (firstTrans);

@@ -270,22 +270,42 @@ public class Datum
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Checks if this datum is equal to another.  For now, we assume
-   * that datums all come from one place, in such a way as we can
-   * compare object references for equality and be assured that
-   * different references imply different datums.
-   */
+  @Override
   public boolean equals (
     Object obj
   ) {
 
-    return (this == obj);
+    boolean equal = false;
+
+    // We check for the singleton case here first.  Most of our datums
+    // will be created by the datum factory using a spheroid code, so
+    // we can first just check that we're dealing with the same object
+    // first before going into a more complex comparison.
+
+    if (this == obj)
+      equal = true;
+    
+    // Now we check the various parameters of the datum to see if they're
+    // equal.
+    
+    else if (obj instanceof Datum) {
+      Datum datum = (Datum) obj;
+      equal = (
+        datum.axis == this.axis &&
+        datum.flat == this.flat &&
+        datum.dx == this.dx &&
+        datum.dy == this.dy &&
+        datum.dz == this.dz
+      );
+    } // else
+    
+    return (equal);
 
   } // equals
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public String toString () {
 
     return ("Datum[datumName=" + datumName + ",spheroidName=" + 
@@ -295,6 +315,7 @@ public class Datum
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public Object clone () {
 
     try {
