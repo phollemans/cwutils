@@ -176,10 +176,10 @@ public class CFNC4Writer
   private static final String LON_DIM = "lon";
 
   /** The name of the row dimension. */
-  private static final String ROW_DIM = "row";
+  private static final String ROW_DIM = "y";
 
   /** The name of the column dimension. */
-  private static final String COLUMN_DIM = "column";
+  private static final String COLUMN_DIM = "x";
 
   /** The name of the n values dimension. */
   private static final String NVALS_DIM = "n_vals";
