@@ -69,8 +69,8 @@ public class PathTransformer {
   /**
    * Sets the diagnostic mode.  With diagnostic mode on, an extra step
    * is performed when transforming the path to check for inconsistencies
-   * in earth transforms that return true from the
-   * {@link EarthTransform#hasBoundaryCheck} method and the actual points
+   * in earth transforms that return non-null from the
+   * {@link EarthTransform#getBoundaryHandler} method and the actual points
    * returned to make sure that a discontinuity didn't occur.  If the extra
    * test reveals a discontinuity, an error is logged with the locations
    * of the issue.
