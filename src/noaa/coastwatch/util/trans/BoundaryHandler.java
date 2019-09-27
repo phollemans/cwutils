@@ -41,7 +41,7 @@ import org.locationtech.jts.operation.buffer.BufferParameters;
 import java.util.logging.Logger;
 
 /**
- * The <code>BoundaryHandler/code> class handles lines of {@link EarthLocation}
+ * The <code>BoundaryHandler</code> class handles lines of {@link EarthLocation}
  * data that cross boundaries in an {@link EarthTransform} and provides
  * splitting geometries for the boundary, as well as a predictate function
  * for testing boundary cuts.
