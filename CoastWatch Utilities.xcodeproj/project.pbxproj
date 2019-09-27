@@ -39,6 +39,7 @@
 		E909F94A2189655B002BE7D0 /* cwstatus_32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cwstatus_32.png; sourceTree = "<group>"; };
 		E909F94B2189655B002BE7D0 /* cdat_32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cdat_32.png; sourceTree = "<group>"; };
 		E909F94C2189655B002BE7D0 /* cdat_128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cdat_128.png; sourceTree = "<group>"; };
+		E90C8BFF2331AF45006EEF89 /* BoundaryHandler.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = BoundaryHandler.java; sourceTree = "<group>"; };
 		E91669291C2CD994005D76EB /* CDMGridMappedProjection.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CDMGridMappedProjection.java; sourceTree = "<group>"; };
 		E916692A1C370E5D005D76EB /* TestLogger.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TestLogger.java; path = test/TestLogger.java; sourceTree = "<group>"; };
 		E916692B1C371B08005D76EB /* TerminalColors.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = TerminalColors.java; path = test/TerminalColors.java; sourceTree = "<group>"; };
@@ -2813,6 +2814,7 @@
 				E9EA43041643B3BF006AD294 /* AlbersConicalEqualAreaProjection.java */,
 				E9EA430716445CC8006AD294 /* AzimuthalEquidistantProjection.java */,
 				E91669291C2CD994005D76EB /* CDMGridMappedProjection.java */,
+				E90C8BFF2331AF45006EEF89 /* BoundaryHandler.java */,
 				E96D8C5D161661420009B833 /* DataProjection.java */,
 				E96D8C5E161661420009B833 /* Datum.java */,
 				E96D8C5F161661420009B833 /* DatumFactory.java */,
