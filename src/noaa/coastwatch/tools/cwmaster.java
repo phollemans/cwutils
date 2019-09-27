@@ -223,10 +223,10 @@ public final class cwmaster
   private static final String REVERT_COMMAND = "Revert";
 
   /** The view panel colors. */
-  private static final Color VIEW_SOLID = ColorLookup.getInstance().getColor ("LightBlue3");
+  private static final Color VIEW_SOLID = new Color (158, 188, 214);
   private static final Color VIEW_BACK = Color.BLACK;
-  private static final Color VIEW_GRID = Color.WHITE; //Color.WHITE;
-  private static final Color VIEW_FILL = ColorLookup.getInstance().getColor ("tan");
+  private static final Color VIEW_GRID = Color.WHITE;
+  private static final Color VIEW_FILL = new Color (221, 210, 208);
   private static final Color VIEW_POLITICAL = Color.RED;
   private static final Color VIEW_STATE = VIEW_FILL.darker();
   private static final Color VIEW_COAST = Color.BLACK;
