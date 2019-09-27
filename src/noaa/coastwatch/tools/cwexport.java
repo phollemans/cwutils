@@ -275,8 +275,8 @@ import java.util.logging.Level;
  *     <li>NetCDF: Not applicable, the missing values for
  *     variable data are copied from the input data source.</li>
  *
- *     <li>GeoTIFF: Not applicable, the missing values for variable data
- *     are written as NaN (not-a-number) in the TIFF image data.</li>
+ *     <li>GeoTIFF: The default is to use write 32-float IEEE NaN values
+ *     with bit pattern 0x7fc00000 in the TIFF image data.</li>
  *
  *   </ul></dd>
  *
@@ -377,8 +377,8 @@ import java.util.logging.Level;
  *   <dt>-T, --tiffcomp=TYPE</dt>
  *
  *   <dd>The TIFF compression algorithm.  The valid types are 'none'
- *   for no compression (the default), 'deflate' for ZIP style
- *   compression, and 'pack' for RLE style PackBits compression.</dd>
+ *   for no compression (the default), or 'deflate' for ZIP style
+ *   compression.</dd>
  *
  * </dl>
  *
@@ -579,7 +579,7 @@ public class cwexport {
     Option sizeOpt = cmd.addStringOption ('s', "size");
     Option rangeOpt = cmd.addStringOption ('r', "range");
     Option scaleOpt = cmd.addStringOption ('c', "scale");
-    Option missingOpt = cmd.addDoubleOption ('M', "missing");
+    Option missingOpt = cmd.addStringOption ('M', "missing");
     Option byteorderOpt = cmd.addStringOption ('o', "byteorder");
     Option headerOpt = cmd.addBooleanOption ('H', "header");
     Option decOpt = cmd.addIntegerOption ('d', "dec");
@@ -666,7 +666,7 @@ public class cwexport {
     if (size == null) size = "float";
     String range = (String) cmd.getOptionValue (rangeOpt);
     String scale = (String) cmd.getOptionValue (scaleOpt);
-    Double missing = (Double) cmd.getOptionValue (missingOpt);
+    String missingStr = (String) cmd.getOptionValue (missingOpt);
     String byteorder = (String) cmd.getOptionValue (byteorderOpt);
     if (byteorder == null) byteorder = "host";
     boolean header = (cmd.getOptionValue (headerOpt) != null);
@@ -696,6 +696,18 @@ public class cwexport {
       LOGGER.severe ("Invalid scale '" + scale + "'");
       ToolServices.exitWithCode (2);
       return;
+    } // if
+
+    // Check missing
+    // -------------
+    Double missing = null;
+    if (missingStr != null) {
+      try { missing = Double.valueOf (missingStr); }
+      catch (NumberFormatException e) {
+        LOGGER.severe ("Invalid missing value '" + missingStr + "'");
+        ToolServices.exitWithCode (2);
+        return;
+      } // catch
     } // if
 
     try {
@@ -815,8 +827,6 @@ public class cwexport {
           compress = GeoTIFFWriter.COMP_NONE;
         else if (tiffcomp.equals ("deflate"))
           compress = GeoTIFFWriter.COMP_DEFLATE;
-        else if (tiffcomp.equals ("pack"))
-          compress = GeoTIFFWriter.COMP_PACK;
         else {
           LOGGER.severe ("Unsupported TIFF compression: " + tiffcomp);
           ToolServices.exitWithCode (2);
@@ -824,6 +834,7 @@ public class cwexport {
         } // else
 
         GeoTIFFDataWriter tiffWriter = new GeoTIFFDataWriter (info, output, compress);
+        if (missing != null) tiffWriter.setMissing (missing.floatValue());
         writer = tiffWriter;
 
       } // else if

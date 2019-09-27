@@ -79,6 +79,9 @@ public class GeoTIFFDataWriter extends EarthDataWriter {
   /** Flag to signify that the file is closed. */
   private boolean closed;
 
+  /** The missing data value. */
+  private float missing = Float.NaN;
+
   ////////////////////////////////////////////////////////////
 
   /**
@@ -86,8 +89,8 @@ public class GeoTIFFDataWriter extends EarthDataWriter {
    *
    * @param info the info object to use for earth transform and other attributes.
    * @param filename the new GeoTIFF file name.
-   * @param compress the TIFF compression type, either COMP_NONE, COMP_DEFLATE,
-   * or COMP_PACK (see {@link GeoTIFFWriter}).
+   * @param compress the TIFF compression type, either COMP_NONE or COMP_DEFLATE
+   * (see {@link GeoTIFFWriter}).
    *
    * @throws IOException if an error occurred  the file.
    */
@@ -141,6 +144,21 @@ public class GeoTIFFDataWriter extends EarthDataWriter {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Sets the missing value.
+   *
+   * @param missing the missing value.  The missing value is used to
+   * represent missing or out of range data.  By default, Float.NaN is used
+   * as the missing value.
+   */
+  public void setMissing (float missing) {
+
+    this.missing = missing;
+
+  } // setMissing
+
+  ////////////////////////////////////////////////////////////
+
   @Override
   public void flush () throws IOException {
   
@@ -169,7 +187,12 @@ public class GeoTIFFDataWriter extends EarthDataWriter {
       float[] floatArray = new float[pixels];
       for (int i = 0; i < imageDims.height; i++) {
         for (int j = 0; j < imageDims.width; j++) {
-          floatArray[i*imageDims.width + j] = (float) grid.getValue (i, j);
+
+          int index = i*imageDims.width + j;
+          float val = (float) grid.getValue (i, j);
+          if (Float.isNaN (val)) floatArray[index] = missing;
+          else floatArray[index] = val;
+          
         } // for
         writeProgress = ((i*imageDims.width)*100)/pixels;
       } // for
