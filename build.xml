@@ -124,6 +124,8 @@
       doctitle="CoastWatch Software Library and Utilities v${version} API Specification"
       header="CoastWatch Utils v${version}"
       footer="CoastWatch Utils v${version}">
+      <bottom><![CDATA[<script>if (typeof useModuleDirectories !== 'undefined') { useModuleDirectories = false; }</script>]]></bottom>
+      <arg line="--allow-script-in-comments"/>
       <packageset dir="src"/>
       <arg line="-Xmaxwarns 10"/>
     </javadoc>
