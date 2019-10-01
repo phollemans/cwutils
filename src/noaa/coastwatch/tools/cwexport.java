@@ -911,7 +911,7 @@ public class cwexport {
     info.option ("-h, --help", "Show help message");
     info.option ("-H, --header", "Write header before data");
     info.option ("-m, --match=PATTERN", "Write only variables matching regular expression");
-    info.option ("-m, --missing=VALUE", "Set value for missing data");
+    info.option ("-M, --missing=VALUE", "Set value for missing data");
     info.option ("-v, --verbose", "Print verbose messages");
     info.option ("--version", "Show version information");
 
