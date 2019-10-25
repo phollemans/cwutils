@@ -65,6 +65,7 @@ import noaa.coastwatch.util.trans.DataProjection;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.GeoVectorProjection;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
+import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.util.trans.SwathProjection;
 import noaa.coastwatch.util.trans.EllipsoidPerspectiveProjection;
 
@@ -538,8 +539,7 @@ utilities when:
       // Check for latitude/longitude axes
       // ---------------------------------
       if (!coordSystem.isLatLon()) {
-        throw new UnsupportedEncodingException (
-          "Expected latitude/longitude based coordinate system");
+        throw new UnsupportedEncodingException ("Expected latitude/longitude based coordinate system");
       } // if
       CoordinateAxis latAxis = coordSystem.getYHorizAxis();
       if (latAxis.getAxisType() != AxisType.Lat)
@@ -576,12 +576,22 @@ utilities when:
             (lonAxis.getMinValue() + lonAxis.getMaxValue())/2
           );
 
+          // Check if dimension order is correct: (lat, lon)
+          // -----------------------------------------------
+          Variable proto = gridset.getGrids().get (0).getVariable();
+          int latIndex = proto.findDimensionIndex (latAxis.getShortName());
+          int lonIndex = proto.findDimensionIndex (lonAxis.getShortName());
+          boolean needsFlip = (latIndex > lonIndex);
+
+          LOGGER.warning ("Geographic projection with dimension ordering (lon,lat) may have unexpected results");
+
           // Create GEO projection
           // ---------------------
           try {
-            trans = MapProjectionFactory.getInstance().create (GCTP.GEO, 0,
+            MapProjection proj = MapProjectionFactory.getInstance().create (GCTP.GEO, 0,
               new double[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, GCTP.WGS84,
               dims, center, pixelDims);
+            trans = proj;
           } // try
           catch (NoninvertibleTransformException e) {
             throw new RuntimeException ("Got non-invertible transform while creating geographic projection");
@@ -714,11 +724,21 @@ utilities when:
     boolean hasNonHorizontal = false;
     group.extraDims = 0;
     String[] axisPrefix = new String[rank];
+    Variable var = prototypeGrid.getVariable();
+
     for (int i = 0; i < rank; i++) {
     
       // Find axis that uses dimension
       // -----------------------------
-      Dimension gridDimension = prototypeGrid.getDimension (i);
+
+      // Note that we get the dimension from the variable at this point,
+      // because we discovered that the GridDatatype has the dimensions
+      // rearranged on canonical order: (runtime, ensemble, time, z, y, x),
+      // even in the getDimension(int) method, not just in the list from
+      // getDimensions().
+
+      Dimension gridDimension = var.getDimension (i);
+      
       List<CoordinateAxis> axesUsingDimension = new ArrayList<CoordinateAxis>();
       for (CoordinateAxis axis : coordSystem.getCoordinateAxes()) {
         if (axis.getDimensions().contains (gridDimension))
@@ -920,12 +940,12 @@ utilities when:
     // ------------------------------
     VariableGroup group = groupMap.get (name);
     if (group.varExtension != null) name = name + START + group.varExtension + END;
-  
+    
     // Get section text
     // ----------------
     String section = name.replaceFirst ("^.*" + START + "(.*)" + END + "$", 
       "$1");
-    
+
     // Expand text to start specification
     // ----------------------------------
     if (!section.equals (name)) {
