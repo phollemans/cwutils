@@ -73,13 +73,15 @@ public abstract class MapProjection
 
   /** 
    * Data <code>[row, column]</code> to map <code>[x, y]</code> affine
-   * transform.
+   * transform.  By inverse, we mean that the affine is used in the
+   * inverse mapping transformation.
    */
   protected AffineTransform inverseAffine;
 
   /**
    * Map <code>[x, y]</code> to data <code>[row, column]</code> affine
-   * transform. 
+   * transform.  By forward, we mean that the affine is used in the
+   * forward mapping transformation.
    */
   protected AffineTransform forwardAffine;
 
@@ -244,13 +246,18 @@ public abstract class MapProjection
     
     // Create new affines
     // ------------------
+    
+    // x     | a  c  e | R
+    // y  =  | b  d  f | C
+    // 1     | 0  0  1 | 1
+    
     inverseAffine = new AffineTransform (
-      0,
-      -pixelDims[0],
-      pixelDims[1],
-      0,
-      xy[0] - pixelDims[1]*(dims[1]-1)/2,
-      xy[1] + pixelDims[0]*(dims[0]-1)/2
+      0,                                    // a
+      -pixelDims[0],                        // b
+      pixelDims[1],                         // c
+      0,                                    // d
+      xy[0] - pixelDims[1]*(dims[1]-1)/2,   // e
+      xy[1] + pixelDims[0]*(dims[0]-1)/2    // f
     );
     forwardAffine = inverseAffine.createInverse();
 
