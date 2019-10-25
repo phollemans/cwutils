@@ -262,6 +262,11 @@ public class NCTileSource
     // --------------------
     scheme = new TilingScheme (dims, tileDims);
 
+    LOGGER.fine ("Using tiling scheme with " +
+    "tileDims = [" + tileDims[0] + "," + tileDims[1] + "], " +
+    "dims = [" + dims[0] + "," + dims[1] + "], " +
+    "isCompressed = " + isCompressed);
+
   } // NCTileSource constructor
 
   ////////////////////////////////////////////////////////////
