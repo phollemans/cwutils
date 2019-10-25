@@ -226,18 +226,21 @@ import java.util.logging.Level;
  *   <dd> Prints a brief help message. </dd>
  *
  *   <dt> -H, --header </dt>
- *   <dd> Specifies that a header should be written with the
- *   output data.  The header is
- *   written before any data and is different depending on the
+ *   <dd> Specifies that a header should be written as well as the output data.
+ *   The method of writing the header is different depending on the
  *   output format: <ul>
  *
  *     <li>Binary: The header consists of one byte specifying the
  *     number of dimensions followed by a series of 32-bit signed
- *     integers specifying the dimension lengths.</li>
+ *     integers specifying the dimension lengths.  The header is written
+ *     on a per-variable basis, before each block of variable values in
+ *     the output file.</li>
  *
  *     <li>Text: The header is one line consisting of an integer
  *     specifying the number of dimensions followed by a series of
- *     integers specifying the dimension lengths.</li>
+ *     integers specifying the dimension lengths.  The header is written
+ *     on a per-variable basis before each set of variable values in the
+ *     output file.</li>
  *
  *     <li>ArcGIS: The header is a separate file used by ArcGIS
  *     applications to determine the dimensions of the data, the
