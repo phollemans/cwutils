@@ -52,6 +52,7 @@ import noaa.coastwatch.util.expression.JEPParser;
 import noaa.coastwatch.util.expression.JELParser;
 import noaa.coastwatch.util.expression.ParseImp;
 import noaa.coastwatch.util.expression.EvaluateImp;
+import noaa.coastwatch.util.expression.ParseTreeTransform;
 
 // Testing
 import noaa.coastwatch.test.TestLogger;
@@ -230,7 +231,10 @@ public class JEPEmulationParser implements ExpressionParser {
       });
     });
 
-    // (cond ? x : y) && (cond ? x : y) --> (cond ? x : y) != 0 && (cond ? x : y) != 0
+    // (cond ? x : y) && expression --> (cond ? x : y) != 0 && expression
+    //         &&
+    //      ?:    expression
+    // cond
     trans.addRule ("//operator[@symbol='&&']/operator[@symbol='?:']", node -> {
       Element notEquals = newOperator (doc, "!=");
       node.getParentNode().replaceChild (notEquals, node);
@@ -238,6 +242,17 @@ public class JEPEmulationParser implements ExpressionParser {
       notEquals.appendChild (newConstant (doc, "0"));
     });
     
+    // (cond ? x : y) || expression --> (cond ? x : y) != 0 || expression
+    //         ||
+    //      ?:    expression
+    // cond
+    trans.addRule ("//operator[@symbol='||']/operator[@symbol='?:']", node -> {
+      Element notEquals = newOperator (doc, "!=");
+      node.getParentNode().replaceChild (notEquals, node);
+      notEquals.appendChild (node);
+      notEquals.appendChild (newConstant (doc, "0"));
+    });
+
     trans.addRule ("//variable[@name='e']", node -> ((Element) node).setAttribute ("name", "E"));
     trans.addRule ("//variable[@name='pi']", node -> ((Element) node).setAttribute ("name", "PI"));
     trans.addRule ("//variable[@name='nan']", node -> ((Element) node).setAttribute ("name", "NaN"));
@@ -255,6 +270,62 @@ public class JEPEmulationParser implements ExpressionParser {
    */
   private void optimizeTree (Document doc) {
   
+    // It's useful at this point to have a little primer on the XPath syntax
+    // used below because the online resources are scattered and bookmarks
+    // become invalid (although try searching "xpath cheatsheet" or visit
+    // https://devhints.io/xpath).  XPath is used to uniquely match specific
+    // fragments of an XML document tree.  The tree contains a parsed expression
+    // from the JEP parser that has been translated into JEL syntax and contains
+    // nodes named 'operator', 'function', 'variable', and 'constant'.  The
+    // goal is to correctly optimize an expression that's been translated
+    // from JEP to JEL into a simpler version of the same expression, with the
+    // effect of making it faster to evaluate.  For example, the expression:
+    //
+    //   (condition ? 0 : 1) != 0
+    //
+    // involves two operators (tertiary if/then/else and the equality test)
+    // plus the condition evaluation and has a parse tree of:
+    //
+    //   <operator symbol='!='>
+    //     <operator symbol='?!'>
+    //       (condition tree)
+    //       <constant value='0'/>
+    //       <constant value='1'/>
+    //     </operator>
+    //     <constant value='0'/>
+    //   </operator>
+    //
+    // and can be manipulated to transform it to:
+    //
+    //   <operator symbol='!'>
+    //     (condition tree)
+    //   </operator>
+    //
+    // which has just the condition evaluation and a not operator, which will
+    // run faster.  Some examples of XPath fragments used:
+    //
+    // /step/step/step -- The general XPath syntax performs location steps
+    // through the tree (default from parent to child) and at each step
+    // specifies the step with the syntax: axisname::nodetest[predicate] where
+    // omitting the axisname:: part means "look through the children of the
+    // current node", ie: child::.
+    //
+    // //operator -- Look for a node named "operator" that is a descendent
+    // anywhere in the tree.  The // means that the node can occur with any
+    // line of parents from the current node which starts with the root node.
+    //
+    // [@symbol='*'] -- Match a node whose attribute "symbol" has the value "*",
+    // ie: in our case the multiplication operator.
+    //
+    // .. -- Back up and start the next step at the parent of the current
+    // node.
+    //
+    // parent::operator -- Select the parent of the current node that has the
+    // name "operator" if it exists.
+    //
+    // following-sibling::constant[@value='1'] -- Select the sibling of this
+    // node that is a constant with value 1.
+    
     ParseTreeTransform trans = new ParseTreeTransform();
 
     // (var*0 == 0) --> !isNaN (var)
