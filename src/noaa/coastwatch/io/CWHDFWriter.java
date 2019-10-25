@@ -632,6 +632,8 @@ public class CWHDFWriter
         missing = Float.valueOf (Float.NaN);
       else if (dataClass.equals (Double.TYPE))
         missing = Double.valueOf (Double.NaN);
+      if (missing != null)
+        LOGGER.warning ("Unspecified fill value for " + name + " set to " + missing + " for data writing");
     } // if
     if (missing != null) {
       Object fillValue = MetadataServices.toArray (missing);
@@ -639,6 +641,10 @@ public class CWHDFWriter
         throw new HDFException ("Cannot set fill value for " + name);
       setAttribute (sdsid, "missing_value", missing);
     } // if
+    else {
+      LOGGER.warning ("Unspecified fill value for variable " + name);
+      LOGGER.warning ("Set fill value before writing data to avoid unexpected results");
+    } // else
 
     // Set calibration info
     // --------------------
