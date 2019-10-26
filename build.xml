@@ -123,7 +123,8 @@
       windowtitle="CoastWatch Utilities v${version}"
       doctitle="CoastWatch Software Library and Utilities v${version} API Specification"
       header="CoastWatch Utils v${version}"
-      footer="CoastWatch Utils v${version}">
+      footer="CoastWatch Utils v${version}"
+      link="https://docs.oracle.com/en/java/javase/11/docs/api">
       <bottom><![CDATA[<script>if (typeof useModuleDirectories !== 'undefined') { useModuleDirectories = false; }</script>]]></bottom>
       <arg line="--allow-script-in-comments"/>
       <packageset dir="src"/>
