@@ -583,7 +583,7 @@ utilities when:
           int lonIndex = proto.findDimensionIndex (lonAxis.getShortName());
           boolean needsFlip = (latIndex > lonIndex);
 
-          LOGGER.warning ("Geographic projection with dimension ordering (lon,lat) may have unexpected results");
+          if (needsFlip) LOGGER.warning ("Geographic projection with dimension ordering (lon,lat)");
 
           // Create GEO projection
           // ---------------------
