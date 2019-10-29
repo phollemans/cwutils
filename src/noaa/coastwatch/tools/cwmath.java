@@ -543,17 +543,10 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  *   the NaN value for floating-point types. </dd>
  *
  *   <dt> -p, --parser=TYPE </dt>
- *   <dd> The expression parser type.  Valid choices are 'emulated'
- *   or 'java':
+ *   <dd> The expression parser type.  Valid choices are 'java' or 'emulated':
  *   <ul>
  *
- *     <li> <b>Legacy emulated (DEFAULT)</b> - The emulated expression parser emulates
- *     the legacy parser (the original parser used in the math tool) by internally
- *     converting the legacy expression syntax, operators, functions, and
- *     constants to Java Language Specification.  The converted expression is
- *     then parsed and evaluated by the high speed Java expression parser.</li>
- *
- *     <li> <b>Java</b> - The Java expression parser accepts expressions written
+ *     <li> <b>Java (DEFAULT)</b> - The Java expression parser accepts expressions written
  *     in the Java Language Specification, with access to the full java.lang.Math
  *     class static methods, in addition to the constants E, PI, NaN, and the
  *     functions isNaN(x), asinh(x), acosh(x), atanh(x), and sum(x1,x2,...).
@@ -563,6 +556,12 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  *     parsers.  For example, operands of the bitwise operators must be an
  *     integer type (or cast to an integer type) in order to pass the parsing
  *     phase without a type error.</li>
+ *
+ *     <li> <b>Legacy emulated</b> - The emulated expression parser emulates
+ *     the legacy parser (the original parser used in the math tool) by internally
+ *     converting the legacy expression syntax, operators, functions, and
+ *     constants to Java Language Specification.  The converted expression is
+ *     then parsed and evaluated by the high speed Java expression parser.</li>
  *
  *   </ul></dd>
  *
@@ -1046,7 +1045,13 @@ public final class cwmath {
     String units = (String) cmd.getOptionValue (unitsOpt);
     String longName = (String) cmd.getOptionValue (longnameOpt);
     String parserType = (String) cmd.getOptionValue (parserOpt);
-    if (parserType == null) parserType = "emulated";
+    boolean parserWasSet = false;
+    if (parserType == null) {
+      parserType = "java";
+    } // if
+    else {
+      parserWasSet = true;
+    } // else
     String missingStr = (String) cmd.getOptionValue (missingOpt);
 
     try {
@@ -1147,7 +1152,12 @@ public final class cwmath {
       } // if
       ExpressionParser parser = ExpressionParserFactory.getFactoryInstance().create (ParserStyle.JAVA);
       parser.init (parseImp);
-      parser.parse (outputExpression);
+      try { parser.parse (outputExpression); }
+      catch (RuntimeException e) {
+        if (!parserWasSet)
+          LOGGER.warning ("As of version 3.5.1, cwmath defaults to using the Java expression parser");
+        throw (e);
+      } // catch
 
       // Get template variable
       // ---------------------
