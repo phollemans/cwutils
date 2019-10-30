@@ -171,7 +171,8 @@ public class WindBarbSymbol
   } // WindBarbSymbol constructor
 
   ////////////////////////////////////////////////////////////
-
+  
+  @Override
   public void drawVector (
     Graphics gc, 
     int x, 
@@ -313,6 +314,7 @@ public class WindBarbSymbol
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public double getMagnitude () {
 
     double speed = 
@@ -323,6 +325,7 @@ public class WindBarbSymbol
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public double getDirection () {
 
     double direction = 

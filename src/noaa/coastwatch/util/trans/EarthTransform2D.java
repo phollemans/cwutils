@@ -66,8 +66,8 @@ public abstract class EarthTransform2D
   // Variables
   // ---------
 
-  /** The transform used for raster point transforms. */
-  private EarthTransform2D pointTrans = this;
+  /** The transform used for raster point transforms (possibly null). */
+  private EarthTransform2D pointTrans;
 
   ////////////////////////////////////////////////////////////
 
@@ -101,11 +101,14 @@ public abstract class EarthTransform2D
    * the same value as {@link #transform(DataLocation,EarthLocation)}.
    *
    * @param pointTrans the point transform to use for raster-is-point
-   * coordinate transformations.
+   * coordinate transformations or null to use this transform.
    */
   public void setPointTransform (
     EarthTransform2D pointTrans
   ) {
+
+    // FIXME: Should we do a deep copy here when the transform is cloned or
+    // adjusted?
 
     this.pointTrans = pointTrans;
 
@@ -245,7 +248,7 @@ public abstract class EarthTransform2D
   /**
    * Converts data coordinates to geographic coordinates (raster point
    * mode).  By default, this method simply calls {@link
-   * #transform(DataLocation,EarthLocation)} if no point transform is
+   * #transform(DataLocation,EarthLocation)} if no point transform has been
    * set with a call to {@link #setPointTransform}.  Otherwise, it
    * passes the data location to the stored point transform.
    *
@@ -264,8 +267,13 @@ public abstract class EarthTransform2D
     EarthLocation earthLoc
   ) {
 
-    return (pointTrans.transform (dataLoc, earthLoc));
+    EarthLocation loc;
 
+    if (pointTrans != null) loc = pointTrans.transform (dataLoc, earthLoc);
+    else loc = transform (dataLoc, earthLoc);
+
+    return (loc);
+    
   } // transformToPoint
 
   ////////////////////////////////////////////////////////////

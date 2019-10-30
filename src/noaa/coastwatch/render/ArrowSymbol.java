@@ -134,6 +134,7 @@ public class ArrowSymbol
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void drawVector (
     Graphics gc, 
     int x, 
@@ -176,6 +177,7 @@ public class ArrowSymbol
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public double getMagnitude () {
 
     double magnitude;
@@ -203,6 +205,7 @@ public class ArrowSymbol
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public double getDirection () {
 
     double direction;

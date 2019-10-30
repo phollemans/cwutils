@@ -99,6 +99,18 @@ public class ColorEnhancement
   /** The (cached) legend to use for data annotation. */
   private Legend legend;
 
+  /** The variable name to use for the legend (or null). */
+  private String varName;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the variable name to display in the legend for this view.
+   *
+   * @param varName the variable name or null to use the grid variable name.
+   */
+  public void setVarName (String varName) { this.varName = varName; }
+
   ////////////////////////////////////////////////////////////
 
   /** 
@@ -479,7 +491,8 @@ public class ColorEnhancement
 
     if (this.legend == null) {
       EnhancementFunction legendFunc = (adjFunc != null ? adjFunc : func);
-      this.legend = new DataColorScale (legendFunc, pal, grid.getName(),
+      String legendVarName = (varName != null ? varName : grid.getName());
+      this.legend = new DataColorScale (legendFunc, pal, legendVarName,
         grid.getUnits());
     } // if
     

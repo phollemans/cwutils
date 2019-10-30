@@ -194,7 +194,8 @@ import ucar.units.Unit;
  * -r, --range=MIN/MAX <br>
  * --scalewidth=PIXELS <br>
  * --ticklabels=LABEL1[/LABEL2[/LABEL3/...]] <br>
- * -U, --units=UNITS
+ * -U, --units=UNITS<br>
+ * --varname=TEXT
  * </p>
  *
  * <h3>Color composite options:</h3>
@@ -922,6 +923,12 @@ import ucar.units.Unit;
  *   UDUNITS package</a> and its <a href="https://www.google.com/search?q=udunits.txt">supported
  *   units</a> file.</dd>
  *
+ *   <dt>--varname=TEXT</dt>
+ *
+ *   <dd>The variable name to show in the color scale legend.  By default the
+ *   name of the variable is used, or in the case of a vector plot either the
+ *   magnitude variable or U/V components.</dd>
+ *
  * </dl>
  *
  * <h3>Color composite options:</h3>
@@ -1154,6 +1161,7 @@ public class cwrender {
     Option fontlistOpt = cmd.addBooleanOption ("fontlist");
     Option palettelistOpt = cmd.addBooleanOption ("palettelist");
     Option paletteimageOpt = cmd.addStringOption ("paletteimage");
+    Option varnameOpt = cmd.addStringOption ("varname");
     try { cmd.parse (argv); }
     catch (OptionException e) {
       LOGGER.warning (e.getMessage());
@@ -1348,6 +1356,7 @@ public class cwrender {
     int scalewidth = (scalewidthObj == null ? 90 : scalewidthObj.intValue());
     String fontStr = (String) cmd.getOptionValue (fontOpt);
     if (fontStr == null) fontStr = "Dialog/plain/9";
+    String varname = (String) cmd.getOptionValue (varnameOpt);
 
     try {
 
@@ -1438,7 +1447,8 @@ public class cwrender {
           ColorEnhancement enhancement = new ColorEnhancement (trans2d,
             gridVar, palette, function);
           enhancement.setMissingColor (lookup.convert (missing));
-          view = enhancement;         
+          if (varname != null) enhancement.setVarName (varname);
+          view = enhancement;
         } // if
 
         // Create vector enhancement view
@@ -1553,9 +1563,13 @@ public class cwrender {
 
           // Create view
           // -----------
+          if (varname == null) {
+            if (style.equals ("magdir")) varname = var1.getName();
+            else varname = "[" + var1.getName() + "," + var2.getName() + "]";
+          } // if
           ColorPointEnhancement enhancement = new ColorPointEnhancement (
-            new PointFeatureOverlay (pointSymbol, pointSource), var1.getName(),
-            var1.getUnits(), trans2d);
+            new PointFeatureOverlay (pointSymbol, pointSource), varname,
+            var1.getUnits(), trans2d);            
           enhancement.setMissingColor (lookup.convert (missing));
           enhancement.setBackground (lookup.convert (background));
           view = enhancement;         
@@ -2163,6 +2177,7 @@ public class cwrender {
     info.option ("--scalewidth=PIXELS", "Set color scale width");
     info.option ("--ticklabels=LABEL1[/LABEL2[/LABEL3/...]]", "Set color scale tick labels");
     info.option ("-U, --units=UNITS", "Set range and color scale units");
+    info.option ("--varname", "Set legend variable name");
 
     info.section ("Color composite");
     info.option ("-B, --bluerange=MIN/MAX", "Set blue component range");
