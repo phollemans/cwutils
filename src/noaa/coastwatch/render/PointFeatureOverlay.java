@@ -86,7 +86,7 @@ public class PointFeatureOverlay<T extends PointFeatureSymbol>
 
     PointFeatureOverlay<T> copy = (PointFeatureOverlay<T>) super.clone();
     copy.symbol = (T) symbol.clone();
-    copy.filter = (SelectionRuleFilter) filter.clone();
+    if (filter != null) copy.filter = (SelectionRuleFilter) filter.clone();
     return (copy);
 
   } // clone

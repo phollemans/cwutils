@@ -747,7 +747,7 @@ public class EarthDataViewPanel
           
           // Check if metadata found
           // -----------------------
-          if (metadataMap == null) {
+          if (metadataMap == null || metadataMap.size() == 0) {
             hideMetadata();
           } // if
           

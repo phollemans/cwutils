@@ -99,10 +99,12 @@ public class PointFeatureOverlayPropertyChooser
     // Add filter chooser
     // ------------------
     PointFeatureSource source = overlay.getSource();
-    SelectionRuleFilterChooser filterChooser = new SelectionRuleFilterChooser (source.getAttributes(),
-      source.getAttributeNameMap());
-    filterChooser.setFilter (overlay.getFilter());
-    this.add (filterChooser, BorderLayout.CENTER);
+    if (source.getAttributeCount() != 0) {
+      SelectionRuleFilterChooser filterChooser =
+        new SelectionRuleFilterChooser (source.getAttributes(), source.getAttributeNameMap());
+      filterChooser.setFilter (overlay.getFilter());
+      this.add (filterChooser, BorderLayout.CENTER);
+    } // if
 
     // Add symbol chooser
     // ------------------

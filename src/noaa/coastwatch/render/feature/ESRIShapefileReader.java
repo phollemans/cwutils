@@ -42,16 +42,23 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
-import noaa.coastwatch.render.EarthDataOverlay;
 import noaa.coastwatch.render.feature.LineFeature;
-import noaa.coastwatch.render.LineFeatureOverlay;
 import noaa.coastwatch.render.feature.LineFeatureSource;
 import noaa.coastwatch.render.feature.PointFeature;
 import noaa.coastwatch.render.feature.PointFeatureSource;
 import noaa.coastwatch.render.feature.PolygonFeature;
-import noaa.coastwatch.render.PolygonFeatureOverlay;
 import noaa.coastwatch.render.feature.PolygonFeatureSource;
+
+import noaa.coastwatch.render.SimpleSymbol;
+import noaa.coastwatch.render.PlotSymbolFactory;
+import noaa.coastwatch.render.EarthDataOverlay;
+import noaa.coastwatch.render.PointFeatureOverlay;
+import noaa.coastwatch.render.LineFeatureOverlay;
+import noaa.coastwatch.render.PolygonFeatureOverlay;
+
 import noaa.coastwatch.util.EarthLocation;
+
+import java.util.logging.Logger;
 
 /**
  * <p>The <code>ESRIShapefileReader</code> class reads geographic
@@ -77,6 +84,8 @@ import noaa.coastwatch.util.EarthLocation;
  * @since 3.1.9
  */
 public class ESRIShapefileReader {
+
+  private static final Logger LOGGER = Logger.getLogger (ESRIShapefileReader.class.getName());
 
   // Variables
   // ---------
@@ -122,6 +131,8 @@ public class ESRIShapefileReader {
       // Create overlay based on prototype geometry
       // ------------------------------------------
       ShapeType shapeType = reader.getHeader().getShapeType();
+      LOGGER.fine ("Found shapefile type = " + shapeType);
+      
       switch (shapeType) {
 
       case MULTIPOINT:
@@ -130,12 +141,17 @@ public class ESRIShapefileReader {
       case POINT:
       case POINT_M:
       case POINT_Z:
-        /*
-        PlotSymbol plotSymbol = new CircleSymbol();
-        plotSymbol.setSize (8);
-        PointFeatureSymbol featureSymbol = new SimpleSymbol (plotSymbol);
-        overlay = new PointFeatureOverlay (featureSymbol, new PointSource());
-        */
+
+//        SimpleSymbol symbol = new SimpleSymbol (PlotSymbolFactory.create ("Circle"));
+//        overlay = new PointFeatureOverlay (symbol, new PointSource());
+//        break;
+
+        // TODO: Re-enable this to allow point file loading.  We almost have it
+        // working, just need to debug the point data overlay
+        // chooser not updating the display when auto-update is enabled, and
+        // also add the ability to select points based on attribute filter.
+        // For that, we need to add in the ability here to read the DBF files.
+
         throw new IOException ("Point and multipoint shapefiles are not supported");
 
       case POLYGON:
@@ -346,6 +362,7 @@ public class ESRIShapefileReader {
             EarthLocation loc = new EarthLocation (pointShape.getY(), pointShape.getX());
             featureList.add (new PointFeature (loc));
           } // while
+          break;
 
         default:
           throw new IOException ("Unexpected shape type " + shapeType);

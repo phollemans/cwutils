@@ -282,12 +282,12 @@ public class VisualOverlay
     // -----------------------
     addVisualPropertyComponent (overlay, "visible", true);
     addVisualPropertyComponent (overlay, "name", false);
-    if (overlay instanceof PointFeatureOverlay)
-      addVisualPropertyComponent (((PointFeatureOverlay) overlay).getSymbol(), "plotSymbol", true);
     if (!(overlay instanceof MultilayerBitmaskOverlay) && !(overlay instanceof MultiPointFeatureOverlay))
       addVisualPropertyComponent (overlay, "color", true);
     if (VisualServices.hasProperty (overlay, "stroke") && !(overlay instanceof PointFeatureOverlay))
       addVisualPropertyComponent (overlay, "stroke", true);
+    if (overlay instanceof PointFeatureOverlay)
+      addVisualPropertyComponent (((PointFeatureOverlay) overlay).getSymbol(), "plotSymbol", true);
     if (VisualServices.hasProperty (overlay, "fillColor"))
       addVisualPropertyComponent (overlay, "fillColor", true);
 

@@ -573,7 +573,8 @@ public class OverlayListChooser
         if (overlayList.size() == 0) {
           String errorMessage =
             "An error occurred creating the shape overlay.\n" +
-            "Please choose another shape data file and try again.";
+            "The file format may not be supported. Please choose\n" +
+            "another shape data file and try again.";
           JOptionPane.showMessageDialog (frame, errorMessage,
             "Error", JOptionPane.ERROR_MESSAGE);
         } // if

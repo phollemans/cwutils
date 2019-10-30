@@ -52,6 +52,8 @@ import noaa.coastwatch.gui.visual.VisualObjectFactory;
 import noaa.coastwatch.gui.visual.VisualServices;
 import noaa.coastwatch.render.EarthDataOverlay;
 
+import java.util.logging.Logger;
+
 /** 
  * The <code>GenericOverlayPropertyChooser</code> class is an
  * implementation of an <code>OverlayPropertyChooser</code> that
@@ -66,6 +68,8 @@ import noaa.coastwatch.render.EarthDataOverlay;
  */
 public class GenericOverlayPropertyChooser 
   extends OverlayPropertyChooser {
+
+  private static final Logger LOGGER = Logger.getLogger (GenericOverlayPropertyChooser.class.getName());
 
   // Variables
   // ---------
@@ -139,7 +143,7 @@ public class GenericOverlayPropertyChooser
                   "Name");
     labelMap.put ("expression",
                   "Mask expression");
-    labelMap.put ("plotSymbol",
+    labelMap.put ("symbol",
                   "Plot symbol");
 
     // Setup dependency map
@@ -159,6 +163,7 @@ public class GenericOverlayPropertyChooser
     orderMap.put ("gridName", Integer.valueOf (n++));
     orderMap.put ("color", Integer.valueOf (n++));
     orderMap.put ("stroke", Integer.valueOf (n++));
+    orderMap.put ("symbol", Integer.valueOf (n++));
     orderMap.put ("fillColor", Integer.valueOf (n++));
     orderMap.put ("transparency", Integer.valueOf (n++));
     orderMap.put ("dropShadow", Integer.valueOf (n++));
@@ -407,6 +412,9 @@ public class GenericOverlayPropertyChooser
     properties.remove ("name");
     properties.remove ("visible");
     reorderProperties (properties);
+
+    LOGGER.fine ("Property list = " + java.util.Arrays.toString (properties.toArray()));
+
     return (properties);
 
   } // getProperties
