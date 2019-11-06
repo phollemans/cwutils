@@ -508,9 +508,13 @@ public abstract class EarthDataView
    * account in the cache.  Note that this is only useful when the
    * navigation is either the identity or a translation.
    *
-   * @param grid the grid variable to use for navigation corrections.
+   * @param grid the grid variable to use for navigation corrections, or
+   * null to compute caches without any navigation transform.
+   *
+   * @since Public as of 3.5.1, and the grid parameter may now be null
+   * if desired.
    */
-  protected void computeCaches (
+  public void computeCaches (
     Grid grid
   ) {
 
@@ -522,45 +526,55 @@ public abstract class EarthDataView
     // Calculate cache points
     // ----------------------
     ImageTransform imageTrans = trans.getImageTransform();
-    for (Point p = new Point (0,0); p.x < imageDims.width; p.x++) {
-      DataLocation loc = grid.navigate (imageTrans.transform(p));
-      colCache[p.x] = (int) Math.round (loc.get(Grid.COLS));
+    for (Point p = new Point (0, 0); p.x < imageDims.width; p.x++) {
+      DataLocation loc = imageTrans.transform (p);
+      if (grid != null) loc = grid.navigate (loc);
+      colCache[p.x] = (int) Math.round (loc.get (Grid.COLS));
     } // for
-    for (Point p = new Point (0,0); p.y < imageDims.height; p.y++) {
-      DataLocation loc = grid.navigate (imageTrans.transform(p));
+    for (Point p = new Point (0, 0); p.y < imageDims.height; p.y++) {
+      DataLocation loc = imageTrans.transform (p);
+      if (grid != null) loc = grid.navigate (loc);
       rowCache[p.y] = (int) Math.round (loc.get(Grid.ROWS));
     } // for
 
-    // Save cache navigation
-    // ---------------------
-    cacheNavigation = grid.getNavigation();
+    if (grid != null) {
 
-    // Compute access hint values
-    // --------------------------
-    int[] start = new int[] {rowCache[0], colCache[0]};
-    int[] end = new int[] {
-      rowCache[imageDims.height-1], 
-      colCache[imageDims.width-1]
-    };
-    int[] stride = new int[] {
-      (int) Math.floor (Math.max (1, (end[0] - start[0] + 1)/
-        (float)imageDims.height)),
-      (int) Math.floor (Math.max (1, (end[1] - start[1] + 1)/
-        (float)imageDims.width))
-    };
+      // Save cache navigation
+      // ---------------------
+      cacheNavigation = grid.getNavigation();
 
-    // Check bounds of hints
-    // ---------------------
-    boolean useHint = true;
-    for (int i = 0; i < 2; i++) {
-      if (start[i] < 0) start[i] = 0;
-      if (end[i] > dataDims[i]-1) end[i] = dataDims[i]-1;
-      if (start[i] > end[i]) { useHint = false; break; }
-    } // for
+      // Compute access hint values
+      // --------------------------
+      int[] start = new int[] {rowCache[0], colCache[0]};
+      int[] end = new int[] {
+        rowCache[imageDims.height-1],
+        colCache[imageDims.width-1]
+      };
+      int[] stride = new int[] {
+        (int) Math.floor (Math.max (1, (end[0] - start[0] + 1)/
+          (float)imageDims.height)),
+        (int) Math.floor (Math.max (1, (end[1] - start[1] + 1)/
+          (float)imageDims.width))
+      };
 
-    // Set hints in grid
-    // -----------------
-    if (useHint) grid.setAccessHint (start, end, stride);
+      // Check bounds of hints
+      // ---------------------
+      boolean useHint = true;
+      for (int i = 0; i < 2; i++) {
+        if (start[i] < 0) start[i] = 0;
+        if (end[i] > dataDims[i]-1) end[i] = dataDims[i]-1;
+        if (start[i] > end[i]) { useHint = false; break; }
+      } // for
+
+      // Set hints in grid
+      // -----------------
+      if (useHint) grid.setAccessHint (start, end, stride);
+
+    } // if
+    
+    else {
+      cacheNavigation = null;
+    } // else
 
   } // computeCaches
 

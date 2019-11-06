@@ -31,6 +31,7 @@ import jargs.gnu.CmdLineParser.OptionException;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 
@@ -53,6 +54,12 @@ import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.trans.EarthTransform;
+
+import static noaa.coastwatch.util.Grid.ROW;
+import static noaa.coastwatch.util.Grid.COL;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * <p>The graphics tool creates earth data annotation graphics.</p>
@@ -102,8 +109,8 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * </pre>
  * <p>Following the standard convention for graphics planes in CoastWatch
  * product files, the default behaviour places latitude/longitude grid
- * graphics in plane 2, coast line graphics in plane 3, and land mask
- * graphics in plane 4.  Coast lines are derived from GSHHS coast line
+ * graphics in plane 2, coastline graphics in plane 3, and land mask
+ * graphics in plane 4.  Coastlines are derived from GSHHS coastline
  * data, and land polygons are filled GSHHS polygons (see the
  * <a href="http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html">GSHHS website</a>).
  * The default output variable name is 'graphics'.  These defaults may be changed
@@ -138,7 +145,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * <dl>
  *
  *   <dt> -c, --coast=PLANE </dt>
- *   <dd> The coast line graphics plane.  The default is plane 3.  If
+ *   <dd> The coastline graphics plane.  The default is plane 3.  If
  *   the plane value is 0, no coast graphics are rendered. </dd>
  *
  *   <dt> -g, --grid=PLANE </dt>
@@ -195,7 +202,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   cwgraphics: Rendering overlay at plane 4
  * </pre>
  * <p>Another example below shows the alteration of the default options.
- * Only coast line and political line graphics are rendered to plane
+ * Only coastline and political line graphics are rendered to plane
  * 1, and the output variable is named 'geography':</p>
  * <pre>
  *   phollema$ cwgraphics -v --land 0 --grid 0 --coast 1 --political 1 
@@ -215,13 +222,15 @@ import noaa.coastwatch.util.trans.EarthTransform;
  */
 public class cwgraphics {
 
+  private static final String PROG = cwgraphics.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
+
   // Constants
   // ------------
+  
   /** Minimum required command line parameters. */
   private static final int NARGS = 1;
-
-  /** Name of program. */
-  private static final String PROG = "cwgraphics";
 
   ////////////////////////////////////////////////////////////
 
@@ -232,6 +241,7 @@ public class cwgraphics {
    */
   public static void main (String argv[]) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -247,17 +257,19 @@ public class cwgraphics {
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
-      System.exit (0);
-    } // if  
+      usage();
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Print version message
     // ---------------------
@@ -270,10 +282,10 @@ public class cwgraphics {
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
-      usage ();
-      System.exit (1);
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String input = remain[0];
     String output = ((remain.length == 1) ? input : remain[1]);
@@ -281,6 +293,7 @@ public class cwgraphics {
     // Set defaults
     // ------------
     boolean verbose = (cmd.getOptionValue (verboseOpt) != null);
+    if (verbose) VERBOSE.setLevel (Level.INFO);
     Integer gridObj = (Integer) cmd.getOptionValue (gridOpt);
     int grid = (gridObj == null? 2 : gridObj.intValue());
     Integer coastObj = (Integer) cmd.getOptionValue (coastOpt);
@@ -300,30 +313,28 @@ public class cwgraphics {
       CWHDFWriter writer;
       EarthDataInfo info;
       if (input.equals (output)) {
-        if (verbose) System.out.println (PROG + ": Reading input " + input);
+        VERBOSE.info ("Reading input " + input);
         writer = new CWHDFWriter (input);
         reader = new CWHDFReader (writer);
         info = reader.getInfo();     
       } // if
       else {
-        if (verbose) System.out.println (PROG + ": Reading input " + input);
+        VERBOSE.info ("Reading input " + input);
         reader = EarthDataReaderFactory.create (input);
         info = reader.getInfo();
-        if (verbose) System.out.println (PROG + ": Creating output " + output);
+        VERBOSE.info ("Creating output " + output);
         writer = new CWHDFWriter (info, output);
       } // else
 
       // Get dimensions
       // --------------
       int[] dims = info.getTransform().getDimensions();
-      int rows = dims[0];
-      int cols = dims[1];
+      int rows = dims[ROW];
+      int cols = dims[COL];
 
       // Create output variable
       // ----------------------
-      if (verbose) {
-        System.out.println (PROG + ": Creating " + variable + " variable");
-      } // if
+      VERBOSE.info ("Creating " + variable + " variable");
       NumberFormat format = NumberFormat.getInstance();
       format.setMaximumFractionDigits (0);
       Grid gridVar = new Grid (variable, "graphics overlay planes", null, rows, cols,
@@ -338,11 +349,14 @@ public class cwgraphics {
 
       // Create buffered image
       // ---------------------
-      BufferedImage image = new BufferedImage (cols, rows, 
+      BufferedImage image = new BufferedImage (cols, rows,
         BufferedImage.TYPE_BYTE_GRAY);
       Graphics2D g = image.createGraphics();
       Raster rast = image.getRaster();
       int[] pixelRow = new int[cols];
+      Point imagePoint = new Point();
+      int[] dataCoord = new int[2];
+      view.computeCaches (null);
 
       // Create overlay and bit lists
       // ------------------------------
@@ -378,18 +392,18 @@ public class cwgraphics {
         EarthDataOverlay overlay = (EarthDataOverlay) overlays.get (k);
         int bit = ((Integer) bits.get (k)).intValue();
         int bitValue = 1 << (bit-1);
-        if (verbose) {
-          System.out.println (PROG + ": Rendering overlay at plane " + bit);
-        } // if
+        VERBOSE.info ("Rendering overlay at plane " + bit);
         view.addOverlay (overlay);
         view.render (g);
         for (int i = 0; i < rows; i++) {
           rast.getPixels (0, i, cols, 1, pixelRow);
           for (int j = 0; j < cols; j++) {
-            int existingByte = (int) outputVar.getValue (i, j);
+            imagePoint.setLocation (j, i);
+            view.transform (imagePoint, dataCoord);
+            int existingByte = (int) outputVar.getValue (dataCoord[ROW], dataCoord[COL]);
             int graphicsByte = (pixelRow[j] != 0 ? bitValue : 0);
             int newByte = existingByte | graphicsByte;
-            outputVar.setValue (i, j, newByte);
+            outputVar.setValue (dataCoord[ROW], dataCoord[COL], newByte);
           } // for
         } // for
         view.removeOverlay (overlay);
@@ -401,42 +415,46 @@ public class cwgraphics {
       writer.close();
 
     } // try
-    catch (Exception e) {
-      e.printStackTrace ();
-      System.exit (2);
+    catch (OutOfMemoryError | Exception e) {
+      ToolServices.warnOutOfMemory (e);
+      LOGGER.log (Level.SEVERE, "Aborting", e);
+      ToolServices.exitWithCode (2);
+      return;
     } // catch
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwgraphics [OPTIONS] input\n" +
-"       cwgraphics [OPTIONS] input output\n" +
-"Creates earth data annotation graphics in the form of a\n" +
-"byte-valued variable.\n" +
-"\n" +
-"Main parameters:\n" +
-"  input                      The input data file name.\n" +
-"  output                     The output data file name.\n" +
-"\n" +
-"Options:\n" +
-"  -c, --coast=PLANE          Set coast line graphics plane.\n" +
-"  -g, --grid=PLANE           Set latitude/longitude grid graphics plane.\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -l, --land=PLANE           Set land mask graphics plane.\n" +
-"  -p, --political=PLANE      Set political line graphics plane\n" +
-"  -v, --verbose              Print verbose messages.\n" +
-"  -V, --variable=NAME        Set output variable name.\n" +
-"  --version                  Show version information.\n"
-    );
+  ////////////////////////////////////////////////////////////
 
-  } // usage
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwgraphics");
+
+    info.func ("Creates earth data annotation graphics");
+
+    info.param ("input", "Input data file", 1);
+    info.param ("input", "Input data file", 2);
+    info.param ("output", "Output data file", 2);
+
+    info.option ("-c, --coast=PLANE", "Set coastline graphics plane");
+    info.option ("-g, --grid=PLANE", "Set latitude/longitude grid graphics plane");
+    info.option ("-h, --help", "Show this help message");
+    info.option ("-l, --land=PLANE", "Set land mask graphics plane");
+    info.option ("-p, --political=PLANE", "Set political line graphics plane");
+    info.option ("-v, --verbose", "Print verbose messages");
+    info.option ("-V, --variable=NAME", "Set output variable name");
+    info.option ("--version", "Show version information");
+
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 
