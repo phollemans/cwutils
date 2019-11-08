@@ -1150,7 +1150,7 @@ public class CFNCWriter
         else if (dataType == DataType.LONG)
           missing = DataType.unsignedIntToLong ((Integer) missing);
       } // if
-      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("missing", (Number) missing));
+      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("missing_value", (Number) missing));
     } // if
     if (dataType == DataType.BYTE) {
       ncFileWriter.addVariableAttribute (ncVar, new Attribute ("valid_range",
