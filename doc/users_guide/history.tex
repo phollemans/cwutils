@@ -12,6 +12,82 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Version 3.5.1 -- November 2019}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\begin{itemize}
+
+  \item The Mac and Linux installation sections in the user's guide have
+  new notes on using the command line program man pages.
+  
+  \item The cwdownload tool has a new fallback behaviour to ignore an invalid
+  SSL certificate when downloading over an SSL connection.
+  
+  \item The command line tools have a new warning message when an out of
+  memory error occurs with advice on how to re-run the command with a higher
+  memory setting.
+  
+  \item The cwexport tool now exports data to 32-bit floating point GeoTIFF
+  images to help with importing scientific data into GIS systems.
+  
+  \item The cwcomposite tool has a new  -{-}collapsetime option that helps
+  preserve time metadata when creating long time series composites.
+  
+  \item The cwrender tool has a new -{-}paletteimage option that creates an
+  image of all available color palettes and their names to help users choose a
+  palette.
+  
+  \item The cwsample tool now produces an error when the file being processed
+  does not have a compatible data projection for sampling.  Previously versions
+  ran but produced incorrect results for some swath projection files.
+  
+  \item The NetCDF 3 and 4 output from CDAT and cwexport has some changes in how
+  the coordinate metadata is written to help CF-compliant readers recognize
+  the projection.
+  
+  \item The cwmath tool has been updated to use the Java expression parser
+  syntax by default rather than the legacy syntax.
+  
+  \item The cwrender tool has a new -{-}varname option that overrides the
+  variable name in the color bar legend with a custom label.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+  \item CDAT and cwrender had an issue when overwriting existing output images
+  with a smaller size image -- garbage data was being left at the end of the
+  file.
+  
+  \item GeoTIFF writing from cwrender or CDAT was broken under the previous
+  release since migrating to OpenJDK 11.  This has been fixed.
+  
+  \item The HDF 4 library has a write limitation of 65535 bytes for attributes.
+  This was causing an error when compositing long time series.  The error
+  has been fixed by truncating any attribute that exceeds this length with
+  a warning, and also an option added to cwcomposite (see above).
+  
+  \item Some Sentinal-1A data was being rendered in a mirrored orientation.
+  This has been fixed.
+  
+  \item CDAT and cwrender had issues when rendering land polygons near the
+  edges of some projections.  This has been corrected for geographic,
+  swath, orthographic, and GVNSP projections.
+  
+  \item The cwgraphics tool had an issue with rendering graphics correctly
+  for projections requiring an orientation flip for display.
+
+  \item CDAT and cwexport were writing incorrect missing value metadata to
+  NetCDF 3 variables.  This has been corrected and now matches the NetCDF
+  4 output.  The issue affected statistics and display of data from the
+  exported NetCDF 3 files.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Version 3.5.0 -- April 2019}
 
 \subsection*{\bigicon{box_software} Updates}
