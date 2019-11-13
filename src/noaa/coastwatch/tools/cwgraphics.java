@@ -195,11 +195,11 @@ import java.util.logging.Level;
  * <pre>
  *   phollema$ cwgraphics -v bc_coast.hdf
  
- *   cwgraphics: Reading input bc_coast.hdf
- *   cwgraphics: Creating graphics variable
- *   cwgraphics: Rendering overlay at plane 2
- *   cwgraphics: Rendering overlay at plane 3
- *   cwgraphics: Rendering overlay at plane 4
+ *   [INFO] Reading input bc_coast.hdf
+ *   [INFO] Creating graphics variable
+ *   [INFO] Rendering overlay at plane 2
+ *   [INFO] Rendering overlay at plane 3
+ *   [INFO] Rendering overlay at plane 4
  * </pre>
  * <p>Another example below shows the alteration of the default options.
  * Only coastline and political line graphics are rendered to plane
@@ -208,11 +208,11 @@ import java.util.logging.Level;
  *   phollema$ cwgraphics -v --land 0 --grid 0 --coast 1 --political 1 
  *     --variable geography bc_coast.hdf
  *
- *   cwgraphics: Reading input bc_coast.hdf
- *   cwgraphics: Creating geography variable
- *   cwgraphics: Rendering overlay at plane 1
- *   cwgraphics: Rendering overlay at plane 1
- *   cwgraphics: Rendering overlay at plane 1
+ *   [INFO] Reading input bc_coast.hdf
+ *   [INFO] Creating geography variable
+ *   [INFO] Rendering overlay at plane 1
+ *   [INFO] Rendering overlay at plane 1
+ *   [INFO] Rendering overlay at plane 1
  * </pre>
  *
  * <!-- END MAN PAGE -->

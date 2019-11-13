@@ -112,7 +112,7 @@ import java.util.logging.Level;
  * -S, --savemap <br>
  * --serial <br>
  * -t, --tiledims=ROWS/COLS <br>
- * -u, --usemap=FILE <br>
+ * -u, --usemap=FILE[/ROW_VAR/COL_VAR] <br>
  * -v, --verbose <br>
  * --version <br>
  * </p>
@@ -252,7 +252,7 @@ import java.util.logging.Level;
  *   the size the HDF chunks will be written as.  The default is 512 by 512
  *   tiles for all variables.</dd>
  *
- *   <dt>-u, --usemap=FILENAME[/SOURCE_ROW_VARIABLE/SOURCE_COL_VARIABLE]</dt>
+ *   <dt>-u, --usemap=FILE[/ROW_VAR/COL_VAR]</dt>
  *
  *   <dd>Uses the file to load previously saved row and column mapping
  *   variables.  The names of the variables are optional, and default to
@@ -938,7 +938,7 @@ public final class cwregister2 {
     info.option ("-S, --savemap", "Save resampling map");
     info.option ("--serial", "Perform serial operations");
     info.option ("-t, --tiledims=ROWS/COLS", "Set written tile dimensions");
-    info.option ("-u, --usemap=FILE", "Use precomputed remapping");
+    info.option ("-u, --usemap=FILE[/ROW_VAR/COL_VAR]", "Use precomputed remapping");
     info.option ("-v, --verbose", "Print verbose messages");
     info.option ("--version", "Show version information");
 
