@@ -853,7 +853,8 @@ public class EarthDataChooser
    *
    * @param component the dialog parent component.
    * @param selectedFile the file to initially show selected, or null
-   * for none.
+   * for none.  If the file is actually a directory, the current directory
+   * is set to the directory.
    *
    * @return the user-selected reader or null if the user cancelled
    * the dialog.
@@ -940,7 +941,10 @@ public class EarthDataChooser
     // Select initial file if requested
     // --------------------------------
     if (selectedFile != null) {
-      chooser.fileChooser.setSelectedFile (selectedFile);
+      if (selectedFile.exists() && selectedFile.isDirectory())
+        chooser.fileChooser.setCurrentDirectory (selectedFile);
+      else
+        chooser.fileChooser.setSelectedFile (selectedFile);
 //      chooser.tabbedPane.setSelectedComponent (chooser.fileChooser);
     } // if
 
