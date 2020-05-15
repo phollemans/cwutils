@@ -55,8 +55,10 @@ public class SensorIdentifier {
   public static enum Sensor {
     AVHRR,
     MODIS,
-    VIIRS,
-    OLCI,
+    VIIRS_MBAND_SDR,
+    VIIRS_MBAND_EDR,
+    VIIRS_IBAND_SDR,
+    VIIRS_IBAND_EDR,
     UNKNOWN
   } // Sensor
 
@@ -130,7 +132,9 @@ public class SensorIdentifier {
     else if (scanLength == 10 && dims[COL] == 1354)
       sensor = Sensor.MODIS;
     else if (scanLength == 16 && dims[COL] == 3200)
-      sensor = Sensor.VIIRS;
+      sensor = Sensor.VIIRS_MBAND_SDR;
+    else if (scanLength == 32 && dims[COL] == 6400)
+      sensor = Sensor.VIIRS_IBAND_SDR;
     else
       sensor = Sensor.UNKNOWN;
 

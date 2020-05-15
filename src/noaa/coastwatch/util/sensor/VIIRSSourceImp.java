@@ -32,27 +32,14 @@ import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.ResamplingSourceImp;
+import noaa.coastwatch.util.sensor.SensorIdentifier.Sensor;
 
 import static noaa.coastwatch.util.Grid.ROW;
 import static noaa.coastwatch.util.Grid.COL;
 
 /**
- * <p>The <code>VIIRSSourceImp</code> helps resample VIIRS data.  The VIIRS
- * scan is 3200 pixels wide by 16 pixels high and has some pixels deleted
- * on the top and bottom two rows which results in less overlap of the scan
- * than say MODIS.  The deletion pattern is as follows with the first and last
- * 1008 pixels deleted on the first line of the scan, and 640 on the second line,
- * similarly at the bottom of the scan:</p>
- * <pre>
- *     0    640       1008               2192      2560   3199
- *  0   ****************-------------------****************
- *  1   ******---------------------------------------******
- *  2   ---------------------------------------------------
- *  ..  ---------------------------------------------------
- *  13  ---------------------------------------------------
- *  14  ******---------------------------------------******
- *  15  ****************-------------------****************
- * </pre>
+ * The <code>VIIRSSourceImp</code> helps resample VIIRS data using a specific
+ * set of VIIRS sensor parameters.
  *
  * @author Peter Hollemans
  * @since 3.5.0
@@ -83,21 +70,24 @@ public class VIIRSSourceImp implements ResamplingSourceImp {
   private double[][] rightEdgeVectors;
 
   /**
-   * The VIIRS bow-tie deletion pattern array, true for locations
-   * removed by bow-tie deletion.
+   * The deletion pattern array of size [scanHeight][scanWidth], true for
+   * locations deleted.
    */
-  private boolean[][] isBowtieDeleted;
+  private boolean[][] isDeletedPixel;
   
   /** The true starting row of the source after any invalid rows. */
   private int validStartRow;
   
   /** The true ending row of the source before any invalid rows. */
   private int validEndRow;
-  
+
+  /** The VIIRS sensor-specific parameters for this resampling. */
+  private VIIRSSensorParams sensorParams;
+
   ////////////////////////////////////////////////////////////
 
   /** Computes vector from b to a, result_k = a_k - b_k. */
-  private void subtract (double[] a, double[] b, double[] result) {
+  private static void subtract (double[] a, double[] b, double[] result) {
   
     for (int k = 0; k < 3; k++)
       result[k] = a[k] - b[k];
@@ -107,7 +97,7 @@ public class VIIRSSourceImp implements ResamplingSourceImp {
   ////////////////////////////////////////////////////////////
 
   /** Computes dot product, result = sum_k (a_k * b_k). */
-  private double dot (double[] a, double[] b) {
+  private static double dot (double[] a, double[] b) {
   
     double result = 0;
     for (int k = 0; k < 3; k++)
@@ -119,30 +109,14 @@ public class VIIRSSourceImp implements ResamplingSourceImp {
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Gets the top edge row of the swath at the specified column.
-   *
-   * @param col the column to query, [0..3199].
-   *
-   * @return the row within the data that forms the top of the non-deleted
-   * part of the swath at the specified column.
-   */
-  private int getTopRowAtColumn (
-    int col
-  ) {
+  /** Computes magnitude, result = sqrt (sum_k (a_k^2)). */
+  private static double magnitude (double[] a) {
 
-    int topRow;
-    
-    if (col >= 1008 && col < 2192)
-      topRow = 0;
-    else if (col >= 640 && col < 2560)
-      topRow = 1;
-    else topRow = 2;
+    double result = Math.sqrt (dot (a, a));
+    return (result);
 
-    return (topRow);
+  } // magnitude
 
-  } // getTopRowAtColumn
-  
   ////////////////////////////////////////////////////////////
 
   /**
@@ -150,22 +124,24 @@ public class VIIRSSourceImp implements ResamplingSourceImp {
    *
    * @param sourceTrans the source transform to use for VIIRS swath location
    * data.
+   * @param sensorParams the VIIRS sensor parameters to use.
    *
    * @return the new resampling helper.
    */
   public static VIIRSSourceImp getInstance (
-    EarthTransform sourceTrans
+    EarthTransform sourceTrans,
+    VIIRSSensorParams sensorParams
   ) {
-  
+
     // Check dimensions
     // ----------------
     int[] sourceDims = sourceTrans.getDimensions();
-    if (sourceDims[ROW]%16 != 0)
+    if (sourceDims[ROW]%sensorParams.getScanHeight() != 0)
       throw new RuntimeException ("Invalid number of rows for VIIRS scan");
-    if (sourceDims[COL] != 3200)
+    if (sourceDims[COL] != sensorParams.getScanWidth())
       throw new RuntimeException ("Invalid number of columns for VIIRS scan");
 
-    return (new VIIRSSourceImp (sourceTrans));
+    return (new VIIRSSourceImp (sourceTrans, sensorParams));
   
   } // getInstance
 
@@ -176,32 +152,25 @@ public class VIIRSSourceImp implements ResamplingSourceImp {
    *
    * @param sourceTrans the source transform to use for VIIRS swath location
    * data.
+   * @param sensorParams the VIIRS sensor parameters to use.
    */
   private VIIRSSourceImp (
-    EarthTransform sourceTrans
+    EarthTransform sourceTrans,
+    VIIRSSensorParams sensorParams
   ) {
 
     this.sourceTrans = sourceTrans;
-
+    this.sensorParams = sensorParams;
+    
     // Get dimensions
     // --------------
     sourceDims = sourceTrans.getDimensions();
     int rows = sourceDims[ROW];
     int cols = sourceDims[COL];
 
-    // Set up bow-tie deletion pattern
-    // -------------------------------
-    isBowtieDeleted = new boolean[16][3200];
-    for (int i = 0; i < 16; i++) {
-      for (int j = 0; j < 3200; j++) {
-        if ((i == 0 || i == 15) && (j < 1008 || j >= 2192))
-          isBowtieDeleted[i][j] = true;
-        else if ((i == 1 || i == 14) && (j < 640 || j >= 2560))
-          isBowtieDeleted[i][j] = true;
-        else
-          isBowtieDeleted[i][j] = false;
-      } // for
-    } // for
+    // Get pixel deletion pattern
+    // --------------------------
+    isDeletedPixel = sensorParams.getDeletionPattern();
 
     // Check for invalid lines at the start and end of the source
     // ----------------------------------------------------------
@@ -225,9 +194,9 @@ public class VIIRSSourceImp implements ResamplingSourceImp {
     int invalidEndRows = rows-1 - validEndRow;
     LOGGER.fine ("Found " + invalidEndRows + " invalid rows at end of VIIRS scan");
 
-    if (validStartRow%16 != 0)
+    if (validStartRow%sensorParams.getScanHeight() != 0)
       throw new RuntimeException ("First valid row not on full VIIRS scan boundary");
-    if (invalidEndRows%16 != 0)
+    if (invalidEndRows%sensorParams.getScanHeight() != 0)
       throw new RuntimeException ("Last valid row not on full VIIRS scan boundary");
 
     // Compute inward pointing vectors along top and bottom edge
@@ -245,7 +214,7 @@ public class VIIRSSourceImp implements ResamplingSourceImp {
 
       // Top
       // ---
-      int topRow = getTopRowAtColumn (i) + validStartRow;
+      int topRow = sensorParams.getTopRowAtColumn (i) + validStartRow;
 
       dataLoc.set (ROW, topRow);
       sourceTrans.transform (dataLoc, earthLoc);
@@ -285,8 +254,8 @@ public class VIIRSSourceImp implements ResamplingSourceImp {
 
       // Skip rows that start or end with deleted pixels
       // -----------------------------------------------
-      int scanLine = i % 16;
-      if (scanLine < 2 || scanLine > 13)
+      int scanLine = i % sensorParams.getScanHeight();
+      if (isDeletedPixel[scanLine][0] || isDeletedPixel[scanLine][sensorParams.getScanWidth()-1])
         continue;
       
       dataLoc.set (ROW, i);
@@ -326,17 +295,17 @@ public class VIIRSSourceImp implements ResamplingSourceImp {
   @Override
   public boolean isValidLocation (DataLocation loc) {
   
-    int sourceScanLine = (int) loc.get (ROW) % 16;
+    int sourceScanLine = (int) loc.get (ROW) % sensorParams.getScanHeight();
     int sourceCol = (int) loc.get (COL);
 
-    return (!isBowtieDeleted[sourceScanLine][sourceCol]);
+    return (!isDeletedPixel[sourceScanLine][sourceCol]);
   
   } // isValidLocation
 
   ////////////////////////////////////////////////////////////
 
   @Override
-  public int getWindowSize() { return (19); }
+  public int getWindowSize() { return ((int) (sensorParams.getScanHeight() * 1.2)); }
 
   ////////////////////////////////////////////////////////////
 
@@ -380,7 +349,7 @@ public class VIIRSSourceImp implements ResamplingSourceImp {
 
     // Top edge
     // --------
-    int topRow = getTopRowAtColumn (sourceCol);
+    int topRow = sensorParams.getTopRowAtColumn (sourceCol);
     int bottomRow = validEndRow - topRow;
 
     if (sourceRow == topRow) {
@@ -452,12 +421,21 @@ public class VIIRSSourceImp implements ResamplingSourceImp {
       // Compute dot between source->dest and source->inside
       // ---------------------------------------------------
       double dotProduct = dot (context.sourceToDestVector, sourceToInsideVector);
+
+      // We add a little on here to take account of the edge pixel outer radius
+      // d = source to dest vector
+      // i = source to inside vector
+      // d' = d + 1/2 i
+      // d' . i > 0 when dest is inside outer boundary of edge pixel
+      // Same goes for the corner case below
+      dotProduct += 0.5 * dot (sourceToInsideVector, sourceToInsideVector);
       isInsideSource = (dotProduct > 0);
 
       // For a corner, check additional dot product
       // ------------------------------------------
       if (isInsideSource && sourceCornerToInsideVector != null) {
         dotProduct = dot (context.sourceToDestVector, sourceCornerToInsideVector);
+        dotProduct += 0.5 * dot (sourceCornerToInsideVector, sourceCornerToInsideVector);
         isInsideSource = (dotProduct > 0);
       } // if
 

@@ -55,16 +55,28 @@ public class SensorSourceImpFactory {
    * Creates a new concrete resampling object for the specified transform.
    *
    * @param sourceTrans the source transform to use for location data.
+   * @param sensorHint the hint to use for the sensor type, or null for
+   * automatic detection.
    *
    * @return the new resampling helper specific to the sensor scan pattern.
    */
   public static ResamplingSourceImp create (
-    EarthTransform sourceTrans
+    EarthTransform sourceTrans,
+    Sensor sensorHint
   ) {
 
     ResamplingSourceImp imp;
 
-    Sensor sensor = SensorIdentifier.getSensorFromScan (sourceTrans);
+    Sensor sensor;
+    if (sensorHint != null) {
+      LOGGER.fine ("Using sensor hint " + sensorHint);
+      sensor = sensorHint;
+    } // if
+    else {
+      LOGGER.fine ("No sensor hint, running automatic sensor detection");
+      sensor = SensorIdentifier.getSensorFromScan (sourceTrans);
+    } // else
+
     switch (sensor) {
     case AVHRR:
       imp = AVHRRSourceImp.getInstance (sourceTrans);
@@ -72,8 +84,17 @@ public class SensorSourceImpFactory {
     case MODIS:
       imp = MODISSourceImp.getInstance (sourceTrans);
       break;
-    case VIIRS:
-      imp = VIIRSSourceImp.getInstance (sourceTrans);
+    case VIIRS_MBAND_EDR:
+      imp = VIIRSSourceImp.getInstance (sourceTrans, new VIIRSMBandEDRParams());
+      break;
+    case VIIRS_MBAND_SDR:
+      imp = VIIRSSourceImp.getInstance (sourceTrans, new VIIRSMBandSDRParams());
+      break;
+    case VIIRS_IBAND_EDR:
+      imp = VIIRSSourceImp.getInstance (sourceTrans, new VIIRSIBandEDRParams());
+      break;
+    case VIIRS_IBAND_SDR:
+      imp = VIIRSSourceImp.getInstance (sourceTrans, new VIIRSIBandSDRParams());
       break;
     default:
       imp = GenericSourceImp.getInstance (sourceTrans);

@@ -325,12 +325,18 @@ public class GenericSourceImp implements ResamplingSourceImp {
       // Compute dot between source->dest and source->inside
       // ---------------------------------------------------
       double dotProduct = dot (context.sourceToDestVector, sourceToInsideVector);
+
+      // See the note in the VIIRSSourceImp class for this.  This accounts
+      // for the size of the pixels at the edge, using the distance between
+      // the edge pixel and its inside neighbour.
+      dotProduct += 0.5 * dot (sourceToInsideVector, sourceToInsideVector);
       isInsideSource = (dotProduct > 0);
 
       // For a corner, check additional dot product
       // ------------------------------------------
       if (isInsideSource && sourceCornerToInsideVector != null) {
         dotProduct = dot (context.sourceToDestVector, sourceCornerToInsideVector);
+        dotProduct += 0.5 * dot (sourceCornerToInsideVector, sourceCornerToInsideVector);
         isInsideSource = (dotProduct > 0);
       } // if
 
