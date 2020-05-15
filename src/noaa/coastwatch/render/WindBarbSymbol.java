@@ -48,10 +48,32 @@ import noaa.coastwatch.util.trans.OrthographicProjection;
 
 /**
  * A <code>WindBarbSymbol</code> is a <code>PointFeatureSymbol</code>
- * that renders a wind barb according to the WMO rules in:
+ * that renders a wind barb according to the WMO rules.  See:
  * <blockquote>
  *   Manual on the Global Data-Processing System, Edition 1992<br>
- *   http://www.wmo.ch/web/www/DPS/Manual/WMO485.pdf
+ *   https://www.wmo.int/pages/prog/www/DPS/Manual/WMO485.pdf
+ * </blockquote>
+ * In Appendix II-4 "GRAPHICAL REPRESENTATION OF DATA, ANALYSES AND FORECASTS",
+ * the following description may be found concerning wind barb symbols:
+ * <blockquote>
+ *   ddff: True direction, in tens of degrees, from which wind is blowing (dd)
+ *   and wind speed in units indicated by iw (ff).<br><br>
+ *   Wind is represented by barbs and solid pennants in black, the full
+ *   barbs representing 5 m s-1 or 10 knots, the half barbs representing
+ *   2.5 m s-1 or 5 knots and the solid pennant representing 25 m s-1 or 50
+ *   knots.<br><br>
+ *   The wind shaft in black is directed along the axis of the wind
+ *   towards the centre of the station circle and stops at its circumference.<br><br>
+ *   All pennants and barbs lie to the left of the wind shaft in the northern
+ *   hemisphere and to the right of the wind shaft in the southern hemisphere.<br><br>
+ *   Barbs are at an angle of approximately 120° from the wind shaft.
+ *   Pennants are triangles with their bases on the wind shaft.<br><br>
+ *   A calm should be indicated by a circle drawn around the station circle:
+ *   (diagram of two concentric circles).<br><br>
+ *   Missing wind speed should be indicated by placing an "x" at the end of
+ *   the wind shaft in lieu of the wind barbs. Wind direction is indicated
+ *   in the usual manner, e.g. x---o. When the wind direction is missing,
+ *   no wind should be plotted.
  * </blockquote>
  *
  * @author Peter Hollemans
