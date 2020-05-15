@@ -62,9 +62,59 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 /** 
- * The <code>CWCFNCReader</code> class reads Java NetCDF accessible
+ * <p>The <code>CWCFNCReader</code> class reads Java NetCDF accessible
  * datasets and uses the CoastWatch HDF metadata conventions to parse
- * the attribute and variable data.
+ * the attribute and variable data.  Only map projected data is supported.
+ * The presence of the following global attributes is used to recognize
+ * the file as having CoastWatch-specific metadata (see the user's guide
+ * metadata appendix for more details on each attribute):</p>
+ *
+ * <ul>
+ *
+ *   <li><code>cw:cwhdf_version</code> (string, optional) - The CoastWatch
+ *   HDF metadata version number, defaults to 2.3.  This attribute is highly
+ *   recommended so that the <code>cw:et_affine</code> attribute is interpreted
+ *   correctly. If in doubt, use 3.4.</li>
+ *
+ *   <li><code>cw:satellite</code> (string, optional) - The satellite name,
+ *   default is to use the CF <code>source</code> attribute.</li>
+ *
+ *   <li><code>cw:sensor</code> (string, optional) - The sensor name,
+ *   default is to use the CF <code>source</code> attribute.</li>
+ *
+ *   <li><code>cw:origin</code> (string, optional) - The data origin, default
+ *   is to use the CF <code>institution</code> attribute.</li>
+ *
+ *   <li><code>cw:pass_date</code> (int, REQUIRED) - The single value or array of dates
+ *   of data recording (days since Jan 1, 1970).</li>
+ *
+ *   <li><code>cw:start_time</code> (double, REQUIRED) - The single value or array of
+ *   start times of data recording (seconds since 00:00:00 UTC).</li>
+ *
+ *   <li><code>cw:temporal_extent</code> (double, optional) - The single
+ *   value or array of durations in seconds of data recording.</li>
+ *
+ *   <li><code>cw:gctp_sys</code> (int, REQUIRED) - The GCTP projection
+ *   system code.</li>
+ *
+ *   <li><code>cw:gctp_zone</code> (int, REQUIRED) - The GCTP UTM projection
+ *   zone code (can be zero).</li>
+ *
+ *   <li><code>cw:gctp_parm</code> (double array, REQUIRED) - The array of
+ *   GCTP projection parameters (15).</li>
+ *
+ *   <li><code>cw:gctp_datum</code> (int, REQUIRED) - The GCTP datum
+ *   code.</li>
+ *
+ *   <li><code>cw:et_affine</code> (double array, REQUIRED) - The map projection
+ *   affine transform.</li>
+ *
+ * </ul>
+ *
+ * <p>On a per-variable basis, the <code>cw:fraction_digits</code> and
+ * <code>cw:nav_affine</code> attributes are also used if found, but are not
+ * required.  Note that if any required or optional attributes are found to
+ * have an incorrect data type, the file will not be recognized.</p>
  *
  * @author Xiaoming Liu
  * @since 3.3.0
