@@ -737,8 +737,18 @@ import ucar.units.Unit;
  *   'arrow' to draw arrows in the direction of the vector, or 'barb'
  *   to draw WMO wind barbs; the default is 'arrow'.  If wind barbs
  *   are used, the feathered end of the barb points in the direction
- *   of the wind.  Lastly, the size of the vector symbols in pixels
- *   may be specified; the default size is 10.</dd>
+ *   that the wind is coming from (unless metadata attached to the direction
+ *   variable is used to alter that convention).  WMO wind barbs are drawn
+ *   differently depending on the wind speed units, m/s or knots:
+ *   <ul>
+ *     <li>Solid pennant: 25 m/s or 50 knots</li>
+ *     <li>Full barb: 5 m/s or 10 knots</li>
+ *     <li>Half barb: 2.5 m/s or 5 knots</li>
+ *     <li>X symbol: missing wind speed</li>
+ *     <li>No symbol: missing wind direction</li>
+ *   </ul>
+ *   Lastly, the size of the vector symbols in pixels may be specified;
+ *   the default size is 10.</dd>
  *
  *   <dt>-F, --function=TYPE</dt>
  *
@@ -917,7 +927,7 @@ import ucar.units.Unit;
  *   they may be specified here.  Many common units are accepted (and
  *   various forms of those units), for example 'kelvin', 'celsius'
  *   and 'fahrenheit' for temperature data, 'knots', 'meters per
- *   second' or 'm/s' for windspeed, and 'mg per m^-3' or 'kg/m-3' for
+ *   second' or 'm/s' for wind speed, and 'mg per m^-3' or 'kg/m-3' for
  *   concentration.  For other possible unit names, see the
  *   conventions used by the <a href="https://www.google.com/search?q=udunits">Unidata
  *   UDUNITS package</a> and its <a href="https://www.google.com/search?q=udunits.txt">supported
@@ -1556,9 +1566,14 @@ public class cwrender {
           // -----------------------
           if (style.equals ("magdir")) {
             String convention = 
-              (String) var1.getMetadataMap().get ("direction_convention");
+              (String) var2.getMetadataMap().get ("direction_convention");
             if (convention == null || convention.equals ("DirectionIsFrom"))
               pointSymbol.setDirectionIsFrom (true);
+            else if (!convention.equals ("DirectionIsTo")) {
+              LOGGER.warning ("Direction variable '" + var2.getName() +
+                "' has unknown direction convention '" + convention + "'");
+              LOGGER.warning ("Assuming convention 'DirectionIsTo'");
+            } // else if
           } // if
 
           // Create view
