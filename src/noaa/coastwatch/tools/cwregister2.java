@@ -75,6 +75,7 @@ import noaa.coastwatch.util.ResamplingDiagnostic;
 import noaa.coastwatch.util.ResamplingDiagnostic.DiagnosticInfo;
 import noaa.coastwatch.util.ResamplingSourceImp;
 import noaa.coastwatch.util.sensor.SensorSourceImpFactory;
+import noaa.coastwatch.util.sensor.SensorIdentifier.Sensor;
 import noaa.coastwatch.util.GridDataResamplingMapFactory;
 
 import static noaa.coastwatch.util.Grid.ROW;
@@ -110,6 +111,7 @@ import java.util.logging.Level;
  * -m, --match=PATTERN <br>
  * -p, --proj=SYSTEM <br>
  * -S, --savemap <br>
+ * -H, --sensorhint=HINT <br>
  * --serial <br>
  * -t, --tiledims=ROWS/COLS <br>
  * -u, --usemap=FILE[/ROW_VAR/COL_VAR] <br>
@@ -240,6 +242,14 @@ import java.util.logging.Level;
  *   The variables 'source_row' and 'source_col' are added to the output
  *   file, and specify for each destination pixel, which source row and column
  *   they were mapped from.</dd>
+ *
+ *   <dt>-H, --sensorhint=HINT</dt>
+ *
+ *   <dd>Provides a hint for the sensor for non-invertible
+ *   transform types to help with the resampling.  The
+ *   default is to automatically detect if sensor-specific handling is needed
+ *   from the input file.  The hints available are 'viirs_mband_edr' and
+ *   'viirs_iband_edr', which are not detected automatically.</dd>
  *
  *   <dt>--serial</dt>
  *
@@ -500,6 +510,7 @@ public final class cwregister2 {
     Option projOpt = cmd.addStringOption ('p', "proj");
     Option savemapOpt = cmd.addBooleanOption ('S', "savemap");
     Option usemapOpt = cmd.addStringOption ('u', "usemap");
+    Option sensorhintOpt = cmd.addStringOption ('H', "sensorhint");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -554,6 +565,7 @@ public final class cwregister2 {
     if (proj == null) proj = "ortho";
     boolean clobberOutput = (cmd.getOptionValue (clobberOpt) != null);
     boolean serialOperations = (cmd.getOptionValue (serialOpt) != null);
+    String sensorhint = (String) cmd.getOptionValue (sensorhintOpt);
 
     // Check output
     // ------------
@@ -600,7 +612,7 @@ public final class cwregister2 {
       // Get destination from optimal projection
       // ---------------------------------------
       else {
-        VERBOSE.info ("Creating optimal destination transform");
+        VERBOSE.info ("Creating optimal destination transform with projection system " + proj);
         destTrans = getOptimalProjection (sourceTrans, proj);
       } // else
 
@@ -735,6 +747,18 @@ public final class cwregister2 {
         } // if
       } // if
 
+      // Check sensor hint
+      // -----------------
+      Sensor sensor = null;
+      if (sensorhint != null) {
+        try { sensor = Sensor.valueOf (sensorhint.toUpperCase()); }
+        catch (IllegalArgumentException e) {
+          LOGGER.severe ("Invalid sensor hint '" + sensorhint + "'");
+          ToolServices.exitWithCode (2);
+          return;
+        } // catch
+      } // if
+
       // Access saved map file
       // ---------------------
       ResamplingSourceImp imp = null;
@@ -784,7 +808,7 @@ public final class cwregister2 {
         // Create sensor imp for diagnostic
         // --------------------------------
         if (performDiagnostic)
-          imp = SensorSourceImpFactory.create (sourceTrans);
+          imp = SensorSourceImpFactory.create (sourceTrans, sensor);
       
       } // if
 
@@ -803,7 +827,7 @@ public final class cwregister2 {
         // ----------------------------------------------------
         else {
           LOGGER.fine ("Detected a non-invertible transform, performing bucket resampling");
-          imp = SensorSourceImpFactory.create (sourceTrans);
+          imp = SensorSourceImpFactory.create (sourceTrans, sensor);
           mapFactory = new BucketResamplingMapFactory (sourceTrans, destTrans, imp);
         } // else
 
@@ -936,6 +960,7 @@ public final class cwregister2 {
     info.option ("-m, --match=PATTERN", "Register only variables matching regular expression");
     info.option ("-p, --proj=SYSTEM", "Set output projection system");
     info.option ("-S, --savemap", "Save resampling map");
+    info.option ("-H, --sensorhint=HINT", "Override automatic sensor detection");
     info.option ("--serial", "Perform serial operations");
     info.option ("-t, --tiledims=ROWS/COLS", "Set written tile dimensions");
     info.option ("-u, --usemap=FILE[/ROW_VAR/COL_VAR]", "Use precomputed remapping");
