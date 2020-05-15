@@ -160,6 +160,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * @author Peter Hollemans
  * @since 3.1.0
  */
+ 
+// TODO: LOGGING
+
 public final class cwimport {
 
   // Constants

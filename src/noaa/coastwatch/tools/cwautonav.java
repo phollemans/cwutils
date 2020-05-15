@@ -522,6 +522,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * @author Peter Hollemans
  * @since 3.1.9
  */
+ 
+// TODO: LOGGING
+ 
 public final class cwautonav {
 
   // Constants

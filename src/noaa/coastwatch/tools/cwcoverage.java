@@ -293,6 +293,9 @@ import noaa.coastwatch.util.trans.SpheroidConstants;
  * @author Peter Hollemans
  * @since 3.1.6
  */
+ 
+// TODO: LOGGING
+
 public class cwcoverage {
 
   // Constants

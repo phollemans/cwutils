@@ -271,6 +271,9 @@ import noaa.coastwatch.util.MetadataServices;
  * @author Peter Hollemans
  * @since 3.2.0
  */
+ 
+// TODO: LOGGING
+
 public final class hdatt {
 
   // Constants

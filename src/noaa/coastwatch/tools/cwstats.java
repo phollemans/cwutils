@@ -212,6 +212,9 @@ import noaa.coastwatch.util.trans.Datum;
  * @author Peter Hollemans
  * @since 3.1.0
  */
+ 
+// TODO: LOGGING
+
 public final class cwstats {
 
   // Constants

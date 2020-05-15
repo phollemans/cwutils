@@ -184,6 +184,9 @@ import noaa.coastwatch.util.SatellitePassInfo;
  * @author Peter Hollemans
  * @since 3.1.3
  */
+ 
+// TODO: LOGGING
+
 public final class cwstatus
   extends JFrame {
 

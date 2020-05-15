@@ -188,6 +188,9 @@ import noaa.coastwatch.util.trans.MapProjectionFactory;
  * @author Peter Hollemans
  * @since 3.1.2
  */
+ 
+// TODO: LOGGING
+
 public final class cwmaster
   extends JFrame {
 
@@ -754,9 +757,15 @@ public final class cwmaster
         // Show file chooser
         // -----------------
         fileChooser.rescanCurrentDirectory();
+        File selectedFile = fileChooser.getSelectedFile();
+        if (selectedFile == null) {
+          File currentDir = fileChooser.getCurrentDirectory();
+          selectedFile = new File (currentDir, "Untitled.hdf");
+          fileChooser.setSelectedFile (selectedFile);
+        } // if
         int ret = fileChooser.showSaveDialog (cwmaster.this);
 
-        // Read new master
+        // Save new master
         // ---------------
         if (ret == JFileChooser.APPROVE_OPTION) {
           try {
