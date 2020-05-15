@@ -211,7 +211,7 @@ public class cwtoolstest {
       // ------------------
       sysOut.println (runTest ("cwdownload", false, new String[] {
         "--ssl",
-        "--satellite", "noaa-16", 
+//        "--satellite", "noaa-16",
         "--scenetime", "day", 
         "--test", 
         "--region", "(er|sr)", 
@@ -237,13 +237,33 @@ public class cwtoolstest {
         getOutputName ("cwregister", "hdf", true)
       }));
 
+      // Run math tests
+      // --------------
+      sysOut.println (runTest ("cwmath", false, new String[] {
+        "-v",
+        "--expr", "diff45 = avhrr_ch4 - avhrr_ch5",
+        getTestFile (TEST_FILE1, "cwmath"),
+        getOutputName ("cwmath", "hdf", true)
+      }));
+      sysOut.println (runTest ("cwmath", false, new String[] {
+        "-v",
+        "--expr", "sst_masked = ((cloud & 0xff) == 0 ? sst : NaN)",
+        getTestFile (TEST_FILE1, "cwmath"),
+        getOutputName ("cwmath", "hdf", true)
+      }));
+      sysOut.println (runTest ("cwmath", true, new String[] {
+        "-v",
+        "--expr", "sst_masked = ((cloud & 0xff) == 0 ? sst : XXX)",
+        getTestFile (TEST_FILE1, "cwmath"),
+        getOutputName ("cwmath", "hdf", true)
+      }));
+
       // TODO Run more tests
       // -------------------
       // sysOut.println (runTest ("cwautonav", false, new String[]{}));
       // sysOut.println (runTest ("cwexport", false, new String[] {"--verbose", "--match", "avhrr_ch1", getTestFile(TEST_FILE1, "cwexport"), getOutputName("cwexport", "ch1", true)}));
       // sysOut.println (runTest ("cwgraphics", false, new String[]{"-v", "--land", "0", "--grid", "0", "--coast", "1", "--political", "1", "--variable", "geography", getTestFile(TEST_FILE1, "cwgraphics")}));
       // sysOut.println (runTest ("cwimport", false, new String[]{}));
-      // sysOut.println (runTest ("cwmath", false, new String[]{}));
       // sysOut.println (runTest ("cwnavigate", false, new String[]{}));
       // sysOut.println (runTest ("cwrender", false, new String[]{}));
       // sysOut.println (runTest ("cwsample", false, new String[]{}));
