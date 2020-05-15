@@ -640,14 +640,13 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  * data for solar zenith angle.  The output variable is named
  * 'avhrr_ch2_corr' and is written to the input file:</p>
  * <pre>
- *   phollema$ cwmath -v --units "percent" --longname "AVHRR channel 2 corrected"
- *     --expr "avhrr_ch2_corr = avhrr_ch2/cos(sun_zenith*pi/180)" 
- *     2019_015_2121_n19_er.hdf
+ *   phollema$ cwmath -v --units percent --longname "AVHRR channel 2 corrected"
+ *     --expr "avhrr_ch2_corr = avhrr_ch2 / cos (toRadians (sun_zenith))"
+ *     2019_250_2241_n19_mr.hdf
  *
- *   [INFO] Opening input/output 2019_015_2121_n19_er.hdf
- *   [INFO] Using expression '(avhrr_ch2 / cos ((sun_zenith * PI) / 180))'
+ *   [INFO] Opening input/output 2019_250_2241_n19_mr.hdf
  *   [INFO] Creating avhrr_ch2_corr variable
- *   [INFO] Total grid size is 1401x1302
+ *   [INFO] Total grid size is 1101x1401
  *   [INFO] Found 8 processor(s) to use
  *   [INFO] Processing 9 data chunks of size 512x512
  * </pre>
@@ -659,32 +658,34 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  *     2019_015_2121_n19_er.hdf
  *
  *   [INFO] Opening input/output 2019_015_2121_n19_er.hdf
- *   [INFO] Using expression '((avhrr_ch2 - avhrr_ch1) / (avhrr_ch2 + avhrr_ch1))'
  *   [INFO] Creating ndvi variable
  *   [INFO] Total grid size is 1401x1302
  *   [INFO] Found 8 processor(s) to use
  *   [INFO] Processing 9 data chunks of size 512x512
  * </pre>
- * <p>In order to demonstrate the use of the 'mask' function, the example
- * below shows the masking of the 'sst' variable using the 'cloud'
- * variable.  Note that a hexadecimal value is used to determine which
- * values from the cloud mask are used in the masking procedure.
- * Since the cloud data is represented by 8-bit bytes, the hexadecimal
- * mask value need only specify two hexadecimal digits.  In this case,
- * the value '0x6f' represents bits 1, 2, 3, 4, 6, and 7 (for all
- * cloud mask bits, the value would be '0xff'):</p>
+ * <p>To show how to mark certain data values in a variable as invalid,
+ * the example below masks the 'sst' variable using data from the 'cloud'
+ * variable:</p>
  * <pre>
- *   phollema$ cwmath -v --template sst 
- *     --expr 'sst_masked = mask (sst, cloud, hex ("0x6f"))'
+ *   phollema$ cwmath -v --template sst
+ *     --expr 'sst_masked = ((cloud &amp; 0x6f) == 0 ? sst : NaN)'
  *     2019_015_2121_n19_er.hdf
  *
  *   [INFO] Opening input/output 2019_015_2121_n19_er.hdf
- *   [INFO] Using expression '((((long)cloud &amp; (long) (0x6f)) == 0) ? sst : NaN)'
  *   [INFO] Creating sst_masked variable
  *   [INFO] Total grid size is 1401x1302
  *   [INFO] Found 8 processor(s) to use
  *   [INFO] Processing 9 data chunks of size 512x512
  * </pre>
+ * <p>We use a hexadecimal value to set which bits from the 8-bit cloud mask
+ * to use for masking.  In this case the value '0x6f' tests the cloud mask
+ * bits 1, 2, 3, 4, 6, and 7 -- to use all cloud mask bits, the value would be '0xff'.
+ * The output value 'NaN' is a special number that marks the SST as invalid
+ * where the cloud mask has detected cloud (ie: at least one of the cloud mask bits
+ * specified in the mask is set to 1).  The conditional operator is
+ * also used: (condition ? x : y) means 'if condition is true, the value of x,
+ * otherwise the value of y'.</p>
+ *
  * <p>A final example below shows how the tool may be used to compute
  * complex formulas using a Unix Bourne shell script.  The example
  * computes the theoretical AVHRR channel 3b albedo at night for
@@ -707,8 +708,8 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  *   w3=2669.3554
  *   c3b_a=1.702380
  *   c3b_b=0.997378
- *   rad3="(($planck_c1*($w3^3)) / (e^(($planck_c2*$w3)/($c3b_a + $c3b_b*$t3)) - 1.0))"
- *   rad3e="(($planck_c1*($w3^3)) / (e^(($planck_c2*$w3)/($c3b_a + $c3b_b*$t3e)) - 1.0))"
+ *   rad3="(($planck_c1*pow ($w3, 3)) / (pow (E, ($planck_c2*$w3)/($c3b_a + $c3b_b*$t3)) - 1.0))"
+ *   rad3e="(($planck_c1*pow ($w3, 3)) / (pow (E, ($planck_c2*$w3)/($c3b_a + $c3b_b*$t3e)) - 1.0))"
  *   alb3="(100*(1 - $rad3/$rad3e))"
  *   cwmath -v --longname "AVHRR channel 3 albedo" --units "percent" \
  *     --expr "avhrr_ch3_albedo=$alb3" $input
@@ -1054,6 +1055,13 @@ public final class cwmath {
     } // else
     String missingStr = (String) cmd.getOptionValue (missingOpt);
 
+    // We have the readers and writers declared outside the try statement so
+    // we can close them later if there's an error that doesn't result in
+    // exiting the Java VM.
+    EarthDataReader[] readers = new EarthDataReader[input.length];
+    CWHDFWriter writer = null;
+    CWHDFReader outputReader = null;
+
     try {
 
       // Get output transform if output exists
@@ -1063,15 +1071,14 @@ public final class cwmath {
       File outputFile = new File (output);
       if (!singleFile && outputFile.exists()) {
         VERBOSE.info ("Checking output " + output);
-        CWHDFReader outputReader = new CWHDFReader (output);
+        outputReader = new CWHDFReader (output);
         outputTransform = outputReader.getInfo().getTransform();
         outputReader.close();
+        outputReader = null;
       } // if
 
       // Create array of readers
       // -----------------------
-      EarthDataReader[] readers = new EarthDataReader[input.length];
-      CWHDFWriter writer = null;
       for (int i = 0; i < input.length; i++) {
 
         // Open file for both input and output
@@ -1393,9 +1400,12 @@ public final class cwmath {
 
       // Close files
       // -----------
-      for (int i = 0; i < readers.length; i++)
+      for (int i = 0; i < readers.length; i++) {
         readers[i].close();
+        readers[i] = null;
+      } // for
       writer.close();
+      writer = null;
       CleanupHook.getInstance().cancelDelete (output);
 
     } // try
@@ -1406,6 +1416,17 @@ public final class cwmath {
       ToolServices.exitWithCode (2);
       return;
     } // catch
+
+    finally {
+      try {
+        for (int i = 0; i < readers.length; i++) {
+          if (readers[i] != null) readers[i].close();
+        } // for
+        if (writer != null) writer.close();
+        if (outputReader != null) outputReader.close();
+      } // try
+      catch (Exception e) { LOGGER.log (Level.SEVERE, "Error closing resources", e); }
+    } // finally
 
     ToolServices.finishExecution (PROG);
 
