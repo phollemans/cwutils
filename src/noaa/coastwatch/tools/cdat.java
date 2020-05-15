@@ -401,7 +401,8 @@ public final class cdat
     // commands differently for MacOS X?  Same for cwstatus and
     // cwmaster.  On Mac, these menu items are normally put into the
     // application menu.  We could do a MacOS detection, and then defer
-    // to a Mac menubar setup routine for this.
+    // to a Mac menubar setup routine for this.  See the java.awt.desktop
+    // for the latest way to handle desktop environments.
 
     // Create file menu
     // ----------------
@@ -1132,11 +1133,19 @@ public final class cdat
 
     // Get reader
     // ----------
+    if (file == null) {
+      String dir = GUIServices.recallStringSettingForClass (null, "last.directory", cdat.class);
+      if (dir != null) file = new File (dir);
+    } // if
     EarthDataReader reader = EarthDataChooser.showDialog (this, file);
     
     // Add analysis panel to tabbed pane
     // ---------------------------------
     if (reader != null) {
+
+      // Create and show the analysis panel here.  We also set up the
+      // control tabs according to the current preference setting.
+
       List<String> variables = reader.getStatisticsVariables();
       EarthDataAnalysisPanel panel = new EarthDataAnalysisPanel (reader, variables);
       boolean areControlTabsVisible = GUIServices.recallBooleanSettingForClass (true, "controltabs.visibility", cdat.class);
@@ -1150,8 +1159,17 @@ public final class cdat
       tabbedPane.setTabComponentAt (tabbedPane.indexOfComponent (panel), tabTitlePanel);
       tabbedPane.setSelectedComponent (panel);
       updateEnabled();
-      GUIServices.addFileToRecentlyOpened (reader.getSource(), cdat.class, 10);
+      
+      // Save the file opened to the recently opened list and rebuild the
+      // menu for the list.  We also store the directory here so that we
+      // can use it later to open the next file.
+      
+      String source = reader.getSource();
+      GUIServices.addFileToRecentlyOpened (source, cdat.class, 10);
       rebuildRecentFilesMenu();
+      String dir = new File (source).getParent();
+      if (dir != null) GUIServices.storeStringSettingForClass (dir, "last.directory", cdat.class);
+
     } // if
 
   } // openFile

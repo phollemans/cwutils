@@ -1364,6 +1364,52 @@ public class GUIServices {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Stores a string value for the target class.
+   *
+   * @param value the value to store.
+   * @param key the key to use for storing the string value.
+   * @param targetClass the class to associate with the value.
+   *
+   * @since 3.6.0
+   */
+  public static void storeStringSettingForClass (
+    String value,
+    String key,
+    Class targetClass
+  ) {
+
+    Preferences prefs = Preferences.userNodeForPackage (targetClass);
+    prefs.put (key, value);
+
+  } // storeStringSettingForClass
+  
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Recalls a string value for the target class.
+   *
+   * @param def the default value for the string if not found.
+   * @param key the key to use for recalling the string value.
+   * @param targetClass the class to recall the string value.
+   *
+   * @return the string value, or the default value if none was found.
+   *
+   * @since 3.6.0
+   */
+  public static String recallStringSettingForClass (
+    String def,
+    String key,
+    Class targetClass
+  ) {
+
+    Preferences prefs = Preferences.userNodeForPackage (targetClass);
+    return (prefs.get (key, def));
+
+  } // recallStringSettingForClass
+
+  ////////////////////////////////////////////////////////////
+
   private GUIServices () { }
 
   ////////////////////////////////////////////////////////////
