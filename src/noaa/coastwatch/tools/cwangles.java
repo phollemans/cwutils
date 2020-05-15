@@ -30,6 +30,10 @@ import jargs.gnu.CmdLineParser.Option;
 import jargs.gnu.CmdLineParser.OptionException;
 import java.io.IOException;
 import java.text.NumberFormat;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 import noaa.coastwatch.io.CWHDFReader;
 import noaa.coastwatch.io.CWHDFWriter;
 import noaa.coastwatch.io.HDFCachedGrid;
@@ -158,45 +162,40 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * The following shows the computation of latitude and longitude data
  * for a CoastWatch HDF product file:</p>
  * <pre> 
- *   phollema$ cwangles --float --location 2002_361_1049_n16_ax.hdf
+ *   phollema$ cwangles --float --location Master.hdf
  *
- *   cwangles: Reading input 2002_361_1049_n16_ax.hdf
- *   cwangles: Creating latitude variable
- *   cwangles: Creating longitude variable
- *   cwangles: Calculating angles
- *   cwangles: Computing row 0
- *   cwangles: Computing row 100
- *   cwangles: Computing row 200
- *   cwangles: Computing row 300
- *   cwangles: Computing row 400
- *   cwangles: Computing row 500
- *   cwangles: Computing row 600
- *   cwangles: Computing row 700
- *   cwangles: Computing row 800
- *   cwangles: Computing row 900
- *   cwangles: Computing row 1000
+ *   [INFO] Reading input Master.hdf
+ *   [INFO] Creating latitude variable
+ *   [INFO] Creating longitude variable
+ *   [INFO] Calculating angles
+ *   [INFO] Computing row 0
+ *   [INFO] Computing row 100
+ *   [INFO] Computing row 200
+ *   [INFO] Computing row 300
+ *   [INFO] Computing row 400
+ *   [INFO] Computing row 500
  * </pre>
  * <p>Another example below shows the computation of solar zenith angle,
  * stored as the cosine and scaled to integer data by 0.0001:</p>
  * <pre> 
  *   phollema$ cwangles -v --sunzenith --units cos --scale 0.0001/0 test_angles.hdf
  *
- *   cwangles: Reading input test_angles.hdf
- *   cwangles: Creating sun_zenith variable
- *   cwangles: Calculating angles
- *   cwangles: Computing row 0
- *   cwangles: Computing row 100
- *   cwangles: Computing row 200
- *   cwangles: Computing row 300
- *   cwangles: Computing row 400
- *   cwangles: Computing row 500
- *   cwangles: Computing row 600
- *   cwangles: Computing row 700
- *   cwangles: Computing row 800
- *   cwangles: Computing row 900
- *   cwangles: Computing row 1000
- *   cwangles: Computing row 1100
- *   cwangles: Computing row 1200
+ *   [INFO] Reading input test_angles.hdf
+ *   [INFO] Creating sun_zenith variable
+ *   [INFO] Calculating angles
+ *   [INFO] Computing row 0
+ *   [INFO] Computing row 100
+ *   [INFO] Computing row 200
+ *   [INFO] Computing row 300
+ *   [INFO] Computing row 400
+ *   [INFO] Computing row 500
+ *   [INFO] Computing row 600
+ *   [INFO] Computing row 700
+ *   [INFO] Computing row 800
+ *   [INFO] Computing row 900
+ *   [INFO] Computing row 1000
+ *   [INFO] Computing row 1100
+ *   [INFO] Computing row 1200
  * </pre>
  *
  * <!-- END MAN PAGE -->
@@ -206,13 +205,15 @@ import noaa.coastwatch.util.trans.EarthTransform;
  */
 public final class cwangles {
 
+  private static final String PROG = cwangles.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
+
   // Constants
   // ---------
+  
   /** Minimum required command line parameters. */
   private static final int NARGS = 1;
-
-  /** Name of program. */
-  private static final String PROG = "cwangles";
 
   /** The units constants. */
   private static final int DEGREES = 0;
@@ -245,6 +246,7 @@ public final class cwangles {
    */
   public static void main (String argv[]) throws IOException {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -261,39 +263,43 @@ public final class cwangles {
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
+      LOGGER.warning (e.getMessage());
       usage();
-      System.exit (1);
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
-      System.exit (0);
-    } // if  
+      usage();
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
-    } // if  
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
       usage();
-      System.exit (1);
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String input = remain[0];
 
     // Set defaults
     // ------------
     boolean verbose = (cmd.getOptionValue (verboseOpt) != null);
+    if (verbose) VERBOSE.setLevel (Level.INFO);
     boolean floatData = (cmd.getOptionValue (floatOpt) != null);
     boolean doubleData = (cmd.getOptionValue (doubleOpt) != null);
     boolean location = (cmd.getOptionValue (locationOpt) != null);
@@ -306,17 +312,18 @@ public final class cwangles {
     // Check angles specified
     // ----------------------
     if (!location && !sunzenith) {
-      System.err.println (PROG + ": Must specify angles to compute");
-      usage();
-      System.exit (1);
+      LOGGER.severe ("Must specify at least one of --location or --sunzenith");
+      ToolServices.exitWithCode (2);
+      return;
     } // if
 
     // Check scaling
     // -------------
     String[] scaleArray = scale.split (ToolServices.SPLIT_REGEX);
     if (scaleArray != null && scaleArray.length != 2) {
-      System.err.println (PROG + ": Invalid scale '" + scale + "'");
-      System.exit (1);
+      LOGGER.severe ("Invalid scale '" + scale + "'");
+      ToolServices.exitWithCode (2);
+      return;
     } // if
 
     // Check units
@@ -326,17 +333,19 @@ public final class cwangles {
     else if (unitsObj.equals ("rad")) units = RADIANS;
     else if (unitsObj.equals ("cos")) units = COSINE;
     else { 
-      System.err.println (PROG + ": Invalid units '" + unitsObj + "'");
-      System.exit (1);
+      LOGGER.severe ("Invalid units '" + unitsObj + "'");
+      ToolServices.exitWithCode (2);
+      return;
     } // else
 
     CWHDFWriter writer = null;
+    CWHDFReader reader = null;
     try {
 
       // Get grid specifications
       // -----------------------
-      if (verbose) System.out.println (PROG + ": Reading input " + input);
-      CWHDFReader reader = new CWHDFReader (input);
+      VERBOSE.info ("Reading input " + input);
+      reader = new CWHDFReader (input);
       EarthDataInfo info = reader.getInfo();
       EarthTransform trans = info.getTransform();
       SolarZenith sz = new SolarZenith (info.getDate());
@@ -344,6 +353,7 @@ public final class cwangles {
       int rows = dims[0];
       int cols = dims[1];
       reader.close();
+      reader = null;
 
       // Instantiate variables according to number format
       // ------------------------------------------------
@@ -394,13 +404,11 @@ public final class cwangles {
       Grid latGrid = null;
       Grid lonGrid = null;
       if (location) {
-        if (verbose) 
-          System.out.println (PROG + ": Creating latitude variable");
+        VERBOSE.info ("Creating latitude variable");
         latGrid = new HDFCachedGrid (
           new Grid ("latitude", "Geographic latitude",
           unitsStr, rows, cols, data, format, scaling, missing), writer);
-        if (verbose) 
-          System.out.println (PROG + ": Creating longitude variable");
+        VERBOSE.info ("Creating longitude variable");
         lonGrid = new HDFCachedGrid (
           new Grid ("longitude", "Geographic longitude",
           unitsStr, rows, cols, data, format, scaling, missing), writer);
@@ -410,8 +418,7 @@ public final class cwangles {
       // ------------------------
       Grid sunzenithGrid = null;
       if (sunzenith) {
-        if (verbose) 
-          System.out.println (PROG + ": Creating sun_zenith variable");
+        VERBOSE.info ("Creating sun_zenith variable");
         sunzenithGrid = new HDFCachedGrid (
           new Grid ("sun_zenith", "Solar zenith angle",
           unitsStr, rows, cols, data, format, scaling, missing), writer);
@@ -419,10 +426,9 @@ public final class cwangles {
 
       // Calculate grid values
       // ---------------------
-      if (verbose) System.out.println (PROG + ": Calculating angles");
+      VERBOSE.info ("Calculating angles");
       for (int i = 0; i < rows; i++) {
-        if (verbose && i%100 == 0)
-          System.out.println (PROG + ": Computing row " + i);
+        if (i%100 == 0) VERBOSE.info ("Computing row " + i);
         for (int j = 0; j < cols; j++) {
           DataLocation dataLoc = new DataLocation (i, j);
           EarthLocation earthLoc = trans.transform (dataLoc);
@@ -440,43 +446,55 @@ public final class cwangles {
       // Close writer
       // ------------
       writer.close();
+      writer = null;
  
     } // try
-    catch (Exception e) {
-      e.printStackTrace();
-      writer.close();
-      System.exit (2);
+
+    catch (OutOfMemoryError | Exception e) {
+      ToolServices.warnOutOfMemory (e);
+      LOGGER.log (Level.SEVERE, "Aborting", e);
+      ToolServices.exitWithCode (2);
+      return;
     } // catch
+
+    finally {
+      try {
+        if (reader != null) reader.close();
+        if (writer != null) writer.close();
+      } // try
+      catch (Exception e) { LOGGER.log (Level.SEVERE, "Error closing resources", e); }
+    } // finally
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwangles [OPTIONS] input\n" +
-"Computes earth location and solar angles for an earth data file.\n" +
-"\n" +
-"Main parameters:\n" +
-"  input                      The input data file name.\n" +
-"\n" +
-"Options:\n" +
-"  -f, --float                Write angles as 32-bit floating-point values.\n"+
-"  -d, --double               Write angles as 64-bit floating-point values.\n"+
-"  -h, --help                 Show this help message.\n" +
-"  -l, --location             Compute earth latitude/longitude values.\n" +
-"  -s, --scale=FACTOR/OFFSET  Set scale factor and offset for integer data\n" +
-"                              storage.\n" + 
-"  -u, --units=TYPE           Set angle units.  TYPE may be 'deg', 'rad',\n" +
-"                              or 'cos'.\n" +
-"  -v, --verbose              Print verbose messages.\n" +
-"  -z, --sunzenith            Compute solar zenith angle values.\n" +
-"  --version                  Show version information.\n"
-    );
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwangles");
+
+    info.func ("Computes earth location and solar angles for an earth data file");
+
+    info.param ("input", "Input data file");
+
+    info.option ("-f, --float", "Write angles as 32-bit float");
+    info.option ("-d, --double", "Write angles as 64-bit float");
+    info.option ("-h, --help", "Show help message");
+    info.option ("-l, --location", "Compute lat/lon locations");
+    info.option ("-s, --scale=FACTOR/OFFSET", "Set integer packing parameters");
+    info.option ("-u, --units=TYPE", "Set angle units");
+    info.option ("-v, --verbose", "Print verbose messages");
+    info.option ("-z, --sunzenith", "Compute solar zenith angles");
+    info.option ("--version", "Show version information");
+    
+    return (info);
 
   } // usage
 

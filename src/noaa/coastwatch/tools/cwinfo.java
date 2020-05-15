@@ -39,6 +39,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
 import noaa.coastwatch.tools.ToolServices;
@@ -51,6 +55,7 @@ import noaa.coastwatch.util.MetadataServices;
 import noaa.coastwatch.util.SatelliteDataInfo;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.MapProjection;
+
 import ucar.ma2.Array;
 import ucar.nc2.constants.AxisType;
 import ucar.nc2.dataset.CoordinateAxis;
@@ -185,33 +190,47 @@ import ucar.nc2.units.DateUnit;
  * </ul>
  *
  * <h2>Examples</h2>
- * <p> The following shows an information dump of a
- * CoastWatch HDF file from the West Coast:</p>
+ * <p> The following shows an information dump of a CoastWatch HDF file:</p>
  * <pre>
- *   phollema$ cwinfo 2002_197_1100_n16_wn.hdf
+ *   phollema$ cwinfo --transform 2019_320_0511_m01_wj.hdf
  *
- *   Contents of file 2002_197_1100_n16_wn.hdf
- *   
+ *   Contents of file 2019_320_0511_m01_wj.hdf
+ *
  *   Global information:
- *     Satellite:        noaa-16
- *     Sensor:           avhrr
- *     Date:             2002/07/16 JD 197
- *     Time:             11:00:08 UTC
- *     Pass type:        night
- *     Projection type:  mapped
- *     Map projection:   mercator
- *     Map affine:       0 -1469.95 1469.95 0 -15012623.67 6367109.52 
- *     Origin:           USDOC/NOAA/NESDIS CoastWatch
- *   
+ *     Satellite:           metop-1
+ *     Sensor:              avhrr
+ *     Date:                2019/11/16 JD 320
+ *     Time:                05:11:42 UTC
+ *     Scene time:          night
+ *     Projection type:     mapped
+ *     Transform ident:     noaa.coastwatch.util.trans.MercatorProjection
+ *     Map projection:      Mercator
+ *     Map affine:          0 -1470 1470 0 -13397799.15 3887086.51
+ *     Spheroid:            WGS 84
+ *     Origin:              USDOC/NOAA/NESDIS CoastWatch
+ *     Format:              CoastWatch HDF version 3.4
+ *     Reader ident:        noaa.coastwatch.io.CWHDFReader
+
  *   Variable information:
- *     Variable       Type    Dimensions  Units          Scale     Offset    
- *     avhrr_ch3      short   1024x1024   temp_deg_c     0.01      0         
- *     avhrr_ch4      short   1024x1024   temp_deg_c     0.01      0         
- *     avhrr_ch5      short   1024x1024   temp_deg_c     0.01      0         
- *     sst            short   1024x1024   temp_deg_c     0.01      0         
- *     cloud          byte    1024x1024   -              -         -         
- *     sat_zenith     short   1024x1024   -              0.0001    0         
- *     graphics       byte    1024x1024   -              -         -         
+ *     Variable       Type    Dimensions  Units          Scale     Offset
+ *     avhrr_ch3      short   1024x1024   celsius        0.01      0
+ *     avhrr_ch4      short   1024x1024   celsius        0.01      0
+ *     avhrr_ch5      short   1024x1024   celsius        0.01      0
+ *     cloud          ubyte   1024x1024   -              1         0
+ *     graphics       ubyte   1024x1024   -              1         0
+ *     sat_zenith     short   1024x1024   degrees        0.01      0
+ *     sst            short   1024x1024   celsius        0.01      0
+ *
+ *   Earth location information:
+ *     Pixel width:                   1.3054 km
+ *     Pixel height:                  1.3123 km
+ *     Total width:                   1334.7650 km
+ *     Total height:                  1340.7132 km
+ *     Center:                        27.2500 N, 113.6000 W
+ *     Upper-left (pixel center):     33.1139 N, 120.3545 W
+ *     Upper-right (pixel center):    33.1139 N, 106.8455 W
+ *     Lower-left (pixel center):     21.0565 N, 120.3545 W
+ *     Lower-right (pixel center):    21.0565 N, 106.8455 W
  * </pre>
  *
  * <!-- END MAN PAGE -->
@@ -221,13 +240,15 @@ import ucar.nc2.units.DateUnit;
  */
 public final class cwinfo {
 
+  private static final String PROG = cwinfo.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
+
   // Constants
   // ---------
+
   /** Minimum required command line parameters. */
   private static final int NARGS = 1;
-
-  /** Name of program. */
-  private static final String PROG = "cwinfo";
 
   /** Default date format. */
   public static final String DATE_FMT = "yyyy/MM/dd 'JD' DDD";
@@ -271,6 +292,7 @@ public final class cwinfo {
    */
   public static void main (String argv[]) throws IOException {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -285,32 +307,35 @@ public final class cwinfo {
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
-      System.exit (0);
-    } // if  
+      usage();
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
-    } // if  
+      ToolServices.exitWithCode (0);
+      return;
+    } // if
 
     // Get remaining arguments
     // -----------------------
     if (cmd.getRemainingArgs().length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
-      usage ();
-      System.exit (1);
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String input = cmd.getRemainingArgs()[0];
 
@@ -337,8 +362,9 @@ public final class cwinfo {
       else if (locFormatObj.equals ("RAW"))
         locFormat = EarthLocation.RAW;
       else {
-        System.err.println (PROG + ": Invalid location format '" + locFormatObj + "'");
-        System.exit (1);
+        LOGGER.severe ("Invalid location format '" + locFormatObj + "'");
+        ToolServices.exitWithCode (2);
+        return;
       } // else
     } // if
 
@@ -346,23 +372,38 @@ public final class cwinfo {
     // -----------------------------
     EarthDataReaderFactory.setVerbose (verbose);
 
-    // Open file
-    // ---------
     EarthDataReader reader = null;
-    //    SwathProjection.setNullMode (true);
     try {
+
+      // Open file
+      // ---------
+      //    SwathProjection.setNullMode (true);
       reader = EarthDataReaderFactory.create (input);
+
+      // Print information
+      // -----------------
+      printInfo (reader, System.out);
+      if (transform) printTransform (reader, System.out, edge, locFormat);
+      if (coord) printCoordSystems (reader, System.out);
+
+      reader.close();
+      reader = null;
+      
     } // try
-    catch (Exception e) {
-      System.err.println (PROG + ": " + e.getMessage());      
-      System.exit (2);
+
+    catch (OutOfMemoryError | Exception e) {
+      ToolServices.warnOutOfMemory (e);
+      LOGGER.log (Level.SEVERE, "Aborting", e);
+      ToolServices.exitWithCode (2);
+      return;
     } // catch
 
-    // Print information
-    // -----------------
-    printInfo (reader, System.out);
-    if (transform) printTransform (reader, System.out, edge, locFormat);
-    if (coord) printCoordSystems (reader, System.out);
+    finally {
+      try { if (reader != null) reader.close(); }
+      catch (Exception e) { LOGGER.log (Level.SEVERE, "Error closing resources", e); }
+    } // finally
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
@@ -848,30 +889,29 @@ public final class cwinfo {
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwinfo [OPTIONS] input\n" +
-"Dumps earth data information in a display-friendly format.\n" +
-"\n" +
-"Main parameters:\n" +
-"  input                      The input data file name.\n" +
-"\n" +
-"Options:\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -t, --transform            Print earth transform information.\n" +
-"  -c, --coord                Print CDM coordinate system information.\n" +
-"  -e, --edge                 Print edge of pixels in transform information.\n" +
-"  -l, --locFormat=TYPE       Set the output format for location coordinates.\n" +
-"                               TYPE may be 'D', 'DD', 'DDDD', 'DDMM',\n" +
-"                               'DDMMSS', or 'RAW'.\n" +
-"  -v, --verbose              Print verbose messages.\n" +
-"  --version                  Show version information.\n"
-    );
-    
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwinfo");
+
+    info.func ("Dumps earth data information in a display-friendly format");
+
+    info.param ("input", "Input data file");
+
+    info.option ("-h, --help", "Show help message");
+    info.option ("-t, --transform", "Print earth transform info");
+    info.option ("-c, --coord", "Print CDM coordinate info");
+    info.option ("-e, --edge", "Print edge of pixels in transform");
+    info.option ("-l, --locFormat=TYPE", "Set output format for locations");
+    info.option ("-v, --verbose", "Print verbose messages");
+    info.option ("--version", "Show version information");
+
+    return (info);
+
   } // usage
 
   ////////////////////////////////////////////////////////////
