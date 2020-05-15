@@ -23,11 +23,11 @@ options are as follows:
   \item[{\file -J-Dcw.cache.size=SIZE}] The maximum cache size for storing
   tiles of 2D data read from data files, currently only implemented for NetCDF
   files.  The SIZE is replaced by a size in megabytes, with a default value
-  of 128 Mb.  For example {\file -J-Dcw.cache.size=1024} specifies a cache
+  of 512 Mb.  For example {\file -J-Dcw.cache.size=1024} specifies a cache
   size of 1024 Mb.  A larger cache size may be needed for some files when the
   files are written with monolithic compression, ie: the entire data variable
   is compressed and written as one chunk which expands to a size larger than
-  128 Mb in memory.  We generally discourage data providers from using monolithic data
+  512 Mb in memory.  We generally discourage data providers from using monolithic data
   variables because they require decompression of an entire variable even if
   only one value or a small section is being accessed, which greatly increases
   the time for interactive display and analysis or automated data processing.

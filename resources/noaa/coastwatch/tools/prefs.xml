@@ -22,7 +22,7 @@
   <enhancement variable="CRW_HOTSPOT" palette="CRW_HOTSPOT" min="0.0" max="5.0" function="linear" />
   <enhancement variable="CRW_DHW" palette="CRW_DHW" min="0.0" max="16.0" function="linear" />
   <general item="earthLocationDisplay" value="dd" />
-  <general item="heapSize" value="512" />
-  <general item="cacheSize" value="128" />
+  <general item="heapSize" value="2048" />
+  <general item="cacheSize" value="512" />
 </preferences>
 

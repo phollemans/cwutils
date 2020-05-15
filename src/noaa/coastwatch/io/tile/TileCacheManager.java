@@ -77,7 +77,7 @@ public class TileCacheManager {
 
   static {
 
-    maxCacheSize = Integer.parseInt (System.getProperty (DEFAULT_MAX_CACHE_SIZE_PROP, "128"))*1024*1024;
+    maxCacheSize = Integer.parseInt (System.getProperty (DEFAULT_MAX_CACHE_SIZE_PROP, "512"))*1024*1024;
 
   } // static
   

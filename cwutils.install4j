@@ -54,7 +54,7 @@
           <entry location="bin/${compiler:cwstatusExecutable}" fileType="launcher" />
           <entry location="extensions" />
           <entry location="lib" />
-          <entry location="doc/cwutils_ug_3_5_1.pdf" />
+          <entry location="doc/cwutils_ug_3_6_0.pdf" />
           <entry location="doc/license.txt" />
           <entry location="data" />
         </include>
@@ -102,7 +102,7 @@
           <versionLine x="165" y="178" text="v${compiler:sys.version} ${compiler:osName}_${compiler:arch}" fontSize="10" fontColor="255,255,255" bold="true" />
         </text>
       </splashScreen>
-      <java mainClass="noaa.coastwatch.tools.cdat" vmParameters="-Xmx512m ${compiler:vmLafOptions} ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cdat" vmParameters="-Xmx2048m ${compiler:vmLafOptions} ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -729,7 +729,7 @@ OTHER DEALINGS WITH THE SOFTWARE.
                         <property name="name" type="string">User's Guide</property>
                         <property name="target">
                           <object class="java.io.File">
-                            <string>doc/cwutils_ug_3_5_1.pdf</string>
+                            <string>doc/cwutils_ug_3_6_0.pdf</string>
                           </object>
                         </property>
                       </object>

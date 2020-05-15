@@ -86,10 +86,10 @@ public class Preferences
   private boolean earthLocDegrees = true;
 
   /** The Java VM heap size in megabytes. */
-  private int heapSize = 512;
+  private int heapSize = 2048;
   
   /** The data tile cache size in megabytes. */
-  private int cacheSize = 128;
+  private int cacheSize = 512;
 
   ////////////////////////////////////////////////////////////
 
