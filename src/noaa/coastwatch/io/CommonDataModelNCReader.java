@@ -1049,6 +1049,7 @@ utilities when:
       try {
         Number scale = (Number) getAttribute (var, "scale_factor");
         Number offset = (Number) getAttribute (var, "add_offset");
+        if (offset == null) offset = 0;        
         scaling = new double[] {scale.doubleValue(), offset.doubleValue()};
         /**
          * We re-arrange the CF scaling conventions here into HDF:
