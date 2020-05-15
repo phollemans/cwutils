@@ -1139,6 +1139,11 @@
 		E9C43E7F1D3C690700BEC746 /* TimeWindow.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TimeWindow.java; sourceTree = "<group>"; };
 		E9C43E801D3D909E00BEC746 /* TimeWindowRule.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = TimeWindowRule.java; sourceTree = "<group>"; };
 		E9CA7C6D1AD5DD2800C2C96C /* CFNC4Writer.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = CFNC4Writer.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E9CCC01B24497517002D7A30 /* VIIRSSensorParams.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = VIIRSSensorParams.java; sourceTree = "<group>"; };
+		E9CCC01C24497B39002D7A30 /* VIIRSMBandSDRParams.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = VIIRSMBandSDRParams.java; sourceTree = "<group>"; };
+		E9CCC01D24497F6C002D7A30 /* VIIRSMBandEDRParams.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = VIIRSMBandEDRParams.java; sourceTree = "<group>"; };
+		E9CCC01E24499032002D7A30 /* VIIRSIBandSDRParams.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = VIIRSIBandSDRParams.java; sourceTree = "<group>"; };
+		E9CCC01F244E16AC002D7A30 /* VIIRSIBandEDRParams.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = VIIRSIBandEDRParams.java; sourceTree = "<group>"; };
 		E9CFE76121C9D6FC004680C1 /* ResamplingMap.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ResamplingMap.java; sourceTree = "<group>"; };
 		E9D1AA8D225EB53400214DB3 /* ArrayReduction.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ArrayReduction.java; sourceTree = "<group>"; };
 		E9D1AA8E225EBA2600214DB3 /* MinReduction.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = MinReduction.java; sourceTree = "<group>"; };
@@ -1260,29 +1265,29 @@
 		E909F9352189655B002BE7D0 /* icons */ = {
 			isa = PBXGroup;
 			children = (
-				E909F9362189655B002BE7D0 /* cdat_16.png */,
-				E909F9372189655B002BE7D0 /* cwstatus_128.png */,
-				E909F9382189655B002BE7D0 /* cwstatus.ico */,
-				E909F9392189655B002BE7D0 /* cwstatus_16.png */,
-				E909F93A2189655B002BE7D0 /* cwmaster_64.png */,
-				E909F93B2189655B002BE7D0 /* cwmaster_128.png */,
-				E909F93C2189655B002BE7D0 /* software_128x128.png */,
-				E909F93D2189655B002BE7D0 /* software.icns */,
-				E909F93E2189655B002BE7D0 /* software_64x64.png */,
-				E909F93F2189655B002BE7D0 /* cwstatus_64.png */,
-				E909F9402189655B002BE7D0 /* software.ico */,
-				E909F9412189655B002BE7D0 /* cwmaster_16.png */,
-				E909F9422189655B002BE7D0 /* cdat_64.png */,
-				E909F9432189655B002BE7D0 /* software_32x32.png */,
-				E909F9442189655B002BE7D0 /* cdat.ico */,
-				E909F9452189655B002BE7D0 /* cwstatus.icns */,
-				E909F9462189655B002BE7D0 /* cwmaster_32.png */,
 				E909F9472189655B002BE7D0 /* cdat.icns */,
+				E909F9442189655B002BE7D0 /* cdat.ico */,
+				E909F94C2189655B002BE7D0 /* cdat_128.png */,
+				E909F9362189655B002BE7D0 /* cdat_16.png */,
+				E909F94B2189655B002BE7D0 /* cdat_32.png */,
+				E909F9422189655B002BE7D0 /* cdat_64.png */,
 				E909F9482189655B002BE7D0 /* cwmaster.icns */,
 				E909F9492189655B002BE7D0 /* cwmaster.ico */,
+				E909F93B2189655B002BE7D0 /* cwmaster_128.png */,
+				E909F9412189655B002BE7D0 /* cwmaster_16.png */,
+				E909F9462189655B002BE7D0 /* cwmaster_32.png */,
+				E909F93A2189655B002BE7D0 /* cwmaster_64.png */,
+				E909F9452189655B002BE7D0 /* cwstatus.icns */,
+				E909F9382189655B002BE7D0 /* cwstatus.ico */,
+				E909F9372189655B002BE7D0 /* cwstatus_128.png */,
+				E909F9392189655B002BE7D0 /* cwstatus_16.png */,
 				E909F94A2189655B002BE7D0 /* cwstatus_32.png */,
-				E909F94B2189655B002BE7D0 /* cdat_32.png */,
-				E909F94C2189655B002BE7D0 /* cdat_128.png */,
+				E909F93F2189655B002BE7D0 /* cwstatus_64.png */,
+				E909F93D2189655B002BE7D0 /* software.icns */,
+				E909F9402189655B002BE7D0 /* software.ico */,
+				E909F93C2189655B002BE7D0 /* software_128x128.png */,
+				E909F93E2189655B002BE7D0 /* software_64x64.png */,
+				E909F9432189655B002BE7D0 /* software_32x32.png */,
 			);
 			path = icons;
 			sourceTree = "<group>";
@@ -2873,6 +2878,11 @@
 				E9BBD11D2239FAA100887D57 /* MODISSourceImp.java */,
 				E9BBD11F223B598F00887D57 /* SensorIdentifier.java */,
 				E9BBD120223C31DF00887D57 /* SensorSourceImpFactory.java */,
+				E9CCC01F244E16AC002D7A30 /* VIIRSIBandEDRParams.java */,
+				E9CCC01E24499032002D7A30 /* VIIRSIBandSDRParams.java */,
+				E9CCC01D24497F6C002D7A30 /* VIIRSMBandEDRParams.java */,
+				E9CCC01C24497B39002D7A30 /* VIIRSMBandSDRParams.java */,
+				E9CCC01B24497517002D7A30 /* VIIRSSensorParams.java */,
 				E9BBD11B222F664B00887D57 /* VIIRSSourceImp.java */,
 				E9D1AA9C226583CA00214DB3 /* package.html */,
 			);
