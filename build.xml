@@ -194,6 +194,27 @@
     <echo>All packages: ${builds.all}</echo>
   </target>
 
+  <target name="mac"
+    description="Creates the macOS X .dmg package">
+    <antcall target="packages">
+      <param name="builds" value="macosx64"/>
+    </antcall>
+  </target>
+
+  <target name="windows"
+    description="Creates the Windows .exe package">
+    <antcall target="packages">
+      <param name="builds" value="windows64"/>
+    </antcall>
+  </target>
+
+  <target name="linux"
+    description="Creates the Linux .tar.gz package">
+    <antcall target="packages">
+      <param name="builds" value="linux64"/>
+    </antcall>
+  </target>
+
   <target name="packages" depends="all"
     description="Creates package files specified by ${builds}, or default set if no builds specified (-Dtag=true tags the build)">
 
