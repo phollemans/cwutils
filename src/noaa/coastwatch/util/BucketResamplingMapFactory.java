@@ -101,18 +101,20 @@ public class BucketResamplingMapFactory implements ResamplingMapFactory {
     DataLocation centerDataLoc = new DataLocation (sourceDims[ROW]/2, sourceDims[COL]/2);
 
     EarthLocation centerEarthLoc = sourceTrans.transform (centerDataLoc);
+    EarthLocation leftEarthLoc = sourceTrans.transform (centerDataLoc.translate (0, -1));
     EarthLocation rightEarthLoc = sourceTrans.transform (centerDataLoc.translate (0, 1));
+    EarthLocation topEarthLoc = sourceTrans.transform (centerDataLoc.translate (-1, 0));
     EarthLocation bottomEarthLoc = sourceTrans.transform (centerDataLoc.translate (1, 0));
 
-    double horizRes = centerEarthLoc.distance (rightEarthLoc);
-    if (Double.isNaN (horizRes) || horizRes == 0) horizRes = Double.MAX_VALUE;
+    double horizRes = leftEarthLoc.distance (rightEarthLoc)/2;
+    if (Double.isNaN (horizRes) || horizRes == 0) horizRes = -Double.MAX_VALUE;
 
-    double vertRes = centerEarthLoc.distance (bottomEarthLoc);
-    if (Double.isNaN (vertRes) || vertRes == 0) vertRes = Double.MAX_VALUE;
+    double vertRes = topEarthLoc.distance (bottomEarthLoc)/2;
+    if (Double.isNaN (vertRes) || vertRes == 0) vertRes = -Double.MAX_VALUE;
 
     double res = Math.max (horizRes, vertRes);
 
-    if (res == Double.MAX_VALUE)
+    if (res == -Double.MAX_VALUE)
       throw new IllegalStateException ("Cannot determine source transform resolution");
 
     // Create location set with approx 5x5 locations per bin
