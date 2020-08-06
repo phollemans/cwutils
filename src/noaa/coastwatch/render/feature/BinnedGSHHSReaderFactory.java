@@ -137,7 +137,7 @@ public class BinnedGSHHSReaderFactory {
    * smaller than 5 km.  The resolution is used to determine the
    * appropriate database name.
    *
-   * @return the resolution level: <code>HIGH</code>,
+   * @return the resolution level: <code>FULL</code>, <code>HIGH</code>,
    * <code>INTERMEDIATE</code>, <code>LOW</code>, or
    * <code>CRUDE</code>.
    */
