@@ -850,6 +850,9 @@ public class CFNCWriter
       ncFileWriter.setRedefineMode (false);
       ncFileWriter.write (latVar, start, latArray);
 
+      start = new int[] {0};
+      count = new int[] {cols};
+
       double[] lon = new double[cols];
       Array lonArray = Array.factory (double.class, count, lon);
       dataLoc = new DataLocation (0, 0);
