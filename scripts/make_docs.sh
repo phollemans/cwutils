@@ -166,6 +166,16 @@ rm -rf tools
 
 # Create user guide
 # -----------------
+
+##
+## NOTE: To create the user's guide on Mac OS X, a number of packages need to
+## have been installed:
+##
+## sudo port install gawk
+## sudo port install texlive-latex
+## sudo port install texlive-latex-extra
+##
+
 echo "Making user's guide"
 cd users_guide
 guide_version=`echo $version | sed -e 's/\./_/g'`
