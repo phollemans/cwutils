@@ -107,6 +107,7 @@ import java.util.logging.Level;
  * -c, --clobber <br>
  * -d, --diagnostic <br>
  * -D, --diagnostic-long <br>
+ * -g, --nogroup <br>
  * -M, --master=FILE <br>
  * -m, --match=PATTERN <br>
  * -p, --proj=SYSTEM <br>
@@ -210,6 +211,12 @@ import java.util.logging.Level;
  *   mentioned above, each suboptimal remapping is printed: destination
  *   coordinates, source coordinates, optimal source coordinates, and distance
  *   error.</dd>
+ *
+ *   <dt>-g, --nogroup</dt>
+ *
+ *   <dd>Turns on removal of the group path in variable names.  If variable
+ *   names contain a leading group path ending with '/', the group path is
+ *   removed.</dd>
  *
  *   <dt>-M, --master=FILE</dt>
  *
@@ -496,6 +503,26 @@ public final class cwregister2 {
   ////////////////////////////////////////////////////////////
 
   /**
+   * Removes the leading group path from a variable name.
+   *
+   * @param name the full variable name.
+   *
+   * @return the modified variable name wothout leading group path.  If no
+   * group path is found, the name is returned unmodified.
+   */
+  private static String stripGroup (
+    String name
+  ) {
+  
+    int index = name.lastIndexOf ("/");
+    String newName = (index == -1 ? name : name.substring (index+1));
+    return (newName);
+
+  } // stripGroup
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Performs the main function.
    *
    * @param argv the list of command line parameters.
@@ -521,6 +548,7 @@ public final class cwregister2 {
     Option savemapOpt = cmd.addBooleanOption ('S', "savemap");
     Option usemapOpt = cmd.addStringOption ('u', "usemap");
     Option sensorhintOpt = cmd.addStringOption ('H', "sensorhint");
+    Option nogroupOpt = cmd.addBooleanOption ('g', "nogroup");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -576,6 +604,7 @@ public final class cwregister2 {
     boolean clobberOutput = (cmd.getOptionValue (clobberOpt) != null);
     boolean serialOperations = (cmd.getOptionValue (serialOpt) != null);
     String sensorhint = (String) cmd.getOptionValue (sensorhintOpt);
+    boolean nogroup = (cmd.getOptionValue (nogroupOpt) != null);
 
     // Check output
     // ------------
@@ -683,9 +712,14 @@ public final class cwregister2 {
         // Create output grid
         // ------------------
         if (var instanceof Grid) {
-          VERBOSE.info ("Creating output variable " + var.getName());
           Grid inputGrid = (Grid) var;
-          Grid outputGrid = new Grid (inputGrid, destRows, destCols);
+          String inputName = var.getName();
+          String outputName = (nogroup ? stripGroup (inputName) : inputName);
+          VERBOSE.info ("Creating output variable " + outputName);
+          Grid outputGrid = new Grid (inputGrid, destRows, destCols) {
+            @Override
+            public String getName() { return (outputName); }
+          };
           outputGrid.setNavigation (null);
           outputGrid = new HDFCachedGrid (outputGrid, writer);
           producerList.add (new GridChunkProducer (inputGrid));
@@ -965,6 +999,7 @@ public final class cwregister2 {
     info.option ("-c, --clobber", "Overwrite previous output file");
     info.option ("-d, --diagnostic", "Perform resampling diagnostics");
     info.option ("-D, --diagnostic-long", "Perform diagnostics in long form");
+    info.option ("-g, --nogroup", "Remove group path from variable names");
     info.option ("-h, --help", "Show help message");
     info.option ("-M, --master=FILE", "Use file for output projection");
     info.option ("-m, --match=PATTERN", "Register only variables matching regular expression");
