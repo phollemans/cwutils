@@ -12,6 +12,52 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Version 3.6.0 -- August 2020}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\begin{itemize}
+
+  \item CDAT now remembers the last directory that it was in when a file
+  was opened.
+  
+  \item CDAT now has increased memory defaults to help with reading
+  certain NetCDF datasets.
+  
+  \item The cwregister2 tool now has a -{-}sensorhint option to help with
+  processing data from sensors that cannot be detected automatically.
+  
+  \item The cwrender tool now has added documentation on how wind barbs
+  are rendered depending on the wind speed units.
+  
+  \item The cwmath documentation now shows examples of how to use the new
+  Java expression parsing syntax.
+    
+  \item The cwregister2 tool now accounts for the full pixel size at the edges
+  of source datasets.  Previously there were small gaps when assembling
+  multiple successive granules from some sensors.
+  
+  \item The cwregister2 tool now has a -{-}nogroup option to remove
+  the leading group path name when source variables are contained in a group.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+  \item There was an issue reading NetCDF files with scaled variables that are
+  missing the add\_offset attribute value.
+
+  \item The cwregister2 tool had issues with automatically determining the
+  resolution of some sensor data with repeated locations such as OLCI.
+  
+  \item The export of NetCDF-3 files from cwexport and CDAT wrote incorrect
+  lat/lon data for some cylindrical projections.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Version 3.5.1 -- November 2019}
 
 \subsection*{\bigicon{box_software} Updates}

@@ -2,7 +2,7 @@
 
 <!DOCTYPE palette SYSTEM "http://coastwatch.noaa.gov/xml/palette.dtd">
 
-<palette name="NCCOS-chla" length="256">
+<palette name="NCCOS-chla" length="251">
 
 <color r="72" g="24" b="106" />
 <color r="72" g="25" b="107" />
@@ -254,10 +254,5 @@
 <color r="181" g="0" b="0" />
 <color r="175" g="0" b="0" />
 <color r="170" g="0" b="0" />
-<color r="130" g="0" b="13" />
-<color r="82" g="82" b="82" />
-<color r="247" g="247" b="247" />
-<color r="204" g="204" b="204" />
-<color r="150" g="150" b="150" />
-<color r="37" g="37" b="37" />
+<color r="130" g="0" b="13"/>
 </palette>
