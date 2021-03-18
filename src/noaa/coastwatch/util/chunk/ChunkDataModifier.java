@@ -23,6 +23,11 @@
 // -------
 package noaa.coastwatch.util.chunk;
 
+// Testing
+import noaa.coastwatch.test.TestLogger;
+import java.util.Comparator;
+import java.util.Arrays;
+
 /**
  * The <code>ChunkDataModifier</code> class is a visitor that modifies
  * data values in any type of {@link DataChunk} instance.  The family of methods
@@ -41,6 +46,7 @@ package noaa.coastwatch.util.chunk;
  * @author Peter Hollemans
  * @since 3.4.0
  */
+@noaa.coastwatch.test.Testable
 public class ChunkDataModifier implements ChunkVisitor {
 
   /** The array of byte values. */
@@ -309,17 +315,39 @@ public class ChunkDataModifier implements ChunkVisitor {
   @Override
   public void visitFloatChunk (FloatChunk chunk) {
 
+    if (floatArray == null) throw new RuntimeException ("No float data found (type mismatch)");
+
+    // Unscale data
+    // ------------
+    var srcFloatArray = floatArray;
+    float[] floatData = chunk.getFloatData();
+    ScalingScheme scaling = chunk.getScalingScheme();
+    if (scaling != null) {
+      scaling.accept (new ScalingSchemeVisitor () {
+
+        @Override
+        public void visitFloatScalingScheme (FloatScalingScheme scheme) {
+          scheme.unscaleFloatData (floatArray, floatData);
+        } // visitFloatScalingScheme
+
+        @Override
+        public void visitDoubleScalingScheme (DoubleScalingScheme scheme) {
+          throw new RuntimeException ("Double scaling for float data not supported");
+        } // visitDoublePackingScheme
+
+      });
+      srcFloatArray = floatData;
+    } // if
+
     // Copy float data
     // ---------------
-    if (floatArray == null) throw new RuntimeException ("No float data found (type mismatch)");
-    float[] floatData = chunk.getFloatData();
     Float missing = chunk.getMissing();
     if (missing != null) {
       float missingValue = missing;
-      for (int i = 0; i < floatData.length; i++) { floatData[i] = (Float.isNaN (floatArray[i]) ? missingValue : floatArray[i]); }
+      for (int i = 0; i < floatData.length; i++) { floatData[i] = (Float.isNaN (srcFloatArray[i]) ? missingValue : srcFloatArray[i]); }
     } // if
     else {
-      for (int i = 0; i < floatData.length; i++) { floatData[i] = floatArray[i]; }
+      for (int i = 0; i < floatData.length; i++) { floatData[i] = srcFloatArray[i]; }
     } // else
 
   } // visitFloatChunk
@@ -329,21 +357,263 @@ public class ChunkDataModifier implements ChunkVisitor {
   @Override
   public void visitDoubleChunk (DoubleChunk chunk) {
 
+    if (doubleArray == null) throw new RuntimeException ("No double data found (type mismatch)");
+
+    // Unscale data
+    // ------------
+    var srcDoubleArray = doubleArray;
+    double[] doubleData = chunk.getDoubleData();
+    ScalingScheme scaling = chunk.getScalingScheme();
+    if (scaling != null) {
+      scaling.accept (new ScalingSchemeVisitor () {
+
+        @Override
+        public void visitFloatScalingScheme (FloatScalingScheme scheme) {
+          throw new RuntimeException ("Float scaling for double data not supported");
+        } // visitFloatScalingScheme
+
+        @Override
+        public void visitDoubleScalingScheme (DoubleScalingScheme scheme) {
+          scheme.unscaleDoubleData (doubleArray, doubleData);
+        } // visitDoublePackingScheme
+
+      });
+      srcDoubleArray = doubleData;
+    } // if
+
     // Copy double data
     // ----------------
-    if (doubleArray == null) throw new RuntimeException ("No double data found (type mismatch)");
-    double[] doubleData = chunk.getDoubleData();
     Double missing = chunk.getMissing();
     if (missing != null) {
       double missingValue = missing;
-      for (int i = 0; i < doubleData.length; i++) { doubleData[i] = (Double.isNaN (doubleArray[i]) ? missingValue : doubleArray[i]); }
+      for (int i = 0; i < doubleData.length; i++) { doubleData[i] = (Double.isNaN (srcDoubleArray[i]) ? missingValue : srcDoubleArray[i]); }
     } // if
     else {
-      for (int i = 0; i < doubleData.length; i++) { doubleData[i] = doubleArray[i]; }
+      for (int i = 0; i < doubleData.length; i++) { doubleData[i] = srcDoubleArray[i]; }
     } // else
 
   } // visitDoubleChunk
 
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   *
+   * @since 3.6.1
+   */
+  public static void main (String[] argv) throws Exception {
+
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (ChunkDataModifier.class);
+
+    ChunkDataModifier modify;
+    DataChunk chunk;
+    var factory = DataChunkFactory.getInstance();
+
+    var floatPacking = new FloatPackingScheme (0.1f, 1.0f);
+    var doublePacking = new DoublePackingScheme (0.1, 1.0);
+
+    var floatScaling = new FloatScalingScheme (0.1f, 1.0f);
+    var doubleScaling = new DoubleScalingScheme (0.1, 1.0);
+
+    float[] floatValues = new float[] {0, 0.1f, Float.NaN, 0.3f, 0.4f};
+    double[] doubleValues = new double[] {0, 0.1, Double.NaN, 0.3, 0.4};
+    boolean[] missingValues = new boolean[] {false, false, true, false, false};
+    int values = 5;
+
+    Comparator<Float> floatCompare = (a,b) -> a.isNaN() ? (b.isNaN() ? 0 : 1) : (Math.abs (a - b) < 5*Math.ulp (a) ? 0 : 1);
+    Comparator<Double> doubleCompare = (a,b) -> a.isNaN() ? (b.isNaN() ? 0 : 1) : (Math.abs (a - b) < 5*Math.ulp (a) ? 0 : 1);
+
+    byte[] byteValues = new byte[] {1,2,3,4,5};
+    byte byteMissing = 3;
+    short[] shortValues = new short[] {1,2,3,4,5};
+    short shortMissing = 3;
+    int[] intValues = new int[] {1,2,3,4,5};
+    int intMissing = 3;
+    long[] longValues = new long[] {1,2,3,4,5};
+    long longMissing = 3;
+    float[] rawFloatValues = new float[] {1,2,3,4,5};
+    float floatMissing = 3;
+    double[] rawDoubleValues = new double[] {1,2,3,4,5};
+    double doubleMissing = 3;
+
+    logger.test ("visitByteChunk");
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setByteData (byteValues);
+    chunk = factory.create (Byte.TYPE, values, false, byteMissing, null, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (byteValues, (byte[]) chunk.getPrimitiveData()));
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setShortData (shortValues);
+    chunk = factory.create (Byte.TYPE, values, true, byteMissing, null, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (byteValues, (byte[]) chunk.getPrimitiveData()));
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setFloatData (floatValues);
+    chunk = factory.create (Byte.TYPE, values, false, byteMissing, floatPacking, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (byteValues, (byte[]) chunk.getPrimitiveData()));
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setDoubleData (doubleValues);
+    chunk = factory.create (Byte.TYPE, values, false, byteMissing, doublePacking, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (byteValues, (byte[]) chunk.getPrimitiveData()));
+
+    logger.passed();
+
+    logger.test ("visitShortChunk");
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setShortData (shortValues);
+    chunk = factory.create (Short.TYPE, values, false, shortMissing, null, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (shortValues, (short[]) chunk.getPrimitiveData()));
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setIntData (intValues);
+    chunk = factory.create (Short.TYPE, values, true, shortMissing, null, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (shortValues, (short[]) chunk.getPrimitiveData()));
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setFloatData (floatValues);
+    chunk = factory.create (Short.TYPE, values, false, shortMissing, floatPacking, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (shortValues, (short[]) chunk.getPrimitiveData()));
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setDoubleData (doubleValues);
+    chunk = factory.create (Short.TYPE, values, false, shortMissing, doublePacking, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (shortValues, (short[]) chunk.getPrimitiveData()));
+
+    logger.passed();
+
+    logger.test ("visitIntChunk");
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setIntData (intValues);
+    chunk = factory.create (Integer.TYPE, values, false, intMissing, null, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (intValues, (int[]) chunk.getPrimitiveData()));
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setLongData (longValues);
+    chunk = factory.create (Integer.TYPE, values, true, intMissing, null, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (intValues, (int[]) chunk.getPrimitiveData()));
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setFloatData (floatValues);
+    chunk = factory.create (Integer.TYPE, values, false, intMissing, floatPacking, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (intValues, (int[]) chunk.getPrimitiveData()));
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setDoubleData (doubleValues);
+    chunk = factory.create (Integer.TYPE, values, false, intMissing, doublePacking, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (intValues, (int[]) chunk.getPrimitiveData()));
+
+    logger.passed();
+
+    logger.test ("visitLongChunk");
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setLongData (longValues);
+    chunk = factory.create (Long.TYPE, values, false, longMissing, null, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (longValues, (long[]) chunk.getPrimitiveData()));
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setLongData (longValues);
+    chunk = factory.create (Long.TYPE, values, true, longMissing, null, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (longValues, (long[]) chunk.getPrimitiveData()));
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setDoubleData (doubleValues);
+    chunk = factory.create (Long.TYPE, values, false, longMissing, doublePacking, null);
+    chunk.accept (modify);
+    assert (Arrays.equals (longValues, (long[]) chunk.getPrimitiveData()));
+
+    logger.passed();
+    
+    logger.test ("visitFloatChunk");
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setFloatData (floatValues);
+    chunk = factory.create (Float.TYPE, values, false, floatMissing, null, null);
+    chunk.accept (modify);
+    for (int i = 0; i < values; i++) {
+      float expected = Float.isNaN (floatValues[i]) ? floatMissing : floatValues[i];
+      float actual = ((float[]) chunk.getPrimitiveData())[i];
+      assert (floatCompare.compare (expected, actual) == 0) : actual + " != " + expected + " at i = " + i;
+    } // for
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setFloatData (floatValues);
+    chunk = factory.create (Float.TYPE, values, false, floatMissing, null, floatScaling);
+    chunk.accept (modify);
+    for (int i = 0; i < values; i++) {
+      float expected = rawFloatValues[i];
+      float actual = ((float[]) chunk.getPrimitiveData())[i];
+      assert (floatCompare.compare (expected, actual) == 0) : actual + " != " + expected + " at i = " + i;
+    } // for
+
+    logger.passed();
+
+    logger.test ("visitDoubleChunk");
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setDoubleData (doubleValues);
+    chunk = factory.create (Double.TYPE, values, false, doubleMissing, null, null);
+    chunk.accept (modify);
+    for (int i = 0; i < values; i++) {
+      double expected = Double.isNaN (doubleValues[i]) ? doubleMissing : doubleValues[i];
+      double actual = ((double[]) chunk.getPrimitiveData())[i];
+      assert (doubleCompare.compare (expected, actual) == 0) : actual + " != " + expected + " at i = " + i;
+    } // for
+
+    modify = new ChunkDataModifier();
+    modify.setMissingData (missingValues);
+    modify.setDoubleData (doubleValues);
+    chunk = factory.create (Double.TYPE, values, false, doubleMissing, null, doubleScaling);
+    chunk.accept (modify);
+    for (int i = 0; i < values; i++) {
+      double expected = rawDoubleValues[i];
+      double actual = ((double[]) chunk.getPrimitiveData())[i];
+      assert (doubleCompare.compare (expected, actual) == 0) : actual + " != " + expected + " at i = " + i;
+    } // for
+
+    logger.passed();
+
+  } // main
+  
   ////////////////////////////////////////////////////////////
 
 } // ChunkDataModifier class

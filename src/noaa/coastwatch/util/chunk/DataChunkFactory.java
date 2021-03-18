@@ -23,6 +23,10 @@
 // -------
 package noaa.coastwatch.util.chunk;
 
+// Imports
+// -------
+import java.lang.reflect.Array;
+
 /**
  * The <code>DataChunkFactory</code> class create appropriate
  * instances of the {@link DataChunk} class using a primitive data array.
@@ -50,7 +54,7 @@ public class DataChunkFactory {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new data chunk.
+   * Creates a new initialized data chunk.
    *
    * @param data the primitive array of data values to be used in the chunk.
    * @param isUnsigned the flag to indicate if the integer primitive values are
@@ -70,29 +74,105 @@ public class DataChunkFactory {
     PackingScheme packing
   ) {
 
-    Class dataClass = data.getClass().getComponentType();
+    return (create (data, isUnsigned, missingValue, packing, null));
+    
+  } // create
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a new uninitialized data chunk.
+   *
+   * @param primitiveType the primitive data type for the chunk.
+   * @param values the number of values in the data chunk.
+   * @param data the primitive array of data values to be used in the chunk.
+   * @param isUnsigned the flag to indicate if the integer primitive values are
+   * actually unsigned values packed into a signed primitive (eg: byte value in
+   * the range [0..255] packaged as a signed byte in the range [-128..127]).
+   * @param missingValue the missing value used as a marker for invalid data,
+   * or null for none.
+   * @param packing the packing scheme for floating point data values packed as
+   * integer values in the chunk, or null for none.
+   * @param scaling the scaling scheme for floating point data values or
+   * null for none.  Either packing or scaling may be specified but not both.
+   *
+   * @return the data chunk wrapping the primitive array.
+   *
+   * @since 3.6.1
+   */
+  public <T extends Number> DataChunk create (
+    Class<T> primitiveType,
+    int values,
+    boolean isUnsigned,
+    Object missingValue,
+    PackingScheme packing,
+    ScalingScheme scaling
+  ) {
+
+    Object data = Array.newInstance (primitiveType, values);
+    return (create (data, isUnsigned, missingValue, packing, scaling));
+
+  } // create
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a new initialized data chunk.
+   *
+   * @param data the primitive array of data values to be used in the chunk.
+   * @param isUnsigned the flag to indicate if the integer primitive values are
+   * actually unsigned values packed into a signed primitive (eg: byte value in
+   * the range [0..255] packaged as a signed byte in the range [-128..127]).
+   * @param missingValue the missing value used as a marker for invalid data,
+   * or null for none.
+   * @param packing the packing scheme for floating point data values packed as
+   * integer values in the chunk, or null for none.
+   * @param scaling the scaling scheme for floating point data values or
+   * null for none.  Either packing or scaling may be specified but not both.
+   *
+   * @return the data chunk wrapping the primitive array.
+   *
+   * @since 3.6.1
+   */
+  public DataChunk create (
+    Object data,
+    boolean isUnsigned,
+    Object missingValue,
+    PackingScheme packing,
+    ScalingScheme scaling
+  ) {
+
+    Class primitiveType = data.getClass().getComponentType();
     DataChunk chunk;
 
-    if (dataClass.equals (Byte.TYPE))
+    if (primitiveType.equals (Byte.TYPE)) {
+      if (scaling != null) throw new IllegalArgumentException ("Scaling not supported for " + primitiveType);
       chunk = new ByteChunk ((byte[]) data, isUnsigned, (Byte) missingValue, packing);
-    else if (dataClass.equals (Short.TYPE))
+    } // if
+    else if (primitiveType.equals (Short.TYPE)) {
+      if (scaling != null) throw new IllegalArgumentException ("Scaling not supported for " + primitiveType);
       chunk = new ShortChunk ((short[]) data, isUnsigned, (Short) missingValue, packing);
-    else if (dataClass.equals (Integer.TYPE))
-      chunk = new IntChunk ((int[]) data, isUnsigned, (Integer) missingValue, packing);
-    else if (dataClass.equals (Long.TYPE))
-      chunk = new LongChunk ((long[]) data, isUnsigned, (Long) missingValue, packing);
-    else if (dataClass.equals (Float.TYPE)) {
-      if (isUnsigned) throw new IllegalArgumentException ("Unsigned data not supported for " + dataClass);
-      if (packing != null) throw new IllegalArgumentException ("Packing not supported for " + dataClass);
-      chunk = new FloatChunk ((float[]) data, (Float) missingValue);
     } // else if
-    else if (dataClass.equals (Double.TYPE)) {
-      if (isUnsigned) throw new IllegalArgumentException ("Unsigned data not supported for " + dataClass);
-      if (packing != null) throw new IllegalArgumentException ("Packing not supported for " + dataClass);
-      chunk = new DoubleChunk ((double[]) data, (Double) missingValue);
+    else if (primitiveType.equals (Integer.TYPE)) {
+      if (scaling != null) throw new IllegalArgumentException ("Scaling not supported for " + primitiveType);
+      chunk = new IntChunk ((int[]) data, isUnsigned, (Integer) missingValue, packing);
+    } // else if
+    else if (primitiveType.equals (Long.TYPE)) {
+      if (scaling != null) throw new IllegalArgumentException ("Scaling not supported for " + primitiveType);
+      chunk = new LongChunk ((long[]) data, isUnsigned, (Long) missingValue, packing);
+    } // else if
+    else if (primitiveType.equals (Float.TYPE)) {
+      if (isUnsigned) throw new IllegalArgumentException ("Unsigned data not supported for " + primitiveType);
+      if (packing != null) throw new IllegalArgumentException ("Packing not supported for " + primitiveType);
+      chunk = new FloatChunk ((float[]) data, (Float) missingValue, scaling);
+    } // else if
+    else if (primitiveType.equals (Double.TYPE)) {
+      if (isUnsigned) throw new IllegalArgumentException ("Unsigned data not supported for " + primitiveType);
+      if (packing != null) throw new IllegalArgumentException ("Packing not supported for " + primitiveType);
+      chunk = new DoubleChunk ((double[]) data, (Double) missingValue, scaling);
     } // else if
     else
-      throw new IllegalArgumentException ("No data chunk support for " + dataClass);
+      throw new IllegalArgumentException ("No data chunk support for " + primitiveType);
 
     return (chunk);
     

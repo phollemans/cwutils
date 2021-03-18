@@ -27,6 +27,11 @@ package noaa.coastwatch.util.chunk;
 // -------
 import noaa.coastwatch.util.chunk.DataChunk.DataType;
 
+// Testing
+import noaa.coastwatch.test.TestLogger;
+import java.util.function.IntFunction;
+import java.util.function.BiFunction;
+
 /**
  * The <code>ChunkDataAccessor</code> class is a visitor that makes (possibly
  * unpacked) data values available from any type of {@link DataChunk} instance.
@@ -43,6 +48,7 @@ import noaa.coastwatch.util.chunk.DataChunk.DataType;
  * @author Peter Hollemans
  * @since 3.4.0
  */
+@noaa.coastwatch.test.Testable
 public class ChunkDataAccessor implements ChunkVisitor {
 
   /** The array of byte values. */
@@ -316,6 +322,28 @@ public class ChunkDataAccessor implements ChunkVisitor {
       } // for
     } // else
 
+    // Scale data
+    // ----------
+    ScalingScheme scaling = chunk.getScalingScheme();
+    if (scaling != null) {
+      scaling.accept (new ScalingSchemeVisitor () {
+
+        @Override
+        public void visitFloatScalingScheme (FloatScalingScheme scheme) {
+          var rawArray = floatArray;
+          var scaledArray = (floatArray == chunk.getFloatData() ? new float[floatArray.length] : floatArray);
+          scheme.scaleFloatData (rawArray, scaledArray);
+          if (floatArray != scaledArray) floatArray = scaledArray;
+        } // visitFloatScalingScheme
+
+        @Override
+        public void visitDoubleScalingScheme (DoubleScalingScheme scheme) {
+          throw new RuntimeException ("Double scaling for float data not supported");
+        } // visitDoublePackingScheme
+
+      });
+    } // if
+
   } // visitFloatChunk
 
   ////////////////////////////////////////////////////////////
@@ -351,6 +379,28 @@ public class ChunkDataAccessor implements ChunkVisitor {
       } // for
     } // else
 
+    // Scale data
+    // ----------
+    ScalingScheme scaling = chunk.getScalingScheme();
+    if (scaling != null) {
+      scaling.accept (new ScalingSchemeVisitor () {
+
+        @Override
+        public void visitFloatScalingScheme (FloatScalingScheme scheme) {
+          throw new RuntimeException ("Float scaling for double data not supported");
+        } // visitFloatScalingScheme
+
+        @Override
+        public void visitDoubleScalingScheme (DoubleScalingScheme scheme) {
+          var rawArray = doubleArray;
+          var scaledArray = (doubleArray == chunk.getDoubleData() ? new double[doubleArray.length] : doubleArray);
+          scheme.scaleDoubleData (rawArray, scaledArray);
+          if (doubleArray != scaledArray) doubleArray = scaledArray;
+        } // visitDoublePackingScheme
+
+      });
+    } // if
+
   } // visitDoubleChunk
 
   ////////////////////////////////////////////////////////////
@@ -363,6 +413,156 @@ public class ChunkDataAccessor implements ChunkVisitor {
   public float getFloatValue (int index) { return (floatArray[index]); }
   public double getDoubleValue (int index) { return (doubleArray[index]); }
 
+  ////////////////////////////////////////////////////////////
+  
+  // Helps check the correct chunk values for testing.  The chunk is accessed,
+  // and then the expected values compared to the actual values using a
+  // comparison function.
+  private static <T> void checkAccess (
+    ChunkDataAccessor access,
+    DataChunk chunk,
+    IntFunction<T> expected,
+    IntFunction<T> actual,
+    BiFunction<T,T,Boolean> compare
+  ) {
+
+    chunk.accept (access);
+    for (int i = 0; i < chunk.getValues(); i++) {
+      var expectedVal = expected.apply (i);
+      var actualVal = actual.apply (i);
+      assert (compare.apply (actualVal, expectedVal)) : actualVal + " != " + expectedVal + " at i = " + i;
+    } // for
+
+  } // checkAccess
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   *
+   * @since 3.6.1
+   */
+  public static void main (String[] argv) throws Exception {
+
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (ChunkDataAccessor.class);
+
+    var access = new ChunkDataAccessor();
+    var factory = DataChunkFactory.getInstance();
+
+    var floatPacking = new FloatPackingScheme (0.1f, 1.0f);
+    var doublePacking = new DoublePackingScheme (0.1, 1.0);
+
+    var floatScaling = new FloatScalingScheme (0.1f, 1.0f);
+    var doubleScaling = new DoubleScalingScheme (0.1, 1.0);
+
+    float[] floatValues = new float[] {0, 0.1f, Float.NaN, 0.3f, 0.4f};
+    double[] doubleValues = new double[] {0, 0.1, Double.NaN, 0.3, 0.4};
+
+    BiFunction<Byte,Byte,Boolean> byteCompare = (a,b) -> (a == b);
+    BiFunction<Short,Short,Boolean> shortCompare = (a,b) -> (a == b);
+    BiFunction<Integer,Integer,Boolean> intCompare = (a,b) -> (a == b);
+    BiFunction<Long,Long,Boolean> longCompare = (a,b) -> (a == b);
+    BiFunction<Float,Float,Boolean> floatCompare = (a,b) -> a.isNaN() ? b.isNaN() : Math.abs (a - b) < 5*Math.ulp (a);
+    BiFunction<Double,Double,Boolean> doubleCompare = (a,b) -> a.isNaN() ? b.isNaN() : Math.abs (a - b) < 5*Math.ulp (a);
+
+    logger.test ("visitByteChunk");
+    byte[] byteValues = new byte[] {1,2,3,4,5};
+    byte byteMissing = 3;
+
+    var chunk = factory.create (byteValues, false, byteMissing, null);
+    checkAccess (access, chunk, i -> byteValues[i], i -> access.getByteValue (i), byteCompare);
+
+    chunk = factory.create (byteValues, true, byteMissing, null);
+    checkAccess (access, chunk, i -> (short) byteValues[i], i -> access.getShortValue (i), shortCompare);
+
+    chunk = factory.create (byteValues, false, byteMissing, floatPacking);
+    checkAccess (access, chunk, i -> floatValues[i], i -> access.getFloatValue (i), floatCompare);
+
+    chunk = factory.create (byteValues, false, byteMissing, doublePacking);
+    checkAccess (access, chunk, i -> doubleValues[i], i -> access.getDoubleValue (i), doubleCompare);
+
+    logger.passed();
+
+    logger.test ("visitShortChunk");
+    short[] shortValues = new short[] {1,2,3,4,5};
+    short shortMissing = 3;
+
+    chunk = factory.create (shortValues, false, shortMissing, null);
+    checkAccess (access, chunk, i -> shortValues[i], i -> access.getShortValue (i), shortCompare);
+
+    chunk = factory.create (shortValues, true, shortMissing, null);
+    checkAccess (access, chunk, i -> (int) shortValues[i], i -> access.getIntValue (i), intCompare);
+
+    chunk = factory.create (shortValues, false, shortMissing, floatPacking);
+    checkAccess (access, chunk, i -> floatValues[i], i -> access.getFloatValue (i), floatCompare);
+
+    chunk = factory.create (shortValues, false, shortMissing, doublePacking);
+    checkAccess (access, chunk, i -> doubleValues[i], i -> access.getDoubleValue (i), doubleCompare);
+
+    logger.passed();
+
+    logger.test ("visitIntChunk");
+    int[] intValues = new int[] {1,2,3,4,5};
+    int intMissing = 3;
+
+    chunk = factory.create (intValues, false, intMissing, null);
+    checkAccess (access, chunk, i -> intValues[i], i -> access.getIntValue (i), intCompare);
+
+    chunk = factory.create (intValues, true, intMissing, null);
+    checkAccess (access, chunk, i -> (long) intValues[i], i -> access.getLongValue (i), longCompare);
+
+    chunk = factory.create (intValues, false, intMissing, floatPacking);
+    checkAccess (access, chunk, i -> floatValues[i], i -> access.getFloatValue (i), floatCompare);
+
+    chunk = factory.create (intValues, false, intMissing, doublePacking);
+    checkAccess (access, chunk, i -> doubleValues[i], i -> access.getDoubleValue (i), doubleCompare);
+
+    logger.passed();
+    
+    logger.test ("visitLongChunk");
+    long[] longValues = new long[] {1,2,3,4,5};
+    long longMissing = 3;
+
+    chunk = factory.create (longValues, false, longMissing, null);
+    checkAccess (access, chunk, i -> longValues[i], i -> access.getLongValue (i), longCompare);
+
+    chunk = factory.create (longValues, true, longMissing, null);
+    checkAccess (access, chunk, i -> (long) longValues[i], i -> access.getLongValue (i), longCompare);
+
+    chunk = factory.create (longValues, false, longMissing, doublePacking);
+    checkAccess (access, chunk, i -> doubleValues[i], i -> access.getDoubleValue (i), doubleCompare);
+
+    logger.passed();
+    
+    logger.test ("visitFloatChunk");
+    float[] rawFloatValues = new float[] {1,2,3,4,5};
+    float floatMissing = 3;
+
+    chunk = factory.create (rawFloatValues, false, floatMissing, null, null);
+    checkAccess (access, chunk, i -> rawFloatValues[i] == floatMissing ? Float.NaN : rawFloatValues[i], i -> access.getFloatValue (i), floatCompare);
+
+    chunk = factory.create (rawFloatValues, false, floatMissing, null, floatScaling);
+    checkAccess (access, chunk, i -> floatValues[i], i -> access.getFloatValue (i), floatCompare);
+
+    logger.passed();
+    
+    logger.test ("visitDoubleChunk");
+    double[] rawDoubleValues = new double[] {1,2,3,4,5};
+    double doubleMissing = 3;
+
+    chunk = factory.create (rawDoubleValues, false, doubleMissing, null, null);
+    checkAccess (access, chunk, i -> rawDoubleValues[i] == doubleMissing ? Double.NaN : rawDoubleValues[i], i -> access.getDoubleValue (i), doubleCompare);
+
+    chunk = factory.create (rawDoubleValues, false, doubleMissing, null, doubleScaling);
+    checkAccess (access, chunk, i -> doubleValues[i], i -> access.getDoubleValue (i), doubleCompare);
+
+    logger.passed();
+
+  } // main
+  
   ////////////////////////////////////////////////////////////
 
 } // ChunkDataAccessor class

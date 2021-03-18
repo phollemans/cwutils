@@ -56,6 +56,23 @@ public class FloatPackingScheme implements PackingScheme {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a new packing instance.
+   *
+   * @param scale the scaling factor.
+   * @param offset the offset value.
+   *
+   * @since 3.6.1
+   */
+  public FloatPackingScheme (float scale, float offset) {
+  
+    this.scale = scale;
+    this.offset = offset;
+  
+  } // FloatPackingScheme
+
+  ////////////////////////////////////////////////////////////
+
   @Override
   public void accept (PackingSchemeVisitor visitor) {
 
@@ -477,9 +494,7 @@ public class FloatPackingScheme implements PackingScheme {
     TestLogger logger = TestLogger.getInstance();
     logger.startClass (FloatPackingScheme.class);
     
-    FloatPackingScheme scheme = new FloatPackingScheme();
-    scheme.scale = 0.01f;
-    scheme.offset = 3000.0f;
+    FloatPackingScheme scheme = new FloatPackingScheme (0.01f, 3000.0f);
     float floatValue = 10.0f;
     int intValue = 4000;
 

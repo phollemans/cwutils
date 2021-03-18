@@ -55,6 +55,23 @@ public class DoublePackingScheme implements PackingScheme {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a new packing instance.
+   *
+   * @param scale the scaling factor.
+   * @param offset the offset value.
+   *
+   * @since 3.6.1
+   */
+  public DoublePackingScheme (double scale, double offset) {
+  
+    this.scale = scale;
+    this.offset = offset;
+  
+  } // DoublePackingScheme
+
+  ////////////////////////////////////////////////////////////
+
   @Override
   public void accept (PackingSchemeVisitor visitor) {
 
@@ -620,9 +637,7 @@ public class DoublePackingScheme implements PackingScheme {
     TestLogger logger = TestLogger.getInstance();
     logger.startClass (DoublePackingScheme.class);
     
-    DoublePackingScheme scheme = new DoublePackingScheme();
-    scheme.scale = 0.01;
-    scheme.offset = 3000.0;
+    DoublePackingScheme scheme = new DoublePackingScheme (0.01, 3000.0);
     double doubleValue = 10.0;
     long longValue = 4000;
 

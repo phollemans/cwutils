@@ -36,7 +36,7 @@ import noaa.coastwatch.util.chunk.ChunkVisitor;
  * @author Peter Hollemans
  * @since 3.4.0
  */
-public class FloatChunk implements DataChunk {
+public class FloatChunk implements FloatingPointValuedDataChunk {
 
   // Variables
   // ---------
@@ -46,7 +46,10 @@ public class FloatChunk implements DataChunk {
   
   /** The missing data value, or null for none. */
   private Float missing;
-  
+
+  /** The scaling scheme, or null for none. */
+  private ScalingScheme scheme;
+
   ////////////////////////////////////////////////////////////
 
   @Override
@@ -55,6 +58,11 @@ public class FloatChunk implements DataChunk {
     return (DataType.FLOAT);
   
   } // getExternalType
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public ScalingScheme getScalingScheme() { return (scheme); }
 
   ////////////////////////////////////////////////////////////
 
@@ -84,7 +92,7 @@ public class FloatChunk implements DataChunk {
 
   public DataChunk blankCopyWithValues (int values) {
   
-    DataChunk chunk = new FloatChunk (new float[values], missing);
+    DataChunk chunk = new FloatChunk (new float[values], missing, scheme);
     return (chunk);
 
   } // blankCopyWithValues
@@ -92,7 +100,7 @@ public class FloatChunk implements DataChunk {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new initialized data chunk with scaling parameters.
+   * Creates a new initialized data chunk.
    *
    * @param floatData the float data values.
    * @param missing the missing data value, or null for none.
@@ -104,6 +112,29 @@ public class FloatChunk implements DataChunk {
 
     this.floatData = floatData;
     this.missing = missing;
+    
+  } // FloatChunk constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a new initialized data chunk with scaling parameters.
+   *
+   * @param floatData the float data values.
+   * @param missing the missing data value, or null for none.
+   * @param scheme the scaling scheme or null for none.
+   *
+   * @since 3.6.1
+   */
+  public FloatChunk (
+    float[] floatData,
+    Float missing,
+    ScalingScheme scheme
+  ) {
+
+    this.floatData = floatData;
+    this.missing = missing;
+    this.scheme = scheme;
     
   } // FloatChunk constructor
 

@@ -48,15 +48,15 @@ public class GridChunkProducer implements ChunkProducer {
   // ---------
 
   /** The grid to use as a source of data. */
-//  private Grid grid;
   protected Grid grid;
 
   /** The packing scheme for new chunks. */
-//  private PackingScheme packing;
   protected PackingScheme packing;
 
+  /** The scaling scheme for new chunks. */
+  protected ScalingScheme scaling;
+
   /** The chunking scheme used or null for none. */
-//  private ChunkingScheme scheme;
   protected ChunkingScheme scheme;
 
   /** The prototype chunk produced. */
@@ -84,21 +84,24 @@ public class GridChunkProducer implements ChunkProducer {
       scheme = new ChunkingScheme (chunkingDims, chunkSize);
     } // if
 
-    // Create packing scheme
-    // ---------------------
-    double[] scaling = grid.getScaling();
-    if (scaling != null && !(scaling[0] == 1 && scaling[1] == 0)) {
-      DoublePackingScheme doublePacking = new DoublePackingScheme();
-      doublePacking.scale = scaling[0];
-      doublePacking.offset = scaling[1];
-      packing = doublePacking;
+    // Create packing or scaling scheme
+    // --------------------------------
+    double[] scalingArray = grid.getScaling();
+    if (scalingArray != null && !(scalingArray[0] == 1 && scalingArray[1] == 0)) {
+      var dataClass = grid.getDataClass();
+      if (dataClass.equals (Float.TYPE))
+        scaling = new FloatScalingScheme ((float) scalingArray[0], (float) scalingArray[1]);
+      else if (dataClass.equals (Double.TYPE))
+        scaling = new DoubleScalingScheme (scalingArray[0], scalingArray[1]);
+      else
+        packing = new DoublePackingScheme (scalingArray[0], scalingArray[1]);
     } // if
 
     // Create the prototype chunk
     // --------------------------
     Object data = Array.newInstance (grid.getDataClass(), 0);
     protoChunk = DataChunkFactory.getInstance().create (data,
-      grid.getUnsigned(), grid.getMissing(), packing);
+      grid.getUnsigned(), grid.getMissing(), packing, scaling);
 
   } // GridChunkProducer constructor
 
@@ -130,7 +133,7 @@ public class GridChunkProducer implements ChunkProducer {
       data = grid.getData (pos.start, pos.length);
     } // synchronized
     DataChunk chunk = DataChunkFactory.getInstance().create (data,
-      grid.getUnsigned(), grid.getMissing(), packing);
+      grid.getUnsigned(), grid.getMissing(), packing, scaling);
 
     return (chunk);
 

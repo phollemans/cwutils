@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////////////////////////
 /*
 
-     File: PackingSchemeVisitor.java
+     File: ScalingSchemeVisitor.java
    Author: Peter Hollemans
-     Date: 2017/11/25
+     Date: 2021/03/06
 
   CoastWatch Software Library and Utilities
-  Copyright (c) 2017 National Oceanic and Atmospheric Administration
+  Copyright (c) 2021 National Oceanic and Atmospheric Administration
   All rights reserved.
 
   Developed by: CoastWatch / OceanWatch
@@ -24,17 +24,17 @@
 package noaa.coastwatch.util.chunk;
 
 /**
- * The <code>PackingSchemeVisitor</code> interface is implemented by any class
+ * The <code>ScalingSchemeVisitor</code> interface is implemented by any class
  * that participates in the visitor pattern to perform operations on
- * {@link PackingScheme} instances.
+ * {@link ScalingScheme} instances.
  *
  * @author Peter Hollemans
- * @since 3.4.0
+ * @since 3.6.1
  */
-public interface PackingSchemeVisitor {
-  public void visitFloatPackingScheme (FloatPackingScheme scheme);
-  public void visitDoublePackingScheme (DoublePackingScheme scheme);
-} // PackingSchemeVisitor interface
+public interface ScalingSchemeVisitor {
+  public void visitFloatScalingScheme (FloatScalingScheme scheme);
+  public void visitDoubleScalingScheme (DoubleScalingScheme scheme);
+} // ScalingSchemeVisitor interface
 
 ////////////////////////////////////////////////////////////////////////
 

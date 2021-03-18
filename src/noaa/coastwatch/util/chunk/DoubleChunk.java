@@ -36,7 +36,7 @@ import noaa.coastwatch.util.chunk.ChunkVisitor;
  * @author Peter Hollemans
  * @since 3.4.0
  */
-public class DoubleChunk implements DataChunk {
+public class DoubleChunk implements FloatingPointValuedDataChunk {
 
   // Variables
   // ---------
@@ -46,7 +46,10 @@ public class DoubleChunk implements DataChunk {
   
   /** The missing data value, or null for none. */
   private Double missing;
-  
+
+  /** The scaling scheme, or null for none. */
+  private ScalingScheme scheme;
+
   ////////////////////////////////////////////////////////////
 
   @Override
@@ -55,6 +58,11 @@ public class DoubleChunk implements DataChunk {
     return (DataType.DOUBLE);
   
   } // getExternalType
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public ScalingScheme getScalingScheme() { return (scheme); }
 
   ////////////////////////////////////////////////////////////
 
@@ -84,7 +92,7 @@ public class DoubleChunk implements DataChunk {
 
   public DataChunk blankCopyWithValues (int values) {
   
-    DataChunk chunk = new DoubleChunk (new double[values], missing);
+    DataChunk chunk = new DoubleChunk (new double[values], missing, scheme);
     return (chunk);
 
   } // blankCopyWithValues
@@ -92,7 +100,7 @@ public class DoubleChunk implements DataChunk {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new initialized data chunk with scaling parameters.
+   * Creates a new initialized data chunk.
    *
    * @param doubleData the double data values.
    * @param missing the missing data value, or null for none.
@@ -104,6 +112,29 @@ public class DoubleChunk implements DataChunk {
 
     this.doubleData = doubleData;
     this.missing = missing;
+    
+  } // DoubleChunk constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a new initialized data chunk with scaling parameters.
+   *
+   * @param doubleData the double data values.
+   * @param missing the missing data value, or null for none.
+   * @param scheme the scaling scheme or null for none.
+   *
+   * @since 3.6.1
+   */
+  public DoubleChunk (
+    double[] doubleData,
+    Double missing,
+    ScalingScheme scheme
+  ) {
+
+    this.doubleData = doubleData;
+    this.missing = missing;
+    this.scheme = scheme;
     
   } // DoubleChunk constructor
 
