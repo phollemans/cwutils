@@ -534,6 +534,15 @@ public class cwsample {
 
       } // for
 
+
+      // TODO: Should we explicitly close the reader here?  An issue was found
+      // in cwrender that if the reader wasn't explicitly closed, it was
+      // assumed by the garbage collector that it wasn't being used anymore
+      // even though structures internal to the reader were being accessed.
+      // The reader is not closed explicitly in cwstats either, and possibly
+      // other places.
+
+
     } // try
 
     catch (OutOfMemoryError | Exception e) {
