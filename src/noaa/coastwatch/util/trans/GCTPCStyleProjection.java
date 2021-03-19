@@ -122,6 +122,7 @@ public abstract class GCTPCStyleProjection
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void mapTransformFor (
     double[] lonLat,
     double[] xy
@@ -164,6 +165,7 @@ public abstract class GCTPCStyleProjection
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public void mapTransformInv (
     double[] xy,
     double[] lonLat
@@ -292,6 +294,7 @@ public abstract class GCTPCStyleProjection
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public double[] getParameters () { return (params); }
 
   ////////////////////////////////////////////////////////////
@@ -326,6 +329,7 @@ public abstract class GCTPCStyleProjection
 
   ////////////////////////////////////////////////////////////
 
+  /** Convenience function for phi3z. */
   public static double phi3z (
     double ml,
     double e0,
@@ -343,6 +347,7 @@ public abstract class GCTPCStyleProjection
 
   ////////////////////////////////////////////////////////////
 
+  /** Convenience function for phi4z. */
   public static long phi4z (
     double eccent,
     double e0,

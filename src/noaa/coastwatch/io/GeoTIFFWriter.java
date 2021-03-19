@@ -146,6 +146,12 @@ public class GeoTIFFWriter {
   /** The TIFF PackBits compression type. */
   public static final int COMP_PACK = 2;
 
+  /** The TIFF LZW compression type. */
+  public static final int COMP_LZW = 3;
+
+  /** The TIFF JPEG compression type. */
+  public static final int COMP_JPEG = 4;
+
   // Variables
   // ---------
   
@@ -820,15 +826,42 @@ public class GeoTIFFWriter {
 
     // Set compression
     // ---------------
-    tag = baselineSet.getInstance().getTag ("Compression");
+    tag = baselineSet.getTag ("Compression");
     char compressValue;
     switch (compress) {
     case COMP_NONE: compressValue = (char) BaselineTIFFTagSet.COMPRESSION_NONE; break;
     case COMP_PACK: compressValue = (char) BaselineTIFFTagSet.COMPRESSION_PACKBITS; break;
     case COMP_DEFLATE: compressValue = (char) BaselineTIFFTagSet.COMPRESSION_DEFLATE; break;
+    case COMP_LZW: compressValue = (char) BaselineTIFFTagSet.COMPRESSION_LZW; break;
+    case COMP_JPEG: compressValue = (char) BaselineTIFFTagSet.COMPRESSION_JPEG; break;
     default: throw new IOException ("Invalid compression type");
     } // switch
     field = new TIFFField (tag, TIFFTag.TIFF_SHORT, 1, new char[] {compressValue});
+    addField (field);
+
+    // If the compression is LZW, it's been discovered that using a predictor
+    // that uses horizontal differencing can reduce the image size, so we add
+    // that here.  Note that LZW is a TIFF extension.
+    if (compress == COMP_LZW) {
+      tag = baselineSet.getTag ("Predictor");
+      field = new TIFFField (tag, TIFFTag.TIFF_SHORT, 1, new char[] {(char) BaselineTIFFTagSet.PREDICTOR_HORIZONTAL_DIFFERENCING});
+      addField (field);
+    } // if
+
+    // Set the tile sizes for cloud optimized GeoTIFFs.  This was requested
+    // in 2021 for use with TIFF data stored in the cloud, so that a
+    // cloud-optimized TIFF reading library can read byte ranges over HTTP
+    // of just the tiles needed.  See https://trac.osgeo.org/gdal/wiki/CloudOptimizedGeoTIFF
+    // for details.  The TIFF tags and usage are documented by Adobe at
+    // https://www.adobe.io/content/dam/udp/en/open/standards/tiff/TIFF6.pdf.
+    // Note that tiled images are a TIFF extension.
+
+    tag = baselineSet.getTag ("TileWidth");
+    field = new TIFFField (tag, TIFFTag.TIFF_SHORT, 1, new char[] {256});
+    addField (field);
+
+    tag = baselineSet.getTag ("TileLength");
+    field = new TIFFField (tag, TIFFTag.TIFF_SHORT, 1, new char[] {256});
     addField (field);
 
     // Set geography

@@ -146,98 +146,76 @@ public class GeographicProjection
   ////////////////////////////////////////////////////////////
 
   /**
-   * Updates the internal longitude range using the current affine
-   * transform.
+   * Updates the internal longitude range.
    *
-   * @since 3.5.1
+   * @param minLon the minimum longitude value (outside edge).
+   * @param maxLon the maximum longitude value (outside edge).
+   *
+   * @since 3.6.1
    */
-  private void updateLongitudeRange () {
+  private void updateLongitudeRange (
+    double minLon,
+    double maxLon
+  ) {
 
-    // Check affine is initialized
-    // ---------------------------
-    if (forwardAffine.isIdentity()) {
+    // Determine longitude range type
+    // ------------------------------
+    if (minLon >= -180 && minLon <= 180 && maxLon >= -180 && maxLon <= 180)
       lonRange = LongitudeRange.SPANS_PRIME;
-    } // if
+
+    else if (minLon >= 0 && minLon <= 180 && maxLon >= 180 && maxLon <= 360)
+      lonRange = LongitudeRange.SPANS_ANTI_POSITIVE;
+
+    else if (minLon >= -360 && minLon <= -180 && maxLon >= -180 && maxLon <= 0)
+      lonRange = LongitudeRange.SPANS_ANTI_NEGATIVE;
+
+    else if (minLon <= 0 && maxLon >= 180) {
+      alpha = minLon;
+      lonRange = LongitudeRange.SPANS_PRIME_ANTI_POSITIVE;
+    } // else if
     
-    else {
+    else if (minLon <= -180 && maxLon >= 0) {
+      alpha = maxLon;
+      lonRange = LongitudeRange.SPANS_PRIME_ANTI_NEGATIVE;
+    } // else if
+
+    else
+      throw new IllegalStateException ("Unsupported longitude range type in geographic projection");
+
+    // Create boundary handler
+    // -----------------------
+    double boundary;
+    switch (lonRange) {
+
+    case SPANS_PRIME:
+      boundary = 180;
+      break;
+
+    case SPANS_ANTI_POSITIVE:
+    case SPANS_ANTI_NEGATIVE:
+      boundary = 0;
+      break;
+
+    case SPANS_PRIME_ANTI_POSITIVE:
+    case SPANS_PRIME_ANTI_NEGATIVE:
+      boundary = alpha;
+      break;
+
+    default:
+      throw new IllegalStateException ("Unsupported longitude range type in geographic projection");
+
+    } // switch
+
+    double nextBoundary = boundary + 360;
+    List<List<EarthLocation>> lineList = List.of (
+      List.of (new EarthLocation (90, boundary), new EarthLocation (-90, boundary)),
+      List.of (new EarthLocation (90, nextBoundary), new EarthLocation (-90, nextBoundary))
+    );
     
-      // Get minimum and maximum longitude
-      // ---------------------------------
-      double[] xyStart = new double[] {-0.5, -0.5};
-      inverseAffine.transform (xyStart, 0, xyStart, 0, 1);
-      double[] xyEnd = new double[] {dims[0] - 0.5, dims[1] - 0.5};
-      inverseAffine.transform (xyEnd, 0, xyEnd, 0, 1);
-      double minLon = Math.min (xyStart[0], xyEnd[0]);
-      double maxLon = Math.max (xyStart[0], xyEnd[0]);
-
-      // Adjust longitude span if greater than 360
-      // -----------------------------------------
-      double lonSpan = maxLon - minLon;
-      if (lonSpan > 360) maxLon = minLon + 360;
-
-      LOGGER.fine ("Minimum longitude = " + minLon);
-      LOGGER.fine ("Maximum longitude = " + maxLon);
-
-      // Determine longitude range type
-      // ------------------------------
-      if (minLon >= -180 && minLon <= 180 && maxLon >= -180 && maxLon <= 180)
-        lonRange = LongitudeRange.SPANS_PRIME;
-
-      else if (minLon >= 0 && minLon <= 180 && maxLon >= 180 && maxLon <= 360)
-        lonRange = LongitudeRange.SPANS_ANTI_POSITIVE;
-
-      else if (minLon >= -360 && minLon <= -180 && maxLon >= -180 && maxLon <= 0)
-        lonRange = LongitudeRange.SPANS_ANTI_NEGATIVE;
-
-      else if (minLon <= 0 && maxLon >= 180) {
-        alpha = minLon;
-        lonRange = LongitudeRange.SPANS_PRIME_ANTI_POSITIVE;
-      } // else if
-      
-      else if (minLon <= -180 && maxLon >= 0) {
-        alpha = maxLon;
-        lonRange = LongitudeRange.SPANS_PRIME_ANTI_NEGATIVE;
-      } // else if
-
-      else
-        throw new IllegalStateException ("Unsupported longitude range type in geographic projection");
-
-      // Create boundary handler
-      // -----------------------
-      double boundary;
-      switch (lonRange) {
-
-      case SPANS_PRIME:
-        boundary = 180;
-        break;
-
-      case SPANS_ANTI_POSITIVE:
-      case SPANS_ANTI_NEGATIVE:
-        boundary = 0;
-        break;
-
-      case SPANS_PRIME_ANTI_POSITIVE:
-      case SPANS_PRIME_ANTI_NEGATIVE:
-        boundary = alpha;
-        break;
-
-      default:
-        throw new IllegalStateException ("Unsupported longitude range type in geographic projection");
-
-      } // switch
-
-      double nextBoundary = boundary + 360;
-      List<List<EarthLocation>> lineList = List.of (
-        List.of (new EarthLocation (90, boundary), new EarthLocation (-90, boundary)),
-        List.of (new EarthLocation (90, nextBoundary), new EarthLocation (-90, nextBoundary))
-      );
-      
-      boundaryHandler = new BoundaryHandler ((a, b) -> isBoundaryCut (a, b), lineList);
-      
-      LOGGER.fine ("Longitude range type is " + lonRange + " with alpha = " + alpha);
+    boundaryHandler = new BoundaryHandler ((a, b) -> isBoundaryCut (a, b), lineList);
     
-    } // else
-  
+    LOGGER.fine ("Longitude range type is " + lonRange + " with alpha = " + alpha);
+    
   } // updateLongitudeRange
 
   ////////////////////////////////////////////////////////////
@@ -267,9 +245,32 @@ public class GeographicProjection
   ) throws NoninvertibleTransformException {
 
     super (GEO, 0, rMajor, rMinor, dimensions, affine);
-    updateLongitudeRange();
+    if (!affine.isIdentity()) setup();
 
   } // GeographicProjection constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets up the affine and longitude type to be internally consistent.
+   *
+   * @since 3.6.1
+   */
+  private void setup() throws NoninvertibleTransformException {
+  
+    double[] matrix = new double[6];
+    inverseAffine.getMatrix (matrix);
+    double[] pixelDims = new double[] {
+      -matrix[1],
+      matrix[2]
+    };
+    double centerLon = matrix[4] + pixelDims[1]*(dims[1]-1)/2.0;
+    double centerLat = matrix[5] - pixelDims[0]*(dims[0]-1)/2.0;
+    EarthLocation centerLoc = new EarthLocation (centerLat, centerLon);
+    
+    setAffine (centerLoc, pixelDims);
+  
+  } // setup
 
   ////////////////////////////////////////////////////////////
 
@@ -278,33 +279,60 @@ public class GeographicProjection
     EarthLocation centerLoc,
     double[] pixelDims
   ) throws NoninvertibleTransformException {
-
+  
     /*
      * We override here to not convert the lat/lon values
-     * into radians before sending to the forward transform.
+     * into radians before sending to the forward transform.  Also
+     * to convert the center longitude to the new range type before
+     * computing the affine transform.
      */
-
-    // Get map coordinates of new center point
-    // ---------------------------------------
-    double[] lonLat = new double[] {centerLoc.lon, centerLoc.lat};
-    double[] xy = new double[2];
-    mapTransformFor (lonLat, xy);
-    
-    // Create new affines
-    // ------------------
-    inverseAffine = new AffineTransform (
-      0,
-      -pixelDims[0],
-      pixelDims[1],
-      0,
-      xy[0] - pixelDims[1]*(dims[1]-1)/2,
-      xy[1] + pixelDims[0]*(dims[0]-1)/2
-    );
-    forwardAffine = inverseAffine.createInverse();
 
     // Update the longitude range type
     // -------------------------------
-    updateLongitudeRange();
+    double widthInDegrees = pixelDims[1]*((dims[1]-1)/2.0 + 0.5);
+    int sign = pixelDims[1] > 0 ? 1 : -1;
+    double startLon = centerLoc.lon - sign*widthInDegrees;
+    double endLon = centerLoc.lon + sign*widthInDegrees;
+
+    if (startLon < -360) { startLon += 360; endLon += 360; }
+    double lonSpan = endLon - startLon;
+    if (lonSpan > 360) endLon = startLon + 360;
+
+    updateLongitudeRange (startLon, endLon);
+
+    // Compute affine values
+    // ---------------------
+    
+    // x     | a  c  e | R
+    // y  =  | b  d  f | C
+    // 1     | 0  0  1 | 1
+
+    // x = a.R + c.C + e
+    // y = b.R + d.C + f
+
+    // a = 0 (x is independent of row)
+    // c = px (x1-x0=px for adjacent columns, x varies linearly with column)
+    // c.C + e = x
+    // e = x - c.C for given x and C
+    // Let: x = centerLon, C = (columns-1)/2, then
+    // e = centerLon - px*(columns-1)/2
+    
+    // b = -py (y varies linearly with row but in reverse order)
+    // d = 0 (y is independent of column)
+    // b.R + f = y
+    // f = y - b.R for given y and R
+    // Let: y = centerLat, R = (rows-1)/2, then
+    // f = centerLat + py*(rows-1)/2
+
+    inverseAffine = new AffineTransform (
+      0,                                                          // a
+      -pixelDims[0],                                              // b
+      pixelDims[1],                                               // c
+      0,                                                          // d
+      lonAdjust (centerLoc.lon - pixelDims[1]*(dims[1]-1)/2.0),   // e
+      centerLoc.lat + pixelDims[0]*(dims[0]-1)/2.0                // f
+    );
+    forwardAffine = inverseAffine.createInverse();
 
   } // setAffine
 
@@ -318,7 +346,11 @@ public class GeographicProjection
 
     GeographicProjection proj =
       (GeographicProjection) super.getSubset (newOrigin, newDims);
-    proj.updateLongitudeRange();
+    try { proj.setup(); }
+    catch (NoninvertibleTransformException e) {
+      LOGGER.severe ("Internal error with non-invertible affine");
+      throw (new IllegalStateException (e));
+    } // catch
     
     return (proj);
 
@@ -335,7 +367,11 @@ public class GeographicProjection
 
     GeographicProjection proj =
       (GeographicProjection) super.getSubset (start, stride, length);
-    proj.updateLongitudeRange();
+    try { proj.setup(); }
+    catch (NoninvertibleTransformException e) {
+      LOGGER.severe ("Internal error with non-invertible affine");
+      throw (new IllegalStateException (e));
+    } // catch
     
     return (proj);
 

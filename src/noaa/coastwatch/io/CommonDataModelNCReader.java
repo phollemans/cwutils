@@ -1023,7 +1023,7 @@ utilities when:
     // Access variable
     // ---------------
     String baseName = getBaseVariableName (variables[index]);
-    Variable var = dataset.getReferencedFile().findVariable (baseName);
+    Variable var = getReferencedFile().findVariable (baseName);
     if (var == null) var = dataset.findCoordinateAxis (baseName);
     if (var == null)
       throw new IOException ("Cannot access variable '" + baseName + "' at index " + index);
@@ -1239,7 +1239,7 @@ utilities when:
           // Create chunk using tile data
           // ----------------------------
           chunk = DataChunkFactory.getInstance().create (tile.getData(),
-            grid.getUnsigned(), grid.getMissing(), packing);
+            grid.getUnsigned(), grid.getMissing(), packing, scaling);
 
         } // try
         catch (IOException e) { throw new RuntimeException (e); }
@@ -1285,7 +1285,7 @@ utilities when:
     // Access variable
     // ---------------
     String baseName = getBaseVariableName (variables[index]);
-    Variable var = dataset.getReferencedFile().findVariable (baseName);
+    Variable var = getReferencedFile().findVariable (baseName);
     if (var == null) var = dataset.findCoordinateAxis (baseName);
     if (var == null)
       throw new IOException ("Cannot access variable '" + baseName + "' at index " + index);
@@ -1316,7 +1316,7 @@ utilities when:
       
       // Create tile source
       // ------------------
-      NCTileSource source = new NCTileSource (dataset.getReferencedFile(),
+      NCTileSource source = new NCTileSource (getReferencedFile(),
         baseName, rowIndex, colIndex, start);
       TileCachedGrid cachedGrid = new TileCachedGrid ((Grid) varPreview, source);
       dataVar = cachedGrid;
@@ -1377,7 +1377,7 @@ utilities when:
     // ---------------
     String section = getArraySection (varName);
     varName = actualVarName;
-    Variable var = dataset.getReferencedFile().findVariable (varName);
+    Variable var = getReferencedFile().findVariable (varName);
     if (var == null)
       throw new IOException ("Cannot access variable " + varName);
 

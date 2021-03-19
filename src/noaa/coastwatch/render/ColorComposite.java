@@ -31,6 +31,8 @@ import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.image.BufferedImage;
+import java.util.function.Function;
+
 import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.render.EnhancementFunction;
@@ -305,6 +307,34 @@ public class ColorComposite
     double units
   ) {
 
+    setRange (component, stats -> {
+      double mean = stats.getMean();
+      double diff = stats.getStdev()*units;
+      return (new double[] {mean - diff, mean + diff});
+    });
+
+  } // normalize
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Set the enhancement function range for this view using the
+   * visible grid value statistics.  This is a generalized version
+   * of {@link #normalize} in which the range is computed with a
+   * user-supplied function.
+   *
+   * @param component the component to set, either <code>RED</code>,
+   * <code>GREEN</code>, or <code>BLUE</code>.
+   * @param statsFunction the statistics function to use for setting the
+   * range.
+   *
+   * @since 3.6.1
+   */
+  public void setRange (
+    int component,
+    Function<Statistics,double[]> statsFunction
+  ) {
+
     // Calculate statistics
     // --------------------
     Grid grid = grids[component];
@@ -316,19 +346,20 @@ public class ColorComposite
     Statistics stats = VariableStatisticsGenerator.getInstance().generate (grid, lc);
 
     // Check for zero valid
-    // --------------------    
+    // --------------------
     if (stats.getValid() == 0) {
       throw new ArithmeticException ("Variable '" + grid.getName() +
         "' has no valid data values, cannot normalize");
-    } // if 
+    } // if
 
     // Modify function
     // ---------------
-    funcs[component].normalize (stats, units);
-
-  } // normalize
+    funcs[component].setRange (statsFunction.apply (stats));
+  
+  } // setRange
 
   ////////////////////////////////////////////////////////////
+
 
 } // ColorComposite class
 

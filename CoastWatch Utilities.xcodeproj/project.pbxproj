@@ -110,6 +110,11 @@
 		E943B02D1FB7DD320065BEB2 /* JEPEmulationParser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = JEPEmulationParser.java; sourceTree = "<group>"; };
 		E943B02E1FBA4AE60065BEB2 /* ExpressionTest.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = ExpressionTest.java; sourceTree = "<group>"; };
 		E943B02F1FBADFA70065BEB2 /* ParseHelper.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ParseHelper.java; sourceTree = "<group>"; };
+		E952C0E025F4B7EF001B74BB /* ScalingScheme.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ScalingScheme.java; sourceTree = "<group>"; };
+		E952C0E125F4B8B7001B74BB /* ScalingSchemeVisitor.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ScalingSchemeVisitor.java; sourceTree = "<group>"; };
+		E952C0E225F4BE23001B74BB /* FloatScalingScheme.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = FloatScalingScheme.java; sourceTree = "<group>"; };
+		E952C0E325F4C3E7001B74BB /* DoubleScalingScheme.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = DoubleScalingScheme.java; sourceTree = "<group>"; };
+		E952C0E425F4C6DC001B74BB /* FloatingPointValuedDataChunk.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = FloatingPointValuedDataChunk.java; sourceTree = "<group>"; };
 		E95A3ECC1E6F725500AD8698 /* FeatureGroupFilterChooser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = FeatureGroupFilterChooser.java; sourceTree = "<group>"; };
 		E95A3ECD1E7601F000AD8698 /* AttributeValueChooser.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = AttributeValueChooser.java; sourceTree = "<group>"; };
 		E95A3ECF1E79048400AD8698 /* ValuePanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = ValuePanel.java; path = value/ValuePanel.java; sourceTree = "<group>"; };
@@ -1388,9 +1393,12 @@
 				E9BC62271FE4C07F00A0E8F7 /* DataChunkFactory.java */,
 				E9D5C1DF2015CCCF00D9BE47 /* DoubleChunk.java */,
 				E963DEE61FC9688B00426A64 /* DoublePackingScheme.java */,
+				E952C0E325F4C3E7001B74BB /* DoubleScalingScheme.java */,
 				E93AE88E1FAA9FB000D3D699 /* ExpressionFunction.java */,
 				E9D5C1DE2015CAE600D9BE47 /* FloatChunk.java */,
+				E952C0E425F4C6DC001B74BB /* FloatingPointValuedDataChunk.java */,
 				E963DEE51FC8A24A00426A64 /* FloatPackingScheme.java */,
+				E952C0E225F4BE23001B74BB /* FloatScalingScheme.java */,
 				E9BC62291FE66DD800A0E8F7 /* GridChunkConsumer.java */,
 				E9749CF31FDE2C2700B6EA90 /* GridChunkProducer.java */,
 				E9D5C1DC2015C59A00D9BE47 /* IntChunk.java */,
@@ -1402,6 +1410,8 @@
 				E93AE8881FAA9FB000D3D699 /* ParallelChunkOperation.java */,
 				E93AE8851FAA9FAF00D3D699 /* PoolProcessor.java */,
 				E9AC37B82208DCF100F7C45C /* ResamplingOperation.java */,
+				E952C0E025F4B7EF001B74BB /* ScalingScheme.java */,
+				E952C0E125F4B8B7001B74BB /* ScalingSchemeVisitor.java */,
 				E93AE88A1FAA9FB000D3D699 /* ShortChunk.java */,
 				E9BBD121223CDDCA00887D57 /* SyntheticIntChunkProducer.java */,
 				E9D1AA942263E5F200214DB3 /* ValidChunkDetector.java */,

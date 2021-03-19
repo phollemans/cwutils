@@ -861,7 +861,7 @@ public abstract class HDFReader
           // Create chunk using data
           // -----------------------
           chunk = DataChunkFactory.getInstance().create (data,
-            grid.getUnsigned(), grid.getMissing(), packing);
+            grid.getUnsigned(), grid.getMissing(), packing, scaling);
 
         } // try
         catch (Exception e) { throw new RuntimeException (e); }

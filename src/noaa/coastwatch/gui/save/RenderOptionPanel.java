@@ -231,7 +231,11 @@ public class RenderOptionPanel
       colorLine = addLine (comps);
       if (showSmooth) GUIServices.setContainerEnabled (colorLine, false);
     } // if
-    
+
+
+// TODO: Should we add the other TIFF compression options here?
+
+
     // Add TIFF compression
     // --------------------
     if (showCompress) {

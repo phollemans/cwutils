@@ -46,6 +46,8 @@ import ucar.nc2.dataset.CoordinateSystem;
 import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.dataset.VariableDS;
 
+import java.util.logging.Logger;
+
 /** 
  * The <code>NCReader</code> class is the base class for readers that
  * use the Java NetCDF API to read and parse metadata.  Supported file
@@ -57,6 +59,8 @@ import ucar.nc2.dataset.VariableDS;
 public abstract class NCReader 
   extends EarthDataReader
   implements GridSubsetReader, NCSD {
+
+  private static final Logger LOGGER = Logger.getLogger (NCReader.class.getName());
 
   // Variables
   // ---------
@@ -363,6 +367,24 @@ public abstract class NCReader
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the NetCDF file referenced in this reader.
+   *
+   * @return the NetCDF file.
+   *
+   * @since 3.6.1
+   */
+  protected NetcdfFile getReferencedFile () {
+
+    var ncFile = dataset.getReferencedFile();
+    if (ncFile == null) ncFile = dataset;
+
+    return (ncFile);
+  
+  } // getReferencedFile
+
+  ////////////////////////////////////////////////////////////
+
   @Override
   public Grid getGridSubset (
     String varName,
@@ -378,7 +400,7 @@ public abstract class NCReader
     
     // Access variable
     // ---------------
-    Variable var = dataset.getReferencedFile().findVariable (varName);
+    Variable var = getReferencedFile().findVariable (varName);
     if (var == null)
       throw new IOException ("Cannot access variable " + varName);
 

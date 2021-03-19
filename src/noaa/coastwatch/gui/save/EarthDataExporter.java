@@ -82,6 +82,10 @@ public class EarthDataExporter
   // Constants
   // ---------
 
+
+// TODO: Where would we put the GeoTIFF 32-bit float data saving format?
+
+
   /** The supported file formats. */
   private static final String[] FORMATS = new String[] {
     "PNG image (.png)", 

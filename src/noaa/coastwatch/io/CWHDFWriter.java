@@ -639,7 +639,7 @@ public class CWHDFWriter
       Object fillValue = MetadataServices.toArray (missing);
       if (!HDFLib.getInstance().SDsetfillvalue (sdsid, fillValue))
         throw new HDFException ("Cannot set fill value for " + name);
-      setAttribute (sdsid, "missing_value", missing);
+      setAttribute (sdsid, "missing_value", missing, var.getUnsigned());
     } // if
     else {
       LOGGER.warning ("Unspecified fill value for variable " + name);

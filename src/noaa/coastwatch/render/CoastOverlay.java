@@ -36,6 +36,8 @@ import noaa.coastwatch.render.EarthImageTransform;
 import noaa.coastwatch.render.PolygonOverlay;
 import noaa.coastwatch.util.EarthArea;
 
+import java.util.logging.Logger;
+
 /**
  * A <code>CoastOverlay</code> annotates an earth data view with
  * coast lines and polygons.  The coast lines are rendered using
@@ -62,8 +64,9 @@ import noaa.coastwatch.util.EarthArea;
  * @author Peter Hollemans
  * @since 3.1.1
  */
-public class CoastOverlay 
-  extends PolygonOverlay {
+public class CoastOverlay extends PolygonOverlay {
+
+  private static final Logger LOGGER = Logger.getLogger (CoastOverlay.class.getName());
 
   /** The serialization constant. */
   private static final long serialVersionUID = 2437261200101474557L;
@@ -183,6 +186,7 @@ public class CoastOverlay
     // -----------------------
     EarthArea viewArea = view.getArea();
     double res = view.getResolution();
+    
     /**
      * We do this next line because the de-serialized coast overlay
      * will have a null reader factory.

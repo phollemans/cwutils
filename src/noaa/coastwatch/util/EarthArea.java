@@ -32,6 +32,8 @@ import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+
 /**
  * The <code>EarthArea</code> class represents irregularly shaped areas on a
  * sphere.  In cases where simple north, south, east, and west bounds
@@ -47,8 +49,9 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * @author Peter Hollemans
  * @since 3.1.1
  */
-public class EarthArea
-  implements Cloneable, Iterable<int[]> {
+public class EarthArea implements Cloneable, Iterable<int[]> {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthArea.class.getName());
 
   // Variables
   // ---------
@@ -506,7 +509,7 @@ public class EarthArea
     DataLocation center = new DataLocation ((min.get(0) + max.get(0))/2,
       (min.get(1) + max.get(1))/2);
     EarthLocation start = trans.transform (center);
-    if (getIndex (start) == -1) 
+    if (getIndex (start) == -1)
       throw new RuntimeException ("Data center has no valid earth location");
 
     // Explore earth area and expand

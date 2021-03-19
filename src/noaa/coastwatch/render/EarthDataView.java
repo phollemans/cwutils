@@ -719,10 +719,33 @@ public abstract class EarthDataView
     
       // TODO: Could this be where the issue is when showing views that
       // contain the date line?  The grid and coastlines get cut off.
-      
-    
+
+      // FIXME: 2020/11/28 -- This is the location of part of the failure.
+      // This issue is caused when cylindrical projections convert lat/lon values
+      // to data locations and the data location has a large column value,
+      // instead of the column value it should have.  For example, take a
+      // 512x512 Mercator projection that spans the date line boundary with
+      // center point to the right of the date line.  The
+      // right half of the image will be correctly explored by the EarthArea
+      // object.  The left half will not be, because the lat/lon locations
+      // transform to data locations with large column values, which are outside
+      // the 512x512 bounds of the view.  One way to make it work is to set the
+      // longitude of the central meridian equal to the longitude of the center
+      // location of the projection (try in cwmaster for Mercator projections).
+
+
+
       DataLocation[] corners = getBounds();
       area = new EarthArea (trans.getEarthTransform(), corners[0], corners[1]);
+
+
+//LOGGER.fine ("corners = [" + corners[0] + "," + corners[1] + "]");
+//for (var box : area)
+//  LOGGER.fine ("box = " + java.util.Arrays.toString (box));
+
+
+
+
     } // if
 
     return ((EarthArea) area.clone()); 

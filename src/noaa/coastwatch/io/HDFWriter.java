@@ -234,6 +234,37 @@ public abstract class HDFWriter
     String name,
     Object value
   ) throws HDFException, ClassNotFoundException {
+
+    setAttribute (sdid, name, value, false);
+
+  } // setAttribute
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets an HDF attribute value.
+   *
+   * @param sdid the HDF scientific dataset ID.
+   * @param name the attribute name.
+   * @param value the attribute value.  If the attribute value is a
+   * Java <code>String</code>, a character string is written.  If the
+   * attribute is a Java primitive wrapped in an object, only one
+   * value is written.  If the attribute value is a Java primitive
+   * array, multiple values are written.
+   * @param isUnsigned the unsigned flag, true if the attribute is numeric
+   * and should be written as unsigned, false otherwise.
+   *
+   * @throws HDFException if an error occurred in an HDF routine.
+   * @throws ClassNotFoundException if the HDF attribute type is unknown.
+   *
+   * @since 3.6.1
+   */
+  public static void setAttribute (
+    int sdid,
+    String name,
+    Object value,
+    boolean isUnsigned
+  ) throws HDFException, ClassNotFoundException {
   
     // Prepare string value
     // --------------------
@@ -256,7 +287,7 @@ public abstract class HDFWriter
       else
         attValue = value;
       attClass = attValue.getClass().getComponentType();
-      attType = getType (attClass, false);
+      attType = getType (attClass, isUnsigned);
       attLength = Array.getLength (attValue);
     } // else
 

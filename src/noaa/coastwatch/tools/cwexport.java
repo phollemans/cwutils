@@ -380,7 +380,7 @@ import java.util.logging.Level;
  *   <dt>-T, --tiffcomp=TYPE</dt>
  *
  *   <dd>The TIFF compression algorithm.  The valid types are 'none'
- *   for no compression (the default), or 'deflate' for ZIP style
+ *   for no compression (the default), 'deflate' or 'lzw' for ZIP style
  *   compression.</dd>
  *
  * </dl>
@@ -830,6 +830,8 @@ public class cwexport {
           compress = GeoTIFFWriter.COMP_NONE;
         else if (tiffcomp.equals ("deflate"))
           compress = GeoTIFFWriter.COMP_DEFLATE;
+        else if (tiffcomp.equals ("lzw"))
+          compress = GeoTIFFWriter.COMP_LZW;
         else {
           LOGGER.severe ("Unsupported TIFF compression: " + tiffcomp);
           ToolServices.exitWithCode (2);

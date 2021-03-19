@@ -51,6 +51,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.Arrays;
+import java.util.function.Function;
 
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
@@ -98,6 +99,7 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.TimePeriod;
 import noaa.coastwatch.util.UnitFactory;
 import noaa.coastwatch.util.trans.EarthTransform2D;
+import noaa.coastwatch.util.Statistics;
 
 import noaa.coastwatch.gui.PalettePanel;
 import javax.imageio.ImageIO;
@@ -465,7 +467,7 @@ import ucar.units.Unit;
  *     <b>--imagecolors</b> options are used, a special 8-bit
  *     paletted image file is generated and comments describing
  *     the data value scaling are inserting into the image
- *     description tags.  </li>
+ *     description tags (unless JPEG compression is used).  </li>
  *
  *     <li> <b>PDF</b> is a standard for high quality publishing
  *     developed by Adobe Systems and is used for output to a printer
@@ -538,9 +540,9 @@ import ucar.units.Unit;
  *   <dt>-T, --tiffcomp=TYPE</dt>
  *
  *   <dd>The TIFF compression algorithm.  The valid types are 'none'
- *   for no compression (the default), 'deflate' for ZIP style
- *   compression, and 'pack' for RLE style PackBits compression.  This
- *   option is only used with GeoTIFF output.</dd>
+ *   for no compression (the default), 'deflate' or 'lzw' for ZIP style
+ *   compression, 'pack' for RLE style PackBits compression, and 'jpeg' for
+ *   JPEG compression.  This option is only used with GeoTIFF output.</dd>
  *
  *   <dt>-W, --worldfile=FILE</dt>
  *
@@ -981,6 +983,13 @@ import ucar.units.Unit;
  *   <dd>The blue component enhancement function, see
  *   <b>--redfunction</b>.</dd>
  *
+ *   <dt>--truecolor</dt>
+ *
+ *   <dd>Performs the color composite assuming that the variables
+ *   are intended to create a true color image.  The various composite
+ *   functions and ranges are ignored and the output image is enhanced
+ *   to make the true color image look as natural as possible.</dd>
+ *
  * </dl>
  *
  * <h2>Exit status</h2>
@@ -1172,6 +1181,7 @@ public class cwrender {
     Option palettelistOpt = cmd.addBooleanOption ("palettelist");
     Option paletteimageOpt = cmd.addStringOption ("paletteimage");
     Option varnameOpt = cmd.addStringOption ("varname");
+    Option truecolorOpt = cmd.addBooleanOption ("truecolor");
     try { cmd.parse (argv); }
     catch (OptionException e) {
       LOGGER.warning (e.getMessage());
@@ -1367,6 +1377,11 @@ public class cwrender {
     String fontStr = (String) cmd.getOptionValue (fontOpt);
     if (fontStr == null) fontStr = "Dialog/plain/9";
     String varname = (String) cmd.getOptionValue (varnameOpt);
+    boolean truecolor = (cmd.getOptionValue (truecolorOpt) != null);
+    if (truecolor) {
+      redfunction = greenfunction = bluefunction = "gamma";
+      redrange = greenrange = bluerange = null;
+    } // if
 
     try {
 
@@ -1982,20 +1997,42 @@ public class cwrender {
       // Normalize view color composite
       // ------------------------------
       else if (view instanceof ColorComposite) {
+
         ColorComposite colorComp = (ColorComposite) view;
         int[] components = new int[] {ColorComposite.RED, ColorComposite.GREEN,
           ColorComposite.BLUE};
         String[] compNames = new String[] {"red", "green", "blue"};
         String[] compRangeVars = new String[] {redrange, greenrange, bluerange};
+
+        // In true color mode, set the gamma enhancement function using the
+        // statistics, based on the minimum and 2*stddev.  Otherwise, set the
+        // range using a factor of stdev around the mean.
+        Function<Statistics, double[]> statsFunc;
+        if (truecolor) {
+          statsFunc = stats -> {
+            double min = stats.getMin();
+            double mean = stats.getMean();
+            double diff = stats.getStdev()*2;
+            return (new double[] {min, mean + diff});
+          };
+        } // if
+        else {
+          statsFunc = stats -> {
+            double mean = stats.getMean();
+            double diff = stats.getStdev()*STDEV_UNITS;
+            return (new double[] {mean - diff, mean + diff});
+          };
+        } // else
+
         for (int i = 0; i < 3; i++) {
           if (compRangeVars[i] == null) {
-            VERBOSE.info ("Normalizing " + compNames[i] + " component");
-            colorComp.normalize (components[i], STDEV_UNITS);
+            colorComp.setRange (components[i], statsFunc);
             EnhancementFunction func = colorComp.getFunctions()[components[i]];
             double[] funcRange = func.getRange();
-            VERBOSE.info ("Normalized range = " + Arrays.toString (funcRange));
+            VERBOSE.info ("Set " + compNames[i] + " component range to " + Arrays.toString (funcRange));
           } // if
         } // for
+
       } // else if
 
       // Set verbose mode
@@ -2033,10 +2070,16 @@ public class cwrender {
 
       // Write image
       // -----------
+      CleanupHook.getInstance().scheduleDelete (output);
       EarthImageWriter writer = EarthImageWriter.getInstance();
       writer.setFont (font);
       writer.write (view, info, verbose, !nolegends, logoIcon, !noantialias,
         new File (output), format, worldfile, tiffcomp, imagecolors);
+
+      // Clean up
+      // --------
+      reader.close();
+      CleanupHook.getInstance().cancelDelete (output);
 
     } // try
 
@@ -2201,6 +2244,7 @@ public class cwrender {
     info.option ("-x, --redfunction=TYPE", "Set red component function type");
     info.option ("-y, --greenfunction=TYPE", "Set green component function type");
     info.option ("-z, --bluefunction=TYPE", "Set blue component function type");
+    info.option ("--truecolor", "Enhance composite for true color");
 
     return (info);
 

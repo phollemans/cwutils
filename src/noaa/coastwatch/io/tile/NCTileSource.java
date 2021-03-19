@@ -263,9 +263,9 @@ public class NCTileSource
     scheme = new TilingScheme (dims, tileDims);
 
     LOGGER.fine ("Using tiling scheme with " +
-    "tileDims = [" + tileDims[0] + "," + tileDims[1] + "], " +
-    "dims = [" + dims[0] + "," + dims[1] + "], " +
-    "isCompressed = " + isCompressed);
+      "tileDims = [" + tileDims[0] + "," + tileDims[1] + "], " +
+      "dims = [" + dims[0] + "," + dims[1] + "], " +
+      "isCompressed = " + isCompressed);
 
   } // NCTileSource constructor
 
@@ -308,6 +308,13 @@ public class NCTileSource
     catch (InvalidRangeException e) {
       throw new IOException ("Invalid start/length reading tile");
     } // catch
+
+    LOGGER.fine ("Read NetCDF tile for " +
+      "file = 0x" + Integer.toHexString (file.hashCode()) +
+      ", varName = " + var.getShortName() +
+      ", start = " + Arrays.toString (start) +
+      ", length = " + Arrays.toString (length)
+    );
 
     return (scheme.new Tile (pos, data));
 

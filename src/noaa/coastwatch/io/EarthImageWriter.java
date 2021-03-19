@@ -218,6 +218,10 @@ public class EarthImageWriter {
       format.equals ("png") ||
       format.equals ("pdf")
     );
+    
+    // We discovered that the TIFF writer doesn't like to JPEG compress
+    // indexed images, so we keep them unindexed here in that case.
+    if (format.equals ("tif") && tiffComp.equals ("jpeg")) isIndexable = false;
 
     // Get visible overlay list
     // ------------------------
@@ -422,6 +426,10 @@ public class EarthImageWriter {
           compress = GeoTIFFWriter.COMP_DEFLATE;
         else if (tiffComp.equals ("pack"))
           compress = GeoTIFFWriter.COMP_PACK;
+        else if (tiffComp.equals ("lzw"))
+          compress = GeoTIFFWriter.COMP_LZW;
+        else if (tiffComp.equals ("jpeg"))
+          compress = GeoTIFFWriter.COMP_JPEG;
         else {
           throw new IllegalArgumentException ("Unsupported TIFF " +
             "compression: " + tiffComp);
