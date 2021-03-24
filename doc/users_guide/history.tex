@@ -12,6 +12,48 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Version 3.6.1 -- March 2021}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\begin{itemize}
+  
+  \item GeoTIFFs written by CDAT, cwrender, and cwexport now conform to the
+  cloud-optimized GeoTIFF recommendations.
+  
+  \item GeoTIFFs created by cwrender and cwxeport now have extra compression
+  options available: LZW and JPEG.
+
+  \item The cwmath, cwcomposite, and cweregister2 tools have been updated to
+  handle floating-point data variables with scaling factors.
+
+  \item NetCDF NcML datasets are now supported to help with data file
+  aggregation and metadata modification.
+
+  \item The cwrender tool now has a -{-}compositehint option to help with
+  automatically setting function types and ranges for rendering color composites.
+  
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+  \item There was an error produced in cwrender when rendering files that had
+  already been closed by the Java garbage collector.  This has been corrected
+  and the error no longer occurs.
+
+  \item HDF 4 files were being written with signed missing\_value attributes
+  even when the variable data was unsigned.  This has been corrected so that
+  the missing\_value and variable types match.
+
+  \item Some data files containing geographic projections that span both the
+  prime meridian and anti-meridian were not being recognized -- this is now
+  fixed.
+  
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Version 3.6.0 -- August 2020}
 
 \subsection*{\bigicon{box_software} Updates}
