@@ -85,7 +85,6 @@ public class DataChunkFactory {
    *
    * @param primitiveType the primitive data type for the chunk.
    * @param values the number of values in the data chunk.
-   * @param data the primitive array of data values to be used in the chunk.
    * @param isUnsigned the flag to indicate if the integer primitive values are
    * actually unsigned values packed into a signed primitive (eg: byte value in
    * the range [0..255] packaged as a signed byte in the range [-128..127]).
