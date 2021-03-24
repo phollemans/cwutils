@@ -208,7 +208,8 @@ import ucar.units.Unit;
  * -R, --redrange=MIN/MAX <br>
  * -x, --redfunction=TYPE <br>
  * -y, --greenfunction=TYPE <br>
- * -z, --bluefunction=TYPE
+ * -z, --bluefunction=TYPE <br>
+ * --compositehint=HINT
  * </p>
  *
  * <h2>Description</h2>
@@ -983,12 +984,29 @@ import ucar.units.Unit;
  *   <dd>The blue component enhancement function, see
  *   <b>--redfunction</b>.</dd>
  *
- *   <dt>--truecolor</dt>
+ *   <dt>--compositehint=HINT</dt>
  *
- *   <dd>Performs the color composite assuming that the variables
- *   are intended to create a true color image.  The various composite
- *   functions and ranges are ignored and the output image is enhanced
- *   to make the true color image look as natural as possible.</dd>
+ *   <dd>Performs the color composite using a hint for setting the composite
+ *   functions and ranges, ignoring any other composite settings.  The hints
+ *   available are:
+ *   <ul>
+ *
+ *     <li>'true_color' -- Creates a true color image from red/green/blue
+ *     variables that have been corrected for atmosphere so that all variables
+ *     contain reflectance data with a range [0..1].</li>
+ *
+ *     <li>'true_color_uncorr' -- Similar to true color above, but handles data
+ *     that has not been corrected for atmosphere and contains albedo or
+ *     radiance data.  The components are analyzed to determine approximate
+ *     dark pixel correction and maximum brightness values.</li>
+ *
+ *     <li>'avhrr_day' -- AVHRR daytime false color using channels 1, 2, and
+ *     4.</li>
+ *
+ *     <li>'avhrr_night' -- AVHRR nighttime false color using channels 3, 4, and
+ *     5.</li>
+
+ *   </ul></dd>
  *
  * </dl>
  *
@@ -1181,7 +1199,7 @@ public class cwrender {
     Option palettelistOpt = cmd.addBooleanOption ("palettelist");
     Option paletteimageOpt = cmd.addStringOption ("paletteimage");
     Option varnameOpt = cmd.addStringOption ("varname");
-    Option truecolorOpt = cmd.addBooleanOption ("truecolor");
+    Option compositehintOpt = cmd.addStringOption ("compositehint");
     try { cmd.parse (argv); }
     catch (OptionException e) {
       LOGGER.warning (e.getMessage());
@@ -1377,11 +1395,7 @@ public class cwrender {
     String fontStr = (String) cmd.getOptionValue (fontOpt);
     if (fontStr == null) fontStr = "Dialog/plain/9";
     String varname = (String) cmd.getOptionValue (varnameOpt);
-    boolean truecolor = (cmd.getOptionValue (truecolorOpt) != null);
-    if (truecolor) {
-      redfunction = greenfunction = bluefunction = "gamma";
-      redrange = greenrange = bluerange = null;
-    } // if
+    String compositehint = (String) cmd.getOptionValue (compositehintOpt);
 
     try {
 
@@ -1623,6 +1637,33 @@ public class cwrender {
         Grid[] grids = new Grid[3]; 
         for (int i = 0; i < 3; i++)
           grids[i] = (Grid) reader.getVariable (compositeArray[i]);
+
+        // Check for composite hint
+        // ------------------------
+        if (compositehint != null) {
+          if (compositehint.equals ("true_color")) {
+            redfunction = greenfunction = bluefunction = "gamma";
+            redrange = greenrange = bluerange = "0/1";
+          } // if
+          else if (compositehint.equals ("true_color_uncorr")) {
+            redfunction = greenfunction = bluefunction = "gamma";
+            redrange = greenrange = bluerange = null;
+          } // else if
+          else if (compositehint.equals ("avhrr_day")) {
+            redfunction = greenfunction = "linear";
+            bluefunction = "linear-reverse";
+            redrange = greenrange = bluerange = null;
+          } // else if
+          else if (compositehint.equals ("avhrr_night")) {
+            redfunction = greenfunction = bluefunction = "linear-reverse";
+            redrange = greenrange = bluerange = null;
+          } // else if
+          else {
+            LOGGER.severe ("Invalid composite hint '" + compositehint + "'");
+            ToolServices.exitWithCode (2);
+            return;
+          } // if
+        } // if
 
         // Get enhancement ranges
         // ----------------------
@@ -1999,34 +2040,60 @@ public class cwrender {
       else if (view instanceof ColorComposite) {
 
         ColorComposite colorComp = (ColorComposite) view;
-        int[] components = new int[] {ColorComposite.RED, ColorComposite.GREEN,
-          ColorComposite.BLUE};
+        int[] components = new int[] {ColorComposite.RED, ColorComposite.GREEN, ColorComposite.BLUE};
         String[] compNames = new String[] {"red", "green", "blue"};
         String[] compRangeVars = new String[] {redrange, greenrange, bluerange};
 
-        // In true color mode, set the gamma enhancement function using the
-        // statistics, based on the minimum and 2*stddev.  Otherwise, set the
-        // range using a factor of stdev around the mean.
-        Function<Statistics, double[]> statsFunc;
-        if (truecolor) {
-          statsFunc = stats -> {
-            double min = stats.getMin();
-            double mean = stats.getMean();
-            double diff = stats.getStdev()*2;
-            return (new double[] {min, mean + diff});
-          };
-        } // if
-        else {
-          statsFunc = stats -> {
-            double mean = stats.getMean();
-            double diff = stats.getStdev()*STDEV_UNITS;
-            return (new double[] {mean - diff, mean + diff});
-          };
-        } // else
+        // We define two statistics functions here, one that we apply
+        // to uncorrected visible channel bands to account for the darkest
+        // pixel, and the other to use the mean and stdev values.
+        Function<Statistics, double[]> visStatsFunc = stats -> {
+          double min = stats.getMin();
+          double mean = stats.getMean();
+          double diff = stats.getStdev()*2;
+          return (new double[] {min, mean + diff});
+        };
 
+        Function<Statistics, double[]> meanStatsFunc = stats -> {
+          double mean = stats.getMean();
+          double diff = stats.getStdev()*STDEV_UNITS;
+          return (new double[] {mean - diff, mean + diff});
+        };
+
+        // If there was a composite hint, set the RGB functions in a special way
+        // depending on the hint.
+        if (compositehint != null) {
+        
+          if (compositehint.equals ("true_color_uncorr")) {
+            colorComp.setRange (ColorComposite.RED, visStatsFunc);
+            colorComp.setRange (ColorComposite.GREEN, visStatsFunc);
+            colorComp.setRange (ColorComposite.BLUE, visStatsFunc);
+          } // else if
+          else if (compositehint.equals ("avhrr_day")) {
+            colorComp.setRange (ColorComposite.RED, meanStatsFunc);
+            colorComp.setRange (ColorComposite.GREEN, meanStatsFunc);
+            colorComp.setRange (ColorComposite.BLUE, meanStatsFunc);
+          } // else if
+          else if (compositehint.equals ("avhrr_night")) {
+            colorComp.setRange (ColorComposite.RED, meanStatsFunc);
+            colorComp.setRange (ColorComposite.GREEN, meanStatsFunc);
+            colorComp.setRange (ColorComposite.BLUE, meanStatsFunc);
+          } // else if
+
+        } // if
+
+        // Otherwise if no composite hint was given, use the mean/stdev
+        // function for all components that don't already have a range
+        // explicitly set.
+        else {
+          for (int i = 0; i < 3; i++) {
+            if (compRangeVars[i] == null) colorComp.setRange (components[i], meanStatsFunc);
+          } // for
+        } // else
+        
+        // In verbose mode, print out the range of each component.
         for (int i = 0; i < 3; i++) {
-          if (compRangeVars[i] == null) {
-            colorComp.setRange (components[i], statsFunc);
+          if (compositehint != null || compRangeVars[i] == null) {
             EnhancementFunction func = colorComp.getFunctions()[components[i]];
             double[] funcRange = func.getRange();
             VERBOSE.info ("Set " + compNames[i] + " component range to " + Arrays.toString (funcRange));
@@ -2244,7 +2311,7 @@ public class cwrender {
     info.option ("-x, --redfunction=TYPE", "Set red component function type");
     info.option ("-y, --greenfunction=TYPE", "Set green component function type");
     info.option ("-z, --bluefunction=TYPE", "Set blue component function type");
-    info.option ("--truecolor", "Enhance composite for true color");
+    info.option ("--compositehint=HINT", "Enhance composite using hinted scheme");
 
     return (info);
 
