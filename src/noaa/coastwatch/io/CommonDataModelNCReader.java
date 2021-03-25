@@ -285,7 +285,9 @@ public class CommonDataModelNCReader
         CalendarDate end = CalendarDate.parseISOformat (calName, time_end);
         dateSet.add (new Date (end.getMillis()));
       } // try
-      catch (Exception e) { } // Might have a parsing error here
+      catch (Exception e) {
+        LOGGER.log (Level.WARNING, "Failed to parse time metadata", e);
+      } // catch
     } // if
     if (dateSet.size() == 0) dateSet.add (new Date(0));
     List<TimePeriod> periodList = new ArrayList<TimePeriod>();
