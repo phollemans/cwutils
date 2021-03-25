@@ -723,6 +723,13 @@ public final class cwinfo {
     valueMap.put ("Transform ident", (trans == null ? "null" :
       trans.getClass().getName()));
 
+
+// TODO: It would be useful here if CDM grid map projections could also
+// have their info printed, similar to the EarthPlotInfo legend.  Search the
+// code for getSystemName() for all places that may need this functionality.
+
+
+
     // Add map projection info
     // -----------------------    
     if (trans instanceof MapProjection) {

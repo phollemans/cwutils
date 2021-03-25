@@ -103,6 +103,63 @@ public class CDMGridMappedProjection
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the projection name.
+   *
+   * @return the projection name.
+   *
+   * @since 3.6.1
+   */
+  public String getName() {
+  
+    // We've found here that the name from the NetCDF library consists
+    // of a class name which is not as readable as we'd like.  We make a few
+    // changes to the format of the name to introduce spaces and remove the
+    // word "Projection" if found.
+    var name = proj.getName().replaceAll ("([a-z0-9])([A-Z])", "$1 $2")
+      .replaceAll ("Projection", "").trim();
+    
+    return (name);
+    
+  } // getName
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the map pixel size.
+   *
+   * @return the pixel size in projection units.
+   *
+   * @since 3.6.1
+   *
+   * @see #getProjectionUnits
+   */
+  public double getPixelSize() {
+  
+    return (xAxisTrans[0]);
+        
+  } // getPixelSize
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the projection system units.
+   *
+   * @return the projection units that match the pixel size
+   * (km, radians, or degrees) or null if they could not be determined.
+   *
+   * @since 3.6.1
+   *
+   * @see #getPixelSize
+   */
+  public String getProjectionUnits() {
+  
+    return (getProjectionUnits (proj));
+        
+  } // getProjectionUnits
+
+  ////////////////////////////////////////////////////////////
+
   public String describe () { return (DESCRIPTION); }
 
   ////////////////////////////////////////////////////////////
@@ -140,7 +197,8 @@ public class CDMGridMappedProjection
    *
    * @param proj the projection to get the units for.
    * 
-   * @return the units or null if they could not be determined.
+   * @return the units (km, radians, or degrees) or null if they could not
+   * be determined.
    */
   private static String getProjectionUnits (
     Projection proj

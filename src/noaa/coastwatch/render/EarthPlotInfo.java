@@ -55,6 +55,7 @@ import noaa.coastwatch.util.MetadataServices;
 import noaa.coastwatch.util.SatelliteDataInfo;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.MapProjection;
+import noaa.coastwatch.util.trans.CDMGridMappedProjection;
 import noaa.coastwatch.tools.cwinfo;
 
 /**
@@ -293,9 +294,39 @@ public class EarthPlotInfo
     strings.add ("  " + (trans == null ? "Unknown" : 
       trans.describe().toUpperCase()));
 
+    // Add grid mapped projection attributes
+    // -------------------------------------
+    if (trans instanceof CDMGridMappedProjection) {
+      var gridMap = (CDMGridMappedProjection) trans;
+      strings.add ("Map projection:");
+      var units = gridMap.getProjectionUnits();
+      if (units != null) {
+        DecimalFormat format;
+        if (units.equals ("radians")) {
+          format = new DecimalFormat ("0.##e0");
+          units = "rad/pixel";
+        } // if
+        else if (units.equals ("km")) {
+          format = new DecimalFormat ("0.###");
+          units = "km/pixel";
+        } // else if
+        else if (units.equals ("degrees")) {
+          format = new DecimalFormat ("0.####");
+          units = "deg/pixel";
+        } // else if
+        else {
+          throw new IllegalStateException ("Unknown projection units '" + units + "'");
+        } // else
+        strings.add ("  " + format.format (gridMap.getPixelSize()) + " " + units);
+      } // if
+      String[] proj = gridMap.getName().toUpperCase().split (" ");
+      for (int i = 0; i < proj.length; i++)
+        strings.add ("  " + proj[i]);
+    } // if
+  
     // Add mapped projection attributes
     // --------------------------------
-    if (trans instanceof MapProjection) {
+    else if (trans instanceof MapProjection) {
       MapProjection map = (MapProjection) trans;
       strings.add ("Map projection:");
       if (map.getSystem() == GCTP.GEO) {
