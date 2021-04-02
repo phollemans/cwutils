@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="8.0.8" transformSequenceNumber="8">
-  <directoryPresets config="../../../../../Downloads/software.iconset" />
+  <directoryPresets config="../../../Terrenus/Code Signing/Apple Mac OS/Terrenus_Apple_Certificates_Dec_21_2020.p12" />
   <application name="CoastWatch Utilities" applicationId="1290-4459-1345-6363" mediaDir="${compiler:pkgDir}" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}-${compiler:osName}-${compiler:arch}${compiler:novm}" compression="9" lzmaCompression="true" pack200Compression="true" shortName="cwutils" publisher="National Oceanic and Atmospheric Administration" publisherWeb="http://coastwatch.noaa.gov" version="3.0.0" allPathsRelative="true" macVolumeId="7b43b8e08af23735" javaMinVersion="11.0">
     <variables>
       <variable name="osName" />
@@ -18,6 +18,14 @@
       <variable name="cwmasterExecutable" value="cwmaster" />
       <variable name="cwstatusExecutable" value="cwstatus" />
     </variables>
+    <codeSigning macEnabled="true" macPkcs12File="../../../Terrenus/Code Signing/Apple Mac OS/Terrenus_Apple_Certificates_Dec_21_2020.p12" windowsEnabled="true" windowsPkcs12File="../../../Terrenus/Code Signing/Microsoft Authenticode/DigiCert/Terrenus_Microsoft_Certificates_Mar_31_2021.pfx" macNotarize="true" appleId="phollemans@icloud.com">
+      <macSearchedJars>
+        <entry>jna-*</entry>
+        <entry>swt-*</entry>
+        <entry>javafx-*</entry>
+        <entry>toolsUI-*</entry>
+      </macSearchedJars>
+    </codeSigning>
     <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk14/jdk-14.0.2+12_openj9-0.21.0" />
   </application>
   <files>

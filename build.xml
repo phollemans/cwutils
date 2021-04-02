@@ -27,6 +27,7 @@
   <tstamp>
     <format property="current.time" pattern="yyyyMMdd_HHmmss"/>
   </tstamp>
+  <property file="${password.file}"/>
 
   <!-- Define tasks -->
   <!-- ************ -->
@@ -266,6 +267,10 @@
       projectfile="cwutils.install4j"
       release="${version.full}"
       buildids="${build.ids}"
+      disableSigning="${disable.signing}"
+      macKeystorePassword="${mac.keystore.password}"
+      winKeystorePassword="${win.keystore.password}"
+      appleIdPassword="${install4j.appleid.password}"
       verbose="true">
       <vmParameter value="-Xmx1024m"/>
     </install4j>
