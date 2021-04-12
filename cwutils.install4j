@@ -11,6 +11,7 @@
       <variable name="baseInstallDir" value="${compiler:sys.shortName}_${compiler:sys.version}" />
       <variable name="arch" value="generic" />
       <variable name="libDir" value="${compiler:osName}_${compiler:arch}" />
+      <variable name="nativeLibOption" />
       <variable name="pkgDir" value="../Packages" />
       <variable name="vmOptionsFile" />
       <variable name="novm" />
@@ -63,7 +64,9 @@
           <entry location="bin/${compiler:cwstatusExecutable}" fileType="launcher" />
           <entry location="extensions" />
           <entry location="lib" />
-          <entry location="doc/cwutils_ug_3_6_1.pdf" />
+          <entry location="doc/cw_cf_metadata.pdf" />
+          <entry location="doc/cwutils_ug_3_7_0.pdf" />
+          <entry location="doc/metadata_comparison_v1_1_jan_2010.pdf" />
           <entry location="doc/license.txt" />
           <entry location="data" />
         </include>
@@ -94,10 +97,8 @@
       </component>
       <component name="Source code and API docs" id="118" selected="false">
         <include>
-          <entry location="doc/api.zip" />
-          <entry location="doc/cw_cf_metadata.pdf" />
-          <entry location="doc/metadata_comparison_v1_1_jan_2010.pdf" />
           <entry location="src.zip" />
+          <entry location="doc/api.zip" />
         </include>
       </component>
     </components>
@@ -181,7 +182,7 @@
     </launcher>
     <launcher name="cwangles" id="35" excludeFromMenu="true">
       <executable name="cwangles" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwangles" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwangles" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -197,7 +198,7 @@
     </launcher>
     <launcher name="cwcomposite" id="36" excludeFromMenu="true">
       <executable name="cwcomposite" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwcomposite" vmParameters="-Djava.awt.headless=true -Xmx256m ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwcomposite" vmParameters="-Djava.awt.headless=true -Xmx256m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -213,7 +214,7 @@
     </launcher>
     <launcher name="cwcoverage" id="52" excludeFromMenu="true">
       <executable name="cwcoverage" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwcoverage" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwcoverage" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -229,7 +230,7 @@
     </launcher>
     <launcher name="cwdownload" id="55" excludeFromMenu="true">
       <executable name="cwdownload" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwdownload" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwdownload" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -245,7 +246,7 @@
     </launcher>
     <launcher name="cwexport" id="59" excludeFromMenu="true">
       <executable name="cwexport" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwexport" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwexport" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -261,7 +262,7 @@
     </launcher>
     <launcher name="cwgraphics" id="61" excludeFromMenu="true">
       <executable name="cwgraphics" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwgraphics" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwgraphics" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -277,7 +278,7 @@
     </launcher>
     <launcher name="cwimport" id="64" excludeFromMenu="true">
       <executable name="cwimport" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwimport" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwimport" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -293,7 +294,7 @@
     </launcher>
     <launcher name="cwinfo" id="67" excludeFromMenu="true">
       <executable name="cwinfo" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwinfo" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwinfo" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -309,7 +310,7 @@
     </launcher>
     <launcher name="cwmath" id="69" excludeFromMenu="true">
       <executable name="cwmath" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwmath" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwmath" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -325,7 +326,7 @@
     </launcher>
     <launcher name="cwnavigate" id="71" excludeFromMenu="true">
       <executable name="cwnavigate" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwnavigate" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwnavigate" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -341,7 +342,7 @@
     </launcher>
     <launcher name="cwregister" id="73" excludeFromMenu="true">
       <executable name="cwregister" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwregister" vmParameters="-Djava.awt.headless=true -Xmx1024m ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwregister" vmParameters="-Djava.awt.headless=true -Xmx1024m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -357,7 +358,7 @@
     </launcher>
     <launcher name="cwregister2" id="1652" excludeFromMenu="true">
       <executable name="cwregister2" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwregister2" vmParameters="-Djava.awt.headless=true -Xmx2048m ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwregister2" vmParameters="-Djava.awt.headless=true -Xmx2048m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -373,7 +374,7 @@
     </launcher>
     <launcher name="cwrender" id="75" excludeFromMenu="true">
       <executable name="cwrender" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwrender" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwrender" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -389,7 +390,7 @@
     </launcher>
     <launcher name="cwsample" id="77" excludeFromMenu="true">
       <executable name="cwsample" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwsample" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwsample" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -405,7 +406,7 @@
     </launcher>
     <launcher name="cwstats" id="79" excludeFromMenu="true">
       <executable name="cwstats" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwstats" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwstats" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -421,7 +422,7 @@
     </launcher>
     <launcher name="cwautonav" id="147" excludeFromMenu="true">
       <executable name="cwautonav" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwautonav" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwautonav" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -438,7 +439,7 @@
     <launcher name="hdatt" id="159" excludeFromMenu="true">
       <executable name="hdatt" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
       <splashScreen width="-1" height="-1" />
-      <java mainClass="noaa.coastwatch.tools.hdatt" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.hdatt" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -453,7 +454,7 @@
     </launcher>
     <launcher name="cwscript" id="716" excludeFromMenu="true">
       <executable name="cwscript" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwscript" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwscript" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -469,7 +470,7 @@
     </launcher>
     <launcher name="cwgscript" id="852" excludeFromMenu="true">
       <executable name="cwgscript" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwscript" vmParameters="-Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
+      <java mainClass="noaa.coastwatch.tools.cwscript" vmParameters="-Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -738,7 +739,7 @@ OTHER DEALINGS WITH THE SOFTWARE.
                         <property name="name" type="string">User's Guide</property>
                         <property name="target">
                           <object class="java.io.File">
-                            <string>doc/cwutils_ug_3_6_1.pdf</string>
+                            <string>doc/cwutils_ug_3_7_0.pdf</string>
                           </object>
                         </property>
                       </object>
@@ -2026,6 +2027,7 @@ if (context.isUnattended()) {
         <variable name="cdatExecutable" value="CoastWatch Data Analysis Tool" />
         <variable name="cwmasterExecutable" value="CoastWatch Master Tool" />
         <variable name="cwstatusExecutable" value="CoastWatch Status Tool" />
+        <variable name="nativeLibOption" value="-Djava.library.path=$app_home/lib/native/${compiler:libDir}" />
       </variables>
       <jreBundle jreBundleSource="generated" />
     </macosFolder>
