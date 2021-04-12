@@ -303,7 +303,7 @@ public class EarthPlotInfo
       if (units != null) {
         DecimalFormat format;
         if (units.equals ("radians")) {
-          format = new DecimalFormat ("0.##e0");
+          format = new DecimalFormat ("0.##E0");
           units = "rad/pixel";
         } // if
         else if (units.equals ("km")) {
