@@ -76,6 +76,7 @@ import noaa.coastwatch.render.EnhancementFunction;
 import noaa.coastwatch.render.IconElement;
 import noaa.coastwatch.render.LinearEnhancement;
 import noaa.coastwatch.render.LogEnhancement;
+import noaa.coastwatch.render.GammaEnhancement;
 import noaa.coastwatch.render.Renderable;
 import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.EarthDataInfo;
@@ -171,7 +172,8 @@ public class EarthImageWriter {
    * @param worldFile the world file to write, or null for no world
    * file.  Correct world files can only be written if no legends are
    * used and only for image formats, not PDF.
-   * @param tiffComp the TIFF compression type: 'none', 'deflate', or 'pack'.
+   * @param tiffComp the TIFF compression type: 'none', 'deflate', 'pack',
+   * 'lzw', or 'jpeg'.
    * @param imageColors the number of image colors to use or 0 to
    * not restrict the image colors.  If &gt; 0, an indexed color
    * model will be used for TIFF, PNG, GIF, and PDF output and
@@ -456,25 +458,58 @@ public class EarthImageWriter {
           int colors = enhancement.getColors();
           String equation = enhancement.getGrid().getName() + " = ";
           if (func instanceof LinearEnhancement) {
+
             /**
-             * For a linear enhancement, we reverse the y = mx + b,
-             * for example: sst = color_index*0.117647 + 0
+             * For a linear enhancement, we reverse the y = mx + b.
+             * m = 1/(max-min)
+             * b = -m*min
+             * Then we have y = (x-min) / (max-min)
+             * Rearranging, x = y*(max-min) + min
+             * For example: sst = color_index*0.117647 + 0
+             * where max = 30, min = 0, colors = 256, y = color_index/(colors-1)
              */
             equation += "color_index*" + (max-min)/(colors-1) + " + " + min; 
+
           } // if
           else if (func instanceof LogEnhancement) {
+
             /**
-             * For a log enhancement, we reverse the y = mlogx + b,
-             * for example: chlor_a = 0.01*(6500^(color_index/255))
+             * For a log enhancement, we reverse the y = mlogx + b.  Since
+             * m = 1/(log(max) - log(min) and
+             * b = -m * log(min)
+             * Then we have y = [logx - log(min)]/[log(max) - log(min)]
+             * Rearranging, x = min * (max/min)^y
+             * For example: chlor_a = 0.01 * (6500^(color_index/255))
+             * where max = 65, min = 0.01, colors = 256, y = color_index/(colors-1)
              */
-            equation += min + "*(" + (max/min) + "^(color_index/" +(colors-1)+
-              "))";
+
+            equation += min + "*(" + (max/min) + "^(color_index/" +(colors-1) + "))";
+
           } // else if
+
+          else if (func instanceof GammaEnhancement) {
+          
+            /**
+             * For a gamma enhancement, we reverse the y = (mx + b)^g.  Since
+             * similarly to the linear case:
+             * m = 1/(max-min)
+             * b = -m*min
+             * Then we have y = [(x-min)/(max-min)]^g
+             * Rearranging, x = y^(1/g) * (max - min) + min
+             * For example: EV_BandM5 = 4.35 * color_index^0.4545 0.01*(6500^(color_index/255))
+             * where max = 55, min = 1, gamma = 1/2.2, colors = 256, y = color_index/(colors-1)
+             */
+            double gamma = ((GammaEnhancement) func).getGamma();
+            equation += "((color_index/" + (colors-1) + ")^" + gamma + ")*" + (max-min) + " + " + min;
+              
+          } // else if
+          
           else {
-            throw new IOException ("Unknown enhancement function: " + 
-              func.getClass());
+            throw new IOException ("Unknown enhancement function: " + func.getClass());
           } // else
-          writer.setDescription (equation);          
+
+          writer.setDescription (equation);
+
         } // if
 
         // Encode the image

@@ -121,8 +121,8 @@ public abstract class ImageSavePanel
    * @param writeWorld the world file write flag, true to write a
    * world file.  The output file name extension is replaced with
    * '.wld' to create the world file name.
-   * @param tiffComp the TIFF compression algorithm: 'none',
-   * 'deflate', or 'pack'.
+   * @param tiffComp the TIFF compression algorithm: 'none', 'deflate', 'pack',
+   * 'lzw', or 'jpeg'.
    * @param colors the number of image colors for an indexed color
    * image, &lt;= 256 or 0 for no color limit.
    * @param format the output file format: 'png', 'gif', 'jpg', 'tif', or

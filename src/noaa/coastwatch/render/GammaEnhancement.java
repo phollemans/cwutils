@@ -74,6 +74,17 @@ public class GammaEnhancement
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the gamma value for this function.
+   *
+   * @return the gamma value used in the normalization.
+   *
+   * @since 3.7.0
+   */
+  public double getGamma () { return (gamma); }
+
+  ////////////////////////////////////////////////////////////
+
   @Override
   public double getInverse (
     double normValue

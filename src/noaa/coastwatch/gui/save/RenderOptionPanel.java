@@ -232,15 +232,18 @@ public class RenderOptionPanel
       if (showSmooth) GUIServices.setContainerEnabled (colorLine, false);
     } // if
 
-
-// TODO: Should we add the other TIFF compression options here?
-
-
     // Add TIFF compression
     // --------------------
     if (showCompress) {
       compressCheck = new JCheckBox ("Use TIFF compression algorithm");
-      compressCombo = new JComboBox (new String[] {"Deflate", "Pack"});
+
+      // We leave out JPEG compression in TIFF for now because testing has
+      // shown an issue with smaller images that are written with JPEG
+      // compression seem to appear all blank.
+      // compressCombo = new JComboBox (new String[] {"Deflate", "Pack", "LZW", "JPEG"});
+
+      compressCombo = new JComboBox (new String[] {"Deflate", "Pack", "LZW"});
+
       addLine (new Component[] {compressCheck, compressCombo});
     } // if
 

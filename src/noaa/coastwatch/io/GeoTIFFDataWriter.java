@@ -89,8 +89,8 @@ public class GeoTIFFDataWriter extends EarthDataWriter {
    *
    * @param info the info object to use for earth transform and other attributes.
    * @param filename the new GeoTIFF file name.
-   * @param compress the TIFF compression type, either COMP_NONE or COMP_DEFLATE
-   * (see {@link GeoTIFFWriter}).
+   * @param compress the TIFF compression type, either COMP_NONE, COMP_DEFLATE,
+   * COMP_PACK, or COMP_LZW.
    *
    * @throws IOException if an error occurred  the file.
    */

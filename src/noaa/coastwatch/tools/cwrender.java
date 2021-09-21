@@ -543,7 +543,8 @@ import ucar.units.Unit;
  *   <dd>The TIFF compression algorithm.  The valid types are 'none'
  *   for no compression (the default), 'deflate' or 'lzw' for ZIP style
  *   compression, 'pack' for RLE style PackBits compression, and 'jpeg' for
- *   JPEG compression.  This option is only used with GeoTIFF output.</dd>
+ *   JPEG compression (JPEG is experimental/beta).  This option is only used
+ *   with GeoTIFF output.</dd>
  *
  *   <dt>-W, --worldfile=FILE</dt>
  *
