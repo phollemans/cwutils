@@ -33,6 +33,8 @@ import noaa.coastwatch.util.chunk.DoublePackingScheme;
 import noaa.coastwatch.util.Grid;
 import java.lang.reflect.Array;
 
+import java.util.logging.Logger;
+
 /**
  * The <code>GridChunkProducer</code> class provides data chunks from
  * a {@link noaa.coastwatch.util.Grid} object.  The chunks produced will
@@ -43,6 +45,8 @@ import java.lang.reflect.Array;
  * @since 3.4.0
  */
 public class GridChunkProducer implements ChunkProducer {
+
+  private static final Logger LOGGER = Logger.getLogger (GridChunkProducer.class.getName());
 
   // Variables
   // ---------

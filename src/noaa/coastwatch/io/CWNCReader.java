@@ -261,7 +261,7 @@ public class CWNCReader
 
     // Get variable names
     // ------------------
-    List variableList = dataset.getReferencedFile().getVariables();
+    List variableList = getReferencedFile().getVariables();
     List nameList = new ArrayList();
     int[] dims = info.getTransform().getDimensions();
     for (Iterator iter = variableList.iterator(); iter.hasNext(); ) {
@@ -323,7 +323,7 @@ public class CWNCReader
 
     // Access variable
     // ---------------
-    Variable var = dataset.getReferencedFile().findVariable (variables[index]);
+    Variable var = getReferencedFile().findVariable (variables[index]);
     if (var == null)
       throw new IOException ("Cannot access variable at index " + index);
 
@@ -501,7 +501,7 @@ public class CWNCReader
 
     // Access variable
     // ---------------
-    Variable var = dataset.getReferencedFile().findVariable (variables[index]);
+    Variable var = getReferencedFile().findVariable (variables[index]);
     if (var == null)
       throw new IOException ("Cannot access variable at index " + index);
 

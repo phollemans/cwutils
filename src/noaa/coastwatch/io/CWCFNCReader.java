@@ -39,6 +39,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import noaa.coastwatch.io.NCReader;
+import noaa.coastwatch.io.tile.NCTileSource;
+import noaa.coastwatch.io.tile.TileCachedGrid;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.Grid;
@@ -302,7 +304,7 @@ public class CWCFNCReader
           // Create a map projection
           // -----------------------
           int[] dims = var.getDimensions();
-	  trans = MapProjectionFactory.getInstance().create (system, zone,
+          trans = MapProjectionFactory.getInstance().create (system, zone,
             parameters, spheroid, dims, affine);
 
         } // try
@@ -328,7 +330,7 @@ public class CWCFNCReader
 
     // Get variable names
     // ------------------
-    List variableList = dataset.getReferencedFile().getVariables();
+    List variableList = getReferencedFile().getVariables();
     List nameList = new ArrayList();
     for (Iterator iter = variableList.iterator(); iter.hasNext(); ) {
       Variable var = (Variable) iter.next();
@@ -340,23 +342,34 @@ public class CWCFNCReader
       // Check for correct dimensions
       // ----------------------------
       String varName = var.getShortName();
-      if (var.getRank() >= 2) {
+      int rank = var.getRank();
+      if (rank >= 2) {
 
         // Detect time bounds variable
         // ---------------------------
         List<Dimension> dims = var.getDimensions();
         Dimension dim0 = dims.get (0);
         Dimension dim1 = dims.get (1);
-        boolean isTimeBounds = (
-          var.getRank() == 2 &&
+        if (
+          rank == 2 &&
           (dim0.getLength() == 1 || dim1.getLength() == 1) &&
           (dim0.getShortName().matches (".*time.*") || dim1.getShortName().matches (".*time.*"))
-        );
+        ) continue;
 
-        // Skip time bounds variable in list
-        // ---------------------------------
-        if (!isTimeBounds)
-          nameList.add (var.getShortName());
+        // We detect a variable with unexpected dimension lengths.  What we
+        // want to see is a time and/or level in the first positions with
+        // length 1, then 2 spatial dimensions at the end.  We don't know what
+        // the time or level dimensions should be called (we would need a
+        // dataset view to determine the axes types) so we just check lengths.
+        boolean correctDimensions = true;
+        for (int index = 0; index < rank-2; index++) {
+          if (dims.get (index).getLength() != 1) { correctDimensions = false; break; }
+        } // for
+        if (!correctDimensions) continue;
+
+        // Add the name to the list
+        // ------------------------
+        nameList.add (var.getShortName());
 
       } // if
       
@@ -402,13 +415,13 @@ public class CWCFNCReader
 
     // Access variable
     // ---------------
-    Variable var = dataset.getReferencedFile().findVariable (variables[index]);
+    Variable var = getReferencedFile().findVariable (variables[index]);
     if (var == null)
       throw new IOException ("Cannot access variable at index " + index);
 
     // Get variable info
     // -----------------
-    int varDims[] = var.getShape();
+    int[] varDims = var.getShape();
     String name = var.getShortName();
     int rank = var.getRank();
     Class varClass = var.getDataType().getPrimitiveClassType();
@@ -584,21 +597,34 @@ public class CWCFNCReader
 
     // Get a variable preview
     // ----------------------
-    DataVariable dataVar = getPreview (index);
+    DataVariable varPreview = getPreview (index);
+    Variable var = getReferencedFile().findVariable (variables[index]);
 
-    // Access variable
-    // ---------------
-    Variable var = dataset.getReferencedFile().findVariable (variables[index]);
-    if (var == null)
-      throw new IOException ("Cannot access variable at index " + index);
+    // Create cached grid
+    // ------------------
+    DataVariable dataVar;
+    if (varPreview instanceof Grid) {
+      Grid grid = (Grid) varPreview;
+      int rank = var.getRank();
+      int rowIndex = rank-2;
+      int colIndex = rank-1;
+      int[] start = new int[rank];
+      NCTileSource source = new NCTileSource (getReferencedFile(),
+        grid.getName(), rowIndex, colIndex, start);
+      TileCachedGrid cachedGrid = new TileCachedGrid (grid, source);
+      dataVar = cachedGrid;
+    } // if
+    
+    // Fill preview with data
+    // ----------------------
+    else {
+      if (var == null)
+        throw new IOException ("Cannot access variable at index " + index);
+      Object data = var.read().getStorage();
+      varPreview.setData (data);
+      dataVar = varPreview;
+    } // else
 
-    // Read data
-    // ---------
-    Object data = var.read().getStorage();
-
-    // Return variable
-    // ---------------
-    dataVar.setData (data);
     return (dataVar);
 
   } // getActualVariable

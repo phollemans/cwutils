@@ -293,7 +293,7 @@ public class ACSPONCReader
     // Create list of 2D non-coordinate variables
     // ------------------------------------------
     List<String> nameList = new ArrayList<String>();
-    for (Variable var : dataset.getReferencedFile().getVariables()) {
+    for (Variable var : getReferencedFile().getVariables()) {
       if (var.getRank() == 2 && !var.isCoordinateVariable())
         nameList.add (var.getShortName());
     } // for
@@ -338,7 +338,7 @@ public class ACSPONCReader
 
     // Access variable
     // ---------------
-    Variable var = dataset.getReferencedFile().findVariable (variables[index]);
+    Variable var = getReferencedFile().findVariable (variables[index]);
     if (var == null)
       throw new IOException ("Cannot access variable at index " + index);
 
@@ -421,7 +421,7 @@ public class ACSPONCReader
     DataVariable dataVar;
     if (varPreview instanceof Grid) {
       Grid grid = (Grid) varPreview;
-      NCTileSource source = new NCTileSource (dataset.getReferencedFile(),
+      NCTileSource source = new NCTileSource (getReferencedFile(),
         grid.getName(), Grid.ROWS, Grid.COLS, new int[] {0, 0});
       TileCachedGrid cachedGrid = new TileCachedGrid (grid, source);
       dataVar = cachedGrid;
@@ -430,7 +430,7 @@ public class ACSPONCReader
     // Fill preview with data
     // ----------------------
     else {
-      Variable var = dataset.getReferencedFile().findVariable (variables[index]);
+      Variable var = getReferencedFile().findVariable (variables[index]);
       if (var == null)
         throw new IOException ("Cannot access variable at index " + index);
       Object data = var.read().getStorage();
