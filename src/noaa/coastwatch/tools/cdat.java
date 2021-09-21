@@ -1138,7 +1138,19 @@ public final class cdat
       if (dir != null) file = new File (dir);
     } // if
     EarthDataReader reader = EarthDataChooser.showDialog (this, file);
-    
+
+
+
+// FIXME: What happens here if the directory or file no longer exist?  In some
+// cases this method is being called from the recent file menu and a file or
+// directory may have been deleted entirely.
+// There's a problem that is not easy to reproduce, but the symptom is when
+// hitting Cancel on the file open dialog, the dialog doesn't disappear, and
+// can't be dismissed and you have to close CDAT.
+
+
+
+
     // Add analysis panel to tabbed pane
     // ---------------------------------
     if (reader != null) {

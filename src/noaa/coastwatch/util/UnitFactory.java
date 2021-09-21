@@ -34,7 +34,7 @@ import ucar.units.UnitName;
 import ucar.units.UnknownUnit;
 
 /**
- * The <code>UnitFactory</code> class create Unidata UDUNITS style
+ * The <code>UnitFactory</code> class creates Unidata UDUNITS style
  * <code>Unit</code> objects from unit specification strings.  This is
  * simply a convenience factory that uses the <code>ucar.units</code>
  * package.  A number of aliases are also added to the parser to
