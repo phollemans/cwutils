@@ -44,6 +44,9 @@ import noaa.coastwatch.util.SolarZenith;
 import noaa.coastwatch.util.TimePeriod;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * The <code>EarthDataInfo</code> class is a container for global
  * metadata pertaining to a number of {@link DataVariable} objects.
@@ -59,6 +62,8 @@ import noaa.coastwatch.util.trans.EarthTransform;
  */
 public class EarthDataInfo
   extends MetadataContainer {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthDataInfo.class.getName());
 
   // Variables
   // ---------
@@ -111,6 +116,21 @@ public class EarthDataInfo
     periodList.add (fullPeriod);
 
   } // collapseTimePeriods
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Clears the history of processing commands.
+   *
+   * @since 3.7.0
+   */
+  public void clearHistory () {
+
+    this.history = "";
+    var map = getMetadataMap();
+    if (map.containsKey ("history")) map.put ("history", "");
+  
+  } // clearHistory
 
   ////////////////////////////////////////////////////////////
 

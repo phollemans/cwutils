@@ -109,6 +109,7 @@ import java.util.logging.Level;
  * <p>
  * -c, --coherent=VARIABLE1[/VARIABLE2[...]] <br>
  * -h, --help <br>
+ * -k, --keephistory <br>
  * -m, --match=PATTERN <br>
  * -M, --method=TYPE <br>
  * -p, --pedantic <br>
@@ -182,6 +183,15 @@ import java.util.logging.Level;
  *   <dt>-h, --help</dt>
  *
  *   <dd>Prints a brief help message.</dd>
+ *
+ *   <dt>-k, --keephistory</dt>
+ *
+ *   <dd>Turns keep history mode on.  In keep history mode, the processing
+ *   commands used to create each input file are combined together, along
+ *   with the composite command.  The combined history of all processing commands
+ *   from all input files can be very large and in many cases overflows the maximum
+ *   length for history metadata in the output file, so by default only the
+ *   composite command is written to the output file history.</dd>
  *
  *   <dt>-m, --match=PATTERN</dt>
  *
@@ -351,6 +361,7 @@ public final class cwcomposite {
     Option inputsOpt = cmd.addStringOption ('i', "inputs");
     Option coherentOpt = cmd.addStringOption ('c', "coherent");
     Option serialOpt = cmd.addBooleanOption ("serial");
+    Option keephistoryOpt = cmd.addBooleanOption ("keepHistory");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -401,6 +412,7 @@ public final class cwcomposite {
     String coherentOutput = (String) cmd.getOptionValue (coherentOpt);
     boolean serialOperations = (cmd.getOptionValue (serialOpt) != null);
     boolean collapseTime = (cmd.getOptionValue (collapsetimeOpt) != null);
+    boolean keepHistory = (cmd.getOptionValue (keephistoryOpt) != null);
 
     // Check for coherent mode
     // -----------------------
@@ -476,6 +488,7 @@ public final class cwcomposite {
         // Get info and add to list
         // ------------------------
         EarthDataInfo info = reader.getInfo();
+        if (!keepHistory) info.clearHistory();
         inputInfoList.add (info);
 
         // Check earth transform matches
@@ -696,6 +709,7 @@ public final class cwcomposite {
 
     info.option ("-c, --coherent=VAR1[/VAR2[...]]", "Use coherent mode with variables");
     info.option ("-h, --help", "Show help message");
+    info.option ("-k, --keephistory", "Retain all input file history metadata");
     info.option ("-m, --match=PATTERN", "Composite only variables matching regular expression");
     info.option ("-M, --method=TYPE", "Set composite type");
     info.option ("-p, --pedantic", "Retain repeated metadata values");
