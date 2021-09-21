@@ -337,6 +337,56 @@ public class JELParser implements ExpressionParser {
       return (EarthLocation.distance (lat1, lon1, lat2, lon2));
     } // dist
 
+    /**
+     * Gets the index of the minimum value in the array, or -1 if there is no
+     * minimum (ie: all values are NaN).
+     */
+    public static int indexOfMin (double[] values) {
+
+      double min = Double.MAX_VALUE;
+      int index = -1;
+      
+      for (int i = 0; i < values.length; i++) {
+        if (values[i] < min) {
+          min = values[i];
+          index = i;
+        } // if
+      } // for
+      
+      return (index);
+
+    } // indexOfMin
+
+    /**
+     * Gets the index of the maximum value in the array, or -1 if there is no
+     * maximum (ie: all values are NaN).
+     */
+    public static int indexOfMax (double[] values) {
+
+      double max = -Double.MAX_VALUE;
+      int index = -1;
+      
+      for (int i = 0; i < values.length; i++) {
+        if (values[i] > max) {
+          max = values[i];
+          index = i;
+        } // if
+      } // for
+      
+      return (index);
+
+    } // indexOfMax
+
+    /** Gets the specified value from the array, or NaN if the index is -1. */
+    public static double getValue (int index, double[] array) {
+      return (index == -1 ? Double.NaN : array[index]);
+    } // getValue
+
+    /** Gets the specified value from the array, or NaN if the index is -1. */
+    public static float getValue (int index, float[] array) {
+      return (index == -1 ? Float.NaN : array[index]);
+    } // getValue
+
   } // ExtrasLibrary class
 
   ////////////////////////////////////////////////////////////
