@@ -12,6 +12,37 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Version 3.7.0 -- September 2021}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\begin{itemize}
+  
+  \item Added new GeoTIFF compression types to CDAT save options panel.
+  
+  \item The pass\_type attribute in CoastWatch HDF data files is no longer
+  updated to match the temporal and spatial coverage of newly created files.
+  The attribute was causing confusion when registering level 2 files that
+  covered a small area of a larger master region.  The CoastWatch HDF metadata
+  specification was similarly updated.
+  
+  \item Better handling was added for reading NetCDF files with CoastWatch
+  HDF and CF compliant metadata for variables of various ranks.
+  
+  \item More complete support for gamma enhancement in GeoTIFF images was
+  added for writing the equation used for scaling data values to indexed
+  colour map values.
+  
+  \item The cwcomposite tool was modified to discard the history attribute
+  in its input files and write only its own history attribute.  The history
+  attribute combined from multiple inputs was overflowing the allowed
+  metadata limits.  The -{-}keephistory option was added to override the
+  new behaviour.
+  
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Version 3.6.1 -- March 2021}
 
 \subsection*{\bigicon{box_software} Updates}
@@ -24,7 +55,7 @@
   \item GeoTIFFs created by cwrender and cwxeport now have extra compression
   options available: LZW and JPEG.
 
-  \item The cwmath, cwcomposite, and cweregister2 tools have been updated to
+  \item The cwmath, cwcomposite, and cwregister2 tools have been updated to
   handle floating-point data variables with scaling factors.
 
   \item NetCDF NcML datasets are now supported to help with data file
