@@ -339,10 +339,18 @@ public class CWHDFWriter
     // --------------------------------------
     List periodList = info.getTimePeriods();
     EarthTransform trans = info.getTransform();
-    if (periodList.size() == 1) {
-      setAttribute (sdid, "pass_type", 
-        info.getSceneTime (trans.getDimensions()));
-    } // if
+
+    // We don't want to write pass_type here anymore because it may need to
+    // be passed through from the original data source and we don't want to
+    // overwrite it, or possibly the user has left it out on purpose and
+    // doesn't want it computed.  It's not a reliable attribute anyway and
+    // we should look at the scene time in other places if needed to get the
+    // same information.
+    
+//    if (periodList.size() == 1) {
+//      setAttribute (sdid, "pass_type", info.getSceneTime (trans.getDimensions()));
+//    } // if
+
     setPeriodList (periodList);
     setTransform (trans);
 

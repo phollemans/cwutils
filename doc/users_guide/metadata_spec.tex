@@ -134,7 +134,9 @@ CoastWatch HDF:
   instantaneous.  & 3.2 \\ \hline
 
   {\tt pass\_type} & CHAR8 & The satellite pass temporal type: {\tt
-  day}, {\tt night}, {\tt day/night}. & 2.4 \\ \hline
+  day}, {\tt night}, {\tt day/night}.  If the data has been registered
+  to a different spatial grid than the original data capture, this attribute
+  indicates the original source temporal type. & 2.4 \\ \hline
   
   & CHAR8 & If the data is a composite, multiple values are
   newline-separated. & 3.2 \\ \hline
