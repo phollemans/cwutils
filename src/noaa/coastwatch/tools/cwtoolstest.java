@@ -209,16 +209,16 @@ public class cwtoolstest {
 
       // Run download tests
       // ------------------
-      sysOut.println (runTest ("cwdownload", false, new String[] {
-        "--ssl",
-//        "--satellite", "noaa-16",
-        "--scenetime", "day", 
-        "--test", 
-        "--region", "(er|sr)", 
-        "--station", "wi", 
-        "--dir", TEST_DATA_DIR,
-        "vmcwsst3.nesdis.noaa.gov"
-      }));
+//      sysOut.println (runTest ("cwdownload", false, new String[] {
+//        "--ssl",
+////        "--satellite", "noaa-16",
+//        "--scenetime", "day",
+//        "--test",
+//        "--region", "(er|sr)",
+//        "--station", "wi",
+//        "--dir", TEST_DATA_DIR,
+//        "vmcwsst3.nesdis.noaa.gov"
+//      }));
       
       // Run info tests
       // --------------
