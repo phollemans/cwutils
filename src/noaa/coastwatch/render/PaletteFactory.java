@@ -299,8 +299,13 @@ public class PaletteFactory {
         } // accept
       });
     for (int i = 0; i < files.length; i++) {
-      Palette palette = create (new FileInputStream (files[i]));
-      addPredefined (palette);
+      try {
+        Palette palette = create (new FileInputStream (files[i]));
+        addPredefined (palette);
+      } // try
+      catch (IOException e) {
+        throw new IOException ("Error parsing palette " + files[i], e);
+      } // catch
     } // for
 
   } // addPredefined

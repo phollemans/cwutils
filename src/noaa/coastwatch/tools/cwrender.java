@@ -217,13 +217,13 @@ import ucar.units.Unit;
  * <h3>Overview</h3>
  *
  * <p>The render tool performs earth data visualization by
- * converting 2D data sets in the input file to color images.
+ * converting 2D datasets in the input file to color images.
  * The data values are converted from scientific units to a color
  * using either an enhancement function and color palette or by
  * performing a color composite of three data variables &#8212; one
  * for each of the red, green, and blue color components.  The
  * resulting earth data plot may have legends displaying the
- * color scale, data origin, date, time, projection info, as well
+ * color scale, data origin, date, time, and projection information as well
  * as data overlays showing latitude/longitude grid lines, coast
  * lines, political boundaries, masks, and shapes.</p>
  *
@@ -1094,6 +1094,47 @@ import ucar.units.Unit;
  *   [INFO] Rendering overlay noaa.coastwatch.render.LatLonOverlay
  *   [INFO] Writing output 2002_288_1435_n17_er_sst_mag.png
  * </pre>
+ * <p>For an example of true color rendering, the next example shows the use
+ * of the <b>--compositehint</b> option for rendering top of atmopshere
+ * OLCI radiance data to a JPEG image:</p>
+ * <pre>
+ *   phollema$ cwrender --verbose --nolegends --size 1024
+ *     --composite EV_BandOa07/EV_BandOa06/EV_BandOa04
+ *     --compositehint true_color_uncorr
+ *     --coast white OLCMCW.I2021048.135053.hdf OLCMCW.I2021048.135053.true.jpg
+ *
+ *   [INFO] Reading input OLCMCW.I2021048.135053.hdf
+ *   [INFO] Set red component range to [0.8290487916208804, 28.153357705221403]
+ *   [INFO] Set green component range to [1.4429238677024843, 30.664745965510583]
+ *   [INFO] Set blue component range to [2.5182327458634974, 35.567549666418145]
+ *   [INFO] Preparing data image
+ *   [INFO] Rendering overlay noaa.coastwatch.render.CoastOverlay
+ *   [INFO] Writing output OLCMCW.I2021048.135053.true.jpg
+ * </pre>
+ * <p>The following shows a unique example of true color rendering from an
+ * existing color GeoTIFF file into a PNG with legends.  The GDAL and NetCDF
+ * Operators (NCO) software are also needed to accomplish this:</p>
+ * <pre>
+ *   phollema$ gdal_translate n20_viirs_20201031_175619.tif
+ *     n20_viirs_20201031_175619.nc
+ *   phollema$ ncatted -a sensor,GLOBAL,c,c,VIIRS n20_viirs_20201031_175619.nc
+ *   phollema$ ncatted -a platform_ID,GLOBAL,c,c,N20 n20_viirs_20201031_175619.nc
+ *   phollema$ ncatted -a institution,GLOBAL,c,c,"NOAA CoastWatch"
+ *     n20_viirs_20201031_175619.nc
+ *   phollema$ ncatted -a time_coverage_start,GLOBAL,c,c,2020-10-31T17:56:19Z
+ *     n20_viirs_20201031_175619.nc
+ *   phollema$ ncatted -a time_coverage_end,GLOBAL,c,c,2020-10-31T17:56:19Z
+ *     n20_viirs_20201031_175619.nc
+ *   phollema$ cwrender --verbose --size 700 --coast white --grid white
+ *     --composite Band1/Band2/Band3 --redrange 0/255 --greenrange 0/255
+ *     --bluerange 0/255 n20_viirs_20201031_175619.nc n20_viirs_20201031_175619.png
+ *
+ *   [INFO] Reading input n20_viirs_20201031_175619.nc
+ *   [INFO] Preparing data image
+ *   [INFO] Rendering overlay noaa.coastwatch.render.CoastOverlay
+ *   [INFO] Rendering overlay noaa.coastwatch.render.LatLonOverlay
+ *   [INFO] Writing output n20_viirs_20201031_175619.png
+ * </pre>
  *
  * <h2>Known Bugs</h2>
  *
@@ -1440,7 +1481,10 @@ public class cwrender {
         // Get palette from palette name
         // -----------------------------
         else {
-          ResourceManager.setupPalettes (false);
+          try { ResourceManager.setupPalettes (false); }
+          catch (IOException e) {
+            LOGGER.log (Level.WARNING, "Palette initialization failed, but rendering will continue", e);
+          } // catch
           List paletteList = PaletteFactory.getPredefined();
           if (!paletteList.contains (paletteName)) {
             LOGGER.severe ("Palette '" + paletteName + "' not found");
