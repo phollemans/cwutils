@@ -18,7 +18,7 @@
 
 \begin{itemize}
   
-  \item Added new GeoTIFF compression types to CDAT save options panel.
+  \item New GeoTIFF compression types were added to the CDAT save options panel.
   
   \item The pass\_type attribute in CoastWatch HDF data files is no longer
   updated to match the temporal and spatial coverage of newly created files.
@@ -26,7 +26,7 @@
   covered a small area of a larger master region.  The CoastWatch HDF metadata
   specification was similarly updated.
   
-  \item Better handling was added for reading NetCDF files with CoastWatch
+  \item File reading was improved for NetCDF files with CoastWatch
   HDF and CF compliant metadata for variables of various ranks.
   
   \item More complete support for gamma enhancement in GeoTIFF images was
@@ -38,6 +38,9 @@
   attribute combined from multiple inputs was overflowing the allowed
   metadata limits.  The -{-}keephistory option was added to override the
   new behaviour.
+  
+  \item Error handling was improved when parsing user colour palette
+  XML files read by CDAT and the cwrender tool.
   
 \end{itemize}
 
