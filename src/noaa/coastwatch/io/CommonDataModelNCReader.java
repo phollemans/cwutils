@@ -97,6 +97,7 @@ import ucar.nc2.time.CalendarDate;
 import ucar.nc2.time.CalendarDateRange;
 import ucar.nc2.dataset.CoordinateAxisTimeHelper;
 import ucar.nc2.time.Calendar;
+import ucar.nc2.dataset.CoordinateAxis1DTime;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -212,6 +213,23 @@ public class CommonDataModelNCReader
             CoordinateAxisTimeHelper helper = new CoordinateAxisTimeHelper (Calendar.getDefault(), axis.getUnitsString());
             CalendarDate date = helper.makeCalendarDateFromOffset (offset);
             dateSet.add (new Date (date.getMillis()));
+
+
+// There's an issue with detecting the time axis data the way it is.  Even
+// if the time axis entries have bounds, the total extent of the time axis
+// is not detected by just using getCalendarDateRange().  It only returns
+// the values of the extreme time axis entries, not accounting for the bounds.
+// Actually detecting the bounds is only accomplished by going into the time
+// axis and requesting the bounds explicitly using getCoordBoundsDate().  But
+// if there are no bounds, this returns some very odd values, namely the epoch
+// start and end times.  Q: Is there a method that detects if time bounds have
+// been specified?  The toolsUI seems to know when an interval is specified,
+// so there must be a method.
+
+
+//LOGGER.fine ("Set date from time axis");
+
+
           } // if
         } // if
       } // if
@@ -221,6 +239,30 @@ public class CommonDataModelNCReader
       else {
         dateSet.add (new Date (dateRange.getStart().getMillis()));
         dateSet.add (new Date (dateRange.getEnd().getMillis()));
+
+
+
+
+//LOGGER.fine ("Set date from date range");
+//dateSet.forEach (val -> { LOGGER.fine ("value = " + val); });
+//
+//LOGGER.fine ("duration = " + dateRange.getDurationInSecs());
+//var timeAxis = coordSystem.getTimeAxis();
+//LOGGER.fine ("time axis = " + timeAxis);
+//if (timeAxis instanceof CoordinateAxis1DTime) {
+//  var time1DAxis = (CoordinateAxis1DTime) timeAxis;
+//  for (int i = 0; i < time1DAxis.getSize(); i++) {
+//    var bounds = time1DAxis.getCoordBoundsDate (i);
+//    LOGGER.fine ("start bound = " + bounds[0]);
+//    LOGGER.fine ("end bound = " + bounds[1]);
+//  } // for
+//
+//  LOGGER.fine ("date range = " + time1DAxis.getCalendarDateRange());
+//
+//
+//} // if
+
+
       } // else
 
     } // for
