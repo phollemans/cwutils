@@ -238,6 +238,7 @@ public abstract class MaskOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void prepare (
     Graphics2D g,
     EarthDataView view
@@ -320,6 +321,7 @@ public abstract class MaskOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void draw (
     Graphics2D g,
     EarthDataView view

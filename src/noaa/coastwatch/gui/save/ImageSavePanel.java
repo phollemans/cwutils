@@ -164,8 +164,7 @@ public abstract class ImageSavePanel
           // Attempt write
           // -------------
           try {
-            IconElement logoIcon = 
-              IconElementFactory.create (IconElement.NOAA3D);
+            IconElement logoIcon = IconElementFactory.create (IconElement.NOAA_SIERRA);
             EarthDataView viewClone = (EarthDataView) view.clone();
             String worldFile = (writeWorld ? 
               file.getPath().replaceFirst ("\\.[^.]*$", ".wld") : null);

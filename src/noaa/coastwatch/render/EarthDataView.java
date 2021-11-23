@@ -66,7 +66,7 @@ import java.util.logging.Level;
 import noaa.coastwatch.test.TestLogger;
 
 /**
- * The earth data view class sets up a correspondence between 2D Earth
+ * The <code>EarthDataView</code> class sets up a correspondence between 2D Earth
  * locatable data variables (possibly more than one) and a visual
  * image.  A view has a certain size in width and height and a
  * translation between earth locations and image coordinates.  A view
@@ -110,7 +110,7 @@ import noaa.coastwatch.test.TestLogger;
  * delay in which the image is being rendered.  In addition to these
  * flags, the two methods <code>prepare()</code> and
  * <code>isPrepared()</code> are used to determine how much of a delay
- * may be involed in rendering.  If the protected <code>image</code>
+ * may be involved in rendering.  If the protected <code>image</code>
  * variable is not built or one of the overlays is not ready to be
  * immediately rendered in screen coordinates, then the view is "not
  * prepared".  The view may be explicitly prepared by calling the
@@ -1134,8 +1134,26 @@ public abstract class EarthDataView
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a new view using the geometry of the specified view.
+   *
+   * @param view the view to copy.
+   *
+   * @since 3.7.1
+   */
+  protected EarthDataView (
+    EarthDataView view
+  ) {
+
+    setProperties (view);
+    this.overlays.clear();
+
+  } // EarthDataView
+  
+  ////////////////////////////////////////////////////////////
+
   /** 
-   * Constructs a new earth data view using the specified parameters.
+   * Constructs a new view using the specified parameters.
    * The view dimensions are initialized to the data dimensions, and
    * the ratio of data to image pixel count to 1.  A check is performed on the
    * transform to determine if it should be oriented differently for
@@ -1305,7 +1323,7 @@ public abstract class EarthDataView
     // Prepare data image
     // ------------------
     if (image == null) {
-      VERBOSE.info ("Preparing data image");
+      VERBOSE.info ("Preparing data image " + this.getClass().getName());
       prepare (g);
       if (stopRendering) { postRendering (true); return; }
     } // if

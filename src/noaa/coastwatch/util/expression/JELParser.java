@@ -41,6 +41,8 @@ import noaa.coastwatch.util.expression.EvaluateImp;
 import noaa.coastwatch.util.expression.ExpressionTest;
 import noaa.coastwatch.util.EarthLocation;
 
+import java.util.logging.Logger;
+
 // Testing
 import noaa.coastwatch.test.TestLogger;
 
@@ -56,6 +58,8 @@ import noaa.coastwatch.test.TestLogger;
  */
 @noaa.coastwatch.test.Testable
 public class JELParser implements ExpressionParser {
+
+  private static final Logger LOGGER = Logger.getLogger (JELParser.class.getName());
 
   // Variables
   // ---------
@@ -125,6 +129,8 @@ public class JELParser implements ExpressionParser {
 
   @Override
   public void parse (String expr) {
+
+    LOGGER.fine ("Parsing Java expression '" + expr + "'");
 
     // Parse the expression
     // --------------------

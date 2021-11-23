@@ -28,7 +28,7 @@ package noaa.coastwatch.util.expression;
 import noaa.coastwatch.util.expression.ExpressionParser;
 
 /**
- * The <code>ExpressionParserFactory</code> class create standard
+ * The <code>ExpressionParserFactory</code> class creates standard
  * instances of a {@link ExpressionParser} that follow either the legacy
  * expression syntax or Java expression syntax.  See the {@link
  * noaa.coastwatch.tools.cwmath} documentation for details on the

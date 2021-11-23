@@ -1107,6 +1107,8 @@
 		E99D69A71C50279900F4A238 /* zoom_in@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zoom_in@2x.png"; sourceTree = "<group>"; };
 		E99D69A81C50279900F4A238 /* zoom_out@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zoom_out@2x.png"; sourceTree = "<group>"; };
 		E9A081041ED1083400EADC83 /* MultiPointFeatureOverlaySymbolPanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = MultiPointFeatureOverlaySymbolPanel.java; sourceTree = "<group>"; };
+		E9A0BD0B273F9A3400C81222 /* JavaExpressionMaskOverlay.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = JavaExpressionMaskOverlay.java; sourceTree = "<group>"; };
+		E9A0BD0C274CF4BB00C81222 /* noaa_sierra.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noaa_sierra.png; sourceTree = "<group>"; };
 		E9A91443196E33A700ABC12D /* LRUTileCache.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; name = LRUTileCache.java; path = io/tile/LRUTileCache.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9AC37B522060FA500F7C45C /* ChunkResampler.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ChunkResampler.java; sourceTree = "<group>"; };
 		E9AC37B62207E78400F7C45C /* ChunkDataCopier.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = ChunkDataCopier.java; sourceTree = "<group>"; };
@@ -1264,6 +1266,7 @@
 		E9F3C8831ADCB625008C3C4C /* CFNC4SavePanel.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; path = CFNC4SavePanel.java; sourceTree = "<group>"; };
 		E9F3ED8916C3398400E05633 /* NCCachedGrid.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = NCCachedGrid.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
 		E9F3ED8C16C89DDB00E05633 /* NCSD.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; lineEnding = 0; path = NCSD.java; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.java; };
+		E9FE70752732181B006E7280 /* HybridView.java */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.java; path = HybridView.java; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -2082,6 +2085,7 @@
 			isa = PBXGroup;
 			children = (
 				E905F6422315C0460062E0A0 /* NCCOS-chla.xml */,
+				E9A0BD0C274CF4BB00C81222 /* noaa_sierra.png */,
 				E96D8A1A161661420009B833 /* 16-Level.xml */,
 				E96D8A1B161661420009B833 /* Atmospheric.jso */,
 				E96D8A1C161661420009B833 /* Beach.xml */,
@@ -2657,9 +2661,11 @@
 				E973CD6C212BAFD80055D725 /* GammaEnhancement.java */,
 				E96D8BDC161661420009B833 /* GraphicsServices.java */,
 				E96D8BDD161661420009B833 /* GridContainerOverlay.java */,
+				E9FE70752732181B006E7280 /* HybridView.java */,
 				E96D8BE2161661420009B833 /* IconElement.java */,
 				E96D8BE3161661420009B833 /* IconElementFactory.java */,
 				E96D8BE4161661420009B833 /* ImageTransform.java */,
+				E9A0BD0B273F9A3400C81222 /* JavaExpressionMaskOverlay.java */,
 				E96D8BE5161661420009B833 /* LabeledLineOverlay.java */,
 				E96D8BE6161661420009B833 /* LatLonOverlay.java */,
 				E96D8BE7161661420009B833 /* Legend.java */,

@@ -29,6 +29,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * The <code>ParseHelper</code> class implements the {@link ParseImp} and
  * {@link EvaluateImp} interfaces with simple data structures.  All variables
@@ -41,6 +44,8 @@ import java.util.List;
  * @since 3.4.0
  */
 public class ParseHelper implements ParseImp, EvaluateImp {
+
+  private static final Logger LOGGER = Logger.getLogger (ParseHelper.class.getName());
 
   // Variables
   // ---------
@@ -93,10 +98,22 @@ public class ParseHelper implements ParseImp, EvaluateImp {
   ////////////////////////////////////////////////////////////
 
   @Override
-  public String typeOfVariable (String varName) { return ("Double"); }
-
+  public String typeOfVariable (String varName) {
+  
+    Integer index = indexOfVariable (varName);
+    String typeName;
+    if (index == -1)
+      typeName = null;
+    else
+      typeName = "Double";
+    
+    return (typeName);
+  
+  } // typeOfVariable
+  
   ////////////////////////////////////////////////////////////
 
+  @Override
   public double getDoubleProperty (int varIndex) { return (data[varIndex]); }
 
   ////////////////////////////////////////////////////////////

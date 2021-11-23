@@ -348,6 +348,7 @@ public class ColorEnhancement
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void prepare (
     Graphics2D g
   ) {

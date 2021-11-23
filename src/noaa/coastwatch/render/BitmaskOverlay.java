@@ -252,6 +252,7 @@ public class BitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void prepareData () {
 
     // Check for valid grid
@@ -262,6 +263,7 @@ public class BitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public boolean isMasked (
     DataLocation loc,
     boolean isNavigated
@@ -277,6 +279,7 @@ public class BitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected boolean isCompatible (
     EarthDataView view
   ) {
@@ -287,6 +290,7 @@ public class BitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public List<Grid> getGridList () { 
 
     return (Arrays.asList (new Grid[] {getGrid()})); 

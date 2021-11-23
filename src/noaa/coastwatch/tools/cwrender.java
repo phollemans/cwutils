@@ -72,11 +72,14 @@ import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.EnhancementFunction;
 import noaa.coastwatch.render.EnhancementFunctionFactory;
 import noaa.coastwatch.render.ExpressionMaskOverlay;
+import noaa.coastwatch.render.JavaExpressionMaskOverlay;
 import noaa.coastwatch.render.feature.GriddedPointGenerator;
+import noaa.coastwatch.render.HybridView;
 import noaa.coastwatch.render.IconElement;
 import noaa.coastwatch.render.IconElementFactory;
 import noaa.coastwatch.render.LatLonOverlay;
 import noaa.coastwatch.render.Legend;
+import noaa.coastwatch.render.MaskOverlay;
 import noaa.coastwatch.render.OverlayGroupManager;
 import noaa.coastwatch.render.Palette;
 import noaa.coastwatch.render.PaletteFactory;
@@ -151,6 +154,7 @@ import ucar.units.Unit;
  * --font=FAMILY[/STYLE[/SIZE]] <br>
  * --fontlist <br>
  * -f, --format=TYPE <br>
+ * --hybridmask=EXPRESSION <br>
  * -i, --indexed <br>
  * -I, --imagecolors=NUMBER <br>
  * -l, --nolegends <br>
@@ -226,6 +230,13 @@ import ucar.units.Unit;
  * color scale, data origin, date, time, and projection information as well
  * as data overlays showing latitude/longitude grid lines, coast
  * lines, political boundaries, masks, and shapes.</p>
+ *
+ * <p>As of version 3.7.1, a hybrid rendering mode is possible that
+ * combines both color composite and color enhancement.  The color enhancement
+ * is rendered on top of the color composite and by default any missing data
+ * pixels in the enhancement are transparent and allow the composite pixels
+ * to show through.  See the <b>--enhance</b>, <b>--composite</b>, and
+ * <b>--hybridmask</b> options below for more details.</p>
  *
  * <h3>Overlay colors</h3>
  *
@@ -332,14 +343,16 @@ import ucar.units.Unit;
  *   individual enhancement function for each variable.  The
  *   data values are scaled to the range [0..255] and used as the red,
  *   green, and blue components of each pixel's color.  Either this
- *   option or <b>--enhance</b> must be specified, but not both.</dd>
+ *   option or <b>--enhance</b> must be specified, or both options for hybrid
+ *   mode rendering (see the <b>--hybridmask</b> option below).</dd>
  *
  *   <dt>-e, --enhance=VARIABLE1[/VARIABLE2]</dt>
  *
  *   <dd>Specifies color enhancement mode using the named variable(s).
  *   The data variable values are converted to colors using an
  *   enhancement function and color palette.  Either this option or
- *   <b>--composite</b> must be specified, but not both.  If one
+ *   <b>--composite</b> must be specified, or both options for hybrid mode
+ *   rendering  (see the <b>--hybridmask</b> option below).  If one
  *   variable name is specified, the plot shows color-enhanced image
  *   data.  If two variable names are specified, the plot shows
  *   color-enhanced vectors whose direction is derived using the two
@@ -478,6 +491,18 @@ import ucar.units.Unit;
  *     fonts. </li>
  *
  *   </ul></dd>
+
+ *   <dt>--hybridmask=EXPRESSION</dt>
+ *
+ *   <dd>Specifies the mask expression used to determine the transparent
+ *   pixels in the color enhancement layer during hybrid mode rendering.  The
+ *   mask expression is a boolean expression that evaluates to true where the
+ *   color enhancement pixels should be transparent, and false where they should
+ *   be opaque.  By default the color enhancement pixels are tested for missing
+ *   values, and the missing data pixels are set to transparent.
+ *   The syntax for the expression is identical to the right-hand-side of a
+ *   <b>cwmath</b> Java expression (see the <b>cwmath</b> tool manual
+ *   page).</dd>
  *
  *   <dt>-i, --indexed</dt>
  *
@@ -520,7 +545,7 @@ import ucar.units.Unit;
  *   <dt>-o, --logo=NAME</dt>
  *
  *   <dd>The logo used for plot legends.  The current predefined logo
- *   names are 'noaa3d' (the default), 'nasa3d', 'nws3d', 'doc3d', and
+ *   names are 'noaa_sierra.png' (the default), 'noaa3d', 'nasa3d', 'nws3d', 'doc3d', and
  *   their corresponding non-3D versions 'noaa', 'nasa', 'nws', and
  *   'doc'.  The predefined logos are named for their respective
  *   government agencies: NOAA, NASA, National Weather Service (NWS),
@@ -701,7 +726,7 @@ import ucar.units.Unit;
  *   option may be given, in which case the masks are applied in
  *   the order that they are specified.  The syntax for the
  *   expression is identical to the right-hand-side of a
- *   <b>cwmath</b> expression (see the <b>cwmath</b> tool manual
+ *   <b>cwmath</b> legacy mode expression (see the <b>cwmath</b> tool manual
  *   page).</dd>
  *
  *   <dt>--watermark=TEXT[/COLOR[/SIZE[/ANGLE]]]</dt>
@@ -1242,6 +1267,8 @@ public class cwrender {
     Option paletteimageOpt = cmd.addStringOption ("paletteimage");
     Option varnameOpt = cmd.addStringOption ("varname");
     Option compositehintOpt = cmd.addStringOption ("compositehint");
+    Option hybridmaskOpt = cmd.addStringOption ('Y', "hybridmask");
+    
     try { cmd.parse (argv); }
     catch (OptionException e) {
       LOGGER.warning (e.getMessage());
@@ -1411,7 +1438,7 @@ public class cwrender {
     String bluefunction = (String) cmd.getOptionValue (bluefunctionOpt);
     if (bluefunction == null) bluefunction = "linear";
     String logo = (String) cmd.getOptionValue (logoOpt);
-    if (logo == null) logo = "noaa3d";
+    if (logo == null) logo = IconElement.NOAA_SIERRA;
     String group = (String) cmd.getOptionValue (groupOpt);
     String worldfile = (String) cmd.getOptionValue (worldfileOpt);
     if (worldfile != null) nolegends = true;
@@ -1438,6 +1465,7 @@ public class cwrender {
     if (fontStr == null) fontStr = "Dialog/plain/9";
     String varname = (String) cmd.getOptionValue (varnameOpt);
     String compositehint = (String) cmd.getOptionValue (compositehintOpt);
+    String hybridmask = (String) cmd.getOptionValue (hybridmaskOpt);
 
     try {
 
@@ -1454,7 +1482,7 @@ public class cwrender {
 
       // Create color enhancement
       // ------------------------
-      EarthDataView view = null;
+      EarthDataView enhancementView = null;
       if (enhance != null) {
 
         // Create palette from specified colors
@@ -1532,7 +1560,7 @@ public class cwrender {
             gridVar, palette, function);
           enhancement.setMissingColor (lookup.convert (missing));
           if (varname != null) enhancement.setVarName (varname);
-          view = enhancement;
+          enhancementView = enhancement;
         } // if
 
         // Create vector enhancement view
@@ -1661,15 +1689,13 @@ public class cwrender {
             var1.getUnits(), trans2d);            
           enhancement.setMissingColor (lookup.convert (missing));
           enhancement.setBackground (lookup.convert (background));
-          view = enhancement;         
-
+          enhancementView = enhancement;
         } // else
 
       } // if
-
-      // Create color composite
-      // ----------------------
-      else if (composite != null) {
+      
+      EarthDataView compositeView = null;
+      if (composite != null) {
 
         // Get variables
         // -------------
@@ -1742,14 +1768,43 @@ public class cwrender {
 
         // Create view
         // -----------
-        view = new ColorComposite (trans2d, grids, functions);
+        compositeView = new ColorComposite (trans2d, grids, functions);
 
-      } // else if
+      } // if
 
-      // Data view type not specified
-      // ----------------------------
+      // We need to check here what type of view was just created.  Either
+      // the view is a color enhancement (possibly vector), or a color
+      // composite, or both.  If both are available at this point, we create
+      // a hybrid view, otherwise we just set the view to one or the other.
+      EarthDataView view = null;
+      if (enhancementView != null && compositeView != null) {
+
+        if (hybridmask == null) {
+          String varName = ((ColorEnhancement) enhancementView).getGrid().getName();
+          hybridmask = "isNaN (" + varName + ")";
+
+
+//          LOGGER.severe ("Hybrid rendering mode requires a --hybridmask option");
+//          ToolServices.exitWithCode (2);
+//          return;
+
+
+        } // if
+
+        var hybridMask = new JavaExpressionMaskOverlay (Color.WHITE, reader,
+          reader.getAllGrids(), hybridmask);
+        view = new HybridView (
+          Arrays.asList (new EarthDataView[] {compositeView, enhancementView}),
+          Arrays.asList (new MaskOverlay[] {null, hybridMask})
+        );
+
+      } // if
+      else if (enhancementView != null)
+        view = enhancementView;
+      else if (compositeView != null)
+        view = compositeView;
       else {
-        LOGGER.severe ("Must specify --enhance or --composite");
+        LOGGER.severe ("Must specify --enhance and/or --composite");
         ToolServices.exitWithCode (2);
         return;
       } // else
@@ -2072,8 +2127,8 @@ public class cwrender {
 
       // Normalize view color enhancement
       // --------------------------------
-      if (view instanceof ColorEnhancement && range == null) {
-        ColorEnhancement colorEnhance = (ColorEnhancement) view;
+      if (enhancementView instanceof ColorEnhancement && range == null) {
+        ColorEnhancement colorEnhance = (ColorEnhancement) enhancementView;
         VERBOSE.info ("Normalizing color enhancement");
         colorEnhance.normalize (STDEV_UNITS);
         double[] funcRange = colorEnhance.getFunction().getRange();
@@ -2082,9 +2137,9 @@ public class cwrender {
 
       // Normalize view color composite
       // ------------------------------
-      else if (view instanceof ColorComposite) {
+      if (compositeView != null) {
 
-        ColorComposite colorComp = (ColorComposite) view;
+        ColorComposite colorComp = (ColorComposite) compositeView;
         int[] components = new int[] {ColorComposite.RED, ColorComposite.GREEN, ColorComposite.BLUE};
         String[] compNames = new String[] {"red", "green", "blue"};
         String[] compRangeVars = new String[] {redrange, greenrange, bluerange};
@@ -2145,7 +2200,7 @@ public class cwrender {
           } // if
         } // for
 
-      } // else if
+      } // if
 
       // Set verbose mode
       // ----------------
@@ -2307,6 +2362,7 @@ public class cwrender {
     info.option ("--font=FAMILY[/STYLE[/SIZE]]", "Set font properties");
     info.option ("--fontlist", "Print system fonts");
     info.option ("-f, --format=TYPE", "Set output format");
+    info.option ("--hybridmask=EXPRESSION", "Set transparent pixel mask in hybrid mode");
     info.option ("-i, --indexed", "Set image colors to 256");
     info.option ("-I, --imagecolors=NUMBER", "Set number of image colors");
     info.option ("-l, --nolegends", "Do not draw legends");

@@ -53,6 +53,7 @@ public class IconElement
 
   // Constants
   // ---------
+  
   /** A predefined NOAA logo icon. */
   public static final String NOAA = "noaa.gif";
 
@@ -67,6 +68,9 @@ public class IconElement
 
   /** A predefined NOAA 3D logo icon. */
   public static final String NOAA3D = "noaa3d.gif";
+
+  /** A predefined NOAA Sierra style logo icon. */
+  public static final String NOAA_SIERRA = "noaa_sierra.png";
 
   /** A predefined NWS 3D logo icon. */
   public static final String NWS3D = "nws3d.gif";

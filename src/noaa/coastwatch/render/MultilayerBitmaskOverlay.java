@@ -261,6 +261,7 @@ public class MultilayerBitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void prepare (
     Graphics2D g,
     EarthDataView view
@@ -377,6 +378,7 @@ public class MultilayerBitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   protected void draw (
     Graphics2D g,
     EarthDataView view
@@ -439,6 +441,7 @@ public class MultilayerBitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public List<Grid> getGridList () { 
 
     return (Arrays.asList (new Grid[] {getGrid()})); 
