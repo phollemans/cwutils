@@ -34,6 +34,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Arrays;
 
 import noaa.coastwatch.util.MetadataServices;
 import noaa.coastwatch.io.IOServices;
@@ -71,7 +72,7 @@ public class ToolServices {
 
   /** The software copyright. */
   public static final String COPYRIGHT = 
-    "(c) 1998-2021 National Oceanic and Atmospheric Administration";
+    "(c) 1998-2022 National Oceanic and Atmospheric Administration";
 
   /** The software copyright (short version). */
   public static final String COPYRIGHT_SHORT = COPYRIGHT;
@@ -510,6 +511,41 @@ public class ToolServices {
   
   } // warnOutOfMemory
   
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Shortens the stack trace contained in a throwable error so that it
+   * ends at the mention of a specific class.  If the thowable has a non-null
+   * cause, it is modified as well.
+   *
+   * @param error the throwable to check.
+   * @param prefix the prefix of the class name to look for.  Any stack trace
+   * elements after the last one that contains the prefix are removed.
+   * 
+   * @return the throwable error passed in, for convenience.
+   *
+   * @since 3.7.1
+   */
+  public static Throwable shortTrace (
+    Throwable error,
+    String prefix
+  ) {
+
+    var trace = error.getStackTrace();
+    int last = trace.length-1;
+    while (last >= 0) { 
+      if (trace[last].getClassName().startsWith (prefix)) break; 
+      last--; 
+    } // while
+
+    error.setStackTrace (Arrays.copyOf (trace, last+1));
+    var cause = error.getCause();
+    if (cause != null) shortTrace (cause, prefix);
+
+    return (error);
+
+  } // shortTrace
+
   ////////////////////////////////////////////////////////////
 
   private ToolServices () { }
