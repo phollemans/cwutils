@@ -81,13 +81,13 @@ import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.AttributeValueChooser;
 
 /**
- * The <code>SelectionRuleFilterChooser</code> class is a panel that allows the 
+ * <p>The <code>SelectionRuleFilterChooser</code> class is a panel that allows the
  * user to manipulate a {@link SelectionRuleFilter}.  If no filter is set, an
- * initial default filter is created and displayed.<p>
+ * initial default filter is created and displayed.</p>
  *
- * The chooser signals a change in the filter by firing a
+ * <p>The chooser signals a change in the filter by firing a
  * <code>PropertyChangeEvent</code> with property name {@link #FILTER_PROPERTY}, 
- * and new value containing an object of type {@link SelectionRuleFilter}.<p>
+ * and new value containing an object of type {@link SelectionRuleFilter}.</p>
  *
  * @author Peter Hollemans
  * @since 3.3.2

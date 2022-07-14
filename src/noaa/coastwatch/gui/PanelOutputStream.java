@@ -39,11 +39,11 @@ import javax.swing.SwingUtilities;
 import noaa.coastwatch.gui.WindowMonitor;
 
 /**
- * The <code>PanelOutputStream</code> class extends
+ * <p>The <code>PanelOutputStream</code> class extends
  * <code>java.io.OutputStream</code> to display output in a Swing
  * <code>JPanel</code>.  The most common use is to create a
  * <code>PanelOutputStream</code> to be used in combination with a
- * <code>java.io.PrintStream</code> object:
+ * <code>java.io.PrintStream</code> object:</p>
  * <pre>
  *   PanelOutputStream panelStream = new PanelOutputStream();
  *   PrintStream printStream = new PrintStream (panelStream, true);
@@ -51,24 +51,24 @@ import noaa.coastwatch.gui.WindowMonitor;
  *   ...
  *   printStream.println ("Hello, world!");
  * </pre>
- * The output stream has a special method <code>getPanel()</code> that
+ * <p>The output stream has a special method <code>getPanel()</code> that
  * retrieves a <code>javax.swing.JPanel</code> object that may be used
  * to display the output.  The retrieved <code>JPanel</code> is simply
  * a Swing text area inside a scrollable pane.  The text area is set
- * to non-editable.<p>
+ * to non-editable.</p>
  *
- * In general, as output is appended to the text area, the scroll
+ * <p>In general, as output is appended to the text area, the scroll
  * panel scrolls to the bottom so that the new output is visible.  To
  * explicitly set the caret position of the text area, you can do
- * something like this:
+ * something like this:</p>
  * <pre>
  *   PanelOutputStream panelStream = new PanelOutputStream();
  *   JTextArea textArea = panelStream.getTextArea(); 
  *   ...
  *   textArea.setCaretPosition (0);
  * </pre>
- * The text area is also useful for setting specific fonts, for example
- * a fixed space font rather than the default proportional space font.
+ * <p>The text area is also useful for setting specific fonts, for example
+ * a fixed space font rather than the default proportional space font.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.7

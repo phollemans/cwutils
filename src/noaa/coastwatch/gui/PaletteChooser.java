@@ -44,16 +44,16 @@ import noaa.coastwatch.render.Palette;
 import noaa.coastwatch.render.PaletteFactory;
 
 /**
- * A palette chooser is a panel that allows the user to pick a colour
+ * <p>A palette chooser is a panel that allows the user to pick a colour
  * palette from a selection of predefined palettes.  A color palette
  * is typically used in conjunction with a 2D data variable to map a
- * set of data values to a set of colours.<p>
+ * set of data values to a set of colours.</p>
  *
- * The palette chooser signals a change in the selected palette by
+ * <p>The palette chooser signals a change in the selected palette by
  * firing a <code>PropertyChangeEvent</code> whose property name is
  * <code>PaletterChooser.PALETTE_PROPERTY</code>, and new value
  * contains a palette name from the predefined palettes supplied by
- * the {@link noaa.coastwatch.render.Palette} class.
+ * the {@link noaa.coastwatch.render.Palette} class.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.6

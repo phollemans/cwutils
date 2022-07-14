@@ -31,18 +31,18 @@ import noaa.coastwatch.util.Function;
 import noaa.coastwatch.util.Statistics;
 
 /**
- * An enhancement function normalizes a data value to the range
+ * <p>An enhancement function normalizes a data value to the range
  * [0..1].  The class is used in conjunction with a data enhancement.
  * For example, if a set of data is to be assigned colors based on the
  * data values, an enhancement function can be used to scale the data
  * values in the range [0..30] to the range [0..1] and then
  * multiplying by 255 would compute a byte value in the range
  * [0..255].  This would <i>color enhance</i> the data to a grayscale
- * color palette from black to white.<p>
+ * color palette from black to white.</p>
  *
- * Note that since this class implements <code>Cloneable</code>, all
+ * <p>Note that since this class implements <code>Cloneable</code>, all
  * concrete child classes must have a valid <code>clone()</code>
- * method.
+ * method.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.1

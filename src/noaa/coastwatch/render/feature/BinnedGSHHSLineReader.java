@@ -38,15 +38,15 @@ import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.EarthLocation;
 
 /**
- * The <code>BinnedGSHHSLineReader</code> class reads Global
+ * <p>The <code>BinnedGSHHSLineReader</code> class reads Global
  * Self-consistent Hierarchical High-resolution Shorelines
  * (GSHHS) border and river data in the binned format provided
  * with the Generic Mapping Tools (GMT).  For source code and
- * data files, see:
+ * data files, see:</p>
  * <blockquote>
  *   http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html<br>
  *   http://gmt.soest.hawaii.edu
- * </blockquote><p>
+ * </blockquote>
  *
  * @author Peter Hollemans
  * @since 3.2.1

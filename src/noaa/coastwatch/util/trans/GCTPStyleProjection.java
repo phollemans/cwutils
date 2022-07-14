@@ -744,11 +744,11 @@ public abstract class GCTPStyleProjection
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets the semi-major, semi-minor, and radius axes lengths based on
+   * <p>Gets the semi-major, semi-minor, and radius axes lengths based on
    * the parameters and spheroid code.  The following algorithm is
    * used.  If the spheroid code is negative, the first two values in
    * the parameter array <code>parm</code> are used to define the
-   * values as follows:<p>
+   * values as follows:</p>
    * 
    * <ul>
    * 
@@ -780,22 +780,22 @@ public abstract class GCTPStyleProjection
    * 
    * </ul>
    *
-   * If a spheroid code is zero or greater, the semimajor and
+   * <p>If a spheroid code is zero or greater, the semimajor and
    * semiminor axis are defined by the spheroid code arrays in the
    * {@link SpheroidConstants} interface, and the radius is set to
    * 6370997.0.  If the spheroid code is greater than
    * <code>MAX_SPHEROIDS-1</code> the default spheroid, Clarke 1866,
    * is used to define the semimajor and semiminor axis and radius is
-   * set to 6370997.0.<p>
+   * set to 6370997.0.</p>
    *
-   * The algorithm to define the semiminor axis using the eccentricity
-   * squared value is as follows:<p>
+   * <p>The algorithm to define the semiminor axis using the eccentricity
+   * squared value is as follows:</p>
    * 
    * <pre>
    *   semiminor = sqrt(1.0 - ES) * semimajor
    * </pre>
    *
-   * where <code>ES</code> is the eccentricity squared.
+   * <p>where <code>ES</code> is the eccentricity squared.</p>
    *
    * @param isph the spheroid code number.
    * @param parm the projection parameter array.

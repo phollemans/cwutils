@@ -29,11 +29,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * A timeout allows the user to perform a certain task after some amount
+ * <p>A timeout allows the user to perform a certain task after some amount
  * of time has passed.  A timeout may be used for example to take action
- * if a network stall occurs.<p>
+ * if a network stall occurs.</p>
  * 
- * When a timeout object is created, it is given a task to run and a
+ * <p>When a timeout object is created, it is given a task to run and a
  * length of time after which to run the task.  However, the timeout
  * is created in an inactive state.  To start the timeout countdown,
  * the start() method must be called.  Once the timeout is started,
@@ -42,7 +42,7 @@ import java.util.TimerTask;
  * if cancel() and then start() had been called, but does so in a way
  * that does not create any new objects or start any new threads, and
  * is thus safe to call frequently if needed, rather than calling
- * cancel() followed by start().
+ * cancel() followed by start().</p>
  *
  * @author Peter Hollemans
  * @since 3.1.5

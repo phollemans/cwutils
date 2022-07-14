@@ -55,17 +55,17 @@ import noaa.coastwatch.render.CoastOverlay;
 import noaa.coastwatch.render.LatLonOverlay;
 
 /** 
- * The <code>ComponentList</code> class is similar to a Swing
+ * <p>The <code>ComponentList</code> class is similar to a Swing
  * <code>JList</code> but with a simplified model and operations.  It
  * lays out a list of <code>ComponentProducer</code> objects from top
  * to bottom and allows them to be selected, removed, added, and so
  * on.  A change in the list selection is signaled using a property
- * change event given by <code>SELECTION_PROPERTY</code>.<p>
+ * change event given by <code>SELECTION_PROPERTY</code>.</p>
  *
- * The list may be placed inside a scrollable window.  The scrolling
+ * <p>The list may be placed inside a scrollable window.  The scrolling
  * behaviour works under the assumption that all components in the
  * list have the same height.  The user may set the number of visible
- * components using the <code>setVisibleRowCount()</code> method.<p>
+ * components using the <code>setVisibleRowCount()</code> method.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.7

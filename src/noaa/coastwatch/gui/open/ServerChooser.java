@@ -55,17 +55,17 @@ import noaa.coastwatch.gui.open.ServerTableModel.Entry;
 import noaa.coastwatch.gui.GUIServices;
 
 /**
- * The <code>ServerChooser</code> class allows the user to select from
+ * <p>The <code>ServerChooser</code> class allows the user to select from
  * and edit a list of network servers.  Each server has a name and
  * location value (for example, a URL).  A property change is used to
  * signal that the user has selected a new server and pressed the
  * connect button.  The server property value sent is a {@link
- * ServerTableModel.Entry} object from the list of server entries.<p>
+ * ServerTableModel.Entry} object from the list of server entries.</p>
  *
- * Generally, it might be a good idea to save the list of servers
+ * <p>Generally, it might be a good idea to save the list of servers
  * after using the chooser, in case the user has edited the server
  * names or locations.  The current server list is available from
- * {@link #getServerList}.
+ * {@link #getServerList}.</p>
  *
  * @author Peter Hollemans
  * @since 3.2.0

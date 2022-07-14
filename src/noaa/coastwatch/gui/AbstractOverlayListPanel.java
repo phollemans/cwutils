@@ -71,7 +71,7 @@ import noaa.coastwatch.render.OverlayGroupManager;
 import noaa.coastwatch.tools.ResourceManager;
 
 /** 
- * The <code>AbstractOverlayListPanel</code> class is the abstract
+ * <p>The <code>AbstractOverlayListPanel</code> class is the abstract
  * parent of all overlay list panels.  It allows the user to add new
  * overlays via a set of buttons, remove overlays from the current
  * list, edit a specific overlay using an overlay property chooser,
@@ -81,22 +81,22 @@ import noaa.coastwatch.tools.ResourceManager;
  * <code>getTitle()</code> method which determine the title for parts
  * of the panel.  Child classes may also override the
  * <code>getCustomPanel()</code> method to supply a custom panel that
- * is inserted between the add button panel and the overlay list.<p>
+ * is inserted between the add button panel and the overlay list.</p>
  *
- * The overlay list panel signals an add/remove in the overlay list by
+ * <p>The overlay list panel signals an add/remove in the overlay list by
  * firing a property change event whose property name is given by the
  * <code>OVERLAY_PROPERTY</code> constant, and old value (if non-null)
  * contains an overlay to remove from the view, and new value (if
  * non-null) contains an overlay to add to the view.  If the overlay
  * to add already exists in the view, then the overlay's internal
- * properties have changed and the view should be re-rendered.<p>
+ * properties have changed and the view should be re-rendered.</p>
  *
- * Additionally, a selection change in the overlay list is signaled by
+ * <p>Additionally, a selection change in the overlay list is signaled by
  * firing a property change event whose property name is given by the
  * <code>SELECTION_PROPERTY</code> constant.  The selection value is
  * the currently selected <code>EarthDataOverlay</code> object, or
  * null if none is selected.  If multiple overlays are selected, no
- * event is fired.
+ * event is fired.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.7

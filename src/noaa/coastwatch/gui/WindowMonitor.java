@@ -29,12 +29,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * The window monitor class performs a system exit when it receives the
+ * <p>The window monitor class performs a system exit when it receives the
  * window closing event.  This is generally only desirable if the closing
- * window is the main application window.<p>
+ * window is the main application window.</p>
  *
- * As an example, the following code shows the window monitor being used
- * for a frame:
+ * <p>As an example, the following code shows the window monitor being used
+ * for a frame:</p>
  * <pre>
  *   JFrame frame = new JFrame();
  *   frame.addWindowListener (new WindowMonitor());

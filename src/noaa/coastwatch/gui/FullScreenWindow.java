@@ -53,20 +53,20 @@ import noaa.coastwatch.gui.FullScreenToolBar;
 import noaa.coastwatch.gui.GUIServices;
 
 /**
- * The <code>FullScreenWindow</code> class display a full screen
+ * <p>The <code>FullScreenWindow</code> class display a full screen
  * component with optional tool bar.  The displayed component is taken
  * from its parent component (if it exists) and displayed in full
  * screen mode by the {@link #start} method.  The component is
  * restored to its parent by the {@link #stop} method.  If a parent
  * component exists, it should have a <code>BorderLayout</code> layout
- * manager for the component to be restored correctly.<p>
+ * manager for the component to be restored correctly.</p>
  *
- * Java support for full screen mode is not required for a
+ * <p>Java support for full screen mode is not required for a
  * component to be displayed full screen, but some performance
  * degradation can occur if no Java support exists.  The {@link
  * #isFullScreenSupported} method checks for Java full screen
  * mode support.  Applications can safely ignore the return value
- * of this method if needed.
+ * of this method if needed.</p>
  *
  * @see FullScreenToolBar
  *

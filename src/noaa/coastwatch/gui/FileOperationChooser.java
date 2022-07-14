@@ -40,19 +40,19 @@ import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.TestContainer;
 
 /**
- * The <code>FileOperationChooser</code> class is a
+ * <p>The <code>FileOperationChooser</code> class is a
  * <code>JToolBar</code> that allows the user to perform basic file
- * operations: Open, Close, Export.<p>
+ * operations: Open, Close, Export.</p>
  *
- * The operation chooser signals a change in the selected operation by
+ * <p>The operation chooser signals a change in the selected operation by
  * firing a <code>PropertyChangeEvent</code> whose property name is
  * <code>FileOperationChooser.OPERATION_PROPERTY</code>, and new value
- * contains an operation name from the constants in this class.<p>
+ * contains an operation name from the constants in this class.</p>
  *
- * A static instance of this class is available via
+ * <p>A static instance of this class is available via
  * <code>getInstance()</code> so that a single chooser may be used
  * from multiple classes, even though it is only included in one
- * layout manager.
+ * layout manager.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.7

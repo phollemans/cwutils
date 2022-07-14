@@ -115,10 +115,10 @@ public class MixedGridResampler
   ////////////////////////////////////////////////////////////
 
   /**
-   * Sets the overwrite mode.  If during the resampling, more than one
+   * <p>Sets the overwrite mode.  If during the resampling, more than one
    * source pixel is mapped to the same destination pixel, the
    * overwrite mode is used to determine if the old value should be
-   * overwritten with the new value:
+   * overwritten with the new value:</p>
    * <ul>
    *
    *   <li><code>OVERWRITE_NEVER</code> - Keep the first data value

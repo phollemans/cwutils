@@ -52,13 +52,13 @@ import noaa.coastwatch.gui.value.TimeWindowValuePanel;
 import java.util.ArrayList;
 
 /**
- * The <code>AttributeValueChooser</code> provides two components: one that can
+ * <p>The <code>AttributeValueChooser</code> provides two components: one that can
  * be used to select a feature attribute, and a second that can be used
  * to select a value for that feature attribute.  The value component 
- * automatically reconfigures based on the attribute type.<p>
+ * automatically reconfigures based on the attribute type.</p>
  *
- * The chooser signals a change by firing one or more <code>PropertyChangeEvent</code>
- * objects with property name as follows:
+ * <p>The chooser signals a change by firing one or more <code>PropertyChangeEvent</code>
+ * objects with property name as follows:</p>
  * <ul>
  *   <li> {@link #ATTRIBUTE_PROPERTY} if the attribute name is changed -- 
  *   new value is attribute.</li>
@@ -66,7 +66,7 @@ import java.util.ArrayList;
  *   new value is attribute value.</li>
  *   <li> {@link #STATE_PROPERTY} if the attribute name, value, or type is changed --
  *   new value is Object array containing attribute and value.</li>
- * </ul><p>
+ * </ul>
  *
  * @author Peter Hollemans
  * @since 3.3.2

@@ -40,9 +40,9 @@ import java.util.logging.Level;
 import noaa.coastwatch.util.DataLocation;
 
 /**
- * The <b>HybridView</b> class is an earth data view that combines a set
+ * <p>The <b>HybridView</b> class is an earth data view that combines a set
  * of data views.  The hybrid view is a combination of data view layers with
- * masks that control the transparency of each layer.<p>
+ * masks that control the transparency of each layer.</p>
  *
  * @author Peter Hollemans
  * @since 3.7.1
@@ -71,9 +71,6 @@ public class HybridView extends EarthDataView {
    * view pixels should be used in the hybrid.  If a mask overlay pixel is
    * active, the corresponding view pixel is made transparent.  If a mask
    * overlay is null, the image view is not masked.
-   *
-   * @throws NoninvertibleTransformException if the resulting image
-   * transform is not invertible.
    */
   public HybridView (
     List<EarthDataView> viewList,

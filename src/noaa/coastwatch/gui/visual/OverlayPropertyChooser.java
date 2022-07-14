@@ -110,15 +110,15 @@ public abstract class OverlayPropertyChooser<T extends EarthDataOverlay>
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Checks the chooser settings for validity.  Some overlay
+   * <p>Checks the chooser settings for validity.  Some overlay
    * choosers may have a complex set of controls that will not
    * always be in a valid state.  This method is called by the
    * {@link #getOverlay} method to ensure that the chooser
-   * controls are set properly.<p>
+   * controls are set properly.</p>
    *
-   * The default implementation of this method does nothing.  It
+   * <p>The default implementation of this method does nothing.  It
    * is up to the child class to override this method and perform
-   * actual validation.
+   * actual validation.</p>
    *
    * @throws IllegalStateException if the chooser controls are
    * not in a valid state.

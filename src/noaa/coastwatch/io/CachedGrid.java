@@ -46,7 +46,7 @@ import noaa.coastwatch.test.TestLogger;
 import java.util.logging.Logger;
 
 /**
- * A <code>CachedGrid</code> is a {@link Grid} that uses temporary caching
+ * <p>A <code>CachedGrid</code> is a {@link Grid} that uses temporary caching
  * to reduce the overall memory footprint of gridded data.  The cache
  * uses a similar strategy to how modern operating systems cache
  * memory pages.  A data stream is kept open, and a number of tiles
@@ -56,17 +56,17 @@ import java.util.logging.Logger;
  * needed are swapped out to make room for new tiles in the cache.  In
  * order to avoid excessive data I/O, a least-recently-used rule is
  * used to determine which tile to remove from the cache when the
- * cache reaches its maximum capacity.<p>
+ * cache reaches its maximum capacity.</p>
  *
- * The standard {@link noaa.coastwatch.util.DataVariable#setValue} method is
+ * <p>The standard {@link noaa.coastwatch.util.DataVariable#setValue} method is
  * supported by keeping a dirty flag for each tile.  If the tile has been
  * written to, it is kept in the cache until, upon removal, it is written
- * to the data stream.<p>
+ * to the data stream.</p>
  *
- * The only methods that subclasses need to implement are {@link #readTile} to
+ * <p>The only methods that subclasses need to implement are {@link #readTile} to
  * retrieve tiles from the data source, {@link #writeTile} to update the
  * data with any changes made to tiles, and {@link #getDataStream} to retrieve
- * the object used to read and write data (only used to check for equality).<p>
+ * the object used to read and write data (only used to check for equality).</p>
  *
  * @author Peter Hollemans
  * @since 3.1.0

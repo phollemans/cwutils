@@ -56,23 +56,23 @@ import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.TabComponent;
 
 /**
- * The <code>NavigationChooser</code> class allows the user to modify
+ * <p>The <code>NavigationChooser</code> class allows the user to modify
  * the navigation affine transform for a set of earth data
  * variables.  The user may use a visual correction mode, or a manual
- * correction mode.<p>
+ * correction mode.</p>
  *
- * The chooser signals a change in the visual navigation correction
+ * <p>The chooser signals a change in the visual navigation correction
  * mode by firing a <code>PropertyChangeEvent</code> whose property
  * name is <code>NAVIGATION_MODE_PROPERTY</code> and value is
  * <code>TRANSLATION</code> or <code>ROTATION</code>.  The user object
- * should perform a correction of the indicated type.<p>
+ * should perform a correction of the indicated type.</p>
  *
- * The chooser signals a manual navigation correction by firing a
+ * <p>The chooser signals a manual navigation correction by firing a
  * <code>PropertyChangeEvent</code> whose property name is
  * <code>AFFINE_PROPERTY</code> and value is the affine transform to
  * apply.  If the affine transform to apply is null, then the
  * navigation transform for the user-specified list of variables
- * should be reset.<p>
+ * should be reset.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.7

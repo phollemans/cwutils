@@ -1338,15 +1338,15 @@ public abstract class NOAA1bReader
     ////////////////////////////////////////////////////////
 
     /**
-     * Creates a new dataset scan line using the specified index.<p>
+     * <p>Creates a new dataset scan line using the specified index.</p>
      *
-     * Note that this code is now using the java.nio package and
+     * <p>Note that this code is now using the java.nio package and
      * individually allocated buffers for each scan line rather
      * than OS memory mapped buffers.  As such the start and
      * count parameters are ignored when the scan line is read,
      * and replaced with 0 and 2048 or 409 respectively.  This
      * should be remedied in a future release by removing the
-     * start and count parameters entirely.
+     * start and count parameters entirely.</p>
      *
      * @param line the scan line index in the range [0..lines-1].
      * @param start the starting sensor data sample.

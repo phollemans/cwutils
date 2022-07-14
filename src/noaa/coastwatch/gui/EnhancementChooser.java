@@ -63,18 +63,18 @@ import noaa.coastwatch.render.StepEnhancement;
 import noaa.coastwatch.util.Statistics;
 
 /**
- * An enhancement chooser is a panel that allows the user to select
+ * <p>An enhancement chooser is a panel that allows the user to select
  * the specifications of a data enhancement function.  An enhancement
  * function is typically used in conjunction with a 2D data variable
  * to normalize a set of data values to the range [0..1] for mapping
- * to a colour palette.<p>
+ * to a colour palette.</p>
  *
- * The enhancement chooser signals a change in the enhancement
+ * <p>The enhancement chooser signals a change in the enhancement
  * function specifications by firing a
  * <code>PropertyChangeEvent</code> whose property name is
  * <code>EnhancementChooser.FUNCTION_PROPERTY</code>, and new value
  * contains an object of type {@link
- * noaa.coastwatch.render.EnhancementFunction}.
+ * noaa.coastwatch.render.EnhancementFunction}.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.6

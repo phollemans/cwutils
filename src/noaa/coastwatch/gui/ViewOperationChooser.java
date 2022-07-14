@@ -43,7 +43,7 @@ import noaa.coastwatch.gui.FullScreenToolBar;
 import noaa.coastwatch.gui.GUIServices;
 
 /**
- * The <code>ViewOperationChooser</code> class is a
+ * <p>The <code>ViewOperationChooser</code> class is a
  * <code>JToolBar</code> that allows the user to select view transform
  * operations using a set of toolbar buttons.  There are seven view
  * transform operations in total: Magnify, Shrink, 1:1, Zoom, Pan,
@@ -53,17 +53,17 @@ import noaa.coastwatch.gui.GUIServices;
  * change according to the operation.  The Zoom, Pan, and Recenter
  * operations are interactive in the sense that once selected,
  * additional input must be obtained from the user in order the change
- * the view transform.<p>
+ * the view transform.</p>
  *
- * The operation chooser signals a change in the selected operation by
+ * <p>The operation chooser signals a change in the selected operation by
  * firing a <code>PropertyChangeEvent</code> whose property name is
  * <code>ViewOperationChooser.OPERATION_PROPERTY</code>, and new value
- * contains an operation name from the constants in this class.<p>
+ * contains an operation name from the constants in this class.</p>
  *
- * A static instance of this class is available via
+ * <p>A static instance of this class is available via
  * <code>getInstance()</code> so that a single chooser may be used
  * from multiple classes, even though it is only included in one
- * layout manager.
+ * layout manager.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.7

@@ -75,17 +75,17 @@ import noaa.coastwatch.render.PolygonOverlay;
 import noaa.coastwatch.render.TopographyOverlay;
 
 /**
- * The <code>OverlayListChooser</code> class is a panel that
+ * <p>The <code>OverlayListChooser</code> class is a panel that
  * allows the user to manipulate a list of {@link
  * EarthDataOverlay} objects.  The user may add a new overlay,
  * delete an overlay, edit the overlay properties, and change the
- * overlay layer.<p>
+ * overlay layer.</p>
  *
- * The chooser signals a change in the overlay list by firing a
+ * <p>The chooser signals a change in the overlay list by firing a
  * property change event whose property name is given by
  * <code>OVERLAY_LIST_PROPERTY</code>.  See the {@link
  * AbstractOverlayListPanel} class for details on how the property
- * change events should be interpreted.<p>
+ * change events should be interpreted.</p>
  *
  * @see LatLonOverlay
  * @see CoastOverlay

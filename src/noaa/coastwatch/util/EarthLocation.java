@@ -264,11 +264,11 @@ public class EarthLocation
   ////////////////////////////////////////////////////////////
 
   /**
-   * Calculates the great circle distance between two locations A and B.
-   * The method uses a calculation for distance on a sphere.<p>
+   * <p>Calculates the great circle distance between two locations A and B.
+   * The method uses a calculation for distance on a sphere.</p>
    *
-   * Haversine Formula (from R.W. Sinnott, "Virtues of the Haversine",
-   * Sky and Telescope, vol. 68, no. 2, 1984, p. 159):<p>
+   * <p>Haversine Formula (from R.W. Sinnott, "Virtues of the Haversine",
+   * Sky and Telescope, vol. 68, no. 2, 1984, p. 159):</p>
    *   
    * <pre>
    *   dlon = lon2 - lon1

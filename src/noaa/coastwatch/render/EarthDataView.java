@@ -66,7 +66,7 @@ import java.util.logging.Level;
 import noaa.coastwatch.test.TestLogger;
 
 /**
- * The <code>EarthDataView</code> class sets up a correspondence between 2D Earth
+ * <p>The <code>EarthDataView</code> class sets up a correspondence between 2D Earth
  * locatable data variables (possibly more than one) and a visual
  * image.  A view has a certain size in width and height and a
  * translation between earth locations and image coordinates.  A view
@@ -75,13 +75,13 @@ import noaa.coastwatch.test.TestLogger;
  * direction, at the top of the image.  If the transform is such that
  * data locations with larger indices have a greater latitude, the
  * sense of the image transform is flipped so that north appears at
- * the top.<p>
+ * the top.</p>
  *
- * A view maintains its image to data scaling information using the
+ * <p>A view maintains its image to data scaling information using the
  * center data location and image scale factor.  All view
- * manipulations are relative to these quantities.<p>
+ * manipulations are relative to these quantities.</p>
  *
- * In order to help implement child classes, it may be of interest to
+ * <p>In order to help implement child classes, it may be of interest to
  * developers to know how view rendering works.  The main
  * <code>render()</code> method is called by any user of the view to
  * render the view to a graphics context.  In some cases, this
@@ -95,9 +95,9 @@ import noaa.coastwatch.test.TestLogger;
  * the graphics context.  This two-step process may involve delays,
  * both in rendering the main image and the overlays.  For example, a
  * delay may occur when translating data values into image colours, or
- * in translating overlay earth locations to image coordinates.<p>
+ * in translating overlay earth locations to image coordinates.</p>
  *
- * In order to help handle delays, two protected variables are used:
+ * <p>In order to help handle delays, two protected variables are used:
  * <code>changed</code> and <code>progress</code>.  The changed flag
  * indicates that something in the view has changed since the last
  * time the <code>render()</code> method was called.  If the view has
@@ -117,9 +117,9 @@ import noaa.coastwatch.test.TestLogger;
  * <code>prepare()</code> method and passing it the graphics context
  * to which preparation progress should be written.  Once prepared,
  * the user may call <code>render()</code> and expect to have no
- * delay.<p>
+ * delay.</p>
  *
- * To handle interruptions in rendering so that a user-interface using
+ * <p>To handle interruptions in rendering so that a user-interface using
  * the view appears responsive, the <code>stopRendering()</code>
  * method may be used.  The method sets the protected
  * <code>stopRendering</code> flag to indicate to the child class that
@@ -128,7 +128,7 @@ import noaa.coastwatch.test.TestLogger;
  * determine if a rendering loop is currently active.  Generally,
  * these methods are only useful in a multithreaded application in
  * which the rendering is running in a separate thread from the
- * user-interface.
+ * user-interface.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.0

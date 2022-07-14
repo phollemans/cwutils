@@ -72,15 +72,15 @@ import java.util.Set;
 import javax.swing.filechooser.FileFilter;
 
 /**
- * A convenience implementation of <code>FileFilter</code> that
+ * <p>A convenience implementation of <code>FileFilter</code> that
  * filters out all files except for those type extensions that it
- * knows about.<p>
+ * knows about.</p>
  *
- * Extensions are of the type ".foo", which is typically found on
- * Windows and Unix boxes, but not on Mac. Case is ignored.<p>
+ * <p>Extensions are of the type ".foo", which is typically found on
+ * Windows and Unix boxes, but not on Mac. Case is ignored.</p>
  *
- * <b>Example:</b> Create a new filter that filters out all files but
- * gif and jpg image files:
+ * <p><b>Example:</b> Create a new filter that filters out all files but
+ * gif and jpg image files:</p>
  * <pre>
  *     JFileChooser chooser = new JFileChooser();
  *     SimpleFileFilter filter = new SimpleFileFilter(

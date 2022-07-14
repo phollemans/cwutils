@@ -39,7 +39,7 @@ import noaa.coastwatch.util.EarthArea;
 import java.util.logging.Logger;
 
 /**
- * A <code>CoastOverlay</code> annotates an earth data view with
+ * <p>A <code>CoastOverlay</code> annotates an earth data view with
  * coast lines and polygons.  The coast lines are rendered using
  * GSHHS coast line vector data (see {@link BinnedGSHHSReader}
  * and {@link BinnedGSHHSReaderFactory}).  The resolution of the
@@ -49,17 +49,17 @@ import java.util.logging.Logger;
  * point.  In order to help reduce the rendering time and keep
  * the view clear of unwanted coast line "dust", by default small
  * polygons such as the coasts of islands and lakes enclosing
- * less than 3x3 pixels are not rendered.<p>
+ * less than 3x3 pixels are not rendered.</p>
  *
- * The overlay color and fill color are used to determine if coast
+ * <p>The overlay color and fill color are used to determine if coast
  * lines and/or polygons should be rendered.  If the overlay color is
  * set to null, the coast lines are not rendered.  Likewise if the
  * fill color is set to null, land polygons are not rendered.  By
- * default the fill color is set to null.<p>
+ * default the fill color is set to null.</p>
  *
- * The default reader factory for coastline data is a standard {@link
+ * <p>The default reader factory for coastline data is a standard {@link
  * BinnedGSHHSReaderFactory} unless the {@link #setReaderFactory} method
- * is called.<p>
+ * is called.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.1

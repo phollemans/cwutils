@@ -75,22 +75,22 @@ import noaa.coastwatch.render.TextElement;
 import noaa.coastwatch.render.TextOverlay;
 
 /**
- * The <code>AnnotationListChooser</code> class is a panel that allows
+ * <p>The <code>AnnotationListChooser</code> class is a panel that allows
  * the user to manipulate a list of annotations.  The user may add a
  * new line, polyline, curve, text, box, circle, polygon or closed
  * curve, and edit the annotation visibility, name, color, linestyle,
- * or fill color.<p>
+ * or fill color.</p>
  *
- * The chooser signals a change in the annotation overlay list by
+ * <p>The chooser signals a change in the annotation overlay list by
  * firing a property change event whose property name is given by
  * <code>ANNOTATION_LIST_PROPERTY</code>.  See the {@link
  * AbstractOverlayListPanel} class for details on how the property
- * change events should be interpreted.<p>
+ * change events should be interpreted.</p>
  *
- * Annotations require that extra information be provided from the
+ * <p>Annotations require that extra information be provided from the
  * user object.  The chooser signals that it requires input for an
  * annotation by firing an action event whose action command specifies
- * the type of input required as:
+ * the type of input required as:</p>
  * <ul>
  *   <li> <code>LINE_COMMAND</code> </li>
  *   <li> <code>POLYLINE_COMMAND</code> </li>
@@ -100,9 +100,9 @@ import noaa.coastwatch.render.TextOverlay;
  *   <li> <code>CURVE_COMMAND</code> </li>
  *   <li> <code>TEXT_COMMAND</code> </li>
  * </ul>
- * The user object should perform some operation to obtain the
+ * <p>The user object should perform some operation to obtain the
  * annotation input information, and then pass it to the
- * <code>addAnnotation()</code> method. <p>
+ * <code>addAnnotation()</code> method.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.7

@@ -31,39 +31,39 @@ import java.util.Arrays;
 import noaa.coastwatch.util.Function;
 
 /**
- * A bivariate estimator approximates the value of a function of two
+ * <p>A bivariate estimator approximates the value of a function of two
  * variables using a set of known function values.  If the function
- * values are given by
+ * values are given by</p>
  * <blockquote>
  *   <code>f<sub>1</sub> = f(x<sub>1</sub>, y<sub>1</sub>) <br>
  *   f<sub>2</sub> = f(x<sub>2</sub>, y<sub>2</sub>) <br>
  *   ... <br>
  *   f<sub>n</sub> = f(x<sub>n</sub>, y<sub>n</sub>) </code>
  * </blockquote>
- * then an estimator is set up based on the
+ * <p>then an estimator is set up based on the
  * function values using a polynomial of user-specified degree.
  * Suppose that the desired polynomial degree is 2 so that the
- * polynomial is a quadratic.  Then a series of 9 coefficients
+ * polynomial is a quadratic.  Then a series of 9 coefficients</p>
  * <blockquote>
  *   <code>[a<sub>0</sub>, a<sub>1</sub>, ... a<sub>8</sub>]</code>
  * </blockquote>
- * are calculated using the values, and the estimator will approximate
- * function values using the coefficients as:
+ * <p>are calculated using the values, and the estimator will approximate
+ * function values using the coefficients as:</p>
  * <blockquote>
  *   <code>f(x, y) = a<sub>0</sub> + a<sub>1</sub>x +
  *   a<sub>2</sub>x<sup>2</sup> + a<sub>3</sub>y + a<sub>4</sub>xy +
  *   a<sub>5</sub>x<sup>2</sup>y + a<sub>6</sub>y<sup>2</sup> +
  *   a<sub>7</sub>xy<sup>2</sup> +
  *   a<sub>8</sub>x<sup>2</sup>y<sup>2</sup></code>.
- * </blockquote><p>
+ * </blockquote>
  *
- * Note that for estimator constuction where the number of data values
+ * <p>Note that for estimator constuction where the number of data values
  * is exactly the required number for the polynomial degree, then LU
  * decomposition is used to obtain a least squares solution.  In the
  * case where the linear system is overdetermined (there are more data
  * values than are required) then singular value decomposition is used
  * to obtain a least squares solution.  The SVD calculation used is
- * detailed in:
+ * detailed in:</p>
  * <blockquote>
  *   Watkins, David S.  <i>Fundamentals of Matrix Computations</i>,
  *   John Wiley &amp; Sons, Inc., 1991, pp 416-418.

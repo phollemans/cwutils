@@ -50,17 +50,17 @@ import noaa.coastwatch.gui.TestContainer;
 import noaa.coastwatch.gui.visual.StrokeSwatch;
 
 /**
- * The <code>StrokeChooser</code> class is a panel that displays line
+ * <p>The <code>StrokeChooser</code> class is a panel that displays line
  * dash pattern and thickness controls to allow the user to select the
  * line stroke.  When the user selects a stroke, a property change
  * event is fired whose property is given by
- * <code>STROKE_PROPERTY</code>.<p>
+ * <code>STROKE_PROPERTY</code>.</p>
  *
- * The chooser has some limitations in the line stroke.  Only
+ * <p>The chooser has some limitations in the line stroke.  Only
  * <code>Stroke</code> objects of type <code>BasicStroke</code> may be
  * used, and must have an integer line thicknesses and the dash
  * pattern given by an element of the <code>DASH_PATTERNS</code>
- * array.
+ * array.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.7

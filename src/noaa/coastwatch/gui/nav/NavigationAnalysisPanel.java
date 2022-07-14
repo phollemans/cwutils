@@ -97,14 +97,14 @@ import noaa.coastwatch.util.NavigationOffsetEstimator;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 /**
- * The <code>NavigationAnalysisPanel</code> class is a panel that
+ * <p>The <code>NavigationAnalysisPanel</code> class is a panel that
  * allows the user to manipulate a list of image row and column
  * points and specify the offset between coastline data and image
- * data.<p>
+ * data.</p>
  *
- * The panel signals a change in the list of offsets or the
+ * <p>The panel signals a change in the list of offsets or the
  * selected offset by firing an
- * <code>OVERLAY_LIST_PROPERTY</code> change event.
+ * <code>OVERLAY_LIST_PROPERTY</code> change event.</p>
  *
  * @author Peter Hollemans
  * @since 3.2.2

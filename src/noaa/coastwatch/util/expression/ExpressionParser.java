@@ -31,18 +31,18 @@ import noaa.coastwatch.util.expression.ParseImp;
 import noaa.coastwatch.util.expression.EvaluateImp;
 
 /**
- * The <code>ExpressionParser</code> class defines an interface for all
+ * <p>The <code>ExpressionParser</code> class defines an interface for all
  * classes that parse and evaluate mathematical expressions.  The expression
  * parser must initialize, parse, and then evaluate in that order.  The list
  * of variables is only available via {@link #getVariables} after parsing
- * is complete.<p>
+ * is complete.</p>
  *
- * Expressions evaluate to a primitive type given by the {@link #getResultType}
+ * <p>Expressions evaluate to a primitive type given by the {@link #getResultType}
  * method.  The result can be retrieved using the {@link #evaluate} method
  * to a primitive wrapper, or the extra overhead of creating a wrapped
  * primitive can be avoided by using one of the special primitive evaluate
  * methods to directly retrieve the result.  If the result type does not match
- * the method called, zero is returned (or false for a boolean).
+ * the method called, zero is returned (or false for a boolean).</p>
  *
  * @author Peter Hollemans
  * @since 3.4.0

@@ -38,17 +38,17 @@ import noaa.coastwatch.render.EarthDataOverlay;
 import noaa.coastwatch.render.EarthDataView;
 
 /**
- * A vector overlay annotes a data view with vector-specified lines
+ * <p>A vector overlay annotes a data view with vector-specified lines
  * and shapes.  The vector overlay adds the concept of a stroke to the
- * parent class.<p>
+ * parent class.</p>
  *
- * An implementation note: The normal <code>BasicStroke</code> object
+ * <p>An implementation note: The normal <code>BasicStroke</code> object
  * that would be used to define a stroke for vector overlays is not
  * serializable.  So we add some special serialization methods here to
  * handle saving and restoring stroke objects.  The alternative is to
  * create a new serializable stroke class, which may be required if
  * there are other classes that use a stroke and need serialization.
- * For now, we keep it simple.<p>
+ * For now, we keep it simple.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.1

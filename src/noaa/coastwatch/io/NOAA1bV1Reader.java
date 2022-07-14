@@ -38,22 +38,22 @@ import java.util.TimeZone;
 import noaa.coastwatch.io.NOAA1bReader;
 
 /**
- * A NOAA 1b version 1 reader is a NOAA 1b reader that reads NOAA
+ * <p>A NOAA 1b version 1 reader is a NOAA 1b reader that reads NOAA
  * 1b format NOAA-A through -J GAC/LAC/HRPT data files available
  * from the NOAA/NESDIS Satellite Active Archive.  These files
  * are characterized by an optional 122 byte Terabit Memory (TBM)
  * header followed by data header and records of
  * 10688/14800/20928 bytes for 8/10/16-bit LAC or 2496/3220/4540
- * bytes for 8/10/16-bit GAC.<p>
+ * bytes for 8/10/16-bit GAC.</p>
  *
- * Note that currently, channel 3, 4, and 5 non-linear
+ * <p>Note that currently, channel 3, 4, and 5 non-linear
  * corrections are applied to NOAA-14 data only.  Also,
  * conversion from radiance to brightness temperatures uses a
  * single central wavenumber for the range 270-310 K for all
  * satellites.  The calibration in this implementation may be
  * updated at a later date as required.  For more accurate
  * calibration results, use NOAA-KLM data stored in NOAA 1b
- * version 2 format datasets.
+ * version 2 format datasets.</p>
  *
  * @see NOAA1bV2Reader
  *

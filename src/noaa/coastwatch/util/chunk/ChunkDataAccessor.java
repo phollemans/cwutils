@@ -26,6 +26,7 @@ package noaa.coastwatch.util.chunk;
 // Imports
 // -------
 import noaa.coastwatch.util.chunk.DataChunk.DataType;
+import java.util.logging.Logger;
 
 // Testing
 import noaa.coastwatch.test.TestLogger;
@@ -33,23 +34,25 @@ import java.util.function.IntFunction;
 import java.util.function.BiFunction;
 
 /**
- * The <code>ChunkDataAccessor</code> class is a visitor that makes (possibly
+ * <p>The <code>ChunkDataAccessor</code> class is a visitor that makes (possibly
  * unpacked) data values available from any type of {@link DataChunk} instance.
  * The type of data available after the visitor is accepted by a chunk
- * can be determined from the {@link DataChunk#getExternalType} method.<p>
+ * can be determined from the {@link DataChunk#getExternalType} method.</p>
  *
- * The family of methods for accessing chunk data values in this
+ * <p>The family of methods for accessing chunk data values in this
  * class takes the form <code>getXXXValue(int)</code> where
  * <code>XXX</code> is one of either Byte, Short, Int, Long, Float,
  * or Double.  The {@link #isMissingValue} method is used to determine if a
  * data value at a given index is invalid or missing, for any integer and
- * floating-point data.<p>
+ * floating-point data.</p>
  *
  * @author Peter Hollemans
  * @since 3.4.0
  */
 @noaa.coastwatch.test.Testable
 public class ChunkDataAccessor implements ChunkVisitor {
+
+  private static final Logger LOGGER = Logger.getLogger (ChunkDataAccessor.class.getName());
 
   /** The array of byte values. */
   private byte[] byteArray;

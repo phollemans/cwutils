@@ -80,7 +80,7 @@ public abstract class Legend {
    * Sets the background color.
    *
    * @param color the background colour to be used for drawing the legend 
-   * background., or null if no background is to be drawn.
+   * background, or null if no background is to be drawn.
    */
   public void setBackground (Color color) { this.back = color; }
 

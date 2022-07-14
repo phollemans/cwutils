@@ -40,23 +40,23 @@ import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.EarthLocation;
 
 /**
- * The TeraScan vector reader class reads databases in the SeaSpace
+ * <p>The TeraScan vector reader class reads databases in the SeaSpace
  * TeraScan package vector file format.  The file format is as
  * follows. Each file contains a 180x360 1 degree square index,
  * followed by a heap filled with variable length vectors. The
- * 1 degree squares are numbered as follows:
+ * 1 degree squares are numbered as follows:</p>
  * <pre>
  *   square = (lower-lat + 90) * 360 + left-lon + 180
  * </pre>
- * where -90 &lt;= lat &lt; 90 and -180 &lt;= lon &lt; 180.  The index is a
+ * <p>where -90 &lt;= lat &lt; 90 and -180 &lt;= lon &lt; 180.  The index is a
  * 180x360 long integer array, indexed by square number. The index
  * entry for a given square is the offset to the first vector in the
  * heap for that square. The offset to the first vector in the heap
  * is 0. All vectors for a given square are contiguous in the
  * heap. The index entry for a square with no vectors is 0. (-1
- * would have been a better choice!)<p>
+ * would have been a better choice!)</p>
  *
- * The format for a given vector in the heap is shown here:
+ * <p>The format for a given vector in the heap is shown here:</p>
  * <pre>
  *   long integer square number
  *   long integer number of (lat,lon) pairs in vector
@@ -65,9 +65,9 @@ import noaa.coastwatch.util.EarthLocation;
  *   short int lat offset #2 from lower lat in seconds
  *   short int lon offset #2 from left lon in seconds
  * </pre>
- * Because vector segments can cross the boundaries of
+ * <p>Because vector segments can cross the boundaries of
  * squares, lat and lon offsets can fall outside the range 0
- * to 3600 seconds.
+ * to 3600 seconds.</p>
  *
  * @deprecated The functionality of this class has been replaced
  * by the {@link BinnedGSHHSLineReader} class which provides

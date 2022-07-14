@@ -46,12 +46,12 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * The <code>PaletteFactory</code> class handles written tables of
+ * <p>The <code>PaletteFactory</code> class handles written tables of
  * predefined index color models.  Each model has a number of color entries
  * and is associated with a descriptive name.  The number of entries can vary
  * from 1 up to 65536, although in practice the palette will be remapped to
  * 256 colors for use with 8-bit images.  The palette file
- * has an XML format, as follows:
+ * has an XML format, as follows:</p>
  * <pre>
  *   &lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
  *   &lt;!DOCTYPE palette SYSTEM "http://coastwatch.noaa.gov/xml/palette.dtd"&gt;
@@ -62,12 +62,12 @@ import org.xml.sax.helpers.DefaultHandler;
  *     &lt;color r="2" g="2" b="2" /&gt;
  *     ...
  *   &lt;/palette&gt;
- *</pre><p>
+ *</pre>
  *
- * Users may generate files of this form and use them as input to the
+ * <p>Users may generate files of this form and use them as input to the
  * palette constructor.  Alternately, palettes may be created by
  * specifying the name and index color model data.  A number of predefined
- * palettes are also available by name or index:
+ * palettes are also available by name or index:</p>
  * <pre>
  *   0  BW-Linear
  *   1  HSL256

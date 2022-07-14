@@ -764,11 +764,11 @@ public class GCTP
   ////////////////////////////////////////////////////////////
 
   /**
-   * Initializes the forward transformation projection parameters.
+   * <p>Initializes the forward transformation projection parameters.
    * Subsequent calls to <code>forward</code> will use the specified
-   * projection parameters.<p>
+   * projection parameters.</p>
    *
-   * Refer to the {@link #gctp} routine output parameters for details.
+   * <p>Refer to the {@link #gctp} routine output parameters for details.</p>
    *
    * @deprecated The native methods of GCTP are no longer supported.  Use
    * the {@link noaa.coastwatch.util.trans.MapProjectionFactory} to create 
@@ -791,11 +791,11 @@ public class GCTP
   ////////////////////////////////////////////////////////////
 
   /**
-   * Initializes the inverse transformation projection parameters.
+   * <p>Initializes the inverse transformation projection parameters.
    * Subsequent calls to <code>inverse</code> will use the specified
-   * projection parameters.<p>
+   * projection parameters.</p>
    *
-   * Refer to the {@link #gctp} routine input parameters for details.
+   * <p>Refer to the {@link #gctp} routine input parameters for details.</p>
    *
    * @deprecated The native methods of GCTP are no longer supported.  Use
    * the {@link noaa.coastwatch.util.trans.MapProjectionFactory} to create 

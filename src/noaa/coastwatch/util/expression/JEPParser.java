@@ -59,15 +59,15 @@ import org.w3c.dom.Element;
 import noaa.coastwatch.test.TestLogger;
 
 /**
- * The <code>JEPParser</code> class parses expressions using the syntax of the
+ * <p>The <code>JEPParser</code> class parses expressions using the syntax of the
  * Java Math Expression Parser (JEP) from http://singularsys.com/jep (we use
  * version 2.24 which is no longer supported since the product is now commercial).
  * This is the syntax that has been used by the CoastWatch Utilities
  * since 2003 and documented in the {@link noaa.coastwatch.tools.cwmath} tool.
  * Previous to this class existing, code would create a JEP instance and
- * use it directly for expression parsing.<p>
+ * use it directly for expression parsing.</p>
  *
- * Note that this class is not thread-safe.<p>
+ * <p>Note that this class is not thread-safe.</p>
  *
  * @author Peter Hollemans
  * @since 3.4.0

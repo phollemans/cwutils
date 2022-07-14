@@ -41,15 +41,15 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 /**
- * A server query interfaces to a CoastWatch data server and handles
+ * <p>A server query interfaces to a CoastWatch data server and handles
  * the query URL connection and response text.  The response is read
  * as a series of results, each with the same number of values.
  * Values may be retrieved by specifying the desired result index and
- * value key or index.<p>
+ * value key or index.</p>
  *
- * The specifics of the query are handled using a set of key/value
+ * <p>The specifics of the query are handled using a set of key/value
  * pairs specified by a map.  Each key and value in the map is expected
- * to be a string.  The allowed key/values pairs are as follows:
+ * to be a string.  The allowed key/values pairs are as follows:</p>
  * <ul>
  *   <li> query = <code>datasetDetails</code> | <code>serverStatus</code> </li>
  *   <li> details = comma-separated list of desired dataset attributes </li>
@@ -65,7 +65,7 @@ import java.util.logging.Level;
  *   <li> order = comma-separated list of desired ordering attributes </li>
  *   <li> coverage = minimum coverage as a percentage </li>
  * </ul>
- * where valid dataset attributes include the following:
+ * <p>where valid dataset attributes include the following:</p>
  * <ul>
  *   <li> <code>satellite</code>
  *   <li> <code>sensor</code>
