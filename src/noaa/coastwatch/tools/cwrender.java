@@ -160,6 +160,7 @@ import ucar.units.Unit;
  * -l, --nolegends <br>
  * -m, --magnify=LATITUDE/LONGITUDE/FACTOR <br>
  * -o, --logo=NAME <br>
+ * --logolist <br>
  * -s, --size=PIXELS | full <br>
  * -T, --tiffcomp=TYPE <br>
  * -W, --worldfile=FILE
@@ -491,7 +492,7 @@ import ucar.units.Unit;
  *     fonts. </li>
  *
  *   </ul></dd>
-
+ *
  *   <dt>--hybridmask=EXPRESSION</dt>
  *
  *   <dd>Specifies the mask expression used to determine the transparent
@@ -544,15 +545,15 @@ import ucar.units.Unit;
  *
  *   <dt>-o, --logo=NAME</dt>
  *
- *   <dd>The logo used for plot legends.  The current predefined logo
- *   names are 'noaa_sierra.png' (the default), 'noaa3d', 'nasa3d', 'nws3d', 'doc3d', and
- *   their corresponding non-3D versions 'noaa', 'nasa', 'nws', and
- *   'doc'.  The predefined logos are named for their respective
- *   government agencies: NOAA, NASA, National Weather Service (NWS),
- *   and Department of Commerce (DOC).  The user may also specify a
- *   custom logo file name, which can be any PNG, GIF, or JPEG
- *   file.</dd>
+ *   <dd>The logo used for plot legends.  The list of predefined logo names
+ *   can be listed using the <b>--logolist</b> option.  The user can also 
+ *   specify a custom logo file name, which can be any PNG, GIF, or JPEG
+ *   file. The default is the official NOAA logo.</dd>
  *
+ *   <dt>--logolist</dt>
+ *
+ *   <dd>Lists the logo names available on the system.</dd>
+ * 
  *   <dt>-s, --size=PIXELS | full</dt>
  *
  *   <dd>The Earth data view size in pixels.  The data view is
@@ -812,91 +813,12 @@ import ucar.units.Unit;
  *
  *   <dt>-P, --palette=NAME</dt>
  *
- *   <dd>The color palette for converting data values to colors.  The
- *   color palettes have been derived from a number of sources including
+ *   <dd>The color palette for converting data values to colors.  The current 
+ *   list of color palette names can be listed using the <b>--palettelist</b>
+ *   option.  The palettes have been derived from a number of sources including
  *   SeaSpace Terascan, Interactive Data Language (IDL) v5.4, and the Python
- *   matplotlib cmocean package, and have similar names.  The valid
- *   color palette names are as follows (line indexes are simply for
- *   reference):
- *   <pre>
- *     0  BW-Linear
- *     1  HSL256
- *     2  RAMSDIS
- *     3  Blue-Red
- *     4  Blue-White
- *     5  Grn-Red-Blu-Wht
- *     6  Red-Temperature
- *     7  Blue-Green-Red-Yellow
- *     8  Std-Gamma-II
- *     9  Prism
- *     10 Red-Purple
- *     11 Green-White-Linear
- *     12 Grn-Wht-Exponential
- *     13 Green-Pink
- *     14 Blue-Red2
- *     15 16-Level
- *     16 Rainbow
- *     17 Steps
- *     18 Stern-Special
- *     19 Haze
- *     20 Blue-Pastel-Red
- *     21 Pastels
- *     22 Hue-Sat-Lightness-1
- *     23 Hue-Sat-Lightness-2
- *     24 Hue-Sat-Value-1
- *     25 Hue-Sat-Value-2
- *     26 Purple-Red-Stripes
- *     27 Beach
- *     28 Mac-Style
- *     29 Eos-A
- *     30 Eos-B
- *     31 Hardcandy
- *     32 Nature
- *     33 Ocean
- *     34 Peppermint
- *     35 Plasma
- *     36 Rainbow2
- *     37 Blue-Waves
- *     38 Volcano
- *     39 Waves
- *     40 Rainbow18
- *     41 Rainbow-white
- *     42 Rainbow-black
- *     43 NDVI
- *     44 GLERL-Archive
- *     45 GLERL-30-Degrees
- *     46 Chlora-1
- *     47 Chlora-anom
- *     48 Spectrum
- *     49 Wind-0-50
- *     50 CRW_SST
- *     51 CRW_SSTANOMALY
- *     52 CRW_HOTSPOT
- *     53 CRW_DHW
- *     54 StepSeq25
- *     55 HSB-Cycle
- *     56 Ocean-algae
- *     57 Ocean-amp
- *     58 Ocean-balance
- *     59 Ocean-curl
- *     60 Ocean-deep
- *     61 Ocean-delta
- *     62 Ocean-dense
- *     63 Ocean-gray
- *     64 Ocean-haline
- *     65 Ocean-ice
- *     66 Ocean-matter
- *     67 Ocean-oxy
- *     68 Ocean-phase
- *     69 Ocean-solar
- *     70 Ocean-speed
- *     71 Ocean-tempo
- *     72 Ocean-thermal
- *     73 Ocean-turbid
- *     74 NCCOS-chla
- *   </pre>
- *   By default, the 'BW-Linear' palette is used which is a gray scale
- *   color ramp from black to white.</dd>
+ *   matplotlib cmocean package, and have similar names.  By default the 
+ *   grayscale 'BW-Linear' palette is used.</dd>
  *
  *   <dt>--palettefile=FILE</dt>
  *
@@ -1268,6 +1190,7 @@ public class cwrender {
     Option varnameOpt = cmd.addStringOption ("varname");
     Option compositehintOpt = cmd.addStringOption ("compositehint");
     Option hybridmaskOpt = cmd.addStringOption ('Y', "hybridmask");
+    Option logolistOpt = cmd.addBooleanOption ("logolist");
     
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -1336,7 +1259,7 @@ public class cwrender {
           writePaletteImage (paletteimage);
         } // try
         catch (IOException e) {
-          LOGGER.log (Level.SEVERE, "Aborting", e);
+          LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
           ToolServices.exitWithCode (2);
           return;
         } // catch
@@ -1345,6 +1268,14 @@ public class cwrender {
       ToolServices.exitWithCode (0);
       return;
 
+    } // if
+
+    // Print logo list
+    // ---------------
+    if (cmd.getOptionValue (logolistOpt) != null) {
+      IconElementFactory.getInstance().getResourceNames().forEach (System.out::println);
+      ToolServices.exitWithCode (0);
+      return;
     } // if
 
     // Get remaining arguments
@@ -1438,7 +1369,7 @@ public class cwrender {
     String bluefunction = (String) cmd.getOptionValue (bluefunctionOpt);
     if (bluefunction == null) bluefunction = "linear";
     String logo = (String) cmd.getOptionValue (logoOpt);
-    if (logo == null) logo = IconElement.NOAA_SIERRA;
+    if (logo == null) logo = IconElementFactory.getInstance().getDefaultIcon();
     String group = (String) cmd.getOptionValue (groupOpt);
     String worldfile = (String) cmd.getOptionValue (worldfileOpt);
     if (worldfile != null) nolegends = true;
@@ -2209,7 +2140,10 @@ public class cwrender {
       // Get logo
       // --------
       IconElement logoIcon = null;
-      if (!nolegends) logoIcon = IconElementFactory.create (logo);
+      if (!nolegends) {
+        logoIcon = IconElementFactory.getInstance().create (logo);
+        logoIcon.setShadow (true);
+      } // if
 
       // Set custom start/end date
       // -------------------------
@@ -2252,7 +2186,7 @@ public class cwrender {
 
     catch (OutOfMemoryError | Exception e) {
       ToolServices.warnOutOfMemory (e);
-      LOGGER.log (Level.SEVERE, "Aborting", e);
+      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
       ToolServices.exitWithCode (2);
       return;
     } // catch
@@ -2368,6 +2302,7 @@ public class cwrender {
     info.option ("-l, --nolegends", "Do not draw legends");
     info.option ("-m, --magnify=LAT/LON/FACTOR", "Center and magnify location");
     info.option ("-o, --logo=NAME", "Set legend logo");
+    info.option ("--logolist", "Print available logos");
     info.option ("-s, --size=PIXELS | full", "Set maximum data view size");
     info.option ("-T, --tiffcomp=TYPE", "Set TIFF compression type");
     info.option ("-W, --worldfile=FILE", "Write georeferencing world file");

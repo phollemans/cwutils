@@ -34,12 +34,16 @@ import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
+
 import noaa.coastwatch.render.GraphicsServices;
 import noaa.coastwatch.render.PictureElement;
+
+import java.util.logging.Logger;
 
 /**
  * An icon element is a picture element that is rendered from image
@@ -48,181 +52,59 @@ import noaa.coastwatch.render.PictureElement;
  * @author Peter Hollemans
  * @since 3.1.1
  */
-public class IconElement
-  extends PictureElement {
+public class IconElement extends PictureElement {
 
-  // Constants
-  // ---------
-  
-  /** A predefined NOAA logo icon. */
-  public static final String NOAA = "noaa.gif";
+  private static final Logger LOGGER = Logger.getLogger (IconElement.class.getName());
 
-  /** A predefined NWS logo icon. */
-  public static final String NWS = "nws.gif";
-
-  /** A predefined NASA logo icon. */
-  public static final String NASA = "nasa.gif";
-
-  /** A predefined US DOC logo icon. */
-  public static final String DOC = "doc.gif";
-
-  /** A predefined NOAA 3D logo icon. */
-  public static final String NOAA3D = "noaa3d.gif";
-
-  /** A predefined NOAA Sierra style logo icon. */
-  public static final String NOAA_SIERRA = "noaa_sierra.png";
-
-  /** A predefined NWS 3D logo icon. */
-  public static final String NWS3D = "nws3d.gif";
-
-  /** A predefined NASA 3D logo icon. */
-  public static final String NASA3D = "nasa3d.gif";
-
-  /** A predefined US DOC 3D logo icon. */
-  public static final String DOC3D = "doc3d.gif";
-
-  // Variables
-  // ---------
   /** The cached icon image. */
   private BufferedImage image;
 
-  /** The area averaging rendering flag. */
-  private boolean areaAveraging;
+  /** The shadow flag, true to draw a drop shadow. */
+  private boolean shadow;
 
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new icon element from the specified properties.
-   *
-   * @param position the top-left corner position of the picture.
-   * @param size the preferred size of the icon (see {@link
-   * PictureElement#setPreferredSize}).
-   * @param name the predefined icon name.
-   *
-   * @throws IOException if the icon file had input errors.
+   * Sets the drop shadow flag.
+   * 
+   * @param flag the drop shadow flag, true to draw a drop shadow or false 
+   * to not.  By default the drop shadow is not drawn.
+   * 
+   * @since 3.7.1
    */
-  public IconElement ( 
-    Point2D position,
-    Dimension size,
-    String name
-  ) throws IOException {
-
-    // Initialize
-    // ----------
-    super (position, size);
-    InputStream stream = getClass().getResourceAsStream (name);
-    if (stream == null)
-      throw new IOException ("Cannot find resource '" + name + "'");
-    image = ImageIO.read (stream);
-    areaAveraging = true;
-
-  } // IconElement constructor
+  public void setShadow (boolean flag) { shadow = flag; }
 
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new icon element from the specified properties. The
+   * Creates a new icon element from the specified image stream.  The
    * position and preferred size are initialized to (0,0) and null.
    *
-   * @param name the predefined icon name.
+   * @param stream the icon image input stream.
+   * 
+   * @return the new icon element.
    *
-   * @throws IOException if the icon file had input errors.
+   * @throws IOException if an error occurred reading the icon image.
+   * 
+   * @since 3.7.1
    */
-  public IconElement ( 
-    String name
-  ) throws IOException {
-
-    this (new Point(), null, name);
-
-  } // IconElement constructor
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Creates a new icon element from the specified properties.
-   *
-   * @param position the top-left corner position of the picture.
-   * @param size the preferred size of the icon (see {@link
-   * PictureElement#setPreferredSize}).
-   * @param file the icon file.
-   *
-   * @throws IOException if the icon file had input errors.
-   */
-  public IconElement ( 
-    Point2D position,
-    Dimension size,
-    File file
-  ) throws IOException {
-
-    // Initialize
-    // ----------
-    super (position, size);
-    image = ImageIO.read (file);
-    areaAveraging = true;
-
-  } // IconElement constructor
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Creates a new icon element from the specified properties.  The
-   * position and preferred size are initialized to (0,0) and null.
-   *
-   * @param file the icon file.
-   *
-   * @throws IOException if the icon file had input errors.
-   */
-  public IconElement ( 
-    File file
-  ) throws IOException {
-
-    this (new Point(), null, file);
-
-  } // IconElement constructor
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Creates a new icon element from the specified properties.
-   *
-   * @param position the top-left corner position of the picture.
-   * @param size the preferred size of the icon (see {@link
-   * PictureElement#setPreferredSize}).
-   * @param stream the icon input stream.
-   *
-   * @throws IOException if the icon file had input errors.
-   */
-  public IconElement ( 
-    Point2D position,
-    Dimension size,
+  public static IconElement create (
     InputStream stream
   ) throws IOException {
 
-    // Initialize
-    // ----------
-    super (position, size);
-    image = ImageIO.read (stream);
-    areaAveraging = true;
+    var element = new IconElement();
+    element.image = ImageIO.read (stream);
+    return (element);
 
-  } // IconElement constructor
+  } // create
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Creates a new icon element from the specified properties.  The
-   * position and preferred size are initialized to (0,0) and null.
-   *
-   * @param stream the icon input stream.
-   *
-   * @throws IOException if the icon file had input errors.
-   */
-  public IconElement ( 
-    InputStream stream
-  ) throws IOException {
+  protected IconElement () {
 
-    this (new Point(), null, stream);
+    super (new Point(), null);
 
-  } // IconElement constructor
+  } // IconElement
 
   ////////////////////////////////////////////////////////////
 
@@ -234,7 +116,7 @@ public class IconElement
 
     // Initialize
     // ----------
-    Rectangle rect = getBounds(g);
+    Rectangle rect = getBounds (g);
 
     // Draw background
     // ---------------
@@ -243,14 +125,54 @@ public class IconElement
       g.fill (rect);
     } // if
 
-    // Draw image
-    // ----------
+    // When drawing the image to a raster device, it's best to scale the image
+    // first and create the drop shadow if needed after scaling.  This is not
+    // the recommended way to scale an image (see StackOverflow for the
+    // opinions) but it works well enough.
+
     if (GraphicsServices.isRasterDevice (g)) {
-      g.drawImage (image.getScaledInstance (rect.width, rect.height, 
-        Image.SCALE_AREA_AVERAGING), rect.x, rect.y, null);
+
+      var scaled = image.getScaledInstance (rect.width, rect.height, Image.SCALE_AREA_AVERAGING);
+
+      if (shadow) {
+
+        var buffer = new BufferedImage (scaled.getWidth(null), scaled.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        var g2 = buffer.getGraphics();
+        g2.drawImage (scaled, 0, 0, null);
+        g2.dispose();
+
+        int size = Math.max (2, buffer.getWidth()/30);
+        var shadowImage = ShadowGenerator.getInstance().createShadow (buffer, size, Color.BLACK, 0.5f);
+        g.drawImage (shadowImage, rect.x-size*2, rect.y-size*2, null);
+
+      } // if
+
+      g.drawImage (scaled, rect.x, rect.y, null);
+
     } // if
+
+    // Otherwise if drawing to a non-raster, just create the drop shadow 
+    // if needed and then render both shadow and icon together.
+
     else {
-      g.drawImage (image, rect.x, rect.y, rect.width, rect.height, null);
+
+      if (shadow) {
+
+        int size = Math.max (2, image.getWidth()/30);
+        var shadowImage = ShadowGenerator.getInstance().createShadow (image, size, Color.BLACK, 0.5f);
+        var g2 = shadowImage.getGraphics();
+        g2.drawImage (image, size*2, size*2, null);
+        g2.dispose();
+
+        int offset = Math.round ((((float) size*2)/image.getWidth()) * rect.width);
+        g.drawImage (shadowImage, rect.x-offset, rect.y-offset, rect.width+2*offset, rect.height+2*offset, null);
+
+      } // if
+
+      else {
+        g.drawImage (image, rect.x, rect.y, rect.width, rect.height, null);
+      } // else
+
     } // else
 
   } // render

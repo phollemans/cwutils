@@ -25,55 +25,114 @@ package noaa.coastwatch.render;
 
 // Imports
 // -------
+import java.util.Map;
+import java.util.List;
+import java.util.LinkedHashMap;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileInputStream;
+
 import noaa.coastwatch.render.IconElement;
 
 /**
  * The <code>IconElementFactory</code> class creates
  * <code>IconElement</code> objects from either a user-specified file
- * or from built in images.
+ * or from built in resource images.
  *
  * @author Peter Hollemans
  * @since 3.1.9
  */
 public class IconElementFactory { 
 
+  /** The map of predefined icon resources. */
+  private Map<String, String> resourceMap;
+
+  /** The singleton instance of this class. */
+  private static IconElementFactory instance;
+
+  ////////////////////////////////////////////////////////////
+
+  public static IconElementFactory getInstance() {
+    if (instance == null) instance = new IconElementFactory();
+    return (instance);
+  } // getInstance
+
   ////////////////////////////////////////////////////////////
 
   /**
-   * Creates a new <code>IconElement</code> from the specified icon.
-   * If the named icon is from the predefined icon resources, it is
-   * used as such.  Otherwise, it is assumed that the icon is a file
-   * name that should be read.
+   * Gets the list of names for the built-in icon resource images.
+   * 
+   * @return the list of names for use in the {@link #create} method.
+   * 
+   * @since 3.7.1
+   */
+  public List<String> getResourceNames() {
+
+    return (List.copyOf (resourceMap.keySet()));
+
+  } // getResourceNames
+
+  ////////////////////////////////////////////////////////////
+
+  protected IconElementFactory () {
+
+    resourceMap = new LinkedHashMap<>();
+    resourceMap.put ("noaa", "noaa.png");
+    resourceMap.put ("noaa_shaded", "noaa3d.gif");
+    resourceMap.put ("nasa", "nasa.gif");
+    resourceMap.put ("nasa_shaded", "nasa3d.gif");
+    resourceMap.put ("nws", "nws.gif");
+    resourceMap.put ("nws_shaded", "nws3d.gif");
+    resourceMap.put ("doc", "doc.gif");
+    resourceMap.put ("doc_shaded", "doc3d.gif");
+
+  } // IconElementFactory
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the default icon name to be used in plot legends.
+   * 
+   * @return the default icon name.
    *
-   * @param icon the icon resource or file name.
+   * @see #getResourceNames
+   * 
+   * @since 3.7.1
+   */
+  public String getDefaultIcon() { return ("noaa"); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a new {@link noaa.coastwatch.render.IconElement} from the 
+   * specified icon name. If the icon name is not one of the predefined 
+   * icon resource names, it is assumed that the icon is a file name that 
+   * should be read.
+   *
+   * @param icon the icon resource name or file name.
    *
    * @return the new image icon.
    *
    * @throws IOException if the icon could not be created from the
    * icon resources or from a file.
+   * 
+   * @see #getDefaultIcon
+   * @see #getResourceNames
+   * 
+   * @since 3.7.1
    */
-  public static IconElement create (
+  public IconElement create (
     String icon
   ) throws IOException {
 
-    // Create from resources
-    // ---------------------
-    try { 
-      String ext = (icon.indexOf ('.') != -1 ? "" : ".gif");
-      return (new IconElement (icon + ext)); 
-    } // try
-    catch (IOException e) { }
+    var file = resourceMap.get (icon);
+    InputStream stream = null;
+    if (file != null) stream = getClass().getResourceAsStream (file);
+    else stream = new FileInputStream (icon);
 
-    // Create from file
-    // ----------------
-    try { 
-      return (new IconElement (new File (icon)));
-    } // try
-    catch (IOException e) {
-      throw new IOException ("Cannot create icon for '" + icon + "'");
-    } // catch
+    return (IconElement.create (stream));
 
   } // create
 
