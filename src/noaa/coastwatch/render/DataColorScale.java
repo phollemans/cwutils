@@ -221,12 +221,6 @@ public class DataColorScale
 
     } //for
 
-
-// FIXME: There is an issue on Mac OS X JRE 1.7 that causes the annotation
-// to be rendered backwards and in the wrong position.  We tried to find
-// a workaround, but nothing worked, so we updated to JRE 1.8 on Mac OS X.
-
-
     // Draw scale legend
     // -----------------
     x1 = maxx + SPACE_SIZE;
