@@ -156,7 +156,7 @@ public class cwtoolstest {
       sysOut.println (runTest ("cwautonav", true, new String[] {}));
       sysOut.println (runTest ("cwcomposite", true, new String[] {}));
       sysOut.println (runTest ("cwcoverage", true, new String[] {}));
-      sysOut.println (runTest ("cwdownload", true, new String[] {}));
+//      sysOut.println (runTest ("cwdownload", true, new String[] {}));
       sysOut.println (runTest ("cwexport", true, new String[] {}));
       sysOut.println (runTest ("cwgraphics", true, new String[] {}));
       sysOut.println (runTest ("cwimport", true, new String[] {}));

@@ -183,10 +183,11 @@ import noaa.coastwatch.util.SatellitePassInfo;
  *
  * @author Peter Hollemans
  * @since 3.1.3
+ * 
+ * @deprecated The status tool no longer has any valid servers that it works
+ * with.  There is no replacement.
  */
- 
-// TODO: LOGGING
-
+@Deprecated
 public final class cwstatus
   extends JFrame {
 

@@ -252,7 +252,11 @@ import java.util.logging.Level;
  *
  * @author Peter Hollemans
  * @since 3.1.0
+ * 
+ * @deprecated The download tool no longer has any valid servers that it works
+ * with.  There is no replacement.
  */
+@Deprecated
 public final class cwdownload {
 
   private static final String PROG = cwdownload.class.getName();

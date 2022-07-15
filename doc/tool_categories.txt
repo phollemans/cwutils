@@ -2,4 +2,3 @@ Information and Statistics|cwinfo cwstats hdatt
 Data Processing|cwimport cwexport cwsample cwmath cwcomposite cwscript
 Graphics and Visualization|cdat cwrender cwcoverage cwgraphics
 Registration and Navigation|cwmaster cwregister cwregister2 cwnavigate cwautonav cwangles
-Network|cwdownload cwstatus
