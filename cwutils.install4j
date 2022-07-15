@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="8.0.8" transformSequenceNumber="8">
-  <directoryPresets config="../../../Terrenus/Code Signing/Apple Mac OS/Terrenus_Apple_Certificates_Dec_21_2020.p12" />
+<install4j version="8.0.11" transformSequenceNumber="8">
+  <directoryPresets config="../../../Terrenus/Code Signing/Microsoft Authenticode/DigiCert/Terrenus_Microsoft_Certificates_Mar_23_2022.p12" />
   <application name="CoastWatch Utilities" applicationId="1290-4459-1345-6363" mediaDir="${compiler:pkgDir}" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}-${compiler:osName}-${compiler:arch}${compiler:novm}" compression="9" lzmaCompression="true" pack200Compression="true" shortName="cwutils" publisher="National Oceanic and Atmospheric Administration" publisherWeb="http://coastwatch.noaa.gov" version="3.0.0" allPathsRelative="true" macVolumeId="7b43b8e08af23735" javaMinVersion="11.0">
     <variables>
       <variable name="osName" />
@@ -18,8 +18,11 @@
       <variable name="cdatExecutable" value="cdat" />
       <variable name="cwmasterExecutable" value="cwmaster" />
       <variable name="cwstatusExecutable" value="cwstatus" />
+      <variable name="winKeystoreFile" />
+      <variable name="macKeystoreFile" />
+      <variable name="appleIdLogin" />
     </variables>
-    <codeSigning macEnabled="true" macPkcs12File="../../../Terrenus/Code Signing/Apple Mac OS/Terrenus_Apple_Certificates_Dec_21_2020.p12" windowsEnabled="true" windowsPkcs12File="../../../Terrenus/Code Signing/Microsoft Authenticode/DigiCert/Terrenus_Microsoft_Certificates_Mar_31_2021.pfx" macNotarize="true" appleId="phollemans@icloud.com">
+    <codeSigning macEnabled="true" macPkcs12File="${compiler:macKeystoreFile}" windowsEnabled="true" windowsPkcs12File="${compiler:winKeystoreFile}" macNotarize="true" appleId="${compiler:appleIdLogin}">
       <macSearchedJars>
         <entry>jna-*</entry>
         <entry>swt-*</entry>
@@ -27,7 +30,7 @@
         <entry>toolsUI-*</entry>
       </macSearchedJars>
     </codeSigning>
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk14/jdk-14.0.2+12_openj9-0.21.0" />
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk17/jdk-17.0.2+8" />
   </application>
   <files>
     <mountPoints>
@@ -65,7 +68,7 @@
           <entry location="extensions" />
           <entry location="lib" />
           <entry location="doc/cw_cf_metadata.pdf" />
-          <entry location="doc/cwutils_ug_3_7_0.pdf" />
+          <entry location="doc/cwutils_ug_3_7_1.pdf" />
           <entry location="doc/metadata_comparison_v1_1_jan_2010.pdf" />
           <entry location="doc/license.txt" />
           <entry location="data" />
@@ -157,29 +160,6 @@
         <file path="${compiler:iconDir}/cwmaster_128.png" />
       </iconImageFiles>
     </launcher>
-    <launcher name="CoastWatch Status Tool" id="1439" excludeFromMenu="true" icnsFile="${compiler:iconDir}/cwstatus.icns">
-      <executable name="${compiler:cwstatusExecutable}" iconSet="true" iconFile="${compiler:iconDir}/cwstatus.ico" executableDir="bin" redirectStderr="false" executableMode="gui" changeWorkingDirectory="false" />
-      <splashScreen show="true" bitmapFile="./resources/noaa/coastwatch/gui/cwf_splash_2_export.png" />
-      <java mainClass="noaa.coastwatch.tools.cwstatus" vmParameters="${compiler:vmLafOptions} ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
-        <classPath>
-          <directory location="extensions" failOnError="false" />
-          <scanDirectory location="lib/java" failOnError="false" />
-          <scanDirectory location="lib/java/depend" failOnError="false" />
-          <directory location="data" failOnError="false" />
-        </classPath>
-        <nativeLibraryDirectories>
-          <directory name="lib/native/${compiler:libDir}" />
-        </nativeLibraryDirectories>
-      </java>
-      <macStaticAssociationActions mode="selected" />
-      <vmOptionsFile mode="none" />
-      <iconImageFiles>
-        <file path="${compiler:iconDir}/cwstatus_16.png" />
-        <file path="${compiler:iconDir}/cwstatus_32.png" />
-        <file path="${compiler:iconDir}/cwstatus_64.png" />
-        <file path="${compiler:iconDir}/cwstatus_128.png" />
-      </iconImageFiles>
-    </launcher>
     <launcher name="cwangles" id="35" excludeFromMenu="true">
       <executable name="cwangles" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
       <java mainClass="noaa.coastwatch.tools.cwangles" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
@@ -198,7 +178,7 @@
     </launcher>
     <launcher name="cwcomposite" id="36" excludeFromMenu="true">
       <executable name="cwcomposite" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwcomposite" vmParameters="-Djava.awt.headless=true -Xmx256m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
+      <java mainClass="noaa.coastwatch.tools.cwcomposite" vmParameters="-Djava.awt.headless=true -Xmx1024m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -215,22 +195,6 @@
     <launcher name="cwcoverage" id="52" excludeFromMenu="true">
       <executable name="cwcoverage" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
       <java mainClass="noaa.coastwatch.tools.cwcoverage" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
-        <classPath>
-          <directory location="extensions" failOnError="false" />
-          <scanDirectory location="lib/java" failOnError="false" />
-          <scanDirectory location="lib/java/depend" failOnError="false" />
-          <directory location="data" failOnError="false" />
-        </classPath>
-        <nativeLibraryDirectories>
-          <directory name="lib/native/${compiler:libDir}" />
-        </nativeLibraryDirectories>
-      </java>
-      <macStaticAssociationActions mode="selected" />
-      <vmOptionsFile mode="none" />
-    </launcher>
-    <launcher name="cwdownload" id="55" excludeFromMenu="true">
-      <executable name="cwdownload" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
-      <java mainClass="noaa.coastwatch.tools.cwdownload" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />
@@ -566,7 +530,7 @@ return console.askOkCancel(message, true);
                 <serializedBean>
                   <property name="displayedText" type="string">&lt;html&gt;
 &lt;p&gt;
-&lt;b&gt;Copyright (c) 1998-2021 National Oceanic and Atmospheric Administration&lt;br&gt;
+&lt;b&gt;Copyright (c) 1998-2022 National Oceanic and Atmospheric Administration&lt;br&gt;
 All rights reserved.&lt;/b&gt;
 &lt;/p&gt;
 
@@ -739,7 +703,7 @@ OTHER DEALINGS WITH THE SOFTWARE.
                         <property name="name" type="string">User's Guide</property>
                         <property name="target">
                           <object class="java.io.File">
-                            <string>doc/cwutils_ug_3_7_0.pdf</string>
+                            <string>doc/cwutils_ug_3_7_1.pdf</string>
                           </object>
                         </property>
                       </object>
@@ -1967,7 +1931,7 @@ if (context.isUnattended()) {
       </exclude>
       <variables>
         <variable name="VM_LNF_PARAM" value="-Dswing.defaultlaf=com.sun.java.swing.plaf.windows.WindowsLookAndFeel" />
-        <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.sun.java.swing.plaf.windows.WindowsLookAndFeel" />
+        <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.formdev.flatlaf.FlatLightLaf" />
         <variable name="osName" value="windows" />
         <variable name="arch" value="x86_64" />
         <variable name="vmOptionsFile" value="${APPDATA}\CoastWatch\cwutils.vmoptions" />
@@ -1975,8 +1939,25 @@ if (context.isUnattended()) {
         <variable name="cwmasterExecutable" value="CoastWatch Master Tool" />
         <variable name="cwstatusExecutable" value="CoastWatch Status Tool" />
       </variables>
-      <jreBundle jreBundleSource="generated" />
+      <jreBundle usePack200="false" jreBundleSource="generated" />
     </windows>
+    <windowsArchive name="windows64 (zip)" id="1656">
+      <exclude>
+        <entry location="lib/native/macosx_x86_64" />
+        <entry location="lib/native/linux_x86_64" />
+        <entry location="lib/native/windows_x86" />
+      </exclude>
+      <variables>
+        <variable name="osName" value="windows" />
+        <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.formdev.flatlaf.FlatLightLaf" />
+        <variable name="arch" value="x86_64" />
+        <variable name="vmOptionsFile" value="$(APPDATA}\CoastWatch\cwutils.vmoptions" />
+        <variable name="cdatExecutable" value="CoastWatch Data Analysis Tool" />
+        <variable name="cwmasterExecutable" value="CoastWatch Master Tool" />
+        <variable name="cwstatusExecutable" value="CoastWatch Status Tool" />
+      </variables>
+      <jreBundle jreBundleSource="generated" />
+    </windowsArchive>
     <unixArchive name="linux64 (tgz)" id="288" installDir="${compiler:baseInstallDir}" overridePrincipalLanguage="true">
       <exclude>
         <entry location="lib/native/linux_x86" />
@@ -1991,7 +1972,7 @@ if (context.isUnattended()) {
         <variable name="osName" value="linux" />
         <variable name="arch" value="x86_64" />
         <variable name="vmOptionsFile" value="${HOME}/.coastwatch/cwutils.vmoptions" />
-        <variable name="vmLafOptions" value="-Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel" />
+        <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.formdev.flatlaf.FlatLightLaf" />
       </variables>
       <jreBundle jreBundleSource="generated" />
     </unixArchive>
@@ -2010,7 +1991,7 @@ if (context.isUnattended()) {
         <variable name="arch" value="x86_64" />
         <variable name="vmOptionsFile" value="${HOME}/.coastwatch/cwutils.vmoptions" />
         <variable name="novm" value="-novm" />
-        <variable name="vmLafOptions" value="-Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel" />
+        <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.formdev.flatlaf.FlatLightLaf" />
       </variables>
     </unixArchive>
     <macosFolder name="macosx64 (dmg)" id="276" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="32" volumeName="${compiler:sys.fullName} ${compiler:sys.version}">
