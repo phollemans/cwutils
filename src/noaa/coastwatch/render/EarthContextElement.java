@@ -72,7 +72,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 /**
- * The earth context element is a picture element that renders a
+ * <p>The <code>EarthContextElement</code> is a picture element that renders a
  * simplified view of the earth with coastlines and the bounding boxes
  * of a number of arbitrarily shaped areas.  The earth is shown in an
  * orthographic projection.  The picture element is designed similarly
@@ -84,15 +84,15 @@ import java.util.logging.Level;
  * usually the boundaries of some earth dataset.  By default the
  * largest dimension of the context area is about 15% of the element
  * size.  This size factor may be set, along with other properties
- * such as the center point and context area itself.<p>
+ * such as the center point and context area itself.</p>
  *
- * The context element may be set up to highlight not only the central
+ * <p>The context element may be set up to highlight not only the central
  * context area, but a set of individual areas via the specification
  * of polygon bounding boxes.  The box edges are rendered in a highlighted
  * color, and filled with a slightly darker, semi-transparent version 
  * of the same color.  The bounding boxes may optionally be annotated with 
  * text labels, which are centered on each box area and rendered in a
- * default 12 point font using the same color as the box edges.<p>
+ * default 12 point font using the same color as the box edges.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.1
@@ -1044,13 +1044,18 @@ public class EarthContextElement
       // Draw fill and outline
       // ---------------------
       LineFeature feature = (LineFeature) polygons.get (i);
-      GeneralPath path = feature.getPath (earthImageTrans);
-      if (!feature.isDiscontinuous()) {
-        g.setColor (fill);
-        g.fill (path);
-        g.setColor (outline);
-        g.draw (path);
-      } // if
+      try {
+        var path = feature.getPath (earthImageTrans);
+        if (!feature.isDiscontinuous()) {
+          g.setColor (fill);
+          g.fill (path);
+          g.setColor (outline);
+          g.draw (path);
+        } // if
+      } // try 
+      catch (Exception e) {
+        LOGGER.log (Level.FINE, "Error getting path for bounding polygon", e);
+      } // catch
 
     } // for
 
