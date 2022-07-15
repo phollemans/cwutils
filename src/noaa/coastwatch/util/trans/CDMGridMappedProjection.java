@@ -42,9 +42,7 @@ import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.CoordinateAxis1D;
 import ucar.unidata.geoloc.Projection;
 import ucar.unidata.geoloc.LatLonPoint;
-import ucar.unidata.geoloc.LatLonPointImpl;
 import ucar.unidata.geoloc.ProjectionPoint;
-import ucar.unidata.geoloc.ProjectionPointImpl;
 import ucar.unidata.util.Parameter;
 import ucar.units.ConversionException;
 import ucar.units.Unit;
@@ -63,6 +61,8 @@ import java.io.StringReader;
 import java.util.Formatter;
 import noaa.coastwatch.util.trans.SpheroidConstants;
 import noaa.coastwatch.test.TestLogger;
+import java.io.File;
+import java.io.PrintStream;
 
 import java.util.logging.Logger;
 
@@ -204,44 +204,107 @@ public class CDMGridMappedProjection
     Projection proj
   ) {
 
-    // Get geographic coordinates of projection center
-    // -----------------------------------------------
-    ProjectionPointImpl projCenter = new ProjectionPointImpl (0, 0);
-    LatLonPointImpl geoCenter = new LatLonPointImpl();
-    proj.projToLatLon (projCenter, geoCenter);
+    // What we're trying to do here is discover what units the projection
+    // system uses.  We do this by calculating how far in kilometers one unit
+    // in the projection system is.  If a distance of 1 projection unit is 1 km,
+    // then the projection system uses kilometers.  
 
-    // Get physical distance to one projection unit away
-    // -------------------------------------------------
-    ProjectionPointImpl projUnitOffset = new ProjectionPointImpl (1, 0);
-    LatLonPointImpl geoUnitOffset = new LatLonPointImpl();
-    proj.projToLatLon (projUnitOffset, geoUnitOffset);
-
-    double distUnitOffset = EarthLocation.distance (
-      geoCenter.getLatitude(),
-      geoCenter.getLongitude(),
-      geoUnitOffset.getLatitude(),
-      geoUnitOffset.getLongitude()
+    // Start by getting the (lat,lon) at the projection origin. Then step 
+    // one projection unit away in the projection X axis direction,
+    // and get the (lat,lon) there.  Then see how far in kilometers that step
+    // is away from the origin.
+    var centerPoint = ProjectionPoint.create (0, 0);
+    var centerLatLon = proj.projToLatLon (centerPoint);
+    var unitXPoint = ProjectionPoint.create (1, 0);
+    var unitXLatLon = proj.projToLatLon (unitXPoint);
+    double unitXDist = EarthLocation.distance (
+      centerLatLon.getLatitude(),
+      centerLatLon.getLongitude(),
+      unitXLatLon.getLatitude(),
+      unitXLatLon.getLongitude()
     );
-    
-    // Get physical distance to one kilometer away from geostationary orbit
-    // --------------------------------------------------------------------
-    ProjectionPointImpl projUnitAngle = new ProjectionPointImpl (1.0/(42164.0 - 6378.137), 0);
-    LatLonPointImpl geoUnitAngle = new LatLonPointImpl();
-    proj.projToLatLon (projUnitAngle, geoUnitAngle);
 
-    double distUnitAngle = EarthLocation.distance (
-      geoCenter.getLatitude(),
-      geoCenter.getLongitude(),
-      geoUnitAngle.getLatitude(),
-      geoUnitAngle.getLongitude()
-    );
-    
-    // Determine units
-    // ---------------
+
+
+//LOGGER.fine ("unitXDist = " + unitXDist);
+
+
+
+    // Now perform some tests -- if the distance is 1 km +/- 0.2 km, the units
+    // are probably kilometers.  If the distance is 100 km +/- 20 km, the
+    // units are probably degrees.
     String units = null;
-    if (Math.abs (1 - distUnitOffset) < 0.2) units = "km";
-    else if (Math.abs (100 - distUnitOffset) < 20) units = "degrees";
-    else if (Math.abs (1 - distUnitAngle) < 0.2) units = "radians";
+    if (!Double.isNaN (unitXDist)) {
+      if (Math.abs (1 - unitXDist) < 0.2) units = "km";
+      else if (Math.abs (100 - unitXDist) < 20) units = "degrees";
+    } // if
+
+    // If neither of these are successful, we suspect that the projection is 
+    // some kind of perspective orbit.  Calculate the distance in kilometers
+    // when we move one projection unit, divided by the distance from
+    // a geostationary satellite to the surface.  If we get 1 km then the
+    // units are radians.
+    if (units == null) {
+
+      var radXPoint = ProjectionPoint.create (1.0/(42164.0 - 6378.137), 0);
+      var radXLatLon = proj.projToLatLon (radXPoint);
+
+      double radXDist = EarthLocation.distance (
+        centerLatLon.getLatitude(),
+        centerLatLon.getLongitude(),
+        radXLatLon.getLatitude(),
+        radXLatLon.getLongitude()
+      );
+      if (Math.abs (1 - radXDist) < 0.2) units = "radians";
+
+
+
+//LOGGER.fine ("radXDist = " + radXDist);
+
+
+
+    } // if
+
+    // Similar calculation as the last one, but convert to degrees in the
+    // projection point before calculating.  If we get 1 km in this case,
+    // then the units are degrees.
+
+
+// QUESTION: Why do we not just get the projection units directly from
+// the projection axes?
+
+
+    if (units == null) {
+
+      var degXPoint = ProjectionPoint.create (Math.toDegrees (1.0/(42164.0 - 6378.137)), 0);
+      var degXLatLon = proj.projToLatLon (degXPoint);
+
+      double degXDist = EarthLocation.distance (
+        centerLatLon.getLatitude(),
+        centerLatLon.getLongitude(),
+        degXLatLon.getLatitude(),
+        degXLatLon.getLongitude()
+      );
+      if (Math.abs (1 - degXDist) < 0.2) units = "degrees";
+
+
+
+//LOGGER.fine ("degXDist = " + degXDist);
+
+
+
+    } // if
+
+
+
+
+
+
+
+
+
+//LOGGER.fine ("units = " + units);
+
 
     return (units);
   
@@ -450,9 +513,8 @@ public class CDMGridMappedProjection
     DataLocation dataLoc
   ) {
 
-    ProjectionPointImpl projPoint = new ProjectionPointImpl();
-    LatLonPointImpl geoPoint = new LatLonPointImpl (earthLoc.lat, earthLoc.lon);
-    proj.latLonToProj (geoPoint, projPoint);
+    var geoPoint = LatLonPoint.create (earthLoc.lat, earthLoc.lon);
+    var projPoint = proj.latLonToProj (geoPoint);
     dataLoc.set (Grid.COLS, (projPoint.getX() - xAxisTrans[1]) / xAxisTrans[0]);
     dataLoc.set (Grid.ROWS, (projPoint.getY() - yAxisTrans[1]) / yAxisTrans[0]);
 
@@ -468,9 +530,8 @@ public class CDMGridMappedProjection
 
     double x = dataLoc.get (Grid.COLS)*xAxisTrans[0] + xAxisTrans[1];
     double y = dataLoc.get (Grid.ROWS)*yAxisTrans[0] + yAxisTrans[1];
-    ProjectionPoint projPoint = new ProjectionPointImpl (x, y);
-    LatLonPointImpl geoPoint = new LatLonPointImpl();
-    proj.projToLatLon (projPoint, geoPoint);
+    var projPoint = ProjectionPoint.create (x, y);
+    var geoPoint = proj.projToLatLon (projPoint);
     earthLoc.lat = geoPoint.getLatitude();
     earthLoc.lon = geoPoint.getLongitude();
 
@@ -517,7 +578,11 @@ public class CDMGridMappedProjection
     // Create test dataset
     // -------------------
     logger.test ("Framework");
-    StringReader reader = new StringReader (
+
+    var file = File.createTempFile ("CDMGridMappedProjection", ".nc");
+    file.deleteOnExit();
+    var output = new PrintStream (file);
+    output.print (
 "<?xml version='1.0' encoding='UTF-8'?>\n" + 
 "<netcdf xmlns='http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2'>\n" +
 "  <dimension name='time' length='1' />\n" + 
@@ -584,9 +649,13 @@ public class CDMGridMappedProjection
 "  </variable>\n" + 
 "</netcdf>\n"
     );
-    NetcdfDataset dataset = NcMLReader.readNcML (reader, null);
+    output.close();
+
+    // NetcdfDataset dataset = NcMLReader.readNcML (reader, null);
+    // assert (dataset != null);
+    NetcdfDataset dataset = NetcdfDataset.openDataset (file.getPath());
     assert (dataset != null);
-    
+
     // Get grid coordinate system
     // --------------------------
     Formatter errorLog = new Formatter();
@@ -607,11 +676,18 @@ public class CDMGridMappedProjection
 
     logger.test ("getProjectionUnits");
     Projection proj = system.getProjection();
-    assert (getProjectionUnits (proj).equals ("radians"));
+    String units;
+    units = getProjectionUnits (proj);
+    assert (units != null);
+    assert (units.equals ("degrees"));
     Projection mercator = new Mercator();
-    assert (getProjectionUnits (mercator).equals ("km"));
+    units = getProjectionUnits (mercator);
+    assert (units != null);
+    assert (units.equals ("km"));
     Projection latlon = new LatLonProjection();
-    assert (getProjectionUnits (latlon).equals ("degrees"));
+    units = getProjectionUnits (latlon);
+    assert (units != null);
+    assert (units.equals ("degrees"));
     logger.passed();
 
     logger.test ("getDatum");
@@ -622,11 +698,11 @@ public class CDMGridMappedProjection
 
     logger.test ("getProjectionAxisTransform");
     double[] trans = getProjectionAxisTransform (proj, (CoordinateAxis1D) system.getXHorizAxis());
-    assert (Math.abs ((trans[0] - Math.toRadians (0.00320214596940))/trans[0]) < 0.01);
-    assert (Math.abs ((trans[1] - Math.toRadians (-8.80430034288115))/trans[1]) < 0.01);
+    assert (Math.abs ((trans[0] - 0.00320214596940)/trans[0]) < 0.01);
+    assert (Math.abs ((trans[1] - (-8.80430034288115))/trans[1]) < 0.01);
     trans = getProjectionAxisTransform (proj, (CoordinateAxis1D) system.getYHorizAxis());
-    assert (Math.abs ((trans[0] - Math.toRadians (-0.00320214596940))/trans[0]) < 0.01);
-    assert (Math.abs ((trans[1] - Math.toRadians (8.80430034288115))/trans[1]) < 0.01);
+    assert (Math.abs ((trans[0] - (-0.00320214596940))/trans[0]) < 0.01);
+    assert (Math.abs ((trans[1] - 8.80430034288115)/trans[1]) < 0.01);
     logger.passed();
 
     // Create projection

@@ -41,6 +41,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -945,6 +946,29 @@ utilities when:
 
   ////////////////////////////////////////////////////////////
 
+  @Override
+  public Map<String, Object> getRawMetadata (int index) throws IOException {
+
+    // In this case, we need to override this method because the normal
+    // getPreview() implementation returns a variable with no key/value pairs
+    // in the metadata map, for historical reasons.  Also, this reader mangles
+    // variable names to expand non-geographic axes, so we need to map back 
+    // to the actual variable name.
+
+    var baseName = getBaseVariableName (variables[index]);
+    var variable = getReferencedFile().findVariable (baseName);
+    if (variable == null) variable = dataset.findCoordinateAxis (baseName);
+    if (variable == null) throw new IOException ("Cannot access variable '" + baseName + "' at index " + index);
+
+    Map<String, Object> map = new LinkedHashMap<>();
+    variable.attributes().forEach (att -> map.put (att.getShortName(), convertAttributeValue (att, false)));
+
+    return (map);
+
+  } // getRawMetadata
+
+  ////////////////////////////////////////////////////////////
+
   /** 
    * Gets the base variable name without any expanded axes values.
    *
@@ -1081,7 +1105,7 @@ utilities when:
       String name = variables[index];
       int rank = var.getRank() - group.extraDims;
       Class varClass = var.getDataType().getPrimitiveClassType();
-      boolean isUnsigned = var.isUnsigned();
+      boolean isUnsigned = var.getDataType().isUnsigned();
 
       // Create fake data array
       // ----------------------

@@ -327,7 +327,7 @@ public class CFNCWriter
 
     case ProjectionConstants.ALBERS:
       attributes.put ("grid_mapping_name", "albers_conical_equal_area");
-      Array albersStdPara = Array.factory (double.class, new int[] {2}, 
+      Array albersStdPara = Array.factory (DataType.DOUBLE, new int[] {2},
         new double[] {GCTP.unpack_angle( params[2]), 
         GCTP.unpack_angle (params[3])});
       attributes.put ("standard_parallel", albersStdPara);
@@ -361,7 +361,7 @@ public class CFNCWriter
 
     case ProjectionConstants.LAMCC:
       attributes.put ("grid_mapping_name", "lambert_conformal_conic");
-      Array lamCCStdPara = Array.factory (double.class, new int[] {2}, 
+      Array lamCCStdPara = Array.factory (DataType.DOUBLE, new int[] {2},
         new double[] {GCTP.unpack_angle (params[2]), 
         GCTP.unpack_angle (params[3])});
       attributes.put ("standard_parallel", lamCCStdPara);
@@ -789,7 +789,7 @@ public class CFNCWriter
       int[] start = new int[] {0};
       int[] count = new int[] {cols};
       ncFileWriter.create();
-      ncFileWriter.write (projXVar, start, Array.factory (double.class, count, x));
+      ncFileWriter.write (projXVar, start, Array.factory (DataType.DOUBLE, count, x));
       ncFileWriter.setRedefineMode (true);
 
       // Write y coordinate array
@@ -802,7 +802,7 @@ public class CFNCWriter
         new Attribute ("units", "m"));
       count[0] = rows;
       ncFileWriter.setRedefineMode (false);
-      ncFileWriter.write (projYVar, start, Array.factory (double.class, count, y));
+      ncFileWriter.write (projYVar, start, Array.factory (DataType.DOUBLE, count, y));
       ncFileWriter.setRedefineMode (true);
 
     } // else if
@@ -838,7 +838,7 @@ public class CFNCWriter
       int[] count = new int[] {rows};
 
       double[] lat = new double[rows];
-      Array latArray = Array.factory (double.class, count, lat);
+      Array latArray = Array.factory (DataType.DOUBLE, count, lat);
       DataLocation dataLoc = new DataLocation (0, 0);
       EarthLocation earthLoc = new EarthLocation (0, 0); 
       for (int row = 0; row < rows; row++) {
@@ -854,7 +854,7 @@ public class CFNCWriter
       count = new int[] {cols};
 
       double[] lon = new double[cols];
-      Array lonArray = Array.factory (double.class, count, lon);
+      Array lonArray = Array.factory (DataType.DOUBLE, count, lon);
       dataLoc = new DataLocation (0, 0);
       for (int col = 0; col < cols; col++) {
         dataLoc.set (Grid.COLS, col);
@@ -892,8 +892,8 @@ public class CFNCWriter
       int[] count = new int[] {1, cols};
       double[] lat = new double[cols];
       double[] lon = new double[cols];
-      Array latArray = Array.factory (double.class, count, lat);
-      Array lonArray = Array.factory (double.class, count, lon);
+      Array latArray = Array.factory (DataType.DOUBLE, count, lat);
+      Array lonArray = Array.factory (DataType.DOUBLE, count, lon);
       ncFileWriter.setRedefineMode (false);
 
       DataLocation dataLoc = new DataLocation (0, 0);
@@ -1073,9 +1073,9 @@ public class CFNCWriter
       (double[]) info.getMetadataMap().get ("polygon_longitude"); 
     if (latPoints != null && lonPoints != null) {
       ncFileWriter.addGroupAttribute (root, new Attribute ("cw:polygon_latitude",
-        Array.factory (double.class, new int[] {latPoints.length}, latPoints)));
+        Array.factory (DataType.DOUBLE, new int[] {latPoints.length}, latPoints)));
       ncFileWriter.addGroupAttribute (root, new Attribute ("cw:polygon_longitude",
-        Array.factory (double.class, new int[] {lonPoints.length}, lonPoints)));
+        Array.factory (DataType.DOUBLE, new int[] {lonPoints.length}, lonPoints)));
     } // if
 
     ncFileWriter.setRedefineMode (false);
@@ -1109,7 +1109,7 @@ public class CFNCWriter
     Group root = null;
     Class dataClass = var.getDataClass();
     boolean isUnsigned = var.getUnsigned();
-    DataType dataType = DataType.getType (dataClass);
+    DataType dataType = DataType.getType (dataClass, false);
     if (dataType == null)
       throw new IOException ("Unsupported data type: " + dataClass);
     if (isUnsigned) {
@@ -1224,7 +1224,7 @@ public class CFNCWriter
         double[] matrix = new double[6];
         nav.getMatrix (matrix); 
         ncFileWriter.addVariableAttribute (ncVar, new Attribute ("cw:nav_affine",
-          Array.factory (double.class, new int[] {6}, matrix)));
+          Array.factory (DataType.DOUBLE, new int[] {6}, matrix)));
       } // if
     } // if
 

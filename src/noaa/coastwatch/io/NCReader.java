@@ -32,12 +32,16 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
+
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.GridSubsetReader;
 import noaa.coastwatch.io.IOServices;
 import noaa.coastwatch.io.NCSD;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.trans.cdm.EllipsoidMercatorBuilder;
+
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
@@ -45,6 +49,8 @@ import ucar.nc2.Variable;
 import ucar.nc2.dataset.CoordinateSystem;
 import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.dataset.VariableDS;
+import ucar.nc2.dataset.CoordTransBuilder;
+import ucar.nc2.constants.CF;
 
 import java.util.logging.Logger;
 
@@ -81,6 +87,16 @@ public abstract class NCReader
   private boolean isClosed;
 
   ////////////////////////////////////////////////////////////
+
+  static {
+
+    // Override the default Mercator transform in order to support
+    // generic ellipsoid projections.
+    CoordTransBuilder.registerTransform (CF.MERCATOR, EllipsoidMercatorBuilder.class);
+
+  } // static
+
+  /////////////////////////////////////////////////////////////////
 
   @Override
   public NetcdfDataset getDataset () { return (dataset); }
@@ -171,7 +187,7 @@ public abstract class NCReader
    * @param asArray the array flag, true to return single values as an
    * array, false to return as a wrapped primitive.
    */
-  private static Object convertAttributeValue (
+  protected static Object convertAttributeValue (
     Attribute att, 
     boolean asArray
   ) {
@@ -456,6 +472,26 @@ public abstract class NCReader
     return (varList);
 
   } // getVariablesForSystem
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public Map<String, Object> getRawMetadata (int index) throws IOException {
+
+    // In this case, we need to override this method because the normal
+    // getPreview() implementation returns a variable with no key/value pairs
+    // in the metadata map, for historical reasons.
+
+    var variable = getReferencedFile().findVariable (variables[index]);
+    if (variable == null) variable = dataset.findCoordinateAxis (variables[index]);
+    if (variable == null) throw new IOException ("Cannot access variable '" + variables[index] + "' at index " + index);
+
+    Map<String, Object> map = new LinkedHashMap<>();
+    variable.attributes().forEach (att -> map.put (att.getShortName(), convertAttributeValue (att, false)));
+
+    return (map);
+
+  } // getRawMetadata
 
   ////////////////////////////////////////////////////////////
 

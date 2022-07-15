@@ -347,7 +347,7 @@ public class ACSPONCReader
     int varDims[] = var.getShape();
     String name = var.getShortName();
     Class varClass = var.getDataType().getPrimitiveClassType();
-    boolean isUnsigned = var.isUnsigned();
+    boolean isUnsigned = var.getDataType().isUnsigned();
     
     // Create fake data array
     // ----------------------

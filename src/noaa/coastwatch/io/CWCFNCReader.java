@@ -425,7 +425,7 @@ public class CWCFNCReader
     String name = var.getShortName();
     int rank = var.getRank();
     Class varClass = var.getDataType().getPrimitiveClassType();
-    boolean isUnsigned = var.isUnsigned();
+    boolean isUnsigned = var.getDataType().isUnsigned();
     
     // Create fake data array
     // ----------------------
