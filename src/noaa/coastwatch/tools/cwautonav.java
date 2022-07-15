@@ -172,9 +172,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   <dt> input </dt>
  *   <dd> The input data file name.  The navigation corrections are
  *   applied to the input file in-situ.  For CoastWatch HDF files, the
- *   corrections are applied to individual variables.  For CoastWatch
- *   IMGMAP files, corrections are applied to the global attributes
- *   and the <b>--match</b> option has no effect.  No other file
+ *   corrections are applied to individual variables. No other file
  *   formats are supported.</dd>
  *
  * </dl>
@@ -267,16 +265,16 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  * <h2>Examples</h2>
  * <p>The following example shows an automatic correction of an East
- * Coast CWF (IMGMAP format) file containing AVHHR channel 2 data.  A
+ * Coast HDF file containing AVHHR channel 2 data.  A
  * total of 3 navigation boxes are specified in a text file, and the
  * size of each box set to 60 by 60 pixels.  The output shows that 2
  * of the 3 boxes were successful and a final navigation correction
  * of (rows, cols) = (-3, 1) was applied to the file.</p>
  * <pre>
  *   phollema$ cwautonav -v --width 60 --height 60 navbox.txt 
- *     avhrr_ch2 2004_064_1601_n17_er_c2.cwf
+ *     avhrr_ch2 2004_064_1601_n17_er.hdf
  *
- *   cwautonav: Reading input 2004_064_1601_n17_er_c2.cwf
+ *   cwautonav: Reading input 2004_064_1601_n17_er.hdf
  *   cwautonav: Testing box at 37.0503 N, 76.2111 W
  *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
  *     distance = 2.33
@@ -304,21 +302,21 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * AVHRR channel 2 which provides high contrast between land and water
  * during the day.  The final correction is applied to all variables
  * in the input file.  This combination of import and autonavigation
- * is a convenient way of correcting a set of older CWF data files all
+ * is a convenient way of correcting a set of CoastWatch HDF data files all
  * at once, using just data from AVHRR channel 2.</p>
  * <pre>
- *   phollema$ cwimport -v --match '(avhrr.*|sst|cloud)' 2004_313_1921_n16_mr*.cwf
+ *   phollema$ cwimport -v --match '(avhrr.*|sst|cloud)' 2004_313_1921_n16_mr*.hdf
  *     2004_313_1921_n16_mr.hdf
  *
- *   cwimport: Reading input 2004_313_1921_n16_mr_c1.cwf
+ *   cwimport: Reading input 2004_313_1921_n16_mr_c1.hdf
  *   cwimport: Creating output 2004_313_1921_n16_mr.hdf
- *   cwimport: Converting file [1/4], 2004_313_1921_n16_mr_c1.cwf
+ *   cwimport: Converting file [1/4], 2004_313_1921_n16_mr_c1.hdf
  *   cwimport: Writing avhrr_ch1
- *   cwimport: Converting file [2/4], 2004_313_1921_n16_mr_c2.cwf
+ *   cwimport: Converting file [2/4], 2004_313_1921_n16_mr_c2.hdf
  *   cwimport: Writing avhrr_ch2
- *   cwimport: Converting file [3/4], 2004_313_1921_n16_mr_cm.cwf
+ *   cwimport: Converting file [3/4], 2004_313_1921_n16_mr_cm.hdf
  *   cwimport: Writing cloud
- *   cwimport: Converting file [4/4], 2004_313_1921_n16_mr_d7.cwf
+ *   cwimport: Converting file [4/4], 2004_313_1921_n16_mr_d7.hdf
  *   cwimport: Writing sst
  *
  *   phollema$ cwautonav -v --width 60 --height 60 navbox2.txt avhrr_ch2 2004_313_1921_n16_mr.hdf

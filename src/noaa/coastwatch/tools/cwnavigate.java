@@ -158,9 +158,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   <dt> input </dt>
  *   <dd> The input data file name.  The navigation corrections are
  *   applied to the input file in-situ.  For CoastWatch HDF files, the
- *   corrections are applied to individual variables.  For CoastWatch
- *   IMGMAP files, corrections are applied to the global attributes
- *   and the <b>--match</b> option has no effect.  No other file
+ *   corrections are applied to individual variables.  No other file
  *   formats are supported.</dd>
  *
  * </dl>
@@ -214,11 +212,11 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   cwnavigate: Applying navigation correction to sst
  * </pre>
  * <p>Another example below shows the navigation correction of a NOAA-15
- * CoastWatch IMGMAP data file from the US east coast:</p>
+ * CoastWatch HDF data file from the US east coast:</p>
  * <pre>
- *   phollema$ cwnavigate --trans -2/1 -v 2002_326_1330_n15_er_c2.cwf
+ *   phollema$ cwnavigate --trans -2/1 -v 2002_326_1330_n15_er_c2.hdf
  *
- *   cwnavigate: Reading input 2002_326_1330_n15_er_c2.cwf
+ *   cwnavigate: Reading input 2002_326_1330_n15_er_c2.hdf
  *   cwnavigate: Applying navigation correction
  * </pre>
  *
