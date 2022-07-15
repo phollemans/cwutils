@@ -403,9 +403,9 @@ public class CWHDFWriter
   ////////////////////////////////////////////////////////////
 
   /**
-   * Writes the earth transform information.  The projection metadata
-   * in the HDF file is converted from the equivalent {@link
-   * EarthTransform}.
+   * Writes the earth transform information.  The {@link EarthTransform}
+   * is converted into equivalent projection metadata
+   * in the HDF file.
    *
    * @param trans the earth transform to write.
    *
