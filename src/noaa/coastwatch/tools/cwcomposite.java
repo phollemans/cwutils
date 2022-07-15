@@ -114,6 +114,7 @@ import java.util.logging.Level;
  * -M, --method=TYPE <br>
  * -p, --pedantic <br>
  * --serial <br>
+ * --threads=MAX <br>
  * -t, --collapsetime <br>
  * -v, --verbose <br>
  * -V, --valid=COUNT <br>
@@ -243,6 +244,12 @@ import java.util.logging.Level;
  *   <dd>Turns on serial processing mode.  By default the program will
  *   use multiple processors in parallel to process chunks of data.</dd>
  *
+ *   <dt>--threads=MAX</dt>
+ *
+ *   <dd>Specifies the maximum number of threads for parallel processing. By
+ *   default the program will automatically detect the maximum number of
+ *   threads possible.</dd>
+ *
  *   <dt>-t, --collapsetime</dt>
  *
  *   <dd>Specifies that the time metadata in the output file
@@ -363,6 +370,7 @@ public final class cwcomposite {
     Option serialOpt = cmd.addBooleanOption ("serial");
     Option keephistoryOpt = cmd.addBooleanOption ("keepHistory");
     Option versionOpt = cmd.addBooleanOption ("version");
+    Option threadsOpt = cmd.addIntegerOption ("threads");
     try { cmd.parse (argv); }
     catch (OptionException e) {
       LOGGER.warning (e.getMessage());
@@ -413,6 +421,8 @@ public final class cwcomposite {
     boolean serialOperations = (cmd.getOptionValue (serialOpt) != null);
     boolean collapseTime = (cmd.getOptionValue (collapsetimeOpt) != null);
     boolean keepHistory = (cmd.getOptionValue (keephistoryOpt) != null);
+    Integer threadsObj = (Integer) cmd.getOptionValue (threadsOpt);
+    int threads = (threadsObj == null ? -1 : threadsObj.intValue());
 
     // Check for coherent mode
     // -----------------------
@@ -568,11 +578,16 @@ public final class cwcomposite {
       // -----------------------------
       int[] dims = earthTransform.getDimensions();
       VERBOSE.info ("Total grid size is " + dims[ROW] + "x" + dims[COL]);
+
+      int maxOps = 0;
       if (!serialOperations) {
         int processors = Runtime.getRuntime().availableProcessors();
-        VERBOSE.info ("Found " + processors + " processor(s) to use");
+        if (threads < 0) maxOps = processors;
+        else maxOps = Math.min (threads, processors);
+        if (maxOps < 1) maxOps = 1;
+        VERBOSE.info ("Using " + maxOps + " parallel threads for processing");
       } // if
-      
+
       // Loop over each composite variable
       // ---------------------------------
       for (String variableName : variableNames) {
@@ -643,6 +658,7 @@ public final class cwcomposite {
         else {
           PoolProcessor processor = new PoolProcessor();
           processor.init (positions, op);
+          processor.setMaxOperations (maxOps);
           processor.start();
           processor.waitForCompletion();
         } // if
@@ -679,7 +695,7 @@ public final class cwcomposite {
 
     catch (OutOfMemoryError | Exception e) {
       ToolServices.warnOutOfMemory (e);
-      LOGGER.log (Level.SEVERE, "Aborting", e);
+      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
       ToolServices.exitWithCode (2);
       return;
     } // catch
@@ -714,6 +730,7 @@ public final class cwcomposite {
     info.option ("-M, --method=TYPE", "Set composite type");
     info.option ("-p, --pedantic", "Retain repeated metadata values");
     info.option ("--serial", "Perform serial operations");
+    info.option ("--threads=MAX", "Set maximum number of parallel threads");
     info.option ("-t, --collapsetime", "Collapse and simplify time metadata");
     info.option ("-v, --verbose", "Print verbose messages");
     info.option ("-V, --valid=COUNT", "Set minimum valid values");

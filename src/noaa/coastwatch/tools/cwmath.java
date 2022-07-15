@@ -115,6 +115,8 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  * -m, --missing=VALUE <br>
  * -p, --parser=TYPE <br>
  * -s, --size=TYPE <br>
+ * --serial <br>
+ * --threads=MAX <br>
  * -t, --template=VARIABLE <br>
  * -f, --full-template <br>
  * -u, --units=STRING <br>
@@ -589,6 +591,17 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  *   packed into 16-bit signed integers with a range of [-327.68 ... 327.67] and
  *   two decimals of accuracy. </dd>
  *
+ *   <dt>--serial</dt>
+ *
+ *   <dd>Turns on serial processing mode.  By default the program will
+ *   use multiple processors in parallel to process chunks of data.</dd>
+ *
+ *   <dt>--threads=MAX</dt>
+ *
+ *   <dd>Specifies the maximum number of threads for parallel processing. By
+ *   default the program will automatically detect the maximum number of
+ *   threads possible.</dd>
+ *
  *   <dt> -t, --template=VARIABLE </dt>
  *   <dd> The output template variable.  When a template is used, the
  *   output variable size, scaling, units, long name, and missing
@@ -768,6 +781,11 @@ public final class cwmath {
     int fileIndex;
     String fileVarName;
 
+    // Get actual variable name in file
+    // --------------------------------
+    if (newNameMap.containsKey (exprVarName))
+      exprVarName = newNameMap.get (exprVarName);
+
     // Parse expression variable name
     // ------------------------------
     if (readers.length > 1) {
@@ -791,11 +809,6 @@ public final class cwmath {
       fileIndex = 0;
       fileVarName = exprVarName;
     } // else
-
-    // Get actual variable name in file
-    // --------------------------------
-    if (newNameMap.containsKey (fileVarName))
-      fileVarName = newNameMap.get (fileVarName);
 
     return (readers[fileIndex].getVariable (fileVarName));
 
@@ -841,7 +854,7 @@ public final class cwmath {
       String name = iter.next();
       String newName = name.replaceAll ("[^0-9a-zA-Z_]", "_");
       if (!newName.equals (name)) {
-        LOGGER.fine ("Replacing variable name " + name + " with " + newName);
+        LOGGER.fine ("Replacing variable name " + name + " with " + newName + " for expressions");
         newNameMap.put (newName, name);
         iter.set (newName);
       } // if
@@ -955,6 +968,8 @@ public final class cwmath {
     Option parserOpt = cmd.addStringOption ('p', "parser");
     Option missingOpt = cmd.addStringOption ('m', "missing");
     Option versionOpt = cmd.addBooleanOption ("version");
+    Option serialOpt = cmd.addBooleanOption ("serial");
+    Option threadsOpt = cmd.addIntegerOption ("threads");
     try { cmd.parse (argv); }
     catch (OptionException e) {
       LOGGER.warning (e.getMessage());
@@ -1054,6 +1069,9 @@ public final class cwmath {
       parserWasSet = true;
     } // else
     String missingStr = (String) cmd.getOptionValue (missingOpt);
+    boolean serialOperations = (cmd.getOptionValue (serialOpt) != null);
+    Integer threadsObj = (Integer) cmd.getOptionValue (threadsOpt);
+    int threads = (threadsObj == null ? -1 : threadsObj.intValue());
 
     // We have the readers and writers declared outside the try statement so
     // we can close them later if there's an error that doesn't result in
@@ -1124,7 +1142,6 @@ public final class cwmath {
       // ----------------------------------------------
       List<String> nameList = getInputVariables (readers);
       nameList.forEach (name -> LOGGER.fine ("Found input variable " + name));
-
       for (String newName : newNameMap.keySet()) {
         String newExpression = outputExpression.replaceAll (newNameMap.get (newName), newName);
         if (!newExpression.equals (outputExpression))
@@ -1373,19 +1390,27 @@ public final class cwmath {
 
       // Perform chunk processing
       // ------------------------
-      boolean isParallel = parser.isThreadSafe();
+      boolean isParallel = parser.isThreadSafe() && !serialOperations;
       int[] chunkingDims = scheme.getDims();
       VERBOSE.info ("Total grid size is " + chunkingDims[0] + "x" + chunkingDims[1]);
+
+      int maxOps = 0;
       if (isParallel) {
         int processors = Runtime.getRuntime().availableProcessors();
-        VERBOSE.info ("Found " + processors + " processor(s) to use");
+        if (threads < 0) maxOps = processors;
+        else maxOps = Math.min (threads, processors);
+        if (maxOps < 1) maxOps = 1;
+        VERBOSE.info ("Using " + maxOps + " parallel threads for processing");
       } // if
+
       int[] chunkSize = scheme.getChunkSize();
       VERBOSE.info ("Processing " + positions.size() +
         " data chunks of size " + chunkSize[0] + "x" + chunkSize[1]);
+
       if (isParallel) {
         PoolProcessor processor = new PoolProcessor();
         processor.init (positions, op);
+        processor.setMaxOperations (maxOps);
         processor.start();
         processor.waitForCompletion();
       } // if
@@ -1412,7 +1437,7 @@ public final class cwmath {
 
     catch (OutOfMemoryError | Exception e) {
       ToolServices.warnOutOfMemory (e);
-      LOGGER.log (Level.SEVERE, "Aborting", e);
+      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
       ToolServices.exitWithCode (2);
       return;
     } // catch
@@ -1457,6 +1482,8 @@ public final class cwmath {
     info.option ("-l, --longname=STRING", "Set output variable long name");
     info.option ("-m, --missing=VALUE", "Set output variable missing value");
     info.option ("-s, --size=TYPE", "Set output variable binary type");
+    info.option ("--serial", "Perform serial operations");
+    info.option ("--threads=MAX", "Set maximum number of parallel threads");
     info.option ("-t, --template=VARIABLE", "Use template for output attributes");
     info.option ("-f, --full-template", "Use all template variable attributes");
     info.option ("-u, --units=STRING", "Set output variable units");

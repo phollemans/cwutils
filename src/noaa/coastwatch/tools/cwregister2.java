@@ -53,6 +53,7 @@ import noaa.coastwatch.util.trans.SpheroidConstants;
 import noaa.coastwatch.util.trans.ProjectionConstants;
 import noaa.coastwatch.util.GCTP;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
+import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.EarthLocation;
 
@@ -111,9 +112,11 @@ import java.util.logging.Level;
  * -M, --master=FILE <br>
  * -m, --match=PATTERN <br>
  * -p, --proj=SYSTEM <br>
+ * -r, --resolution=SIZE <br>
  * -S, --savemap <br>
  * -H, --sensorhint=HINT <br>
  * --serial <br>
+ * --threads=MAX <br>
  * -t, --tiledims=ROWS/COLS <br>
  * -u, --usemap=FILE[/ROW_VAR/COL_VAR] <br>
  * -v, --verbose <br>
@@ -233,13 +236,28 @@ import java.util.logging.Level;
  *
  *   <dt>-p, --proj=SYSTEM</dt>
  *
- *   <dd>The projection system to use for a master.  This can be 'geo'
- *   (geographic), 'ortho' (orthographic), 'mercator', or 'polar' (polar
- *   stereographic).  An optimal destination master is created using the
+ *   <dd>The projection system to use for a master.  This can be:
+ *   <ul>
+ *     <li>geo - Geographic</li>
+ *     <li>ortho - Orthographic</li>
+ *     <li>mercator - Merator</li>
+ *     <li>polar - Polar Stereographic</li>
+ *     <li>tm - Transverse Mercator</li>
+ *     <li>utm - Universal Transverse Mercator</li>
+ *   </ul>
+ *   An optimal destination master is created using the
  *   specified projection system, and is set up with its center location,
  *   resolution, and extents matching the input file.  If no projection
  *   system is specified and no master file is provided, the default is
- *   to create an orthographic projection.</dd>
+ *   UTM.</dd>
+ *
+ *   <dt>-r, --resolution=SIZE</dt>
+ *
+ *   <dd>Specifies the pixel resolution for the optimal destination master.
+ *   The pixel resolution is specified in degrees for a geographic projection
+ *   or kilometers for all other projections.  By default the resolution is
+ *   automatically determined from the center location of the input file unless
+ *   a master file is specified (see <b>--master</b> above).</dd>
  *
  *   <dt>-S, --savemap</dt>
  *
@@ -262,6 +280,12 @@ import java.util.logging.Level;
  *
  *   <dd>Turns on serial processing mode.  By default the program will
  *   use multiple processors in parallel to process chunks of data.</dd>
+ *
+ *   <dt>--threads=MAX</dt>
+ *
+ *   <dd>Specifies the maximum number of threads for parallel processing. By
+ *   default the program will automatically detect the maximum number of
+ *   threads possible.</dd>
  *
  *   <dt>-t, --tiledims=ROWS/COLS</dt>
  *
@@ -360,51 +384,68 @@ public final class cwregister2 {
 
   /**
    * Gets a map projection that covers the entire extents of the source
-   * transform area.  The returned map projection attempts to match the
-   * source transform resolution and center point as closely as possible.
+   * transform area.  The returned map projection optionally matches the
+   * source transform resolution, and has the same center geographic
+   * coordinates.
    *
    * @param sourceTrans the source transform to match.
-   * @param type the map projection type: geo, ortho, mercator, or polar.
+   * @param destPixelSize the destination pixel size in kilometers or degrees
+   * for geographic projections, or Double.NaN to measure the pixel resolution
+   * from the source transform.
+   * @param type the map projection type: geo, ortho, mercator, polar, tm, utm.
    *
    * @return the optimal map projection of the given type.
    */
   private static EarthTransform getOptimalProjection (
     EarthTransform sourceTrans,
+    double destPixelSize,
     String type
   ) {
   
-    // Estimate source resolution at center
-    // ------------------------------------
+    // We either use the specified pixel size here or compute an approximate
+    // pixel size from the center of the source transform
+    
     int[] sourceDims = sourceTrans.getDimensions();
     DataLocation centerDataLoc = new DataLocation (sourceDims[ROW]/2, sourceDims[COL]/2);
-
     EarthLocation centerEarthLoc = sourceTrans.transform (centerDataLoc);
-    EarthLocation leftEarthLoc = sourceTrans.transform (centerDataLoc.translate (0, -1));
-    EarthLocation rightEarthLoc = sourceTrans.transform (centerDataLoc.translate (0, 1));
-    EarthLocation topEarthLoc = sourceTrans.transform (centerDataLoc.translate (-1, 0));
-    EarthLocation bottomEarthLoc = sourceTrans.transform (centerDataLoc.translate (1, 0));
 
-    LOGGER.fine ("Using centered difference between " +
-      leftEarthLoc.format (EarthLocation.RAW) + " and " +
-      rightEarthLoc.format (EarthLocation.RAW) + " for horizontal resolution");
-    double horizRes = leftEarthLoc.distance (rightEarthLoc)/2;
-    LOGGER.fine ("Horizontal resolution is " + horizRes + " km");
-    if (Double.isNaN (horizRes) || horizRes == 0) horizRes = -Double.MAX_VALUE;
+    double res;
+    boolean isGeo = type.equals ("geo");
 
-    LOGGER.fine ("Using centered difference between " +
-      topEarthLoc.format (EarthLocation.RAW) + " and " +
-      bottomEarthLoc.format (EarthLocation.RAW) + " for vertical resolution");
-    double vertRes = topEarthLoc.distance (bottomEarthLoc)/2;
-    LOGGER.fine ("Vertical resolution is " + vertRes + " km");
-    if (Double.isNaN (vertRes) || vertRes == 0) vertRes = -Double.MAX_VALUE;
+    if (Double.isNaN (destPixelSize)) {
 
-    double res = Math.max (horizRes, vertRes);
+      EarthLocation leftEarthLoc = sourceTrans.transform (centerDataLoc.translate (0, -1));
+      EarthLocation rightEarthLoc = sourceTrans.transform (centerDataLoc.translate (0, 1));
+      EarthLocation topEarthLoc = sourceTrans.transform (centerDataLoc.translate (-1, 0));
+      EarthLocation bottomEarthLoc = sourceTrans.transform (centerDataLoc.translate (1, 0));
 
-    if (res == -Double.MAX_VALUE)
-      throw new IllegalStateException ("Cannot determine source transform resolution");
+      LOGGER.fine ("Using centered difference between " +
+        leftEarthLoc.format (EarthLocation.RAW) + " and " +
+        rightEarthLoc.format (EarthLocation.RAW) + " for horizontal resolution");
+      double horizRes = leftEarthLoc.distance (rightEarthLoc)/2;
+      LOGGER.fine ("Horizontal resolution is " + horizRes + " km");
+      if (Double.isNaN (horizRes) || horizRes == 0) horizRes = -Double.MAX_VALUE;
+
+      LOGGER.fine ("Using centered difference between " +
+        topEarthLoc.format (EarthLocation.RAW) + " and " +
+        bottomEarthLoc.format (EarthLocation.RAW) + " for vertical resolution");
+      double vertRes = topEarthLoc.distance (bottomEarthLoc)/2;
+      LOGGER.fine ("Vertical resolution is " + vertRes + " km");
+      if (Double.isNaN (vertRes) || vertRes == 0) vertRes = -Double.MAX_VALUE;
+
+      res = Math.max (horizRes, vertRes);
+      if (isGeo) res = Math.toDegrees (res / SpheroidConstants.STD_RADIUS);
+
+      if (res == -Double.MAX_VALUE)
+        throw new IllegalStateException ("Cannot determine source transform resolution");
+
+    } // if
+    else {
+      res = destPixelSize;
+    } // else
 
     LOGGER.fine ("Projection center is " + centerEarthLoc.format (EarthLocation.RAW));
-    LOGGER.fine ("Projection resolution is " + res + " km");
+    LOGGER.fine ("Projection resolution is " + res + " " + (isGeo ? "deg/pixel" : "km/pixel"));
 
     // Create projection
     // -----------------
@@ -414,18 +455,36 @@ public final class cwregister2 {
     
     if (type.equals ("geo")) {
       system = ProjectionConstants.GEO;
-      res = Math.toDegrees (res / SpheroidConstants.STD_RADIUS);
     } // if
     else {
       if (type.equals ("ortho")) {
         system = ProjectionConstants.ORTHO;
         spheroid = SpheroidConstants.SPHERE;
+        parameters[4] = GCTP.pack_angle (centerEarthLoc.lon);
+        parameters[5] = GCTP.pack_angle (centerEarthLoc.lat);
       } // if
-      else if (type.equals ("mercator")) system = ProjectionConstants.MERCAT;
-      else if (type.equals ("polar")) system = ProjectionConstants.PS;
+      else if (type.equals ("mercator")) {
+        system = ProjectionConstants.MERCAT;
+        parameters[4] = GCTP.pack_angle (centerEarthLoc.lon);
+        parameters[5] = GCTP.pack_angle (centerEarthLoc.lat);
+      } // else if
+      else if (type.equals ("polar")) {
+        system = ProjectionConstants.PS;
+        parameters[4] = GCTP.pack_angle (centerEarthLoc.lon);
+        parameters[5] = GCTP.pack_angle (centerEarthLoc.lat);
+      } // else if
+      else if (type.equals ("tm")) {
+        system = ProjectionConstants.TM;
+        parameters[2] = 1;
+        parameters[4] = GCTP.pack_angle (centerEarthLoc.lon);
+        parameters[5] = GCTP.pack_angle (centerEarthLoc.lat);
+      } // else if
+      else if (type.equals ("utm")) {
+        system = ProjectionConstants.UTM;
+        parameters[0] = GCTP.pack_angle (centerEarthLoc.lon);
+        parameters[1] = GCTP.pack_angle (centerEarthLoc.lat);
+      } // else if
       else throw new IllegalArgumentException ("Unsupported projection type " + type);
-      parameters[4] = GCTP.pack_angle (centerEarthLoc.lon);
-      parameters[5] = GCTP.pack_angle (centerEarthLoc.lat);
       res = res*1000;
     } // else
     
@@ -544,7 +603,9 @@ public final class cwregister2 {
     Option diagnosticOpt = cmd.addBooleanOption ('d', "diagnostic");
     Option diagnosticlongOpt = cmd.addBooleanOption ('D', "diagnostic-long");
     Option tiledimsOpt = cmd.addStringOption ('t', "tiledims");
+    Option threadsOpt = cmd.addIntegerOption ("threads");
     Option projOpt = cmd.addStringOption ('p', "proj");
+    Option resolutionOpt = cmd.addDoubleOption ('r', "resolution");
     Option savemapOpt = cmd.addBooleanOption ('S', "savemap");
     Option usemapOpt = cmd.addStringOption ('u', "usemap");
     Option sensorhintOpt = cmd.addStringOption ('H', "sensorhint");
@@ -600,11 +661,15 @@ public final class cwregister2 {
     String usemap = (String) cmd.getOptionValue (usemapOpt);
     String master = (String) cmd.getOptionValue (masterOpt);
     String proj = (String) cmd.getOptionValue (projOpt);
-    if (proj == null) proj = "ortho";
+    if (proj == null) proj = "utm";
     boolean clobberOutput = (cmd.getOptionValue (clobberOpt) != null);
     boolean serialOperations = (cmd.getOptionValue (serialOpt) != null);
     String sensorhint = (String) cmd.getOptionValue (sensorhintOpt);
     boolean nogroup = (cmd.getOptionValue (nogroupOpt) != null);
+    Integer threadsObj = (Integer) cmd.getOptionValue (threadsOpt);
+    int threads = (threadsObj == null ? -1 : threadsObj.intValue());
+    Double resolutionObj = (Double) cmd.getOptionValue (resolutionOpt);
+    double resolution = (resolutionObj == null ? Double.NaN : resolutionObj.doubleValue());
 
     // Check output
     // ------------
@@ -651,8 +716,14 @@ public final class cwregister2 {
       // Get destination from optimal projection
       // ---------------------------------------
       else {
-        VERBOSE.info ("Creating optimal destination transform with projection system " + proj);
-        destTrans = getOptimalProjection (sourceTrans, proj);
+        var mapProj = (MapProjection) getOptimalProjection (sourceTrans, resolution, proj);
+        float mapRes = (float) mapProj.getPixelDimensions()[0];
+        boolean isGeo = proj.equals ("geo");
+        if (!isGeo) mapRes = mapRes/1000;
+        VERBOSE.info ("Created optimal " + mapProj.getSystemName() +
+          " projection with spheroid " + mapProj.getSpheroidName() +
+          " and " + mapRes + " " + (isGeo ? "deg" : "km") + "/pixel resolution");
+        destTrans = mapProj;
       } // else
 
       int[] destDims = destTrans.getDimensions();
@@ -896,9 +967,13 @@ public final class cwregister2 {
       int[] chunkingDims = scheme.getDims();
       VERBOSE.info ("Destination has size " + chunkingDims[ROW] + "x" + chunkingDims[COL]);
 
+      int maxOps = 0;
       if (!serialOperations) {
         int processors = Runtime.getRuntime().availableProcessors();
-        VERBOSE.info ("Found " + processors + " processor(s) to use");
+        if (threads < 0) maxOps = processors;
+        else maxOps = Math.min (threads, processors);
+        if (maxOps < 1) maxOps = 1;
+        VERBOSE.info ("Using " + maxOps + " parallel threads for processing");
       } // if
 
       int[] chunkSize = scheme.getChunkSize();
@@ -915,6 +990,7 @@ public final class cwregister2 {
       else {
         PoolProcessor processor = new PoolProcessor();
         processor.init (positions, op);
+        processor.setMaxOperations (maxOps);
         processor.start();
         processor.waitForCompletion();
       } // if
@@ -970,7 +1046,7 @@ public final class cwregister2 {
     
     catch (OutOfMemoryError | Exception e) {
       ToolServices.warnOutOfMemory (e);
-      LOGGER.log (Level.SEVERE, "Aborting", e);
+      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
       ToolServices.exitWithCode (2);
       return;
     } // catch
@@ -1004,9 +1080,11 @@ public final class cwregister2 {
     info.option ("-M, --master=FILE", "Use file for output projection");
     info.option ("-m, --match=PATTERN", "Register only variables matching regular expression");
     info.option ("-p, --proj=SYSTEM", "Set output projection system");
+    info.option ("-r, --resolution=SIZE", "Set output pixel resolution");
     info.option ("-S, --savemap", "Save resampling map");
     info.option ("-H, --sensorhint=HINT", "Override automatic sensor detection");
     info.option ("--serial", "Perform serial operations");
+    info.option ("--threads=MAX", "Set maximum number of parallel threads");
     info.option ("-t, --tiledims=ROWS/COLS", "Set written tile dimensions");
     info.option ("-u, --usemap=FILE[/ROW_VAR/COL_VAR]", "Use precomputed remapping");
     info.option ("-v, --verbose", "Print verbose messages");
