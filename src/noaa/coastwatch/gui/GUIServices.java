@@ -29,10 +29,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -43,8 +45,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.image.BaseMultiResolutionImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.imageio.ImageIO;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +66,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.prefs.Preferences;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -187,6 +194,23 @@ public class GUIServices {
     userDir = getPlatformDefaultDirectory();
 
   } // static
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Initializes the environment prior to creating a GUI components.
+   * 
+   * @since 3.7.1
+   */
+  public static void initializeLaf () {
+
+    var laf = System.getProperty ("swing.defaultlaf", "");
+    if (laf.indexOf ("flatlaf") != -1) {
+      UIManager.put ("TabbedPane.tabType", "card");
+      UIManager.put ("EditorPane.inactiveBackground", UIManager.get ("EditorPane.background"));
+    } // if
+
+  } // initializeLaf
 
   ////////////////////////////////////////////////////////////
 
@@ -584,8 +608,9 @@ public class GUIServices {
 
     // Initialize
     // ----------
-    Frame parentFrame = JOptionPane.getFrameForComponent (parent);
-    final JDialog dialog = new JDialog (parentFrame, title, modal);
+    Window parentWindow = (parent instanceof Window ? (Window)parent : JOptionPane.getFrameForComponent (parent));
+    var modality = (modal ?  Dialog.DEFAULT_MODALITY_TYPE :  Dialog.ModalityType.MODELESS);
+    final JDialog dialog = new JDialog (parentWindow, title, modality);
     Container contentPane = dialog.getContentPane();
 
     // Create dialog panel
@@ -969,10 +994,82 @@ public class GUIServices {
       throw new IllegalArgumentException ("Cannot find resource for icon " +
         iconFile);
     } // if
-    
-    return (new ImageIcon (resource));
+
+    // If we're not on Mac, try looking for another icon image with the @2x
+    // naming convention.  If we find one, create an adaptive image for the
+    // icon.  Otherwise icons on Windows and Linux look terrible on scaled
+    // displays.
+    ImageIcon icon = null;
+    if (IS_MAC) {
+      icon = new ImageIcon (resource);
+    } // if
+    else {
+      var path = resource.toString();
+      int index = path.lastIndexOf ('.');
+      var base = path.substring (0, index);
+      var ext = path.substring (index+1);
+      var path2x = base + "@2x." + ext;
+      try {
+        var image2x = ImageIO.read (new URL (path2x));
+        var image = ImageIO.read (resource);
+        var adaptive = new AdaptiveImage (0, image, image2x);
+        icon = new ImageIcon (adaptive);
+      } // try
+      catch (Exception e) {
+        icon = new ImageIcon (resource);
+      } // catch
+    } // else
+
+    return (icon);
 
   } // getIcon
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * The <code>AdaptiveImage</code> class handles the supply of icon images
+   * of different resolutions for Windows and Linux when display scaling is
+   * being used.  For example a base 24x24 icon image in Windows running at a
+   * scaling of 125% needs a 30x30 image to be created.  This is done by
+   * downscaling from the 48x48 image supplied for the Mac retina resolution.
+   * This is only done in Windows and Linux because the Mac JVM already handles
+   * display scaling by looking for the *@2x.png files.  Without this, upscaled
+   * 24x24 icons look terrible on Windows and Linux displays.
+   */
+  private static class AdaptiveImage extends BaseMultiResolutionImage {
+  
+    private String previousDims = "";
+    private Image previousVariant = null;
+    
+    public AdaptiveImage (int baseImageIndex, Image... resolutionVariants) {
+      super (baseImageIndex, resolutionVariants);
+    } // AdaptiveImage
+
+    @Override
+    public Image getResolutionVariant (double destImageWidth, double destImageHeight) {
+
+      var variant = super.getResolutionVariant (destImageWidth, destImageHeight);
+      if (variant.getWidth (null) != destImageWidth || variant.getHeight (null) != destImageHeight) {
+        var dims = destImageWidth + "x" + destImageHeight;
+        if (dims.equals (previousDims)) {
+          variant = previousVariant;
+        } // if
+        else {
+          var scaled = variant.getScaledInstance ((int) destImageWidth, (int) destImageHeight, Image.SCALE_AREA_AVERAGING);
+          while (scaled.getWidth (null) == -1) {
+            Thread.onSpinWait();
+          } // while
+          variant = scaled;
+          previousDims = dims;
+          previousVariant = variant;
+        } // if
+      } // if
+
+      return (variant);
+      
+    } // getResolutionVariant
+  
+  } // AdaptiveImage class
 
   ////////////////////////////////////////////////////////////
 
@@ -1407,6 +1504,40 @@ public class GUIServices {
     return (prefs.get (key, def));
 
   } // recallStringSettingForClass
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the width of a label.
+   * 
+   * @param len the length of text in the label.
+   * 
+   * @return the width of the label in pixels.
+   * 
+   * @since 3.7.1
+   */
+  public static int getLabelWidth (int len) {
+
+    var buf = new StringBuffer();
+    for (int i = 0; i < len; i++) buf.append ((char) ('a' + (i%26)));
+    return ((int) new JLabel (buf.toString()).getPreferredSize().getWidth());
+
+  } // getLabelWidth
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the height of a label.
+   * 
+   * @return the height of the label in pixels.
+   * 
+   * @since 3.7.1
+   */
+  public static int getLabelHeight () {
+
+    return ((int) new JLabel ("abcdef").getPreferredSize().getHeight());
+
+  } // getLabelHeight
 
   ////////////////////////////////////////////////////////////
 

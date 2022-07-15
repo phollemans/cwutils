@@ -101,6 +101,8 @@ public class LegendPanel
       Graphics2D g2d = (Graphics2D) g;
       Object textHint = g2d.getRenderingHint (RenderingHints.KEY_TEXT_ANTIALIASING);
       g2d.setRenderingHint (RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+      legend.setForeground (getForeground());
+      legend.setBackground (null);
       legend.render (g2d, preferred.width/2 - actual.width/2,
         preferred.height/2 - actual.height/2);
       g2d.setRenderingHint (RenderingHints.KEY_TEXT_ANTIALIASING, textHint);

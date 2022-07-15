@@ -84,6 +84,7 @@ import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.HTMLPanel;
 import noaa.coastwatch.gui.PreferencesChooser;
 import noaa.coastwatch.gui.ReaderInfoPanel;
+import noaa.coastwatch.gui.ReaderMetadataPanel;
 import noaa.coastwatch.gui.SimpleFileFilter;
 import noaa.coastwatch.gui.SplashScreenManager;
 import noaa.coastwatch.gui.TabComponent;
@@ -177,9 +178,9 @@ import noaa.coastwatch.gui.ScriptConsole;
  * <h2>Examples</h2>
  *
  * <p>The following shows the use of CDAT to view 
- * data from a CoastWatch IMGMAP file:</p>
+ * data from a CoastWatch HDF file:</p>
  * <pre>
- *   phollema$ cdat 2002_319_2144_n16_wl_c2.cwf
+ *   phollema$ cdat 2002_319_2144_n16_wl_c2.hdf
  * </pre>
  *
  * <!-- END MAN PAGE -->
@@ -394,7 +395,11 @@ public final class cdat
     // Create menu bar
     // ---------------
     JMenuBar menuBar = new JMenuBar();
-    menuBar.setBorder (new BevelBorder (BevelBorder.RAISED));
+    
+// For now, we remove the raised border for menus, so that look and feels
+// operate correctly, some of which may not used a raised border.
+//    menuBar.setBorder (new BevelBorder (BevelBorder.RAISED));
+
     this.setJMenuBar (menuBar);
 
     // TODO: Should we handle the About, Preferences, and Quit
@@ -615,16 +620,16 @@ public final class cdat
     submenu.setMnemonic (KeyEvent.VK_R);
     toolsMenu.add (submenu);
 
-    menuItem = new JMenuItem (SAVE_PROFILE_COMMAND);
-    menuItem.setMnemonic (KeyEvent.VK_S);
-    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_S, keymask));
+    menuItem = new JMenuItem (LOAD_PROFILE_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_L);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_L, keymask));
     menuItem.addActionListener (toolsListener);
     submenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
-    menuItem = new JMenuItem (LOAD_PROFILE_COMMAND);
-    menuItem.setMnemonic (KeyEvent.VK_L);
-    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_L, keymask));
+    menuItem = new JMenuItem (SAVE_PROFILE_COMMAND);
+    menuItem.setMnemonic (KeyEvent.VK_S);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_S, keymask));
     menuItem.addActionListener (toolsListener);
     submenu.add (menuItem);
     menuItemDisableList.add (menuItem);
@@ -709,7 +714,15 @@ public final class cdat
 
     // Set minimized window icon
     // -------------------------
-    setIconImage (GUIServices.getIcon ("tools.cdat").getImage());
+
+    // This icon is used in a number of places: the Windows 10 window frame
+    // at the top-left, and the Linux task bar when CDAT is running.  It's not
+    // used on the Mac as far as we know.
+    
+    setIconImages (List.of (
+      GUIServices.getIcon ("tools.cdat").getImage(),
+      GUIServices.getIcon ("tools.cdat.taskbar").getImage()
+    ));
 
     // Add drag and drop support
     // -------------------------
@@ -967,8 +980,23 @@ public final class cdat
       // ----------------
       else if (command.equals (INFO_COMMAND)) {
         EarthDataReader reader = getAnalysisPanel().getReader();
-        ReaderInfoPanel infoPanel = new ReaderInfoPanel (reader);
-        infoPanel.showDialog (cdat.this, "File Information");
+
+        var infoPanel = new ReaderInfoPanel (reader);
+        var metadataPanel = new ReaderMetadataPanel (reader);
+        var tabs = new JTabbedPane();
+        tabs.add ("Summary", infoPanel);
+        tabs.add ("Raw Metadata", metadataPanel);
+        var pane = new JPanel (new BorderLayout());
+        pane.add (tabs, BorderLayout.CENTER);
+
+        JOptionPane optionPane = new JOptionPane (pane,
+          JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION,
+          null, new String [] {"Close"});
+        JDialog dialog = optionPane.createDialog (cdat.this, "File Information");
+        dialog.setResizable (true);
+        dialog.setModal (false);
+        dialog.setVisible (true);
+
       } // else if
 
       // Show navigation analysis dialog
@@ -1359,7 +1387,9 @@ public final class cdat
     // ---------------------
     SwingUtilities.invokeLater (new Runnable() {
       public void run() { 
-        
+
+        GUIServices.initializeLaf();
+
         // Create main frame
         // -----------------
         final JFrame frame = new cdat();

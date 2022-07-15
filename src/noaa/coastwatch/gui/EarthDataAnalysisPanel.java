@@ -30,8 +30,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -42,6 +44,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.JFrame;
@@ -49,6 +52,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.BorderFactory;
+
 import javax.swing.border.BevelBorder;
 import noaa.coastwatch.gui.EarthDataViewController;
 import noaa.coastwatch.gui.EarthDataViewPanel;
@@ -337,6 +342,7 @@ public class EarthDataAnalysisPanel
     for (TabComponent tab : tabs) {
       JPanel tabPanel = new JPanel (new BorderLayout());
       Box helpBox = Box.createHorizontalBox();
+      helpBox.setBorder (BorderFactory.createEmptyBorder (2, 2, 2, 2));
       helpBox.add (GUIServices.getHelpButton (tab.getClass()));
       helpBox.add (Box.createHorizontalGlue());
       tabPanel.add (helpBox, BorderLayout.SOUTH);
