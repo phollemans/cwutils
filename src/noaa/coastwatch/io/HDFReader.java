@@ -62,6 +62,8 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
 import static noaa.coastwatch.util.Grid.ROW;
 import static noaa.coastwatch.util.Grid.COL;
 
+import java.util.logging.Logger;
+
 /**
  * An HDF reader is an earth data reader that reads HDF format
  * files using the HDF library class.  The HDF reader class is
@@ -73,6 +75,8 @@ import static noaa.coastwatch.util.Grid.COL;
 public abstract class HDFReader
   extends EarthDataReader
   implements HDFSD {
+
+  private static final Logger LOGGER = Logger.getLogger (HDFReader.class.getName());
 
   // Variables
   // ---------
@@ -832,31 +836,62 @@ public abstract class HDFReader
 
         try {
 
-          // Read chunk from HDF file
-          // ------------------------
+          // Start by getting access to the HDF variable
           String name = grid.getName();
           int varIndex = HDFLib.getInstance().SDnametoindex (sdid, name);
           if (varIndex < 0) throw new RuntimeException ("SDnametoindex failed for " + name);
           int sdsid = HDFLib.getInstance().SDselect (sdid, varIndex);
           if (sdsid < 0) throw new RuntimeException ("SDselect failed for " + name);
-          int[] size = scheme.getChunkSize();
-          int values = size[ROW] * size[COL];
-          Object data = Array.newInstance (grid.getDataClass(), values);
-          int[] start = new int[2];
-          for (int i = 0; i < 2; i++) start[i] = pos.start[i] / size[i];
-          boolean success = HDFLib.getInstance().SDreadchunk (sdsid, start, data);
-          if (!success) throw new RuntimeException ("SDreadchunk failed at chunk " + Arrays.toString (start) + " for " + name);
-          HDFLib.getInstance().SDendaccess (sdsid);
 
-          // Remove ghost area if needed
-          // ---------------------------
-          if (pos.length[ROW] != size[ROW] || pos.length[COL] != size[COL]) {
-            int chunkValues = pos.length[ROW] * pos.length[COL];
-            Object newData = Array.newInstance (grid.getDataClass(), chunkValues);
-            Grid.arraycopy (data, size, new int[] {0,0}, newData,
-              pos.length, new int[] {0,0}, pos.length);
-            data = newData;
+          // Now we need to know if the HDF variable itself is chunked or not.
+          // It turns out that we can't use SDreadchunk if the variable is not
+          // chunked, it just doesn't read anything and also doesn't send us
+          // an error back.
+          var chunkLengths = getChunkLengths (sdsid);
+
+          // If the variable is chunked, we read the chunk using SDreadchunk
+          // and then remove the ghost area if this chunk happens to fall on
+          // an edge.
+          Object data;
+          if (chunkLengths != null) {
+
+            int[] size = scheme.getChunkSize();
+            int values = size[ROW] * size[COL];
+            data = Array.newInstance (grid.getDataClass(), values);
+
+            int[] start = new int[2];
+            for (int i = 0; i < 2; i++) start[i] = pos.start[i] / size[i];
+            boolean success = HDFLib.getInstance().SDreadchunk (sdsid, start, data);
+            if (!success) throw new RuntimeException ("SDreadchunk failed at chunk " + Arrays.toString (start) + " for " + name);
+            HDFLib.getInstance().SDendaccess (sdsid);
+
+            if (pos.length[ROW] != size[ROW] || pos.length[COL] != size[COL]) {
+              int chunkValues = pos.length[ROW] * pos.length[COL];
+              Object newData = Array.newInstance (grid.getDataClass(), chunkValues);
+              Grid.arraycopy (data, size, new int[] {0,0}, newData,
+                pos.length, new int[] {0,0}, pos.length);
+              data = newData;
+            } // if
+
           } // if
+
+          // On the other hand, if this data is not chunked, we just read a
+          // rectangular section of it with the start position and lengths of 
+          // the chunk position requested.
+          else {
+
+            int values = pos.length[ROW] * pos.length[COL];
+            data = Array.newInstance (grid.getDataClass(), values);
+
+            int[] start = pos.start;
+            int[] stride = new int[] {1, 1};
+            int[] length = pos.length;
+
+            boolean success = HDFLib.getInstance().SDreaddata (sdsid, start, stride, length, data);
+            if (!success) throw new RuntimeException ("SDreaddata failed at " + Arrays.toString (start) + " for " + name);
+            HDFLib.getInstance().SDendaccess (sdsid);
+
+          } // else
 
           // Create chunk using data
           // -----------------------

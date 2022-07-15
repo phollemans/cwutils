@@ -780,9 +780,16 @@ public class HDFLib {
   public synchronized boolean SDgetchunkinfo (int arg0, HDFChunkInfo arg1, int[] arg2) throws HDFException {
     return (HDFLibrary.SDgetchunkinfo (arg0, arg1, arg2));
   } // SDgetchunkinfo
-  
+
   public synchronized boolean SDreadchunk (int arg0, int[] arg1, byte[] arg2) throws HDFException {
+
+    /** 
+     * Note that there is a bug in the HDF 4 JNI code in
+     * Java HDF 3.2.1 returns true even if the SDS is not chunked.
+     */
+
     return (HDFLibrary.SDreadchunk (arg0, arg1, arg2));
+
   } // SDreadchunk
   
   public synchronized boolean SDreadchunk (int arg0, int[] arg1, Object arg2) throws HDFException {
