@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -69,6 +70,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.UIManager;
 
 import noaa.coastwatch.gui.EarthDataViewFactory;
 import noaa.coastwatch.gui.EarthDataViewPanel;
@@ -94,6 +96,8 @@ import noaa.coastwatch.util.trans.SwathProjection;
 import noaa.coastwatch.util.DataLocationConstraints;
 import noaa.coastwatch.util.VariableStatisticsGenerator;
 
+import java.util.logging.Logger;
+
 /** 
  * The <code>EarthDataChooser</code> class allows the user to choose a
  * dataset and list of variables for opening earth locatable data.
@@ -104,8 +108,9 @@ import noaa.coastwatch.util.VariableStatisticsGenerator;
  * @author Peter Hollemans
  * @since 3.2.0
  */
-public class EarthDataChooser 
-  extends JPanel {
+public class EarthDataChooser extends JPanel {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthDataChooser.class.getName());
 
   // Constants
   // ---------
@@ -232,39 +237,36 @@ public class EarthDataChooser
 
     // Create information panel
     // ------------------------
-    JPanel infoPanel = new JPanel (new GridLayout (2, 1));
+    JPanel infoPanel = new JPanel (new GridLayout (1, 2));
     this.add (infoPanel);
-    infoPanel.setPreferredSize (new Dimension (400, 0));
 
     // Create global info panel
     // ------------------------
     readerInfoPanel = new BasicReaderInfoPanel();
-    infoPanel.add (readerInfoPanel);
-    readerInfoPanel.setBorder (new TitledBorder (new EtchedBorder(), 
-      "Global Information"));
-
-    // Create variable preview panel
-    // -----------------------------
-    JPanel variablePanel = new JPanel (new GridLayout (1, 2));
-    infoPanel.add (variablePanel);
+    readerInfoPanel.setBorder (new TitledBorder (new EtchedBorder(), "File Information"));
+    var leftInfoPanel = new JPanel (new BorderLayout());
+    infoPanel.add (leftInfoPanel);
+    leftInfoPanel.add (readerInfoPanel, BorderLayout.NORTH);
 
     // Create variable info panel
     // --------------------------
     variableModel = new DataVariableTableModel();
     variableTable = new JTable (variableModel);
-    variableTable.getSelectionModel().addListSelectionListener (
-      new VariableListener());
+    variableTable.setShowGrid (true);
+    variableTable.setGridColor (UIManager.getColor ("Panel.background"));
+    variableTable.getSelectionModel().addListSelectionListener (new VariableListener());
     JScrollPane scrollPane = new JScrollPane (variableTable);
     JPanel scrollPanePanel = new JPanel (new BorderLayout());
     scrollPanePanel.add (scrollPane, BorderLayout.CENTER);
-    variablePanel.add (scrollPanePanel);
-    scrollPanePanel.setBorder (new TitledBorder (new EtchedBorder(), 
-      "Variables"));
-    int rowHeight = variableTable.getRowHeight();
-    int colWidth = 
-      (int) new JLabel ("123456789012").getPreferredSize().getWidth();
-    variableTable.setPreferredScrollableViewportSize (
-      new Dimension (colWidth*2, rowHeight*10));
+    leftInfoPanel.add (scrollPanePanel, BorderLayout.CENTER);
+    scrollPanePanel.setBorder (new TitledBorder (new EtchedBorder(), "Variables"));
+
+    int nameWidth = (int) new JLabel ("abcdefghijklmnopqrstuvwxyz").getPreferredSize().getWidth();
+    int unitsWidth = (int) new JLabel ("abcdefghijklm").getPreferredSize().getWidth();
+    variableTable.getColumnModel().getColumn (0).setPreferredWidth (nameWidth);
+    variableTable.getColumnModel().getColumn (1).setPreferredWidth (unitsWidth);
+    var dims = new Dimension (nameWidth + unitsWidth, variableTable.getRowHeight() * 8);
+    variableTable.setPreferredScrollableViewportSize (dims);
 
     // Create null earth view
     // ----------------------
@@ -284,9 +286,8 @@ public class EarthDataChooser
     // Create preview panel
     // --------------------
     JPanel previewContainer = new JPanel (new BorderLayout());
-    previewContainer.setBorder (new TitledBorder (new EtchedBorder(), 
-      "Preview"));
-    variablePanel.add (previewContainer);
+    previewContainer.setBorder (new TitledBorder (new EtchedBorder(), "Preview"));
+    infoPanel.add (previewContainer);
     previewPanel = new EarthDataViewPanel (nullView);
     previewPanel.setBackground (Color.BLACK);
     JPanel previewPanelContainer = new JPanel (new BorderLayout());

@@ -38,6 +38,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -74,24 +76,26 @@ import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+
 /**
- * The <code>EarthDataViewPanel</code> class displays an onscreen
+ * <p>The <code>EarthDataViewPanel</code> class displays an onscreen
  * version of an <code>EarthDataView</code> object.  The panel has
  * enhanced functionality over the <code>RenderablePanel</code> class
  * with resizing behaviour and mouse events.  The panel also supplies
  * a tracking bar that may be used to display the mouse cursor
- * position within the panel.<p>
+ * position within the panel.</p>
  *
- * Changes to the view should be performed using panel methods
+ * <p>Changes to the view should be performed using panel methods
  * wherever possible rather than the corresponding view methods, since
  * a rendering loop may be active in the panel.  When the view must be
  * modified directly, users should call the panel
- * <code>stopRendering()</code> method before making the change.<p>
+ * <code>stopRendering()</code> method before making the change.</p>
  *
- * The panel signals a change in rendering status by firing a
+ * <p>The panel signals a change in rendering status by firing a
  * <code>RENDERING_PROPERTY</code> change event with value true
  * when rendering is in progress or false if not.  This can help
- * with progress monitors.
+ * with progress monitors.</p>
  *
  * @see noaa.coastwatch.render.EarthDataView
  *
@@ -101,6 +105,8 @@ import noaa.coastwatch.util.trans.EarthTransform;
 public class EarthDataViewPanel
   extends JPanel
   implements DelayedRenderingComponent, TransformableImageComponent {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthDataViewPanel.class.getName());
 
   // Constants
   // ---------
@@ -447,7 +453,19 @@ public class EarthDataViewPanel
 
     stopRendering();
     try {
+
+
+      // TODO: This may be where we can detect if we're running on a scaled
+      // display, and act accordingly.  The view needs to have a higher
+      // resolution buffer image created in order to paint that buffer image
+      // into the panel during the paintComponent() method.
       Dimension dims = getSize();
+      var affine = ((Graphics2D) getGraphics()).getTransform();
+      var scaleX = affine.getScaleX();
+      var scaleY = affine.getScaleY();
+      
+
+
       if (isStaticView) {
         view.resize (dims);
       } // if
@@ -581,7 +599,18 @@ public class EarthDataViewPanel
     // -------------------
     super.paintComponent (g);
     if (isRendering() || view.isPrepared()) {
+
+
+//    TODO: To draw images at a higher resolution for scaled displays,
+//    we need to draw the larger buffer image here into the panel size,
+//    and it will be scaled accordingly.
+//
+//    g.drawImage (bufferImage, 0, 0, panelDims.width, panelDims.height, null);
+
+
       g.drawImage (bufferImage, 0, 0, null);
+
+
     } // if
     else {
       startRendering();
@@ -632,13 +661,11 @@ public class EarthDataViewPanel
 
     // Add detection for panel resizing
     // --------------------------------
-    /*
     addComponentListener (new ComponentAdapter() {
-        public void componentResized (ComponentEvent e) {
-          wasResized = true;
-        } // componentResized
-      });
-    */
+      public void componentResized (ComponentEvent e) {
+        wasResized = true;
+      } // componentResized
+    });
 
     // Add detection for showing changed
     // ---------------------------------
