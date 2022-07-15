@@ -45,6 +45,15 @@ public class MetadataServices {
   /** The composite attribute value splitting string. */
   public static final String SPLIT_STRING = "\n";
 
+ /** Default date format. */
+  public static final String DATE_FMT = "yyyy/MM/dd 'JD' DDD";
+
+  /** Default time format. */
+  public static final String TIME_FMT = "HH:mm:ss 'UTC'";
+
+  /** Default date/time format. */
+  public static final String DATE_TIME_FMT = "yyyy/MM/dd HH:mm:ss 'UTC'";
+
   ////////////////////////////////////////////////////////////
 
   /**

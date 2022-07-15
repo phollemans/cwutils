@@ -586,6 +586,26 @@ public abstract class EarthDataReader {
   ////////////////////////////////////////////////////////////
 
   /**
+   * Gets the detailed raw metadata for a variable.
+   * 
+   * @param index the index of the variable for raw metadata.
+   * 
+   * @return the map of attribute name to attribute value.
+   * 
+   * @see #getRawMetadata
+   * @since 3.7.1
+   * 
+   * @throws IOException if the data source had I/O errors.
+   */
+  public Map<String, Object> getRawMetadata (int index) throws IOException {
+
+    return ((Map<String, Object>) getPreview (index).getMetadataMap());
+
+  } // getRawMetadata
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Gets the NetCDF CDM style coordinate systems accessed by
    * this reader.
    *

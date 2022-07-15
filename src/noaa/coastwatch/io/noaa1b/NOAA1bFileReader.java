@@ -724,7 +724,7 @@ public class NOAA1bFileReader extends EarthDataReader {
   public static void main (String argv[]) throws Exception {
 
     NOAA1bFileReader reader = new NOAA1bFileReader (argv[0], false);
-    noaa.coastwatch.tools.cwinfo.printInfo (reader, System.out);
+    noaa.coastwatch.tools.cwinfo.printSummary (reader, System.out, false);
 
   } // main  
 

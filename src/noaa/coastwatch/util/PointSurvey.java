@@ -26,6 +26,8 @@ package noaa.coastwatch.util;
 // Imports
 // -------
 import java.text.NumberFormat;
+import java.util.LinkedHashMap;
+
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataSurvey;
@@ -34,6 +36,7 @@ import noaa.coastwatch.util.Statistics;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.DataLocationConstraints;
 import noaa.coastwatch.util.VariableStatisticsGenerator;
+import noaa.coastwatch.util.ReportFormatter;
 
 /**
  * The <code>PointSurvey</code> class holds survey information for a
@@ -47,28 +50,36 @@ public class PointSurvey
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a results report for the point survey. */
-  public String getResults () {
+  @Override
+  public void getResults (ReportFormatter formatter) {
 
-    StringBuffer buffer = new StringBuffer();
-    buffer.append ("Point survey of " + getVariableName() + "\n\n");
+    formatter.start();
+
+    formatter.title ("Point survey of " + getVariableName());
 
     EarthTransform trans = getTransform();
     DataLocation loc = getExtents()[0];
     EarthLocation earthLoc = trans.transform (loc);
-    buffer.append ("Survey extents:\n");
-    buffer.append ("  Row, Col: " + loc.format (true) + "\n");
-    buffer.append ("  Lat, Lon: " + earthLoc.format() + "\n\n");
+
+    formatter.section ("Survey extents:");
+
+    var map = new LinkedHashMap<String, String>();
+    map.put ("Row, Col", loc.format (true));
+    map.put ("Lat, Lon", earthLoc.format());
+    formatter.map (map);
 
     Statistics stats = getStatistics();
     NumberFormat format = getVariableFormat();
-    buffer.append ("Survey statistics:\n");
     int valid = stats.getValid();
-    buffer.append ("  Valid:    " + valid + "\n");
-    String value = (valid == 0 ? "NaN" : format.format (stats.getMin()));
-    buffer.append ("  Value:    " + value + "\n");
 
-    return (buffer.toString());
+    formatter.section ("Survey statistics:");
+
+    map.clear();
+    map.put ("Valid", Integer.toString (valid));
+    map.put ("Value", (valid == 0 ? "NaN" : format.format (stats.getMin())));
+    formatter.map (map);
+
+    formatter.end();
 
   } // getResults
 

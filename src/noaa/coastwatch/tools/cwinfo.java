@@ -28,39 +28,20 @@ package noaa.coastwatch.tools;
 import jargs.gnu.CmdLineParser;
 import jargs.gnu.CmdLineParser.Option;
 import jargs.gnu.CmdLineParser.OptionException;
-import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.io.ReaderSummaryProducer;
+import noaa.coastwatch.io.ReaderSummaryProducer.SummaryTable;
 import noaa.coastwatch.tools.ToolServices;
-import noaa.coastwatch.util.DataLocation;
-import noaa.coastwatch.util.DataVariable;
-import noaa.coastwatch.util.DateFormatter;
-import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.EarthLocation;
-import noaa.coastwatch.util.MetadataServices;
-import noaa.coastwatch.util.SatelliteDataInfo;
-import noaa.coastwatch.util.trans.EarthTransform;
-import noaa.coastwatch.util.trans.MapProjection;
-
-import ucar.ma2.Array;
-import ucar.nc2.constants.AxisType;
-import ucar.nc2.dataset.CoordinateAxis;
-import ucar.nc2.dataset.CoordinateSystem;
-import ucar.nc2.units.DateUnit;
+import noaa.coastwatch.util.TextReportFormatter;
 
 /**
  * <p>The information utility dumps earth data information in a
@@ -250,39 +231,6 @@ public final class cwinfo {
   /** Minimum required command line parameters. */
   private static final int NARGS = 1;
 
-  /** Default date format. */
-  public static final String DATE_FMT = "yyyy/MM/dd 'JD' DDD";
-
-  /** Default time format. */
-  public static final String TIME_FMT = "HH:mm:ss 'UTC'";
-
-  /** Default date/time format. */
-  public static final String DATE_TIME_FMT = "yyyy/MM/dd HH:mm:ss 'UTC'";
-
-  /** Java primitve 1D array class types. */
-  private static final Class[] JAVA_TYPES = {
-    Boolean.TYPE,
-    Byte.TYPE,
-    Character.TYPE,
-    Short.TYPE,
-    Integer.TYPE,
-    Long.TYPE,
-    Float.TYPE,
-    Double.TYPE
-  };
-
-  /** Primitive array class names. */
-  private static final String[] JAVA_NAMES = {
-    "boolean",
-    "byte",
-    "char",
-    "short",
-    "int",
-    "long",
-    "float",
-    "double"
-  };
-
   ////////////////////////////////////////////////////////////
 
   /**
@@ -372,28 +320,19 @@ public final class cwinfo {
     // -----------------------------
     EarthDataReaderFactory.setVerbose (verbose);
 
+    // Open the reader and print the requested information
     EarthDataReader reader = null;
     try {
-
-      // Open file
-      // ---------
       //    SwathProjection.setNullMode (true);
       reader = EarthDataReaderFactory.create (input);
-
-      // Print information
-      // -----------------
-      printInfo (reader, System.out);
-      if (transform) printTransform (reader, System.out, edge, locFormat);
-      if (coord) printCoordSystems (reader, System.out);
-
+      printSummary (reader, System.out, edge, locFormat, transform, coord);
       reader.close();
       reader = null;
-      
     } // try
 
     catch (OutOfMemoryError | Exception e) {
       ToolServices.warnOutOfMemory (e);
-      LOGGER.log (Level.SEVERE, "Aborting", e);
+      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
       ToolServices.exitWithCode (2);
       return;
     } // catch
@@ -409,490 +348,96 @@ public final class cwinfo {
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints earth transform data from the specified file.  The Earth
-   * transform data includes pixel resolution, total width and height,
-   * and latitude and longitude data for selected locations.  Earth location
-   * coordinates are printed using the EarthLocation.DDDD format.
-   *
-   * @param reader the earth data reader object to use.
-   * @param stream the output stream for printing.
-   * @param useEdges true to use actual edges for location values,
-   * false to use center of edge pixels.
-   *
-   * @see #printTransform(EarthDataReader,PrintStream,boolean)
-   */
-  public static void printTransform (
-    EarthDataReader reader,
-    PrintStream stream,
-    boolean useEdges
-  ) {
-  
-    printTransform (reader, stream, useEdges, EarthLocation.DDDD);
-    
-  } // printTransform
+  private static void printMap (Map<String, String> map, PrintStream stream) {
+
+    int maxKey = map.keySet().stream().mapToInt (key -> key.length()).max().orElse (0);
+    var fmt = "  %-" + (maxKey+1) + "s     %s\n";
+    map.forEach ((key, value) -> stream.format (fmt, key + ":", value));
+
+  } // printMap
+
+  ////////////////////////////////////////////////////////////
+
+  private static void printTable (SummaryTable table, PrintStream stream) {
+
+    int cols = table.columnNames.length;
+    int[] columnSizes = new int[cols];
+    for (int i = 0; i < cols; i++) {
+      var index = i;
+      columnSizes[i] = Math.max (table.columnNames[i].length(), table.rowList.stream().mapToInt (row -> row[index].length()).max().orElse (0));
+    } // for
+
+    var buf = new StringBuffer();
+    buf.append ("  ");
+    for (int i = 0; i < cols; i++) buf.append ("%-" + columnSizes[i] + "s   ");
+    buf.append ("\n");
+    var fmt = buf.toString();
+
+    stream.format (fmt, (Object[]) table.columnNames);
+    table.rowList.forEach (row -> stream.format (fmt, (Object[]) row));
+
+  } // printTable
 
   ////////////////////////////////////////////////////////////
 
   /**
-   * Prints Earth transform data from the specified file.  The Earth
-   * transform data includes pixel resolution, total width and height,
-   * and latitude and longitude data for selected locations.
+   * Prints earth transform data from the specified file.  
    *
-   * @param reader the Earth data reader object to use.
+   * @param reader the reader object to use.
+   * @param stream the output stream for printing.
+   * @param transform the transform flag, true to print detailed earth location
+   * data.  The earth transform data includes pixel resolution, total width 
+   * and height, and latitude and longitude data for selected locations.
+   */
+  public static void printSummary (
+    EarthDataReader reader,
+    PrintStream stream,
+    boolean transform
+  ) {
+
+    printSummary (reader, stream, false, EarthLocation.DDDD, transform, false);
+
+  } // printSummary
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Prints earth transform data from the specified file.  
+   *
+   * @param reader the reader object to use.
    * @param stream the output stream for printing.
    * @param useEdges true to use actual edges for location values,
    * false to use center of edge pixels.
    * @param locFormat the Earth location format code,
    * see {@link EarthLocation#format}.
+   * @param transform the transform flag, true to print detailed earth location
+   * data.  The earth transform data includes pixel resolution, total width 
+   * and height, and latitude and longitude data for selected locations.
+   * @param coord the coord flag, true to print detailed coordinate system
+   * data.  
    */
-  public static void printTransform (
+  public static void printSummary (
     EarthDataReader reader,
     PrintStream stream,
     boolean useEdges,
-    int locFormat
-  ) {
-
-    // Get info
-    // --------
-    EarthDataInfo info = reader.getInfo();
-    EarthTransform trans = info.getTransform();
-    int[] dims = trans.getDimensions();
-    int rows = dims[0];
-    int cols = dims[1];
-
-    // Create map
-    // ----------
-    Map valueMap = new LinkedHashMap();
-
-    // Add distance info
-    // -----------------
-    double centerRow = (rows-1)/2.0;
-    double centerCol = (cols-1)/2.0;
-    double pixelWidth = trans.distance (
-      new DataLocation (centerRow, centerCol-0.5),
-      new DataLocation (centerRow, centerCol+0.5));
-    valueMap.put ("Pixel width", String.format ("%.4f km", pixelWidth));
-    double pixelHeight = trans.distance (
-      new DataLocation (centerRow-0.5, centerCol),
-      new DataLocation (centerRow+0.5, centerCol));
-    valueMap.put ("Pixel height", String.format ("%.4f km", pixelHeight));
-    double width = trans.distance (
-      new DataLocation (centerRow, 0),
-      new DataLocation (centerRow, cols-1));
-    valueMap.put ("Total width", String.format ("%.4f km", width));
-    double height = trans.distance (
-      new DataLocation (0, centerCol),
-      new DataLocation (rows-1, centerCol));
-    valueMap.put ("Total height", String.format ("%.4f km", height));
-
-    // Add location info
-    // -----------------
-    double corr = (useEdges ? 0.5 : 0);
-    String pixelLoc = (useEdges ? "edge" : "center");
-    valueMap.put ("Center",
-      trans.transform (new DataLocation (centerRow, centerCol)).format (locFormat));
-    valueMap.put ("Upper-left (pixel " + pixelLoc + ")",
-      trans.transform (new DataLocation (0-corr, 0-corr)).format (locFormat));
-    valueMap.put ("Upper-right (pixel " + pixelLoc + ")",
-      trans.transform (new DataLocation (0-corr, cols-1+corr)).format (locFormat));
-    valueMap.put ("Lower-left (pixel " + pixelLoc + ")",
-      trans.transform (new DataLocation (rows-1+corr, 0-corr)).format (locFormat));
-    valueMap.put ("Lower-right (pixel " + pixelLoc + ")",
-      trans.transform (new DataLocation (rows-1+corr, cols-1+corr)).format (locFormat));
-
-    // Print data
-    // ----------
-    stream.format ("Earth location information:\n");
-    for (Iterator iter = valueMap.keySet().iterator(); iter.hasNext(); ) {
-      String key = (String) iter.next();
-      String value = (String) valueMap.get (key);
-      stream.format ("  %-30s %s\n", key + ":", value);
-    } // for
-    stream.println();
-
-  } // printTransform
-
-  ////////////////////////////////////////////////////////////
-
-  /** Prints a single coordinate system axes. */
-  private static void printCoordSystem (
-    EarthDataReader reader, 
-    CoordinateSystem system,
-    PrintStream stream
-  ) throws IOException {                                        
-
-    // Print system header
-    // -------------------
-    List<CoordinateAxis> axes = system.getCoordinateAxes();
-    int rank = axes.size();
-    stream.print ("  ");
-    for (int i = 0; i < rank; i++)
-      stream.print (axes.get (i).getAxisType() + (i != rank-1 ? " " : ""));
-    stream.print (" (");
-    for (int i = 0; i < rank; i++)
-      stream.print (axes.get (i).getSize() + (i != rank-1 ? "x" : ""));
-    stream.println (")");
-
-    // Print each axis
-    // ---------------
-    for (CoordinateAxis axis : axes) {
-
-      // Print basic axis info
-      // ---------------------
-      AxisType axisType = axis.getAxisType();
-      String units = axis.getUnitsString();
-      int size = (int) axis.getSize();
-      stream.format ("    %s (%s):\n", axisType, units);
-
-      // Create date unit if applicable
-      // ------------------------------
-      DateUnit dateUnit = null;
-      if (axisType == AxisType.Time) {
-        try { dateUnit = new DateUnit (units); }
-        catch (Exception e) { }
-      } // if
-
-      // Detect geographic axis
-      // ----------------------
-      boolean isGeo = (
-        axisType == AxisType.GeoX || 
-        axisType == AxisType.GeoY ||
-        axisType == AxisType.Lat ||
-        axisType == AxisType.Lon ||
-        axisType == AxisType.RadialAzimuth ||
-        axisType == AxisType.RadialDistance ||
-        axisType == AxisType.RadialElevation
-      );
-
-      // Print coordinates for simple axis
-      // ---------------------------------
-      if (axis.getRank() == 1) {
-        Array data = axis.read();
-        if (isGeo) {
-          for (int i : new int[] {0, size-1})
-            stream.format ("    %-5d %s\n", i, data.getObject (i));
-        } // if
-        else {
-          int coordIndex = 0;
-          while (data.hasNext()) {
-            Object value = data.next();
-            if (dateUnit != null) {
-              Date date = dateUnit.makeDate (((Number) value).doubleValue());
-              value = DateFormatter.formatDate (date, DATE_TIME_FMT);
-            } // if
-            stream.format ("    %-5d %s\n", coordIndex, value);
-            coordIndex++;
-          } // while
-        } // else
-      } // if
-
-    } // for
-
-    // Print variables
-    // ---------------
-    List<String> varList = reader.getVariablesForSystem (system);
-    stream.println ("    Variables:");
-    for (String var : varList) 
-      stream.println ("    " + var);
-
-  } // printCoordSystem
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Prints Common Data Model (CDM) style coordinate system
-   * information including level and time index information.
-   *
-   * @param reader the earth data reader object to use.
-   * @param stream the output stream for printing.
-   */
-  public static void printCoordSystems (
-    EarthDataReader reader,
-    PrintStream stream
-  ) throws IOException {
-
-    // Print header
-    // ------------
-    List<CoordinateSystem> systemList = reader.getCoordinateSystems();
-    stream.println ("Coordinate system information:\n");
-
-    // Print each system
-    // -----------------
-    for (CoordinateSystem system : systemList) {
-      printCoordSystem (reader, system, stream);
-      stream.println();
-    } // for
-
-  } // printCoordSystems
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Prints the information from the specified file.
-   *
-   * @param reader the earth data reader object to use.
-   * @param stream the output stream for printing.
-   */
-  public static void printInfo (
-    EarthDataReader reader,
-    PrintStream stream
+    int locFormat,
+    boolean transform,
+    boolean coord
   ) {
 
     try {
-      stream.println ("Contents of file " + reader.getSource());
-      stream.println();
-      printGlobal (reader, stream);
-      printVariables (reader, stream);
+
+      var producer = ReaderSummaryProducer.getInstance();
+      var summary = producer.create (reader, useEdges, locFormat);
+      var formatter = TextReportFormatter.create();
+      producer.report (summary, formatter, true, true, transform, coord);
+      stream.print (formatter.getContent());
+
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.warning (e.getMessage());
     } // catch
 
-  } // printInfo
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Prints the global file information.
-   *
-   * @param reader the earth data reader object to use.
-   * @param stream the output stream for printing.
-   *
-   * @throws IOException if an error occurred printing to the stream.
-   */
-  public static void printGlobal (
-    EarthDataReader reader,
-    PrintStream stream
-  ) throws IOException {
-
-    // Create map of attributes to values
-    // ----------------------------------
-    Map valueMap = new LinkedHashMap();
-
-    // Add data source info
-    // --------------------
-    EarthDataInfo info = reader.getInfo();
-    if (info instanceof SatelliteDataInfo) {
-      SatelliteDataInfo satInfo = (SatelliteDataInfo) info;
-      valueMap.put ("Satellite", 
-        MetadataServices.format (satInfo.getSatellite(), ", "));
-      valueMap.put ("Sensor", 
-        MetadataServices.format (satInfo.getSensor(), ", "));
-    } // if
-    else {
-      valueMap.put ("Data source", 
-        MetadataServices.format (info.getSource(), ", "));
-    } // else
-
-    // Add single time info
-    // --------------------
-    if (info.isInstantaneous()) {
-      Date startDate = info.getStartDate();
-      valueMap.put ("Date", DateFormatter.formatDate (startDate, DATE_FMT));
-      valueMap.put ("Time", DateFormatter.formatDate (startDate, TIME_FMT));
-      valueMap.put ("Scene time", reader.getSceneTime());
-    } // if
-
-    // Add time range info
-    // -------------------
-    else {
-      Date startDate = info.getStartDate();
-      Date endDate = info.getEndDate();
-      String startDateString = DateFormatter.formatDate (startDate, DATE_FMT);
-      String endDateString = DateFormatter.formatDate (endDate, DATE_FMT);
-      String startTimeString = DateFormatter.formatDate (startDate, TIME_FMT);
-      String endTimeString = DateFormatter.formatDate (endDate, TIME_FMT);
-      if (startDateString.equals (endDateString)) {
-        valueMap.put ("Date", startDateString);
-        valueMap.put ("Start time", startTimeString);
-        valueMap.put ("End time", endTimeString);
-      } // if
-      else {
-        valueMap.put ("Start date", startDateString);
-        valueMap.put ("Start time", startTimeString);
-        valueMap.put ("End date", endDateString);
-        valueMap.put ("End time", endTimeString);
-      } // else
-    } // else
-
-    // Add earth transform info
-    // ------------------------
-    EarthTransform trans = info.getTransform();
-    valueMap.put ("Projection type", (trans == null ? "Unknown" : 
-      trans.describe()));
-    valueMap.put ("Transform ident", (trans == null ? "null" :
-      trans.getClass().getName()));
-
-
-// TODO: It would be useful here if CDM grid map projections could also
-// have their info printed, similar to the EarthPlotInfo legend.  Search the
-// code for getSystemName() for all places that may need this functionality.
-
-
-
-    // Add map projection info
-    // -----------------------    
-    if (trans instanceof MapProjection) {
-      MapProjection map = (MapProjection) trans;
-      valueMap.put ("Map projection", map.getSystemName());
-      String affineVals = "";      
-      DecimalFormat form = new DecimalFormat ("0.##");
-      double[] matrix = new double[6];
-      map.getAffine().getMatrix (matrix);
-      for (int i = 0; i < 6; i++)
-        affineVals += form.format (matrix[i]) + " ";
-      valueMap.put ("Map affine", affineVals);
-      valueMap.put ("Spheroid", map.getSpheroidName());
-    } // if
-
-    // Add other info
-    // --------------
-    valueMap.put ("Origin",
-      MetadataServices.format (info.getOrigin(), ", "));
-    valueMap.put ("Format", reader.getDataFormat());
-    valueMap.put ("Reader ident", reader.getClass().getName());
-
-    // Print attribute and value lists
-    // -------------------------------
-    stream.format ("Global information:\n");
-    for (Iterator iter = valueMap.keySet().iterator(); iter.hasNext(); ) {
-      String key = (String) iter.next();
-      String value = (String) valueMap.get (key);
-      stream.format ("  %-20s %s\n", key + ":", value);
-    } // for
-    stream.println();
-
-  } // printGlobal
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Gets the variable data type name.
-   *
-   * @param var the data variable.
-   * 
-   * @return a user-friendly type name.
-   */
-  private static String getType (
-    DataVariable var
-  ) {
-
-    // Find appropriate type name
-    // --------------------------
-    Class dataClass = var.getDataClass();
-    String typeName = null;
-    for (int i = 0; i < JAVA_TYPES.length && typeName == null; i++) {
-      if (JAVA_TYPES[i].equals (dataClass))
-        typeName = JAVA_NAMES[i];
-    } // for
-
-    // Check for unknown type
-    // ----------------------
-    if (typeName == null) return ("Unknown");
-
-    // Add unsigned prefix
-    // -------------------
-    if (var.getUnsigned()) typeName = "u" + typeName;
-    return (typeName);
-
-  } // getType
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Prints the variable information.
-   *
-   * @param reader the earth data reader object to use.
-   * @param stream the output stream for printing.
-   *
-   * @throws IOException if an error occurred printing to the stream.
-   */
-  public static void printVariables (
-    EarthDataReader reader,
-    PrintStream stream
-  ) throws IOException {
-
-    // Check variable count
-    // --------------------
-    int vars = reader.getVariables();
-    if (vars == 0)
-      return;
-    
-    // Get variable info
-    // -----------------
-    int maxNameLength = 14;
-    int maxUnitsLength = 14;
-    List<String[]> varInfoList = new ArrayList<String[]>();
-    for (int i = 0; i < vars; i++) {
-
-      // Get preview
-      // -----------
-      DataVariable var = null;
-      try { var = reader.getPreview (i); }
-      catch (Exception e) {
-        e.printStackTrace();
-        continue;
-      } // catch
-      
-      // Create new info array
-      // ---------------------
-      String[] infoArray = new String[6];
-      int index = 0;
-      infoArray[index++] = var.getName();
-      infoArray[index++] = getType (var);
-      varInfoList.add (infoArray);
-      
-      // Get dimensions
-      // --------------
-      int[] dims = var.getDimensions();
-      String dimValues = "";
-      for (int dim = 0; dim < dims.length; dim++)
-        dimValues += dims[dim] + (dim < dims.length-1 ? "x" : "");
-      infoArray[index++] = dimValues;
-
-      // Get units
-      // ---------
-      String units = var.getUnits ();
-      if (units.equals ("")) units = "-";
-      infoArray[index++] = units;
-
-      // Get scale, offset
-      // -----------------
-      double[] scaling = var.getScaling();
-      String scale, offset;
-      if (scaling == null) {
-        scale = "-";
-        offset = "-";
-      } // if
-      else {
-        DecimalFormat fmt = new DecimalFormat ("0.######");
-        scale = fmt.format (scaling[0]);
-        offset = fmt.format (scaling[1]);
-      } // else
-      infoArray[index++] = scale;
-      infoArray[index++] = offset;
-
-      // Save maximum lengths
-      // --------------------
-      int nameLength = var.getName().length();
-      if (nameLength > maxNameLength) maxNameLength = nameLength;
-      int unitsLength = units.length();
-      if (unitsLength > maxUnitsLength) maxUnitsLength = unitsLength;
-
-    } // for
-
-    // Print variable info
-    // -------------------
-    stream.format ("Variable information:\n");
-    String varFormatLine = "  %-" + maxNameLength + "s %-7s %-11s %-" + maxUnitsLength + "s %-9s %-9s\n";
-    stream.format (varFormatLine, "Variable", "Type", "Dimensions", "Units", "Scale", "Offset");
-    for (String[] infoArray : varInfoList) {
-      stream.format (varFormatLine, infoArray[0], infoArray[1], infoArray[2],
-        infoArray[3], infoArray[4], infoArray[5]);
-    } // for
-    stream.println();
-
-  } // printVariables
+  } // printSummary
 
   ////////////////////////////////////////////////////////////
 

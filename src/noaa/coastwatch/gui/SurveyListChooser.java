@@ -49,6 +49,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JPanel;
@@ -56,34 +57,38 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
+import javax.swing.JEditorPane;
+import javax.swing.UIManager;
+
 import noaa.coastwatch.gui.AbstractOverlayListPanel;
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.SurveyPlotFactory;
 import noaa.coastwatch.gui.TabComponent;
 import noaa.coastwatch.render.SurveyOverlay;
 import noaa.coastwatch.util.EarthDataSurvey;
+import noaa.coastwatch.util.HTMLReportFormatter;
 
 /**
- * The <code>SurveyListChooser</code> class is a panel that
+ * <p>The <code>SurveyListChooser</code> class is a panel that
  * allows the user to manipulate a list of {@link
  * EarthDataSurvey} objects.  The user may add a new point, line,
  * or box survey, edit the survey color, name and linestyle, and
- * change the survey layer.<p>
+ * change the survey layer.</p>
  *
- * The chooser signals a change in the survey list by firing a
+ * <p>The chooser signals a change in the survey list by firing a
  * property change event whose property name is given by
  * <code>SURVEY_LIST_PROPERTY</code>.  See the {@link
  * AbstractOverlayListPanel} class for details on how the property
- * change events should be interpreted.<p>
+ * change events should be interpreted.</p>
  *
- * Surveys require that extra information be provided from the user
+ * <p>Surveys require that extra information be provided from the user
  * object.  The chooser signals that it requires input for a survey by
  * firing an action event whose action command specifies the type of
  * input required as <code>POINT_COMMAND</code>,
  * <code>LINE_COMMAND</code>, or <code>BOX_COMMAND</code>.  The user
  * object should perform some operation to obtain the survey input
  * information, and then pass it to the <code>addSurvey()</code>
- * method.<p>
+ * method.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.7
@@ -129,8 +134,8 @@ public class SurveyListChooser
   /** The last survey command executed. */
   private String surveyCommand;
 
-  /** The text area used for survey results. */
-  private JTextArea resultsArea;
+  /** The panel used for survey results. */
+  private JEditorPane resultsArea;
 
   /** The plot area used for survey plot results. */
   private JPanel plotPanel;
@@ -186,11 +191,10 @@ public class SurveyListChooser
 
     // Create results area
     // -------------------
-    resultsArea = new JTextArea();
+    this.resultsArea = new JEditorPane();
+    resultsArea.setContentType ("text/html");
+    resultsArea.putClientProperty (JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
     resultsArea.setEditable (false);
-    Font font = resultsArea.getFont();
-    Font monoFont = new Font ("Monospaced", font.getStyle(), font.getSize());
-    resultsArea.setFont (monoFont);
     JScrollPane scrollPane = new JScrollPane (resultsArea);
     resultsPanel.add ("Results", scrollPane);
 
@@ -301,8 +305,16 @@ public class SurveyListChooser
 
     // Set results text
     // ----------------
-    resultsArea.setText (survey.getResults());
+    var formatter = HTMLReportFormatter.create();
+    formatter.setSpacing (2);
+    survey.getResults (formatter);
+    resultsArea.setText (formatter.getContent());
     resultsArea.setCaretPosition (0);
+
+
+    // resultsArea.setText (survey.getResults());
+    // resultsArea.setCaretPosition (0);
+
 
     // Set statistics plot
     // -------------------

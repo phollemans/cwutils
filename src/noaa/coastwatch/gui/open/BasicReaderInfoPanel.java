@@ -25,22 +25,21 @@ package noaa.coastwatch.gui.open;
 
 // Imports
 // -------
-import com.braju.format.Format;
 import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-import javax.swing.JCheckBox;
+import java.awt.Dimension;
+
+import java.util.List;
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTable;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.UIManager;
+
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
 import noaa.coastwatch.tools.cwinfo;
@@ -50,12 +49,15 @@ import noaa.coastwatch.util.MetadataServices;
 import noaa.coastwatch.util.SatelliteDataInfo;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.MapProjection;
+import noaa.coastwatch.gui.GUIServices;
+
+import static noaa.coastwatch.util.MetadataServices.DATE_FMT;
+import static noaa.coastwatch.util.MetadataServices.TIME_FMT;
 
 /**
  * The <code>BasicReaderInfoPanel</code> class displays basic
  * information from a <code>EarthDataReader</code> in a graphical
- * panel.  A details checkbox may be used to display the raw metadata
- * from the reader.
+ * panel.
  *
  * @author Peter Hollemans
  * @since 3.2.0
@@ -63,30 +65,15 @@ import noaa.coastwatch.util.trans.MapProjection;
 public class BasicReaderInfoPanel
   extends JPanel {
 
-  // Constants
-  // ---------
-
-  /** The default date format. */
-  private static final String DATE_FMT = cwinfo.DATE_FMT;
-
-  /** The UTC time format. */
-  private static final String TIME_FMT = cwinfo.TIME_FMT;
-
   // Variables
   // ---------
   
-  /** The Swing text area for output. */
-  private JTextArea textArea;
-
-  /** The string for normal display. */
-  private String basicInfoString;
-
-  /** The string for detailed display. */
-  private String detailedInfoString;
-
-  /** The details mode check box. */
-  private JCheckBox detailsCheckBox;
-
+  /** The list of [name,value] entries to show in the table. */
+  private List<String[]> dataList;
+  
+  /** The table data model with two columns. */
+  private AbstractTableModel dataModel;
+  
   ////////////////////////////////////////////////////////////
 
   /** Creates a new info panel initialized with the specified reader. */
@@ -104,62 +91,41 @@ public class BasicReaderInfoPanel
 
     super (new BorderLayout());
 
-    // Create text area and panel
-    // --------------------------
-    textArea = new JTextArea();
-    textArea.setEditable (false);
-    textArea.setColumns (45);
-    JScrollPane scrollPane = new JScrollPane (textArea);
+    // We create a data list and model here that simply returns the [0]
+    // element as the first column and the [1] element as the second column.
+    // Then when the reader is updated, the data list gets updated and the
+    // table is refreshed.
+    dataList = new ArrayList<>();
+    dataModel = new AbstractTableModel() {
+      public int getColumnCount() { return (2); }
+      public int getRowCount() { return (dataList.size()); }
+      public Object getValueAt (int row, int col) { return (dataList.get (row)[col]); }
+    };
+    var table = new JTable (dataModel);
+    table.setTableHeader (null);
+    table.setShowGrid (true);
+    table.setGridColor (UIManager.getColor ("Panel.background"));
+    var scrollPane = new JScrollPane (table);
     this.add (scrollPane, BorderLayout.CENTER);
 
-    // Set font and columns
-    // --------------------
-    Font font = textArea.getFont();
-    Font monoFont = new Font ("Monospaced", font.getStyle(), font.getSize());
-    textArea.setFont (monoFont);
+    // Set the table viewport size large enough to accomodate two columns
+    // and eight rows.
+    int keyWidth = GUIServices.getLabelWidth (15);
+    int valWidth = GUIServices.getLabelWidth (35);
+    table.getColumnModel().getColumn (0).setPreferredWidth (keyWidth);
+    table.getColumnModel().getColumn (1).setPreferredWidth (valWidth);
+    var dims = new Dimension (keyWidth + valWidth, table.getRowHeight() * 8);
+    table.setPreferredScrollableViewportSize (dims);
 
-    // Create details checkbox
-    // -----------------------
-    detailsCheckBox = new JCheckBox ("Show detailed metadata");
-    detailsCheckBox.addItemListener (new ItemListener () {
-        public void itemStateChanged (ItemEvent event) {
-          updateTextArea();
-        } // itemStateChanged
-      });
-    this.add (detailsCheckBox, BorderLayout.SOUTH);
-
-  } // BasicReaderInfoPanel constructor
-
-  ////////////////////////////////////////////////////////////
-
-  /** Updates the text area after a change. */
-  private void updateTextArea () {
-
-    // Check for null text
-    // -------------------
-    if (basicInfoString == null) { textArea.setText (""); return; }
-
-    // Create text to display
-    // ----------------------
-    StringBuffer buffer = new StringBuffer();
-    buffer.append (basicInfoString);
-    if (detailsCheckBox.isSelected()) {
-      buffer.append ("\n----- Detailed metadata -----\n\n");
-      buffer.append (detailedInfoString);
-    } // if
-    textArea.setText (buffer.toString());
-    textArea.setCaretPosition (0);
-
-  } // updateTextArea
+  } // BasicReaderInfoPanel
 
   ////////////////////////////////////////////////////////////
 
   /** Clears the information displayed by this panel. */
   public void clear () {
 
-    basicInfoString = null;
-    detailedInfoString = null;
-    updateTextArea();
+    dataList.clear();
+    dataModel.fireTableDataChanged();
 
   } // clear
 
@@ -175,58 +141,70 @@ public class BasicReaderInfoPanel
     EarthDataReader reader
   ) {
 
-    // Create map of attributes to values
-    // ----------------------------------
-    Map valueMap = new LinkedHashMap();
 
-    // Add data source info
-    // --------------------
-    EarthDataInfo info = reader.getInfo();
+//    // Create detailed info string
+//    // ---------------------------
+//    Map metadata = reader.getRawMetadata();
+//    if (metadata.size() == 0)
+//      detailedInfoString = "(No detailed metadata available.)";
+//    else {
+//      buffer.setLength (0);
+//      for (Iterator iter = metadata.keySet().iterator(); iter.hasNext(); ) {
+//        String key = (String) iter.next();
+//        Object value = metadata.get (key);
+//        buffer.append (key);
+//        buffer.append (" = ");
+//        buffer.append (MetadataServices.toString (value));
+//        buffer.append ("\n");
+//    } // for
+//      detailedInfoString = buffer.toString();
+//    } // else
+//
+
+
+
+    dataList.clear();
+    
+    // Add in the data source information, or if from a satellite, the satellite
+    // and sensor information.
+    var info = reader.getInfo();
     if (info instanceof SatelliteDataInfo) {
       SatelliteDataInfo satInfo = (SatelliteDataInfo) info;
-      valueMap.put ("Satellite", 
-        MetadataServices.format (satInfo.getSatellite(), ", "));
-      valueMap.put ("Sensor", 
-        MetadataServices.format (satInfo.getSensor(), ", "));
+      dataList.add (new String[] {"Satellite", MetadataServices.format (satInfo.getSatellite(), ", ")});
+      dataList.add (new String[] {"Sensor", MetadataServices.format (satInfo.getSensor(), ", ")});
     } // if
     else {
-      valueMap.put ("Data source", 
-        MetadataServices.format (info.getSource(), ", "));
+      dataList.add (new String[] {"Data source", MetadataServices.format (info.getSource(), ", ")});
     } // else
 
-    // Add single time info
-    // --------------------
+    // Add in when the data was recorded.
     if (info.isInstantaneous()) {
-      Date startDate = info.getStartDate();
-      valueMap.put ("Date", DateFormatter.formatDate (startDate, DATE_FMT));
-      valueMap.put ("Time", DateFormatter.formatDate (startDate, TIME_FMT));
+      var startDate = info.getStartDate();
+      dataList.add (new String[] {"Date", DateFormatter.formatDate (startDate, DATE_FMT)});
+      dataList.add (new String[] {"Time", DateFormatter.formatDate (startDate, TIME_FMT)});
     } // if
-
-    // Add time range info
-    // -------------------
     else {
-      Date startDate = info.getStartDate();
-      Date endDate = info.getEndDate();
-      String startDateString = DateFormatter.formatDate (startDate, DATE_FMT);
-      String endDateString = DateFormatter.formatDate (endDate, DATE_FMT);
-      String startTimeString = DateFormatter.formatDate (startDate, TIME_FMT);
-      String endTimeString = DateFormatter.formatDate (endDate, TIME_FMT);
+      var startDate = info.getStartDate();
+      var endDate = info.getEndDate();
+      var startDateString = DateFormatter.formatDate (startDate, DATE_FMT);
+      var endDateString = DateFormatter.formatDate (endDate, DATE_FMT);
+      var startTimeString = DateFormatter.formatDate (startDate, TIME_FMT);
+      var endTimeString = DateFormatter.formatDate (endDate, TIME_FMT);
       if (startDateString.equals (endDateString)) {
-        valueMap.put ("Date", startDateString);
-        valueMap.put ("Start time", startTimeString);
-        valueMap.put ("End time", endTimeString);
+        dataList.add (new String[] {"Date", startDateString});
+        dataList.add (new String[] {"Start time", startTimeString});
+        dataList.add (new String[] {"End time", endTimeString});
       } // if
       else {
-        valueMap.put ("Start date", startDateString);
-        valueMap.put ("Start time", startTimeString);
-        valueMap.put ("End date", endDateString);
-        valueMap.put ("End time", endTimeString);
+        dataList.add (new String[] {"Start date", startDateString});
+        dataList.add (new String[] {"Start time", startTimeString});
+        dataList.add (new String[] {"End date", endDateString});
+        dataList.add (new String[] {"End time", endTimeString});
       } // else
     } // else
 
-    // Add earth transform info
-    // ------------------------
-    EarthTransform trans = info.getTransform();
+    // Add in the projection information.
+    var trans = info.getTransform();
     String projection;
     if (trans == null) projection = "Unknown";
     else {
@@ -234,45 +212,13 @@ public class BasicReaderInfoPanel
       if (trans instanceof MapProjection)
         projection += " / " + ((MapProjection) trans).getSystemName();
     } // else
-    valueMap.put ("Projection", projection);
+    dataList.add (new String[] {"Projection", projection});
 
-    // Add other info
-    // --------------
-    valueMap.put ("Origin", MetadataServices.format (info.getOrigin(), ", "));
-    valueMap.put ("Format", reader.getDataFormat());
+    // Add in the data origina and format.
+    dataList.add (new String[] {"Origin", MetadataServices.format (info.getOrigin(), ", ")});
+    dataList.add (new String[] {"Format", reader.getDataFormat()});
 
-    // Create basic info string
-    // ------------------------
-    StringBuffer buffer = new StringBuffer();
-    for (Iterator iter = valueMap.keySet().iterator(); iter.hasNext(); ) {
-      String key = (String) iter.next();
-      String value = (String) valueMap.get (key);
-      buffer.append (Format.sprintf ("%-12s %s\n", 
-        new Object[] {key + ":", value}));
-    } // for
-    basicInfoString = buffer.toString();
-
-    // Create detailed info string
-    // ---------------------------
-    Map metadata = reader.getRawMetadata();
-    if (metadata.size() == 0) 
-      detailedInfoString = "(No detailed metadata available.)";
-    else {
-      buffer.setLength (0);
-      for (Iterator iter = metadata.keySet().iterator(); iter.hasNext(); ) {
-        String key = (String) iter.next();
-        Object value = metadata.get (key);
-        buffer.append (key);
-        buffer.append (" = ");
-        buffer.append (MetadataServices.toString (value));
-        buffer.append ("\n");
-    } // for
-      detailedInfoString = buffer.toString();
-    } // else
-
-    // Update text
-    // -----------
-    updateTextArea();
+    dataModel.fireTableDataChanged();
 
   } // setReader
 

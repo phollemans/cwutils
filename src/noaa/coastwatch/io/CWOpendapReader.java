@@ -518,8 +518,7 @@ public class CWOpendapReader
   public static void main (String[] argv) throws Exception {
 
     CWOpendapReader reader = new CWOpendapReader (argv[0]);
-    noaa.coastwatch.tools.cwinfo.printInfo (reader, System.out);
-    noaa.coastwatch.tools.cwinfo.printTransform (reader, System.out, false);
+    noaa.coastwatch.tools.cwinfo.printSummary (reader, System.out, true);
     noaa.coastwatch.tools.cwstats.printStats (reader, null, null, null, 0, 0.01,
       null);
 

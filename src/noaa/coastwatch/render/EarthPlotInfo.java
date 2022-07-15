@@ -58,6 +58,9 @@ import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.util.trans.CDMGridMappedProjection;
 import noaa.coastwatch.tools.cwinfo;
 
+import static noaa.coastwatch.util.MetadataServices.DATE_FMT;
+import static noaa.coastwatch.util.MetadataServices.TIME_FMT;
+
 /**
  * An earth plot information legend annotates an earth data view with
  * information about the data source, date, time, projection, and
@@ -73,12 +76,6 @@ public class EarthPlotInfo
   // ---------
   /** The minimum picture element size. */
   private static final int MIN_PICTURE_SIZE = 50;
-
-  /** The default date format. */
-  private static final String DATE_FMT = cwinfo.DATE_FMT;
-
-  /** The UTC time format. */
-  private static final String TIME_FMT = cwinfo.TIME_FMT;
 
   /** The local time format. */
   private static final String LOCAL_TIME_FMT = "HH:mm:ss Z";

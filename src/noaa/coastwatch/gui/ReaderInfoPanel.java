@@ -25,21 +25,33 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
+
+import java.util.Map;
+import java.util.List;
+import java.io.IOException;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Font;
-import java.io.PrintStream;
+import java.awt.Dimension;
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
-import noaa.coastwatch.gui.PanelOutputStream;
+import javax.swing.UIManager;
+
 import noaa.coastwatch.gui.WindowMonitor;
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
-import noaa.coastwatch.tools.cwinfo;
+import noaa.coastwatch.io.ReaderSummaryProducer;
+import noaa.coastwatch.io.ReaderSummaryProducer.Summary;
+import noaa.coastwatch.io.ReaderSummaryProducer.SummaryTable;
+import noaa.coastwatch.util.HTMLReportFormatter;
+
+import java.util.logging.Logger;
 
 /**
  * The <code>ReaderInfoPanel</code> class displays information from a 
@@ -48,17 +60,32 @@ import noaa.coastwatch.tools.cwinfo;
  * @author Peter Hollemans
  * @since 3.1.7
  */
-public class ReaderInfoPanel
-  extends JPanel {
+public class ReaderInfoPanel extends JPanel {
 
-  // Constants
-  // ---------
+  private static final Logger LOGGER = Logger.getLogger (ReaderInfoPanel.class.getName());
 
-  /** The preferred columns of text. */
-  private static final int PREFERRED_COLUMNS = 80;
+  /** The panel showing the HTML. */
+  private JEditorPane editor;
 
-  /** The preferred rows of text. */
-  private static final int PREFERRED_ROWS = 25;
+  ////////////////////////////////////////////////////////////
+
+  private void updateEditor (EarthDataReader reader) {
+
+    try { 
+
+      var producer = ReaderSummaryProducer.getInstance();
+      var formatter = HTMLReportFormatter.create();
+      formatter.setBorderColor (UIManager.getColor ("Label.background"));
+      producer.report (producer.create (reader), formatter);
+
+      editor.setText (formatter.getContent());
+      editor.setCaretPosition (0);
+
+    } catch (IOException e) {
+      LOGGER.warning (e.getMessage());
+    } // catch
+
+  } // updateEditor
 
   ////////////////////////////////////////////////////////////
 
@@ -74,30 +101,20 @@ public class ReaderInfoPanel
 
     super (new BorderLayout());
 
-    // Create panel and print streams
-    // ------------------------------
-    PanelOutputStream panelStream = new PanelOutputStream();
-    PrintStream printStream = new PrintStream (panelStream, true);
-    JPanel panel = panelStream.getPanel();
-    this.add (panel, BorderLayout.CENTER);
+    this.editor = new JEditorPane();
+    editor.setContentType ("text/html");
+    editor.putClientProperty (JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
+    editor.setEditable (false);
+    var scroll = new JScrollPane (editor);
+    this.add (scroll, BorderLayout.CENTER);
 
-    // Set to monospaced font
-    // ----------------------
-    JTextArea textArea = panelStream.getTextArea();
-    Font font = textArea.getFont();
-    Font monoFont = new Font ("Monospaced", font.getStyle(), font.getSize());
-    textArea.setFont (monoFont);
+    var dims = new Dimension (
+      GUIServices.getLabelWidth (100),
+      GUIServices.getLabelHeight() * 30
+    );
+    editor.setPreferredSize (dims);
 
-    // Set preferred columns
-    // ---------------------
-    textArea.setColumns (PREFERRED_COLUMNS);
-    textArea.setRows (PREFERRED_ROWS);
-
-    // Print reader info
-    // -----------------
-    cwinfo.printInfo (reader, printStream);
-    cwinfo.printTransform (reader, printStream, false);
-    textArea.setCaretPosition (0);
+    updateEditor (reader);
 
   } // ReaderInfoPanel constructor
 

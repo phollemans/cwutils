@@ -29,6 +29,7 @@ import java.text.NumberFormat;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.Statistics;
 import noaa.coastwatch.util.trans.EarthTransform;
+import noaa.coastwatch.util.ReportFormatter;
 
 /**
  * The <code>EarthDataSurvey</code> class is used to perform surveys
@@ -100,8 +101,14 @@ public abstract class EarthDataSurvey {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a results report for the survey. */
-  public abstract String getResults ();
+  /** 
+   * Gets a results report for the survey.
+   * 
+   * @param formatter the formatter to use for the report.
+   * 
+   * @since 3.7.1
+   */
+  public void getResults (ReportFormatter formatter) { }
 
   ////////////////////////////////////////////////////////////
 
