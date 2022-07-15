@@ -111,7 +111,7 @@ public class EarthDataViewFactory {
       // Get subset grid
       // ---------------
       Grid grid;
-      if (reader instanceof GridSubsetReader) {
+      if (reader instanceof GridSubsetReader && trans instanceof MapProjection) {
         int[] dims = reader.getPreview (varName).getDimensions();
         int strideValue = Math.max (
           (int) Math.ceil ((float)dims[Grid.ROWS]/subsetSize),
@@ -122,16 +122,8 @@ public class EarthDataViewFactory {
         int[] length = new int[] {dims[Grid.ROWS]/strideValue, 
           dims[Grid.COLS]/strideValue};
         try {
-          grid = ((GridSubsetReader) reader).getGridSubset (varName, start, 
-            stride, length);
-
-          // TODO: What happens here if the transform is not a map
-          // projection?  We're currently limited in our implementations
-          // of grid subset readers, so we're OK for now.  But in the
-          // future, we may need a more general mechanism here.
-          
-          if (trans instanceof MapProjection)
-            trans = ((MapProjection) trans).getSubset (start, stride, length);
+          grid = ((GridSubsetReader) reader).getGridSubset (varName, start, stride, length);
+          trans = ((MapProjection) trans).getSubset (start, stride, length);
         } // try
 
         // Fall back on full size grid
