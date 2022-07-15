@@ -28,8 +28,11 @@ package noaa.coastwatch.gui;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import java.beans.PropertyChangeListener;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -51,6 +54,7 @@ import javax.swing.JToolBar;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.Document;
+import javax.swing.SwingUtilities;
 
 import noaa.coastwatch.gui.GUIServices;
 
@@ -84,7 +88,7 @@ public class HTMLPanel
   private int currentPage;
 
   /** The history of URLs. */
-  private LinkedList history;
+  private LinkedList<HistoryEntry> history;
 
   /** The home URL. */
   private URL homeURL;
@@ -94,6 +98,25 @@ public class HTMLPanel
 
   /** The back navigation button. */
   private JButton backButton;
+
+  /** The scroll pane used to hold the editor. */
+  private JScrollPane scrollPane;
+
+  ////////////////////////////////////////////////////////////
+
+  private static class HistoryEntry {
+
+    public URL url;
+    public Point position;
+
+    public static HistoryEntry create (URL url) { 
+      var entry = new HistoryEntry();
+      entry.url = url;
+      entry.position = new Point();
+      return (entry);
+    } // create
+
+  } // HistoryEntry class
 
   ////////////////////////////////////////////////////////////
 
@@ -127,7 +150,8 @@ public class HTMLPanel
 
     // Create scroll window
     // --------------------
-    add (new JScrollPane (editor), BorderLayout.CENTER);
+    scrollPane = new JScrollPane (editor);
+    add (scrollPane, BorderLayout.CENTER);
 
     // Create top panel
     // ----------------
@@ -143,6 +167,7 @@ public class HTMLPanel
 
     JButton button;
     ActionListener navListener = new Navigate();
+    
     button = GUIServices.getIconButton ("navigation.back");
     button.setToolTipText (BACK_COMMAND);
     button.getModel().setActionCommand (BACK_COMMAND);
@@ -186,7 +211,7 @@ public class HTMLPanel
 
     // Create empty history
     // --------------------
-    history = new LinkedList();
+    history = new LinkedList<>();
     currentPage = -1;
     homeURL = null;
 
@@ -217,9 +242,9 @@ public class HTMLPanel
     URL url
   ) {
 
-    history = new LinkedList();
+    history = new LinkedList<>();
     currentPage = -1;
-    setPage (url, true);
+    setPage (url, null, true);
 
   } // setPage
 
@@ -229,11 +254,13 @@ public class HTMLPanel
    * Sets the HTML page to display.
    *
    * @param url the URL for the page to display.
-   * @param record the record flag, true to record the page in the
-   * history list.
+   * @param position the new position to display the page at, or null to display
+   * at the top of the page.
+   * @param record the record flag, true to record the page in the history list.
    */
   private void setPage (
     URL url,
+    Point position,
     boolean record
   ) {
 
@@ -249,19 +276,27 @@ public class HTMLPanel
 
       // Set editor page
       // ---------------
-      editor.setPage (url); 
-
-      // Update address field
-      // --------------------
-      if (addressField != null) { addressField.setText (url.toString()); }
+      if (position != null) {
+        var listener = new PropertyChangeListener[1];
+        listener[0] = event -> {
+          scrollPane.getViewport().setViewPosition (position);
+          editor.removePropertyChangeListener ("page", listener[0]);
+        };
+        editor.addPropertyChangeListener ("page", listener[0]);
+      } // if
+      editor.setPage (url);
 
       // Record history
       // --------------
       if (record) {
         while (currentPage < history.size()-1) history.removeLast();
-        history.add (url);
+        history.add (HistoryEntry.create (url));
         currentPage++;
       } // if
+
+      // Update address field
+      // --------------------
+      if (addressField != null) { addressField.setText (url.toString()); }
 
       // Update navigation
       // -----------------
@@ -285,12 +320,23 @@ public class HTMLPanel
 
   ////////////////////////////////////////////////////////////
 
+  private void savePosition() {
+
+    if (currentPage >= 0 && currentPage <= history.size()-1)
+      history.get (currentPage).position = scrollPane.getViewport().getViewPosition();
+
+  } // savePosition
+
+  ////////////////////////////////////////////////////////////
+
   /** Sets the page forward in the history. */
   private void forward () {
 
     if (currentPage < history.size()-1) {
+      savePosition();
       currentPage++;
-      setPage ((URL) history.get (currentPage), false);
+      var entry = history.get (currentPage);
+      setPage (entry.url, entry.position, false);
     } // if
  
   } // forward
@@ -301,8 +347,10 @@ public class HTMLPanel
   private void back () {
 
     if (currentPage > 0) {
+      savePosition();
       currentPage--;
-      setPage ((URL) history.get (currentPage), false);
+      var entry = history.get (currentPage);
+      setPage (entry.url, entry.position, false);
     } // if
  
   } // back
@@ -313,9 +361,9 @@ public class HTMLPanel
   private void refresh () {
 
     if (currentPage >= 0) {
-      editor.getDocument().putProperty (
-        Document.StreamDescriptionProperty, null);
-      setPage ((URL) history.get (currentPage), false);
+      editor.getDocument().putProperty (Document.StreamDescriptionProperty, null);
+      var entry = history.get (currentPage);
+      setPage (entry.url, entry.position, false);
     } // if
  
   } // refresh
@@ -329,8 +377,10 @@ public class HTMLPanel
   private void home () {
 
     if (homeURL != null) {
-      if (!((URL) history.get (currentPage)).equals (homeURL))
-        setPage (homeURL, true);
+      if (!(history.get (currentPage).url).equals (homeURL)) {
+        savePosition();
+        setPage (homeURL, null, true);
+      } // if
     } // if
 
   } // home
@@ -378,8 +428,7 @@ public class HTMLPanel
   ////////////////////////////////////////////////////////////
 
   /** Responds to an address change. */
-  private class AddressEntered
-    extends AbstractAction {
+  private class AddressEntered extends AbstractAction {
 
     public void actionPerformed (ActionEvent event) {
 
@@ -400,10 +449,12 @@ public class HTMLPanel
 
       // Set page
       // --------
-      if (currentPage >= 0 && url.equals (history.get (currentPage)))
+      if (currentPage >= 0 && url.equals (history.get (currentPage).url))
         refresh();
-      else
-        setPage (url, true);
+      else {
+        savePosition();
+        setPage (url, null, true);
+      } // else
 
     } // actionPerformed
 
@@ -417,7 +468,8 @@ public class HTMLPanel
 
     public void hyperlinkUpdate (HyperlinkEvent event) { 
       if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-        setPage (event.getURL(), true);
+        savePosition();
+        setPage (event.getURL(), null, true);
       } // if
     } // hyperlinkUpdate
 

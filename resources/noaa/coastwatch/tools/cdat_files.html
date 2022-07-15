@@ -23,7 +23,7 @@
 menu item or by clicking the <span class="gui">Open</span> button
 on the tool bar:</p>
 
-<p class="centered"><img src="cdat_files.png"></p>
+<p class="centered"><img src="cdat_files.png" width="260"></p>
 
 <p>Once the file has been selected, you must choose the variables
 to view from the list of available variables.  More than one
@@ -43,7 +43,8 @@ using the <span class="gui">Tools|File Information</span> menu
 item.  Details include the satellite and sensor (or data source),
 date and time, projection information, spheroid, data origin,
 file format, variable names and attributes, and earth location
-boundary data.</p>
+boundary data.  A second tab in the file information window
+also shows the raw metadata attribute values.</p>
 
 <a name="formats"></a>
 <h2>Supported file formats</h2>
@@ -52,16 +53,10 @@ boundary data.</p>
 
 <dl>
 
-  <dt>CoastWatch IMGMAP</dt>
-
-  <dd>CoastWatch format (.cwf) files that contain AVHRR SST, cloud,
-  channel, angle, and graphics data.  These files were produced by
-  CoastWatch up to 2004.</dd>
-
   <dt>CoastWatch HDF and netCDF</dt>
 
-  <dd>HDF 4 and netCDF 3 with CoastWatch HDF or CF metadata (.hdf,
-  .nc).  CF metadata support is still experimental.</dd>
+  <dd>HDF 4 and netCDF 3/4 with CoastWatch HDF or CF metadata (.hdf,
+  .nc, .nc4).</dd>
 
   <dt>SeaSpace HDF</dt>
 
@@ -77,13 +72,6 @@ boundary data.</p>
   <dd>NOAA 1b AVHRR data, format versions 1 through 5, GAC or LAC
   resolutions, 8-bit, 10-bit, and 16-bit sensor word sizes with or
   without archive header.</dd>
-
-  <dt>OPeNDAP</dt>
-
-  <dd>OPeNDAP datasets with CoastWatch HDF or CF metadata, map
-  projection files only.  CF metadata support is still experimental.
-  Swath datasets and <span class="code"> RasterPixelIsPoint</span>
-  mode are not supported. </dd>
 
 </dl>
 

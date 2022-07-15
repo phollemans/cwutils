@@ -11,30 +11,30 @@
 
 <p>The CoastWatch Data Analysis Tool (CDAT) is a part of the
 CoastWatch Software Library and Utilities package.  CDAT allows
-you to view satellite data files in CoastWatch HDF (.hdf),
-CoastWatch IMGMAP (.cwf), and other formats, create data plots,
+you to view satellite data files in CoastWatch HDF (.hdf), NetCDF 3/4 with CF
+metadata and other formats, create data plots,
 perform data surveys, export data to other formats, and so on.  The
 following figure shows the main components of the CDAT window:</p>
 
-<p class="centered"><img src="cdat.png"></p>
+<p class="centered"><img src="cdat.png" width="520"></p>
 
-<p>The components are as follows:</p>
+<p>The components are as follows (starting from the top):</p>
 
 <dl>
 
   <dt>Menu bar</dt>
 
-  <dd>Access to file operations, preferences, and the help
+  <dd>Access to file and view operations, tools, preferences, and the help
   system.</dd>
 
   <dt>Tool bar</dt>
 
-  <dd>Buttons for common file and view change operations.</dd>
+  <dd>Buttons for common file and view change operations: Zoom, Pan, etc.</dd>
  
   <dt>File tabs</dt>
 
   <dd>Displays the currently open data file names, and allows you
-  to select the desired file.</dd>
+  to select or close (by clicking the x symbol) a specific file.</dd>
 
   <dt>Control tabs</dt>
 
@@ -42,14 +42,19 @@ following figure shows the main components of the CDAT window:</p>
   palette, overlays, surveys, annotations, composite, and
   navigation correction.</dd>
 
+  <dt>Variable selector</dt>
+
+  <dd>Displays the currently selected variable in the data file. 
+  You can choose a new variable by selecting it from the drop-down list 
+  button.</dd>
+
   <dt>Data view controls</dt>
 
-  <dd>Buttons and adjustments for each panel that controls some
-  aspect of the data view.</dd>
+  <dd>Buttons and adjustments for each control tab.</dd>
 
   <dt>Data view</dt>
 
-  <dd>The main area showing the current earth data file.</dd>
+  <dd>The main area showing the current earth data file and active variable.</dd>
 
   <dt>Track bar</dt>
 
