@@ -76,7 +76,7 @@ is a sketch of the software evolution:
 
 To download, visit the CoastWatch central web site: 
 \begin{quote}
-  \url{http://coastwatch.noaa.gov}
+  \url{https://coastwatch.noaa.gov}
 \end{quote}
 and navigate to the {\gui Software \& Utilities} section under
 {\gui User Resources}.  Download the package appropriate for your
@@ -141,6 +141,13 @@ or under BASH in the {\tt \~{ }/.bashrc} file:
   {\tt export PATH=\$\{PATH\}:\$HOME/cwutils/bin} \\
   {\tt export MANPATH=\$\{MANPATH\}:\$HOME/cwutils/doc/man}
 \end{quote}
+Note that some Linux users with high resolution screens have reported issues with 
+running CDAT and the CoastWatch Master Tool -- the application windows 
+and text appear smaller than expected.  If this happens, try adding this option
+when running CDAT:
+\begin{quote}
+  -J-Dsun.java2d.uiScale=2.0
+\end{quote}
 
 \section{Using the Software}
 
@@ -175,11 +182,9 @@ task:
   creation such as data coverage maps, grids, coastlines, landmasks.
     
   \item[Registration and Navigation] Resampling of data from one
-  projection to another, interactive generation of region masters,
+  projection to another, interactive generation of map projections,
   manual and automatic navigational correction, computation of solar
   and earth location angles.
-
-  \item[Network] Data download and server status.
 
 \end{description}
 

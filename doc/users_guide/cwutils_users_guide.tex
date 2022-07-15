@@ -1,9 +1,25 @@
 \documentclass[10pt]{book}
+
 \usepackage[pdftex]{graphicx}
 \usepackage{latexsym}
 \usepackage{amssymb}
-\usepackage[colorlinks=true]{hyperref}
+
+%% These PDF tags are mainly for 508 accessibility compliance
+\usepackage[
+  pdfauthor={Peter Hollemans},
+  pdftitle={CoastWatch Software Library and Utilities User's Guide},
+  pdfsubject={CoastWatch Utilities},
+  pdfkeywords={NOAA, CoastWatch, utilities, software},
+  pdflang={en-US},
+  pdfdisplaydoctitle=true,
+  colorlinks=true
+]{hyperref}
+\usepackage{pdfcomment}
+
 \usepackage{color}
+
+\usepackage{datetime}
+\usdate
 
 \renewcommand{\familydefault}{\sfdefault}
 

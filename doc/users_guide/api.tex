@@ -7,7 +7,7 @@ Developers may want to use some of the same code used by the
 CoastWatch Utilities to read and write data, render images, or
 perform some variation on the existing functionality.  Since the
 CoastWatch Utilities are written almost entirely in Java
-(conforming to the Java 8 language spec), the Java Application
+(conforming to the Java 11 language spec), the Java Application
 Programming Interface (API) documentation is available in
 standard Javadoc-generated HTML web page format, included with the
 CoastWatch Utilities distribution package as the compressed
@@ -27,7 +27,7 @@ In order to effectively develop your own Java code that uses the
 CoastWatch API and link it to the CoastWatch libraries, you
 should be familiar with using the Java compiler, JAR files, how
 to navigate through Javadoc pages, and possibly be familiar with
-automated code compiling tools such as Ant.  There are a number
+automated code compiling tools such as Apache Ant.  There are a number
 of directories and files in the installation that are of use to
 developers:
 \begin{description}
@@ -35,22 +35,19 @@ developers:
 \item[{\file lib/java/}] -- Contains the main {\file cwutils.jar} file of
 CoastWatch Utilities code.
 
-\item[{\file lib/java/depend/}] -- Contains the Java JAR dependencies for:
+\item[{\file lib/java/depend/}] -- Contains the Java JAR dependencies that 
+supply such functionality as:
 \begin{itemize}
 
-\item Alloy Look and Feel (used for Linux GUI)
-\item GeoTools (ArcGIS Shapefile rendering)
-\item GIF encoding
-\item PDF encoding
+\item User interface styling  
+\item Shapefiles
+\item GIF, PDF, and GeoTIFF encoding
 \item XML parsing
-\item C-style print formatting
-\item Command line argument parsing
-\item Java Advanced Imaging CODEC (mainly for GeoTIFF encoding)
-\item Mathematical expression parsing
+\item Command line option parsing
+\item Mathematical expressions
 \item Plotting symbols
-\item Java matrix manipulation
-\item HDF and NetCDF I/O
-\item Unidata UDUNITS units conversion
+\item Matrices
+\item HDF and NetCDF file formats
 \item Terrenus HRPT interfaces for NOAA1b instrument data
 
 \end{itemize}
@@ -256,9 +253,8 @@ from IDL but also some special-purpose CoastWatch palettes.
 The {\java noaa.coastwatch.gui} package is the largest and most
 complex package in the CoastWatch Utilities, and provides all the
 GUI components for the \hyperlink{cdatchap}{CoastWatch Data
-Analysis Tool}, \hyperlink{cwmaster}{CoastWatch Master Tool
-(cwmaster)}, and \hyperlink{cwstatus}{CoastWatch Status Tool
-(cwstatus)} using Java Swing for platform-dependent look and
+Analysis Tool}, and the \hyperlink{cwmaster}{CoastWatch Master Tool
+(cwmaster)} using Java Swing for platform-dependent look and
 feel.  There are far too many classes to describe here, but the
 following are some of the more general and re-usable classes:
 \begin{description}

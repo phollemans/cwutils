@@ -12,6 +12,70 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Version 3.7.1 -- July 2022}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\begin{itemize}
+  
+  \item The user interface in CDAT was updated to better handle display 
+  scaling on Windows and Linux.  This involved updating the user interface
+  toolkit which now has a more uniform look across different platforms.
+
+  \item The Java VM was updated to 17.0.2 on all platforms (Linux, Windows,
+  and Mac) for bug fixes and security patches.
+
+  \item The Java code documentation was updated for the latest Java 
+  virtual machine Javadoc tool.
+
+  \item The User's Guide and in-application help was updated to reflect the 
+  latest software updates.
+
+  \item The CDAT file chooser was reorganized for easier data file selection.
+  Now when opening a file, long variable names and units have more room for 
+  display.
+
+  \item The CDAT file information window was enhanced to show more complete
+  file contents.  It also includes a new tab with the ability to search for text
+  in metadata names and values.
+
+  \item The cwcomposite, cwmath, and cwregister2 tools have new command line
+  options -{-}threads and -{-}serial to control the amount of multithreading
+  used for data processing.
+
+  \item The render tool has a new hybrid rendering mode to combine color
+  enhancements with composite color images.  For hybrid mode rendering, 
+  the -{-}composite and -{-}enhance options are no longer mutually exclusive, 
+  and a new -{-}hybridmask option specifies transparent pixel areas.
+
+  \item A new standardized NOAA logo is now included as the default
+  for plot legends.  The new logo uses the official NOAA colors.
+
+  \item Various command line tools were updated for better info/verbose logging
+  and for clearer and shorter error messages.
+
+  \item The cwdownload and cwstatus tools were deprecated and removed.
+  These tools have been replaced with various methods of downloading
+  data from the CoastWatch node websites such as THREDDS, ERDDAP, HTTP, FTP,
+  etc.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+  \item When clicking the Help buttons in CDAT, help windows sometimes 
+  appeared behind their parent window.  This has been fixed so that help
+  windows always appear correctly in front.
+
+  \item When reading HDF files in cwcomposite, unchunked variable data was 
+  not being read and composited correctly.  This has been fixed so that now all
+  HDF variable data both chunked or unchunked is read correctly.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Version 3.7.0 -- September 2021}
 
 \subsection*{\bigicon{box_software} Updates}

@@ -42,7 +42,7 @@ the \hyperlink{cwmath}{cwmath} tool for an example of masking and
 The \hyperlink{hdatt}{hdatt} tool is only useful for CoastWatch HDF
 files\footnote{The hdatt tool works with any HDF 4 file using the
 SDS interface, but is primarily intended for CoastWatch HDF files,
-as opposed to CoastWatch IMGMAP or any other non-HDF file format
+as opposed to any other non-HDF file format
 supported by the utilities.}, and performs low-level reading and
 writing of HDF attribute data.  You can use it to change an attribute
 value without rewriting the file, or to append an attribute value
@@ -64,7 +64,7 @@ layer) separating the tools from the physical input file format.
 The \hyperlink{cwexport}{cwexport} tool complements cwimport -- it
 converts data into various simple text or binary formats.  The
 cwexport tool benefits from the EDR layer as well, and as such can
-export data from CoastWatch HDF, CoastWatch IMGMAP, NOAA 1b, and
+export data from CoastWatch HDF, NetCDF, NOAA 1b, and
 others.
 
 During satellite data processing, it is often necessary to compare data
@@ -90,10 +90,21 @@ cwcomposite on all the masked SST files to compute the mean or
 median.
 
 Certain data processing tasks are beyond the capabilities of the
-CoastWatch Utilities.  In such a case, the recommended procedure
-is to access and process data using either the Java Language API
-outlined in \autoref{api}, or the native C HDF libraries from NCSA
-(see \autoref{third}).  IDL and Matlab also have HDF access built-in.
+CoastWatch Utilities command line tools.  In such a case, the recommendation
+is to:
+\begin{enumerate}
+
+\item Access and process data using the Java Language API
+outlined in \autoref{api}, either by writing Java code or by using a script 
+written in BeanShell (\url{http://beanshell.org}) with the 
+\hyperlink{cwscript}{cwscript} tool.
+
+\item Use native C code with the HDF or NetCDF libraries (see \autoref{third}).
+
+\item Use a higher level programming language like IDL, Matlab, or Python 
+which have HDF and NetCDF access libraries available.
+
+\end{enumerate}
 The advantage of using the Java API provided by the CoastWatch
 Utilities is that metadata and file I/O operations are already
 implemented and generally transparent to the programmer.
@@ -143,7 +154,7 @@ projection can be intercompared or combined on a pixel by pixel basis.
 
 You can create your own master projections and CoastWatch map-projected
 data files using the \hyperlink{cwmaster}{cwmaster} and
-\hyperlink{cwregister}{cwregister} tools.  The cwmaster tool is an
+\hyperlink{cwregister2}{cwregister2} tools.  The cwmaster tool is an
 interactive tool for designing master map projections.  The tool
 enables you to create CoastWatch HDF masters that use one of the
 various map projections supported by the General Cartographic
@@ -151,7 +162,7 @@ Transformation Package (GCTP)\footnote{See \autoref{metadata} for
 a discussion of CoastWatch HDF metadata which relies on GCTP for
 map projection parameters.}, such as Mercator, Polar Stereographic,
 Orthographic, and many others.  Once a master is created 
-you can used it in the cwregister tool to resample data to the new
+you can used it in the cwregister2 tool to resample data to the new
 master projection.
 
 When earth image data is captured from a satellite and processed,
@@ -185,21 +196,21 @@ packages.  Note that text output from the cwexport tool (see
 \autoref{processing}) can also include the latitude and longitude
 of each pixel without having to run cwangles.
 
-\section{Network}
-
-The \hyperlink{cwdownload}{cwdownload} tool has a command line only
-interface and is recommended for advanced data users only.  You can
-use the tool to retrieve recent data files from a CoastWatch data
-server, or to maintain an archive of certain data files of interest.
-For regular data file retrieval, the tool can be run via the Unix
-cron daemon or Windows Task Scheduler (located under System Tools
-in newer versions of Windows).  Currently, only AVHRR data is handled
-by cwdownload.  You should contact the CoastWatch Help Desk
-(coastwatch.info@noaa.gov) for access to a CoastWatch data server
-to use with cwdownload.
-
-The \hyperlink{cwstatus}{cwstatus} tool shows a graphical view of the
-status of a CoastWatch data server, and is intended for use by
-CoastWatch staff only.  The status tool displays the current list of
-satellite passes, their properties, and a graphical view of the pass
-footprint on the earth along with a preview image.
+%%\section{Network}
+%%
+%%The \hyperlink{cwdownload}{cwdownload} tool has a command line only
+%%interface and is recommended for advanced data users only.  You can
+%%use the tool to retrieve recent data files from a CoastWatch data
+%%server, or to maintain an archive of certain data files of interest.
+%%For regular data file retrieval, the tool can be run via the Unix
+%%cron daemon or Windows Task Scheduler (located under System Tools
+%%in newer versions of Windows).  Currently, only AVHRR data is handled
+%%by cwdownload.  You should contact the CoastWatch Help Desk
+%%(coastwatch.info@noaa.gov) for access to a CoastWatch data server
+%%to use with cwdownload.
+%%
+%%The \hyperlink{cwstatus}{cwstatus} tool shows a graphical view of the
+%%status of a CoastWatch data server, and is intended for use by
+%%CoastWatch staff only.  The status tool displays the current list of
+%%satellite passes, their properties, and a graphical view of the pass
+%%footprint on the earth along with a preview image.

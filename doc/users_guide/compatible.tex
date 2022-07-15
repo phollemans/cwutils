@@ -11,51 +11,51 @@ the file format compatibility of the various tools: \\
 
   TOOL & INPUT & OUTPUT \\ \hline
 
-  cdat & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & HDF 4, NetCDF 3, NetCDF 4,
+  cdat & HDF 4, NetCDF 3/4, NOAA 1b & HDF 4, NetCDF 3/4,
   Binary, Text, ArcGIS, PNG, GIF, JPEG, PDF, GeoTIFF \\ \hline
 
   cwangles & HDF 4, NetCDF 3 & -- \\ \hline
 
   cwautonav & HDF 4, NetCDF 3 & -- \\ \hline
 
-  cwcomposite & HDF 4, NetCDF 3, NetCDF 4 & HDF 4 \\ \hline
+  cwcomposite & HDF 4, NetCDF 3/4 & HDF 4 \\ \hline
 
-  cwcoverage & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & PNG \\ \hline
+  cwcoverage & HDF 4, NetCDF 3/4, NOAA 1b & PNG \\ \hline
 
-  cwdownload & -- & -- \\ \hline
+%%  cwdownload & -- & -- \\ \hline
 
-  cwexport & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & Binary, Text, ArcGIS,
-  NetCDF 3, NetCDF 4 \\ \hline
+  cwexport & HDF 4, NetCDF 3/4, NOAA 1b & Binary, Text, ArcGIS,
+  NetCDF 3/4 \\ \hline
 
-  cwgraphics & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & HDF 4 \\ \hline
+  cwgraphics & HDF 4, NetCDF 3/4, NOAA 1b & HDF 4 \\ \hline
 
-  cwimport & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & HDF 4 \\ \hline
+  cwimport & HDF 4, NetCDF 3/4, NOAA 1b & HDF 4 \\ \hline
 
-  cwinfo & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & -- \\ \hline
+  cwinfo & HDF 4, NetCDF 3/4, NOAA 1b & -- \\ \hline
 
-  cwmaster & HDF 4, NetCDF 3, NetCDF 4 & HDF 4 \\ \hline
+  cwmaster & HDF 4, NetCDF 3/4 & HDF 4 \\ \hline
 
-  cwmath & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & HDF 4 \\ \hline
+  cwmath & HDF 4, NetCDF 3/4, NOAA 1b & HDF 4 \\ \hline
 
   cwnavigate & HDF 4, NetCDF 3 & -- \\ \hline
 
-  cwregister & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & HDF 4 \\ \hline
+  cwregister & HDF 4, NetCDF 3/4, NOAA 1b & HDF 4 \\ \hline
 
-\end{tabular}
+%\end{tabular}
 
-\begin{tabular}{|l|p{5cm}|p{5cm}|}
-  \hline
+%\begin{tabular}{|l|p{5cm}|p{5cm}|}
+%  \hline
 
-  TOOL & INPUT & OUTPUT \\ \hline
+%  TOOL & INPUT & OUTPUT \\ \hline
 
-  cwrender & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & PNG, GIF, JPEG, PDF,
+  cwrender & HDF 4, NetCDF 3/4, NOAA 1b & PNG, GIF, JPEG, PDF,
   GeoTIFF \\ \hline
 
-  cwsample & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & Text \\ \hline
+  cwsample & HDF 4, NetCDF 3/4, NOAA 1b & Text \\ \hline
 
-  cwstats & HDF 4, NetCDF 3, NetCDF 4, NOAA 1b & -- \\ \hline
+  cwstats & HDF 4, NetCDF 3/4, NOAA 1b & -- \\ \hline
 
-  cwstatus & -- & -- \\ \hline
+%  cwstatus & -- & -- \\ \hline
 
 \end{tabular} \\
 \\
@@ -83,8 +83,8 @@ are as follows: \\
   file \\ \hline
 
   GeoTIFF & TIFF spec 6.0, GeoTIFF spec 1.8.2 \\
-  & Uncompressed, Deflate (PKZIP-style), and PackBits compression \\
-  & 8-bit or 24-bit \\
+  & Uncompressed, Deflate/LZW (ZIP-style), and PackBits compression \\
+  & 8-bit or 24-bit colour, 32-bit IEEE floating point data \\
   & Map projections supported: \\
   & Alaska Conformal \\
   & Albers Conical Equal Area \\

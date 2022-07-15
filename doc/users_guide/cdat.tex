@@ -94,7 +94,7 @@ and variables to load (see \autoref{file_open}).
 %%downloading data from a CoastWatch web site or FTP site.
 Note
 that CDAT was originally designed to read CoastWatch HDF,
-CoastWatch IMGMAP, and NOAA 1b AVHRR data files, but also reads
+CoastWatch IMGMAP (no longer supported), and NOAA 1b AVHRR data files, but also reads
 other formats as described in \autoref{compatible}.
 %%Whether
 %%using local or network data files, s
@@ -229,11 +229,10 @@ setting the range, the {\gui Normalize} button changes the range
 to bracket the data mean with a 1.5 standard deviation unit
 window, the {\gui Reverse} button swaps the minimum and maximum
 range values, and the {\gui Reset} button sets the range back to
-its full extents.  The enhancement function can be {\gui Linear}
-or {\gui Log10} for log base 10 as described above, or {\gui Step}
-which is a linear enhancement that effectively turns a normal
-continuously varying color palette into a palette with a discrete
-number of color steps.
+its full extents.  The enhancement function can be: (i) {\gui Linear},
+(ii) {\gui Log10} for log base 10 as described above, (iii) {\gui Step} 
+for a linear function with discrete steps, or (iv) {\gui Gamma} for brightness
+data (0\% - 100\%) that needs a correction for computer displays.
 
 The \button{palette}{Color Palette} tab shows the current color
 palette and list of available palettes.  CDAT comes installed
@@ -738,7 +737,7 @@ The \button{environment_ok}{Navigation Correction} tab (see
 \autoref{navigation_tab}) is used to write correction parameters
 to a data file so that the data view image lines up correctly
 with actual geographic features such as coastlines.  Only data
-files in CoastWatch IMGMAP (.cwf) and CoastWatch HDF (.hdf)
+files in CoastWatch HDF (.hdf)
 format can be corrected.  Also, only satellite sensor and
 sensor-derived variables in a data file should be corrected --
 not latitude/longitude data, graphics, or viewing angle data. You
@@ -823,10 +822,7 @@ coordinates $(R,C)$ in the data file:
 \end{description}
 To completely remove the navigation correction on a variable,
 click {\gui Reset correction to identity} and then {\gui Perform}.
-Note that CoastWatch IMGMAP (.cwf) files can only store
-integer-valued translation corrections, not rotation or general
-affine corrections.  CoastWatch HDF (.hdf) files have no such
-limitations.  More information about how navigation corrections
+More information about how navigation corrections
 are stored in CoastWatch HDF data files can be found in
 \autoref{metadata}.  Command line tools for performing navigation
 correction from a script rather than interactively are described
@@ -952,7 +948,7 @@ exported data is to be used determines the format -- {\em color
 image formats} such as PNG and JPEG are commonly used for
 creating graphics for the web, printable materials, or
 presentation slides for meetings while {\em numerical data
-formats} such as HDF and ArcGIS are used for getting data into
+formats} such as HDF, NetCDF, and ArcGIS are used for getting data into
 other analysis or GIS software packages.
 
 To export the current data view to a color image, click the
@@ -990,7 +986,10 @@ than the corresponding PNG, GIF, or JPEG. In general the GeoTIFFs
 generated are 24-bit colour images, but when no overlays are used
 or the image color option is set, a special 8-bit paletted image
 file is generated and comments describing the data value scaling
-equation are inserting into the image description tags.
+equation are inserting into the image description tags. Note that
+the \hyperlink{cwexport}{cwexport} command line tool also creates
+GeoTIFF files that contain 32-bit IEEE floating-point data values
+rather than color pixels.
 
 \item[PDF] -- A standard document format for high quality
 publishing developed by Adobe Systems and used for output to a
@@ -1003,7 +1002,7 @@ fonts.
 
 To export data from the current data file to a numerical data
 format, click the \button{export2}{Export} button and select one
-of the data formats: CoastWatch HDF, binary raster, text file, or
+of the data formats: CoastWatch HDF, NetCDF 3, NetCDF 4, binary raster, text file, or
 ArcGIS binary grid.  Numerical data formats can hold data from
 one or more of the data file variables (with the exception of
 ArcGIS grids which only hold one variable), and either the full
@@ -1017,6 +1016,12 @@ CoastWatch and others to distribute satellite data. Information
 and access software may be found at
 \url{https://www.hdfgroup.org}. A description of the current
 CoastWatch HDF metadata standards is given in \autoref{metadata}.
+
+\item[NetCDF 3/4] -- Network Common Data Format with CF 1.4 
+metadata.  See the document "Encoding CoastWatch Satellite Data 
+in NetCDF using the CF Metadata Conventions", Peter Hollemans, February 2010,
+included with the CoastWatch Utilities installation for more details.  Access
+software can be found at \url{https://www.unidata.ucar.edu/software/netcdf}.
 
 \item[Binary raster] -- A simple stream of binary data values --
 either 8-bit unsigned bytes, 16-bit signed integers, or 32-bit
@@ -1067,7 +1072,7 @@ geographic coordinates are displayed at the location of the mouse cursor.
 
 \begin{figure}
   \begin{center}
-    \includegraphics[width=4in]{figures/general_prefs.png}
+    \includegraphics[width=4in]{figures/cdat_general_prefs.png}
     \caption[General section in the Preferences panel]{
        {\gui General} section in the
        \button{preferences}{Preferences} panel
@@ -1120,11 +1125,10 @@ base units can be combined with spaces, slashes, and
 exponentiation. For example, wind or ocean current speed in
 kilometers per hour could be written a number of ways: ``km/h'',
 ``km hr\^{~}-1'', ``kilometers / hour'', or ``kilometers per
-hour''.  For other possible unit names, see the UDUNITS package
-from UCAR:
-\url{http://www.unidata.ucar.edu/software/udunits/udunits-1/index.html}
-and
-\url{http://www.unidata.ucar.edu/software/udunits/udunits-1/udunits.txt}.
+hour''.  For other possible unit names, see the
+conventions used by the \href{https://www.google.com/search?q=udunits}{Unidata
+UDUNITS package} and its \href{https://www.google.com/search?q=udunits.txt}{supported
+units} file.
 
 \item[Enhancement function] -- Select the color scale minimum and
 maximum values and the type of function: {\gui Linear},
@@ -1185,10 +1189,10 @@ as follows:
 \item[{\tt prefs.xml}] -- Main preferences file with general and
 enhancement preferences.
 
-\item[{\tt opendap\_servers.xml}] -- List of current OPeNDAP
-servers, accessed and edited under the
-\button{harddisk_network}{Network} tab after clicking
-\button{folder_out}{Open}.
+% \item[{\tt opendap\_servers.xml}] -- List of current OPeNDAP
+% servers, accessed and edited under the
+% \button{harddisk_network}{Network} tab after clicking
+% \button{folder_out}{Open}.
 
 \item[{\tt overlays/}] -- Directory for storing overlay groups
 from the \button{tables}{Overlay Layers} tab.  Each overlay group
@@ -1310,13 +1314,15 @@ options map to the command line as follows:
 
 \end{itemize}
 
-\item[File information] -- The file information shown clicking
+\item[File information] -- The file information shown by clicking
 {\gui Tools | File Information} in CDAT is the same as that
-reported by the \hyperlink{cwinfo}{cwinfo} tool.
+reported by the \hyperlink{cwinfo}{cwinfo} tool.  The file information window
+in CDAT also has a raw metadata search and display that shows
+the same metadata values as the \hyperlink{hdatt}{hdatt} tool or the NetCDF 
+software ncdump program.
 
-\item[Data formats] -- The same data formats read by CDAT
-(including network data via OPeNDAP) can be read by most of the
-command line tools.  See \autoref{compatible} for more details on
+\item[Data formats] -- The same data formats read by CDAT can be read by 
+most of the command line tools.  See \autoref{compatible} for more details on
 data format compatibility between tools.
 
 \end{description}
