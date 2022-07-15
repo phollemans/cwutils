@@ -108,7 +108,7 @@ public class IQuamNCReader
   private final static String EXPECTED_ATT_NAME = "id";
 
   /** The expected attribute value. */
-  private final static Object EXPECTED_ATT_VALUE = "STAR-L2i-iQuam-V2.00";
+  private final static String EXPECTED_ATT_REGEX = "STAR-L2i-iQuam-V2.*";
   
   /** The default chunk size for unchunked data. */
   private final static int DEFAULT_CHUNK_SIZE = 10000;
@@ -281,9 +281,9 @@ public class IQuamNCReader
       // ----------------------------
       HObject rootGroup = format.get ("/");
       rootGroup.open();
-      Object attValue = getObjectAttribute (rootGroup, EXPECTED_ATT_NAME);
-      if (attValue == null || !attValue.equals (EXPECTED_ATT_VALUE))
-        throw new IOException ("Attribute '" + EXPECTED_ATT_NAME + "' value does not match expected");
+      String attValue = (String) getObjectAttribute (rootGroup, EXPECTED_ATT_NAME);
+      if (attValue == null || !(attValue.matches (EXPECTED_ATT_REGEX)))
+        throw new IOException ("Attribute '" + EXPECTED_ATT_NAME + "' value does not match expected '" + EXPECTED_ATT_REGEX + "'");
 
       // Check for expected variables
       // ----------------------------
