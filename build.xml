@@ -124,7 +124,6 @@
       windowtitle="CoastWatch Utilities v${version}"
       doctitle="CoastWatch Software Library and Utilities v${version} API Specification"
       header="CoastWatch Utils v${version}"
-      footer="CoastWatch Utils v${version}"
       link="https://docs.oracle.com/en/java/javase/11/docs/api">
       <bottom><![CDATA[<script>if (typeof useModuleDirectories !== 'undefined') { useModuleDirectories = false; }</script>]]></bottom>
       <arg line="--allow-script-in-comments"/>
@@ -187,6 +186,7 @@
   <property name="build.id.linux64" value="288"/>
   <property name="build.id.linux64.novm" value="710"/>
   <property name="build.id.windows64" value="278"/>
+  <property name="build.id.windows64.zip" value="1656"/>
   <property name="build.id.macosx64" value="276"/>
   <property name="build.id.macosx64.tgz" value="528"/>
 
@@ -273,6 +273,9 @@
       appleIdPassword="${install4j.appleid.password}"
       verbose="true">
       <vmParameter value="-Xmx1024m"/>
+      <variable name="winKeystoreFile" value="${win.keystore.file}"/>
+      <variable name="macKeystoreFile" value="${mac.keystore.file}"/>
+      <variable name="appleIdLogin" value="${install4j.appleid.login}"/>
     </install4j>
 
     <!-- Tag the package version -->
@@ -341,6 +344,21 @@
       <fileset file="${pkg.dir}/output.txt"/>
       <fileset file="${pkg.dir}/md5sums"/>
       <fileset file="${pkg.dir}/updates.xml"/>
+    </delete>
+  </target>
+
+  <target name="clean-doc"
+    description="Deletes all documentation">
+    <delete dir="doc/api"/>
+    <delete verbose="true" quiet="true" includeemptydirs="true">
+      <fileset dir="doc/tools"/>
+      <fileset dir="doc/man"/>
+      <fileset dir="doc">
+        <include name="api.zip"/>
+        <include name="cwutils_ug_*.pdf"/>
+      </fileset>
+      <fileset dir="doc/users_guide" excludes="*.tex,*.bib,figures/*,icons/*"/>
+      <fileset file="doc/users_guide/manual_pages.tex"/>
     </delete>
   </target>
 
