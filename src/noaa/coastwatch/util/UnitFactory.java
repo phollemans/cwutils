@@ -66,7 +66,8 @@ public class UnitFactory {
       UnitDB unitDB = UnitDBManager.instance();
       String[][] aliases = new String[][] {
         {"celsius", "temp_deg_c"},
-        {"percent", "albedo*100%"}
+        {"percent", "albedo*100%"},
+        {"celsius", "degrees_Celsius"}
       };
       for (int i = 0; i < aliases.length; i++) {
         Unit unit = format.parse (aliases[i][0]);
