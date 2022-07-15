@@ -41,6 +41,9 @@ import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * <p>The import tool translates earth data into CoastWatch HDF format.</p> 
  *
@@ -87,7 +90,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   <dd> The input data file name(s).  At least one input file is
  *   required.  If multiple files are specified, they must have
  *   matching dates and earth transforms.  The currently supported
- *   input formats are CoastWatch HDF, CoastWatch IMGMAP, TeraScan
+ *   input formats are CoastWatch HDF, NetCDF 3/4 with CF metadata, TeraScan
  *   HDF, and NOAA 1b format GAC/LAC/HRPT AVHRR. </dd>
  *
  *   <dt> output </dt>
@@ -141,18 +144,15 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * </ul>
  *
  * <h2>Examples</h2>
- * <p> The following shows the import of several .cwf files
- * to CoastWatch HDF with verbose mode on:</p>
+ * <p> The following shows the import of a NetCDF file to CoastWatch HDF 
+ * with verbose mode on:</p>
  * <pre>
- *   phollema$ cwimport --verbose 2002_214_2057_n16_wv_*.cwf 2002_214_2057_n16_wv.hdf
- *
- *   cwimport: Reading file [1/2], 2002_214_2057_n16_wv_c2.cwf
- *   cwimport: Writing avhrr_ch2
- *   cwimport: Writing graphics
- *   cwimport: Reading file [2/2], 2002_214_2057_n16_wv_c4.cwf
- *   cwimport: Writing avhrr_ch4
- *   cwimport: Writing graphics
- *   cwimport: Variable 'graphics' already exists, skipping
+ *   phollema$ cwimport --verbose --match analysed_sst 
+ *     20220621-GHRSST-Blended-v02.0-fv01.0.nc 2022_06_21_night_sst.hdf
+ *   [INFO] Reading input 20220621-GHRSST-Blended-v02.0-fv01.0.nc
+ *   [INFO] Creating output 2022_06_21_night_sst.hdf
+ *   [INFO] Reading file [1/1], 20220621-GHRSST-Blended-v02.0-fv01.0.nc
+ *   [INFO] Writing analysed_sst
  * </pre>
  *
  * <!-- END MAN PAGE -->
@@ -160,18 +160,16 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * @author Peter Hollemans
  * @since 3.1.0
  */
- 
-// TODO: LOGGING
+ public final class cwimport {
 
-public final class cwimport {
+  private static final String PROG = cwimport.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
 
   // Constants
   // ---------
   /** Minimum required command line parameters. */
   private static final int NARGS = 2;
-
-  /** Name of program. */
-  private static final String PROG = "cwimport";
 
   ////////////////////////////////////////////////////////////
 
@@ -182,6 +180,7 @@ public final class cwimport {
    */
   public static void main (String argv[]) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -194,33 +193,36 @@ public final class cwimport {
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
-      System.exit (0);
+      usage();
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
-      usage ();
-      System.exit (1);
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String output = remain[remain.length-1];
     String[] input = remain;
@@ -229,39 +231,44 @@ public final class cwimport {
     // Set defaults
     // ------------
     boolean verbose = (cmd.getOptionValue (verboseOpt) != null);
+    if (verbose) VERBOSE.setLevel (Level.INFO);
     String match = (String) cmd.getOptionValue (matchOpt);
     boolean copy = (cmd.getOptionValue (copyOpt) != null);
+
+    // We have the reader and writer declared outside the try statement so
+    // we can close them later if there's an error that doesn't result in
+    // exiting the Java VM.
+    EarthDataReader[] readers = new EarthDataReader[input.length];
+    CWHDFWriter writer = null;
+    EarthDataReader reader = null;
 
     try {
 
       // Open first input file
       // ---------------------
-      if (verbose) System.out.println (PROG + ": Reading input " + input[0]);
-      EarthDataReader reader = EarthDataReaderFactory.create (
-        input[0]);
-      EarthDataInfo info = reader.getInfo ();
+      VERBOSE.info ("Reading input " + input[0]);
+      reader = EarthDataReaderFactory.create (input[0]);
+      EarthDataInfo info = reader.getInfo();
       Date date = reader.getInfo().getDate();
       EarthTransform trans = reader.getInfo().getTransform();
 
       // Open/check output file
       // ----------------------
-      CWHDFWriter writer;
       if (copy) {
         File outputFile = new File (output);
         if (!outputFile.exists()) {
-          System.err.println (PROG + ": Output file " + output + 
-            " does not exist");
-          System.exit (2);
+          LOGGER.severe ("Output file " + output + " does not exist");
+          ToolServices.exitWithCode (2);
+          return;
         } // if          
-        if (verbose) System.out.println (PROG + ": Opening output " + output);
+        VERBOSE.info ("Opening output " + output);
         CWHDFReader outputReader = new CWHDFReader (output);
         EarthTransform outputTransform = outputReader.getInfo().getTransform();
         outputReader.close();
         if (!trans.equals (outputTransform)) {
-          System.err.println (PROG + 
-            ": Earth transforms do not match for " + input[0] + " and " + 
-            output);
-          System.exit (2);
+          LOGGER.severe ("Earth transforms do not match for " + input[0] + " and " + output);
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         writer = new CWHDFWriter (output);
       } // if
@@ -269,7 +276,7 @@ public final class cwimport {
       // Create new output file
       // ----------------------
       else {
-        if (verbose) System.out.println (PROG + ": Creating output " + output);
+        VERBOSE.info ("Creating output " + output);
         CleanupHook.getInstance().scheduleDelete (output);
         writer = new CWHDFWriter (info, output);
       } // else
@@ -277,9 +284,7 @@ public final class cwimport {
       // Loop over each input file
       // -------------------------
       for (int k = 0; k < inputCount; k++) {
-        if (verbose)
-          System.out.println (PROG + ": Reading file [" + (k+1) + "/" +
-            + inputCount + "], " + input[k]);
+        VERBOSE.info ("Reading file [" + (k+1) + "/" + inputCount + "], " + input[k]);
 
         // Loop over each variable
         // -----------------------
@@ -295,14 +300,12 @@ public final class cwimport {
           // ----------------------
           try {
             DataVariable var = reader.getVariable (i);
-            if (verbose)
-              System.out.println (PROG + ": Writing " + varName); 
+            VERBOSE.info ("Writing " + varName); 
             writer.addVariable (var);
             writer.flush(); 
           } // try
           catch (IOException e) { 
-            if (verbose) 
-              System.out.println (PROG + ": " + e.getMessage() +", skipping");
+            VERBOSE.info (e.getMessage() + ", skipping");
           } // catch
 
         } // for
@@ -310,6 +313,7 @@ public final class cwimport {
         // Close input
         // -----------
         reader.close();
+        reader = null;
 
         // Open new input file
         // -------------------
@@ -318,14 +322,14 @@ public final class cwimport {
           Date newDate = reader.getInfo().getDate();
           EarthTransform newTrans = reader.getInfo().getTransform();
           if (!date.equals (newDate)) {
-            System.err.println (PROG + ": Dates do not match for " +
-              input[k+1] + " and " + input[0]);
-            System.exit (2);
+            LOGGER.severe ("Dates do not match for " + input[k+1] + " and " + input[0]);
+            ToolServices.exitWithCode (2);
+            return;
           } // if
           if (!trans.equals (newTrans)) {
-            System.err.println (PROG + ": Earth transforms do not match for " +
-              input[k+1] + " and " + input[0]);
-            System.exit (2);
+            LOGGER.severe ("Earth transforms do not match for " + input[k+1] + " and " + input[0]);
+            ToolServices.exitWithCode (2);
+            return;
           } // if
         } // if
 
@@ -334,40 +338,55 @@ public final class cwimport {
       // Close output file
       // -----------------
       writer.close();
+      writer = null;
       CleanupHook.getInstance().cancelDelete (output);
     
     } // try
-    catch (Exception e) {
-      e.printStackTrace ();
-      System.exit (2);
+
+    catch (OutOfMemoryError | Exception e) {
+      ToolServices.warnOutOfMemory (e);
+      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
+      ToolServices.exitWithCode (2);
+      return;
     } // catch
+
+    finally {
+      try {
+        if (reader != null) reader.close();
+        if (writer != null) writer.close();
+      } // try
+      catch (Exception e) { LOGGER.log (Level.SEVERE, "Error closing resources", e); }
+    } // finally
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwimport [OPTIONS] input1 [input2 ...] output\n" +
-"Translates earth data into CoastWatch HDF format.\n" +
-"\n" +
-"Main parameters:\n" +
-"  input1 [input2 ...]        The input data file name(s).\n" +
-"  output                     The output data file name.\n" +
-"\n" +
-"Options:\n" +
-"  -c, --copy                 Copy data without overwriting output file.\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -m, --match=PATTERN        Import variables matching the pattern.\n" +
-"  -v, --verbose              Print verbose messages.\n" +
-"  --version                  Show version information.\n"
-    );
+  ////////////////////////////////////////////////////////////
 
-  } // usage
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwimport");
+
+    info.func ("Translates earth data into CoastWatch HDF format");
+
+    info.param ("input1 [input2 ...]", "Input data file(s)");
+    info.param ("output", "Output data file");
+
+    info.option ("-c, --copy", "Copy data without overwriting output file");
+    info.option ("-h, --help", "Show help message");
+    info.option ("-m, --match=PATTERN", "Import only variables matching regular expression");
+    info.option ("-v, --verbose", "Print verbose messages");
+    info.option ("--version", "Show version information");
+
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 

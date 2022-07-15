@@ -60,6 +60,9 @@ import noaa.coastwatch.util.VariableStatisticsGenerator;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.Datum;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * <p>The statistics utility calculates a number of statistics for each
  * variable in an earth data file.</p>
@@ -213,17 +216,16 @@ import noaa.coastwatch.util.trans.Datum;
  * @since 3.1.0
  */
  
-// TODO: LOGGING
-
 public final class cwstats {
+
+  private static final String PROG = cwstats.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
 
   // Constants
   // ---------
+
   /** Minimum required command line parameters. */
   private static final int NARGS = 1;
-
-  /** Name of program. */
-  private static final String PROG = "cwstats";
 
   ////////////////////////////////////////////////////////////
 
@@ -234,6 +236,7 @@ public final class cwstats {
    */
   public static void main (String argv[]) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -249,32 +252,35 @@ public final class cwstats {
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
-      System.exit (0);
+      usage();
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Get remaining arguments
     // -----------------------
     if (cmd.getRemainingArgs().length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
-      usage ();
-      System.exit (1);
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String input = cmd.getRemainingArgs()[0];
 
@@ -295,8 +301,9 @@ public final class cwstats {
     if (limit != null) {
       String[] limitArray = limit.split (ToolServices.SPLIT_REGEX);
       if (limitArray.length != 4) {
-        System.err.println (PROG + ": Invalid limit '" + limit + "'");
-        System.exit (2);
+        LOGGER.severe ("Invalid limit '" + limit + "'");
+        ToolServices.exitWithCode (2);
+        return;
       } // if
       start = new DataLocation (Double.parseDouble (limitArray[0]),
         Double.parseDouble (limitArray[1]));
@@ -304,87 +311,109 @@ public final class cwstats {
         Double.parseDouble (limitArray[3]));
     } // if
 
-    // Open file
-    // ---------
     EarthDataReader reader = null;
+
     try {
-      reader = EarthDataReaderFactory.create (input);
-    } // try
-    catch (Exception e) {
-      System.err.println (PROG + ": " + e.getMessage());      
-      System.exit (1);
-    } // catch
 
-    // Get region limits
-    // -----------------
-    if (region != null) {
-      String[] regionArray = region.split (ToolServices.SPLIT_REGEX);
-      if (regionArray.length != 3) {
-        System.err.println (PROG + ": Invalid region '" + region + "'");
-        System.exit (2);
-      } // if
-      EarthLocation centerLoc = new EarthLocation (
-        Double.parseDouble (regionArray[0]),
-        Double.parseDouble (regionArray[1])
-      );
-      double radius = Double.parseDouble (regionArray[2]);
-      Subregion subregion = new Subregion (centerLoc, radius);
-      start = new DataLocation (2);
-      end = new DataLocation (2);
-      boolean success = subregion.getLimits (reader.getInfo().getTransform(),
-        start, end);
-      if (!success) {
-        System.err.println (PROG + ": Error getting region limits");
-        System.exit (2);
-      } // if
-    } // if
-
-    // Get polygon point data
-    // ----------------------
-    Shape polygonShape = null;
-    if (polygon != null) {
-
-      // Read points
-      // -----------
-      List<EarthLocation> locations = new ArrayList<EarthLocation>();
-      EarthTransform trans = reader.getInfo().getTransform();
-      Datum datum = trans.getDatum();
+      // Open file
+      // ---------
       try {
-        SimpleParser parser = new SimpleParser (new BufferedReader (
-          new InputStreamReader (new FileInputStream (new File (polygon)))));
-        do {
-          double lat = parser.getNumber();
-          double lon = parser.getNumber();
-          locations.add (new EarthLocation (lat, lon, datum));
-        } while (!parser.eof());
+        reader = EarthDataReaderFactory.create (input);
       } // try
-      catch (IOException e) {
-        System.err.println (PROG + ": Error parsing polygon points file");
-        e.printStackTrace();
-        System.exit (2);
+      catch (Exception e) {
+        LOGGER.severe (e.getMessage());
+        ToolServices.exitWithCode (1);
+        return;
       } // catch
 
-      // Convert to data location path
-      // -----------------------------
-      Iterator<EarthLocation> iter = locations.iterator();
-      if (iter.hasNext()) {
-        DataLocation dataLoc = new DataLocation (2);
-        trans.transform (iter.next(), dataLoc);
-        Path2D path = new Path2D.Double();
-        path.moveTo (dataLoc.get (0), dataLoc.get (1));
-        iter.forEachRemaining (earthLoc -> {
-          trans.transform (earthLoc, dataLoc);
-          path.lineTo (dataLoc.get (0), dataLoc.get (1));
-        });
-        path.closePath();
-        polygonShape = path;
+      // Get region limits
+      // -----------------
+      if (region != null) {
+        String[] regionArray = region.split (ToolServices.SPLIT_REGEX);
+        if (regionArray.length != 3) {
+          LOGGER.severe ("Invalid region '" + region + "'");
+          ToolServices.exitWithCode (2);
+          return;
+        } // if
+        EarthLocation centerLoc = new EarthLocation (
+          Double.parseDouble (regionArray[0]),
+          Double.parseDouble (regionArray[1])
+        );
+        double radius = Double.parseDouble (regionArray[2]);
+        Subregion subregion = new Subregion (centerLoc, radius);
+        start = new DataLocation (2);
+        end = new DataLocation (2);
+        boolean success = subregion.getLimits (reader.getInfo().getTransform(),
+          start, end);
+        if (!success) {
+          LOGGER.severe ("Error getting region limits");
+          ToolServices.exitWithCode (2);
+          return;
+        } // if
       } // if
 
-    } // if
+      // Get polygon point data
+      // ----------------------
+      Shape polygonShape = null;
+      if (polygon != null) {
 
-    // Print stats
-    // -----------
-    printStats (reader, start, end, polygonShape, stride, sample, match);
+        // Read points
+        // -----------
+        List<EarthLocation> locations = new ArrayList<EarthLocation>();
+        EarthTransform trans = reader.getInfo().getTransform();
+        Datum datum = trans.getDatum();
+        try {
+          SimpleParser parser = new SimpleParser (new BufferedReader (
+            new InputStreamReader (new FileInputStream (new File (polygon)))));
+          do {
+            double lat = parser.getNumber();
+            double lon = parser.getNumber();
+            locations.add (new EarthLocation (lat, lon, datum));
+          } while (!parser.eof());
+        } // try
+        catch (IOException e) {
+          LOGGER.severe ("Error parsing polygon points file");
+          ToolServices.exitWithCode (2);
+          return;
+        } // catch
+
+        // Convert to data location path
+        // -----------------------------
+        Iterator<EarthLocation> iter = locations.iterator();
+        if (iter.hasNext()) {
+          DataLocation dataLoc = new DataLocation (2);
+          trans.transform (iter.next(), dataLoc);
+          Path2D path = new Path2D.Double();
+          path.moveTo (dataLoc.get (0), dataLoc.get (1));
+          iter.forEachRemaining (earthLoc -> {
+            trans.transform (earthLoc, dataLoc);
+            path.lineTo (dataLoc.get (0), dataLoc.get (1));
+          });
+          path.closePath();
+          polygonShape = path;
+        } // if
+
+      } // if
+
+      // Print stats
+      // -----------
+      printStats (reader, start, end, polygonShape, stride, sample, match);
+
+    } // try
+
+    catch (OutOfMemoryError | Exception e) {
+      ToolServices.warnOutOfMemory (e);
+      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
+      ToolServices.exitWithCode (2);
+      return;
+    } // catch
+
+    finally {
+      try { if (reader != null) reader.close(); }
+      catch (Exception e) { LOGGER.log (Level.SEVERE, "Error closing resources", e); }
+    } // finally
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
@@ -508,37 +537,31 @@ public final class cwstats {
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwstats [OPTIONS] input\n" +
-"Calculates a number of statistics for each variable in an earth data file.\n"+
-"\n" +
-"Main parameters:\n" +
-"  input                      The input data file name.\n" +
-"\n" +
-"Options:\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -i, --region=LAT/LON/RADIUS\n" +
-"                             Only compute statistics for data values\n" +
-"                              within so many kilometers of a location.\n" +
-"  -l, --limit=STARTROW/STARTCOL/ENDROW/ENDCOL\n" +
-"                             Only compute statistics for data values\n" +
-"                              between the limits.\n" +
-"  -m, --match=PATTERN        Only compute statistics for variables\n" +
-"                              matching the pattern.\n" +
-"  -p, --polygon=FILE         Only compute statistics inside the polygon\n" +
-"                               specified by the set of vertex points.\n" +
-"  -s, --stride=N             Sample every Nth value in each dimension.\n" +
-"  -S, --sample=FACTOR        Sample only a fraction of the data in each\n" +
-"                              variable.  FACTOR must be between 0 and 1.\n" +
-"  --version                  Show version information.\n"
-    );
+  ////////////////////////////////////////////////////////////
 
-  } // usage
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwstats");
+
+    info.func ("Calculates statistics for variables in an earth data file");
+
+    info.param ("input", "Input data file name");
+
+    info.option ("-h, --help", "Show help message");
+    info.option ("-i, --region=LAT/LON/RADIUS", "Set geographic location and radius");
+    info.option ("-l, --limit=STARTROW/STARTCOL/ENDROW/ENDCOL", "Set data coordinate bounds");
+    info.option ("-m, --match=PATTERN", "Set variable matching regular expression");
+    info.option ("-p, --polygon=FILE", "Set polygon vertex point file");
+    info.option ("-s, --stride=N", "Sample every Nth value in each dimension");
+    info.option ("-S, --sample=FACTOR", "Sample fraction of data, factor range [0..1]");
+    info.option ("--version", "Show version information");
+
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 

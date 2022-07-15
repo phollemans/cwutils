@@ -58,7 +58,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 /**
- * <p>The registration tool resamples gridded earth data to a master
+ * <p>The registration tool resamples gridded earth data to a master 
  * projection.</p>
  * <!-- START MAN PAGE -->
  *
@@ -88,7 +88,11 @@ import java.util.logging.Level;
  * </p>
  *
  * <h2>Description</h2>
- * <p> The register tool resamples gridded earth data to
+ * <p><b>THIS TOOL HAS BEEN DEPRECATED AND REPLACED WITH CWREGISTER2. IT ONLY
+ * EXISTS TO HELP WITH BACKWARDS COMPATIBILITY.  USERS SHOULD TRANSITION TO
+ * CWREGISTER2 FOR BETTER TIME PERFORMANCE AND ACCURACY.</b></p>
+ * 
+ * <p>The register tool resamples gridded earth data to
  * a master projection.  A master projection specifies the translation
  * between grid row and column coordinates and earth latitude and
  * longitude coordinates.  The master projection file is any valid
@@ -623,7 +627,7 @@ public final class cwregister {
 
     catch (OutOfMemoryError | Exception e) {
       ToolServices.warnOutOfMemory (e);
-      LOGGER.log (Level.SEVERE, "Aborting", e);
+      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
       ToolServices.exitWithCode (2);
       return;
     } // catch

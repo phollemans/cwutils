@@ -28,6 +28,7 @@ package noaa.coastwatch.tools;
 import jargs.gnu.CmdLineParser;
 import jargs.gnu.CmdLineParser.Option;
 import jargs.gnu.CmdLineParser.OptionException;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -43,6 +44,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.imageio.ImageIO;
+
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
 import noaa.coastwatch.render.ColorLookup;
@@ -56,6 +58,9 @@ import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
 import noaa.coastwatch.util.trans.SpheroidConstants;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * <p>The coverage tool creates an earth data coverage map.</p>
@@ -293,13 +298,15 @@ import noaa.coastwatch.util.trans.SpheroidConstants;
  * @author Peter Hollemans
  * @since 3.1.6
  */
- 
-// TODO: LOGGING
-
 public class cwcoverage {
+
+  private static final String PROG = cwcoverage.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
 
   // Constants
   // ---------
+
   /** Minimum required command line parameters. */
   private static final int NARGS = 1;
 
@@ -323,9 +330,6 @@ public class cwcoverage {
 
   /** The number of line segments to use for station circles. */
   private static final int STATION_SEGMENTS = 60;
-
-  /** Name of program. */
-  private static final String PROG = "cwcoverage";
 
   /////////////////////////////////////////////////////////////////////
 
@@ -404,6 +408,7 @@ public class cwcoverage {
    */
   public static void main (String argv[]) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -428,33 +433,36 @@ public class cwcoverage {
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
+      LOGGER.warning (e.getMessage());
       usage();
-      System.exit (1);
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
-      System.exit (0);
+      usage();
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
       usage();
-      System.exit (1);
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String output = remain[remain.length-1];
     String[] input = new String [remain.length-1];
@@ -463,6 +471,7 @@ public class cwcoverage {
     // Set defaults
     // ------------
     boolean verbose = (cmd.getOptionValue (verboseOpt) != null);
+    if (verbose) VERBOSE.setLevel (Level.INFO);
     Integer sizeObj = (Integer) cmd.getOptionValue (sizeOpt);
     int size = (sizeObj == null? SIZE : sizeObj.intValue());
     String box = (String) cmd.getOptionValue (boxOpt);
@@ -485,8 +494,7 @@ public class cwcoverage {
 
     // Create context map
     // ------------------
-    EarthContextElement element = new EarthContextElement (
-      new EarthLocation (0,0));
+    EarthContextElement element = new EarthContextElement (new EarthLocation (0,0));
     element.setGrid (true);
     element.setEdge (true);
     element.setPreferredSize (new Dimension (size, size));
@@ -495,8 +503,7 @@ public class cwcoverage {
 
     // Calculate satellite visibility angle
     // ------------------------------------
-    double visAngle = getVisibility (SpheroidConstants.STD_RADIUS, height, 
-      elevation); 
+    double visAngle = getVisibility (SpheroidConstants.STD_RADIUS, height, elevation); 
 
     // Create earth area for context map
     // ---------------------------------
@@ -508,12 +515,9 @@ public class cwcoverage {
       // -------------
       ColorLookup lookup = new ColorLookup();
       Color boxColor = (box == null ? BOX_COLOR : lookup.convert (box));
-      Color foregroundColor = (foreground == null ? FORE : 
-        lookup.convert (foreground));
-      Color backgroundColor = (background == null ? BACK : 
-        lookup.convert (background));
-      Color stationColor = (stationColorName == null ? boxColor : 
-        lookup.convert (stationColorName));
+      Color foregroundColor = (foreground == null ? FORE : lookup.convert (foreground));
+      Color backgroundColor = (background == null ? BACK : lookup.convert (background));
+      Color stationColor = (stationColorName == null ? boxColor : lookup.convert (stationColorName));
 
       // Get region labels
       // -----------------
@@ -521,9 +525,9 @@ public class cwcoverage {
       if (labels != null) {
         labelsArray = labels.split (ToolServices.SPLIT_REGEX);
         if (labelsArray.length != input.length) {
-          System.err.println (PROG + 
-            ": Number of labels does not match number of input files");
-          System.exit (2);
+          LOGGER.severe ("Number of labels does not match number of input files");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
       } // if
       
@@ -533,21 +537,23 @@ public class cwcoverage {
       if (stations != null) {
         String[] stationsArray = stations.split (ToolServices.SPLIT_REGEX);
         if (stationsArray.length % 2 != 0) {
-          System.err.println (PROG + 
-            ": Station location list length must be a multiple of 2");
-          System.exit (2);
+          LOGGER.severe ("Station location list length must be a multiple of 2");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         int locations = stationsArray.length/2;
         for (int i = 0; i < locations; i++) {
           double lat = Double.parseDouble (stationsArray[i*2]);
           if (lat < -90 || lat > 90) {
-            System.err.println (PROG + ": Invalid station latitude: " + lat);
-            System.exit (2);
+            LOGGER.severe ("Invalid station latitude: " + lat);
+            ToolServices.exitWithCode (2);
+            return;
           } // if
           double lon = Double.parseDouble (stationsArray[i*2+1]);
           if (lon < -180 || lon > 180) {
-            System.err.println (PROG + ": Invalid station longitude: " + lon);
-            System.exit (2);
+            LOGGER.severe ("Invalid station longitude: " + lon);
+            ToolServices.exitWithCode (2);
+            return;
           } // if
           stationList.add (new EarthLocation (lat, lon));
         } // for
@@ -559,9 +565,9 @@ public class cwcoverage {
       if (stationlabels != null) {
         stationLabelsArray = stationlabels.split (ToolServices.SPLIT_REGEX);
         if (stationLabelsArray.length != stationList.size()) {
-          System.err.println (PROG + 
-            ": Number of station labels does not match number of stations");
-          System.exit (2);
+          LOGGER.severe ("Number of station labels does not match number of stations");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
       } // if
 
@@ -578,20 +584,35 @@ public class cwcoverage {
       // -------------------------
       for (int i = 0; i < input.length; i++) {
 
-        // Open file
-        // ---------
+        // Open file and get the transform info to use for the bounding box
+        // and the earth area
         String file = input[i];
-        if (verbose) System.out.println (PROG + ": Reading input " + file);
-        EarthDataReader reader = EarthDataReaderFactory.create (file);
+        VERBOSE.info ("Reading input " + file);
+        EarthDataReader reader = null;
+        EarthDataInfo info;
+        EarthTransform trans;
+        try {
+          reader = EarthDataReaderFactory.create (file);
+          info = reader.getInfo();
+          trans = info.getTransform();
+          reader.close();
+          reader = null;
+        } // try
+        catch (Exception e) {
+          LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
+          ToolServices.exitWithCode (2);
+          return;
+        } // catch
+        finally {
+          try {
+            if (reader != null) reader.close();
+          } // try
+          catch (Exception e) { LOGGER.log (Level.SEVERE, "Error closing resources", e); }
+        } // finally
 
-        // Get transform info
-        // ------------------
-        EarthDataInfo info = reader.getInfo();
-        EarthTransform trans = info.getTransform();
         int[] dims = trans.getDimensions();
         int rows = dims[0];
         int cols = dims[1];
-        reader.close();
 
         // Determine this box color
         // ------------------------
@@ -613,11 +634,9 @@ public class cwcoverage {
         // -----------------
         if (center == null) {
           area.explore (trans, min, max, trans.transform (min));
-          area.explore (trans, min, max, trans.transform (
-            new DataLocation (0, cols-1)));
+          area.explore (trans, min, max, trans.transform (new DataLocation (0, cols-1)));
           area.explore (trans, min, max, trans.transform (max));
-          area.explore (trans, min, max, trans.transform (
-            new DataLocation (rows-1, 0)));
+          area.explore (trans, min, max, trans.transform (new DataLocation (rows-1, 0)));
         } // if
 
       } // for
@@ -627,19 +646,21 @@ public class cwcoverage {
       if (center != null) {
         String[] centerArray = center.split (ToolServices.SPLIT_REGEX);
         if (centerArray.length != 2) {
-          System.err.println (PROG + ": Invalid center parameters '" + 
-            center + "'");
-          System.exit (2);
+          LOGGER.severe ("Invalid center parameters '" + center + "'");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         double lat = Double.parseDouble (centerArray[0]);
         if (lat < -90 || lat > 90) {
-          System.err.println (PROG + ": Invalid center latitude: " + lat);
-          System.exit (2);
+          LOGGER.severe ("Invalid center latitude: " + lat);
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         double lon = Double.parseDouble (centerArray[1]);
         if (lon < -180 || lon > 180) {
-          System.err.println (PROG + ": Invalid center longitude: " + lon);
-          System.exit (2);
+          LOGGER.severe ("Invalid center longitude: " + lon);
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         element.setContextCenter (new EarthLocation (lat, lon));
       } // if
@@ -653,25 +674,22 @@ public class cwcoverage {
 
       // Create image
       // ------------
-      BufferedImage image = new BufferedImage (size, size,
-        BufferedImage.TYPE_INT_RGB);
+      BufferedImage image = new BufferedImage (size, size, BufferedImage.TYPE_INT_RGB);
       Graphics2D g = image.createGraphics();
 
       // Set antialiasing
       // ----------------
       if (noantialias) {
-        g.setRenderingHint (RenderingHints.KEY_ANTIALIASING, 
-          RenderingHints.VALUE_ANTIALIAS_OFF);
+        g.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
       } // if
       else {
-        g.setRenderingHint (RenderingHints.KEY_ANTIALIASING, 
-          RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
       } // else
 
       // Render map
       // ----------
       element.render (g, foregroundColor, backgroundColor);
-      if (verbose) System.out.println (PROG + ": Writing " + output);
+      VERBOSE.info ("Writing " + output);
       ImageIO.write (image, "png", new File (output));
 
       // Write image map file
@@ -680,7 +698,7 @@ public class cwcoverage {
 
         // Create map file
         // ---------------
-        if (verbose) System.out.println (PROG + ": Writing " + map);
+        VERBOSE.info ("Writing " + map);
         PrintStream mapOutput = new PrintStream (new FileOutputStream (map));
         mapOutput.println ("<map name=\"coverage_map\" id=\"coverage_map\">");
 
@@ -714,62 +732,60 @@ public class cwcoverage {
 
     } // try
     catch (Exception e) {
-      e.printStackTrace();
-      System.exit (2);
+      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
+      ToolServices.exitWithCode (2);
+      return;
     } // catch
+
+    ToolServices.finishExecution (PROG);
 
   } // main 
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwcoverage [OPTIONS] input1 [input2 ...] output\n" +
-"       cwcoverage [OPTIONS] output\n" +
-"Creates an earth data coverage map from earth data sets and ground\n" +
-"stations." +
-"\n" +
-"Main parameters:\n" +
-"  input1 [input2 ...]        The input data file name(s).\n" +
-"  output                     The output PNG file name.\n" +
-"\n" +
-"General options:\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -v, --verbose              Print verbose messages.\n" +
-"  --version                  Show version information.\n" +
-"\n" +
-"Output content and format options:\n" +
-"  -a, --noantialias          Do not smooth lines and fonts.\n" +
-"  -b, --background=COLOR     Set the map background color.\n" +
-"  -c, --center=LATITUDE/LONGITUDE\n" +
-"                             Center map on a location.\n" +
-"  -f, --foreground=COLOR     Set map foreground color.\n" +
-"  -s, --size=PIXELS          Set map height and width.\n" +
-"\n" +
-"Dataset boundary options:\n" +
-"  -H, --highlight=PATTERN    Highlight boundaries whose input file names\n" +
-"                              match the pattern.\n" +
-"  -l, --labels=LABEL1/LABEL2/...\n" +
-"                             Label boundaries with text.\n" +
-"  -m, --map=OUTPUT           Create an HTML image map file using the\n" +
-"                              boundary points.\n" +
-"  -x, --box=COLOR            Set boundary box outline and fill color.\n" +
-"\n" +
-"Ground station options:\n" +
-"  -C, --stationcolor=COLOR   Set ground station outline and fill color.\n" +
-"  -e, --elevation=DEGREES    Set minimum ground station antenna elevation.\n"+
-"  -E, --height=KILOMETERS    Set satellite orbital height.\n" +
-"  -L, --stationlabels=LABEL1/LABEL2/...\n" +
-"                             Label ground stations with text.\n" +
-"  -S, --stations=LAT1/LON1/LAT2/LON2/...\n" +
-"                             Draw ground station coverage circles.\n"
-    );
+  ////////////////////////////////////////////////////////////
 
-  } // usage
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwcoverage");
+
+    info.func ("Creates a geographic coverage map for earth data sets and ground stations");
+
+    info.param ("output", "Output PNG file name", 1);
+    info.param ("input1 [input2 ...]", "Input data file name(s)", 2);
+    info.param ("output", "", 2);
+
+    info.section ("General");
+    info.option ("-h, --help", "Show help message");
+    info.option ("-v, --verbose", "Print verbose messages");
+    info.option ("--version", "Show version information");
+
+    info.section ("Output content and format");
+    info.option ("-a, --noantialias", "Do not smooth lines and fonts");
+    info.option ("-b, --background=COLOR", "Set the map background color");
+    info.option ("-c, --center=LATITUDE/LONGITUDE", "Center map on a location");
+    info.option ("-f, --foreground=COLOR", "Set map foreground color");
+    info.option ("-s, --size=PIXELS", "Set map height and width");
+
+    info.section ("Dataset boundary");
+    info.option ("-H, --highlight=PATTERN", "Highlight boundaries with input file names matching pattern");
+    info.option ("-l, --labels=LABEL1/LABEL2/...", "Label boundaries with text");
+    info.option ("-m, --map=OUTPUT","Create HTML image map file");
+    info.option ("-x, --box=COLOR", "Set boundary box outline and fill color");
+ 
+    info.section ("Ground station");
+    info.option ("-C, --stationcolor=COLOR", "Set ground station outline and fill color");
+    info.option ("-e, --elevation=DEGREES", "Set minimum ground station antenna elevation");
+    info.option ("-E, --height=KILOMETERS", "Set satellite orbital height");
+    info.option ("-L, --stationlabels=LABEL1/LABEL2/...", "Label ground stations with text");
+    info.option ("-S, --stations=LAT1/LON1/LAT2/LON2/...", "Draw ground station coverage circles");
+
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 

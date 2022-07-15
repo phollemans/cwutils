@@ -37,6 +37,9 @@ import bsh.EvalError;
 
 import java.awt.Window;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * <p>The script tool runs a shell script written in BeanShell syntax.</p>
  *
@@ -223,19 +226,16 @@ import java.awt.Window;
  * @author Peter Hollemans
  * @since 3.4.1
  */
- 
-// TODO: LOGGING
+ public final class cwscript {
 
-public final class cwscript {
+  private static final String PROG = cwscript.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
 
   // Constants
   // ---------
 
   /** Minimum required command line parameters. */
   private static final int NARGS = 1;
-
-  /** Name of program. */
-  private static final String PROG = "cwscript";
 
   ////////////////////////////////////////////////////////////
 
@@ -246,6 +246,7 @@ public final class cwscript {
    */
   public static void main (String argv[]) throws EvalError, IOException {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -255,31 +256,35 @@ public final class cwscript {
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
       usage();
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if
 
     // Get remaining arguments
     // -----------------------
     if (cmd.getRemainingArgs().length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + " argument(s) required");
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
       usage();
-      System.exit (1);
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String input = cmd.getRemainingArgs()[0];
 
@@ -291,38 +296,42 @@ public final class cwscript {
     interpreter.set ("args", scriptArgs);
     try { interpreter.source (input); }
     catch (Exception e) {
-      System.err.println (PROG + ": " + e.getMessage());
+      LOGGER.warning (e.getMessage());
     } // catch
+
+    ToolServices.finishExecution (PROG);
 
     // Check if the script created any windows
     // ---------------------------------------
     Window[] windows = Window.getWindows();
     boolean hasWindows = (windows.length != 0);
 
-    if (!hasWindows) System.exit (0);
+    if (!hasWindows) ToolServices.exitWithCode (0);
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwscript input [ARGUMENTS]\n" +
-"Runs a shell script written in BeanShell.\n" +
-"\n" +
-"Main parameters:\n" +
-"  input                      The input shell script file.\n" +
-"\n" +
-"Options:\n" +
-"  -h, --help                 Show this help message.\n" +
-"  --version                  Show version information.\n"
-    );
-    
-  } // usage
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwscript");
+
+    info.func ("Runs a script written in BeanShell (beanshell.org)");
+
+    info.param ("input", "Input shell script file");
+    info.param ("[ARGUMENTS]", "Arguments passed to the shell script");
+
+    info.option ("-h, --help", "Show help message");
+    info.option ("--version", "Show version information");
+
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 

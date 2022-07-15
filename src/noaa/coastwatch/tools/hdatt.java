@@ -42,6 +42,9 @@ import noaa.coastwatch.io.HDFWriter;
 import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.MetadataServices;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * <p>The attribute tool reads and writes HDF file attributes.</p>
  *
@@ -56,17 +59,15 @@ import noaa.coastwatch.util.MetadataServices;
  *
  * <h2>Synopsis</h2>
  *
- * <p>
- * hdatt [OPTIONS] input<br>
- * hdatt {-n, --name=STRING} [OPTIONS] input<br>
- * hdatt {-n, --name=STRING} {-l, --value=STRING1[/STRING2/...]} [OPTIONS] input<br>
- * </p>
+ * <p>hdatt [OPTIONS] input</p>
  *
  * <h3>Options:</h3>
  *
  * <p>
  * -h, --help<br>
+ * -n, --name=STRING<br>
  * -t, --type=TYPE<br>
+ * -l, --value=STRING1[/STRING2/...]<br>
  * -V, --variable=STRING<br>
  * --version <br>
  * </p>
@@ -110,19 +111,7 @@ import noaa.coastwatch.util.MetadataServices;
  * <h3>Main parameters:</h3>
  *
  * <dl>
- *
- *   <dt> -n, --name=STRING </dt>
- *   <dd> The name of the attribute to read or write. </dd>
- *
- *   <dt> -l, --value=STRING1[/STRING2/...] </dt>
- *   <dd> The value(s) for the named attribute.  If specified, this
- *   places the tool into write mode, and <b>--name</b> must specify
- *   an attribute name.  If an attribute already exists, its value is
- *   overwritten with the new value.  If an attribute with the name
- *   does not exist, it is created and the new value assigned to it.
- *   By default if this option is not used, the tool is in read
- *   mode. </dd>
- *
+ * 
  *   <dt> input </dt>
  *   <dd> The input data file name. </dd>
  *
@@ -131,6 +120,9 @@ import noaa.coastwatch.util.MetadataServices;
  * <h3>Options:</h3>
  *
  * <dl>
+ *
+ *   <dt> -n, --name=STRING </dt>
+ *   <dd> The name of the attribute to read or write. </dd>
  *
  *   <dt> -t, --type=TYPE </dt>
  *   <dd> The attribute data type (write mode only).  The valid types and
@@ -174,6 +166,15 @@ import noaa.coastwatch.util.MetadataServices;
  *     </tr>
  *   </table></dd>
  *
+ *   <dt> -l, --value=STRING1[/STRING2/...] </dt>
+ *   <dd> The value(s) for the named attribute.  If specified, this
+ *   places the tool into write mode, and <b>--name</b> must specify
+ *   an attribute name.  If an attribute already exists, its value is
+ *   overwritten with the new value.  If an attribute with the name
+ *   does not exist, it is created and the new value assigned to it.
+ *   By default if this option is not used, the tool is in read
+ *   mode. </dd>
+ * 
  *   <dt> -V, --variable=STRING </dt>
  *   <dd> The variable to read or write the attribute data.  By
  *   default, the attribute is read from or written to the global
@@ -271,19 +272,16 @@ import noaa.coastwatch.util.MetadataServices;
  * @author Peter Hollemans
  * @since 3.2.0
  */
- 
-// TODO: LOGGING
+ public final class hdatt {
 
-public final class hdatt {
+  private static final String PROG = hdatt.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
 
   // Constants
   // ---------
 
   /** Minimum required command line parameters. */
   private static final int NARGS = 1;
-
-  /** Name of program. */
-  private static final String PROG = "hdatt";
 
   ////////////////////////////////////////////////////////////
 
@@ -292,8 +290,9 @@ public final class hdatt {
    *
    * @param argv the list of command line parameters.  
    */
-  public static void main (String argv[]) throws Exception {
+  public static void main (String argv[]) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -307,33 +306,36 @@ public final class hdatt {
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
+      LOGGER.warning (e.getMessage());
       usage();
-      System.exit (1);
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
       usage();
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
       usage();
-      System.exit (1);
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String input = remain[0];
 
@@ -348,154 +350,180 @@ public final class hdatt {
     // Check name/value
     // ----------------
     if (name == null && value != null) {
-      throw new IllegalArgumentException (
-        "Cannot specify attribute value or type without name");
+      LOGGER.severe ("Cannot specify attribute value or type without name");
+      ToolServices.exitWithCode (2);
+      return;
     } // if
 
-    // Open file
-    // ---------
-    int mode = (value == null ? HDFConstants.DFACC_READ : 
-      HDFConstants.DFACC_WRITE);
-    int sdid = HDFLib.getInstance().SDstart (input, mode);
+    int sdid = -1, sdsid = -1;
 
-    // Set target to variable
-    // ----------------------
-    int sdsid = -1, targetid;
-    if (variable != null) {
-      int index = HDFLib.getInstance().SDnametoindex (sdid, variable);
-      if (index < 0)
-        throw new IOException ("Cannot access variable '" + variable + "'");
-      sdsid = HDFLib.getInstance().SDselect (sdid, index);
-      if (sdsid < 0)
-        throw new IOException ("Cannot access variable at index " + index);
-      targetid = sdsid;
-    } // if    
+    try {
 
-    // Set target to global
-    // --------------------
-    else {
-      targetid = sdid;
-    } // else
+      // Open file
+      // ---------
+      int mode = (value == null ? HDFConstants.DFACC_READ : HDFConstants.DFACC_WRITE);
+      sdid = HDFLib.getInstance().SDstart (input, mode);
 
-    // Read attribute value
-    // --------------------
-    if (value == null) {
+      // Set target to variable
+      // ----------------------
+      int targetid;
+      if (variable != null) {
+        int index = HDFLib.getInstance().SDnametoindex (sdid, variable);
+        if (index < 0) {
+          LOGGER.severe ("Cannot access variable '" + variable + "'");
+          ToolServices.exitWithCode (2);
+          return;
+        } // if
+        sdsid = HDFLib.getInstance().SDselect (sdid, index);
+        if (sdsid < 0) {
+          LOGGER.severe ("Cannot access variable at index " + index);
+          ToolServices.exitWithCode (2);
+          return;
+        } // if
+        targetid = sdsid;
+      } // if    
 
-      // Print single value
-      // ------------------
-      if (name != null) {
-        Object attValue = HDFReader.getAttribute (targetid, name);
-        System.out.println (MetadataServices.toString (attValue));
-      } // if
-
-      // Print all values
-      // ----------------
+      // Set target to global
+      // --------------------
       else {
-        Map attMap = new LinkedHashMap();
-        HDFReader.getAttributes (targetid, attMap, (variable == null));
-        for (Iterator iter = attMap.entrySet().iterator(); iter.hasNext(); ) {
-          Map.Entry entry = (Map.Entry) iter.next();
-          System.out.print (entry.getKey() + " = ") ;
-          System.out.println (MetadataServices.toString (entry.getValue()));
-        } // for
+        targetid = sdid;
       } // else
 
-    } // if
+      // Read attribute value
+      // --------------------
+      if (value == null) {
 
-    // Write attribute value
-    // ---------------------
-    else {
+        // Print single value
+        // ------------------
+        if (name != null) {
+          Object attValue = HDFReader.getAttribute (targetid, name);
+          System.out.println (MetadataServices.toString (attValue));
+        } // if
 
-      // Write string
-      // ------------
-      if (type.equals ("string")) {
-        HDFWriter.setAttribute (targetid, name, value);
+        // Print all values
+        // ----------------
+        else {
+          Map attMap = new LinkedHashMap();
+          HDFReader.getAttributes (targetid, attMap, (variable == null));
+          for (Iterator iter = attMap.entrySet().iterator(); iter.hasNext(); ) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            System.out.print (entry.getKey() + " = ") ;
+            System.out.println (MetadataServices.toString (entry.getValue()));
+          } // for
+        } // else
+
       } // if
 
-      // Write numerical types
+      // Write attribute value
       // ---------------------
       else {
-        String[] valueArray = value.split (ToolServices.SPLIT_REGEX);
-        Class valuePrimitiveClass;
-        Class valueClass;
-        if (type.equals ("byte")) {
-          valuePrimitiveClass = Byte.TYPE;
-          valueClass = Byte.class;
+
+        // Write string
+        // ------------
+        if (type.equals ("string")) {
+          HDFWriter.setAttribute (targetid, name, value);
         } // if
-        else if (type.equals ("short")) {
-          valuePrimitiveClass = Short.TYPE;
-          valueClass = Short.class;
-        } // else if
-        else if (type.equals ("int")) {
-          valuePrimitiveClass = Integer.TYPE;
-          valueClass = Integer.class;
-        } // else if
-        else if (type.equals ("long")) {
-          valuePrimitiveClass = Long.TYPE;
-          valueClass = Long.class;
-        } // else if
-        else if (type.equals ("float")) {
-          valuePrimitiveClass = Float.TYPE;
-          valueClass = Float.class;
-        } // else if
-        else if (type.equals ("double")) {
-          valuePrimitiveClass = Double.TYPE;
-          valueClass = Double.class;
-        } // else if
+
+        // Write numerical types
+        // ---------------------
         else {
-          throw new IllegalArgumentException ("Unsupported type '" + type + 
-            "'");
+          String[] valueArray = value.split (ToolServices.SPLIT_REGEX);
+          Class valuePrimitiveClass;
+          Class valueClass;
+          if (type.equals ("byte")) {
+            valuePrimitiveClass = Byte.TYPE;
+            valueClass = Byte.class;
+          } // if
+          else if (type.equals ("short")) {
+            valuePrimitiveClass = Short.TYPE;
+            valueClass = Short.class;
+          } // else if
+          else if (type.equals ("int")) {
+            valuePrimitiveClass = Integer.TYPE;
+            valueClass = Integer.class;
+          } // else if
+          else if (type.equals ("long")) {
+            valuePrimitiveClass = Long.TYPE;
+            valueClass = Long.class;
+          } // else if
+          else if (type.equals ("float")) {
+            valuePrimitiveClass = Float.TYPE;
+            valueClass = Float.class;
+          } // else if
+          else if (type.equals ("double")) {
+            valuePrimitiveClass = Double.TYPE;
+            valueClass = Double.class;
+          } // else if
+          else {
+            LOGGER.severe ("Unsupported type '" + type + "'");
+            ToolServices.exitWithCode (2);
+            return;
+          } // else
+          Object valueObj = Array.newInstance (valuePrimitiveClass, valueArray.length);
+          Constructor cons = valueClass.getConstructor (new Class[] {String.class});
+          for (int i = 0; i < valueArray.length; i++) {
+            Object thisValue = cons.newInstance (new Object[] {valueArray[i]});
+            Array.set (valueObj, i, thisValue);
+          } // for
+          HDFWriter.setAttribute (targetid, name, valueObj);
         } // else
-        Object valueObj = Array.newInstance (valuePrimitiveClass, 
-          valueArray.length);
-        Constructor cons = valueClass.getConstructor (
-          new Class[] {String.class});
-        for (int i = 0; i < valueArray.length; i++) {
-          Object thisValue = cons.newInstance (new Object[] {valueArray[i]});
-          Array.set (valueObj, i, thisValue);
-        } // for
-        HDFWriter.setAttribute (targetid, name, valueObj);
+
       } // else
 
-    } // else
+      // Close file
+      // ----------
+      if (variable != null) {
+        HDFLib.getInstance().SDendaccess (sdsid);
+        sdsid = -1;
+      } // if
+      HDFLib.getInstance().SDend (sdid);
+      sdid = -1;
 
-    // Close file
-    // ----------
-    if (variable != null)
-      HDFLib.getInstance().SDendaccess (sdsid);
-    HDFLib.getInstance().SDend (sdid);
+    } // try
+
+    catch (Exception e) {
+      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
+      ToolServices.exitWithCode (2);
+      return;
+    } // catch
+
+    finally {
+      try {
+        if (sdsid != -1) HDFLib.getInstance().SDendaccess (sdsid);
+        if (sdid != -1) HDFLib.getInstance().SDend (sdid);
+      } // try
+      catch (Exception e) { LOGGER.log (Level.SEVERE, "Error closing resources", e); }
+    } // finally
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: hdatt [OPTIONS] input\n" +
-"       hdatt {-n, --name=STRING} [OPTIONS] input\n" +
-"       hdatt {-n, --name=STRING} {-l, --value=STRING1[/STRING2/...]}\n" +
-"         [OPTIONS] input\n" +
-"Reads or writes HDF file attributes.\n" +
-"\n" +
-"Main parameters:\n" +
-"  -l, --value=STRING         Set value to write to attribute.\n" +
-"  -n, --name=STRING          Set name of attribute to read or write.\n" +
-"  input                      The input data file name.\n" +
-"\n" +
-"Options:\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -t, --type=TYPE            Set attribute value type for writing.  TYPE\n" +
-"                              may be 'string', 'byte', 'short', 'int',\n" +
-"                              'long', 'float', or 'double'.\n" +
-"  -V, --variable=STRING      Set variable to which attribute belongs.\n" +
-"  --version                  Show version information.\n"
-    );
+  ////////////////////////////////////////////////////////////
 
-  } // usage
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("hdatt");
+
+    info.func ("Reads or writes HDF file attributes");
+
+    info.param ("input", "Input data file name");
+
+    info.option ("-h, --help", "Show help message");
+    info.option ("-n, --name=STRING", "Name of attribute to read or write");
+    info.option ("-t, --type=TYPE", "Set attribute value type for writing");
+    info.option ("-l, --value=STRING1[/STRING2/...]", "Value of attribute to write");
+    info.option ("-V, --variable=STRING", "Set variable to which attribute belongs");
+    info.option ("--version", "Show version information");
+
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 

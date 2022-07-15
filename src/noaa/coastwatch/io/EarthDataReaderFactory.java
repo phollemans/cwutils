@@ -37,7 +37,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+
 import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.tools.ToolServices;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * The earth data reader factory class creates an appropriate
@@ -78,6 +83,9 @@ import noaa.coastwatch.io.EarthDataReader;
  */
 public class EarthDataReaderFactory {
 
+  private static final Logger LOGGER = Logger.getLogger (EarthDataReaderFactory.class.getName());
+  private static final Logger VERBOSE = Logger.getLogger (EarthDataReaderFactory.class.getName() + ".verbose");
+
   // Constants
   // ---------
 
@@ -87,12 +95,12 @@ public class EarthDataReaderFactory {
   // Variables
   // ---------
 
-  /** The verbose flag, true to print all error messages. */
-  private static boolean verbose;
-
   /** The list of available reader classes as strings. */
-  private static List readerList;
+  private static List<String> readerList;
   
+  /** The default log level for the verbose logger. */
+  private static Level defaultLevel;
+
   ////////////////////////////////////////////////////////////
 
   /** Sets up the initial set of readers. */
@@ -100,7 +108,7 @@ public class EarthDataReaderFactory {
 
     // Create reader list
     // ------------------
-    readerList = new ArrayList();
+    readerList = new ArrayList<>();
     String thisPackage = EarthDataReaderFactory.class.getPackage().getName();
 
     // Add HDF variants
@@ -129,8 +137,7 @@ public class EarthDataReaderFactory {
 
     // Add extension readers
     // ---------------------
-    InputStream stream = ClassLoader.getSystemResourceAsStream (
-      READER_PROPERTIES);
+    InputStream stream = ClassLoader.getSystemResourceAsStream (READER_PROPERTIES);
     if (stream != null) {
       Properties props = new Properties();
       try { 
@@ -138,10 +145,10 @@ public class EarthDataReaderFactory {
         for (Iterator iter = props.keySet().iterator(); iter.hasNext();)
           readerList.add ((String) iter.next());
       } // try
-      catch (IOException e) { }
+      catch (IOException e) { LOGGER.log (Level.WARNING, "Error loading reader extension properties", e); }
       finally { 
         try { stream.close(); }
-        catch (IOException e) { }
+        catch (IOException e) { LOGGER.log (Level.WARNING, "Error closing reader extension properties", e); }
       } // finally
     } // if
 
@@ -178,7 +185,12 @@ public class EarthDataReaderFactory {
    *
    * @param flag the verbose flag.
    */
-  public static void setVerbose (boolean flag) { verbose = flag; }
+  public static void setVerbose (boolean flag) { 
+
+    if (defaultLevel == null) defaultLevel = VERBOSE.getLevel();
+    VERBOSE.setLevel (flag ? Level.INFO : defaultLevel);
+
+  } // setVerbose
 
   ////////////////////////////////////////////////////////////
 
@@ -217,12 +229,12 @@ public class EarthDataReaderFactory {
     Class[] types = new Class[] {String.class};
     Object[] args = new Object[] {file};
     EarthDataReader reader = null;
-    for (Iterator iter = readerList.iterator(); iter.hasNext(); ) {
+    for (var readerName : readerList) {
 
       // Try to create a new reader object from the file name
       // ----------------------------------------------------
       try {
-        Class readerClass = Class.forName ((String) iter.next());
+        Class readerClass = Class.forName (readerName);
         Constructor constructor = readerClass.getConstructor (types);
         reader = (EarthDataReader) constructor.newInstance (args);
       } // try
@@ -240,14 +252,14 @@ public class EarthDataReaderFactory {
 
         // Otherwise show a stack trace
         // ----------------------------
-        if (verbose) cause.printStackTrace();
+        VERBOSE.log (Level.INFO, "Error creating object " + readerName, ToolServices.shortTrace (cause, readerName));
 
       } // catch
 
       // Handle some other error
       // -----------------------
       catch (Exception otherException) {
-        if (verbose) otherException.printStackTrace();
+        VERBOSE.log (Level.INFO, "Error creating object " + readerName, ToolServices.shortTrace (otherException, readerName));
       } // catch
 
       // Check if we've found the right reader
@@ -259,8 +271,7 @@ public class EarthDataReaderFactory {
     // Give up and throw an error 
     // --------------------------
     if (reader == null) 
-      throw new UnsupportedEncodingException (
-        "Unable to recognize file format for " + file);      
+      throw new UnsupportedEncodingException ("Unable to recognize file format for " + file);      
 
     return (reader);
 

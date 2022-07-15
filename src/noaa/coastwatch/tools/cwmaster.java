@@ -51,6 +51,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -105,6 +106,9 @@ import noaa.coastwatch.util.SatelliteDataInfo;
 import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.util.trans.MapProjectionFactory;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * <p>The master utility creates map projection master datasets.</p>
  *
@@ -120,8 +124,7 @@ import noaa.coastwatch.util.trans.MapProjectionFactory;
  * <h2>Synopsis</h2>
  *
  * <p>
- *   cwmaster [OPTIONS] input <br>
- *   cwmaster [OPTIONS]
+ *   cwmaster [OPTIONS] [input]
  * </p>
  *
  * <h3>Options:</h3>
@@ -150,7 +153,7 @@ import noaa.coastwatch.util.trans.MapProjectionFactory;
  * <dl>
  *
  *   <dt>input</dt>
- *   <dd>The input data file name.  If specified, the data file is
+ *   <dd>The optional input data file name.  If specified, the data file is
  *   opened and used as the initial map projection master.</dd>
  *
  * </dl>
@@ -178,9 +181,9 @@ import noaa.coastwatch.util.trans.MapProjectionFactory;
  *
  * <h2>Examples</h2>
  * <p> The following shows the use of cwmaster to load master
- * parameters from a CoastWatch IMGMAP file:</p>
+ * parameters from a CoastWatch HDF file:</p>
  * <pre>
- *   phollema$ cwmaster 2002_319_2144_n16_wl_c2.cwf
+ *   phollema$ cwmaster 2021_232_1630_l20_gr.hdf
  * </pre>
  *
  * <!-- END MAN PAGE -->
@@ -188,23 +191,19 @@ import noaa.coastwatch.util.trans.MapProjectionFactory;
  * @author Peter Hollemans
  * @since 3.1.2
  */
- 
-// TODO: LOGGING
-
-public final class cwmaster
+ public final class cwmaster
   extends JFrame {
+
+  private static final String PROG = cwmaster.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
 
   // Constants
   // ---------
   /** Minimum required command line parameters. */
   private static final int NARGS = 0;
 
-  /** Name of program. */
-  private static final String PROG = "cwmaster";
-
   /** The long program name. */
-  private static final String LONG_NAME = 
-    "CoastWatch Master Tool";
+  private static final String LONG_NAME = "CoastWatch Master Tool";
 
   /** The file commands. */
   private static final String OPEN_COMMAND = "Open";
@@ -423,7 +422,11 @@ public final class cwmaster
     // Create menu bar
     // ---------------
     JMenuBar menuBar = new JMenuBar();
-    menuBar.setBorder (new BevelBorder (BevelBorder.RAISED));
+
+// For now, we remove the raised border for menus, so that look and feels
+// operate correctly, some of which may not used a raised border.
+//    menuBar.setBorder (new BevelBorder (BevelBorder.RAISED));
+
     this.setJMenuBar (menuBar);
 
     // Create file menu
@@ -435,15 +438,15 @@ public final class cwmaster
     AbstractAction fileAction = new FileAction();
     JMenuItem menuItem;
     int keymask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-    menuItem = new JMenuItem (OPEN_COMMAND, 
-      GUIServices.getIcon ("menu.open"));
+//    menuItem = new JMenuItem (OPEN_COMMAND, GUIServices.getIcon ("menu.open"));
+    menuItem = new JMenuItem (OPEN_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_O);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_O, keymask));
     menuItem.addActionListener (fileAction); 
     fileMenu.add (menuItem);
 
-    menuItem = new JMenuItem (SAVE_COMMAND, 
-      GUIServices.getIcon ("menu.save"));
+//    menuItem = new JMenuItem (SAVE_COMMAND, GUIServices.getIcon ("menu.save"));
+    menuItem = new JMenuItem (SAVE_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_S);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_S, keymask));
     menuItem.addActionListener (fileAction); 
@@ -498,8 +501,8 @@ public final class cwmaster
     menuBar.add (helpMenu);
 
     AbstractAction helpAction = new HelpAction();
-    menuItem = new JMenuItem (HELP_COMMAND,
-      GUIServices.getIcon ("menu.support"));
+//    menuItem = new JMenuItem (HELP_COMMAND, GUIServices.getIcon ("menu.support"));
+    menuItem = new JMenuItem (HELP_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_H);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (
       KeyEvent.VK_F1, 0));
@@ -507,8 +510,8 @@ public final class cwmaster
     helpMenu.add (menuItem);
     helpMenu.addSeparator();
 
-    menuItem = new JMenuItem (ABOUT_COMMAND, 
-      GUIServices.getIcon ("menu.about"));
+//    menuItem = new JMenuItem (ABOUT_COMMAND, GUIServices.getIcon ("menu.about"));
+    menuItem = new JMenuItem (ABOUT_COMMAND);
     menuItem.setMnemonic (KeyEvent.VK_A);
     menuItem.addActionListener (helpAction); 
     helpMenu.add (menuItem);
@@ -615,16 +618,14 @@ public final class cwmaster
     toolBar.add (button);
 
     ViewAction viewAction = new ViewAction();
-    button = new JButton (ZOOMIN_COMMAND, 
-      GUIServices.getIcon ("view.magnify"));
+    button = new JButton (ZOOMIN_COMMAND, GUIServices.getIcon ("view.magnify"));
     button.setHorizontalTextPosition (SwingConstants.CENTER);
     button.setVerticalTextPosition (SwingConstants.BOTTOM);
     button.setIconTextGap (0);
     button.addActionListener (viewAction);
     toolBar.add (button);
 
-    button = new JButton (ZOOMOUT_COMMAND, 
-      GUIServices.getIcon ("view.shrink"));
+    button = new JButton (ZOOMOUT_COMMAND, GUIServices.getIcon ("view.shrink"));
     button.setHorizontalTextPosition (SwingConstants.CENTER);
     button.setVerticalTextPosition (SwingConstants.BOTTOM);
     button.setIconTextGap (0);
@@ -633,8 +634,7 @@ public final class cwmaster
 
     toolButtonGroup = new ButtonGroup ();
     JToggleButton toggleButton;
-    toggleButton = new JToggleButton (ZOOM_COMMAND, 
-      GUIServices.getIcon ("view.zoom"));
+    toggleButton = new JToggleButton (ZOOM_COMMAND, GUIServices.getIcon ("view.zoom"));
     toggleButton.setHorizontalTextPosition (SwingConstants.CENTER);
     toggleButton.setVerticalTextPosition (SwingConstants.BOTTOM);
     toggleButton.setIconTextGap (0);
@@ -643,8 +643,7 @@ public final class cwmaster
     toolButtonGroup.add (toggleButton);
     toolBar.add (toggleButton);
 
-    toggleButton = new JToggleButton (PAN_COMMAND, 
-      GUIServices.getIcon ("view.pan"));
+    toggleButton = new JToggleButton (PAN_COMMAND, GUIServices.getIcon ("view.pan"));
     toggleButton.setHorizontalTextPosition (SwingConstants.CENTER);
     toggleButton.setVerticalTextPosition (SwingConstants.BOTTOM);
     toggleButton.setIconTextGap (0);
@@ -653,8 +652,7 @@ public final class cwmaster
     toolButtonGroup.add (toggleButton);
     toolBar.add (toggleButton);
 
-    toggleButton = new JToggleButton (RECENTER_COMMAND, 
-      GUIServices.getIcon ("view.recenter"));
+    toggleButton = new JToggleButton (RECENTER_COMMAND, GUIServices.getIcon ("view.recenter"));
     toggleButton.setHorizontalTextPosition (SwingConstants.CENTER);
     toggleButton.setVerticalTextPosition (SwingConstants.BOTTOM);
     toggleButton.setIconTextGap (0);
@@ -663,8 +661,7 @@ public final class cwmaster
     toolButtonGroup.add (toggleButton);
     toolBar.add (toggleButton);
 
-    button = new JButton (RESET_COMMAND, 
-      GUIServices.getIcon ("view.reset"));
+    button = new JButton (RESET_COMMAND, GUIServices.getIcon ("view.reset"));
     button.setHorizontalTextPosition (SwingConstants.CENTER);
     button.setVerticalTextPosition (SwingConstants.BOTTOM);
     button.setIconTextGap (0);
@@ -679,7 +676,10 @@ public final class cwmaster
 
     // Set minimized window icon
     // -------------------------
-    setIconImage (GUIServices.getIcon ("tools.cwmaster").getImage());
+    setIconImages (List.of (
+      GUIServices.getIcon ("tools.cwmaster").getImage(),
+      GUIServices.getIcon ("tools.cwmaster.taskbar").getImage()
+    ));
 
   } // cwmaster constructor
 
@@ -1082,7 +1082,10 @@ public final class cwmaster
 
     EarthDataReader reader = EarthDataReaderFactory.create (file);
     EarthDataInfo info = reader.getInfo();
-    proj[0] = (MapProjection) info.getTransform();
+    var trans = info.getTransform();
+    if (!(trans instanceof MapProjection)) 
+      throw new IOException ("File does not contain a usable map projection");
+    proj[0] = (MapProjection) trans;
     System.arraycopy (proj[0].getDimensions(), 0, dims, 0, 2);
     reader.close();
 
@@ -1107,33 +1110,36 @@ public final class cwmaster
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
       usage ();
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
-      usage ();
-      System.exit (1);
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String input = (remain.length == 0 ? null : remain[0]);
 
@@ -1146,8 +1152,9 @@ public final class cwmaster
         readMaster (input, projArray, dims);
       } // try
       catch (Exception e) {
-        e.printStackTrace();
-        System.exit (2);
+      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
+        ToolServices.exitWithCode (2);
+        return;
       } // catch
     } // if
 
@@ -1155,12 +1162,12 @@ public final class cwmaster
     // ---------------------
     SwingUtilities.invokeLater (new Runnable() {
       public void run() { 
+        GUIServices.initializeLaf();        
         JFrame frame = new cwmaster (projArray[0], dims);
         frame.addWindowListener (new WindowMonitor());
         frame.addWindowListener (new UpdateAgent (PROG));
         frame.pack();
-        GUIServices.createErrorDialog (frame, "Error", 
-          ToolServices.ERROR_INSTRUCTIONS);
+        GUIServices.createErrorDialog (frame, "Error", ToolServices.ERROR_INSTRUCTIONS);
         frame.setVisible (true);
       } // run
     });
@@ -1169,24 +1176,29 @@ public final class cwmaster
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwmaster [OPTIONS] input\n" +
-"       cwmaster [OPTIONS]\n" +
-"Creates map projection master data sets using a graphical user interface.\n" +
-"\n" +
-"Main parameters:\n" +
-"  input                      The initial input data file to open.\n" +
-"\n" +
-"Options:\n" +
-"  -h, --help                 Show this help message.\n" +
-"  --version                  Show version information.\n"
-    );
-  } // usage
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the usage info for this tool. */
+  private static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwmaster");
+
+    info.func ("Creates map projection master datasets interactively");
+
+    info.param ("[input]", "The optional initial input data file to open");
+
+    info.option ("-h, --help", "Show help message");
+    info.option ("--version", "Show version information");
+
+    return (info);
+
+  } // getUsage
+
+  ////////////////////////////////////////////////////////////
+
+  private cwmaster () { }
 
   ////////////////////////////////////////////////////////////
 
