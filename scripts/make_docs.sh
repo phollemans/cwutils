@@ -66,7 +66,7 @@ done
 # ---------------------------
 if [ -z `which java` ] ; then
   echo "No Java runtime detected, stopping"
-  exit
+  exit 2
 fi
 
 # Create manual pages section in Latex
@@ -184,10 +184,12 @@ guide_name_with_verson="cwutils_ug_${guide_version}"
 $pdflatex --interaction batchmode ${guide_name}.tex > /dev/null 2>&1
 if [ $? -ne 0 ] ; then
   echo "Error running pdflatex"
+  exit 2
 else
   $bibtex $guide_name > /dev/null 2>&1
   if [ $? -ne 0 ] ; then
     echo "Error running bibtex"
+    exit 2
   else
     $pdflatex --interaction batchmode ${guide_name}.tex > /dev/null 2>&1
     $pdflatex --interaction batchmode ${guide_name}.tex > /dev/null 2>&1
