@@ -141,12 +141,18 @@ or under BASH in the {\tt \~{ }/.bashrc} file:
   {\tt export PATH=\$\{PATH\}:\$HOME/cwutils/bin} \\
   {\tt export MANPATH=\$\{MANPATH\}:\$HOME/cwutils/doc/man}
 \end{quote}
-Note that some Linux users with high resolution screens have reported issues with 
-running CDAT and the CoastWatch Master Tool -- the application windows 
-and text appear smaller than expected.  If this happens, try adding this option
-when running CDAT:
+Note that some Linux users with display scaling 
+turned on in the Linux display settings have reported issues with 
+running CDAT and the CoastWatch Master Tool -- the application windows, icons,
+and some fonts appear small and unreadable.  If this happens, try adding this 
+option when running CDAT:
 \begin{quote}
   -J-Dsun.java2d.uiScale=2.0
+\end{quote}
+To use this option every time you run CDAT without having to explicitly add 
+it to the command line, add this line to your startup resources:
+\begin{quote}
+  {\tt export INSTALL4J\_ADD\_VM\_PARAMS=-Dsun.java2d.uiScale=2.0}
 \end{quote}
 
 \section{Using the Software}
