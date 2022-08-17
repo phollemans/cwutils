@@ -65,6 +65,7 @@ import noaa.coastwatch.render.CoastOverlay;
 import noaa.coastwatch.render.DataReferenceOverlay;
 import noaa.coastwatch.render.feature.ESRIShapefileReader;
 import noaa.coastwatch.render.feature.IQuamNCReader;
+import noaa.coastwatch.render.feature.LatLonLineReader;
 import noaa.coastwatch.render.EarthDataOverlay;
 import noaa.coastwatch.render.ExpressionMaskOverlay;
 import noaa.coastwatch.render.GridContainerOverlay;
@@ -523,12 +524,19 @@ public class OverlayListChooser
       // Show file chooser
       // -----------------
       JFileChooser fileChooser = GUIServices.getFileChooser();
+
       SimpleFileFilter shapefileFilter = new SimpleFileFilter (
         new String[] {"shp"}, "ESRI shapefile data");
       fileChooser.addChoosableFileFilter (shapefileFilter);
+
       SimpleFileFilter iquamFilter = new SimpleFileFilter (
         new String[] {"nc"}, "iQuam in-situ point data");
       fileChooser.addChoosableFileFilter (iquamFilter);
+
+      SimpleFileFilter textFilter = new SimpleFileFilter (
+        new String[] {"txt"}, "Lat/lon line data");
+      fileChooser.addChoosableFileFilter (textFilter);
+
       fileChooser.setDialogType (JFileChooser.OPEN_DIALOG);
       final Frame frame = 
         JOptionPane.getFrameForComponent (OverlayListChooser.this);
@@ -564,6 +572,19 @@ public class OverlayListChooser
             for (Object name : variableList)
               gridList.add ((Grid) reader.getVariable ((String) name));
             overlayList.addAll (iquamReader.getStandardOverlays (date, trans, gridList));
+          } // try
+          catch (IOException e) { }
+        } // if
+
+        // Try reading as a lat/lon line file
+        // ----------------------------------
+        if (overlayList.size() == 0) {
+          try {
+            var latLonReader = new LatLonLineReader (file.getAbsolutePath());
+            EarthDataOverlay overlay = latLonReader.getOverlay();
+            overlay.setColor (Color.WHITE);
+            overlay.setName ("Lat/lon data");
+            overlayList.add (overlay);
           } // try
           catch (IOException e) { }
         } // if

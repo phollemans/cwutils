@@ -85,6 +85,7 @@ import noaa.coastwatch.render.Palette;
 import noaa.coastwatch.render.PaletteFactory;
 import noaa.coastwatch.render.PointFeatureOverlay;
 import noaa.coastwatch.render.feature.PointFeatureSource;
+import noaa.coastwatch.render.feature.ShapeOverlayFactory;
 import noaa.coastwatch.render.PoliticalOverlay;
 import noaa.coastwatch.render.PolygonOverlay;
 import noaa.coastwatch.render.Renderable;
@@ -649,13 +650,14 @@ import ucar.units.Unit;
  *
  *   <dd>The name and drawing/fill colors for a user-supplied
  *   shape file.  The colors are specified by name or hexadecimal
- *   value (see above).  The only file format currently supported
- *   is ESRI shapefile format, and only line and polygon data (no
- *   point data).  The fill color is optional and is used to fill
- *   polygons if any are found in the file.  Multiple values of
- *   the <b>--shape</b> option may be given, in which case the
- *   shape overlays are rendered in the order that they are
- *   specified.</dd>
+ *   value (see above).  The file formats currently supported
+ *   are ESRI shapefile format (line and polygon data, no
+ *   point data), and simple text files with lists of lat/lon values (the same format as described
+ *   for the <b>--polygon</b> option in the <b>cwstats</b> tool).  
+ *   The fill color is optional and is used to fill polygons if any are 
+ *   found in the file.  Multiple values of the <b>--shape</b> option may 
+ *   be given, in which case the shape overlays are rendered in the order 
+ *   that they are specified.</dd>
  * 
  *   <dt>-L, --land=COLOR</dt> 
  *
@@ -1933,15 +1935,14 @@ public class cwrender {
             ToolServices.exitWithCode (2);
             return;
           } // if
-          URL url = new File (shapeArray[0]).toURI().toURL();
+          String shapeFilename = shapeArray[0];
           Color lineColor = lookup.convert (shapeArray[1]);
           Color fillColor = (shapeArray.length == 2 ? null : 
             lookup.convert (shapeArray[2]));
 
           // Add shape overlay to view
           // -------------------------
-          ESRIShapefileReader shapeReader = new ESRIShapefileReader (url);
-          EarthDataOverlay shapeOverlay = shapeReader.getOverlay();
+          var shapeOverlay = ShapeOverlayFactory.getInstance().create (shapeFilename);
           if (shapeOverlay instanceof PolygonOverlay)
             ((PolygonOverlay) shapeOverlay).setFillColor (fillColor);
           shapeOverlay.setColor (lineColor);
