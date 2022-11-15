@@ -86,6 +86,10 @@ import noaa.coastwatch.render.PaletteFactory;
 import noaa.coastwatch.render.PointFeatureOverlay;
 import noaa.coastwatch.render.feature.PointFeatureSource;
 import noaa.coastwatch.render.feature.ShapeOverlayFactory;
+import noaa.coastwatch.render.feature.PointFeature;
+import noaa.coastwatch.render.SimpleSymbol;
+import noaa.coastwatch.render.PlotSymbolFactory;
+import noaa.coastwatch.render.PointFeatureOverlay;
 import noaa.coastwatch.render.PoliticalOverlay;
 import noaa.coastwatch.render.PolygonOverlay;
 import noaa.coastwatch.render.Renderable;
@@ -95,6 +99,7 @@ import noaa.coastwatch.render.TopographyOverlay;
 import noaa.coastwatch.render.WindBarbSymbol;
 import noaa.coastwatch.tools.ResourceManager;
 import noaa.coastwatch.tools.ToolServices;
+
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.DateFormatter;
 import noaa.coastwatch.util.EarthDataInfo;
@@ -314,6 +319,7 @@ import ucar.units.Unit;
  *     <li>Shape files (<b>--shape</b>), possibly more than one</li>
  *     <li>Latitude/longitude grid lines (<b>--grid</b>)</li>
  *     <li>Overlay groups (<b>--group</b>)</li>
+ *     <li>Markers (<b>--marker</b>)</li>
  *   </ul></li>
  *
  * </ol>
@@ -555,7 +561,7 @@ import ucar.units.Unit;
  *
  *   <dd>Lists the logo names available on the system.</dd>
  * 
- *   <dt>-s, --size=PIXELS | full</dt>
+ *   <dt>-s, --size=PIXELS | full | WIDTH/HEIGHT</dt>
  *
  *   <dd>The Earth data view size in pixels.  The data view is
  *   normally accompanied by a set of legends unless the
@@ -563,7 +569,9 @@ import ucar.units.Unit;
  *   size is 512 pixels, plus the size of any legends.  If 'full'
  *   is specified rather than a size in pixels, the view size is
  *   set to match the actual full extent of the data, ie: full
- *   resolution.</dd>
+ *   resolution. If the <b>--magnify</b> option is used, the
+ *   size of the magnified region may optionally be specified by width and
+ *   height, otherwise the region is a square.</dd>
  *
  *   <dt>-T, --tiffcomp=TYPE</dt>
  *
@@ -658,7 +666,7 @@ import ucar.units.Unit;
  *   found in the file.  Multiple values of the <b>--shape</b> option may 
  *   be given, in which case the shape overlays are rendered in the order 
  *   that they are specified.</dd>
- * 
+ *
  *   <dt>-L, --land=COLOR</dt> 
  *
  *   <dd>The land mask color.  The color is specified by name or
@@ -669,6 +677,17 @@ import ucar.units.Unit;
  *   alternative to the <b>--land</b> option, try using the
  *   <b>--coast</b> option with a fill color.</dd>
  *
+ *   <dt>--marker=LAT/LON/COLOR[/FILL[/SYMBOL[/TEXT]]]</dt>
+ * 
+ *   <dd>The specifications for a symbol used to mark a location.
+ *   The marker position is specified in terms of earth location latitude
+ *   and longitude in the range [-90..90] and [-180..180].  The color is 
+ *   specified by name or hexadecimal value (see above).
+ *   Optional parameters may be specified by appending the fill color (default
+ *   is no fill), symbol (default is a circle), and text label (default is no
+ *   label).  The symbol may be one of 'cross', 'x', 'square', 'circle', 
+ *   'triup', 'tridown', or 'diamond'.</dd>
+ * 
  *   <dt>-p --political=COLOR</dt>
  *
  *   <dd>The political boundaries color.  The color is specified by
@@ -1193,7 +1212,8 @@ public class cwrender {
     Option compositehintOpt = cmd.addStringOption ("compositehint");
     Option hybridmaskOpt = cmd.addStringOption ('Y', "hybridmask");
     Option logolistOpt = cmd.addBooleanOption ("logolist");
-    
+    Option markerOpt = cmd.addStringOption ("marker");
+
     try { cmd.parse (argv); }
     catch (OptionException e) {
       LOGGER.warning (e.getMessage());
@@ -1335,6 +1355,7 @@ public class cwrender {
     String coast = (String) cmd.getOptionValue (coastOpt);
     String grid = (String) cmd.getOptionValue (gridOpt);
     List shapeList = cmd.getOptionValues (shapeOpt);
+    List markerList = cmd.getOptionValues (markerOpt);
     String political = (String) cmd.getOptionValue (politicalOpt);
     boolean nostates = (cmd.getOptionValue (nostatesOpt) != null);
     String topo = (String) cmd.getOptionValue (topoOpt);
@@ -1400,12 +1421,13 @@ public class cwrender {
     String compositehint = (String) cmd.getOptionValue (compositehintOpt);
     String hybridmask = (String) cmd.getOptionValue (hybridmaskOpt);
 
+    EarthDataReader reader = null;
     try {
 
       // Open input file
       // ---------------
       VERBOSE.info ("Reading input " + input);
-      EarthDataReader reader = EarthDataReaderFactory.create (input);
+      reader = EarthDataReaderFactory.create (input);
       EarthDataInfo info = reader.getInfo();
       EarthTransform2D trans2d = (EarthTransform2D) info.getTransform();
 
@@ -1972,6 +1994,78 @@ public class cwrender {
         } // for
       } // if
 
+      // Add markers
+      // -----------
+      if (markerList.size() != 0) {
+        for (Iterator iter = markerList.iterator(); iter.hasNext();) {
+          String marker = (String) iter.next();
+        
+          // Get marker parameters
+          // ---------------------
+          String[] markerArray = marker.split (ToolServices.getSplitRegex());
+          if (markerArray.length < 3) {
+            LOGGER.severe ("Invalid marker parameters '" + marker + "'");
+            ToolServices.exitWithCode (2);
+            return;
+          } // if
+          double lat = Double.parseDouble (markerArray[0]);
+          if (lat < -90 || lat > 90) {
+            LOGGER.severe ("Invalid marker latitude: " + lat);
+            ToolServices.exitWithCode (2);
+            return;
+          } // if
+          double lon = Double.parseDouble (markerArray[1]);
+          if (lon < -180 || lon > 180) {
+            LOGGER.severe ("Invalid magnification longitude: " + lon);
+            ToolServices.exitWithCode (2);
+            return;
+          } // if
+          var loc = new EarthLocation (lat, lon);
+          Color lineColor = lookup.convert (markerArray[2]);
+          Color fillColor = (markerArray.length < 4 ? null : lookup.convert (markerArray[3]));
+          String symbol = (markerArray.length < 5 ? "circle" : markerArray[4]);
+          if (symbol.equals ("cross")) symbol = "Cross";
+          else if (symbol.equals ("x")) symbol = "X";
+          else if (symbol.equals ("square")) symbol = "Square";
+          else if (symbol.equals ("circle")) symbol = "Circle";
+          else if (symbol.equals ("triup")) symbol = "Triangle Up";
+          else if (symbol.equals ("tridown")) symbol = "Triangle Down";
+          else if (symbol.equals ("diamond")) symbol = "Diamond";
+          else {
+            LOGGER.severe ("Invalid symbol '" + symbol + "'");
+            ToolServices.exitWithCode (2);
+            return;
+          } // else
+          String text = (markerArray.length < 6 ? null : markerArray[5]);
+
+          // Add point overlay to view
+          // -------------------------
+          var attributes = (text == null ? null : new Object[] {text});
+          var plotSymbol = PlotSymbolFactory.create (symbol);
+          var pointSymbol = (text == null ? new SimpleSymbol (plotSymbol) : new SimpleSymbol (plotSymbol, 0, font));
+          var pointFeature = new PointFeature (loc, attributes);
+          var pointSource = new PointFeatureSource() {            
+            private boolean selected = false;
+            protected void select () throws IOException { 
+              if (!selected) { selected = true; featureList.add (pointFeature); }
+            } // select
+          };
+          var markerOverlay = new PointFeatureOverlay (pointSymbol, pointSource);
+          markerOverlay.setColor (lineColor);
+          markerOverlay.setFillColor (fillColor);
+          view.addOverlay (markerOverlay);
+
+
+          // FIXME: Something odd happens here when the fill colour is specified
+          // with partial transparency.  The transparency value carries over
+          // into the text rendering if there's a marker label.  The text is
+          // supposed to be rendered in the same colour as the marker outline
+          // though -- see the SimpleSymbol class line 183.
+
+
+        } // for
+      } // if
+
       // Get plot size
       // -------------
       boolean isFullSize = (sizeStr != null && sizeStr.equals ("full"));
@@ -1981,12 +2075,25 @@ public class cwrender {
         return;
       } // if
       int size = 512;
+      int sizeWidth = -1;
+      int sizeHeight = -1;
       if (isFullSize) { 
         int[] dims = trans2d.getDimensions();
         size = Math.max (dims[Grid.ROWS], dims[Grid.COLS]);
       } // if
       else if (sizeStr != null) {
-        size = Integer.parseInt (sizeStr);
+        var sizeArray = sizeStr.split (ToolServices.getSplitRegex());
+        if (sizeArray.length == 1)
+          size = Integer.parseInt (sizeStr);
+        else {
+          if (magnify == null) {
+            LOGGER.severe ("Cannot specify width/height without magnification parameters");
+            ToolServices.exitWithCode (2);
+            return;
+          } // if
+          sizeWidth = Integer.parseInt (sizeArray[0]);
+          sizeHeight = Integer.parseInt (sizeArray[1]);
+        } // else
       } // else
 
       // Magnify view
@@ -2028,7 +2135,8 @@ public class cwrender {
           return;
         } // if
         view.magnify (loc, factor);
-        view.setSize (new Dimension (size, size));
+        if (sizeWidth > 0 && sizeHeight > 0) view.setSize (new Dimension (sizeWidth, sizeHeight));
+        else view.setSize (new Dimension (size, size));
 
       } // if
       else
@@ -2181,6 +2289,7 @@ public class cwrender {
       // Clean up
       // --------
       reader.close();
+      reader = null;
       CleanupHook.getInstance().cancelDelete (output);
 
     } // try
@@ -2191,6 +2300,13 @@ public class cwrender {
       ToolServices.exitWithCode (2);
       return;
     } // catch
+
+    finally {
+      try {
+        if (reader != null) reader.close();
+      } // try
+      catch (Exception e) { LOGGER.log (Level.SEVERE, "Error closing resources", e); }
+    } // finally
 
     ToolServices.finishExecution (PROG);
 
@@ -2272,7 +2388,7 @@ public class cwrender {
   ////////////////////////////////////////////////////////////
 
   /** Gets the usage info for this tool. */
-  private static UsageInfo getUsage () {
+  static UsageInfo getUsage () {
 
     UsageInfo info = new UsageInfo ("cwrender");
 
@@ -2316,6 +2432,7 @@ public class cwrender {
     info.option ("-g, --grid=COLOR", "Render lat/lon grid");
     info.option ("-H, --shape=FILE/COLOR[/FILL]", "Render shape file");
     info.option ("-L, --land=COLOR", "Render land mask");
+    info.option ("--marker=LAT/LON/COLOR[/FILL[/SYMBOL[/TEXT]]]", "Render marker symbol");
     info.option ("-p, --political=COLOR", "Render politial boundaries");
     info.option ("-S, --nostates", "Do not render state boundaries");
     info.option ("-t, --topo=COLOR[/LEVEL1/LEVEL2/...]", "Render topographic contours");
