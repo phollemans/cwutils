@@ -47,6 +47,9 @@ import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * The earth data plot class is used for rendering earth data
  * with legends.  The plot uses an earth data view and earth data
@@ -77,6 +80,8 @@ import noaa.coastwatch.util.trans.EarthTransform;
  */
 public class EarthDataPlot
   implements Renderable {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthDataPlot.class.getName());
 
   // Constants
   // ---------
@@ -140,24 +145,34 @@ public class EarthDataPlot
     // ------------------
     if (info != null) {
 
-      // Create context element
-      // ----------------------
+      // We only create the context image here if it takes up less than a
+      // quarter of the whole earth area.  Otherwise, there tends to be
+      // problems with showing the bounding box on an orthographic projection.
+      var area = view.getArea();
       EarthImageTransform viewTrans = view.getTransform();
-      ImageTransform imageTrans = viewTrans.getImageTransform();
-      EarthTransform earthTrans = viewTrans.getEarthTransform();
-      DataLocation upperLeft = imageTrans.transform (new Point (0,0));
-      DataLocation lowerRight = imageTrans.transform (new Point (
-        viewSize.width-1, viewSize.height-1));
-      EarthContextElement context = new EarthContextElement (earthTrans,
-        upperLeft, lowerRight);
-      context.addBoundingBox (earthTrans, upperLeft, lowerRight, 
-        CONTEXT_BOUNDS_COLOR, null);
-      EarthLocation center = viewTrans.transform (new Point (
-        (viewSize.width-1)/2, (viewSize.height-1)/2));
+      EarthContextElement context = null;
+      var coverage = area.getCoverage();
+      LOGGER.fine ("View coverage is " + coverage);
+      if (area.getCoverage() < 0.25) {
+
+        ImageTransform imageTrans = viewTrans.getImageTransform();
+        EarthTransform earthTrans = viewTrans.getEarthTransform();
+        DataLocation upperLeft = imageTrans.transform (new Point (0,0));
+        DataLocation lowerRight = imageTrans.transform (new Point (
+          viewSize.width-1, viewSize.height-1));
+
+        context = new EarthContextElement (earthTrans,
+          upperLeft, lowerRight);
+        context.addBoundingBox (earthTrans, upperLeft, lowerRight, 
+          CONTEXT_BOUNDS_COLOR, null);
+
+      } // if 
 
       // Create legend
       // -------------
-      infoLegend = new EarthPlotInfo (icon, info, view.getArea(), 
+      EarthLocation center = viewTrans.transform (new Point (
+        (viewSize.width-1)/2, (viewSize.height-1)/2));
+      infoLegend = new EarthPlotInfo (icon, info, area, 
         context, center, null, font, fore, back);
 
     } // if

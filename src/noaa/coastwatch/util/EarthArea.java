@@ -61,6 +61,19 @@ public class EarthArea implements Cloneable, Iterable<int[]> {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the coverage of this area as a fraction of the total area of the
+   * earth.  The coverage is an estimate based on the 1x1 degree grid squares
+   * coveraged by the area.
+   * 
+   * @return the coverage of this area as a fraction in the range [0..1].
+   * 
+   * @since 3.8.0
+   */
+  public double getCoverage () { return (bits.cardinality() / 64800.0); }
+
+  ////////////////////////////////////////////////////////////
+
   /** 
    * Computes the intersection between this area and another.  The
    * resulting area includes only grid squares which occur both in this

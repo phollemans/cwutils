@@ -88,7 +88,7 @@ public class EarthPlotInfo
   /** The earth data information for legend text. */
   private String[] labels;
 
-  /** The earth context element for the bottom of the legend. */
+  /** The earth context element for the bottom of the legend, possibly null. */
   private EarthContextElement context;
 
   ////////////////////////////////////////////////////////////
@@ -102,7 +102,8 @@ public class EarthPlotInfo
    * @param icon the icon element to use for the top of the legend.
    * @param info the earth data information for text annotations.
    * @param area the earth area for geographic bounds.
-   * @param context the earth context for the bottom of the legend.
+   * @param context the earth context for the bottom of the legend, or null
+   * for no context element.
    */
   public EarthPlotInfo (
     IconElement icon,
@@ -185,7 +186,8 @@ public class EarthPlotInfo
    * @param icon the icon element to use for the top of the legend.
    * @param info the earth data information for text annotations.
    * @param area the earth area for geographic bounds.
-   * @param context the earth context for the bottom of the legend.
+   * @param context the earth context for the bottom of the legend, or null
+   * for no context element.
    * @param center the earth location of the plot center.
    * @param dim the preferred scale dimensions, or null for none.
    * @param font the font for variable name, units, and scale values, or 
@@ -250,9 +252,11 @@ public class EarthPlotInfo
       strings.add ("  " + DateFormatter.formatDate (startDate, TIME_FMT));
       strings.add ("  " + DateFormatter.formatDate (startDate, LOCAL_TIME_FMT, 
         center));
-      strings.add ("Scene time:");
-      strings.add ("  " + info.getSceneTime (context.getUpperLeft(), 
-        context.getLowerRight()).toUpperCase());
+      if (context != null) {
+        strings.add ("Scene time:");
+        strings.add ("  " + info.getSceneTime (context.getUpperLeft(), 
+          context.getLowerRight()).toUpperCase());
+      } // if
     } // if
 
     // Add time range info
@@ -404,23 +408,25 @@ public class EarthPlotInfo
 
     // Render context
     // --------------
-    context.setPreferredSize (new Dimension (pictureSize, pictureSize));
-    Rectangle contextBounds = context.getBounds(g);
-    Point contextPos = new Point (x + SPACE_SIZE*2 + 
-      pictureSize/2 - contextBounds.width/2, (y + size.height - 1) - 
-      SPACE_SIZE*2 - pictureSize/2 - contextBounds.height/2);
-    context.setPosition (contextPos);
-    Color highBack = null;
-    if (back != null) {
-      highBack = new Color (
-        (int) Math.min (back.getRed()*1.05, 255),
-        back.getGreen(),
-        back.getBlue());
+    if (context != null) { 
+      context.setPreferredSize (new Dimension (pictureSize, pictureSize));
+      Rectangle contextBounds = context.getBounds(g);
+      Point contextPos = new Point (x + SPACE_SIZE*2 + 
+        pictureSize/2 - contextBounds.width/2, (y + size.height - 1) - 
+        SPACE_SIZE*2 - pictureSize/2 - contextBounds.height/2);
+      context.setPosition (contextPos);
+      Color highBack = null;
+      if (back != null) {
+        highBack = new Color (
+          (int) Math.min (back.getRed()*1.05, 255),
+          back.getGreen(),
+          back.getBlue());
+      } // if
+      context.render (g, fore, highBack);
+      g.setColor (fore);
+      GraphicsServices.drawRect (g, new Rectangle (contextPos.x, contextPos.y, 
+        contextBounds.width, contextBounds.height));
     } // if
-    context.render (g, fore, highBack);
-    g.setColor (fore);
-    GraphicsServices.drawRect (g, new Rectangle (contextPos.x, contextPos.y, 
-      contextBounds.width, contextBounds.height));
 
     // Loop over labels
     // ----------------
