@@ -94,10 +94,22 @@ public class Attribute {
    */
   public String getUnits () { return (units); }
 
- ////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
 
   @Override
   public String toString () { return (name); }
+
+  ////////////////////////////////////////////////////////////
+
+  public String toDebugString () { 
+
+    return ("Attribute[" +
+      "name=" + name + "," +
+      "type=" + type + "," +
+      "units=" + units +
+      "]");
+
+  } // toDebugString
 
  ////////////////////////////////////////////////////////////
 

@@ -72,7 +72,8 @@ public class PointFeature
    * Creates a new point feature with attributes. 
    * 
    * @param point thae point feature location.
-   * @param attributeArray the array of feature attributes.
+   * @param attributeArray the array of feature attributes, or null for no
+   * attributes.
    */
   public PointFeature (
     EarthLocation point,

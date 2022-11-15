@@ -40,7 +40,7 @@ import noaa.coastwatch.render.feature.Feature;
 import noaa.coastwatch.render.PointFeatureSymbol;
 
 /**
- * The <code>PointFeatureSource</code> class supplied and renders
+ * The <code>PointFeatureSource</code> class supplies and renders
  * <code>PointFeature</code> data with user-supplied plot symbols.
  *
  * @author Peter Hollemans

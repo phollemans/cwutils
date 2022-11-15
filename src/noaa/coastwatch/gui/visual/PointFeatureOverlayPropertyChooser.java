@@ -43,6 +43,7 @@ import javax.swing.Box;
 
 import noaa.coastwatch.gui.SelectionRuleFilterChooser;
 import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
+import noaa.coastwatch.gui.visual.VisualObject;
 
 import noaa.coastwatch.render.PointFeatureOverlay;
 import noaa.coastwatch.render.feature.PointFeatureSource;
@@ -102,7 +103,8 @@ public class PointFeatureOverlayPropertyChooser
     if (source.getAttributeCount() != 0) {
       SelectionRuleFilterChooser filterChooser =
         new SelectionRuleFilterChooser (source.getAttributes(), source.getAttributeNameMap());
-      filterChooser.setFilter (overlay.getFilter());
+      var filter = overlay.getFilter();
+      if (filter != null) filterChooser.setFilter (filter);
       this.add (filterChooser, BorderLayout.CENTER);
     } // if
 
@@ -118,16 +120,28 @@ public class PointFeatureOverlayPropertyChooser
     symbolPanel.setAlignmentX (0);
     symbolPanel.add (Box.createHorizontalStrut (20));
     symbolPanel.add (new JLabel ("Symbol:"));
-    symbolPanel.add (VisualObjectFactory.create (overlay.getSymbol(), "plotSymbol").getComponent());
+    var visualList = new ArrayList<VisualObject>();
+    var visual = VisualObjectFactory.create (overlay.getSymbol(), "plotSymbol");
+    visualList.add (visual);
+    symbolPanel.add (visual.getComponent());
     symbolPanel.add (Box.createHorizontalStrut (5));
     symbolPanel.add (new JLabel ("Drawing color:"));
-    symbolPanel.add (VisualObjectFactory.create (overlay, "color").getComponent());
+    visual = VisualObjectFactory.create (overlay, "color");
+    visualList.add (visual);
+    symbolPanel.add (visual.getComponent());
     symbolPanel.add (Box.createHorizontalStrut (5));
     symbolPanel.add (new JLabel ("Fill color:"));
-    symbolPanel.add (VisualObjectFactory.create (overlay, "fillColor").getComponent());
+    visual = VisualObjectFactory.create (overlay, "fillColor");
+    visualList.add (visual);
+    symbolPanel.add (visual.getComponent());
     bottomPanel.add (symbolPanel);
     this.add (bottomPanel, BorderLayout.SOUTH);
   
+    // Add listeners to the visual objects so that they signal a
+    // property change when they're updated.
+    visualList.forEach (obj -> obj.addPropertyChangeListener (
+      event -> firePropertyChange (OVERLAY_PROPERTY, null, overlay)));
+
   } // PointFeatureOverlayPropertyChooser constructor
   
   ////////////////////////////////////////////////////////////

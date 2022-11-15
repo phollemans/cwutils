@@ -73,6 +73,7 @@ import noaa.coastwatch.render.LatLonOverlay;
 import noaa.coastwatch.render.MultilayerBitmaskOverlay;
 import noaa.coastwatch.render.PoliticalOverlay;
 import noaa.coastwatch.render.PolygonOverlay;
+import noaa.coastwatch.render.PointFeatureOverlay;
 import noaa.coastwatch.render.TopographyOverlay;
 
 /**
@@ -550,20 +551,30 @@ public class OverlayListChooser
 
         // Try reading as shapefile
         // ------------------------
+        boolean failed = false;
         try {
           ESRIShapefileReader shapeReader = new ESRIShapefileReader (file.toURI().toURL());
           EarthDataOverlay overlay = shapeReader.getOverlay();
-          if (overlay instanceof PolygonOverlay)
+          if (overlay instanceof PointFeatureOverlay) {
+            ((PointFeatureOverlay) overlay).setFillColor (Color.WHITE);
+            overlay.setColor (Color.BLACK);
+          } // if
+          else if (overlay instanceof PolygonOverlay) {
             ((PolygonOverlay) overlay).setFillColor (null);
-          overlay.setColor (Color.WHITE);
+            overlay.setColor (Color.WHITE);
+          } // else if
+          else {
+            overlay.setColor (Color.WHITE);
+          } // else
           overlay.setName ("ESRI data");
           overlayList.add (overlay);
         } // try
-        catch (IOException e) { }
+        catch (IOException e) { failed = true; }
         
         // Try reading as iQuam file
         // -------------------------
-        if (overlayList.size() == 0) {
+        if (failed) {
+          failed = false;
           try {
             IQuamNCReader iquamReader = new IQuamNCReader (file.getAbsolutePath());
             Date date = reader.getInfo().getDate();
@@ -573,12 +584,13 @@ public class OverlayListChooser
               gridList.add ((Grid) reader.getVariable ((String) name));
             overlayList.addAll (iquamReader.getStandardOverlays (date, trans, gridList));
           } // try
-          catch (IOException e) { }
+          catch (IOException e) { failed = true; }
         } // if
 
         // Try reading as a lat/lon line file
         // ----------------------------------
-        if (overlayList.size() == 0) {
+        if (failed) {
+          failed = false;
           try {
             var latLonReader = new LatLonLineReader (file.getAbsolutePath());
             EarthDataOverlay overlay = latLonReader.getOverlay();
@@ -586,12 +598,12 @@ public class OverlayListChooser
             overlay.setName ("Lat/lon data");
             overlayList.add (overlay);
           } // try
-          catch (IOException e) { }
+          catch (IOException e) { failed = true; }
         } // if
         
         // Show error message
         // ------------------
-        if (overlayList.size() == 0) {
+        if (failed || overlayList.size() == 0) {
           String errorMessage =
             "An error occurred creating the shape overlay.\n" +
             "The file format may not be supported. Please choose\n" +

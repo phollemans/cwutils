@@ -145,6 +145,8 @@ public class GenericOverlayPropertyChooser
                   "Mask expression");
     labelMap.put ("symbol",
                   "Plot symbol");
+    labelMap.put ("plotSymbol",
+                  "Symbol");
 
     // Setup dependency map
     // --------------------

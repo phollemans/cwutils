@@ -366,11 +366,14 @@ public class SelectionRuleFilterChooser
    * Sets the feature filter displayed and manipulated by this chooser.
    *
    * @param filter the filter to use.
+   * 
+   * @throws IllegalArgumentException if the filter is null.
    */
   public void setFilter (
     SelectionRuleFilter filter
   ) {
 
+    if (filter == null) throw new IllegalArgumentException ("Filter is null");
     reconfigureForFilter (filter);
 
   } // setFilter
