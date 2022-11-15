@@ -528,7 +528,7 @@ public final class cwdownload {
   ////////////////////////////////////////////////////////////
 
   /** Gets the usage info for this tool. */
-  private static UsageInfo getUsage () {
+  static UsageInfo getUsage () {
 
     UsageInfo info = new UsageInfo ("cwdownload");
 

@@ -446,7 +446,7 @@ public final class cwinfo {
   ////////////////////////////////////////////////////////////
 
   /** Gets the usage info for this tool. */
-  private static UsageInfo getUsage () {
+  static UsageInfo getUsage () {
 
     UsageInfo info = new UsageInfo ("cwinfo");
 
@@ -464,7 +464,7 @@ public final class cwinfo {
 
     return (info);
 
-  } // usage
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 

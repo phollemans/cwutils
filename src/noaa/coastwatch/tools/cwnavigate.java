@@ -38,6 +38,9 @@ import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * <p>The navigation tool adds navigation corrections to 2D variables
  * in an earth data file.</p>
@@ -54,13 +57,19 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * <h2>Synopsis</h2>
  *
  * <p>
- *   cwnavigate [OPTIONS] {-t, --trans=ROWS/COLS} input<br>
- *   cwnavigate [OPTIONS] {-r, --rotate=ANGLE} input<br>
- *   cwnavigate [OPTIONS] {-a, --affine=A/B/C/D/E/F} input<br>
- *   cwnavigate [OPTIONS] {-R, --reset} input<br>
+ *   cwnavigate [OPTIONS] input
+ * </p>
+ * 
+ * <h3>Correction options:</h3>
+ *
+ * <p>
+ *   -t, --trans=ROWS/COLS <br>
+ *   -r, --rotate=ANGLE <br>
+ *   -a, --affine=A/B/C/D/E/F <br>
+ *   -R, --reset <br>
  * </p>
  *
- * <h3>Options:</h3>
+ * <h3>General options:</h3>
  *
  * <p>
  * -h, --help <br>
@@ -132,6 +141,18 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  * <dl>
  *
+ *   <dt> input </dt>
+ *   <dd> The input data file name.  The navigation corrections are
+ *   applied to the input file in-situ.  For CoastWatch HDF files, the
+ *   corrections are applied to individual variables.  No other file
+ *   formats are supported.</dd>
+ *
+ * </dl>
+ *
+ * <h3>Correction options:</h3>
+ *
+ * <dl>
+ *
  *   <dt> -t, --trans=ROWS/COLS </dt>
  *   <dd> The translation transform to apply.  The actual row and
  *   column coordinates are calculated by adding the specified row and
@@ -154,16 +175,10 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   <dd> Specifies that the existing navigation transform should be
  *   reset to the identity. Under the identity transform, no
  *   navigation correction is performed.</dd>
- *   
- *   <dt> input </dt>
- *   <dd> The input data file name.  The navigation corrections are
- *   applied to the input file in-situ.  For CoastWatch HDF files, the
- *   corrections are applied to individual variables.  No other file
- *   formats are supported.</dd>
  *
  * </dl>
- *
- * <h3>Options:</h3>
+ * 
+ * <h3>General options:</h3>
  *
  * <dl>
  *
@@ -225,18 +240,17 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * @author Peter Hollemans
  * @since 3.1.2
  */
- 
-// TODO: LOGGING
+ public final class cwnavigate {
 
-public final class cwnavigate {
+  private static final String PROG = cwnavigate.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
 
   // Constants
   // ------------
+
   /** Minimum required command line parameters. */
   private static final int NARGS = 1;
-
-  /** Name of program. */
-  private static final String PROG = "cwnavigate";
 
   ////////////////////////////////////////////////////////////
 
@@ -247,6 +261,7 @@ public final class cwnavigate {
    */
   public static void main (String argv[]) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -260,59 +275,66 @@ public final class cwnavigate {
     Option affineOpt = cmd.addStringOption ('a', "affine");
     Option resetOpt = cmd.addBooleanOption ('R', "reset");
     Option versionOpt = cmd.addBooleanOption ("version");
+
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
-      usage ();
-      System.exit (0);
+      usage();
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
-      usage ();
-      System.exit (1);
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String input = remain[0];
 
     // Set defaults
     // ------------
     boolean verbose = (cmd.getOptionValue (verboseOpt) != null);
+    if (verbose) VERBOSE.setLevel (Level.INFO);
     String match = (String) cmd.getOptionValue (matchOpt);
     String trans = (String) cmd.getOptionValue (transOpt);
     Double rotate = (Double) cmd.getOptionValue (rotateOpt);
     String affine = (String) cmd.getOptionValue (affineOpt);
     boolean reset = (cmd.getOptionValue (resetOpt) != null);
 
+    EarthDataReader reader = null;
     try {
 
       // Open input file
       // ---------------
-      if (verbose) System.out.println (PROG + ": Reading input " + input);
-      EarthDataReader reader = EarthDataReaderFactory.create (input);
+      VERBOSE.info ("Reading input " + input);
+      reader = EarthDataReaderFactory.create (input);
 
       // Check file format
       // ----------------- 
-    if (!reader.canUpdateNavigation()) {
-        System.err.println (PROG + ": Unsupported file format for " + input);
-        System.exit (2);
+      if (!reader.canUpdateNavigation()) {
+        LOGGER.severe ("Unsupported file format for " + input);
+        ToolServices.exitWithCode (2);
+        return;
       } // if       
 
       // Create translation transform
@@ -321,12 +343,14 @@ public final class cwnavigate {
       if (trans != null) {
         String[] transArray = trans.split (ToolServices.SPLIT_REGEX);
         if (transArray.length != 2) {
-          System.err.println (PROG + ": Invalid translation '" + trans + "'");
-          System.exit (2);
+          LOGGER.severe ("Invalid translation '" + trans + "'");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         double rows = Double.parseDouble (transArray[0]);
         double cols = Double.parseDouble (transArray[1]);
         newNav = AffineTransform.getTranslateInstance (rows, cols);
+        VERBOSE.info ("Using translation transform");
       } // if
 
       // Create rotation transform
@@ -337,8 +361,8 @@ public final class cwnavigate {
         int[] dims = info.getTransform().getDimensions();
         int rows = dims[0];
         int cols = dims[1];
-        newNav = AffineTransform.getRotateInstance (
-          theta, (rows-1)/2.0, (cols-1)/2.0);
+        newNav = AffineTransform.getRotateInstance (theta, (rows-1)/2.0, (cols-1)/2.0);
+        VERBOSE.info ("Using rotation transform");
       } // else if
 
       // Create generic transform
@@ -346,25 +370,30 @@ public final class cwnavigate {
       else if (affine != null) {
         String[] affineArray = affine.split (ToolServices.SPLIT_REGEX);
         if (affineArray.length != 6) {
-          System.err.println (PROG + ": Invalid affine '" + affine + "'");
-          System.exit (2);
+          LOGGER.severe ("Invalid affine '" + affine + "'");
+          ToolServices.exitWithCode (2);
+          return;
         } // if
         double[] matrix = new double[6];
         for (int i = 0; i < 6; i++) 
           matrix[i] =  Double.parseDouble (affineArray[i]);
         newNav = new AffineTransform (matrix);
+        VERBOSE.info ("Using explicit affine transform");
       } // else
 
       // Create reset transform
       // ----------------------
-      else if (reset) { newNav = null; }
+      else if (reset) { 
+        newNav = null; 
+        VERBOSE.info ("Using a null transform (reset mode)");        
+      } // else if
 
       // Report error
       // ------------
       else {
-        System.err.println (PROG + ": At least one navigation option" +
-          " must be specified");
-        System.exit (2);
+        LOGGER.severe ("At least one navigation option must be specified");
+        ToolServices.exitWithCode (2);
+        return;
       } // else
 
       // Get variable names
@@ -376,57 +405,64 @@ public final class cwnavigate {
         String varName = var.getName();
         if (match != null && !varName.matches (match)) continue;
         variables.add (varName);
-        if (verbose) 
-          System.out.println (PROG + ": Adding variable " + varName + 
-            " to correction list");
+        VERBOSE.info ("Adding variable " + varName + " to correction list");
       } // for      
 
       // Apply navigation
       // ----------------
-      if (verbose)
-        System.out.println (PROG + ": Applying navigation correction");
+      VERBOSE.info ("Applying navigation correction");
       reader.updateNavigation (variables, newNav);
       reader.close();
+      reader = null;
 
     } // try
     catch (Exception e) {
-      e.printStackTrace ();
-      System.exit (2);
+      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
+      ToolServices.exitWithCode (2);
+      return;
     } // catch
+
+    finally {
+      try {
+        if (reader != null) reader.close();
+      } // try
+      catch (Exception e) { LOGGER.log (Level.SEVERE, "Error closing resources", e); }
+    } // finally
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwnavigate [OPTIONS] {-t, --trans=ROWS/COLS} input\n" +
-"       cwnavigate [OPTIONS] {-r, --rotate=ANGLE} input\n" +
-"       cwnavigate [OPTIONS] {-a, --affine=A/B/C/D/E/F} input\n" +
-"       cwnavigate [OPTIONS] {-R, --reset} input\n" +
-"Adds navigation corrections to 2D variables in an earth data file\n" +
-"by setting navigation transform parameters.\n" +
-"\n" +
-"Main parameters:\n" +
-"  -t, --trans=ROWS/COLS      Apply translation correction.\n" +
-"  -r, --rotate=ANGLE         Apply rotation correction.\n" +
-"  -a, --affine=A/B/C/D/E/F   Apply generic affine correction.\n" +
-"  -R, --reset                Reset correction to identity.\n" +
-"  input                      The input data file name.\n" +
-"\n" +
-"Options:\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -m, --match=PATTERN        Apply correction to variables matching the\n" +
-"                              pattern.\n" +
-"  -v, --verbose              Print verbose messages.\n" +
-"  --version                  Show version information.\n"
-    );
+  ////////////////////////////////////////////////////////////
 
-  } // usage
+  /** Gets the usage info for this tool. */
+  static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwnavigate");
+
+    info.func ("Adds navigation corrections to earth data");
+
+    info.param ("input", "Input data file");
+
+    info.section ("Correction");
+    info.option ("-t, --trans=ROWS/COLS", "Apply translation correction");
+    info.option ("-r, --rotate=ANGLE", "Apply rotation correction");    
+    info.option ("-a, --affine=A/B/C/D/E/F", "Apply generic affine correction");
+    info.option ("-R, --reset", "Reset correction to identity");
+
+    info.section ("General");
+    info.option ("-h, --help", "Show help message");
+    info.option ("-m, --match=PATTERN", "Correct only variables matching regular expression");
+    info.option ("-v, --verbose", "Print verbose messages");
+    info.option ("--version", "Show version information");
+
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 

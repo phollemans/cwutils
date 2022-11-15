@@ -1464,7 +1464,7 @@ public final class cwmath {
   ////////////////////////////////////////////////////////////
 
   /** Gets the usage info for this tool. */
-  private static UsageInfo getUsage () {
+  static UsageInfo getUsage () {
 
     UsageInfo info = new UsageInfo ("cwmath");
 

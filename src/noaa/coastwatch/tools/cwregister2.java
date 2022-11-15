@@ -1062,12 +1062,11 @@ public final class cwregister2 {
   ////////////////////////////////////////////////////////////
 
   /** Gets the usage info for this tool. */
-  private static UsageInfo getUsage () {
+  static UsageInfo getUsage () {
 
     UsageInfo info = new UsageInfo ("cwregister2");
 
-    info.func ("Resamples gridded earth data to a master projection using " +
-      "a revised set of high accuracy algorithms");
+    info.func ("Resamples earth data using high accuracy algorithms (replaces cwregister)");
 
     info.param ("input", "Input data file");
     info.param ("output", "Output data file");

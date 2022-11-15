@@ -1,3 +1,4 @@
+Tool Help|cwtools
 Information and Statistics|cwinfo cwstats hdatt
 Data Processing|cwimport cwexport cwsample cwmath cwcomposite cwscript
 Graphics and Visualization|cdat cwrender cwcoverage cwgraphics

@@ -1152,7 +1152,7 @@ import java.util.logging.Level;
         readMaster (input, projArray, dims);
       } // try
       catch (Exception e) {
-      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
+        LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
         ToolServices.exitWithCode (2);
         return;
       } // catch
@@ -1181,7 +1181,7 @@ import java.util.logging.Level;
   ////////////////////////////////////////////////////////////
 
   /** Gets the usage info for this tool. */
-  private static UsageInfo getUsage () {
+  static UsageInfo getUsage () {
 
     UsageInfo info = new UsageInfo ("cwmaster");
 

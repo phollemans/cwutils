@@ -64,13 +64,12 @@
         <include>
           <entry location="bin/${compiler:cdatExecutable}" fileType="launcher" />
           <entry location="bin/${compiler:cwmasterExecutable}" fileType="launcher" />
-          <entry location="bin/${compiler:cwstatusExecutable}" fileType="launcher" />
           <entry location="extensions" />
           <entry location="lib" />
           <entry location="doc/cw_cf_metadata.pdf" />
-          <entry location="doc/cwutils_ug_3_7_1.pdf" />
           <entry location="doc/metadata_comparison_v1_1_jan_2010.pdf" />
           <entry location="doc/license.txt" />
+          <entry location="doc/cwutils_ug_3_8_0.pdf" />
           <entry location="data" />
         </include>
       </component>
@@ -79,7 +78,6 @@
           <entry location="bin/cwangles" fileType="launcher" />
           <entry location="bin/cwcomposite" fileType="launcher" />
           <entry location="bin/cwcoverage" fileType="launcher" />
-          <entry location="bin/cwdownload" fileType="launcher" />
           <entry location="bin/cwexport" fileType="launcher" />
           <entry location="bin/cwgraphics" fileType="launcher" />
           <entry location="bin/cwimport" fileType="launcher" />
@@ -95,6 +93,7 @@
           <entry location="bin/hdatt" fileType="launcher" />
           <entry location="bin/cwscript" fileType="launcher" />
           <entry location="bin/cwgscript" fileType="launcher" />
+          <entry location="bin/cwtools" fileType="launcher" />
           <entry location="doc/man" />
         </include>
       </component>
@@ -435,6 +434,22 @@
     <launcher name="cwgscript" id="852" excludeFromMenu="true">
       <executable name="cwgscript" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
       <java mainClass="noaa.coastwatch.tools.cwscript" vmParameters="-Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib/java" failOnError="false" />
+          <scanDirectory location="lib/java/depend" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/native/${compiler:libDir}" />
+        </nativeLibraryDirectories>
+      </java>
+      <macStaticAssociationActions mode="selected" />
+      <vmOptionsFile mode="none" />
+    </launcher>
+    <launcher name="cwtools" id="1657" excludeFromMenu="true">
+      <executable name="cwtools" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
+      <java mainClass="noaa.coastwatch.tools.cwtools" vmParameters="-Djava.awt.headless=true ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
         <classPath>
           <directory location="extensions" failOnError="false" />
           <scanDirectory location="lib/java" failOnError="false" />

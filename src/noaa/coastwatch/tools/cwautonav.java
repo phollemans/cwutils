@@ -46,6 +46,9 @@ import noaa.coastwatch.util.NavigationOffsetEstimator;
 import noaa.coastwatch.util.trans.Datum;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * <p>The autonavigation tool automatically determines a navigation
  * correction based on earth image data.</p>
@@ -274,26 +277,21 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   phollema$ cwautonav -v --width 60 --height 60 navbox.txt 
  *     avhrr_ch2 2004_064_1601_n17_er.hdf
  *
- *   cwautonav: Reading input 2004_064_1601_n17_er.hdf
- *   cwautonav: Testing box at 37.0503 N, 76.2111 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 2.33
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 44.2783 N, 66.1377 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation
- *     distance = 3.436
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.965 at
- *     offset = (-3, 1)
- *   cwautonav: Box offset = (-3, 1)
- *   cwautonav: Testing box at 45.1985 N, 65.9262 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 3.814
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.987 at
- *     offset = (-3, 1)
- *   cwautonav: Box offset = (-3, 1)
- *   cwautonav: Mean offset = (-3, 1)
- *   cwautonav: Applying navigation correction
+ *   [INFO] Reading input 2004_064_1601_n17_er.hdf
+ *   [INFO] Testing box at 37.0503 N, 76.2111 W
+ *   [INFO] Land/water class separation distance = 2.33
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 44.2783 N, 66.1377 W
+ *   [INFO] Land/water class separation distance = 3.436
+ *   [INFO] Image correlation = 0.965 at offset = (-3, 1)
+ *   [INFO] Box offset = (-3, 1)
+ *   [INFO] Testing box at 45.1985 N, 65.9262 W
+ *   [INFO] Land/water class separation distance = 3.814
+ *   [INFO] Image correlation = 0.987 at offset = (-3, 1)
+ *   [INFO] Box offset = (-3, 1)
+ *   [INFO] Mean offset = (-3, 1)
+ *   [INFO] Applying navigation correction
  * </pre>
  * <p>The next example below shows the import and automatic correction of
  * multiple CWF files from the Gulf of Mexico.  The AVHRR channel 1,
@@ -308,53 +306,43 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   phollema$ cwimport -v --match '(avhrr.*|sst|cloud)' 2004_313_1921_n16_mr*.hdf
  *     2004_313_1921_n16_mr.hdf
  *
- *   cwimport: Reading input 2004_313_1921_n16_mr_c1.hdf
- *   cwimport: Creating output 2004_313_1921_n16_mr.hdf
- *   cwimport: Converting file [1/4], 2004_313_1921_n16_mr_c1.hdf
- *   cwimport: Writing avhrr_ch1
- *   cwimport: Converting file [2/4], 2004_313_1921_n16_mr_c2.hdf
- *   cwimport: Writing avhrr_ch2
- *   cwimport: Converting file [3/4], 2004_313_1921_n16_mr_cm.hdf
- *   cwimport: Writing cloud
- *   cwimport: Converting file [4/4], 2004_313_1921_n16_mr_d7.hdf
- *   cwimport: Writing sst
+ *   [INFO] Reading input 2004_313_1921_n16_mr_c1.hdf
+ *   [INFO] Creating output 2004_313_1921_n16_mr.hdf
+ *   [INFO] Converting file [1/4], 2004_313_1921_n16_mr_c1.hdf
+ *   [INFO] Writing avhrr_ch1
+ *   [INFO] Converting file [2/4], 2004_313_1921_n16_mr_c2.hdf
+ *   [INFO] Writing avhrr_ch2
+ *   [INFO] Converting file [3/4], 2004_313_1921_n16_mr_cm.hdf
+ *   [INFO] Writing cloud
+ *   [INFO] Converting file [4/4], 2004_313_1921_n16_mr_d7.hdf
+ *   [INFO] Writing sst
  *
  *   phollema$ cwautonav -v --width 60 --height 60 navbox2.txt avhrr_ch2 2004_313_1921_n16_mr.hdf
  *
- *   cwautonav: Reading input 2004_313_1921_n16_mr.hdf
- *   cwautonav: Testing box at 26.7734 N, 82.1731 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 3.239
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.945 at
- *     offset = (-2, 1)
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient correlation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 29.1666 N, 83.0324 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 3.54
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.985 at 
- *     offset = (-2, 1)
- *   cwautonav: Box offset = (-2, 1)
- *   cwautonav: Testing box at 29.9141 N, 84.3543 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 4.514
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.976 at 
- *     offset = (-2, 0)
- *   cwautonav: Box offset = (-2, 0)
- *   cwautonav: Testing box at 30.3258 N, 88.1352 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 3.006
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.954 at 
- *     offset = (-3, 0)
- *   cwautonav: Box offset = (-3, 0)
- *   cwautonav: Testing box at 27.8423 N, 82.5433 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 3.59
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.953 at 
- *     offset = (-2, 1)
- *   cwautonav: Box offset = (-2, 1)
- *   cwautonav: Mean offset = (-2.25, 0.5)
- *   cwautonav: Applying navigation correction
+ *   [INFO] Reading input 2004_313_1921_n16_mr.hdf
+ *   [INFO] Testing box at 26.7734 N, 82.1731 W
+ *   [INFO] Land/water class separation distance = 3.239
+ *   [INFO] Image correlation = 0.945 at offset = (-2, 1)
+ *   [INFO] Insufficient correlation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 29.1666 N, 83.0324 W
+ *   [INFO] Land/water class separation distance = 3.54
+ *   [INFO] Image correlation = 0.985 at offset = (-2, 1)
+ *   [INFO] Box offset = (-2, 1)
+ *   [INFO] Testing box at 29.9141 N, 84.3543 W
+ *   [INFO] Land/water class separation distance = 4.514
+ *   [INFO] Image correlation = 0.976 at offset = (-2, 0)
+ *   [INFO] Box offset = (-2, 0)
+ *   [INFO] Testing box at 30.3258 N, 88.1352 W
+ *   [INFO] Land/water class separation distance = 3.006
+ *   [INFO] Image correlation = 0.954 at offset = (-3, 0)
+ *   [INFO] Box offset = (-3, 0)
+ *   [INFO] Testing box at 27.8423 N, 82.5433 W
+ *   [INFO] Land/water class separation distance = 3.59
+ *   [INFO] Image correlation = 0.953 at offset = (-2, 1)
+ *   [INFO] Box offset = (-2, 1)
+ *   [INFO] Mean offset = (-2.25, 0.5)
+ *   [INFO] Applying navigation correction
  * </pre>
  * <p>Another example below shows the correction of a Hawaii AVHRR HDF
  * file using many 15 by 15 pixel navigation boxes distributed
@@ -365,154 +353,118 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *   phollema$ cwautonav -v --match '(avhrr.*|sst|cloud)' --width 15 --height 15
  *     navbox3.txt avhrr_ch2 2005_042_0051_n16_hr.hdf
  *
- *   cwautonav: Reading input 2005_042_0051_n16_hr.hdf
- *   cwautonav: Testing box at 21.7885 N, 160.2259 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.537
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 21.9856 N, 160.0938 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.395
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 21.6033 N, 158.2847 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.562
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 21.7144 N, 157.9678 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.982
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 21.0961 N, 157.3207 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.517
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 21.2448 N, 157.2547 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 2.252
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 21.2076 N, 156.9774 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 3.236
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.973 at 
- *     offset = (-2, 0)
- *   cwautonav: Box 
- *     offset = (-2, 0)
- *   cwautonav: Testing box at 21.1581 N, 156.7001 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 2.293
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 20.9225 N, 157.0698 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.448
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 20.7115 N, 156.9642 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.506
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 21.3067 N, 158.1130 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.601
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 21.3067 N, 157.6508 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.593
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 20.5374 N, 156.7001 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 5.142
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.978 at 
- *     offset = (-2, 0)
- *   cwautonav: Box 
- *     offset = (-2, 0)
- *   cwautonav: Testing box at 20.5499 N, 156.5680 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 2.834
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.947 at 
- *     offset = (-2, -1)
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient correlation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 20.5996 N, 156.4360 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 2.285
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 20.8108 N, 156.5152 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 2.092
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 20.9349 N, 156.4756 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 3.629
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.969 at 
- *     offset = (-2, -1)
- *   cwautonav: Box 
- *     offset = (-2, -1)
- *   cwautonav: Testing box at 20.8357 N, 156.1190 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 2.46
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 20.2635 N, 155.8813 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 2.522
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Image correlation = 0.964 at 
- *     offset = (-2, 0)
- *   cwautonav: Box 
- *     offset = (-2, 0)
- *   cwautonav: Testing box at 19.5140 N, 154.7985 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.64
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 19.7392 N, 155.0230 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.833
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 19.7267 N, 155.1022 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.688
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 18.9119 N, 155.6965 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.378
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 19.8642 N, 155.9342 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.583
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 19.0375 N, 155.8813 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.638
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 22.0349 N, 159.7901 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.919
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Testing box at 22.1826 N, 159.3279 W
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Land/water class separation 
- *     distance = 1.496
- *   class noaa.coastwatch.util.NavigationOffsetEstimator: Insufficient separation
- *   cwautonav: Box failed
- *   cwautonav: Mean offset = (-2, -0.25)
- *   cwautonav: Applying navigation correction
+ *   [INFO] Reading input 2005_042_0051_n16_hr.hdf
+ *   [INFO] Testing box at 21.7885 N, 160.2259 W
+ *   [INFO] Land/water class separation distance = 1.537
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 21.9856 N, 160.0938 W
+ *   [INFO] Land/water class separation distance = 1.395
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 21.6033 N, 158.2847 W
+ *   [INFO] Land/water class separation distance = 1.562
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 21.7144 N, 157.9678 W
+ *   [INFO] Land/water class separation distance = 1.982
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 21.0961 N, 157.3207 W
+ *   [INFO] Land/water class separation distance = 1.517
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 21.2448 N, 157.2547 W
+ *   [INFO] Land/water class separation distance = 2.252
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 21.2076 N, 156.9774 W
+ *   [INFO] Land/water class separation distance = 3.236
+ *   [INFO] Image correlation = 0.973 at offset = (-2, 0)
+ *   [INFO] Box offset = (-2, 0)
+ *   [INFO] Testing box at 21.1581 N, 156.7001 W
+ *   [INFO] Land/water class separation distance = 2.293
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 20.9225 N, 157.0698 W
+ *   [INFO] Land/water class separation distance = 1.448
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 20.7115 N, 156.9642 W
+ *   [INFO] Land/water class separation distance = 1.506
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 21.3067 N, 158.1130 W
+ *   [INFO] Land/water class separation distance = 1.601
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 21.3067 N, 157.6508 W
+ *   [INFO] Land/water class separation distance = 1.593
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 20.5374 N, 156.7001 W
+ *   [INFO] Land/water class separation distance = 5.142
+ *   [INFO] Image correlation = 0.978 at offset = (-2, 0)
+ *   [INFO] Box offset = (-2, 0)
+ *   [INFO] Testing box at 20.5499 N, 156.5680 W
+ *   [INFO] Land/water class separation distance = 2.834
+ *   [INFO] Image correlation = 0.947 at offset = (-2, -1)
+ *   [INFO] Insufficient correlation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 20.5996 N, 156.4360 W
+ *   [INFO] Land/water class separation distance = 2.285
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 20.8108 N, 156.5152 W
+ *   [INFO] Land/water class separation distance = 2.092
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 20.9349 N, 156.4756 W
+ *   [INFO] Land/water class separation distance = 3.629
+ *   [INFO] Image correlation = 0.969 at offset = (-2, -1)
+ *   [INFO] Box offset = (-2, -1)
+ *   [INFO] Testing box at 20.8357 N, 156.1190 W
+ *   [INFO] Land/water class separation distance = 2.46
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 20.2635 N, 155.8813 W
+ *   [INFO] Land/water class separation distance = 2.522
+ *   [INFO] Image correlation = 0.964 at offset = (-2, 0)
+ *   [INFO] Box offset = (-2, 0)
+ *   [INFO] Testing box at 19.5140 N, 154.7985 W
+ *   [INFO] Land/water class separation distance = 1.64
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 19.7392 N, 155.0230 W
+ *   [INFO] Land/water class separation distance = 1.833
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 19.7267 N, 155.1022 W
+ *   [INFO] Land/water class separation distance = 1.688
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 18.9119 N, 155.6965 W
+ *   [INFO] Land/water class separation distance = 1.378
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 19.8642 N, 155.9342 W
+ *   [INFO] Land/water class separation distance = 1.583
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 19.0375 N, 155.8813 W
+ *   [INFO] Land/water class separation distance = 1.638
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 22.0349 N, 159.7901 W
+ *   [INFO] Land/water class separation distance = 1.919
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Testing box at 22.1826 N, 159.3279 W
+ *   [INFO] Land/water class separation distance = 1.496
+ *   [INFO] Insufficient separation
+ *   [INFO] Box failed
+ *   [INFO] Mean offset = (-2, -0.25)
+ *   [INFO] Applying navigation correction
  * </pre>
  *
  * <!-- END MAN PAGE -->
@@ -520,19 +472,17 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * @author Peter Hollemans
  * @since 3.1.9
  */
- 
-// TODO: LOGGING
- 
 public final class cwautonav {
+
+  private static final String PROG = cwautonav.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
 
   // Constants
   // ------------
 
   /** Minimum required command line parameters. */
   private static final int NARGS = 3;
-
-  /** Name of program. */
-  private static final String PROG = "cwautonav";
 
   ////////////////////////////////////////////////////////////
 
@@ -541,8 +491,9 @@ public final class cwautonav {
    *
    * @param argv the list of command line parameters.  
    */
-  public static void main (String argv[]) throws Exception {
+  public static void main (String argv[]) {
 
+    ToolServices.startExecution (PROG);
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -560,35 +511,39 @@ public final class cwautonav {
     Option fractionOpt = cmd.addDoubleOption ('f', "fraction");
     Option separationOpt = cmd.addDoubleOption ('S', "separation");
     Option versionOpt = cmd.addBooleanOption ("version");
+
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
+      LOGGER.warning (e.getMessage());
       usage();
-      System.exit (1);
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
       usage();
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
       usage();
-      System.exit (1);
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     String locations = remain[0];
     String variable = remain[1];
@@ -598,6 +553,7 @@ public final class cwautonav {
     // ------------
     Boolean verboseObj = (Boolean) cmd.getOptionValue (verboseOpt);
     boolean verbose = (verboseObj == null ? false : verboseObj.booleanValue());
+    if (verbose) VERBOSE.setLevel (Level.INFO);
     String match = (String) cmd.getOptionValue (matchOpt);
     Integer widthObj = (Integer) cmd.getOptionValue (widthOpt);
     int width = (widthObj == null ? 100 : widthObj.intValue());
@@ -613,145 +569,166 @@ public final class cwautonav {
     Double fractionObj = (Double) cmd.getOptionValue (fractionOpt);
     Double separationObj = (Double) cmd.getOptionValue (separationOpt);
 
-    // Open input file
-    // ---------------
-    if (verbose) System.out.println (PROG + ": Reading input " + input);
-    EarthDataReader reader = EarthDataReaderFactory.create (input);
-    EarthTransform trans = reader.getInfo().getTransform();
-    Datum datum = trans.getDatum();
-    Grid grid = (Grid) reader.getVariable (variable);
+    EarthDataReader reader = null;
+    try {
 
-    // Check file format
-    // ----------------- 
-    if (!reader.canUpdateNavigation()) {
-      System.err.println (PROG + ": Unsupported file format for " + input);
-      System.exit (2);
-    } // if       
+      // Open input file
+      // ---------------
+      VERBOSE.info ("Reading input " + input);
+      reader = EarthDataReaderFactory.create (input);
+      EarthTransform trans = reader.getInfo().getTransform();
+      Datum datum = trans.getDatum();
+      Grid grid = (Grid) reader.getVariable (variable);
 
-    // Loop over each location
-    // -----------------------
-    BufferedReader locationReader = 
-      new BufferedReader (new FileReader (locations));
-    List offsetList = new ArrayList();
-    String line;
-    NavigationOffsetEstimator estimator = new NavigationOffsetEstimator();
-    estimator.setVerbose (verbose);
-    if (correlationObj != null) 
-      estimator.setMinCorrelation (correlationObj.doubleValue());
-    if (fractionObj != null) 
-      estimator.setMinFraction (fractionObj.doubleValue());
-    if (separationObj != null) 
-      estimator.setMinStdevDist (separationObj.doubleValue());
-    while ((line = locationReader.readLine()) != null) {
-                                                        
-      // Get center location
-      // -------------------
-      String[] values = line.split ("[ \t]+");
-      EarthLocation earthLoc = new EarthLocation (
-        Double.parseDouble (values[0]), Double.parseDouble (values[1]), datum);
+      // Check file format
+      // ----------------- 
+      if (!reader.canUpdateNavigation()) {
+        LOGGER.severe ("Unsupported file format for " + input);
+        ToolServices.exitWithCode (2);
+        return;
+      } // if       
 
-      // Get offset
-      // ----------
+      // Loop over each location
+      // -----------------------
+      BufferedReader locationReader = new BufferedReader (new FileReader (locations));
+      List offsetList = new ArrayList();
+      String line;
+      NavigationOffsetEstimator estimator = new NavigationOffsetEstimator();
+      estimator.setVerbose (verbose);
+      if (correlationObj != null) 
+        estimator.setMinCorrelation (correlationObj.doubleValue());
+      if (fractionObj != null) 
+        estimator.setMinFraction (fractionObj.doubleValue());
+      if (separationObj != null) 
+        estimator.setMinStdevDist (separationObj.doubleValue());
+      while ((line = locationReader.readLine()) != null) {
+                                                          
+        // Get center location
+        // -------------------
+        String[] values = line.split ("[ \t]+");
+        EarthLocation earthLoc = new EarthLocation (
+          Double.parseDouble (values[0]), 
+          Double.parseDouble (values[1]), 
+          datum
+        );
 
-      // TODO: Should we add a test here if the box center is out
-      // of bounds?
+        // Get offset
+        // ----------
 
-      System.out.println (PROG + ": Testing box at " + earthLoc.format());
-      int[] offset = estimator.getOffset (grid, trans, earthLoc, height, 
-        width, search);
-      if (offset != null) {
-        System.out.println (PROG + ": Box offset = (" + offset[0] + ", " + 
-          offset[1] + ")");
-        offsetList.add (offset);
+        // TODO: Should we add a test here if the box center is out
+        // of bounds?
+
+        VERBOSE.info ("Testing box at " + earthLoc.format());
+        int[] offset = estimator.getOffset (grid, trans, earthLoc, height, width, search);
+        if (offset != null) {
+          VERBOSE.info ("Box offset = (" + offset[0] + ", " + offset[1] + ")");
+          offsetList.add (offset);
+        } // if
+        else {
+          VERBOSE.info ("Box failed");
+        } // else
+        
+      } // while
+
+      // Test for minimum boxes
+      // ----------------------
+      if (offsetList.size() < minboxes) {
+        VERBOSE.info ("Not enough good boxes (minimum " + minboxes + " required)");
+        ToolServices.exitWithCode (1);
+        return;
       } // if
-      else {
-        System.out.println (PROG + ": Box failed");
-      } // else
-      
-    } // while
 
-    // Test for minimum boxes
-    // ----------------------
-    if (offsetList.size() < minboxes) {
-      System.out.println (PROG + ": Not enough good boxes (minimum " + 
-        minboxes + " required)");
-      System.exit (1);
-    } // if
+      // Compute mean
+      // ------------
+      double[] mean = new double[2];
+      for (Iterator iter = offsetList.iterator(); iter.hasNext(); ) {
+        int[] offset = (int[]) iter.next();
+        mean[0] += offset[0];
+        mean[1] += offset[1];
+      } // for
+      mean[0] /= offsetList.size();
+      mean[1] /= offsetList.size();
+      DecimalFormat fmt = new DecimalFormat ("0.###");
+      VERBOSE.info ("Mean offset = (" + 
+        fmt.format (mean[0]) + ", " + 
+        fmt.format (mean[1]) + ")"
+      );
 
-    // Compute mean
-    // ------------
-    double[] mean = new double[2];
-    for (Iterator iter = offsetList.iterator(); iter.hasNext(); ) {
-      int[] offset = (int[]) iter.next();
-      mean[0] += offset[0];
-      mean[1] += offset[1];
-    } // for
-    mean[0] /= offsetList.size();
-    mean[1] /= offsetList.size();
-    DecimalFormat fmt = new DecimalFormat ("0.###");
-    System.out.println (PROG + ": Mean offset = (" + fmt.format (mean[0]) + 
-      ", " + fmt.format (mean[1]) + ")");
+      // Check for test mode
+      // -------------------
+      if (test) {
+        ToolServices.exitWithCode (0);
+        return;
+      } // if
 
-    // Check for test mode
-    // -------------------
-    if (test) System.exit (0);
+      // Get variable names
+      // ------------------
+      List variables = new ArrayList();
+      for (int i = 0; i < reader.getVariables(); i++) {
+        DataVariable var = reader.getPreview(i);
+        if (var.getRank() != 2) continue;
+        String varName = var.getName();
+        if (match != null && !varName.matches (match)) continue;
+        variables.add (varName);
+      } // for      
 
-    // Get variable names
-    // ------------------
-    List variables = new ArrayList();
-    for (int i = 0; i < reader.getVariables(); i++) {
-      DataVariable var = reader.getPreview(i);
-      if (var.getRank() != 2) continue;
-      String varName = var.getName();
-      if (match != null && !varName.matches (match)) continue;
-      variables.add (varName);
-    } // for      
+      // Perform navigation
+      // ------------------
+      VERBOSE.info ("Applying navigation correction");
+      AffineTransform affine = AffineTransform.getTranslateInstance (mean[0], mean[1]);
+      reader.updateNavigation (variables, affine);
+      reader.close();
+      reader = null;
 
-    // Perform navigation
-    // ------------------
-    if (verbose)
-      System.out.println (PROG + ": Applying navigation correction");
-    AffineTransform affine = AffineTransform.getTranslateInstance (mean[0],
-      mean[1]);
-    reader.updateNavigation (variables, affine);
-    reader.close();
+    } // try
+    catch (Exception e) {
+      LOGGER.log (Level.SEVERE, "Aborting", ToolServices.shortTrace (e, "noaa.coastwatch"));
+      ToolServices.exitWithCode (2);
+      return;
+    } // catch
+
+    finally {
+      try {
+        if (reader != null) reader.close();
+      } // try
+      catch (Exception e) { LOGGER.log (Level.SEVERE, "Error closing resources", e); }
+    } // finally
+
+    ToolServices.finishExecution (PROG);
 
   } // main
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cwautonav [OPTIONS] locations-file variable input\n" +
-"Automatically determines a navigation correction based on earth image\n" +
-"data.\n" +
-"\n" +
-"Main parameters:\n" +
-"  locations-file             The text file of latitude/longitude\n" +
-"                              locations.\n" +
-"  variable                   The input data variable used for image data.\n" +
-"  input                      The input data file name.\n" +
-"\n" +
-"Options:\n" +
-"  -c, --correlation=FACTOR   Set minimum correlation factor.\n" + 
-"  -f, --fraction=FRACTION    Set minimum class fraction.\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -H, --height=PIXELS        Set navigation box height in pixels.\n" +
-"  -m, --match=PATTERN        Apply correction to variables matching the\n" +
-"                              pattern.\n" +
-"  -M, --minboxes=N           Set minimum number of successful navigation\n" +
-"                              boxes needed to apply mean correction.\n" +
-"  -s, --search=LEVEL         Set search level.\n" +
-"  -S, --separation=DISTANCE  Set minimum class separation distance.\n" +
-"  -t, --test                 Do not apply correction, run test mode only.\n" +
-"  -v, --verbose              Print verbose messages.\n" +
-"  -w, --width=PIXELS         Set navigation box width in pixels.\n" +
-"  --version                  Show version information.\n"
-    );
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the usage info for this tool. */
+  static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwautonav");
+
+    info.func ("Automatically corrects navigation using earth image data");
+
+    info.param ("locations-file", "Input text file of lat/lon locations");
+    info.param ("variable", "Input data variable used for image data");
+    info.param ("input", "Input data file");
+
+    info.option ("-c, --correlation=FACTOR", "Set minimum correlation factor");
+    info.option ("-f, --fraction=FRACTION", "Set minimum class fraction");
+    info.option ("-h, --help", "Show help message");
+    info.option ("-H, --height=PIXELS", "Set navigation box height in pixels");
+    info.option ("-m, --match=PATTERN", "Correct only variables matching regular expression");
+    info.option ("-M, --minboxes=N", "Set minimum number boxes for mean correction");
+    info.option ("-s, --search=LEVEL", "Set search level");
+    info.option ("-S, --separation=DISTANCE", "Set minimum class separation distance");
+    info.option ("-t, --test", "Do not apply correction, run test mode only");
+    info.option ("-v, --verbose", "Print verbose messages");
+    info.option ("-w, --width=PIXELS", "Set navigation box width in pixels");
+    info.option ("--version", "Show version information");
+
+    return (info);
 
   } // usage
 

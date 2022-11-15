@@ -59,6 +59,28 @@ public class UsageInfo {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the name of the command.
+   * 
+   * @return the name of the command.
+   * 
+   * @since 3.8.0
+   */
+  public String getName () { return (command); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the function of the command.
+   * 
+   * @return the function or null if none has been set.
+   * 
+   * @since 3.8.0
+   */
+  public String getFunc () { return (func); }
+
+  ////////////////////////////////////////////////////////////
+
   public UsageInfo (String command) {
 
     this.command = command;

@@ -104,6 +104,9 @@ import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.gui.ScriptConsole;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * <p>The analysis tool allows user to view, survey, and save datasets.</p>
  *
@@ -113,21 +116,21 @@ import noaa.coastwatch.gui.ScriptConsole;
  *
  * <p>
  *   <!-- START NAME -->
- *   cdat - performs visual earth data analysis.
+ *   cdat - performs interactive earth data analysis.
  *   <!-- END NAME -->
  * </p>
  *
  * <h2>Synopsis</h2>
  *
  * <p>
- *   cdat [OPTIONS] input <br>
- *   cdat [OPTIONS]
+ *   cdat [OPTIONS] [input]
  * </p>
  *
  * <h3>Options:</h3>
  *
  * <p>
  * -h, --help <br>
+ * -g, --geometry=WxH <br>
  * --version <br>
  * </p>
  *
@@ -145,7 +148,7 @@ import noaa.coastwatch.gui.ScriptConsole;
  * <dl>
  *
  *   <dt>input</dt>
- *   <dd>The input data file name.  If specified, the data file is
+ *   <dd>The optional input data file name.  If specified, the data file is
  *   opened immediately after CDAT starts.</dd>
  *
  * </dl>
@@ -191,13 +194,15 @@ import noaa.coastwatch.gui.ScriptConsole;
 public final class cdat
   extends JFrame {
 
+  private static final String PROG = cdat.class.getName();
+  private static final Logger LOGGER = Logger.getLogger (PROG);
+  private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
+
   // Constants
   // ---------
+
   /** Minimum required command line parameters. */
   private static final int NARGS = 0;
-
-  /** Name of program for command line. */
-  private static final String PROG = "cdat";
 
   /** The short program name. */
   private static final String SHORT_NAME = "CDAT";
@@ -1015,7 +1020,11 @@ public final class cdat
             getAnalysisPanel().saveProfile (saveFile);
           } // try
           catch (IOException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog (cdat.this,
+              "An error occurred saving the profile:\n" +
+              e.toString() + "\n" + 
+              "The profile was not saved.", 
+              "Error", JOptionPane.ERROR_MESSAGE);
           } // catch
         } // if
       } // else if
@@ -1030,10 +1039,14 @@ public final class cdat
             getAnalysisPanel().loadProfile (loadFile);
           } // try
           catch (IOException e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog (cdat.this,
+              "An error occurred loading the profile:\n" +
+              e.toString() + "\n" + 
+              "Try again with another file.", 
+              "Error", JOptionPane.ERROR_MESSAGE);
           } // catch
           catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            LOGGER.log (Level.WARNING, "Error loading profile", ToolServices.shortTrace (e, "noaa.coastwatch")); 
           } // catch
         } // if
       } // else if
@@ -1260,7 +1273,8 @@ public final class cdat
       // Quit program
       // ------------
       else if (command.equals (QUIT_COMMAND)) {
-        System.exit (0);
+        ToolServices.exitWithCode (0);
+        return;
       } // else if
 
     } // actionPerformed
@@ -1326,33 +1340,36 @@ public final class cdat
     Option memoryOpt = cmd.addBooleanOption ("memory");
     try { cmd.parse (argv); }
     catch (OptionException e) {
-      System.err.println (PROG + ": " + e.getMessage());
-      usage ();
-      System.exit (1);
+      LOGGER.warning (e.getMessage());
+      usage();
+      ToolServices.exitWithCode (1);
+      return;
     } // catch
 
     // Print help message
     // ------------------
     if (cmd.getOptionValue (helpOpt) != null) {
       usage ();
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Print version message
     // ---------------------
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
-      System.exit (0);
+      ToolServices.exitWithCode (0);
+      return;
     } // if  
 
     // Get remaining arguments
     // -----------------------
     String[] remain = cmd.getRemainingArgs();
     if (remain.length < NARGS) {
-      System.err.println (PROG + ": At least " + NARGS + 
-        " argument(s) required");
+      LOGGER.warning ("At least " + NARGS + " argument(s) required");
       usage();
-      System.exit (1);
+      ToolServices.exitWithCode (1);
+      return;
     } // if
     final String input = (remain.length == 0 ? null : remain[0]);
 
@@ -1368,8 +1385,9 @@ public final class cdat
     if (geometry != null) {
       String[] geometryArray = geometry.split ("x");
       if (geometryArray.length != 2) {
-        System.err.println (PROG + ": Invalid geometry '" + geometry + "'");
-        System.exit (2);
+        LOGGER.severe ("Invalid geometry '" + geometry + "'");
+        ToolServices.exitWithCode (2);
+        return;
       } // if
       try {
         int width = Integer.parseInt (geometryArray[0]);
@@ -1377,8 +1395,9 @@ public final class cdat
         userFrameSize = new Dimension (width, height);
       } // try
       catch (NumberFormatException e) {
-        System.err.println (PROG + ": Error parsing geometry: " + e.getMessage());
-        System.exit (2);
+        LOGGER.severe ("Error parsing geometry: " + e.getMessage());
+        ToolServices.exitWithCode (2);
+        return;
       } // catch
     } // if
     final Dimension frameSize = (userFrameSize != null ? userFrameSize : lastFrameSize);
@@ -1416,7 +1435,8 @@ public final class cdat
             e.toString() + "\n" + 
             "Please correct the problem and try again.", 
             "Error", JOptionPane.ERROR_MESSAGE);
-          System.exit (1);
+          ToolServices.exitWithCode (1);
+          return;
         } // catch
 
         // Initialize resources
@@ -1436,7 +1456,8 @@ public final class cdat
             e.toString() + "\n" + 
             "Please correct the problem and try again.", 
             "Error", JOptionPane.ERROR_MESSAGE);
-          System.exit (1);
+          ToolServices.exitWithCode (1);
+          return;
         } // catch
 
         // Check setup
@@ -1448,7 +1469,8 @@ public final class cdat
             errorStr + "\n" +
             "Please correct the problem and try again.",
             "Error", JOptionPane.ERROR_MESSAGE);
-          System.exit (1);
+          ToolServices.exitWithCode (1);
+          return;
         } // if
 
         // Show frame
@@ -1474,26 +1496,26 @@ public final class cdat
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Prints a brief usage message.
-   */
-  private static void usage () {
+  private static void usage () { System.out.println (getUsage()); }
 
-    System.out.println (
-"Usage: cdat [OPTIONS] input\n" +
-"       cdat [OPTIONS]\n" +
-"Allows users to view, survey, and save earth datasets interactively.\n" +
-"\n" +
-"Main parameters:\n" +
-"  input                      The initial input data file to open.\n" +
-"\n" +
-"Options:\n" +
-"  -h, --help                 Show this help message.\n" +
-"  -g, --geometry=WxH         Set width and height of the window.\n" +
-"  --version                  Show version information.\n"
-    );
+  ////////////////////////////////////////////////////////////
 
-  } // usage
+  /** Gets the usage info for this tool. */
+  static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cdat");
+
+    info.func ("Performs interactive earth data analysis");
+
+    info.param ("[input]", "The optional initial input data file to open");
+
+    info.option ("-h, --help", "Show help message");
+    info.option ("-g, --geometry=WxH", "Set window width and height");
+    info.option ("--version", "Show version information");
+
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 
