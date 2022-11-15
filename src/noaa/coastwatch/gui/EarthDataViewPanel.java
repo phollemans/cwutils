@@ -1239,6 +1239,11 @@ public class EarthDataViewPanel
         textFields[VALUE_FIELD].setText (value);
       } // if
 
+      // Here we move all the text fields carets to the start of the field box.
+      // Otherwise if the data value uses a lot of digits, you can only see the
+      // least significant digits which is useless.
+      for (var field : textFields) { if (field != null) field.setCaretPosition(0); }
+
     } // update
 
     ////////////////////////////////////////////////////////
