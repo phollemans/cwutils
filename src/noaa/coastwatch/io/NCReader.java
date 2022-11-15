@@ -44,6 +44,7 @@ import noaa.coastwatch.util.trans.cdm.EllipsoidMercatorBuilder;
 
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Attribute;
+import ucar.ma2.DataType;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.CoordinateSystem;
@@ -197,11 +198,12 @@ public abstract class NCReader
     if (asArray || att.isArray())
       value = att.getValues().copyTo1DJavaArray();
     else {
-      if (att.isString()) {
-        value = att.getStringValue().trim();
-        if (((String) value).indexOf ("\\0") != -1) {
-          value = IOServices.convertOctal ((String) value).trim();
-        } // if
+      if (att.getDataType().isString()) {
+        String strValue = att.getStringValue();
+        if (strValue == null) strValue = "";
+        strValue = strValue.trim();
+        if (strValue.indexOf ("\\0") != -1) strValue = IOServices.convertOctal (strValue.trim());
+        value = strValue;
       } // if
       else 
         value = att.getNumericValue();
