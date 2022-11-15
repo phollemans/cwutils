@@ -77,6 +77,9 @@ import noaa.coastwatch.gui.TransformableImageComponent;
 import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.util.DataLocation;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * A <code>LightTable</code> is a container that places an
  * invisible drawing table on top of another component and allows
@@ -91,6 +94,8 @@ import noaa.coastwatch.util.DataLocation;
  */
 public class LightTable 
   extends JLayeredPane {
+
+  private static final Logger LOGGER = Logger.getLogger (LightTable.class.getName());
 
   // Constants
   // ---------
@@ -357,7 +362,7 @@ public class LightTable
     MouseHandler handler = new MouseHandler();
     glassPane.addMouseListener (handler);
     glassPane.addMouseMotionListener (handler);
-    glassPane.addMouseWheelListener (event -> wheelRotation (event));
+//    glassPane.addMouseWheelListener (event -> wheelRotation (event));
     MouseEventForwarder forwarder = new MouseEventForwarder();
     glassPane.addMouseListener (forwarder);
     glassPane.addMouseMotionListener (forwarder);
@@ -389,6 +394,14 @@ public class LightTable
 
   private void wheelRotation (MouseWheelEvent event) {
 
+
+    // TODO: This is an attempt to explore the use of a mouse wheel 
+    // for sending back magnification events to the panel using this
+    // light table.  See the TODO item in EarthDataViewPanel for more 
+    // details and other code.  For now we disable this by not subscribing 
+    // to mouse wheel events in the constructor.
+
+
     // Create or restart the timer
     // ---------------------------
     if (wheelRotationTimer == null) {
@@ -404,7 +417,7 @@ public class LightTable
     wheelRotationTotal += event.getPreciseWheelRotation();
 
 
-
+LOGGER.fine ("wheelRotationTotal = " + wheelRotationTotal);
 
 
 /*

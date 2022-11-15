@@ -93,6 +93,9 @@ import noaa.coastwatch.util.PolygonSurvey;
 import noaa.coastwatch.util.Statistics;
 import noaa.coastwatch.util.trans.EarthTransform;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * The <code>EarthDataViewController</code> class handles
  * interactions between an {@link EarthDataView} object and the
@@ -118,6 +121,8 @@ import noaa.coastwatch.util.trans.EarthTransform;
  * @since 3.1.7
  */
 public class EarthDataViewController {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthDataViewController.class.getName());
 
   // Constants
   // ---------
@@ -534,6 +539,31 @@ public class EarthDataViewController {
     // ------------------
     lightTable = new LightTable (viewPanel);
     lightTable.addChangeListener (new DrawListener()); 
+
+
+
+
+    // TODO: This works to activate the magnify function but it's very ugly
+    // and choppy, and very delayed when a complex scene needs to be rendered,
+    // for example a swath projection with coastlines, grid lines, and a
+    // quality mask.  Also, it only works here when the glass pane is not active,
+    // ie: when the file is opened prior to any panning etc.  There would need
+    // to be some underlying optimization of the view rendering or the use of
+    // the existing image to display while rendering the new image for this to
+    // work properly and be acceptable.
+
+    // viewPanel.addMouseWheelListener (event -> {
+    //   var clicks = event.getWheelRotation();
+    //   LOGGER.fine ("Wheel rotation clicks = " + clicks);
+    //   if (viewPanel.isShowing() && clicks != 0) {
+    //     double mag = (clicks < 1 ? -clicks*1.2 : clicks*0.8);
+    //     viewPanel.magnify (mag);
+    //     viewPanel.repaint();
+    //   } // if
+    // });
+
+
+
 
     // Create navigation analysis panel
     // --------------------------------
