@@ -164,7 +164,7 @@ public class ReaderMetadataPanel extends JPanel {
     // the reader.
     this.metadataList = new ArrayList<>();
     var global = "Global";
-    reader.getRawMetadata().forEach ((key, value) -> {  
+    reader.getRawMetadata().forEach ((key, value) -> {
       metadataList.add (new String[] {global, (String) key, getType (value), MetadataServices.toString (value)});
     });
     for (int i = 0; i < reader.getVariables(); i++) {
