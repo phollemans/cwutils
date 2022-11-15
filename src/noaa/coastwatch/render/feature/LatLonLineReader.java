@@ -68,6 +68,42 @@ public class LatLonLineReader {
   ////////////////////////////////////////////////////////////
 
   /**
+   * Performs a test parsing of a list of latitude/longitude locations 
+   * in a text file.
+   * 
+   * @param filename the name of the text file to read.
+   * 
+   * @throws IOException if an error occurred parsing the locations, or no
+   * valid locations were found.
+   */
+  public static void testLocationData (
+    String filename
+  ) throws IOException { 
+
+    int valid = 0;
+
+    try (
+      var stream = new FileInputStream (new File (filename));
+      var reader = new InputStreamReader (stream);
+      var buffer = new BufferedReader (reader);      
+    ) {
+      var parser = new SimpleParser (buffer);
+      do {
+        double lat = parser.getNumber();
+        if (lat < -90 || lat > 90) lat = Double.NaN;
+        double lon = parser.getNumber();
+        if (lon < -360 || lon > 360) lon = Double.NaN;
+        if (!Double.isNaN (lat) && !Double.isNaN (lon)) valid++;
+      } while (!parser.eof());
+    } // try
+
+    if (valid == 0) throw new IOException ("No valid lat/lon locations found");
+
+  } // testLocationData
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * <p>Reads a list of latitude/longitude locations in a text file, 
    * for example:</p>
    * 
@@ -85,6 +121,8 @@ public class LatLonLineReader {
    * to use WGS84.
    * 
    * @return the list of points read.
+   * 
+   * @throws IOException if an error occurred parsing the locations.
    */
   public static List<EarthLocation> readLocationData (
     String filename,
@@ -125,6 +163,7 @@ public class LatLonLineReader {
 
     var file = new File (filename);
     if (!file.canRead()) throw new IOException ("Cannot read " + filename);
+    testLocationData (filename);
 
     this.filename = filename;
     this.overlay = new LineFeatureOverlay (Color.WHITE, new LineSource());
