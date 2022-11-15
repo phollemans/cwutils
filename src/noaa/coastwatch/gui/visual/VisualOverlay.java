@@ -57,6 +57,9 @@ import noaa.coastwatch.render.MultilayerBitmaskOverlay;
 import noaa.coastwatch.render.PointFeatureOverlay;
 import noaa.coastwatch.render.MultiPointFeatureOverlay;
 
+import java.util.logging.Logger;
+
+
 /**
  * The <code>VisualOverlay</code> class represents an
  * <code>EarthDataOverlay</code> object as a panel with modification
@@ -69,6 +72,8 @@ import noaa.coastwatch.render.MultiPointFeatureOverlay;
  */
 public class VisualOverlay 
   extends AbstractVisualObject {
+
+  private static final Logger LOGGER = Logger.getLogger (VisualOverlay.class.getName());
 
   // Variables
   // ---------
@@ -167,8 +172,9 @@ public class VisualOverlay
    */
   private boolean setOverlayFromChooser () {
 
-    try { 
-      setOverlay (chooserPanel.getOverlay());
+    try {
+      var newOverlay = (EarthDataOverlay) chooserPanel.getOverlay().clone();
+      setOverlay (newOverlay);
       return (true);
     } // try
     catch (IllegalStateException e) {
@@ -273,6 +279,9 @@ public class VisualOverlay
     // -----------
     EarthDataOverlay oldOverlay = overlay;
     overlay = newOverlay;
+
+    LOGGER.fine ("Old overlay is " + oldOverlay);
+    LOGGER.fine ("New overlay is " + newOverlay);
 
     // Clear panel contents
     // --------------------
