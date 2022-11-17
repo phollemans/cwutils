@@ -190,7 +190,13 @@ public abstract class HDFWriter
       if (c.equals (Byte.TYPE)) return (HDFConstants.DFNT_UINT8);
       else if (c.equals (Short.TYPE)) return (HDFConstants.DFNT_UINT16);
       else if (c.equals (Integer.TYPE)) return (HDFConstants.DFNT_UINT32);
-      else if (c.equals (Long.TYPE)) return (HDFConstants.DFNT_UINT64);
+
+      // The current HDF4 library doesn't support writing 64-bit integer 
+      // data, even though it has data type constants that would indicate
+      // otherwise.  The HDF5 library _does_ support 64-bit integer.
+      
+      // else if (c.equals (Long.TYPE)) return (HDFConstants.DFNT_UINT64);
+
       else throw new ClassNotFoundException (
         "Unsupported unsigned type class: " + c.getName());
     } // if
@@ -201,7 +207,10 @@ public abstract class HDFWriter
       if (c.equals (Byte.TYPE)) return (HDFConstants.DFNT_INT8);
       else if (c.equals (Short.TYPE)) return (HDFConstants.DFNT_INT16);
       else if (c.equals (Integer.TYPE)) return (HDFConstants.DFNT_INT32);
-      else if (c.equals (Long.TYPE)) return (HDFConstants.DFNT_INT64);
+
+      // See note above.
+      // else if (c.equals (Long.TYPE)) return (HDFConstants.DFNT_INT64);
+
       else if (c.equals (Float.TYPE)) return (HDFConstants.DFNT_FLOAT32);
       else if (c.equals (Double.TYPE)) return (HDFConstants.DFNT_FLOAT64);
       else throw new ClassNotFoundException (
