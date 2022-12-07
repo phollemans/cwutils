@@ -41,7 +41,7 @@ import noaa.coastwatch.util.ResamplingMap;
  * operation between pairs of {@link ChunkProducer} instances and
  * {@link ChunkConsumer} instances.  A {@link ResamplingMapFactory} is used
  * to create {@link ResamplingMap} instances for a given chunk in the
- * consumers' chunkiung scheme.  Consumers are all assumed to have the same
+ * consumers' chunking scheme.  Consumers are all assumed to have the same
  * chunking scheme, so that resampling can be performed on each chunk in the
  * consumers using the same resampling map.  If a given position in the consumer
  * scheme has no valid resampling map, no operation is performed.

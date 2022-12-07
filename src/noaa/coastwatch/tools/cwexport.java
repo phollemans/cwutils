@@ -278,7 +278,7 @@ import java.util.logging.Level;
  *     <li>NetCDF: Not applicable, the missing values for
  *     variable data are copied from the input data source.</li>
  *
- *     <li>GeoTIFF: The default is to use write 32-float IEEE NaN values
+ *     <li>GeoTIFF: The default is to write 32-float IEEE NaN values
  *     with bit pattern 0x7fc00000 in the TIFF image data.</li>
  *
  *   </ul></dd>
