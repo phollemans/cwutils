@@ -160,6 +160,29 @@ public class FloatChunk implements FloatingPointValuedDataChunk {
 
   ////////////////////////////////////////////////////////////
 
+  @Override
+  public boolean isCompatible (DataChunk chunk) {
+
+    boolean compatible = false;
+    if (chunk instanceof FloatChunk) {
+      var otherChunk = (FloatChunk) chunk;
+      compatible = 
+        (
+          (this.missing == null && otherChunk.missing == null) ||
+          (this.missing != null && this.missing.equals (otherChunk.missing))
+        ) &&
+        (
+          (this.scheme == null && otherChunk.scheme == null) || 
+          (this.scheme != null && this.scheme.equals (otherChunk.scheme))
+        );
+    } // if
+
+    return (compatible);
+
+  } // isCompatible
+
+  ////////////////////////////////////////////////////////////
+
 } // FloatChunk class
 
 ////////////////////////////////////////////////////////////////////////

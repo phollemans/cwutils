@@ -90,6 +90,16 @@ public interface DataChunk {
    */
   public DataChunk blankCopyWithValues (int values);
 
+  /**
+   * Checks if this chunk is compatible with another.  Compatible chunks
+   * share the same primitive data type and other properties.
+   *
+   * @param chunk the data chunk to check.
+   * 
+   * @since 3.8.0
+   */
+  public boolean isCompatible (DataChunk chunk);
+
 } // DataChunk interface
 
 ////////////////////////////////////////////////////////////////////////

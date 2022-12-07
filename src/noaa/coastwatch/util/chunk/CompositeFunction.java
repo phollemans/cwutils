@@ -42,7 +42,8 @@ import noaa.coastwatch.util.chunk.ChunkDataModifier;
  * that takes many chunks and collapses them into just one chunk using a
  * reduction operator.  If the number of input chunks is less than the minimum
  * valid, or the input chunks contain all invalid data, the function returns
- * null from the {@link #apply} method.
+ * null from the {@link #apply} method.  All input chunks must have the same
+ * external data type.
  *
  * @author Peter Hollemans
  * @since 3.5.0
@@ -60,6 +61,9 @@ public class CompositeFunction implements ChunkFunction {
   /** The minimum valid values to perform the composite. */
   private int minValid;
 
+  /** The prototype chunk to use for creating results. */
+  private DataChunk protoChunk;
+
   ////////////////////////////////////////////////////////////
 
   /**
@@ -71,15 +75,20 @@ public class CompositeFunction implements ChunkFunction {
    * present to form a composite value, at least 1.  If the valid input count
    * falls below the minimum, the output at that chunk location is marked as
    * missing.
+   * @param protoChunk the prototype chunk for the function result.  The chunk
+   * returned by the {@link #apply} method will be compatible with the 
+   * prototype.
    */
   public CompositeFunction (
     ArrayReduction operator,
-    int minValid
+    int minValid,
+    DataChunk protoChunk
   ) {
   
     this.operator = operator;
     if (minValid < 1) throw new IllegalArgumentException ("Minimum valid values must be >= 1");
     this.minValid = minValid;
+    this.protoChunk = protoChunk;
 
   } // CompositeFunction constructor
 
@@ -124,9 +133,9 @@ public class CompositeFunction implements ChunkFunction {
 
       // Create result chunk
       // -------------------
-      resultChunk = inputChunks.get (0).blankCopy();
+      int chunkValues = inputChunks.get (0).getValues();
+      resultChunk = protoChunk.blankCopyWithValues (chunkValues);
       ChunkDataModifier modifier = new ChunkDataModifier();
-      int chunkValues = resultChunk.getValues();
     
       // Compute
       // -------

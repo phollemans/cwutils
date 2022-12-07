@@ -557,7 +557,7 @@ public final class cwcomposite {
       CleanupHook.getInstance().scheduleDelete (output);
       CWHDFWriter writer = new CWHDFWriter (outputInfo, output);
 
-      // Create chunk function
+      // Create chunk operator
       // ---------------------
       ArrayReduction operator = null;
       if (method.equals ("mean")) operator = new MeanReduction();
@@ -572,7 +572,6 @@ public final class cwcomposite {
         ToolServices.exitWithCode (2);
         return;
       } // else
-      ChunkFunction function = new CompositeFunction (operator, minValid);
 
       // Report computation properties
       // -----------------------------
@@ -641,6 +640,7 @@ public final class cwcomposite {
 
         // Create chunk computation
         // ------------------------
+        ChunkFunction function = new CompositeFunction (operator, minValid, consumer.getPrototypeChunk());
         ChunkComputation op = new ChunkComputation (collector, consumer, function);
 
         // Debugging

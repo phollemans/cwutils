@@ -131,6 +131,26 @@ public class DoubleScalingScheme implements ScalingScheme {
 
   } // unscaleDouble
 
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean equals (Object obj) {
+
+    boolean equal = false;
+    if (obj instanceof DoubleScalingScheme) {
+      var scheme = (DoubleScalingScheme) obj;
+      equal = (this.scale == scheme.scale && this.offset == scheme.offset);
+    } // if
+
+    return (equal);
+
+  } // equals
+
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public int hashCode() { return (Double.hashCode (scale)*1009 ^ Double.hashCode (offset)*1013); }
+
   ////////////////////////////////////////////////////////////
 
   /**
@@ -153,6 +173,17 @@ public class DoubleScalingScheme implements ScalingScheme {
 
     logger.test ("unscaleDouble");
     assert (scheme.unscaleDouble (scaledValue) == rawValue);
+    logger.passed();
+
+    var otherScheme = new DoubleScalingScheme (0.02, 3000.0);
+    var sameScheme = new DoubleScalingScheme (0.01, 3000.0);
+    logger.test ("equals");
+    assert (sameScheme.equals (scheme));
+    assert (!otherScheme.equals (scheme));
+    logger.passed();
+
+    logger.test ("hashCode");
+    assert (scheme.hashCode() == sameScheme.hashCode());
     logger.passed();
 
   } // main

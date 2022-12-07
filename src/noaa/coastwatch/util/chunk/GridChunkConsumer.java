@@ -102,6 +102,10 @@ public class GridChunkConsumer implements ChunkConsumer {
   @Override
   public void putChunk (ChunkPosition pos, DataChunk chunk) {
 
+    // Check that the chunk passed in conforms to the prototype!
+    if (!chunk.isCompatible (protoChunk))
+      throw new IllegalArgumentException ("Chunk is incompatible with prototype");
+
     int[] start = new int[] {(int) pos.start[0], (int) pos.start[1]};
     int[] length = new int[] {(int) pos.length[0], (int) pos.length[1]};
     synchronized (grid) {

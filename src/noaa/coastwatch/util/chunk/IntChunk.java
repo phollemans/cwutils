@@ -159,6 +159,32 @@ public class IntChunk implements IntegerValuedDataChunk {
 
   ////////////////////////////////////////////////////////////
 
+  @Override
+  public boolean isCompatible (DataChunk chunk) {
+
+    boolean compatible = false;
+    if (chunk instanceof IntChunk) {
+      var otherChunk = (IntChunk) chunk;
+      compatible = 
+        (
+          (this.missing == null && otherChunk.missing == null) ||
+          (this.missing != null && this.missing.equals (otherChunk.missing))
+        ) &&
+        (
+          (this.scheme == null && otherChunk.scheme == null) || 
+          (this.scheme != null && this.scheme.equals (otherChunk.scheme))
+        ) &&
+        (
+          this.isUnsigned == otherChunk.isUnsigned
+        );
+    } // if
+
+    return (compatible);
+
+  } // isCompatible
+
+  ////////////////////////////////////////////////////////////
+
 } // IntChunk class
 
 ////////////////////////////////////////////////////////////////////////

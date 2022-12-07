@@ -131,6 +131,26 @@ public class FloatScalingScheme implements ScalingScheme {
 
   } // unscaleFloat
 
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean equals (Object obj) {
+
+    boolean equal = false;
+    if (obj instanceof FloatScalingScheme) {
+      var scheme = (FloatScalingScheme) obj;
+      equal = (this.scale == scheme.scale && this.offset == scheme.offset);
+    } // if
+
+    return (equal);
+
+  } // equals
+
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public int hashCode() { return (Float.hashCode (scale)*1009 ^ Float.hashCode (offset)*1013); }
+
   ////////////////////////////////////////////////////////////
 
   /**
@@ -153,6 +173,17 @@ public class FloatScalingScheme implements ScalingScheme {
 
     logger.test ("unscaleFloat");
     assert (scheme.unscaleFloat (scaledValue) == rawValue);
+    logger.passed();
+
+    var otherScheme = new FloatScalingScheme (0.02f, 3000.0f);
+    var sameScheme = new FloatScalingScheme (0.01f, 3000.0f);
+    logger.test ("equals");
+    assert (sameScheme.equals (scheme));
+    assert (!otherScheme.equals (scheme));
+    logger.passed();
+
+    logger.test ("hashCode");
+    assert (scheme.hashCode() == sameScheme.hashCode());
     logger.passed();
 
   } // main

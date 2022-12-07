@@ -625,6 +625,26 @@ public class DoublePackingScheme implements PackingScheme {
 
   } // unpackDouble
 
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean equals (Object obj) {
+
+    boolean equal = false;
+    if (obj instanceof DoublePackingScheme) {
+      var scheme = (DoublePackingScheme) obj;
+      equal = (this.scale == scheme.scale && this.offset == scheme.offset);
+    } // if
+
+    return (equal);
+
+  } // equals
+
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public int hashCode() { return (Double.hashCode (scale)*1009 ^ Double.hashCode (offset)*1013); }
+
   ////////////////////////////////////////////////////////////
 
   /**
@@ -647,6 +667,17 @@ public class DoublePackingScheme implements PackingScheme {
 
     logger.test ("unpackDouble");
     assert (scheme.unpackDouble (longValue) == doubleValue);
+    logger.passed();
+
+    var otherScheme = new DoublePackingScheme (0.02, 3000.0);
+    var sameScheme = new DoublePackingScheme (0.01, 3000.0);
+    logger.test ("equals");
+    assert (sameScheme.equals (scheme));
+    assert (!otherScheme.equals (scheme));
+    logger.passed();
+
+    logger.test ("hashCode");
+    assert (scheme.hashCode() == sameScheme.hashCode());
     logger.passed();
 
   } // main

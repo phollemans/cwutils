@@ -90,6 +90,7 @@ public class DoubleChunk implements FloatingPointValuedDataChunk {
 
   ////////////////////////////////////////////////////////////
 
+  @Override
   public DataChunk blankCopyWithValues (int values) {
   
     DataChunk chunk = new DoubleChunk (new double[values], missing, scheme);
@@ -157,6 +158,23 @@ public class DoubleChunk implements FloatingPointValuedDataChunk {
    * @return the primitive double data array containing the data.
    */
   public double[] getDoubleData() { return (doubleData); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean isCompatible (DataChunk chunk) {
+
+    boolean compatible = false;
+    if (chunk instanceof DoubleChunk) {
+      var otherChunk = (DoubleChunk) chunk;
+      compatible = 
+        (this.missing == null || this.missing.equals (otherChunk.missing)) &&
+        (this.scheme == null || (this.scheme.equals (otherChunk.scheme)));
+    } // if
+
+    return (compatible);
+
+  } // isCompatible
 
   ////////////////////////////////////////////////////////////
 

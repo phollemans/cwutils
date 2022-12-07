@@ -482,6 +482,26 @@ public class FloatPackingScheme implements PackingScheme {
 
   } // unpackFloat
 
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean equals (Object obj) {
+
+    boolean equal = false;
+    if (obj instanceof FloatPackingScheme) {
+      var scheme = (FloatPackingScheme) obj;
+      equal = (this.scale == scheme.scale && this.offset == scheme.offset);
+    } // if
+
+    return (equal);
+
+  } // equals
+
+  /////////////////////////////////////////////////////////////////
+
+  @Override
+  public int hashCode() { return (Float.hashCode (scale)*1009 ^ Float.hashCode (offset)*1013); }
+
   ////////////////////////////////////////////////////////////
 
   /**
@@ -504,6 +524,17 @@ public class FloatPackingScheme implements PackingScheme {
 
     logger.test ("unpackFloat");
     assert (scheme.unpackFloat (intValue) == floatValue);
+    logger.passed();
+
+    var otherScheme = new FloatPackingScheme (0.02f, 3000.0f);
+    var sameScheme = new FloatPackingScheme (0.01f, 3000.0f);
+    logger.test ("equals");
+    assert (sameScheme.equals (scheme));
+    assert (!otherScheme.equals (scheme));
+    logger.passed();
+
+    logger.test ("hashCode");
+    assert (scheme.hashCode() == sameScheme.hashCode());
     logger.passed();
 
   } // main
