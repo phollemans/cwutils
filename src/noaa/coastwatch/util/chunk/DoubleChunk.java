@@ -168,8 +168,14 @@ public class DoubleChunk implements FloatingPointValuedDataChunk {
     if (chunk instanceof DoubleChunk) {
       var otherChunk = (DoubleChunk) chunk;
       compatible = 
-        (this.missing == null || this.missing.equals (otherChunk.missing)) &&
-        (this.scheme == null || (this.scheme.equals (otherChunk.scheme)));
+        (
+          (this.missing == null && otherChunk.missing == null) ||
+          (this.missing != null && this.missing.equals (otherChunk.missing))
+        ) &&
+        (
+          (this.scheme == null && otherChunk.scheme == null) || 
+          (this.scheme != null && this.scheme.equals (otherChunk.scheme))
+        );
     } // if
 
     return (compatible);
