@@ -79,11 +79,20 @@ public class GridChunkConsumer implements ChunkConsumer {
     PackingScheme packing = null;
     ScalingScheme scaling = null;
     double[] scalingArray = grid.getScaling();
-    if (scalingArray != null && !(scalingArray[0] == 1 && scalingArray[1] == 0)) {
+
+    // We previously assumed that an identity scaling array meant that the data 
+    // needs no scaling or packing scheme.  But this causes integer data chunks 
+    // to have a different external type than the scaling array, which causes
+    // problems in expression parsing and preserving the correct missing 
+    // values. 
+//    if (scalingArray != null && !(scalingArray[0] == 1 && scalingArray[1] == 0)) {
+
+    if (scalingArray != null) {
+      boolean unity = (scalingArray[0] == 1 && scalingArray[1] == 0);
       var dataClass = grid.getDataClass();
-      if (dataClass.equals (Float.TYPE))
+      if (dataClass.equals (Float.TYPE) && !unity)
         scaling = new FloatScalingScheme ((float) scalingArray[0], (float) scalingArray[1]);
-      else if (dataClass.equals (Double.TYPE))
+      else if (dataClass.equals (Double.TYPE) && !unity)
         scaling = new DoubleScalingScheme (scalingArray[0], scalingArray[1]);
       else
         packing = new DoublePackingScheme (scalingArray[0], scalingArray[1]);

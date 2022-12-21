@@ -678,6 +678,16 @@ public abstract class HDFReader
         if (!HDFLib.getInstance().SDgetcal (sdsid, calInfo, calType))
           throw new HDFException ("Cannot get calibration info for " + name);
         scaling = new double[] {calInfo[0], calInfo[2]};
+
+        // We check the calibrated type here.  If we find that the calibrated
+        // type matches the variable type, and the scaling is an identity
+        // operator, than we discard the scaling.
+        Class calClass = null;
+        try { calClass = getClass (calType[0]); }
+        catch (ClassNotFoundException e) { calClass = varClass; } 
+        if (scaling[0] == 1 && scaling[1] == 0 && varClass.equals (calClass))
+          scaling = null;
+
       } // try
       catch (HDFException e) {
         scaling = null;
