@@ -102,12 +102,15 @@ public class GridChunkProducer implements ChunkProducer {
     if (scalingArray != null) {
       boolean unity = (scalingArray[0] == 1 && scalingArray[1] == 0);
       var dataClass = grid.getDataClass();
-      if (dataClass.equals (Float.TYPE) && !unity)
-        scaling = new FloatScalingScheme ((float) scalingArray[0], (float) scalingArray[1]);
-      else if (dataClass.equals (Double.TYPE) && !unity)
-        scaling = new DoubleScalingScheme (scalingArray[0], scalingArray[1]);
-      else
+      if (dataClass.equals (Float.TYPE)) {
+        if (!unity) scaling = new FloatScalingScheme ((float) scalingArray[0], (float) scalingArray[1]);
+      } // if            
+      else if (dataClass.equals (Double.TYPE)) {
+        if (!unity) scaling = new DoubleScalingScheme (scalingArray[0], scalingArray[1]);
+      } // else if
+      else {
         packing = new DoublePackingScheme (scalingArray[0], scalingArray[1]);
+      } // else
     } // if
 
     // Create the prototype chunk
