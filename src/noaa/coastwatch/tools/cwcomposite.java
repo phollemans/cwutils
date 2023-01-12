@@ -68,6 +68,7 @@ import noaa.coastwatch.util.MedianReduction;
 import noaa.coastwatch.util.LastReduction;
 
 import noaa.coastwatch.util.chunk.DataChunk;
+import noaa.coastwatch.util.chunk.DataChunk.DataType;
 import noaa.coastwatch.util.chunk.ChunkCollector;
 import noaa.coastwatch.util.chunk.ChunkProducer;
 import noaa.coastwatch.util.chunk.ChunkConsumer;
@@ -572,6 +573,10 @@ public final class cwcomposite {
         ToolServices.exitWithCode (2);
         return;
       } // else
+      boolean orderingMethod = (
+        method.equals ("latest") || 
+        method.equals ("explicit")
+      );
 
       // Report computation properties
       // -----------------------------
@@ -623,6 +628,13 @@ public final class cwcomposite {
           } // if
         } // for
         
+        // Warn the user about compositing variables that are integer types
+        // that may represent a mask
+        if (!orderingMethod && !(externalType == DataType.FLOAT || externalType == DataType.DOUBLE)) {
+          LOGGER.warning ("Composite method '" + method + "' with variable '" + variableName + "' of integer external type");
+          LOGGER.warning ("For mask or quality flag variables, this may not be what you want");
+        } // if
+
         // Create a chunk consumer for the output variable
         // -----------------------------------------------
         TilingScheme inputTilingScheme = prototypeGrid.getTilingScheme();
