@@ -43,6 +43,7 @@ import noaa.coastwatch.io.CWHDFWriter;
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
 import noaa.coastwatch.io.HDFCachedGrid;
+import noaa.coastwatch.io.IOServices;
 import noaa.coastwatch.tools.CleanupHook;
 import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.DataVariable;
@@ -562,26 +563,6 @@ public final class cwregister2 {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Removes the leading group path from a variable name.
-   *
-   * @param name the full variable name.
-   *
-   * @return the modified variable name wothout leading group path.  If no
-   * group path is found, the name is returned unmodified.
-   */
-  private static String stripGroup (
-    String name
-  ) {
-  
-    int index = name.lastIndexOf ("/");
-    String newName = (index == -1 ? name : name.substring (index+1));
-    return (newName);
-
-  } // stripGroup
-
-  ////////////////////////////////////////////////////////////
-
-  /**
    * Performs the main function.
    *
    * @param argv the list of command line parameters.
@@ -785,7 +766,7 @@ public final class cwregister2 {
         if (var instanceof Grid) {
           Grid inputGrid = (Grid) var;
           String inputName = var.getName();
-          String outputName = (nogroup ? stripGroup (inputName) : inputName);
+          String outputName = (nogroup ? IOServices.stripGroup (inputName) : inputName);
           VERBOSE.info ("Creating output variable " + outputName);
           Grid outputGrid = new Grid (inputGrid, destRows, destCols) {
             @Override
