@@ -531,8 +531,16 @@ public class CWHDFWriter
     else if (trans instanceof DataProjection && version >= 3) {
       DataProjection data = (DataProjection) trans;
       setAttribute (sdid, "projection_type", SwathProjection.DESCRIPTION);
-      writeVariable (data.getLat(), false, false);
-      writeVariable (data.getLon(), false, false);
+
+      // We need to rename the data projection variables here to make sure 
+      // we can read them later in the CWHDFReader code
+      var lat = data.getLat();
+      lat.setName ("latitude");
+      var lon = data.getLon();
+      lon.setName ("longitude");
+      writeVariable (lat, false, false);
+      writeVariable (lon, false, false);
+
     } // else if
 
     // Unsupported transform

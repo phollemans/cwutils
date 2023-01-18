@@ -236,6 +236,28 @@ public class IOServices {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Removes the leading group path from a variable name.
+   *
+   * @param name the full variable name.
+   *
+   * @return the modified variable name wothout leading group path.  If no
+   * group path is found, the name is returned unmodified.
+   * 
+   * @since 3.8.0
+   */
+  public static String stripGroup (
+    String name
+  ) {
+  
+    int index = name.lastIndexOf ("/");
+    String newName = (index == -1 ? name : name.substring (index+1));
+    return (newName);
+
+  } // stripGroup
+
+  ////////////////////////////////////////////////////////////
+
   private IOServices () { }
 
   ////////////////////////////////////////////////////////////

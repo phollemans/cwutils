@@ -35,6 +35,7 @@ import noaa.coastwatch.io.CWHDFReader;
 import noaa.coastwatch.io.CWHDFWriter;
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
+import noaa.coastwatch.io.IOServices;
 import noaa.coastwatch.tools.CleanupHook;
 import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.DataVariable;
@@ -63,6 +64,7 @@ import java.util.logging.Level;
  *
  * <p>
  * -c, --copy <br>
+ * -g, --nogroup <br>
  * -h, --help <br>
  * -m, --match=PATTERN <br>
  * -v, --verbose <br>
@@ -109,6 +111,12 @@ import java.util.logging.Level;
  *   default is to create a new output file and populate it with
  *   data.  Copy mode is especially useful for copying variables
  *   from one CoastWatch HDF file to another.</dd>
+ *
+ *   <dt>-g, --nogroup</dt>
+ *
+ *   <dd>Turns on removal of the group path in variable names.  If variable
+ *   names contain a leading group path ending with '/', the group path is
+ *   removed.</dd>
  *
  *   <dt> -h, --help </dt>
  * 
@@ -190,6 +198,7 @@ import java.util.logging.Level;
     Option verboseOpt = cmd.addBooleanOption ('v', "verbose");
     Option matchOpt = cmd.addStringOption ('m', "match");
     Option copyOpt = cmd.addBooleanOption ('c', "copy");
+    Option nogroupOpt = cmd.addBooleanOption ('g', "nogroup");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -234,6 +243,12 @@ import java.util.logging.Level;
     if (verbose) VERBOSE.setLevel (Level.INFO);
     String match = (String) cmd.getOptionValue (matchOpt);
     boolean copy = (cmd.getOptionValue (copyOpt) != null);
+    boolean nogroup = (cmd.getOptionValue (nogroupOpt) != null);
+
+    // We set the reader to default to reading a swath projection as a data
+    // projection to preserve the sensor geometery as much as possible if there
+    // are level 2 files
+    EarthDataReader.setDataProjection (true);
 
     // We have the reader and writer declared outside the try statement so
     // we can close them later if there's an error that doesn't result in
@@ -300,6 +315,13 @@ import java.util.logging.Level;
           // ----------------------
           try {
             DataVariable var = reader.getVariable (i);
+
+            if (nogroup) {
+              String outputName = IOServices.stripGroup (varName);
+              var.setName (outputName);
+              varName = outputName;
+            } // if
+
             VERBOSE.info ("Writing " + varName); 
             writer.addVariable (var);
             writer.flush(); 
@@ -379,6 +401,7 @@ import java.util.logging.Level;
     info.param ("output", "Output data file");
 
     info.option ("-c, --copy", "Copy data without overwriting output file");
+    info.option ("-g, --nogroup", "Remove group path from variable names");
     info.option ("-h, --help", "Show help message");
     info.option ("-m, --match=PATTERN", "Import only variables matching regular expression");
     info.option ("-v, --verbose", "Print verbose messages");
