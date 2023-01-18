@@ -44,6 +44,9 @@ import ucar.units.Unit;
  * missing data value.  Other metadata may also be attached using the
  * <code>TreeMap</code> functions, where it is expected that the key
  * be a Java <code>String</code> object.
+ * 
+ * Note that this class and any subclasses are not guaranteed to be
+ * thread safe.
  *
  * @author Peter Hollemans
  * @since 3.1.0

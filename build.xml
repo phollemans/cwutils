@@ -380,6 +380,14 @@
 
   <target name="test" depends="classes"
     description="Tests the Java class ${class} by calling its main() method with arguments ${args}">
+
+    <if>
+      <not><isset property="args"/></not>
+      <then>
+        <property name="args" value=""/>
+      </then>
+    </if>
+
     <java 
       classname="${class}" 
       classpathref="test.class.path"
@@ -388,6 +396,7 @@
       <jvmarg line="${vm.args} -Dcw.debug=true -Djna.library.path='${basedir}/lib/native/${os.libs}' -ea:noaa.coastwatch..."/>
       <arg line="${args}"/>
     </java>
+
   </target>
 
   <target name="test-cdat"

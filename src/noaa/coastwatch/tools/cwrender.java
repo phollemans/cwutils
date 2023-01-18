@@ -964,6 +964,9 @@ import ucar.units.Unit;
  *     variables that have been corrected for atmosphere so that all variables
  *     contain reflectance data with a range [0..1].</li>
  *
+ *     <li>'true_color_vivid' -- Similar to true color above, but produces
+ *     slightly higher contrast true color images. </li>
+ *
  *     <li>'true_color_uncorr' -- Similar to true color above, but handles data
  *     that has not been corrected for atmosphere and contains albedo or
  *     radiance data.  The components are analyzed to determine approximate
@@ -974,7 +977,7 @@ import ucar.units.Unit;
  *
  *     <li>'avhrr_night' -- AVHRR nighttime false color using channels 3, 4, and
  *     5.</li>
-
+ * 
  *   </ul></dd>
  *
  * </dl>
@@ -1670,6 +1673,10 @@ public class cwrender {
           if (compositehint.equals ("true_color")) {
             redfunction = greenfunction = bluefunction = "gamma";
             redrange = greenrange = bluerange = "0/1";
+          } // if
+          else if (compositehint.equals ("true_color_vivid")) {
+            redfunction = greenfunction = bluefunction = "gamma";
+            redrange = greenrange = bluerange = "0.02/0.8";
           } // if
           else if (compositehint.equals ("true_color_uncorr")) {
             redfunction = greenfunction = bluefunction = "gamma";

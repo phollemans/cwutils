@@ -39,17 +39,10 @@ import java.awt.Stroke;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Arrays;
-import noaa.coastwatch.io.EarthDataReader;
-import noaa.coastwatch.io.EarthDataReaderFactory;
-import noaa.coastwatch.io.IOServices;
 import noaa.coastwatch.render.ContourGenerator;
 import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.LineOverlay;
 import noaa.coastwatch.util.EarthArea;
-import noaa.coastwatch.util.EarthDataInfo;
-import noaa.coastwatch.util.trans.EarthTransform;
-import noaa.coastwatch.util.Grid;
-import noaa.coastwatch.util.trans.MapProjection;
 
 /**
  * A topography overlay annotates an earth data view with topography
@@ -71,9 +64,6 @@ public class TopographyOverlay
  
   // Constants
   // ---------
-
-  /** The topography data file. */
-  private static final String TOPOGRAPHY_FILE = "etopo5.hdf";
 
   /** The default topography contour levels. */
   public static final int[] TOPO_LEVELS = new int[] {
@@ -142,19 +132,11 @@ public class TopographyOverlay
   /** Gets the source for topographic contours. */
   private ContourGenerator getSource () throws IOException {
 
-    // Get reader
-    // ----------
-    String path = IOServices.getFilePath (getClass(), TOPOGRAPHY_FILE);
-    EarthDataReader reader = EarthDataReaderFactory.create (path);
+    // Get an instance of the topography data
+    var topo = Topography.getInstance();
 
-    // Get grid and transform
-    // ----------------------
-    Grid grid = (Grid) reader.getVariable ("elevation");
-    EarthTransform trans = reader.getInfo().getTransform();
-
-    // Create contour generator
-    // ------------------------
-    ContourGenerator generator = new ContourGenerator (grid, trans);
+    // Create the contour generator
+    ContourGenerator generator = new ContourGenerator (topo.getElevation(), topo.getTransform());
     generator.setLevelNudge (TOPOGRAPHY_ACCURACY/2);
     return (generator);
 
