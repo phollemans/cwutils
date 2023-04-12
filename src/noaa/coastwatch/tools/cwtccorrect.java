@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.DecimalFormat;
 
 import noaa.coastwatch.io.EarthDataReaderFactory;
 import noaa.coastwatch.io.EarthDataReader;
@@ -628,10 +629,17 @@ public class cwtccorrect {
         var band = (Grid) reader.getVariable (bandNames[i]);
         boolean isReflectance = band.getUnits().equals ("1");
     
-        var bandRefl = new Grid (band);
-        bandRefl.setUnits ("1");
-        bandRefl.setName (band.getName() + nameExt);
+        int[] dims = band.getDimensions();
+        Grid bandRefl = new Grid (
+          band.getName() + nameExt, 
+          "Corrected reflectance in " + bandColors[i] + " true color band", "1",
+          dims[Grid.ROWS], dims[Grid.COLS],
+          new float[] {}, new DecimalFormat ("0.#######"), 
+          null, Float.NaN
+        );
         bandRefl = new HDFCachedGrid (bandRefl, writer);
+        var consumer = new GridChunkConsumer (bandRefl);
+        var prototypeReflChunk = consumer.getPrototypeChunk();
         bandReflGrids[i] = bandRefl;
 
         var collector = new ChunkCollector();
@@ -689,7 +697,7 @@ public class cwtccorrect {
               reflData[j] = (float) ((Math.PI * bandData[j])/(d * esun * cosTheta));
             } // for
 
-            var reflChunk = bandChunk.blankCopy();
+            var reflChunk = prototypeReflChunk.blankCopyWithValues (values);
             ChunkDataCast.fromFloatArray (reflData, reflChunk);
             
             return (reflChunk);
@@ -698,7 +706,6 @@ public class cwtccorrect {
 
         } // else
 
-        var consumer = new GridChunkConsumer (bandRefl);
         perform (new ChunkComputation (collector, consumer, function), consumer.getNativeScheme(), threads);
 
       } // for
