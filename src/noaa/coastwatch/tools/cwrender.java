@@ -478,8 +478,9 @@ import ucar.units.Unit;
  *     packages handle GeoTIFF images and allow the user to
  *     combine a GeoTIFF base map image with other sources of
  *     raster and vector data.  The GeoTIFF images generated are
- *     non-lossy uncompressed image data (unless a compression is
- *     specified using <b>--tiffcomp</b>), and can be much larger
+ *     non-lossy image data compressed with the deflate algorithm
+ *     (unless no compression or a different compression scheme is
+ *     specified using <b>--tiffcomp</b>), and can be larger
  *     than the corresponding PNG, GIF, or JPEG.  Since GeoTIFF
  *     images are generally destined for import into a GIS
  *     system, the use of this format turns on the
@@ -545,8 +546,9 @@ import ucar.units.Unit;
  *   to the specified center and pixel magnification factor.  The
  *   center position is specified in terms of Earth location latitude
  *   and longitude in the range [-90..90] and [-180..180] and the
- *   magnification factor as a fractional number (0..1] where factors
- *   &gt; 1 magnify and factors &lt; 1 shrink.  By default, the data view
+ *   magnification factor (greater than zero) is a decimal value, the image to 
+ *   data pixel ratio.  A factor of 1 shows data at its native resolution, where as
+ *   factors &gt; 1 zoom in and factors &lt; 1 zoom out.  By default, the data view
  *   shows the entire data field with an optimal magnification factor
  *   to fit the desired view size (see <b>--size</b>).</dd>
  *
@@ -576,10 +578,11 @@ import ucar.units.Unit;
  *   <dt>-T, --tiffcomp=TYPE</dt>
  *
  *   <dd>The TIFF compression algorithm.  The valid types are 'none'
- *   for no compression (the default), 'deflate' or 'lzw' for ZIP style
- *   compression, 'pack' for RLE style PackBits compression, and 'jpeg' for
- *   JPEG compression (JPEG is experimental/beta).  This option is only used
- *   with GeoTIFF output.</dd>
+ *   for no compression, 'deflate' or 'lzw' for ZIP style
+ *   compression, 'pack' for RLE style 
+ *   PackBits compression, and 'jpeg' for JPEG compression 
+ *   (JPEG is experimental/beta).  By default, deflate compression is used.
+ *   This option is only used with GeoTIFF output.</dd>
  *
  *   <dt>-W, --worldfile=FILE</dt>
  *
@@ -1106,7 +1109,24 @@ import ucar.units.Unit;
  *   [INFO] Rendering overlay noaa.coastwatch.render.LatLonOverlay
  *   [INFO] Writing output n20_viirs_20201031_175619.png
  * </pre>
- *
+ * <p>This next example shows how to render ocean current vector data by 
+ * supplying two variables to the <b>--enhance</b> option.  Rendering vector
+ * data is best done by using the <b>--magnify</b> option as well.  This call renders 
+ * data off the east coast of Japan using color vectors on a black background:
+ * <pre>
+ *   phollema$ cwrender --verbose --enhance ugos/vgos --range 0/2 --palette Blue-Red 
+ *     --function step10 --coast black/gray40 --grid white --background black
+ *     --magnify 35/143/10 --size 800/700 example_altim_surface_curr_feb_2023.nc 
+ *     example_altim_surface_curr_feb_vector.png
+ * 
+ *   [INFO] Reading input example_altim_surface_curr_feb_2023.nc
+ *   [INFO] Preparing data image noaa.coastwatch.render.ColorPointEnhancement
+ *   [INFO] Rendering overlay noaa.coastwatch.render.PointFeatureOverlay
+ *   [INFO] Rendering overlay noaa.coastwatch.render.CoastOverlay
+ *   [INFO] Rendering overlay noaa.coastwatch.render.LatLonOverlay
+ *   [INFO] Writing output example_altim_surface_curr_feb_vector.png
+ * </pre>
+ * 
  * <h2>Known Bugs</h2>
  *
  * <p>When using the <b>--coast</b> option with a fill color and
@@ -1405,7 +1425,7 @@ public class cwrender {
     String background = (String) cmd.getOptionValue (backgroundOpt);
     if (background == null) background = "white";
     String tiffcomp = (String) cmd.getOptionValue (tiffcompOpt);
-    if (tiffcomp == null) tiffcomp = "none";
+    if (tiffcomp == null) tiffcomp = "deflate";
     Integer imagecolorsObj = (Integer) cmd.getOptionValue (imagecolorsOpt);
     int imagecolors  = 
       (imagecolorsObj == null ? 0 : imagecolorsObj.intValue());

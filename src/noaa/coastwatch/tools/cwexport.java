@@ -380,8 +380,8 @@ import java.util.logging.Level;
  *   <dt>-T, --tiffcomp=TYPE</dt>
  *
  *   <dd>The TIFF compression algorithm.  The valid types are 'none'
- *   for no compression (the default), 'deflate' or 'lzw' for ZIP style
- *   compression.</dd>
+ *   for no compression, and 'deflate' or 'lzw' for ZIP style
+ *   compression.  The default is to use deflate compression.</dd>
  *
  * </dl>
  *
@@ -682,7 +682,7 @@ public class cwexport {
     String delimit = (String) cmd.getOptionValue (delimitOpt);
     if (delimit == null) delimit = " ";
     String tiffcomp = (String) cmd.getOptionValue (tiffcompOpt);
-    if (tiffcomp == null) tiffcomp = "none";
+    if (tiffcomp == null) tiffcomp = "deflate";
 
     // Check range and scaling
     // -----------------------

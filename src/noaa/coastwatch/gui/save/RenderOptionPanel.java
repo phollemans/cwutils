@@ -236,6 +236,7 @@ public class RenderOptionPanel
     // --------------------
     if (showCompress) {
       compressCheck = new JCheckBox ("Use TIFF compression algorithm");
+      compressCheck.setSelected (true);
 
       // We leave out JPEG compression in TIFF for now because testing has
       // shown an issue with smaller images that are written with JPEG
