@@ -34,6 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import noaa.coastwatch.io.IOServices;
 import noaa.coastwatch.util.DataVariable;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.Grid;
@@ -335,15 +336,27 @@ public abstract class EarthDataReader {
     DataVariable preview = getPreviewImpl (index);
     String varName = preview.getName();
 
-    // Modify units
-    // ------------
-    if (unitsMap != null && unitsMap.containsKey (varName)) {
-      try {
-        preview.convertUnits ((String) unitsMap.get (varName));
-      } // try
-      catch (IllegalArgumentException e) {
-        LOGGER.warning (e.getMessage() + ", units conversion failed");
-      } // catch
+    // Try modifying the units if there's a units map.  We either look for the
+    // variable name in the units map, or if the variable name has a group
+    // prefix, we strip it and try looking for the base variable name in the 
+    // units map.
+    if (unitsMap != null) {
+
+      String newUnits = (String) unitsMap.get (varName);
+      if (newUnits == null) {
+        String baseVarName = IOServices.stripGroup (varName);
+        newUnits = (String) unitsMap.get (baseVarName);
+      } // if
+
+      if (newUnits != null) {
+        try {
+          preview.convertUnits (newUnits);
+        } // try
+        catch (IllegalArgumentException e) {
+          LOGGER.warning (e.getMessage() + ", units conversion failed");
+        } // catch
+      } // if
+
     } // if
 
     return (preview);

@@ -28,6 +28,7 @@ package noaa.coastwatch.gui;
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.GridSubsetReader;
 import noaa.coastwatch.io.NCReader;
+import noaa.coastwatch.io.IOServices;
 import noaa.coastwatch.render.ColorEnhancement;
 import noaa.coastwatch.render.ColorEnhancementSettings;
 import noaa.coastwatch.render.EarthDataView;
@@ -147,6 +148,15 @@ public class EarthDataViewFactory {
       // ------------------------
       ColorEnhancementSettings settings = 
         ResourceManager.getPreferences().getEnhancement (varName);
+
+      // If the settings aren't found, we try stripping the group name
+      // from the variable if there is one, and try again.
+      if (settings == null) {
+        String baseVarName = IOServices.stripGroup (varName);
+        if (!baseVarName.equals (varName)) settings = 
+          ResourceManager.getPreferences().getEnhancement (baseVarName);
+      } // if
+
       if (settings == null) {
         DataLocationConstraints lc = new DataLocationConstraints();
         lc.fraction = 0.01;

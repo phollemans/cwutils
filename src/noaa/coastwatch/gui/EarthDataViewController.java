@@ -67,6 +67,7 @@ import noaa.coastwatch.gui.VariableChooser;
 import noaa.coastwatch.gui.ViewOperationChooser;
 import noaa.coastwatch.gui.nav.NavigationAnalysisPanel;
 import noaa.coastwatch.io.EarthDataReader;
+import noaa.coastwatch.io.IOServices;
 import noaa.coastwatch.render.ColorComposite;
 import noaa.coastwatch.render.ColorEnhancement;
 import noaa.coastwatch.render.ColorEnhancementSettings;
@@ -355,6 +356,15 @@ public class EarthDataViewController {
 
     ColorEnhancementSettings prefsSettings = 
       ResourceManager.getPreferences().getEnhancement (variableName);
+
+    // If the settings aren't found, we try stripping the group name
+    // from the variable if there is one, and try again.
+    if (prefsSettings == null) {
+      String baseVarName = IOServices.stripGroup (variableName);
+      if (!baseVarName.equals (variableName)) prefsSettings = 
+        ResourceManager.getPreferences().getEnhancement (baseVarName);
+    } // if
+
     if (prefsSettings != null) return (prefsSettings);
     else return (getDefaultSettings (variableName));
 
