@@ -676,7 +676,10 @@ to view each variable and set up the enhancement function in the
 set up the enhancement function is to use a grayscale palette to
 visually judge the scene contrast and click {\gui Normalize} which
 centers the enhancement function around the mean.  Then use the
-range sliders to fine tune the enhancement.
+range sliders to fine tune the enhancement.  In the case when the
+variable(s) represents reflecance data in the range of 0 to 1, or
+albedo data in the range 0 to 100, it's best to use a {\gui Gamma} 
+enhancement function. 
 
 \item Click the {\gui Perform color composite} check box in the
 \button{colors}{Color Composite} tab to turn composite mode on.
