@@ -171,9 +171,10 @@ import java.util.logging.Level;
  *   <dd> The sampling factor for each variable.  The sampling factor
  *   is a value in the range [0..1] that specifies the number of data
  *   values sampled as a fraction of the total number of data values.
+ *   Optionally, the sample value can be specified in percent, eg: 50%.
  *   To sample 1 percent of all data values, the sample factor would
- *   be 0.01.  The default is to sample all data values (factor =
- *   1). </dd>
+ *   be specified as 0.01 or 1%.  The default is to sample all data 
+ *   values (factor = 1). </dd>
  *
  *   <dt>--version</dt>
  *
@@ -244,7 +245,7 @@ public final class cwstats {
     CmdLineParser cmd = new CmdLineParser ();
     Option helpOpt = cmd.addBooleanOption ('h', "help");
     Option strideOpt = cmd.addIntegerOption ('s', "stride");
-    Option sampleOpt = cmd.addDoubleOption ('S', "sample");
+    Option sampleOpt = cmd.addStringOption ('S', "sample");
     Option matchOpt = cmd.addStringOption ('m', "match");
     Option limitOpt = cmd.addStringOption ('l', "limit");
     Option polygonOpt = cmd.addStringOption ('p', "polygon");
@@ -288,12 +289,27 @@ public final class cwstats {
     // ------------
     Integer strideObj = (Integer) cmd.getOptionValue (strideOpt);
     int stride = (strideObj == null ? 1 : strideObj.intValue());
-    Double sampleObj = (Double) cmd.getOptionValue (sampleOpt);
-    double sample = (sampleObj == null ? Double.NaN : sampleObj.doubleValue());
+    String sampleStr = (String) cmd.getOptionValue (sampleOpt);
+    double sample = Double.NaN;
     String match = (String) cmd.getOptionValue (matchOpt);
     String limit = (String) cmd.getOptionValue (limitOpt);
     String region = (String) cmd.getOptionValue (regionOpt);
     String polygon = (String) cmd.getOptionValue (polygonOpt);
+
+    // Get sample factor
+    // -----------------
+    if (sampleStr != null) {
+      sampleStr = sampleStr.trim();
+      if (sampleStr.endsWith ("%"))
+        sample = Double.parseDouble (sampleStr.replaceFirst ("%$", "")) * 0.01;
+      else
+        sample = Double.parseDouble (sampleStr);
+      if (sample < 0 || sample > 1) {
+        LOGGER.severe ("Invalid sample factor " + sample + ", must be in the range [0..1]");
+        ToolServices.exitWithCode (2);
+        return;
+      } // if
+    } // if
 
     // Get limits
     // ----------
