@@ -541,8 +541,9 @@ import noaa.coastwatch.util.chunk.DataChunkFactory;
  *   because the computation of the expression failed, or no value was ever
  *   or should ever be written to the location (possibly, it falls outside
  *   some geographic domain).  By default, the missing value is type-dependent
- *   and is set to the minimum representable value for integer types, or
- *   the NaN value for floating-point types. </dd>
+ *   and is set to the minimum representable value for integer types.  For
+ *   floating point types, this option is ignored and the missing value is
+ *   set to the NaN value or inherited from the template variable.</dd>
  *
  *   <dt> -p, --parser=TYPE </dt>
  *   <dd> The expression parser type.  Valid choices are 'java' or 'emulated':
