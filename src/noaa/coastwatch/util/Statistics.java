@@ -225,7 +225,7 @@ public class Statistics {
       // Check for missing value
       // -----------------------
       double val = iter.nextDouble();
-      if (Double.isNaN (val)) continue;
+      if (!Double.isFinite (val)) continue;
       valid++;
 
       // Set min and max
@@ -288,7 +288,7 @@ public class Statistics {
       // ---------
       double val = iter.nextDouble();
       if (saveData) { dataArray[dataIndex] = val; dataIndex++; }
-      if (Double.isNaN (val)) continue;
+      if (!Double.isFinite (val)) continue;
 
       // Accumulate sums for standard deviation
       // --------------------------------------
