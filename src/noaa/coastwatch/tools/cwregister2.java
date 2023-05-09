@@ -241,7 +241,7 @@ import java.util.logging.Level;
  *   <ul>
  *     <li>geo - Geographic</li>
  *     <li>ortho - Orthographic</li>
- *     <li>mercator - Merator</li>
+ *     <li>mercator - Mercator</li>
  *     <li>polar - Polar Stereographic</li>
  *     <li>tm - Transverse Mercator</li>
  *     <li>utm - Universal Transverse Mercator</li>
