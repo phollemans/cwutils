@@ -357,7 +357,7 @@ public class ESRIShapefileReader {
 
       finally {
         inputStream.close();
-        dbfReader.close();
+        if (dbfReader != null) dbfReader.close();
       } // finally
 
     } // select
@@ -445,7 +445,7 @@ public class ESRIShapefileReader {
 
       finally {
         inputStream.close();
-        dbfReader.close();
+        if (dbfReader != null) dbfReader.close();
       } // finally
 
     } // select
@@ -555,7 +555,7 @@ public class ESRIShapefileReader {
       
       finally {
         inputStream.close();
-        dbfReader.close();
+        if (dbfReader != null) dbfReader.close();
       } // finally
 
     } // select
