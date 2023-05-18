@@ -1112,7 +1112,7 @@ import ucar.units.Unit;
  * <p>This next example shows how to render ocean current vector data by 
  * supplying two variables to the <b>--enhance</b> option.  Rendering vector
  * data is best done by using the <b>--magnify</b> option as well.  This call renders 
- * data off the east coast of Japan using color vectors on a black background:
+ * data off the east coast of Japan using color vectors on a black background:</p>
  * <pre>
  *   phollema$ cwrender --verbose --enhance ugos/vgos --range 0/2 --palette Blue-Red 
  *     --function step10 --coast black/gray40 --grid white --background black

@@ -539,7 +539,8 @@ import java.util.logging.Level;
  *     :Conventions = "CF-1.4" ;
  *     :source = "METOP2_AVHRR " ;
  *     :institution = "USDOC/NOAA/NESDIS CoastWatch" ;
- *     :history = "[2010-03-13 09:46:43 IST cwf-3.2.4-pre-build169 phollema] cwexport -v --match (sst|cloud) 2010_040_1636_m02_wj.hdf 2010_040_1636_m02_wj.nc" ;
+ *     :history = "[2010-03-13 09:46:43 IST cwf-3.2.4-pre-build169 phollema] cwexport 
+ *       -v --match (sst|cloud) 2010_040_1636_m02_wj.hdf 2010_040_1636_m02_wj.nc" ;
  *   }
  * </pre>
  *

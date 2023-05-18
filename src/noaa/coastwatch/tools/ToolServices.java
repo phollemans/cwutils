@@ -72,7 +72,7 @@ public class ToolServices {
 
   /** The software copyright. */
   public static final String COPYRIGHT = 
-    "(c) 1998-2022 National Oceanic and Atmospheric Administration";
+    "(c) 1998-2023 National Oceanic and Atmospheric Administration";
 
   /** The software copyright (short version). */
   public static final String COPYRIGHT_SHORT = COPYRIGHT;

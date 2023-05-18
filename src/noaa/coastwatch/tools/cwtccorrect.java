@@ -184,8 +184,8 @@ import java.util.logging.Level;
  *   <dd> The path for a custom properties file giving the names of supported
  *   sensors and their bands and solar irradiance values.
  *   By default the <code>true_color.properties</code> 
- *   file in the <code>INSTALLDIR/data/noaa/coastwatch/tools</code> is used.  The format
- *   of the properties file is a set of key/value pairs.
+ *   file in the installation directory <code>data/noaa/coastwatch/tools</code> 
+ *   is used.  The format of the properties file is a set of key/value pairs.
  *   For example to add the new <i>Zork Visible Spectrum Imager</i> aboard the satellite 
  *   <i>Frobozz-5</i> to the list of allowed sensors, you can create a new properties
  *   file as follows:
