@@ -12,6 +12,88 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Version 3.8.0 -- May 2023}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\begin{itemize}
+
+ \item A new file format of latitude/longitude location lists was added 
+for use in cwrender and CDAT, where only ESRI shapefiles were previously
+supported.
+
+\item Initial beta support for ESRI point shapefiles was added to CDAT.
+
+\item A new -{-}marker option was added to cwrender to label user-specified
+locations with a point symbol and text label.
+
+\item The cwrender tool -{-}size option now accepts a number of rows and
+columns for the output image size.
+
+\item A new command line tool named {\em cwtools} was created to list all the 
+tools and their functions.
+
+\item The cwimport tool now has a -{-}nogroup option to eliminate the group
+structure if found in imported data files.  It has also been modified to better
+preserve earth location data in imported level 2 swath files.
+
+\item A new command line tool named {\em cwtccorrect} was created to help
+with visualizing top-of-atmosphere true color data from VIIRS, MSI, OLCI, 
+and user-defined sensors. The correction accounts for molecular (Rayleigh) 
+scattering and gaseous absorption (water vapor, ozone).
+
+\item The cwstats tool -{-}factor option now accepts values in \%.
+
+\item The cwrender, cwexport, and CDAT tools have all been updated to default
+to writing GeoTIFF data using the deflate compression algorithm.
+
+\item CDAT has been updated to ignore any group name prefix when searching for
+range and palette preferences by variable name.  This helps with visualizing data 
+variables that can occur both in a hierarchical group structured file or a 
+file with no groups.
+
+\item CDAT and cwrender have been updated to optionally use ETOPO1 data 
+for rendering contours.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+\item In the CDAT trackbar, data value display was hard to read when the
+data value had many digits.  This has been updated so that data values are 
+always left-justified.
+
+\item Reading NetCDF files with zero length string attributes was throwing
+an exception in CDAT when showing the raw file attribute information.  Zero
+length string attributes are now being detected and handled.
+
+\item Earth context diagrams were being drawn on output from cwrender and
+CDAT even for global dataset views.  This has been corrected so that context
+diagrams are only shown when the area is above some threshold value.
+
+\item An obscure error was being thrown when attempting to write 64-bit integer
+data to HDF 4 files.  This has been fixed to report that HDF 4 files cannot 
+contain 64-bit integer data (though HDF 5 files can).
+
+\item Incorrect data was being written by cwcomposite in some cases when input
+data files contained data variables with matching names but different missing 
+values.  This has been corrected.
+
+\item Incorrect data was being written by the cwmath expression parser in 
+some cases when input data files contained integer data variables with 
+missing values and unity scaling (scale factor of 1 with offset of 0).  This 
+has been corrected.
+
+\item The cwstats tool and CDAT had an issue with detecting when some data 
+variables contained both NaN values and Infinity values in IEEE 
+floating-point data.  This has been corrected so that both are detected 
+and flagged as invalid.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Version 3.7.1 -- July 2022}
 
 \subsection*{\bigicon{box_software} Updates}

@@ -9,7 +9,7 @@ interactive tools that use Java/Swing for displaying data.  The main GUI tool is
 Tool (CDAT).
 
 The user's guide and installable builds of the CoastWatch Utilities for Linux, Windows, and Mac are distributed from the 
-http://coastwatch.noaa.gov website, with beta and past builds available at http://www.terrenus.ca/download/cwutils. 
+https://coastwatch.noaa.gov website, with beta and past builds available at http://www.terrenus.ca/download/cwutils. 
 
 # Development Setup
 
@@ -69,7 +69,7 @@ General comments and questions on using the software should go to coastwatch.inf
 questions and bug/crash reports can be posted here.  Also we welcome Java developers to contribute to the project -- please
 feel free to ask for help with the API if you're writing your own code and/or provide code improvements as you see them.
 
-The user's guide in the installation directory and linked from http://coastwatch.noaa.gov contains all the information you'll 
+The user's guide in the installation directory and linked from https://coastwatch.noaa.gov contains all the information you'll 
 need for using the software, and a primer for software developers as well to write your own programs that use the API.
 
 # License
@@ -83,7 +83,7 @@ All rights reserved.
 Developed by:<br>
 CoastWatch / OceanWatch<br>
 Center for Satellite Applications and Research<br>
-http://coastwatch.noaa.gov
+https://coastwatch.noaa.gov
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the "Software"),
