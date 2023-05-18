@@ -69,6 +69,9 @@ import edu.ucar.ral.nujan.netcdf.NhFileWriter;
 import edu.ucar.ral.nujan.netcdf.NhGroup;
 import edu.ucar.ral.nujan.netcdf.NhVariable;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 // Testing
 import noaa.coastwatch.test.TestLogger;
 
@@ -111,6 +114,8 @@ import noaa.coastwatch.test.TestLogger;
 @noaa.coastwatch.test.Testable
 public class CFNC4Writer
   extends EarthDataWriter {
+
+  private static final Logger LOGGER = Logger.getLogger (CFNC4Writer.class.getName());
 
   // Constants
   // ---------
@@ -1382,6 +1387,16 @@ public class CFNC4Writer
       ncVar.addAttribute ("scale_factor", packingDataType, scaleFactor);
       ncVar.addAttribute ("add_offset", packingDataType, addOffset);
     } // if
+
+
+
+
+
+    // TODO: Write valid_min, valid_max, valid_range if found?
+
+
+
+
 
     // Set standard and long name
     // --------------------------

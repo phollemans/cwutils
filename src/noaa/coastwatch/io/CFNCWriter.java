@@ -68,6 +68,9 @@ import ucar.nc2.Group;
 import ucar.nc2.NetcdfFileWriter;
 import ucar.nc2.Variable;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 // Testing
 import noaa.coastwatch.test.TestLogger;
 
@@ -124,6 +127,8 @@ import noaa.coastwatch.test.TestLogger;
 @noaa.coastwatch.test.Testable
 public class CFNCWriter
   extends EarthDataWriter {
+
+  private static final Logger LOGGER = Logger.getLogger (CFNCWriter.class.getName());
 
   // Constants
   // ---------
@@ -1147,14 +1152,42 @@ public class CFNCWriter
     // ----------------
     Object missing = var.getMissing();
     if (missing != null) {
-      if (isUnsigned) {
-        if (dataType == DataType.INT)
-          missing = DataType.unsignedShortToInt ((Short) missing);
-        else if (dataType == DataType.LONG)
-          missing = DataType.unsignedIntToLong ((Integer) missing);
-      } // if
-      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("missing_value", (Number) missing));
+      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("missing_value", 
+        convertNumberValue ((Number) missing, isUnsigned, dataType)));
     } // if
+
+
+/*
+
+    // We attempt to propagate the valid_min, valid_max, and valid_range 
+    // attributes here, based on the metadata in the source.
+
+    var validMin = var.getMetadataMap().get ("valid_min");
+    if (validMin != null) {
+      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("valid_min", 
+        convertNumberValue ((Number) validMin, isUnsigned, dataType)));
+    } // if
+
+    var validMax = var.getMetadataMap().get ("valid_max");
+    if (validMax != null) {
+      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("valid_max",
+        convertNumberValue ((Number) validMax, isUnsigned, dataType)));
+    } // if
+
+    var validRange = var.getMetadataMap().get ("valid_range");
+    if (validRange == null) {
+      var array = Array.factory (dataType, new int[] {2});
+      array.setObject (0, convertNumberValue ((Number) java.lang.reflect.Array.get (validRange, 0), isUnsigned, dataType));
+      array.setObject (1, convertNumberValue ((Number) java.lang.reflect.Array.get (validRange, 1), isUnsigned, dataType));
+      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("valid_range", array));
+    } // if
+    else if (dataType == DataType.BYTE) {
+      ncFileWriter.addVariableAttribute (ncVar, new Attribute ("valid_range",
+        Array.factory (DataType.INT, new int[] {2}, new int[] {0, 255})));
+    } // else if
+
+*/
+
     if (dataType == DataType.BYTE) {
       ncFileWriter.addVariableAttribute (ncVar, new Attribute ("valid_range",
         Array.factory (DataType.INT, new int[] {2}, new int[] {0, 255})));
@@ -1255,6 +1288,37 @@ public class CFNCWriter
     ncFileWriter.flush();
 
   } // writeVariable
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Converts a numerical attribute value for writing.
+   * 
+   * @param value the value to convert.
+   * @param isUnsigned true if unsigned, false if not.
+   * @param dataType the data type of the variable that this attribute 
+   * should match.
+   * 
+   * @return the newly converted value.
+   * 
+   * @since 3.8.0
+   */
+  private static Number convertNumberValue (
+    Number value,
+    boolean isUnsigned,
+    DataType dataType    
+  ) {
+
+    if (isUnsigned) {
+      if (dataType == DataType.INT)
+        value = DataType.unsignedShortToInt ((Short) value);
+      else if (dataType == DataType.LONG)
+        value = DataType.unsignedIntToLong ((Integer) value);
+    } // if
+
+    return (value);
+
+  } // convertNumberValue
 
   ////////////////////////////////////////////////////////////
 

@@ -427,7 +427,86 @@ import java.util.logging.Level;
         // Write numerical types
         // ---------------------
         else {
+
+
+
+          // We have to convert the values provided on the command line here.
+          // Unsigned values are supported by parsing as the value as if it's
+          // the next highest type and then stuffing the binary data into the
+          // appropriate type. 
+
           String[] valueArray = value.split (ToolServices.SPLIT_REGEX);
+
+
+/*
+
+          int values = valueArray.length;
+          Object valueObj = null;
+          var unsigned = type.startsWith ("u");
+          if (unsigned) type = type.substring (1);
+
+          if (type.equals ("byte")) {
+            var array = new byte[values];
+            for (int i = 0; i < values; i++) {
+              array[i] = (
+                unsigned ? 
+                (byte) (Short.parseShort (valueArray[i]) & 0xff) : 
+                Byte.parseByte (valueArray[i])
+              );
+            } // for
+            valueObj = array;
+          } // else if
+
+          else if (type.equals ("short")) {
+            var array = new short[values];
+            for (int i = 0; i < values; i++) {
+              array[i] = (
+                unsigned ? 
+                (short) (Integer.parseInteger (valueArray[i]) & 0xffff) : 
+                Short.parseShort (valueArray[i])
+              );
+            } // for
+            valueObj = array;
+          } // else if
+
+          else if (type.equals ("int")) {
+            var array = new int[values];
+            for (int i = 0; i < values; i++) {
+              array[i] = (
+                unsigned ? 
+                (int) (Long.parseLong (valueArray[i]) & 0xffffffff) : 
+                Integer.parseInt (valueArray[i])
+              );
+            } // for
+            valueObj = array;
+          } // else if
+
+          else if (type.equals ("long")) {
+            var array = new int[values];
+
+
+
+            // TODO: Shoud we somehow use BigDecimal here?
+
+
+            for (int i = 0; i < values; i++) {
+              array[i] = (
+                unsigned ? 
+                (int) (Long.parseLong (valueArray[i]) & 0xffffffff) : 
+                Long.parseLong (valueArray[i])
+              );
+            } // for
+            valueObj = array;
+
+          } // if
+
+
+
+*/
+
+
+
+
           Class valuePrimitiveClass;
           Class valueClass;
           if (type.equals ("byte")) {
