@@ -735,7 +735,7 @@ OTHER DEALINGS WITH THE SOFTWARE.
                         <property name="name" type="string">User's Guide</property>
                         <property name="target">
                           <object class="java.io.File">
-                            <string>doc/cwutils_ug_3_7_1.pdf</string>
+                            <string>doc/cwutils_ug_3_8_0.pdf</string>
                           </object>
                         </property>
                       </object>
