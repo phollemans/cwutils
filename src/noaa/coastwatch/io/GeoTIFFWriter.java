@@ -40,6 +40,8 @@ import java.awt.image.BandedSampleModel;
 import java.awt.image.SampleModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferFloat;
+import java.awt.image.DataBufferByte;
+import java.awt.image.DataBufferUShort;
 import java.awt.image.WritableRaster;
 import java.awt.image.Raster;
 import java.awt.image.ColorModel;
@@ -151,6 +153,15 @@ public class GeoTIFFWriter {
 
   /** The TIFF JPEG compression type. */
   public static final int COMP_JPEG = 4;
+
+  /** The TIFF buffer type for 8-bit unsigned integer data. */
+  public static final int TYPE_BYTE = DataBuffer.TYPE_BYTE;
+
+  /** The TIFF buffer type for 16-bit unsigned integer data. */
+  public static final int TYPE_USHORT = DataBuffer.TYPE_USHORT;
+
+  /** The TIFF buffer type for 32-bit floating point data. */
+  public static final int TYPE_FLOAT = DataBuffer.TYPE_FLOAT;
 
   // Variables
   // ---------
@@ -1009,7 +1020,7 @@ public class GeoTIFFWriter {
     private Raster raster;
     private ColorModel colorModel;
     
-    public DataImage (Raster raster) {
+    public DataImage (Raster raster, int bufferType) {
 
       this.raster = raster;
 
@@ -1017,14 +1028,14 @@ public class GeoTIFFWriter {
       // will not throw an error on.
       ColorSpace colorSpace = ColorSpace.getInstance (ColorSpace.CS_GRAY);
       colorModel = new ComponentColorModel (colorSpace, false, false,
-        Transparency.OPAQUE, DataBuffer.TYPE_FLOAT) {
-          public boolean isCompatibleRaster​ (Raster raster) { return (true); }
-          public boolean isCompatibleSampleModel​ (SampleModel sm) { return (true); }
+        Transparency.OPAQUE, bufferType) {
+          public boolean isCompatibleRaster (Raster raster) { return (true); }
+          public boolean isCompatibleSampleModel (SampleModel sm) { return (true); }
       };
 
     } // DataImage
 
-    public WritableRaster copyData​ (WritableRaster copy) {
+    public WritableRaster copyData (WritableRaster copy) {
       if (copy == null) copy = raster.createCompatibleWritableRaster();
       copy.setRect (raster);
       return (copy);
@@ -1034,8 +1045,8 @@ public class GeoTIFFWriter {
 
     public Raster getData() { return (getData (raster.getBounds())); }
 
-    public Raster getData​ (Rectangle rect) {
-      WritableRaster copy = raster.createCompatibleWritableRaster​ (rect);
+    public Raster getData (Rectangle rect) {
+      WritableRaster copy = raster.createCompatibleWritableRaster (rect);
       copy.setRect (raster);
       return (copy);
     } // getData
@@ -1047,11 +1058,11 @@ public class GeoTIFFWriter {
     public int getMinY() { return (0); }
     public int  getNumXTiles() { return (0); }
     public int  getNumYTiles() { return (0); }
-    public Object getProperty​ (String name) { return (Image.UndefinedProperty); }
+    public Object getProperty (String name) { return (Image.UndefinedProperty); }
     public String[] getPropertyNames() { return (null); }
     public SampleModel getSampleModel() { return (raster.getSampleModel()); }
     public Vector<RenderedImage> getSources() { return (null); }
-    public Raster getTile​ (int tileX, int tileY) { throw new UnsupportedOperationException(); }
+    public Raster getTile (int tileX, int tileY) { throw new UnsupportedOperationException(); }
     public int getTileGridXOffset() { return (0); }
     public int getTileGridYOffset() { return (0); }
     public int getTileHeight() { return (0); }
@@ -1069,6 +1080,11 @@ public class GeoTIFFWriter {
    * @param height the image height in pixels.
    * @param floatDataList the list of float data arrays for the bands, each
    * of length width*height.
+   * @param bufferType rendered image buffer type.  Supported types are 
+   * DataBuffer.TYPE_FLOAT (32-bit float), DataBuffer.TYPE_BYTE (8-bit unsigned byte), 
+   * and DataBuffer.TYPE_USHORT (16-bit unsigned short).  The buffer type determines
+   * what data type is ultimately encoded to the TIFF image.  Any Float.NaN
+   * values in the data arrays are written as zeroes for integer data types.
    *
    * @return an image suitable for passing directly to the {@link #encode}
    * method.  The image should not be used for display.
@@ -1078,16 +1094,62 @@ public class GeoTIFFWriter {
   static public RenderedImage createImageForData (
     int width,
     int height,
-    List<float[]> floatDataList
+    List<float[]> floatDataList,
+    int bufferType 
   ) {
 
+
+    // Start by extracting the list data to an array of float arrays.  We
+    // assume that each array has the same number of samples.  
     int bands = floatDataList.size();
-    BandedSampleModel sampleModel =
-      new BandedSampleModel (DataBuffer.TYPE_FLOAT, width, height, bands);
+    int samples = width*height;
+    BandedSampleModel sampleModel = null;
+    DataBuffer buffer = null;
     float[][] floatData = floatDataList.toArray (new float[0][0]);
-    DataBuffer buffer = new DataBufferFloat (floatData, width*height);
+
+    // Depending on the requested buffer type, create a compatible sample 
+    // model and buffer.  If the requested buffer type is not 32-bit float,
+    // convert the data values over to the proper type.
+    switch (bufferType) {
+
+    case DataBuffer.TYPE_FLOAT:
+      sampleModel = new BandedSampleModel (DataBuffer.TYPE_FLOAT, width, height, bands);
+      buffer = new DataBufferFloat (floatData, samples);
+      break;
+
+    case DataBuffer.TYPE_BYTE:
+      byte[][] byteData = new byte[bands][];
+      for (int i = 0; i < bands; i++) {
+        byteData[i] = new byte[samples];
+        for (int j = 0; j < samples; j++) {
+          byteData[i][j] = (byte) (((int) Math.round (floatData[i][j])) & 0xff);
+        } // for
+      } // for
+      sampleModel = new BandedSampleModel (DataBuffer.TYPE_BYTE, width, height, bands);
+      buffer = new DataBufferByte (byteData, samples);
+      break;
+
+    case DataBuffer.TYPE_USHORT:
+      short[][] shortData = new short[bands][];
+      for (int i = 0; i < bands; i++) {
+        shortData[i] = new short[samples];
+        for (int j = 0; j < samples; j++) {
+          shortData[i][j] = (short) (((int) Math.round (floatData[i][j])) & 0xffff);
+        } // for
+      } // for
+      sampleModel = new BandedSampleModel (DataBuffer.TYPE_USHORT, width, height, bands);
+      buffer = new DataBufferUShort (shortData, samples);
+      break;
+
+    default:
+      throw new IllegalArgumentException ("Requested buffer type " + bufferType + " not supported");
+
+    } // switch
+
+    // Finally, create the raster and image using the custom data and buffer
+    // type.
     WritableRaster raster = Raster.createWritableRaster (sampleModel, buffer, null);
-    RenderedImage dataImage = new DataImage (raster);
+    RenderedImage dataImage = new DataImage (raster, bufferType);
 
     return (dataImage);
 

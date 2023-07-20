@@ -49,9 +49,9 @@ import static noaa.coastwatch.util.Grid.COL;
 
 /**
  * <p>The <code>GeoTIFFDataWriter</code> encodes a set of data variables
- * as a 32-bit floating-point value multiband TIFF file with GeoTIFF
- * georeferencing tags.  The resulting image file is not suitable for display,
- * but can be imported into GIS systems.</p>
+ * as an 8-, 16-, or 32-bit multiband TIFF file with GeoTIFF georeferencing 
+ * tags.  The resulting image file is not suitable for display, but can be 
+ * imported into GIS systems.</p>
  *
  * @author Peter Hollemans
  * @since 3.5.1
@@ -82,6 +82,9 @@ public class GeoTIFFDataWriter extends EarthDataWriter {
   /** The missing data value. */
   private float missing = Float.NaN;
 
+  /** The image buffer type. */
+  private int bufferType = GeoTIFFWriter.TYPE_FLOAT;
+
   ////////////////////////////////////////////////////////////
 
   /**
@@ -89,8 +92,9 @@ public class GeoTIFFDataWriter extends EarthDataWriter {
    *
    * @param info the info object to use for earth transform and other attributes.
    * @param filename the new GeoTIFF file name.
-   * @param compress the TIFF compression type, either COMP_NONE, COMP_DEFLATE,
-   * COMP_PACK, or COMP_LZW.
+   * @param compress the TIFF compression type, either GeoTIFFWriter.COMP_NONE, 
+   * GeoTIFFWriter.COMP_DEFLATE, GeoTIFFWriter.COMP_PACK, or 
+   * GeoTIFFWriter.COMP_LZW.
    *
    * @throws IOException if an error occurred  the file.
    */
@@ -156,6 +160,29 @@ public class GeoTIFFDataWriter extends EarthDataWriter {
     this.missing = missing;
 
   } // setMissing
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the output TIFF image buffer type.  This is the data type that
+   * will ultimately be used to write the TIFF data values.  If the buffer type
+   * is integer, data values will be rounded to this type before writing and if 
+   * the missing value is Float.NaN, zeroes will be written as missing data.
+   *
+   * @param bufferType the TIFF image buffer type.  Supported types are 
+   * GeoTIFFWriter.TYPE_FLOAT, GeoTIFFWriter.TYPE_BYTE (8-bit unsigned byte), 
+   * and GeoTIFFWriter.TYPE_USHORT (16-bit unsigned short).  By default, 
+   * GeoTIFFWriter.TYPE_FLOAT is used.
+   * 
+   * @since 3.8.1
+   * 
+   * @see #setMissing
+   */
+  public void setBufferType (int bufferType) {
+
+    this.bufferType = bufferType;
+
+  } // setBufferType
 
   ////////////////////////////////////////////////////////////
 
@@ -236,7 +263,7 @@ public class GeoTIFFDataWriter extends EarthDataWriter {
       // Write image
       // -----------
       RenderedImage image = GeoTIFFWriter.createImageForData (
-        imageDims.width, imageDims.height, floatArrayList);
+        imageDims.width, imageDims.height, floatArrayList, bufferType);
       writer.encode (image);
       outputStream.close();
 

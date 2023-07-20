@@ -109,6 +109,7 @@ import java.util.logging.Level;
  *
  * <p>
  * -T, --tiffcomp=TYPE <br>
+ * -F, --tiffsize=TYPE <br>
  * </p>
  *
  * <h2>Description</h2>
@@ -181,7 +182,8 @@ import java.util.logging.Level;
  *
  * <h3>GeoTIFF:</h3>
  *
- * <p>The output is a 32-bit floating point TIFF file with GeoTIFF
+ * <p>The output is an 8-bit unsigned integer, 16-bit unsigned integer, 
+ * or 32-bit IEEE floating pointing data TIFF file with GeoTIFF
  * georeference tags.  The number of samples per pixel in the TIFF image
  * matches the number of variables exported.  The resulting image file
  * is not suitable for display as a regular TIFF image, but rather is
@@ -278,8 +280,9 @@ import java.util.logging.Level;
  *     <li>NetCDF: Not applicable, the missing values for
  *     variable data are copied from the input data source.</li>
  *
- *     <li>GeoTIFF: The default is to write 32-float IEEE NaN values
- *     with bit pattern 0x7fc00000 in the TIFF image data.</li>
+ *     <li>GeoTIFF: The default is to write (i) zeros for integer data types,
+ *     or (ii) 32-float IEEE NaN values with bit pattern 0x7fc00000 for 32-bit float
+ *     data in the TIFF image data.</li>
  *
  *   </ul></dd>
  *
@@ -378,10 +381,15 @@ import java.util.logging.Level;
  * <dl>
  *
  *   <dt>-T, --tiffcomp=TYPE</dt>
- *
  *   <dd>The TIFF compression algorithm.  The valid types are 'none'
  *   for no compression, and 'deflate' or 'lzw' for ZIP style
  *   compression.  The default is to use deflate compression.</dd>
+ *
+ *   <dt>-F, --tiffsize=TYPE</dt>
+ *   <dd>The TIFF data value size.  The valid types are 'byte'
+ *   for 8-bit unsigned integers, 'ushort' for 16-bit unsigned integers, or 
+ *   'float' for 32-bit IEEE floating point values.  The default is to write
+ *   32-bit floats.</dd>
  *
  * </dl>
  *
@@ -593,6 +601,7 @@ public class cwexport {
     Option dcsOpt = cmd.addBooleanOption ('S', "dcs");
     Option cwOpt = cmd.addBooleanOption ('C', "cw");
     Option tiffcompOpt = cmd.addStringOption ('T', "tiffcomp");
+    Option tiffsizeOpt = cmd.addStringOption ('F', "tiffsize");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -684,6 +693,8 @@ public class cwexport {
     if (delimit == null) delimit = " ";
     String tiffcomp = (String) cmd.getOptionValue (tiffcompOpt);
     if (tiffcomp == null) tiffcomp = "deflate";
+    String tiffsize = (String) cmd.getOptionValue (tiffsizeOpt);
+    if (tiffsize == null) tiffsize = "float";
 
     // Check range and scaling
     // -----------------------
@@ -839,8 +850,23 @@ public class cwexport {
           return;
         } // else
 
+        // Retrieve the TIFF buffer type from the parameters
+        int bufferType = -1;
+        if (tiffsize.equals ("byte"))
+          bufferType = GeoTIFFWriter.TYPE_BYTE;
+        else if (tiffsize.equals ("ushort"))
+          bufferType = GeoTIFFWriter.TYPE_USHORT;
+        else if (tiffsize.equals ("float"))
+          bufferType = GeoTIFFWriter.TYPE_FLOAT;
+        else {
+          LOGGER.severe ("Unsupported TIFF size: " + tiffsize);
+          ToolServices.exitWithCode (2);
+          return;
+        } // else
+
         GeoTIFFDataWriter tiffWriter = new GeoTIFFDataWriter (info, output, compress);
         if (missing != null) tiffWriter.setMissing (missing.floatValue());
+        tiffWriter.setBufferType (bufferType);
         writer = tiffWriter;
 
       } // else if
@@ -939,6 +965,7 @@ public class cwexport {
 
     info.section ("GeoTIFF");
     info.option ("-T, --tiffcomp=TYPE", "Set TIFF compression type");
+    info.option ("-F, --tiffsize=TYPE", "Set TIFF data value size");
 
     return (info);
 

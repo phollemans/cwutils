@@ -267,12 +267,16 @@ public class EarthImageWriter {
         } // if
         int overlayColors = overlayColorList.size();
 
+        LOGGER.fine ("Using " + overlayColors + " overlay colours");
+
         // Get legend colors
         // -----------------
         int legendColors = 0;
         if (hasLegends && !format.equals ("pdf")) {
           legendColors += 3;
         } // if
+
+        LOGGER.fine ("Using " + legendColors + " legend colours");
 
         // Check image colors
         // ------------------
@@ -283,6 +287,9 @@ public class EarthImageWriter {
         else if ((imageColors - extraColors) < 16) {
           throw new IOException ("Too few colors for overlays and legends");
         } // if
+
+        LOGGER.fine ("Using " + imageColors + " image colours and " +
+          extraColors + " extra colours");
 
         // Set colors for data view
         // ------------------------
