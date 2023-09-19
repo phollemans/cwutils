@@ -52,9 +52,12 @@ public class LoggingConfig {
       // --------------------------------
       String debugProperty = System.getProperty ("cw.debug");
       String debugVariable = System.getenv ("CW_DEBUG");
-      boolean isDebug = (
-        (debugProperty != null && debugProperty.equals ("true")) ||
-        (debugVariable != null && debugVariable.equals ("true"))
+      String debugMode = (debugProperty != null ? debugProperty : debugVariable);
+      String debugLevel = (
+        debugMode == null ? null :
+        debugMode.matches ("true|fine") ? "FINE" :
+        debugMode.equals ("finer") ? "FINER" : 
+        null
       );
 
       // Set up the log manager
@@ -63,11 +66,11 @@ public class LoggingConfig {
       try {
         logManager.reset();
 
-        // Inject a FINE log level if debugging requested
-        // ----------------------------------------------
+        // Inject a FINE or FINER log level if debugging requested
+        // -------------------------------------------------------
         Function<String, BiFunction<String, String, String>> mapper =
-          (key) -> key.equals ("noaa.coastwatch.level") && isDebug
-          ? ((oldVal, newVal) -> "FINE")
+          (key) -> key.equals ("noaa.coastwatch.level") && (debugLevel != null)
+          ? ((oldVal, newVal) -> debugLevel)
           : ((oldVal, newVal) -> newVal);
 
         // Read/update the config
