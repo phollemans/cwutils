@@ -302,23 +302,42 @@ public class MetadataServices {
 
   ////////////////////////////////////////////////////////////
 
-  /** Converts an attribute value to a string. */
+  /** 
+   * Converts an attribute value to a string.
+   * 
+   * @param attValue the attribute value to convert.
+   * 
+   * @return the attribute value as a string or "null" if the attribute
+   * value is null.
+   */
   public static String toString (
     Object attValue
   ) {
 
-    if (attValue.getClass().isArray()) {
-      StringBuffer buffer = new StringBuffer();
-      int length = Array.getLength (attValue);
-      for (int i = 0; i < length; i++) {
-        buffer.append (Array.get (attValue, i).toString());
-        if (i < length-1) buffer.append (" ");
-      } // for
-      return (buffer.toString());
+    String str = null;
+
+    if (attValue == null) {
+      str = "null";
     } // if
+
     else {
-      return (attValue.toString());
+
+      if (attValue.getClass().isArray()) {
+        StringBuffer buffer = new StringBuffer();
+        int length = Array.getLength (attValue);
+        for (int i = 0; i < length; i++) {
+          buffer.append (Array.get (attValue, i).toString());
+          if (i < length-1) buffer.append (" ");
+        } // for
+        str = buffer.toString();
+      } // if
+      else {
+        str = attValue.toString();
+      } // else
+
     } // else
+
+    return (str);
 
   } // toString
 

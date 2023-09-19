@@ -134,14 +134,28 @@ public class ReaderMetadataPanel extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the data type description of an object value.
+   * 
+   * @param value the object value.
+   * 
+   * @return the data type description or "unknown" if value is null.
+   */
   private String getType (Object value) {
 
-    var valueClass = value.getClass();
-    var isArray = valueClass.isArray();
-    var className = (isArray ? valueClass.getComponentType().toString() : valueClass.toString());
-    var type = className.substring (className.lastIndexOf ('.')+1).toLowerCase();
-    if (type.equals ("integer")) type = "int";
-    if (isArray) type += "[]";
+    String type = null;
+
+    if (value == null)
+      type = "unknown";
+    else {
+      var valueClass = value.getClass();
+      var isArray = valueClass.isArray();
+      var className = (isArray ? valueClass.getComponentType().toString() : valueClass.toString());
+      type = className.substring (className.lastIndexOf ('.')+1).toLowerCase();
+      if (type.equals ("integer")) type = "int";
+      if (isArray) type += "[]";
+    } // else
+
     return (type);
 
   } // getType
@@ -165,13 +179,15 @@ public class ReaderMetadataPanel extends JPanel {
     this.metadataList = new ArrayList<>();
     var global = "Global";
     reader.getRawMetadata().forEach ((key, value) -> {
+      LOGGER.fine ("Global metadata, key = " + key + ", value = " + value);
       metadataList.add (new String[] {global, (String) key, getType (value), MetadataServices.toString (value)});
     });
     for (int i = 0; i < reader.getVariables(); i++) {
       try { 
         var map = reader.getRawMetadata (i);
         var name = "Variable " + reader.getName (i);
-        map.forEach ((key, value) -> {  
+        map.forEach ((key, value) -> {
+          LOGGER.fine (name + " metadata, key = " + key + ", value = " + value);
           metadataList.add (new String[] {name, (String) key, getType (value), MetadataServices.toString (value)});
         });
       } // try

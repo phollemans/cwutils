@@ -1367,7 +1367,7 @@ public class CFNC4Writer
       missing,
       COMPRESSION_LEVEL
     );
-    ncVar.addAttribute ("missing_value", dataType, missing);
+    if (missing != null) ncVar.addAttribute ("missing_value", dataType, missing);
 
     // Set packing info
     // ----------------
