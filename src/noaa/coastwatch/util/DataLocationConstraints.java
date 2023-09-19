@@ -32,7 +32,7 @@ import noaa.coastwatch.util.DataLocation;
 
 /**
  * The <code>DataLocationConstraints</code> class holds a set of values
- * used to specify the bounds and sparseness of a continguous area of data 
+ * used to specify the bounds and sparseness of a contiguous area of data 
  * locations.  The main purpose is to pass to the 
  * {@link DataLocationIteratorFactory} to create various types of iterators 
  * over locations within the area.  The class also has static methods useful
