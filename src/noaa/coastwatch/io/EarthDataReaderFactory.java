@@ -214,7 +214,7 @@ public class EarthDataReaderFactory {
 
     // Check for a network file
     // ------------------------
-    boolean isNetwork = file.startsWith ("http://");
+    boolean isNetwork = file.startsWith ("http://") || file.startsWith ("https://");
 
     // Check file exists and is readable
     // ---------------------------------
