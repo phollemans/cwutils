@@ -167,7 +167,7 @@ import ucar.units.Unit;
  * -m, --magnify=LATITUDE/LONGITUDE/FACTOR <br>
  * -o, --logo=NAME <br>
  * --logolist <br>
- * -s, --size=PIXELS | full <br>
+ * -s, --size=PIXELS | full | WIDTH/HEIGHT <br>
  * -T, --tiffcomp=TYPE <br>
  * -W, --worldfile=FILE
  * </p>
@@ -2447,7 +2447,7 @@ public class cwrender {
     info.option ("-m, --magnify=LAT/LON/FACTOR", "Center and magnify location");
     info.option ("-o, --logo=NAME", "Set legend logo");
     info.option ("--logolist", "Print available logos");
-    info.option ("-s, --size=PIXELS | full", "Set maximum data view size");
+    info.option ("-s, --size=PIXELS | full | WIDTH/HEIGHT", "Set maximum data view size");
     info.option ("-T, --tiffcomp=TYPE", "Set TIFF compression type");
     info.option ("-W, --worldfile=FILE", "Write georeferencing world file");
 
