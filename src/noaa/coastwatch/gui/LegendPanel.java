@@ -33,6 +33,8 @@ import java.awt.RenderingHints;
 import javax.swing.JPanel;
 import noaa.coastwatch.render.Legend;
 
+import java.util.logging.Logger;
+
 /**
  * The <code>LegendPanel</code> class displays a {@link
  * noaa.coastwatch.render.Legend} graphic in a panel.  The size of the
@@ -43,6 +45,8 @@ import noaa.coastwatch.render.Legend;
  */
 public class LegendPanel 
   extends JPanel {
+
+  private static final Logger LOGGER = Logger.getLogger (LegendPanel.class.getName());
 
   // Variables
   // ---------
@@ -88,6 +92,9 @@ public class LegendPanel
       Dimension preferred = getSize();
       legend.setPreferredSize (preferred);
       Dimension actual = legend.getSize ((Graphics2D) g);
+
+      LOGGER.fine ("Legend panel preferred size is " + preferred);
+      LOGGER.fine ("Legend actual size is " + actual);
 
       // Dim disabled legend
       // -------------------

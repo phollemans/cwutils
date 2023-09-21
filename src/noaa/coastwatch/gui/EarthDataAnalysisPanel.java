@@ -325,7 +325,7 @@ public class EarthDataAnalysisPanel
 
 
     LegendPanel legendPanel = controller.getLegendPanel();
-    legendPanel.setPreferredSize (new Dimension (90, 0));
+    legendPanel.setPreferredSize (new Dimension (120, 0));
     centerPanel.add (legendPanel, BorderLayout.EAST);
     this.add (centerPanel, BorderLayout.CENTER);
     

@@ -46,6 +46,8 @@ import noaa.coastwatch.render.Palette;
 import noaa.coastwatch.render.StepEnhancement;
 import noaa.coastwatch.render.TextElement;
 
+import java.util.logging.Logger;
+
 /**
  * A color scale annotates a data enhancement plot with a scale of
  * colors from a color palette and tick marks at regular intervals for
@@ -57,6 +59,8 @@ import noaa.coastwatch.render.TextElement;
  */
 public class DataColorScale 
   extends Legend {
+
+  private static final Logger LOGGER = Logger.getLogger (DataColorScale.class.getName());
 
   // Constants
   // ---------
@@ -91,7 +95,7 @@ public class DataColorScale
    * Sets the tick labels.
    * 
    * @param labels the new tick labels to use.  Each label is 
-   * a number formatted to a string value/.
+   * a number formatted to a string value.
    */
   public void setTickLabels (
     String[] labels
@@ -113,6 +117,9 @@ public class DataColorScale
     // Initialize
     // ----------
     Dimension size = getSize (g);
+    Dimension required = getRequiredSize (g);
+    int xoff = (required.width < size.width ? (size.width - required.width)/2 : 0);
+
     int x1, y1, x2, y2;
     int scaleHeight = size.height - 4*SPACE_SIZE - 2;
     double[] range = new double[] {function.getInverse (0), 
@@ -132,7 +139,7 @@ public class DataColorScale
 
     // Draw scale colors
     // -----------------
-    x1 = x + SPACE_SIZE*2;
+    x1 = x + xoff + SPACE_SIZE*2;
     x2 = x1 + SCALE_WIDTH;
 
     Dimension imageDims = new Dimension (SCALE_WIDTH, scaleHeight);
@@ -160,70 +167,70 @@ public class DataColorScale
     // Draw scale border
     // -----------------
     g.setColor (fore);
-    GraphicsServices.drawRect (g, new Rectangle (x + SPACE_SIZE*2, 
+    GraphicsServices.drawRect (g, new Rectangle (x + xoff + SPACE_SIZE*2, 
       y + SPACE_SIZE*2, SCALE_WIDTH, scaleHeight));
-
-    // Check for valid range
-    // ---------------------
-    if (Double.isNaN (range[0]) || Double.isNaN (range[1]) || 
-      range[0] == range[1]) return;
 
     // Draw scale ticks
     // ----------------
     x1 = x2 + 1;
     x2 = x1 + TICK_SIZE - 1;
     int maxx = x2 + SPACE_SIZE;
-    boolean invert = (range[0] > range[1]);
-    EnhancementFunction tickFunction;
-    /** 
-     * Note that this next statement may only appear to work in
-     * testing because there is currently no way to set the reversal
-     * flag for StepEnhancement objects in cdat (and cwrender
-     * currently does not support step enhancements).
-     */
-    if (function instanceof StepEnhancement)
-      tickFunction = new LinearEnhancement (function.getRange());
-    else 
-      tickFunction = function;
-    for (int i = 0; i < labels.length; i++) {
 
-      // Draw tick
-      // ---------
-      double val = Double.parseDouble (labels[i]);
-      double norm = tickFunction.getValue (val);
-      if (reverse) norm = 1-norm;
-      y1 = y2 = (y + SPACE_SIZE*2 + scaleHeight) - 
-        (int) (norm * (scaleHeight-1));
-      g.drawLine (x1, y1, x2, y2);
+    if (Double.isFinite (range[0]) && Double.isFinite (range[1]) && (range[0] != range[1])) {
 
-      // Draw label
-      // ----------
-      TextElement labelElement = new TextElement (labels[i], font,
-        new Point (x2 + SPACE_SIZE, y1), new double[] {0, 0.5}, 0);
-      labelElement.render (g, fore, null);
-      int endx = x2 + SPACE_SIZE + labelElement.getBounds(g).width;
-      if (endx > maxx) maxx = endx;
+      boolean invert = (range[0] > range[1]);
+      EnhancementFunction tickFunction;
+      /** 
+       * Note that this next statement may only appear to work in
+       * testing because there is currently no way to set the reversal
+       * flag for StepEnhancement objects in cdat (and cwrender
+       * currently does not support step enhancements).
+       */
+      if (function instanceof StepEnhancement)
+        tickFunction = new LinearEnhancement (function.getRange());
+      else 
+        tickFunction = function;
+      for (int i = 0; i < labels.length; i++) {
 
-      // Draw extra ticks
-      // ----------------
-      if (tickFunction instanceof LogEnhancement && i < labels.length-1) {
-        double nextVal = Double.parseDouble (labels[i+1]);
-        for (int j = 2; j < 10; j++) {
-          double betweenVal = val * j;
-          if (betweenVal >= nextVal) continue;
-          norm = tickFunction.getValue (betweenVal);
-          if (reverse) norm = 1-norm;
-          y1 = y2 = (y + SPACE_SIZE*2 + scaleHeight) - 
-            (int) (norm * (scaleHeight-1));
-          g.drawLine (x1, y1, x2, y2);
-        } // for
-      } // if
+        // Draw tick
+        // ---------
+        double val = Double.parseDouble (labels[i]);
+        double norm = tickFunction.getValue (val);
+        if (reverse) norm = 1-norm;
+        y1 = y2 = (y + SPACE_SIZE*2 + scaleHeight) - 
+          (int) (norm * (scaleHeight-1));
+        g.drawLine (x1, y1, x2, y2);
 
-    } //for
+        // Draw label
+        // ----------
+        TextElement labelElement = new TextElement (labels[i], font,
+          new Point (x2 + SPACE_SIZE, y1), new double[] {0, 0.5}, 0);
+        labelElement.render (g, fore, null);
+        int endx = x2 + SPACE_SIZE + labelElement.getBounds(g).width;
+        if (endx > maxx) maxx = endx;
+
+        // Draw extra ticks
+        // ----------------
+        if (tickFunction instanceof LogEnhancement && i < labels.length-1) {
+          double nextVal = Double.parseDouble (labels[i+1]);
+          for (int j = 2; j < 10; j++) {
+            double betweenVal = val * j;
+            if (betweenVal >= nextVal) continue;
+            norm = tickFunction.getValue (betweenVal);
+            if (reverse) norm = 1-norm;
+            y1 = y2 = (y + SPACE_SIZE*2 + scaleHeight) - 
+              (int) (norm * (scaleHeight-1));
+            g.drawLine (x1, y1, x2, y2);
+          } // for
+        } // if
+
+      } //for
+
+    } // if
 
     // Draw scale legend
     // -----------------
-    x1 = maxx + SPACE_SIZE;
+    x1 = maxx + SPACE_SIZE*2;
     y1 = y + size.height/2;
     TextElement annotationElement = new TextElement (annotation, font,
       new Point (x1, y1), new double[] {0.5, 1}, 90);
@@ -233,8 +240,15 @@ public class DataColorScale
 
   ////////////////////////////////////////////////////////////
 
-  @Override
-  public Dimension getSize (
+  /**
+   * Gets the minimum size required by the color scale based on the label
+   * lengths and scale width.
+   * 
+   * @param g the graphics context.
+   * 
+   * @return the minimum required size.
+   */
+  private Dimension getRequiredSize (
     Graphics2D g
   ) {
 
@@ -258,11 +272,25 @@ public class DataColorScale
     // Calculate size
     // --------------
     int requiredWidth = SPACE_SIZE*2 + 1 + SCALE_WIDTH + 1 + TICK_SIZE + SPACE_SIZE +
-      labelBounds.width + SPACE_SIZE + annotationBounds.width + SPACE_SIZE*2;
+      labelBounds.width + SPACE_SIZE*2 + annotationBounds.width + SPACE_SIZE*2;
     int requiredHeight = Math.max (labelBounds.height * labels.length * 2,
       annotationBounds.height);
     requiredHeight += SPACE_SIZE*4;
     Dimension size = new Dimension (requiredWidth, requiredHeight);
+
+    return (size);
+
+  } // getRequiredSize
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public Dimension getSize (
+    Graphics2D g
+  ) {
+
+    Dimension size = getRequiredSize (g);
+
     if (preferredSize != null) {
       size.width = Math.max (preferredSize.width, size.width);
       size.height = Math.max (preferredSize.height, size.height);
@@ -324,10 +352,13 @@ public class DataColorScale
     int maxExponent = (int) Math.ceil (LogEnhancement.log10 (max));
     boolean shortFormat = (minExponent < -3 || maxExponent > 3);
 
+    LOGGER.fine ("Min exponent is " + minExponent);
+    LOGGER.fine ("Max exponent is " + maxExponent);
+
     // Create labels
     // -------------
     int nticks = maxExponent - minExponent + 1;
-    List labels = new LinkedList();
+    List<String> labelList = new LinkedList<>();
     for (int i = 0; i < nticks; i++) {
       int exponent = minExponent + i;
       double value = Math.pow (10, exponent);
@@ -338,10 +369,18 @@ public class DataColorScale
         label = formatLogValue (exponent-1, shortFormat, min);
       else
         label = formatLogValue (exponent, shortFormat, value);
-      labels.add (label);
+      labelList.add (label);
     } // for
+    String[] labels = labelList.toArray (new String[0]);
 
-    return ((String[]) labels.toArray (new String[] {}));
+    if (labels.length == 0)
+      LOGGER.fine ("No labels created!");
+    else if (labels.length == 1)
+      LOGGER.fine ("Created " + labels.length + " label, " + labels[0]);
+    else if (labels.length >= 2)
+      LOGGER.fine ("Created " + labels.length + " labels, [" + labels[0] + " .. " + labels[labels.length-1] + "]");
+
+    return (labels);
 
   } // getLogTickLabels
 
@@ -408,13 +447,27 @@ public class DataColorScale
     // -----------------------
     double interval = getLinearTickInterval (min, max, desired);
 
+    LOGGER.fine ("Tick interval is " + interval);
+
     // Create decimal format
     // ---------------------
-    double logint = LogEnhancement.log10 (interval);
-    int decimals = (int) (logint < 0 ? -Math.floor (logint) : 0);
-    String pattern = (decimals == 0 ? "0" : "0.");
-    for (int i = 0; i < decimals; i++) pattern += "#";
+    String pattern;
+    double minExp = Math.abs (LogEnhancement.log10 (Math.abs (min)));
+    if (!Double.isFinite (minExp)) minExp = 0;
+    double maxExp = Math.abs (LogEnhancement.log10 (Math.abs (max)));
+    if (!Double.isFinite (maxExp)) maxExp = 0;
+    if (Math.max (minExp, maxExp) >= 3) {
+      pattern = "0.##E0";
+    } // if
+    else {
+      double logint = LogEnhancement.log10 (interval);
+      int decimals = (int) (logint < 0 ? -Math.floor (logint) : 0);
+      pattern = (decimals == 0 ? "0" : "0.");
+      for (int i = 0; i < decimals; i++) pattern += "#";
+    } // else
     DecimalFormat format = new DecimalFormat (pattern);
+
+    LOGGER.fine ("Decimal pattern is " + pattern);
 
     // Nudge min and max
     // -----------------
@@ -423,17 +476,32 @@ public class DataColorScale
     double newMax = Math.floor ((max - Double.MIN_VALUE + 
       interval)/interval)*interval;
 
+    LOGGER.fine ("Nudged min is " + newMin);
+    LOGGER.fine ("Nudged max is " + newMax);    
+
     // Create labels
     // -------------
-    int nticks = (int) Math.round ((newMax - newMin)/interval) + 1;
-    List labelList = new ArrayList();
-    for (int i = 0; i < nticks; i++) {
-      double val = newMin + i*interval;
-      if (val < min || val > max) continue;
-      labelList.add (format.format (val));
-    } // for
-    String[] labels = new String[labelList.size()];
-    return ((String[]) labelList.toArray (labels));
+    String[] labels;
+    if (Double.isFinite (newMin) && Double.isFinite (newMax)) {
+      int nticks = (int) Math.round ((newMax - newMin)/interval) + 1;
+      List<String> labelList = new ArrayList<>();
+      for (int i = 0; i < nticks; i++) {
+        double val = newMin + i*interval;
+        if (val < min || val > max) continue;
+        labelList.add (format.format (val));
+      } // for
+      labels = labelList.toArray (new String[0]);
+    } // if
+    else labels = new String[0];
+
+    if (labels.length == 0)
+      LOGGER.fine ("No labels created!");
+    else if (labels.length == 1)
+      LOGGER.fine ("Created " + labels.length + " label, " + labels[0]);
+    else if (labels.length >= 2)
+      LOGGER.fine ("Created " + labels.length + " labels, [" + labels[0] + " .. " + labels[labels.length-1] + "]");
+
+    return (labels);
 
   } // getLinearTickLabels
 
