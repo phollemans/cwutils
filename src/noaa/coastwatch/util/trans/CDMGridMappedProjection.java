@@ -197,7 +197,7 @@ public class CDMGridMappedProjection
    *
    * @param proj the projection to get the units for.
    * 
-   * @return the units (km, radians, or degrees) or null if they could not
+   * @return the units (m, km, radians, or degrees) or null if they could not
    * be determined.
    */
   private static String getProjectionUnits (
@@ -224,11 +224,7 @@ public class CDMGridMappedProjection
       unitXLatLon.getLongitude()
     );
 
-
-
-//LOGGER.fine ("unitXDist = " + unitXDist);
-
-
+    LOGGER.fine ("Testing projection units distance unitXDist = " + unitXDist);
 
     // Now perform some tests -- if the distance is 1 km +/- 0.2 km, the units
     // are probably kilometers.  If the distance is 100 km +/- 20 km, the
@@ -236,6 +232,7 @@ public class CDMGridMappedProjection
     String units = null;
     if (!Double.isNaN (unitXDist)) {
       if (Math.abs (1 - unitXDist) < 0.2) units = "km";
+      else if (Math.abs (1 - unitXDist*1000) < 0.2) units = "m";
       else if (Math.abs (100 - unitXDist) < 20) units = "degrees";
     } // if
 
@@ -257,11 +254,7 @@ public class CDMGridMappedProjection
       );
       if (Math.abs (1 - radXDist) < 0.2) units = "radians";
 
-
-
-//LOGGER.fine ("radXDist = " + radXDist);
-
-
+      LOGGER.fine ("Testing projection units distance radXDist = " + radXDist);
 
     } // if
 
@@ -270,8 +263,12 @@ public class CDMGridMappedProjection
     // then the units are degrees.
 
 
+
+
 // QUESTION: Why do we not just get the projection units directly from
 // the projection axes?
+
+
 
 
     if (units == null) {
@@ -287,24 +284,11 @@ public class CDMGridMappedProjection
       );
       if (Math.abs (1 - degXDist) < 0.2) units = "degrees";
 
-
-
-//LOGGER.fine ("degXDist = " + degXDist);
-
-
+      LOGGER.fine ("Testing projection units distance degXDist = " + degXDist);
 
     } // if
 
-
-
-
-
-
-
-
-
-//LOGGER.fine ("units = " + units);
-
+    if (units == null) LOGGER.warning ("Cannot determine projection system units");
 
     return (units);
   
@@ -429,6 +413,9 @@ public class CDMGridMappedProjection
     // Perform units conversion if needed
     // ----------------------------------
     String projUnitStr = getProjectionUnits (proj);
+
+    LOGGER.fine ("For axis " + axis.getAxisType() + ", scale = " + scale + ", offset = " + offset + ", units = " + projUnitStr);
+
     if (projUnitStr != null) {
       Unit projUnit = UnitFactory.create (projUnitStr);
       String axisUnitStr = axis.getUnitsString();
@@ -486,6 +473,9 @@ public class CDMGridMappedProjection
     proj = coordSystem.getProjection();
     xAxisTrans = getProjectionAxisTransform (proj, xAxis);
     yAxisTrans = getProjectionAxisTransform (proj, yAxis);
+
+    LOGGER.fine ("xAxisTrans [scale,offset] = " + Arrays.toString (xAxisTrans));
+    LOGGER.fine ("yAxisTrans [scale,offset] = " + Arrays.toString (yAxisTrans));
     
     // Detect datum
     // ------------
