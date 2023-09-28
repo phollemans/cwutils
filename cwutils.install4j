@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="8.0.11" transformSequenceNumber="8">
+<install4j version="10.0.6" transformSequenceNumber="10">
   <directoryPresets config="../../../Terrenus/Code Signing/Microsoft Authenticode/DigiCert/Terrenus_Microsoft_Certificates_Mar_23_2022.p12" />
   <application name="CoastWatch Utilities" applicationId="1290-4459-1345-6363" mediaDir="${compiler:pkgDir}" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}-${compiler:osName}-${compiler:arch}${compiler:novm}" compression="9" lzmaCompression="true" pack200Compression="true" shortName="cwutils" publisher="National Oceanic and Atmospheric Administration" publisherWeb="http://coastwatch.noaa.gov" version="3.0.0" allPathsRelative="true" macVolumeId="7b43b8e08af23735" javaMinVersion="11.0">
     <variables>
@@ -30,7 +30,7 @@
         <entry>toolsUI-*</entry>
       </macSearchedJars>
     </codeSigning>
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="openjdk17/jdk-17.0.2+8" />
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="17/jdk-17.0.2+8" />
   </application>
   <files>
     <mountPoints>
@@ -69,7 +69,7 @@
           <entry location="doc/cw_cf_metadata.pdf" />
           <entry location="doc/metadata_comparison_v1_1_jan_2010.pdf" />
           <entry location="doc/license.txt" />
-          <entry location="doc/cwutils_ug_3_8_0.pdf" />
+          <entry location="doc/cwutils_ug_3_8_1.pdf" />
           <entry location="data" />
         </include>
       </component>
@@ -126,7 +126,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="content">
         <content>-include-options ${compiler:vmOptionsFile}</content>
       </vmOptionsFile>
@@ -136,6 +135,10 @@
         <file path="${compiler:iconDir}/cdat_64.png" />
         <file path="${compiler:iconDir}/cdat_128.png" />
       </iconImageFiles>
+      <macStaticAssociations>
+        <fileAssociation extension="hdf" description="Hierarchical Data Format (HDF)" />
+        <fileAssociation extension="nc,nc4" description="Network Common Data Form (NetCDF)" />
+      </macStaticAssociations>
     </launcher>
     <launcher name="CoastWatch Master Tool" id="1434" menuName="CoastWatch Master Tool" icnsFile="${compiler:iconDir}/cwmaster.icns">
       <executable name="${compiler:cwmasterExecutable}" iconSet="true" iconFile="${compiler:iconDir}/cwmaster.ico" executableDir="bin" redirectStderr="false" executableMode="gui" changeWorkingDirectory="false" />
@@ -151,7 +154,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
       <iconImageFiles>
         <file path="${compiler:iconDir}/cwmaster_16.png" />
@@ -173,7 +175,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwcomposite" id="36" excludeFromMenu="true">
@@ -189,7 +190,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwcoverage" id="52" excludeFromMenu="true">
@@ -205,7 +205,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwexport" id="59" excludeFromMenu="true">
@@ -221,7 +220,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwgraphics" id="61" excludeFromMenu="true">
@@ -237,7 +235,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwimport" id="64" excludeFromMenu="true">
@@ -253,7 +250,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwinfo" id="67" excludeFromMenu="true">
@@ -269,7 +265,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwmath" id="69" excludeFromMenu="true">
@@ -285,7 +280,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwnavigate" id="71" excludeFromMenu="true">
@@ -301,7 +295,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwregister" id="73" excludeFromMenu="true">
@@ -317,7 +310,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwregister2" id="1652" excludeFromMenu="true">
@@ -333,7 +325,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwrender" id="75" excludeFromMenu="true">
@@ -349,7 +340,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwsample" id="77" excludeFromMenu="true">
@@ -365,7 +355,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwstats" id="79" excludeFromMenu="true">
@@ -381,7 +370,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwautonav" id="147" excludeFromMenu="true">
@@ -397,7 +385,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="hdatt" id="159" excludeFromMenu="true">
@@ -413,7 +400,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwscript" id="716" excludeFromMenu="true">
@@ -429,7 +415,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwgscript" id="852" excludeFromMenu="true">
@@ -445,7 +430,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwtools" id="1657" excludeFromMenu="true">
@@ -461,7 +445,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwtccorrect" id="1658" excludeFromMenu="true">
@@ -477,7 +460,6 @@
           <directory name="lib/native/${compiler:libDir}" />
         </nativeLibraryDirectories>
       </java>
-      <macStaticAssociationActions mode="selected" />
       <vmOptionsFile mode="none" />
     </launcher>
   </launchers>
@@ -735,7 +717,7 @@ OTHER DEALINGS WITH THE SOFTWARE.
                         <property name="name" type="string">User's Guide</property>
                         <property name="target">
                           <object class="java.io.File">
-                            <string>doc/cwutils_ug_3_8_0.pdf</string>
+                            <string>doc/cwutils_ug_3_8_1.pdf</string>
                           </object>
                         </property>
                       </object>
@@ -753,12 +735,7 @@ OTHER DEALINGS WITH THE SOFTWARE.
                 <serializedBean>
                   <property name="description" type="string">Hierarchical Data Format (HDF)</property>
                   <property name="extension" type="string">hdf</property>
-                  <property name="launcherId" type="string">7</property>
-                  <property name="macIconFile">
-                    <object class="com.install4j.api.beans.ExternalFile">
-                      <string />
-                    </object>
-                  </property>
+                  <property name="launcherId" type="string">1233</property>
                   <property name="windowsIconFile">
                     <object class="com.install4j.api.beans.ExternalFile">
                       <string />
@@ -769,13 +746,8 @@ OTHER DEALINGS WITH THE SOFTWARE.
               <action id="530" beanClass="com.install4j.runtime.beans.actions.desktop.CreateFileAssociationAction" actionElevationType="elevated">
                 <serializedBean>
                   <property name="description" type="string">Network Common Data Form (NetCDF)</property>
-                  <property name="extension" type="string">nc</property>
-                  <property name="launcherId" type="string">7</property>
-                  <property name="macIconFile">
-                    <object class="com.install4j.api.beans.ExternalFile">
-                      <string />
-                    </object>
-                  </property>
+                  <property name="extension" type="string">nc,nc4</property>
+                  <property name="launcherId" type="string">1233</property>
                   <property name="windowsIconFile">
                     <object class="com.install4j.api.beans.ExternalFile">
                       <string />
@@ -793,6 +765,10 @@ OTHER DEALINGS WITH THE SOFTWARE.
             </formComponents>
           </screen>
           <screen id="331" beanClass="com.install4j.runtime.beans.screens.FormScreen">
+            <serializedBean>
+              <property name="subTitle" type="string">How often should the CoastWatch Utilities check for an update?</property>
+              <property name="title" type="string">Select Update Schedule</property>
+            </serializedBean>
             <formComponents>
               <formComponent id="332" beanClass="com.install4j.runtime.beans.formcomponents.UpdateScheduleSelectorComponent">
                 <serializedBean>
@@ -1777,11 +1753,19 @@ if (context.isUnattended()) {
           <group id="1040" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize banner image" externalParametrizationMode="include">
             <serializedBean>
               <property name="backgroundColor">
-                <object class="java.awt.Color">
-                  <int>255</int>
-                  <int>255</int>
-                  <int>255</int>
-                  <int>255</int>
+                <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                  <object class="java.awt.Color">
+                    <int>255</int>
+                    <int>255</int>
+                    <int>255</int>
+                    <int>255</int>
+                  </object>
+                  <object class="java.awt.Color">
+                    <int>49</int>
+                    <int>52</int>
+                    <int>53</int>
+                    <int>255</int>
+                  </object>
                 </object>
               </property>
               <property name="borderSides">
@@ -1790,11 +1774,19 @@ if (context.isUnattended()) {
                 </object>
               </property>
               <property name="imageEdgeBackgroundColor">
-                <object class="java.awt.Color">
-                  <int>25</int>
-                  <int>143</int>
-                  <int>220</int>
-                  <int>255</int>
+                <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                  <object class="java.awt.Color">
+                    <int>25</int>
+                    <int>143</int>
+                    <int>220</int>
+                    <int>255</int>
+                  </object>
+                  <object class="java.awt.Color">
+                    <int>0</int>
+                    <int>74</int>
+                    <int>151</int>
+                    <int>255</int>
+                  </object>
                 </object>
               </property>
               <property name="imageEdgeBorder" type="boolean" value="true" />
@@ -1848,11 +1840,19 @@ if (context.isUnattended()) {
               <group id="1047" beanClass="com.install4j.runtime.beans.groups.VerticalFormComponentGroup" useExternalParametrization="true" externalParametrizationName="Customize title bar" externalParametrizationMode="include">
                 <serializedBean>
                   <property name="backgroundColor">
-                    <object class="java.awt.Color">
-                      <int>255</int>
-                      <int>255</int>
-                      <int>255</int>
-                      <int>255</int>
+                    <object class="com.install4j.runtime.beans.LightOrDarkColor">
+                      <object class="java.awt.Color">
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                        <int>255</int>
+                      </object>
+                      <object class="java.awt.Color">
+                        <int>49</int>
+                        <int>52</int>
+                        <int>53</int>
+                        <int>255</int>
+                      </object>
                     </object>
                   </property>
                   <property name="borderSides">
@@ -1955,7 +1955,7 @@ if (context.isUnattended()) {
     </styles>
   </installerGui>
   <mediaSets>
-    <windows name="windows64" id="278" installDir="CoastWatch Utilities" overridePrincipalLanguage="true">
+    <windows name="windows64" id="278" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" architecture="64">
       <exclude>
         <entry location="lib/native/macosx_x86_64" />
         <entry location="lib/native/linux_x86_64" />
@@ -1971,9 +1971,9 @@ if (context.isUnattended()) {
         <variable name="cwmasterExecutable" value="CoastWatch Master Tool" />
         <variable name="cwstatusExecutable" value="CoastWatch Status Tool" />
       </variables>
-      <jreBundle usePack200="false" jreBundleSource="generated" />
+      <jreBundle usePack200="false" />
     </windows>
-    <windowsArchive name="windows64 (zip)" id="1656">
+    <windowsArchive name="windows64 (zip)" id="1656" architecture="64">
       <exclude>
         <entry location="lib/native/macosx_x86_64" />
         <entry location="lib/native/linux_x86_64" />
@@ -1988,7 +1988,6 @@ if (context.isUnattended()) {
         <variable name="cwmasterExecutable" value="CoastWatch Master Tool" />
         <variable name="cwstatusExecutable" value="CoastWatch Status Tool" />
       </variables>
-      <jreBundle jreBundleSource="generated" />
     </windowsArchive>
     <unixArchive name="linux64 (tgz)" id="288" installDir="${compiler:baseInstallDir}" overridePrincipalLanguage="true">
       <exclude>
@@ -2006,7 +2005,6 @@ if (context.isUnattended()) {
         <variable name="vmOptionsFile" value="${HOME}/.coastwatch/cwutils.vmoptions" />
         <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.formdev.flatlaf.FlatLightLaf" />
       </variables>
-      <jreBundle jreBundleSource="generated" />
     </unixArchive>
     <unixArchive name="linux64novm (tgz)" id="710" installDir="${compiler:baseInstallDir}" overridePrincipalLanguage="true">
       <exclude>
@@ -2025,8 +2023,9 @@ if (context.isUnattended()) {
         <variable name="novm" value="-novm" />
         <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.formdev.flatlaf.FlatLightLaf" />
       </variables>
+      <jreBundle jreBundleSource="none" />
     </unixArchive>
-    <macosFolder name="macosx64 (dmg)" id="276" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" jreBitType="32" volumeName="${compiler:sys.fullName} ${compiler:sys.version}">
+    <macosFolder name="macosx64 (dmg)" id="276" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" volumeName="${compiler:sys.fullName} ${compiler:sys.version}">
       <exclude>
         <entry location="lib/native/linux_x86_64" />
         <entry location="lib/native/windows_x86_64" />
@@ -2042,7 +2041,6 @@ if (context.isUnattended()) {
         <variable name="cwstatusExecutable" value="CoastWatch Status Tool" />
         <variable name="nativeLibOption" value="-Djava.library.path=$app_home/lib/native/${compiler:libDir}" />
       </variables>
-      <jreBundle jreBundleSource="generated" />
     </macosFolder>
     <unixArchive name="macosx64 (tgz)" id="528" installDir="${compiler:baseInstallDir}" overridePrincipalLanguage="true">
       <exclude>
@@ -2062,7 +2060,7 @@ if (context.isUnattended()) {
         <variable name="cwmasterExecutable" value="CoastWatch Master Tool" />
         <variable name="cwstatusExecutable" value="CoastWatch Status Tool" />
       </variables>
-      <jreBundle jreBundleSource="generated" platform="macos-amd64" />
+      <jreBundle platform="macos-amd64" />
     </unixArchive>
   </mediaSets>
   <buildIds buildAll="false">
