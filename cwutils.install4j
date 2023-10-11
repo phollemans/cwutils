@@ -755,6 +755,13 @@ OTHER DEALINGS WITH THE SOFTWARE.
                   </property>
                 </serializedBean>
               </action>
+              <action id="1659" beanClass="com.install4j.runtime.beans.actions.misc.ModifyEnvironmentVariableAction" actionElevationType="elevated" rollbackBarrierExitCode="0">
+                <serializedBean>
+                  <property name="type" type="enum" class="com.install4j.runtime.beans.actions.misc.ModifyStringType" value="APPEND" />
+                  <property name="value" type="string">${installer:sys.installationDir}\bin</property>
+                  <property name="variableName" type="string">PATH</property>
+                </serializedBean>
+              </action>
             </actions>
             <formComponents>
               <formComponent id="888" beanClass="com.install4j.runtime.beans.formcomponents.ProgressComponent">

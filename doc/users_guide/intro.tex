@@ -89,13 +89,22 @@ If upgrading to a new version, there is no need to uninstall the
 previous version -- the new installation setup program will handle
 the details.  To install the new version, simply double-click the
 downloaded installation package. The setup program will install the
-software in a user-specified directory, and add entries to the Start
-Menu.  The User's Guide (this document) is also added to the Start
-Menu.
+software in a user-specified directory, and add entries to the Windows {\gui Start
+Menu}.  The User's Guide (this document) is also added to the {\gui Start
+Menu}.
 
 If you use the command line tools you may want to add the installed
-executable directory to the path for easier command line execution.  Under
-Windows 10 go the the Windows {\gui Start Menu} and click the
+executable directory to the path for easier command line execution.  This is
+done automatically starting with version 3.8.1 -- you can test this by opening
+a new {\gui Command Prompt} window and typing:
+\begin{quote}
+  {\tt cwinfo --version}
+\end{quote}
+If you get an error message, then the path wasn't set correctly and you may
+need to do it manually as shown below.
+
+If installing a previous CoastWatch Utilities version, on Windows 10 go the 
+the Windows {\gui Start Menu} and click the
 {\gui Settings} gear icon.  In the search box type ``environment'' and select
 {\gui Edit environment variables for your account}.  Under {\gui User variables}
 edit the {\gui Path} variable and add a new entry, for example
@@ -115,13 +124,20 @@ it exists.
 
 If you use the command line tools you may want to add the installed
 executable and man page directories to your paths for easier command line execution.
-In a Terminal session, add the following lines to the {\tt \~{ }/.profile}
+In a {\gui Terminal} session, type the following to verify which shell you're running:
+\begin{quote}
+  {\tt echo \$SHELL}
+\end{quote}
+If the output of the command is {\tt /bin/bash}, your account uses the Bash
+shell, and you can add the following lines to the {\tt \~{ }/.bash\_profile}
 file:
 \begin{quote}
   {\tt export PATH=\$\{PATH\}:"/Applications/CoastWatch Utilities/bin"} \\
   {\tt export MANPATH=\$\{MANPATH\}:"/Applications/CoastWatch Utilities/doc/man"}
 \end{quote}
-and then open a new Terminal window for the changes to take effect.
+If the output is {\tt /bin/zsh} (newer macOS versions), then your account uses 
+the Z shell, and you can add the lines above to the {\tt \~{ }/.zshrc}.
+In either case, open a new {\gui Terminal} window for the changes to take effect.
 
 \subsubsection{Linux}
 
