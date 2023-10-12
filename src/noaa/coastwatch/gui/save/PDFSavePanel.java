@@ -60,7 +60,7 @@ public class PDFSavePanel
    */
   public void write (File file) throws IOException {
 
-    write (renderPanel.getLegends(), false, false, null, 
+    write (renderPanel.getLegends(), renderPanel.getInfoLegend(), false, false, null, 
       renderPanel.getColors(), "pdf", file);
 
   } // write

@@ -164,6 +164,7 @@ import ucar.units.Unit;
  * -i, --indexed <br>
  * -I, --imagecolors=NUMBER <br>
  * -l, --nolegends <br>
+ * -l, --noinfo <br>
  * -m, --magnify=LATITUDE/LONGITUDE/FACTOR <br>
  * -o, --logo=NAME <br>
  * --logolist <br>
@@ -539,6 +540,13 @@ import ucar.units.Unit;
  *   and plot information legends are drawn.  With no legends, the
  *   Earth data is simply rendered by itself with no frame,
  *   borders, or legends.</dd>
+ *
+ *   <dt>--noinfo</dt>
+ *
+ *   <dd>Turns the plot information legend off.  By default, the plot information
+ *   legend is drawn to the right of the color scale.  With no plot information legend, 
+ *   only the color scale is drawn if applicable.  See the <b>--nolegends</b>
+ *   option above which removes all legends.</dd>
  *
  *   <dt>-m, --magnify=LATITUDE/LONGITUDE/FACTOR</dt> 
  *
@@ -1197,6 +1205,7 @@ public class cwrender {
     Option sizeOpt = cmd.addStringOption ('s', "size");
     Option magnifyOpt = cmd.addStringOption ('m', "magnify");
     Option nolegendsOpt = cmd.addBooleanOption ('l', "nolegends");
+    Option noinfoOpt = cmd.addBooleanOption ("noinfo");
     Option noantialiasOpt = cmd.addBooleanOption ('a', "noantialias");
     Option paletteOpt = cmd.addStringOption ('P', "palette");
     Option palettefileOpt = cmd.addStringOption ("palettefile");
@@ -1391,6 +1400,7 @@ public class cwrender {
     String magnify = (String) cmd.getOptionValue (magnifyOpt);
     boolean nolegends = (cmd.getOptionValue (nolegendsOpt) != null);
     if (format.equals ("tif")) nolegends = true;
+    boolean noinfo = (cmd.getOptionValue (noinfoOpt) != null);
     boolean noantialias = (cmd.getOptionValue (noantialiasOpt) != null);
     String paletteName = (String) cmd.getOptionValue (paletteOpt);
     if (paletteName == null) paletteName = "BW-Linear";
@@ -2310,7 +2320,7 @@ public class cwrender {
       CleanupHook.getInstance().scheduleDelete (output);
       EarthImageWriter writer = EarthImageWriter.getInstance();
       writer.setFont (font);
-      writer.write (view, info, verbose, !nolegends, logoIcon, !noantialias,
+      writer.write (view, (noinfo ? null : info), verbose, !nolegends, logoIcon, !noantialias,
         new File (output), format, worldfile, tiffcomp, imagecolors);
 
       // Clean up
@@ -2444,6 +2454,7 @@ public class cwrender {
     info.option ("-i, --indexed", "Set image colors to 256");
     info.option ("-I, --imagecolors=NUMBER", "Set number of image colors");
     info.option ("-l, --nolegends", "Do not draw legends");
+    info.option ("--noinfo", "Do not draw info legend");
     info.option ("-m, --magnify=LAT/LON/FACTOR", "Center and magnify location");
     info.option ("-o, --logo=NAME", "Set legend logo");
     info.option ("--logolist", "Print available logos");

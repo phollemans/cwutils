@@ -60,7 +60,7 @@ public class GIFSavePanel
    */
   public void write (File file) throws IOException {
 
-    write (renderPanel.getLegends(), renderPanel.getSmooth(), 
+    write (renderPanel.getLegends(), renderPanel.getInfoLegend(), renderPanel.getSmooth(), 
       renderPanel.getWorld(), null, renderPanel.getColors(), "gif", file);
 
   } // write

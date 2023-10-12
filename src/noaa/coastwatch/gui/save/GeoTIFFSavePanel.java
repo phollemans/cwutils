@@ -60,7 +60,7 @@ public class GeoTIFFSavePanel
    */
   public void write (File file) throws IOException {
 
-    write (false, renderPanel.getSmooth(), false, renderPanel.getCompress(),
+    write (false, false, renderPanel.getSmooth(), false, renderPanel.getCompress(),
       renderPanel.getColors(), "tif", file);
 
   } // write

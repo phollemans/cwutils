@@ -116,6 +116,7 @@ public abstract class ImageSavePanel
    *
    * @param hasLegends the legends flag, true to draw color scale and
    * information legends.
+   * @param hasInfoLegend the info legend flag, true to draw information legend.
    * @param isAntialiased the antialias flag, true to antialias fonts
    * and lines.
    * @param writeWorld the world file write flag, true to write a
@@ -133,6 +134,7 @@ public abstract class ImageSavePanel
    */
   protected void write (
     final boolean hasLegends,
+    final boolean hasInfoLegend,
     final boolean isAntialiased,
     final boolean writeWorld,
     final String tiffComp,
@@ -170,7 +172,8 @@ public abstract class ImageSavePanel
             EarthDataView viewClone = (EarthDataView) view.clone();
             String worldFile = (writeWorld ? 
               file.getPath().replaceFirst ("\\.[^.]*$", ".wld") : null);
-            EarthImageWriter.getInstance().write (viewClone, info, false, hasLegends, 
+            EarthImageWriter.getInstance().write (viewClone, 
+              (hasInfoLegend ? info : null), false, hasLegends, 
               logoIcon, isAntialiased, file, format, worldFile, tiffComp, 
               colors);
           } // try

@@ -158,7 +158,7 @@ public class EarthImageWriter {
    *
    * @param view the earth data view to write.
    * @param info the earth data information to use for the
-   * legends.
+   * legends, or null to not show the information legend.
    * @param isVerbose the verbose flag, true to print verbose messages.
    * @param hasLegends the legends flag, true to draw color scale and
    * information legends.

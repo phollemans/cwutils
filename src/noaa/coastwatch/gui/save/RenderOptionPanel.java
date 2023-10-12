@@ -60,6 +60,9 @@ public class RenderOptionPanel
   /** The checkbox for plot legends. */
   private JCheckBox nolegendsCheck;
   
+  /** The checkbox for info legend. */
+  private JCheckBox noinfoCheck;
+
   /** The checkbox for font and line smoothing. */
   private JCheckBox nosmoothCheck;
 
@@ -80,6 +83,20 @@ public class RenderOptionPanel
 
   /** The line of controls for color limits. */
   private JPanel colorLine;
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the info legends flag. 
+   * 
+   * @since 3.8.1
+   */
+  public boolean getInfoLegend () { 
+
+    if (noinfoCheck == null) return (false);
+    return (!noinfoCheck.isSelected());
+
+  } // getInfoLegend
 
   ////////////////////////////////////////////////////////////
 
@@ -183,12 +200,12 @@ public class RenderOptionPanel
     // Add legend check box
     // --------------------
     if (showLegends) {
-      nolegendsCheck = new JCheckBox ("Data image only, no legends", 
-        false);
+      nolegendsCheck = new JCheckBox ("Data image only, no legends", false);
       nolegendsCheck.addActionListener (new ActionListener() {
           public void actionPerformed (ActionEvent event) {
             if (worldCheck != null) 
               worldCheck.setEnabled (nolegendsCheck.isSelected());
+            noinfoCheck.setEnabled (!nolegendsCheck.isSelected());
           } // actionPerformed
         });
       addLine (new Component[] {nolegendsCheck});
@@ -200,6 +217,13 @@ public class RenderOptionPanel
       worldCheck = new JCheckBox ("Write world file ( .wld )");
       worldCheck.setEnabled (false);
       addLine (new Component[] {Box.createHorizontalStrut (10), worldCheck});
+    } // if
+
+    // Add info legends checkbox
+    // -------------------------
+    if (showLegends) {
+      noinfoCheck = new JCheckBox ("No information legend", false);
+      addLine (new Component[] {noinfoCheck});
     } // if
 
     // Add smoothing checkbox
