@@ -175,8 +175,7 @@ public class CWNCReader
     for (int i = 0; i < periods; i++) {
       long msec = (long) passDateArray[i] * MSEC_PER_DAY;
       msec += (long) (startTimeArray[i] * 1000L);
-      periodList.add (new TimePeriod (new Date (msec), 
-        (long) extentArray[i] * 1000L));
+      periodList.add (new TimePeriod (new Date (msec), (long) (extentArray[i] * 1000L)));
     } // for
 
     return (periodList);
