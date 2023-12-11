@@ -36,6 +36,8 @@ import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
+import java.util.Map;
+import java.util.HashMap;
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.TestContainer;
 
@@ -68,12 +70,19 @@ public class FileOperationChooser
 
   /** The open operation. */
   public static final String OPEN = "Open";
+  private static final String OPEN_TIP = "Open new data file";
 
   /** The close operation. */
   public static final String CLOSE = "Close";
+  private static final String CLOSE_TIP = "Close current data file";
 
   /** The save as operation. */
   public static final String EXPORT = "Export";
+  private static final String EXPORT_TIP = "Export to image or data";
+
+  /** The file information operation. */
+  public static final String INFO = "Info";
+  private static final String INFO_TIP = "Show data file information";
 
   // Variables
   // ---------
@@ -87,11 +96,8 @@ public class FileOperationChooser
   /** The static instance. */
   private static FileOperationChooser instance;
 
-  /** The close button. */
-  private JButton closeButton;
-
-  /** The save as button. */
-  private JButton exportButton;
+  /** The map of all buttons. */
+  private Map<String, AbstractButton> buttonMap;
 
   ////////////////////////////////////////////////////////////
 
@@ -105,7 +111,7 @@ public class FileOperationChooser
     boolean flag
   ) {
 
-    closeButton.setEnabled (flag);
+    buttonMap.get (CLOSE).setEnabled (flag);
 
   } // setClosable
 
@@ -121,29 +127,65 @@ public class FileOperationChooser
     boolean flag
   ) {
 
-    exportButton.setEnabled (flag);
+    buttonMap.get (EXPORT).setEnabled (flag);
 
   } // setSavable
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * Sets the info flag.
+   *
+   * @param flag the info flag, true if the info button should be enabled 
+   * or false if not.
+   * 
+   * @since 3.8.1
+   */
+  public void setInfo (
+    boolean flag
+  ) {
+
+    buttonMap.get (INFO).setEnabled (flag);
+
+  } // setInfo
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets the visiblity of the toolbar text labels.
+   * 
+   * @param flag the new text visibility flag value.
+   * 
+   * @since 3.8.1
+   */
+  public void setShowText (boolean flag) {
+
+    if (this.showText != flag) {
+      this.showText = flag;
+      buttonMap.forEach ((text,button) -> { button.setText (showText ? text : ""); });
+    } // if
+
+  } // setShowText
+
+  ////////////////////////////////////////////////////////////
+
   /** Adds the specified button to the toolbar. */
   private void addButton (
-    AbstractButton button
+    AbstractButton button,
+    String tip
   ) {
+
+    var text = button.getText();
+    buttonMap.put (text, button);
 
     // Setup button properties
     // -----------------------
-    button.getModel().setActionCommand (button.getText());
-    if (showText) {
-      button.setHorizontalTextPosition (SwingConstants.CENTER);
-      button.setVerticalTextPosition (SwingConstants.BOTTOM);
-      button.setIconTextGap (0);
-    } // if
-    else {
-      button.setToolTipText (button.getText());
-      button.setText ("");
-    } // else
+    button.getModel().setActionCommand (text);
+    button.setHorizontalTextPosition (SwingConstants.CENTER);
+    button.setVerticalTextPosition (SwingConstants.BOTTOM);
+    button.setIconTextGap (0);
+    button.setToolTipText (tip);
+    if (!showText) button.setText ("");
     button.addActionListener (operationAction);
     if (GUIServices.IS_AQUA) button.setBorderPainted (false);
 
@@ -190,14 +232,14 @@ public class FileOperationChooser
     // -------------
     operationAction = new OperationAction();
     this.showText = showText;
+    this.buttonMap = new HashMap<>();
 
     // Create buttons
     // --------------
-    addButton (new JButton (OPEN, GUIServices.getIcon ("file.open")));
-    closeButton = new JButton (CLOSE, GUIServices.getIcon ("file.close"));
-    addButton (closeButton);
-    exportButton = new JButton (EXPORT, GUIServices.getIcon ("file.export")); 
-    addButton (exportButton);
+    addButton (new JButton (OPEN, GUIServices.getIcon ("file.open")), OPEN_TIP);
+    addButton (new JButton (CLOSE, GUIServices.getIcon ("file.close")), CLOSE_TIP);
+    addButton (new JButton (EXPORT, GUIServices.getIcon ("file.export")), EXPORT_TIP); 
+    addButton (new JButton (INFO, GUIServices.getIcon ("file.info")), INFO_TIP); 
 
   } // FileOperationChooser constructor
 

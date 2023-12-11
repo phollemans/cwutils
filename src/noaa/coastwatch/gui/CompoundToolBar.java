@@ -26,6 +26,9 @@ package noaa.coastwatch.gui;
 // Imports
 // -------
 import java.awt.FlowLayout;
+import java.awt.Dimension;
+import javax.swing.BoxLayout;
+import javax.swing.Box;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
@@ -47,6 +50,8 @@ import noaa.coastwatch.gui.ViewOperationChooser;
 public class CompoundToolBar
   extends JToolBar {
 
+  private List<JComponent> componentList;
+
   ////////////////////////////////////////////////////////////
 
   /** 
@@ -63,18 +68,19 @@ public class CompoundToolBar
 
     // Initialize
     // ----------
-    setLayout (new FlowLayout (FlowLayout.LEFT, 2, 2));
+    this.setLayout (new BoxLayout (this, BoxLayout.X_AXIS));
 
     // Add components
     // --------------
-    List componentList = new ArrayList();
+    componentList = new ArrayList<>();
     for (int i = 0; i < toolbars.length; i++) {
       while (toolbars[i].getComponentCount() != 0) {
         JComponent comp = (JComponent) toolbars[i].getComponentAtIndex (0);
         this.add (comp);
         componentList.add (comp);
       } // while
-      if (i != toolbars.length-1) this.addSeparator();
+      if (i == toolbars.length-2) this.add (Box.createHorizontalGlue());
+      else if (i != toolbars.length-1) this.addSeparator (new Dimension (20, 20));
     } // for
 
     // Make same size
@@ -82,6 +88,15 @@ public class CompoundToolBar
     if (sameSize) GUIServices.setSameSize (componentList);
 
   } // CompoundToolBar constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Updates the button sizes of this toolbar after a button content change.
+   * 
+   * @since 3.8.1
+   */
+  public void updateButtonSize () { GUIServices.setSameSize (componentList); }
 
   ////////////////////////////////////////////////////////////
 

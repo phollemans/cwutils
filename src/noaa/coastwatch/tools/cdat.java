@@ -43,14 +43,17 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.NoninvertibleTransformException;
+import java.awt.Desktop;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URI;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -90,9 +93,11 @@ import noaa.coastwatch.gui.SplashScreenManager;
 import noaa.coastwatch.gui.TabComponent;
 import noaa.coastwatch.gui.UpdateAgent;
 import noaa.coastwatch.gui.ViewOperationChooser;
+import noaa.coastwatch.gui.HelpOperationChooser;
 import noaa.coastwatch.gui.WindowMonitor;
 import noaa.coastwatch.gui.open.EarthDataChooser;
 import noaa.coastwatch.gui.save.EarthDataExporter;
+import noaa.coastwatch.gui.HelpOperationChooser;
 
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.render.EarthDataView;
@@ -210,68 +215,8 @@ public final class cdat
   /** The long program name. */
   private static final String LONG_NAME = "CoastWatch Data Analysis Tool";
 
-  /** The File/Open menu command. */
-  private static final String OPEN_COMMAND = FileOperationChooser.OPEN;
-
-  /** The File/Close menu command. */
-  private static final String CLOSE_COMMAND = FileOperationChooser.CLOSE;
-  
-  /** The File/Save As menu command. */
-  private static final String EXPORT_COMMAND = FileOperationChooser.EXPORT;
-
-  /** The File/Quit menu command. */
-  private static final String QUIT_COMMAND = "Quit";
-
-  /** The View/Window Size small command. */
-  private static final String WINDOW_SIZE_SMALL_COMMAND = "Small (960x720)";
-
-  /** The View/Window Size medium command. */
-  private static final String WINDOW_SIZE_MEDIUM_COMMAND = "Medium (1200x900)";
-
-  /** The View/Window Size large command. */
-  private static final String WINDOW_SIZE_LARGE_COMMAND = "Large (1440x1080)";
-
-  /** The View/Data Size custom command. */
-  private static final String WINDOW_SIZE_CUSTOM_COMMAND = "Custom Window Size";
-
-  /** The View/Data Size small command. */
-  private static final String DATA_SIZE_SMALL_COMMAND = "Small (512x512)";
-
-  /** The View/Data Size medium command. */
-  private static final String DATA_SIZE_MEDIUM_COMMAND = "Medium (768x768)";
-
-  /** The View/Data Size large command. */
-  private static final String DATA_SIZE_LARGE_COMMAND = "Large (1024x1024)";
-
-  /** The View/Data Size custom command. */
-  private static final String DATA_SIZE_CUSTOM_COMMAND = "Custom Data Size";
-
-  /** The View/Full Screen Mode menu command. */
-  private static final String FULL_SCREEN_COMMAND = "Full Screen Mode";
-
-  /** The Tools/Preferences menu command. */
-  private static final String PREFS_COMMAND = "Preferences";
-  
-  /** The Tools/Profile/Save Profile menu command. **/
-  private static final String SAVE_PROFILE_COMMAND = "Save Profile";
-
-  /** The Tools/Profile/Load Profile menu command. **/
-  private static final String LOAD_PROFILE_COMMAND = "Load Profile";
-
-  /** The Tools/Navigation Analysis menu command. */
-  private static final String NAV_ANALYSIS_COMMAND = "Navigation Analysis";
-
-  /** The Tools/File Information menu command. */
-  private static final String INFO_COMMAND = "File Information";
-
-  /** The Tools/Script Console menu command. */
-  private static final String SCRIPT_CONSOLE_COMMAND = "Script Console";
-
-  /** The Help/Help menu command. */
-  private static final String HELP_COMMAND = "Help and support";
-
-  /** The Help/About menu command. */
-  private static final String ABOUT_COMMAND = "About " + LONG_NAME;
+  /** The URL to use for the online course. */
+  private static final String COURSE_URL = "https://umd.instructure.com/courses/1336575/pages/coastwatch-utilities-tutorials";
 
   /** The help index file. */
   private static final String HELP_INDEX = "cdat_index.html";
@@ -287,6 +232,9 @@ public final class cdat
 
   /** The view operation chooser. */
   private ViewOperationChooser viewChooser;
+
+  /** The help operation chooser. */
+  private HelpOperationChooser helpChooser;
 
   /** The compound toolbar. */
   private CompoundToolBar toolBar;
@@ -400,11 +348,6 @@ public final class cdat
     // Create menu bar
     // ---------------
     JMenuBar menuBar = new JMenuBar();
-    
-// For now, we remove the raised border for menus, so that look and feels
-// operate correctly, some of which may not used a raised border.
-//    menuBar.setBorder (new BevelBorder (BevelBorder.RAISED));
-
     this.setJMenuBar (menuBar);
 
     // TODO: Should we handle the About, Preferences, and Quit
@@ -414,131 +357,86 @@ public final class cdat
     // to a Mac menubar setup routine for this.  See the java.awt.desktop
     // for the latest way to handle desktop environments.
 
-    // Create file menu
-    // ----------------
+    // Create the file menu with open, close, export, etc.
+
     JMenu fileMenu = new JMenu ("File");
     fileMenu.setMnemonic (KeyEvent.VK_F);
     menuBar.add (fileMenu);
 
-    FileMenuListener fileListener = new FileMenuListener();
     JMenuItem menuItem;
     int keymask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-//    menuItem = new JMenuItem (OPEN_COMMAND, GUIServices.getIcon ("menu.open"));
-    menuItem = new JMenuItem (OPEN_COMMAND);
+    menuItem = new JMenuItem (FileOperationChooser.OPEN);
     menuItem.setMnemonic (KeyEvent.VK_O);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_O, keymask));
-    menuItem.addActionListener (fileListener); 
+    menuItem.addActionListener (event -> openFileEvent());
     fileMenu.add (menuItem);
 
     openRecentMenu = new JMenu ("Open Recent");
     fileMenu.add (openRecentMenu);
     rebuildRecentFilesMenu();
 
-//    menuItem = new JMenuItem (CLOSE_COMMAND, GUIServices.getIcon ("menu.close"));
-    menuItem = new JMenuItem (CLOSE_COMMAND);
+    menuItem = new JMenuItem (FileOperationChooser.CLOSE);
     menuItem.setMnemonic (KeyEvent.VK_C);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_W, keymask));
-    menuItem.addActionListener (fileListener); 
+    menuItem.addActionListener (event -> closeFileEvent());
     fileMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
-//    menuItem = new JMenuItem (EXPORT_COMMAND, GUIServices.getIcon ("menu.export"));
-    menuItem = new JMenuItem (EXPORT_COMMAND);
+    menuItem = new JMenuItem (FileOperationChooser.EXPORT);
     menuItem.setMnemonic (KeyEvent.VK_E);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_E, keymask));
-    menuItem.addActionListener (fileListener); 
+    menuItem.addActionListener (event -> exportFileEvent()); 
     fileMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
     if (!GUIServices.IS_AQUA) {
       fileMenu.addSeparator();
-      menuItem = new JMenuItem (QUIT_COMMAND);
+      menuItem = new JMenuItem ("Quit");
       menuItem.setMnemonic (KeyEvent.VK_Q);
       menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_Q, keymask));
-      menuItem.addActionListener (fileListener); 
+      menuItem.addActionListener (event -> quitEvent());
       fileMenu.add (menuItem);
     } // if
 
-    // Create view menu
-    // ----------------
+    // Create the view menu with window size, full screen, view controls, etc.
+
     JMenu viewMenu = new JMenu ("View");
     viewMenu.setMnemonic (KeyEvent.VK_V);
     menuBar.add (viewMenu);
 
-    ViewMenuListener viewListener = new ViewMenuListener();
-    JMenu submenu = new JMenu ("Window size");
+    JMenu submenu = new JMenu ("Window Size");
     submenu.setMnemonic (KeyEvent.VK_S);
     viewMenu.add (submenu);
 
-    menuItem = new JMenuItem (WINDOW_SIZE_SMALL_COMMAND);
+    var smallWindow = "Small (960x720)";
+    menuItem = new JMenuItem (smallWindow);
     menuItem.setMnemonic (KeyEvent.VK_S);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_1, keymask));
-    menuItem.addActionListener (viewListener);
+    menuItem.addActionListener (event -> windowSizeEvent (new Dimension (960, 720)));
     submenu.add (menuItem);
 
-    menuItem = new JMenuItem (WINDOW_SIZE_MEDIUM_COMMAND);
+    menuItem = new JMenuItem ("Medium (1200x900)");
     menuItem.setMnemonic (KeyEvent.VK_M);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_2, keymask));
-    menuItem.addActionListener (viewListener);
+    menuItem.addActionListener (event -> windowSizeEvent (new Dimension (1200, 900)));
     submenu.add (menuItem);
 
-    menuItem = new JMenuItem (WINDOW_SIZE_LARGE_COMMAND);
+    menuItem = new JMenuItem ("Large (1440x1080)");
     menuItem.setMnemonic (KeyEvent.VK_L);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_3, keymask));
-    menuItem.addActionListener (viewListener);
+    menuItem.addActionListener (event -> windowSizeEvent (new Dimension (1440, 1080)));
     submenu.add (menuItem);
 
-    menuItem = new JMenuItem (WINDOW_SIZE_CUSTOM_COMMAND);
+    menuItem = new JMenuItem ("Custom Window Size");
     menuItem.setMnemonic (KeyEvent.VK_C);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_4, keymask));
-    menuItem.addActionListener (viewListener);
+    menuItem.addActionListener (event -> windowCustomSizeEvent());
     submenu.add (menuItem);
 
-/**
- * TODO: This functionality doesn't work yet.  We leave it here for now in
- * case it's needed in the future.  For now, it may be sufficient for just
- * the window size changes to be implemented.
- 
-    submenu = new JMenu ("Data size");
-    submenu.setMnemonic (KeyEvent.VK_S);
-    viewMenu.add (submenu);
-
-    menuItem = new JMenuItem (DATA_SIZE_SMALL_COMMAND);
-    menuItem.setMnemonic (KeyEvent.VK_S);
-    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_1, keymask | InputEvent.SHIFT_DOWN_MASK));
-    menuItem.addActionListener (viewListener);
-    submenu.add (menuItem);
-    menuItemDisableList.add (menuItem);
-
-    menuItem = new JMenuItem (DATA_SIZE_MEDIUM_COMMAND);
-    menuItem.setMnemonic (KeyEvent.VK_M);
-    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_2, keymask | InputEvent.SHIFT_DOWN_MASK));
-    menuItem.addActionListener (viewListener);
-    submenu.add (menuItem);
-    menuItemDisableList.add (menuItem);
-
-    menuItem = new JMenuItem (DATA_SIZE_LARGE_COMMAND);
-    menuItem.setMnemonic (KeyEvent.VK_L);
-    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_3, keymask | InputEvent.SHIFT_DOWN_MASK));
-    menuItem.addActionListener (viewListener);
-    submenu.add (menuItem);
-    menuItemDisableList.add (menuItem);
-
-    menuItem = new JMenuItem (DATA_SIZE_CUSTOM_COMMAND);
-    menuItem.setMnemonic (KeyEvent.VK_C);
-    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_4, keymask | InputEvent.SHIFT_DOWN_MASK));
-    menuItem.addActionListener (viewListener);
-    submenu.add (menuItem);
-    menuItemDisableList.add (menuItem);
-
-
-*/
-
-
-    menuItem = new JMenuItem (FULL_SCREEN_COMMAND);
+    menuItem = new JMenuItem ("Full Screen Mode");
     menuItem.setMnemonic (KeyEvent.VK_F);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_F, keymask));
-    menuItem.addActionListener (viewListener);
+    menuItem.addActionListener (event -> fullScreenEvent());
     viewMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
@@ -594,12 +492,21 @@ public final class cdat
 
     viewMenu.addSeparator();
 
+    submenu = new JMenu ("Tool bar");
+    viewMenu.add (submenu);
+
     JCheckBoxMenuItem checkBoxMenuItem;
-    checkBoxMenuItem = new JCheckBoxMenuItem ("Show Tool bar");
+    checkBoxMenuItem = new JCheckBoxMenuItem ("Show bar");
     boolean isToolbarVisible = GUIServices.recallBooleanSettingForClass (true, "toolbar.visibility", cdat.class);
     checkBoxMenuItem.setState (isToolbarVisible);
     checkBoxMenuItem.addActionListener (event -> updateToolbarVisibility (event));
-    viewMenu.add (checkBoxMenuItem);
+    submenu.add (checkBoxMenuItem);
+
+    checkBoxMenuItem = new JCheckBoxMenuItem ("Show text labels");
+    boolean isToolbarLabelVisible = GUIServices.recallBooleanSettingForClass (false, "toolbar.label.visibility", cdat.class);
+    checkBoxMenuItem.setState (isToolbarLabelVisible);
+    checkBoxMenuItem.addActionListener (event -> updateToolbarLabelVisibility (event));
+    submenu.add (checkBoxMenuItem);
 
     checkBoxMenuItem = new JCheckBoxMenuItem ("Show Control tabs");
     boolean areControlTabsVisible = GUIServices.recallBooleanSettingForClass (true, "controltabs.visibility", cdat.class);
@@ -607,130 +514,140 @@ public final class cdat
     checkBoxMenuItem.addActionListener (event -> updateControlTabsVisibility (event));
     viewMenu.add (checkBoxMenuItem);
 
-    // Create tools menu
-    // -----------------
+    // Create the tools menu with preferences, profiles, file info, etc.
+
     JMenu toolsMenu = new JMenu ("Tools");
     toolsMenu.setMnemonic (KeyEvent.VK_T);
     menuBar.add (toolsMenu);
 
-    ToolsMenuListener toolsListener = new ToolsMenuListener();
-//    menuItem = new JMenuItem (PREFS_COMMAND, GUIServices.getIcon ("menu.prefs"));
-    menuItem = new JMenuItem (PREFS_COMMAND);
+    submenu = new JMenu ("Preferences");
+    toolsMenu.add (submenu);    
+
+    menuItem = new JMenuItem ("Edit Preferences");
     menuItem.setMnemonic (KeyEvent.VK_P);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_COMMA, keymask));
-    menuItem.addActionListener (toolsListener);
-    toolsMenu.add (menuItem);
+    menuItem.addActionListener (event -> editPreferencesEvent());
+    submenu.add (menuItem);
     
+    menuItem = new JMenuItem ("Open User Resources Directory");
+    menuItem.addActionListener (event -> openResourcesEvent());
+    submenu.add (menuItem);
+
     submenu = new JMenu ("Profile");
     submenu.setMnemonic (KeyEvent.VK_R);
     toolsMenu.add (submenu);
 
-    menuItem = new JMenuItem (LOAD_PROFILE_COMMAND);
+    menuItem = new JMenuItem ("Load Profile");
     menuItem.setMnemonic (KeyEvent.VK_L);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_L, keymask));
-    menuItem.addActionListener (toolsListener);
+    menuItem.addActionListener (event -> loadProfileEvent());
     submenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
-    menuItem = new JMenuItem (SAVE_PROFILE_COMMAND);
+    menuItem = new JMenuItem ("Save Profile");
     menuItem.setMnemonic (KeyEvent.VK_S);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_S, keymask));
-    menuItem.addActionListener (toolsListener);
+    menuItem.addActionListener (event -> saveProfileEvent());
     submenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
-    menuItem = new JMenuItem (INFO_COMMAND);
+    menuItem = new JMenuItem ("File Information");
     menuItem.setMnemonic (KeyEvent.VK_I);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_I, keymask));
-    menuItem.addActionListener (toolsListener); 
+    menuItem.addActionListener (event -> fileInfoEvent());; 
     toolsMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
-    menuItem = new JMenuItem (NAV_ANALYSIS_COMMAND);
+    menuItem = new JMenuItem ("Navigation Analysis");
     menuItem.setMnemonic (KeyEvent.VK_N);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_N, keymask));
-    menuItem.addActionListener (toolsListener); 
+    menuItem.addActionListener (event -> navAnalysisEvent()); 
     toolsMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
-    menuItem = new JMenuItem (SCRIPT_CONSOLE_COMMAND);
-    menuItem.setMnemonic (KeyEvent.VK_C);
-    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_C, keymask));
-    menuItem.addActionListener (toolsListener); 
-    toolsMenu.add (menuItem);
+    // Create the help menu with help, about, online course, etc.
 
-    // Create help menu
-    // ----------------
     JMenu helpMenu = new JMenu ("Help");
     helpMenu.setMnemonic (KeyEvent.VK_H);
     menuBar.add (helpMenu);
 
-    HelpMenuListener helpListener = new HelpMenuListener();
-//    menuItem = new JMenuItem (HELP_COMMAND, GUIServices.getIcon ("menu.support"));
-    menuItem = new JMenuItem (HELP_COMMAND);
+    menuItem = new JMenuItem ("Help and Support");
     menuItem.setMnemonic (KeyEvent.VK_H);
-    menuItem.setAccelerator (KeyStroke.getKeyStroke (
-      KeyEvent.VK_F1, 0));
-    menuItem.addActionListener (helpListener); 
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_F1, 0));
+    menuItem.addActionListener (event -> showHelpEvent()); 
     helpMenu.add (menuItem);
+
+    menuItem = new JMenuItem ("Open Online Course");
+    menuItem.addActionListener (event -> openCourseEvent());
+    helpMenu.add (menuItem);
+
     helpMenu.addSeparator();
 
-//    menuItem = new JMenuItem (ABOUT_COMMAND, GUIServices.getIcon ("menu.about"));
-    menuItem = new JMenuItem (ABOUT_COMMAND);
+    menuItem = new JMenuItem ("About " + LONG_NAME);
     menuItem.setMnemonic (KeyEvent.VK_A);
-    menuItem.addActionListener (helpListener); 
+    menuItem.addActionListener (event -> showAboutEvent()); 
     helpMenu.add (menuItem);
 
-    // Create file chooser
-    // -------------------
+    // Create the file chooser toolbar
     fileChooser = FileOperationChooser.getInstance();
-    fileChooser.addPropertyChangeListener (
-      FileOperationChooser.OPERATION_PROPERTY, fileListener);
+    fileChooser.addPropertyChangeListener (FileOperationChooser.OPERATION_PROPERTY,
+      new PropertyChangeAdapter (Map.of (
+        FileOperationChooser.OPEN, () -> openFileEvent(),
+        FileOperationChooser.CLOSE, () -> closeFileEvent(),
+        FileOperationChooser.EXPORT, () -> exportFileEvent(),
+        FileOperationChooser.INFO, () -> fileInfoEvent()
+      )
+    ));
 
-    // Create view chooser
-    // -------------------
+    // Create the view chooser toolbar.
     viewChooser = ViewOperationChooser.getInstance(); 
 
-    // Create profile chooser
-    // ----------------------
+    // Create the help chooser toolbar.
+    helpChooser = HelpOperationChooser.getInstance();
+    helpChooser.addPropertyChangeListener (HelpOperationChooser.OPERATION_PROPERTY,
+      new PropertyChangeAdapter (Map.of (
+        HelpOperationChooser.HELP, () -> showHelpEvent(),
+        HelpOperationChooser.PREFERENCES, () -> editPreferencesEvent(),
+        HelpOperationChooser.COURSE, () -> openCourseEvent()
+      )
+    ));
+
+    // Create the profile chooser that saves and loads profiles of
+    // CDAT enhancements and overlays.
     String currentDir = System.getProperty ("user.home");
     profileChooser = new JFileChooser (GUIServices.getPlatformDefaultDirectory());
     SimpleFileFilter filter = new SimpleFileFilter (
       new String[] {"profile"}, "CDAT profile");
     profileChooser.setFileFilter (filter);
 
-    // Create tool bar
-    // ---------------
-    toolBar = new CompoundToolBar (new JToolBar[] {fileChooser, viewChooser}, true);
+    // Combine the various tool bars into a compound one that holds them all.
+    toolBar = new CompoundToolBar (new JToolBar[] {fileChooser, viewChooser, helpChooser}, true);
     toolBar.setFloatable (false);
     toolBar.setBorder (new BevelBorder (BevelBorder.RAISED));
+    updateToolbarLabelVisibility (isToolbarLabelVisible);
     toolBar.setVisible (isToolbarVisible);
     this.getContentPane().add (toolBar, BorderLayout.NORTH);
 
-    // Create tabbed pane
-    // ------------------
+    // Create the tabbed pane.
     tabbedPane = new JTabbedPane();
     tabbedPane.setTabLayoutPolicy (JTabbedPane.SCROLL_TAB_LAYOUT);
     this.getContentPane().add (tabbedPane, BorderLayout.CENTER);
     
-    // Set initial enabled status
-    // --------------------------
+    // Set all the various GUI elements to their initialk enabled/disabled
+    // modes.
     updateEnabled();
 
-    // Set minimized window icon
-    // -------------------------
-
-    // This icon is used in a number of places: the Windows 10 window frame
-    // at the top-left, and the Linux task bar when CDAT is running.  It's not
-    // used on the Mac as far as we know.
-    
+    // Set the minimized window icon.  This icon is used in a number of 
+    // places: the Windows 10 window frame at the top-left, and the Linux 
+    // task bar when CDAT is running.  It's not used on the Mac as far as 
+    // we know.    
     setIconImages (List.of (
       GUIServices.getIcon ("tools.cdat").getImage(),
       GUIServices.getIcon ("tools.cdat.taskbar").getImage()
     ));
 
-    // Add drag and drop support
-    // -------------------------
+    // Add a handler when a data file is dragged into the tabbed pane so 
+    // that we open the file.
     Runnable runnable = new Runnable () {
         public void run () {
           openFile (dropHandler.getFile());
@@ -739,8 +656,8 @@ public final class cdat
     dropHandler = new FileTransferHandler (runnable);
     tabbedPane.setTransferHandler (dropHandler);
 
-    // Add file open support
-    // ---------------------
+    // Add file open support for when a file is double clicked on Mac
+    // or Windows.
     GUIServices.addOpenFileListener (event -> {
       String name = event.getActionCommand();
       if (name != null)
@@ -759,6 +676,29 @@ public final class cdat
     GUIServices.storeBooleanSettingForClass (flag, "toolbar.visibility", cdat.class);
 
   } // updateToolbarVisibility
+  
+  ////////////////////////////////////////////////////////////
+
+  /** Updates the visibility of the toolbar labels. */
+  private void updateToolbarLabelVisibility (boolean flag) {
+
+    fileChooser.setShowText (flag);
+    viewChooser.setShowText (flag);
+    helpChooser.setShowText (flag);
+    toolBar.updateButtonSize();
+
+  } // updateToolbarLabelVisibility
+
+  ////////////////////////////////////////////////////////////
+
+  /** Updates the visibility of the toolbar labels. */
+  private void updateToolbarLabelVisibility (ActionEvent event) {
+
+    boolean flag = ((JCheckBoxMenuItem) event.getSource()).getState();
+    updateToolbarLabelVisibility (flag);
+    GUIServices.storeBooleanSettingForClass (flag, "toolbar.label.visibility", cdat.class);
+
+  } // updateToolbarLabelVisibility
   
   ////////////////////////////////////////////////////////////
 
@@ -828,264 +768,33 @@ public final class cdat
     
   ////////////////////////////////////////////////////////////
 
-  /** Handles view menu commands. */
-  private class ViewMenuListener implements ActionListener {
-    public void actionPerformed (ActionEvent event) {
+  /** 
+   * Shows the file information dialog window for the currently active
+   * tab.
+   * 
+   * @since 3.8.1
+   */
+  private void showFileInformation () {
 
-      String command = event.getActionCommand();
+    EarthDataReader reader = getAnalysisPanel().getReader();
 
-      // Change window size to small/medium/large
-      // ----------------------------------------
-      if (
-        command.equals (WINDOW_SIZE_SMALL_COMMAND) ||
-        command.equals (WINDOW_SIZE_MEDIUM_COMMAND) ||
-        command.equals (WINDOW_SIZE_LARGE_COMMAND)
-      ) {
-        String sizeString = command.replaceFirst ("^.*\\(([0-9]+x[0-9]+)\\).*$", "$1");
-        String[] sizeArray = sizeString.split ("x");
-        try {
-          int width = Integer.parseInt (sizeArray[0]);
-          int height = Integer.parseInt (sizeArray[1]);
-          Dimension frameSize = new Dimension (width, height);
-          cdat.this.setSize (frameSize);
-        } // try
-        catch (NumberFormatException e) {}
-      } // if
-      
-      // Change view size to custom
-      // --------------------------
-      else if (command.equals (WINDOW_SIZE_CUSTOM_COMMAND)) {
+    var infoPanel = new ReaderInfoPanel (reader);
+    var metadataPanel = new ReaderMetadataPanel (reader);
+    var tabs = new JTabbedPane();
+    tabs.add ("Summary", infoPanel);
+    tabs.add ("Raw Metadata", metadataPanel);
+    var pane = new JPanel (new BorderLayout());
+    pane.add (tabs, BorderLayout.CENTER);
 
-        JPanel dimPanel = new JPanel();
-        dimPanel.setLayout (new GridBagLayout());
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.anchor = GridBagConstraints.WEST;
+    JOptionPane optionPane = new JOptionPane (pane,
+      JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION,
+      null, new String [] {"Close"});
+    JDialog dialog = optionPane.createDialog (cdat.this, "File Information");
+    dialog.setResizable (true);
+    dialog.setModal (false);
+    dialog.setVisible (true);
 
-        Dimension size = cdat.this.getSize();
-        NumberFormat format = NumberFormat.getIntegerInstance();
-        format.setGroupingUsed (false);
-
-        GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
-        gc.insets = new Insets (2, 0, 2, 10);
-        dimPanel.add (new JLabel ("Width:"), gc);
-        gc.insets = new Insets (2, 0, 2, 0);
-        GUIServices.setConstraints (gc, 1, 1, 1, 1, GridBagConstraints.NONE, 1, 0);
-        final JFormattedTextField widthField = new JFormattedTextField (format);
-        widthField.setValue (size.width);
-        widthField.setEditable (true);
-        widthField.setColumns (8);
-        dimPanel.add (widthField, gc);
-        
-        GUIServices.setConstraints (gc, 0, 2, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
-        gc.insets = new Insets (2, 0, 2, 10);
-        dimPanel.add (new JLabel ("Height:"), gc);
-        gc.insets = new Insets (2, 0, 2, 0);
-        GUIServices.setConstraints (gc, 1, 2, 1, 1, GridBagConstraints.NONE, 1, 0);
-        final JFormattedTextField heightField = new JFormattedTextField (format);
-        heightField.setValue (size.height);
-        heightField.setEditable (true);
-        heightField.setColumns (8);
-        dimPanel.add (heightField, gc);
-
-        Action okAction = GUIServices.createAction ("OK", new Runnable() {
-          public void run () {
-            Dimension newSize = new Dimension();
-            newSize.width = Integer.parseInt (widthField.getText());
-            newSize.height = Integer.parseInt (heightField.getText());
-            cdat.this.setSize (newSize);
-          } // run
-        });
-        Action cancelAction = GUIServices.createAction ("Cancel", null);
-        JDialog dialog = GUIServices.createDialog (
-          cdat.this, "Set window size", true, dimPanel,
-          null, new Action[] {okAction, cancelAction}, null, true);
-
-        dialog.setVisible (true);
-
-      } // else if
-
-      // Change data size to small/medium/large
-      // --------------------------------------
-
-/*
-
-      else if (
-        command.equals (DATA_SIZE_SMALL_COMMAND) ||
-        command.equals (DATA_SIZE_MEDIUM_COMMAND) ||
-        command.equals (DATA_SIZE_LARGE_COMMAND)
-      ) {
-        String sizeString = command.replaceFirst ("^.*\\(([0-9]+x[0-9]+)\\).*$", "$1");
-        String[] sizeArray = sizeString.split ("x");
-        try {
-          int width = Integer.parseInt (sizeArray[0]);
-          int height = Integer.parseInt (sizeArray[1]);
-          Dimension panelSize = new Dimension (width, height);
-
-
-          // FIXME: This doesn't quite work!
-          
-          System.out.println ("setting panelSize = " + panelSize);
-          
-          getAnalysisPanel().setViewPanelSize (panelSize);
-          cdat.this.pack();
-
-
-        } // try
-        catch (NumberFormatException e) {}
-      } // if
-
-
-*/
-
-
-
-
-
-
-      // Show view full screen
-      // ---------------------
-      else if (command.equals (FULL_SCREEN_COMMAND)) {
-        getAnalysisPanel().showFullScreen();
-      } // else if
-
-    } // actionPerformed
-  } // ViewMenuListener class
-
-  ////////////////////////////////////////////////////////////
-
-  /** Handles tools menu commands. */
-  private class ToolsMenuListener implements ActionListener {
-    public void actionPerformed (ActionEvent event) {
-
-      String command = event.getActionCommand();
-
-      // Show preferences dialog
-      // -----------------------
-      if (command.equals (PREFS_COMMAND)) {
-        Preferences oldPrefs = ResourceManager.getPreferences();
-        Preferences newPrefs = PreferencesChooser.showDialog (cdat.this,
-          "Preferences", oldPrefs);
-        if (newPrefs != null) {
-          try { 
-            ResourceManager.setPreferences (newPrefs);
-            setEarthLocFormat (newPrefs);
-            EarthDataReader.setUnitsMap (newPrefs.getUnitsMap());
-          } // try
-          catch (Exception e) {
-            JOptionPane.showMessageDialog (cdat.this,
-              "An error occurred writing the preferences file:\n" +
-              e.toString() + "\n" + 
-              "The preferences were not saved.", 
-              "Error", JOptionPane.ERROR_MESSAGE);
-          } // catch
-        } // if
-      } // if
-
-      // Show info dialog
-      // ----------------
-      else if (command.equals (INFO_COMMAND)) {
-        EarthDataReader reader = getAnalysisPanel().getReader();
-
-        var infoPanel = new ReaderInfoPanel (reader);
-        var metadataPanel = new ReaderMetadataPanel (reader);
-        var tabs = new JTabbedPane();
-        tabs.add ("Summary", infoPanel);
-        tabs.add ("Raw Metadata", metadataPanel);
-        var pane = new JPanel (new BorderLayout());
-        pane.add (tabs, BorderLayout.CENTER);
-
-        JOptionPane optionPane = new JOptionPane (pane,
-          JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION,
-          null, new String [] {"Close"});
-        JDialog dialog = optionPane.createDialog (cdat.this, "File Information");
-        dialog.setResizable (true);
-        dialog.setModal (false);
-        dialog.setVisible (true);
-
-      } // else if
-
-      // Show navigation analysis dialog
-      // -------------------------------
-      else if (command.equals (NAV_ANALYSIS_COMMAND)) {
-        getAnalysisPanel().showNavAnalysisDialog();
-      } // else if
-
-      // Save profile
-      // ------------
-      else if (command.equals (SAVE_PROFILE_COMMAND)) {
-    	int returnVal = profileChooser.showSaveDialog (cdat.this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-          File saveFile = profileChooser.getSelectedFile();
-          try {
-            getAnalysisPanel().saveProfile (saveFile);
-          } // try
-          catch (IOException e) {
-            JOptionPane.showMessageDialog (cdat.this,
-              "An error occurred saving the profile:\n" +
-              e.toString() + "\n" + 
-              "The profile was not saved.", 
-              "Error", JOptionPane.ERROR_MESSAGE);
-          } // catch
-        } // if
-      } // else if
-
-      // Load profile
-      // ------------
-      else if (command.equals (LOAD_PROFILE_COMMAND)) {
-    	int returnVal = profileChooser.showOpenDialog (cdat.this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-          File loadFile = profileChooser.getSelectedFile();
-          try {
-            getAnalysisPanel().loadProfile (loadFile);
-          } // try
-          catch (IOException e) {
-            JOptionPane.showMessageDialog (cdat.this,
-              "An error occurred loading the profile:\n" +
-              e.toString() + "\n" + 
-              "Try again with another file.", 
-              "Error", JOptionPane.ERROR_MESSAGE);
-          } // catch
-          catch (ClassNotFoundException e) {
-            LOGGER.log (Level.WARNING, "Error loading profile", ToolServices.shortTrace (e, "noaa.coastwatch")); 
-          } // catch
-        } // if
-      } // else if
-      
-      // Show script console
-      // -------------------
-      else if (command.equals (SCRIPT_CONSOLE_COMMAND)) {
-        ScriptConsole.getInstance().showRelativeTo (cdat.this);
-      } // else if
-
-    } // actionPerformed
-  } // ToolsMenuListener class
-
-  ////////////////////////////////////////////////////////////
-
-  /** Handles help menu commands. */
-  private class HelpMenuListener implements ActionListener {
-    public void actionPerformed (ActionEvent event) {
-
-      String command = event.getActionCommand();
-
-      // Show help dialog
-      // ----------------
-      if (command.equals (HELP_COMMAND)) {
-        HTMLPanel helpPanel = new HTMLPanel (helpIndex, false);
-        helpPanel.setPreferredSize (ToolServices.HELP_DIALOG_SIZE);
-        helpPanel.showDialog (cdat.this, "Help");
-      } // if
-
-      // Show about dialog
-      // -----------------
-      else if (command.equals (ABOUT_COMMAND)) {
-        JOptionPane.showMessageDialog (cdat.this, 
-          ToolServices.getAbout (LONG_NAME), "About", 
-          JOptionPane.INFORMATION_MESSAGE);
-      } // else if
-
-    } // actionPerformed
-  } // HelpMenuListener class
+  } // showFileInformation
 
   ////////////////////////////////////////////////////////////
 
@@ -1100,6 +809,7 @@ public final class cdat
     boolean enabled = (tabbedPane.getTabCount() != 0);
     fileChooser.setClosable (enabled);
     fileChooser.setSavable (enabled);
+    fileChooser.setInfo (enabled);
     viewChooser.setEnabled (enabled);
 
     // Update menu items
@@ -1229,67 +939,200 @@ public final class cdat
 
   ////////////////////////////////////////////////////////////
 
-  /** Handles file menu commands. */
-  private class FileMenuListener 
-    implements ActionListener, PropertyChangeListener {
+  // THese are various events performed in response to clicks from 
+  // buttons or menus.
 
-    /** Performs the specified action. */
-    public void actionPerformed (ActionEvent event) {
+  private void openFileEvent () { openFile (null); }
 
-      // Open new file
-      // -------------
-      String command = event.getActionCommand();
-      if (command.equals (OPEN_COMMAND)) {
-        openFile (null);
-      } // if
+  private void closeFileEvent () {
+    EarthDataAnalysisPanel analysisPanel = getAnalysisPanel();
+    tabbedPane.remove (analysisPanel);
+    analysisPanel.dispose();
+    updateEnabled();
+  } // closeFileEvent
 
-      // Close file
-      // ----------
-      else if (command.equals (CLOSE_COMMAND)) {
-        EarthDataAnalysisPanel analysisPanel = getAnalysisPanel();
-        tabbedPane.remove (analysisPanel);
-        analysisPanel.dispose();
-        updateEnabled();
-      } // if
+  private void exportFileEvent () {
+    EarthDataAnalysisPanel analysisPanel = getAnalysisPanel();
+    EarthDataView view = analysisPanel.getView();
+    EarthDataReader reader = analysisPanel.getReader();
+    EarthDataExporter exporter = new EarthDataExporter (
+      view, reader.getInfo(), reader, reader.getStatisticsVariables());
+    exporter.showDialog (cdat.this);
+  } // exportFileEvent
 
-      // Save to file
-      // ------------
-      else if (command.equals (EXPORT_COMMAND)) {
-        EarthDataAnalysisPanel analysisPanel = getAnalysisPanel();
-        EarthDataView view = analysisPanel.getView();
-        EarthDataReader reader = analysisPanel.getReader();
+  private void fileInfoEvent () {
+    showFileInformation();
+  } // fileInfoEvent
 
-        /*
-        EarthDataSaveOperation operation = new EarthDataSaveOperation (
-          view, reader.getInfo(), reader, reader.getStatisticsVariables());
-        operation.perform (cdat.this);
-        */
-        EarthDataExporter exporter = new EarthDataExporter (
-          view, reader.getInfo(), reader, reader.getStatisticsVariables());
-        exporter.showDialog (cdat.this);
+  private void quitEvent () {
+    ToolServices.exitWithCode (0);
+    return;
+  } // quitEvent
 
-      } // else if
+  private void windowSizeEvent (Dimension size) { cdat.this.setSize (size); }
 
-      // Quit program
-      // ------------
-      else if (command.equals (QUIT_COMMAND)) {
-        ToolServices.exitWithCode (0);
-        return;
-      } // else if
+  private void windowCustomSizeEvent () {
 
-    } // actionPerformed
+    JPanel dimPanel = new JPanel();
+    dimPanel.setLayout (new GridBagLayout());
+    GridBagConstraints gc = new GridBagConstraints();
+    gc.anchor = GridBagConstraints.WEST;
 
-    ////////////////////////////////////////////////////////
+    Dimension size = cdat.this.getSize();
+    NumberFormat format = NumberFormat.getIntegerInstance();
+    format.setGroupingUsed (false);
 
-    /** Sends property changes to the action listener. */
+    GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
+    gc.insets = new Insets (2, 0, 2, 10);
+    dimPanel.add (new JLabel ("Width:"), gc);
+    gc.insets = new Insets (2, 0, 2, 0);
+    GUIServices.setConstraints (gc, 1, 1, 1, 1, GridBagConstraints.NONE, 1, 0);
+    final JFormattedTextField widthField = new JFormattedTextField (format);
+    widthField.setValue (size.width);
+    widthField.setEditable (true);
+    widthField.setColumns (8);
+    dimPanel.add (widthField, gc);
+    
+    GUIServices.setConstraints (gc, 0, 2, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
+    gc.insets = new Insets (2, 0, 2, 10);
+    dimPanel.add (new JLabel ("Height:"), gc);
+    gc.insets = new Insets (2, 0, 2, 0);
+    GUIServices.setConstraints (gc, 1, 2, 1, 1, GridBagConstraints.NONE, 1, 0);
+    final JFormattedTextField heightField = new JFormattedTextField (format);
+    heightField.setValue (size.height);
+    heightField.setEditable (true);
+    heightField.setColumns (8);
+    dimPanel.add (heightField, gc);
+
+    Action okAction = GUIServices.createAction ("OK", new Runnable() {
+      public void run () {
+        Dimension newSize = new Dimension();
+        newSize.width = Integer.parseInt (widthField.getText());
+        newSize.height = Integer.parseInt (heightField.getText());
+        cdat.this.setSize (newSize);
+      } // run
+    });
+    Action cancelAction = GUIServices.createAction ("Cancel", null);
+    JDialog dialog = GUIServices.createDialog (
+      cdat.this, "Set window size", true, dimPanel,
+      null, new Action[] {okAction, cancelAction}, null, true);
+
+    dialog.setVisible (true);
+
+  } // windowCustomSizeEvent
+
+  private void fullScreenEvent () { getAnalysisPanel().showFullScreen(); }
+
+  private void editPreferencesEvent() {
+    Preferences oldPrefs = ResourceManager.getPreferences();
+    Preferences newPrefs = PreferencesChooser.showDialog (cdat.this,
+      "Preferences", oldPrefs);
+    if (newPrefs != null) {
+      try { 
+        ResourceManager.setPreferences (newPrefs);
+        setEarthLocFormat (newPrefs);
+        EarthDataReader.setUnitsMap (newPrefs.getUnitsMap());
+      } // try
+      catch (Exception e) {
+        JOptionPane.showMessageDialog (cdat.this,
+          "An error occurred writing the preferences file:\n" +
+          e.toString() + "\n" + 
+          "The preferences were not saved.", 
+          "Error", JOptionPane.ERROR_MESSAGE);
+      } // catch
+    } // if
+  } // editPreferencesEvent
+
+  private void openResourcesEvent() {
+    try { ResourceManager.showResourcesDirectory(); }
+    catch (IOException e) {
+      JOptionPane.showMessageDialog (cdat.this,
+        "An error occurred showing the user\n" +
+        "resources directory:\n" + e.toString(),
+        "Error", JOptionPane.ERROR_MESSAGE);
+    } // catch
+  } // openResourcesEvent
+
+  private void navAnalysisEvent() { getAnalysisPanel().showNavAnalysisDialog(); }
+
+  private void saveProfileEvent() {
+    int returnVal = profileChooser.showSaveDialog (cdat.this);
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+      File saveFile = profileChooser.getSelectedFile();
+      try {
+        getAnalysisPanel().saveProfile (saveFile);
+      } // try
+      catch (IOException e) {
+        JOptionPane.showMessageDialog (cdat.this,
+          "An error occurred saving the profile:\n" +
+          e.toString() + "\n" + 
+          "The profile was not saved.", 
+          "Error", JOptionPane.ERROR_MESSAGE);
+      } // catch
+    } // if
+  } // saveProfileEvent
+
+  private void loadProfileEvent() {
+    int returnVal = profileChooser.showOpenDialog (cdat.this);
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+      File loadFile = profileChooser.getSelectedFile();
+      try {
+        getAnalysisPanel().loadProfile (loadFile);
+      } // try
+      catch (IOException e) {
+        JOptionPane.showMessageDialog (cdat.this,
+          "An error occurred loading the profile:\n" +
+          e.toString() + "\n" + 
+          "Try again with another file.", 
+          "Error", JOptionPane.ERROR_MESSAGE);
+      } // catch
+      catch (ClassNotFoundException e) {
+        LOGGER.log (Level.WARNING, "Error loading profile", ToolServices.shortTrace (e, "noaa.coastwatch")); 
+      } // catch
+    } // if
+  } // loadProfileEvent
+
+  private void showHelpEvent() {
+    HTMLPanel helpPanel = new HTMLPanel (helpIndex, false);
+    helpPanel.setPreferredSize (ToolServices.HELP_DIALOG_SIZE);
+    helpPanel.showDialog (cdat.this, "Help");
+  } // showHelpEvent
+
+  private void openCourseEvent() {
+    try { Desktop.getDesktop().browse (new URI (COURSE_URL)); }
+    catch (Exception e) {
+      JOptionPane.showMessageDialog (cdat.this,
+        "Error opening the online course:\n" + e.toString(),
+        "Error", JOptionPane.ERROR_MESSAGE);
+    } // catch
+  } // openCourseEvent
+
+  private void showAboutEvent() {
+    JOptionPane.showMessageDialog (cdat.this, 
+      ToolServices.getAbout (LONG_NAME), "About", 
+      JOptionPane.INFORMATION_MESSAGE);
+  } // showAboutEvent
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * This is a utility class that takes a new property value and matches
+   * it to a runnable item.  This is a custom adapter that's used with the
+   * tool bar choosers.
+   */
+  private class PropertyChangeAdapter implements PropertyChangeListener {
+
+    private Map<String, Runnable> runTable;
+
+    public PropertyChangeAdapter (Map<String, Runnable> runTable) { this.runTable = runTable; }
+
     public void propertyChange (PropertyChangeEvent event) {
-      actionPerformed (new ActionEvent (event.getSource(), 0, 
-        (String) event.getNewValue()));
+      String value = (String) event.getNewValue();
+      var runnable = runTable.get (value);
+      if (runnable != null) runnable.run();
     } // propertyChange
 
-    ////////////////////////////////////////////////////////
-
-  } // FileMenuListener class
+  } // PropertyChangeAdapter class
 
   ////////////////////////////////////////////////////////////
 
@@ -1311,12 +1154,18 @@ public final class cdat
 
   ////////////////////////////////////////////////////////////
 
-  /** Handles window resizes and saves the new window size. */
+  /** 
+   * This is a utility class that handles window resize events 
+   * and saves the new window size so that it can be recalled later
+   * the next time the application starts.
+   */
   private static class WindowResizeListener extends ComponentAdapter {
+
     public void componentResized (ComponentEvent event) {
       Dimension windowSize = event.getComponent().getSize();
       GUIServices.storeWindowSizeForClass (windowSize, cdat.class);
     } // componentResized
+
   } // WindowResizeListener class
 
   ////////////////////////////////////////////////////////////
