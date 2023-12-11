@@ -28,11 +28,16 @@ package noaa.coastwatch.gui;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import java.awt.Cursor;
+
 import javax.swing.JComponent;
 import javax.swing.TransferHandler;
+import javax.swing.Icon;
+
+import java.io.File;
+import java.io.IOException;
+
+import java.util.List;
 
 /**
  * The <code>FileTransferHandler</code> class is used with the
@@ -106,80 +111,39 @@ public class FileTransferHandler
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Returns true if the data flavour contains a
-   * <code>DataFlavour.javaFileListFlovor</code> object.  Users should
-   * not need to call this method -- it is called by AWT when a drag
-   * event occurs over the component.  See the Java API documentation
-   * for <code>javax.swing.TransferHandler</code> for more info.
-   */
-  public boolean canImport (
-    JComponent comp, 
-    DataFlavor[] flavors
-  ) {
+  @Override
+  public boolean canImport (TransferHandler.TransferSupport info) {
 
-    // Find file list flavor
-    // ---------------------
-    for (int i = 0; i < flavors.length; i++) {
-      if (flavors[i].equals (DataFlavor.javaFileListFlavor))
-        return (true);
-    } // for
+    boolean importable = false;
 
-    return (false);
+    if (info.isDrop() && info.isDataFlavorSupported (DataFlavor.javaFileListFlavor)) {
+      importable = true;
+    } // if
+
+    return (importable);
 
   } // canImport
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Returns true if the dropped data is imported successfully.  Users
-   * should not need to call this method -- it is called by AWT when a
-   * drop event occurs on the component.  See the Java API
-   * documentation for <code>javax.swing.TransferHandler</code> for
-   * more info.
-   */
-  public boolean importData (
-    JComponent comp, 
-    Transferable t
-  ) {
-          
-    // Get file list
-    // -------------
-    try {
-      fileList = (List) t.getTransferData (DataFlavor.javaFileListFlavor);
-    } // try
-    catch (UnsupportedFlavorException e1) { return (false); }
-    catch (IOException e2) { return (false); }
+  @Override
+  public boolean importData (TransferHandler.TransferSupport info) {
 
-    // Call runnable
-    // -------------
-    runnable.run();
+    boolean imported = false;
 
-    return (true);
+    if (canImport (info)) {
+      try {
+        fileList = (List) info.getTransferable().getTransferData (DataFlavor.javaFileListFlavor);
+        imported = true;
+      }  // try
+      catch (UnsupportedFlavorException e) { }
+      catch (IOException e) { }
+    } // if
+
+    if (imported) runnable.run();
+    return (imported);
 
   } // importData
-
-  ////////////////////////////////////////////////////////////
-
-  /** 
-   * Returns an icon that represents the file transfer.  Users should
-   * not need to call this method -- it is called by AWT when a drop
-   * event occurs on the component.  See the Java API documentation
-   * for <code>javax.swing.TransferHandler</code> for more info.
-   */
-
-  /*
-   * TODO: Currently, we can't find a JVM that supports changing the
-   * cursor for a drop operation using the return value from this
-   * method, so for now we don't override it.
-
-  public Icon getVisualRepresentation (Transferable t) {
-
-    return (GUIServices.getIcon ("file.open"));
-
-  } // getVisualRepresentation
-
-   */
 
   ////////////////////////////////////////////////////////////
 

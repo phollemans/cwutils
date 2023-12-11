@@ -27,22 +27,35 @@ package noaa.coastwatch.gui;
 // -------
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.BasicStroke;
+import java.awt.Stroke;
+import java.awt.font.TextLayout;
+
 import java.util.Iterator;
 import java.util.List;
+
+import java.io.File;
+
 import javax.swing.Action;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.Icon;
@@ -55,13 +68,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.JFileChooser;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -69,8 +85,13 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.Document;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.SwingConstants;
+
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.TestContainer;
+import noaa.coastwatch.gui.FileTransferHandler;
 import noaa.coastwatch.render.ColorEnhancementSettings;
 import noaa.coastwatch.render.EnhancementFunction;
 import noaa.coastwatch.render.EnhancementFunctionFactory;
@@ -80,6 +101,9 @@ import noaa.coastwatch.render.GammaEnhancement;
 import noaa.coastwatch.render.Palette;
 import noaa.coastwatch.render.PaletteFactory;
 import noaa.coastwatch.render.StepEnhancement;
+import noaa.coastwatch.render.IconElement;
+import noaa.coastwatch.render.IconElementFactory;
+import noaa.coastwatch.render.GraphicsServices;
 import noaa.coastwatch.tools.Preferences;
 import noaa.coastwatch.tools.ResourceManager;
 
@@ -102,6 +126,9 @@ public class PreferencesChooser
 
   /** The category name for enhancement settings. */
   private static final String ENHANCEMENT_CATEGORY = "Enhancement";
+
+  /** The category name for export settings. */
+  private static final String EXPORT_CATEGORY = "Export";
 
   /** The icon for general settings. */
   private static final Icon GENERAL_ICON = 
@@ -168,6 +195,37 @@ public class PreferencesChooser
   /** The general preferences chooser. */
   private GeneralPreferencesChooser generalPrefsChooser;
 
+  /** The file chooser to use for logos. */
+  private static JFileChooser fileChooser;
+
+  // The category selected in the preferences chooser.
+  private static String selectedCategory = GENERAL_CATEGORY;
+
+  private CardLayout cardLayout;
+  private JPanel cards;
+
+  ////////////////////////////////////////////////////////////
+
+  static {
+
+    fileChooser = new JFileChooser();
+    SimpleFileFilter imageFilter = new SimpleFileFilter (
+      new String[] {"png", "gif", "jpg", "tif", "bmp"}, "Image files");
+    fileChooser.addChoosableFileFilter (imageFilter);
+    fileChooser.setDialogTitle ("Select logo image");
+    fileChooser.setDialogType (JFileChooser.OPEN_DIALOG);
+    fileChooser.setApproveButtonText ("OK");
+    fileChooser.setFileFilter (imageFilter);
+
+  } // static
+
+  ////////////////////////////////////////////////////////////
+
+  private void categorySelectEvent (String category) {
+    cardLayout.show (cards, category);
+    selectedCategory = category;
+  } // categorySelectEvent
+
   ////////////////////////////////////////////////////////////
   
   /** 
@@ -180,80 +238,68 @@ public class PreferencesChooser
     Preferences prefs
   ) {
   
-    // Initialize
-    // ----------
     super (new BorderLayout (5, 5));
     this.prefs = (Preferences) prefs.clone();
-    
-    // Create cards
-    // ------------
-    final CardLayout cardLayout = new CardLayout();
-    final JPanel cards = new JPanel (cardLayout);
+
+    // Start by creating a card layout that will be controlled by the
+    // toggle buttons on a toolbar.
+    cardLayout = new CardLayout();
+    cards = new JPanel (cardLayout);
     add (cards, BorderLayout.CENTER);
     generalPrefsChooser = new GeneralPreferencesChooser();
     cards.add (generalPrefsChooser, GENERAL_CATEGORY);
     enhancePrefsChooser = new EnhancementPreferencesChooser();
     cards.add (enhancePrefsChooser, ENHANCEMENT_CATEGORY);
+    var exportPrefsChooser = new ExportPreferencesChooser();
+    cards.add (exportPrefsChooser, EXPORT_CATEGORY);
+    cardLayout.show (cards, selectedCategory);
 
-    // Create list
-    // -----------
-    final JList list = new JList (new String[] {GENERAL_CATEGORY, 
-      ENHANCEMENT_CATEGORY});
-    list.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
-    list.setSelectedIndex (0);
-    list.addListSelectionListener (new ListSelectionListener () {
-        public void valueChanged (ListSelectionEvent e) {
-          cardLayout.show (cards, (String) list.getSelectedValue());
-        } // valueChanged
-      });
-    list.setCellRenderer (new PrefsCellRenderer());    
-    JScrollPane scrollPane = new JScrollPane (list);
-    Dimension viewSize = list.getPreferredScrollableViewportSize();
-    int width = viewSize.width + viewSize.height/list.getVisibleRowCount();
-    list.setFixedCellWidth (width);
-    add (scrollPane, BorderLayout.LINE_START);
+    // Now create the toggle buttons so that they switch the card layout 
+    // component.
+    JPanel topPanel = new JPanel (new BorderLayout());
+    topPanel.add (new JSeparator (JSeparator.HORIZONTAL), BorderLayout.SOUTH);
+    add (topPanel, BorderLayout.NORTH);
+
+    var toolbar = new JToolBar();
+
+    toolbar.setLayout (new BoxLayout (toolbar, BoxLayout.X_AXIS));
+    toolbar.add (Box.createHorizontalGlue());
+
+    toolbar.setFloatable (false);
+    topPanel.add (toolbar, BorderLayout.CENTER);
+    var group = new ButtonGroup();
+    JToggleButton button;
+
+    button = new JToggleButton (GENERAL_CATEGORY, GUIServices.getIcon ("prefs.tab.general"));
+    button.setSelected (selectedCategory.equals (GENERAL_CATEGORY));
+    group.add (button);
+    button.setHorizontalTextPosition (SwingConstants.CENTER);
+    button.setVerticalTextPosition (SwingConstants.BOTTOM);
+    button.setIconTextGap (0);
+    button.addActionListener (event -> categorySelectEvent (GENERAL_CATEGORY));
+    toolbar.add (button);
+
+    button = new JToggleButton (ENHANCEMENT_CATEGORY, GUIServices.getIcon ("prefs.tab.enhancement"));
+    button.setSelected (selectedCategory.equals (ENHANCEMENT_CATEGORY));
+    group.add (button);
+    button.setHorizontalTextPosition (SwingConstants.CENTER);
+    button.setVerticalTextPosition (SwingConstants.BOTTOM);
+    button.setIconTextGap (0);
+    button.addActionListener (event -> categorySelectEvent (ENHANCEMENT_CATEGORY));
+    toolbar.add (button);
+
+    button = new JToggleButton (EXPORT_CATEGORY, GUIServices.getIcon ("prefs.tab.export"));
+    button.setSelected (selectedCategory.equals (EXPORT_CATEGORY));
+    group.add (button);
+    button.setHorizontalTextPosition (SwingConstants.CENTER);
+    button.setVerticalTextPosition (SwingConstants.BOTTOM);
+    button.setIconTextGap (0);
+    button.addActionListener (event -> categorySelectEvent (EXPORT_CATEGORY));
+    toolbar.add (button);
+
+    toolbar.add (Box.createHorizontalGlue());
 
   } // PreferencesChooser constructor
-
-  ////////////////////////////////////////////////////////////
-
-  /** Renders list cells for the preferences category list. */
-  private class PrefsCellRenderer 
-    extends JLabel 
-    implements ListCellRenderer {
-
-    public Component getListCellRendererComponent (
-      JList list,
-      Object value,
-      int index,
-      boolean isSelected,
-      boolean cellHasFocus
-    ) {
-
-      String str = value.toString();
-      setText (str);
-      Icon icon;
-      if (str.equals (GENERAL_CATEGORY)) icon = GENERAL_ICON;
-      else if (str.equals (ENHANCEMENT_CATEGORY)) icon = ENHANCEMENT_ICON;
-      else throw new IllegalStateException ("Unknown preferences category");
-      setIcon (icon);
-      if (isSelected) {
-        setBackground (list.getSelectionBackground());
-        setForeground (list.getSelectionForeground());
-      } // if
-      else {
-        setBackground (list.getBackground());
-        setForeground (list.getForeground());
-      } // else
-      setEnabled (list.isEnabled());
-      setFont (list.getFont());
-      setOpaque (true);
-
-      return (this);
-
-    } // getListCellRendererComponent
-
-  } // PrefsCellRenderer
 
   ////////////////////////////////////////////////////////////
 
@@ -405,7 +451,6 @@ public class PreferencesChooser
       // Initialize
       // ----------
       super (new GridBagLayout());
-      setBorder (new TitledBorder (new EtchedBorder(), "General Preferences"));
 
       GridBagConstraints gc = new GridBagConstraints();
       gc.insets = new Insets (2, 0, 2, 0);
@@ -436,7 +481,7 @@ public class PreferencesChooser
       add (heapField, gc);
 
       GUIServices.setConstraints (gc, 2, row, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
-      add (new JLabel ("Mb"), gc);
+      add (new JLabel (" Mb"), gc);
 
       GUIServices.setConstraints (gc, 0, ++row, 1, 1, GridBagConstraints.NONE, 0, 0);
       gc.insets = new Insets (2, 15, 2, 10);
@@ -452,7 +497,7 @@ public class PreferencesChooser
       add (cacheField, gc);
 
       GUIServices.setConstraints (gc, 2, row, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
-      add (new JLabel ("Mb"), gc);
+      add (new JLabel (" Mb"), gc);
 
       // Add geographic coordinate selection
       // -----------------------------------
@@ -487,7 +532,7 @@ public class PreferencesChooser
 
     ////////////////////////////////////////////////////////
 
-  } // GeneralPreferencesChooser
+  } // GeneralPreferencesChooser class
 
   ////////////////////////////////////////////////////////////
 
@@ -578,8 +623,6 @@ public class PreferencesChooser
       // Initialize
       // ----------
       super (new GridBagLayout());
-      setBorder (new TitledBorder (new EtchedBorder(), 
-        "Enhancement Preferences"));
   
       // Create variable panel
       // ---------------------
@@ -1130,10 +1173,270 @@ public class PreferencesChooser
   
     } // removeEntry
 
-  } // EnhancementPreferencesChooser
+  } // EnhancementPreferencesChooser class
 
   ////////////////////////////////////////////////////////////
+
+  /**
+   * The <code>ExportPreferencesChooser</code> lets the user change
+   * just the preferences relating to export settings.
+   * 
+   * @since 3.8.1
+   */
+  private class ExportPreferencesChooser extends JPanel {
+
+    IconElement logoIcon;
+    JRadioButton predefinedRadio;
+    JRadioButton customRadio;
+    JComboBox<String> logoCombo;
+    JPanel logoPanel;
+    JTextField customField;
+    JButton fileSelectButton;
+    FileTransferHandler dropHandler;
+
+    ////////////////////////////////////////////////////////
+
+    private String logoSetting () {
+      var logo = predefinedRadio.isSelected() ? 
+        (String) logoCombo.getSelectedItem() : 
+        customField.getText();
+      return (logo);
+    } // logoSetting
+
+    private void applyChanges() { 
+      var logo = logoSetting();
+      prefs.setLogo (logo);
+      prefsChanged = true;
+    } // applyChanges
+
+    private void updateEnabled() { 
+      boolean predefined = predefinedRadio.isSelected();
+      logoCombo.setEnabled (predefined);
+      customField.setEnabled (!predefined);
+      fileSelectButton.setEnabled (!predefined);
+    } // updateEnabled
+
+    private void radioButtonEvent () {
+      updateEnabled();
+      updateLogo();
+    } // radioButtonEvent
+
+    private void updateLogo() {
+      var logo = logoSetting();
+      reloadLogo (logo);
+      logoPanel.repaint();
+      applyChanges();
+    } // updateLogo
+
+    private boolean reloadLogo (String logo) {
+      boolean success;
+      try { 
+        logoIcon = IconElementFactory.getInstance().create (logo); 
+        success = true;
+      } // try
+      catch (Exception e) {
+        logoIcon = null;
+        // JOptionPane.showMessageDialog (ExportPreferencesChooser.this,
+        //   "Error creating logo from image:\n" + e.toString(),
+        //   "Error", JOptionPane.ERROR_MESSAGE);
+        success = false;
+
+      } // catch
+//      if (success) updateLogo();
+      return (success);
+    } // reloadLogo
+
+    private void logoComboEvent() {
+      updateLogo();
+    } // logoComboEvent
+
+    private void fileSelectEvent () {
+      int returnVal = fileChooser.showDialog (this, null);
+      if (returnVal == JFileChooser.APPROVE_OPTION) {
+        customField.setText (fileChooser.getSelectedFile().getPath());
+        updateLogo();
+      } // if
+    } // fileSelectEvent
+
+    private void acceptCustomEvent () {
+      updateLogo();
+    } // acceptCustomEvent
+
+    private void fileDropEvent (File file) {
+      customField.setText (file.getPath());
+      if (customRadio.isSelected()) acceptCustomEvent();
+      else customRadio.doClick();
+    } // fileDropEvent
+
+    ////////////////////////////////////////////////////////
   
+    /** Creates a new export preferences chooser. */
+    public ExportPreferencesChooser () {
+  
+      super (new GridBagLayout());
+
+      GridBagConstraints gc = new GridBagConstraints();
+      gc.insets = new Insets (2, 0, 2, 0);
+      gc.anchor = GridBagConstraints.NORTHWEST;
+
+      int row = -1;
+      GUIServices.setConstraints (gc, 0, ++row, 3, 1, GridBagConstraints.HORIZONTAL, 1, 0);
+      gc.insets = new Insets (5, 0, 5, 0);
+      add (new JLabel ("Plot legend logo:"), gc);
+      
+      // Start by getting the current logo setting.  If there's no setting,
+      // then this preferences instance was from before the export update.
+      // Select a default logo in that case.  
+
+      var predefinedNames = IconElementFactory.getInstance().getResourceNames();
+      var logo = prefs.getLogo();
+      if (logo == null) logo = IconElementFactory.getInstance().getDefaultIcon();
+      boolean predefined = predefinedNames.contains (logo);
+      try { logoIcon = IconElementFactory.getInstance().create (logo); }
+      catch (Exception e) { }
+
+      ButtonGroup group = new ButtonGroup();
+
+      // Add the predefined and custom logo controls eith their event
+      // handlers.
+
+      predefinedRadio = new JRadioButton ("Use predefined:", predefined);
+      group.add (predefinedRadio);
+      predefinedRadio.addItemListener (event -> radioButtonEvent());
+      GUIServices.setConstraints (gc, 0, ++row, 1, 1, GridBagConstraints.NONE, 0, 0);
+      gc.insets = new Insets (2, 10, 2, 0);
+      add (predefinedRadio, gc);
+
+      logoCombo = new JComboBox<String>();
+      predefinedNames.forEach (logoCombo::addItem);
+      if (predefined) logoCombo.setSelectedItem (logo);
+      logoCombo.addActionListener (event -> logoComboEvent());
+      GUIServices.setConstraints (gc, 1, row, 1, 1, GridBagConstraints.NONE, 0, 0);
+      gc.insets = new Insets (2, 5, 2, 0);
+      add (logoCombo, gc);
+
+      customRadio = new JRadioButton ("Use custom:", !predefined);
+      group.add (customRadio);
+      GUIServices.setConstraints (gc, 0, ++row, 1, 1, GridBagConstraints.NONE, 0, 0);
+      gc.insets = new Insets (2, 10, 2, 0);
+      add (customRadio, gc);
+
+      customField = new JTextField (20);
+      if (!predefined) customField.setText (logo);
+      customField.setEditable (true);
+      customField.addFocusListener (new FocusAdapter() {
+        public void focusLost (FocusEvent event) { acceptCustomEvent(); }
+      });
+      customField.addActionListener (event -> acceptCustomEvent());
+      dropHandler = new FileTransferHandler (() -> fileDropEvent (dropHandler.getFile()));
+      customField.setTransferHandler (dropHandler);
+
+      GUIServices.setConstraints (gc, 1, row, 1, 1, GridBagConstraints.NONE, 0, 0);
+      gc.insets = new Insets (2, 5, 2, 0);
+      add (customField, gc);
+
+      fileSelectButton = GUIServices.getIconButton ("select.file");
+      GUIServices.setSquare (fileSelectButton);
+      fileSelectButton.addActionListener (event -> fileSelectEvent());
+
+      GUIServices.setConstraints (gc, 2, row, 1, 1, GridBagConstraints.NONE, 1, 0);
+      add (fileSelectButton, gc);
+
+      // Add the logo preview panel.  This will show a logo if there's a valid
+      // one, or a message if the logo is invalid, ie: the user selected an
+      // image file that couldn't be used, or the custom logo no longer exists.
+
+      logoPanel = new LogoPanel();
+      logoPanel.setTransferHandler (dropHandler);
+      logoPanel.setPreferredSize (new Dimension (80, 80));
+
+      GUIServices.setConstraints (gc, 4, 0, 1, 4, GridBagConstraints.NONE, 0, 0);
+      gc.insets = new Insets (5, 0, 5, 0);
+      add (logoPanel, gc);
+
+      GUIServices.setConstraints (gc, 0, ++row, 3, 1, GridBagConstraints.HORIZONTAL, 1, 1);
+      add (new JLabel(), gc);
+
+      updateEnabled();
+
+    } // ExportPreferencesChooser constructor
+
+    ////////////////////////////////////////////////////////
+
+    private class LogoPanel extends JPanel {
+
+      int SPACE_SIZE = 5;
+      Stroke DEFAULT_STROKE = new BasicStroke (1.0f, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL);
+      Color FILL = new Color (237, 238, 207);
+
+      public void paintComponent (Graphics g) {
+        super.paintComponent (g);
+        var g2d = (Graphics2D) g;
+
+        // First draw a square frame in the foreground color, filled with the
+        // legend background color.
+        var size = getSize();
+        int frameWidth = size.height - 1;
+        int frameHeight = frameWidth;
+        var frameOrigin = new Point (
+          (size.width - frameWidth)/2, 
+          (size.height - frameWidth)/2
+        );
+        g2d.setColor (FILL);
+        g2d.fillRect (frameOrigin.x, frameOrigin.y, frameWidth, frameHeight);
+        g2d.setColor (getForeground());
+        g2d.setStroke (DEFAULT_STROKE);
+        GraphicsServices.drawRect (g2d, new Rectangle (frameOrigin.x, frameOrigin.y, 
+          frameWidth, frameHeight));
+
+        // If the logo is null, then we have no preview to present and we
+        // draw some text lines.
+        if (logoIcon == null) {
+
+          var renderContext = g2d.getFontRenderContext();
+          var font = g2d.getFont();
+          g2d.setColor (getForeground());
+
+          var firstLine = "No preview";
+          var secondLine = "available";
+
+          var layout = new TextLayout (firstLine, font, renderContext);
+          var textBounds = layout.getBounds().getBounds();
+          var textHeight = (int) Math.ceil (layout.getAscent() + layout.getDescent());
+          g2d.drawString (firstLine, 
+            frameOrigin.x + (frameWidth - textBounds.width)/2, 
+            frameOrigin.y + (frameHeight - textHeight)/2 + textHeight/2);
+
+          layout = new TextLayout (secondLine, font, renderContext);
+          textBounds = layout.getBounds().getBounds();
+          g2d.drawString (secondLine, 
+            frameOrigin.x + (frameWidth - textBounds.width)/2, 
+            frameOrigin.y + (frameHeight + textHeight)/2 + textHeight/2);
+
+        } // if
+
+        // If the logo is available, then we render it inside the frame with
+        // a background.
+        else {
+          int logoSize = frameWidth - SPACE_SIZE*4;
+          if (logoSize > 0) {
+            logoIcon.setPreferredSize (new Dimension (logoSize, logoSize));
+            var bounds = logoIcon.getBounds (g2d);
+            logoIcon.setPosition (new Point (frameOrigin.x + SPACE_SIZE*2, frameOrigin.y + SPACE_SIZE*2));          
+            logoIcon.setShadow (true);
+            logoIcon.render (g2d, null, FILL);
+          } // if
+        } // else
+
+      } // paintComponent
+    } // LogoPanel class
+
+    ////////////////////////////////////////////////////////
+
+  } // ExportPreferencesChooser class
+
+  ////////////////////////////////////////////////////////////
+
   /** 
    * Tests this class.
    *

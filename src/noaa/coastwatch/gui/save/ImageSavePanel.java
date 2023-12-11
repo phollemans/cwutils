@@ -46,6 +46,7 @@ import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.IconElement;
 import noaa.coastwatch.render.IconElementFactory;
 import noaa.coastwatch.util.EarthDataInfo;
+import noaa.coastwatch.tools.ResourceManager;
 
 /** 
  * The <code>ImageSavePanel</code> class is the abstract parent of all
@@ -166,9 +167,18 @@ public abstract class ImageSavePanel
           // Attempt write
           // -------------
           try {
+
+            // Get the logo to use.  If there's no preference setting for a 
+            // logo, or the logo failed to load, use the default logo.
             var factory = IconElementFactory.getInstance();
-            IconElement logoIcon = factory.create (factory.getDefaultIcon());
+            var defaultLogo = factory.getDefaultIcon();
+            var logo = ResourceManager.getPreferences().getLogo();
+            if (logo == null) logo = defaultLogo;
+            IconElement logoIcon;
+            try { logoIcon = factory.create (logo); }
+            catch (Exception e) { logoIcon = factory.create (defaultLogo); }
             logoIcon.setShadow (true);
+
             EarthDataView viewClone = (EarthDataView) view.clone();
             String worldFile = (writeWorld ? 
               file.getPath().replaceFirst ("\\.[^.]*$", ".wld") : null);
@@ -176,6 +186,7 @@ public abstract class ImageSavePanel
               (hasInfoLegend ? info : null), false, hasLegends, 
               logoIcon, isAntialiased, file, format, worldFile, tiffComp, 
               colors);
+
           } // try
 
           // Show error message
