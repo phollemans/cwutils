@@ -94,6 +94,7 @@ public class IconElement extends PictureElement {
 
     var element = new IconElement();
     element.image = ImageIO.read (stream);
+    if (element.image == null) throw new IOException ("ImageIO.read() returned null");
     return (element);
 
   } // create
