@@ -17,7 +17,7 @@
 
 -->
 
-<!ELEMENT preferences (enhancement*, general*)>
+<!ELEMENT preferences (enhancement*, general*, export*)>
 <!ELEMENT enhancement EMPTY>
 <!ATTLIST enhancement variable CDATA #REQUIRED>
 <!ATTLIST enhancement palette CDATA #REQUIRED>
@@ -28,3 +28,6 @@
 <!ELEMENT general EMPTY>
 <!ATTLIST general item CDATA #REQUIRED>
 <!ATTLIST general value CDATA #REQUIRED>
+<!ELEMENT export EMPTY>
+<!ATTLIST export item CDATA #REQUIRED>
+<!ATTLIST export value CDATA #REQUIRED>
