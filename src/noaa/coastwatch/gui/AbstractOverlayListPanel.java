@@ -473,6 +473,14 @@ public abstract class AbstractOverlayListPanel
       restoreButton.setToolTipText (RESTORE_COMMAND);
       groupButtonPanel.add (restoreButton);
 
+      // Add a double click detector to the group list.  This is a shortcut
+      // for opening the group.
+      groupList.addMouseListener (new MouseInputAdapter () {
+        public void mouseClicked (MouseEvent e) {
+          if (e.getClickCount() == 2) loadButton.doClick();
+        } // mouseClicked
+      });
+
     } // if
 
   } // AbstractOverlayListPanel constructor
