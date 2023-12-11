@@ -34,6 +34,7 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.awt.Desktop;
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.open.ServerTableModel;
 import noaa.coastwatch.io.SerializedObjectManager;
@@ -312,6 +313,37 @@ public class ResourceManager {
   ////////////////////////////////////////////////////////////
 
   /** 
+   * Restores the default initial overlays.  The user resource directory
+   * must already exist.
+   *
+   * @throws IOException if an error occurred restoring the overlays.
+   * 
+   * @since 3.8.1
+   */
+  public static void restoreOverlays () throws IOException {
+
+    // Check if the resources directory already exists.  We need this 
+    // to restore into. 
+    if (!OVERLAYS_DIR.exists()) 
+      throw new IOException ("Resource directory '" + OVERLAYS_DIR + "' does not exist");
+
+    // Restore the default set of overlay groups.  We delete and overwrite any 
+    // overlay groups that already exist.
+    for (int i = 0; i < OVERLAY_FILES.length; i++) {
+      var file = new File (OVERLAYS_DIR, OVERLAY_FILES[i]);
+      if (file.exists()) { if (!file.delete()) throw new IOException ("Cannot delete file '" + file + "'"); }
+      copyStream (
+        OverlayGroupManager.class.getResourceAsStream (OVERLAY_FILES[i]),
+        new FileOutputStream (file),
+        true
+      );
+    } // for
+
+  } // restoreOverlays
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
    * Sets up the user-specified overlays.  If the overlay resource
    * directory does not exist, it is created and populated with
    * default initial overlays.
@@ -575,6 +607,19 @@ public class ResourceManager {
     } // catch
 
   } // getPreferences
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Shows the user resources directory in the OS native file explorer.
+   * 
+   * @since 3.8.1
+   */
+  public static void showResourcesDirectory () throws IOException {
+
+    Desktop.getDesktop().open (PREFERENCES_DIR);
+
+  } // showResourcesDirectory
 
   ////////////////////////////////////////////////////////////
 
