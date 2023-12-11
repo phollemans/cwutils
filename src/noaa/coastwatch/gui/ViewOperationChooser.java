@@ -31,6 +31,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -79,30 +81,39 @@ public class ViewOperationChooser
 
   /** The magnify operation. */
   public static final String MAGNIFY = "Magnify";
+  private static final String MAGNIFY_TIP = "Zoom in";
 
   /** The shrink operation. */
   public static final String SHRINK = "Shrink";
+  private static final String SHRINK_TIP = "Zoom out";
 
   /** The 1:1 operation. */
   public static final String ONE_TO_ONE = "Actual";
+  private static final String ONE_TO_ONE_TIP = "Zoom to actual size";
 
   /** The zoom operation. */
   public static final String ZOOM = "Zoom";
+  private static final String ZOOM_TIP = "Zoom to selection";
 
   /** The pan operation. */
   public static final String PAN = "Pan";
+  private static final String PAN_TIP = "Shift view center";
 
   /** The recenter operation. */
   public static final String RECENTER = "Recenter";
+  private static final String RECENTER_TIP = "Recenter view";
 
   /** The reset operation. */
   public static final String RESET = "Reset";
+  private static final String RESET_TIP = "Fit image to window";
 
   /** The fit operation. */
   public static final String FIT = "Fit";
+  private static final String FIT_TIP = "Fill window";
 
   /** The close operation (full screen only). */
   public static final String CLOSE = "Close";
+  private static final String CLOSE_TIP = "Close full screen mode";
 
   // Variables
   // ---------
@@ -122,8 +133,8 @@ public class ViewOperationChooser
   /** The invisible button used for turning off the button group. */
   private JToggleButton hidden;
 
-  /** The list of all buttons. */
-  private List<AbstractButton> buttonList;
+  /** The map of all buttons. */
+  private Map<String, AbstractButton> buttonMap;
 
   /** The fullscreen toolbar for this chooser. */
   private FullScreenToolBar fsToolbar;
@@ -138,39 +149,54 @@ public class ViewOperationChooser
   /** Sets the enabled status of the chooser buttons. */
   public void setEnabled (boolean flag) {
 
-    for (Iterator iter = buttonList.iterator(); iter.hasNext(); ) {
-      ((AbstractButton) iter.next()).setEnabled (flag);
-    } // for
+    buttonMap.forEach ((k,button) -> button.setEnabled (flag));
 
   } // setEnabled
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Sets the visiblity of the toolbar text labels.
+   * 
+   * @param flag the new text visibility flag value.
+   * 
+   * @since 3.8.1
+   */
+  public void setShowText (boolean flag) {
+
+    if (this.showText != flag) {
+      this.showText = flag;
+      buttonMap.forEach ((text,button) -> { button.setText (showText ? text : ""); });
+    } // if
+
+  } // setShowText
+
+  ////////////////////////////////////////////////////////////
+
   /** Adds the specified button to the toolbar. */
   private void addButton (
-    AbstractButton button
+    AbstractButton button,
+    String tip
   ) {
+
+    var text = button.getText();
+    buttonMap.put (text, button);
 
     // Setup button properties
     // -----------------------
-    button.getModel().setActionCommand (button.getText());
+    button.getModel().setActionCommand (text);
     if (button instanceof JToggleButton)
       group.add (button);
-    if (showText) {
-      button.setHorizontalTextPosition (SwingConstants.CENTER);
-      button.setVerticalTextPosition (SwingConstants.BOTTOM);
-      button.setIconTextGap (0);
-    } // if
-    else {
-      button.setToolTipText (button.getText());
-      button.setText ("");
-    } // else
+    button.setHorizontalTextPosition (SwingConstants.CENTER);
+    button.setVerticalTextPosition (SwingConstants.BOTTOM);
+    button.setIconTextGap (0);
+    button.setToolTipText (tip);
+    if (!showText) button.setText ("");
     button.addActionListener (operationAction);
     if (GUIServices.IS_AQUA) button.setBorderPainted (false);
 
     // Add button
     // ----------
-    buttonList.add (button);
     this.add (button);
 
   } // addButton
@@ -213,20 +239,18 @@ public class ViewOperationChooser
     group = new ButtonGroup();
     operationAction = new OperationAction();
     this.showText = showText;
-    buttonList = new ArrayList();
+    buttonMap = new HashMap<>();
 
     // Create buttons
     // --------------
-    addButton (new JButton (MAGNIFY, GUIServices.getIcon ("view.magnify")));
-    addButton (new JButton (SHRINK, GUIServices.getIcon ("view.shrink")));
-    addButton (new JButton (ONE_TO_ONE, 
-      GUIServices.getIcon ("view.one_to_one")));
-    addButton (new JToggleButton (ZOOM, GUIServices.getIcon ("view.zoom")));
-    addButton (new JToggleButton (PAN, GUIServices.getIcon ("view.pan")));
-    addButton (new JToggleButton (RECENTER, 
-      GUIServices.getIcon ("view.recenter")));
-    addButton (new JButton (FIT, GUIServices.getIcon ("view.fit")));
-    addButton (new JButton (RESET, GUIServices.getIcon ("view.reset")));
+    addButton (new JButton (MAGNIFY, GUIServices.getIcon ("view.magnify")), MAGNIFY_TIP);
+    addButton (new JButton (SHRINK, GUIServices.getIcon ("view.shrink")), SHRINK_TIP);
+    addButton (new JButton (ONE_TO_ONE, GUIServices.getIcon ("view.one_to_one")), ONE_TO_ONE_TIP);
+    addButton (new JToggleButton (ZOOM, GUIServices.getIcon ("view.zoom")), ZOOM_TIP);
+    addButton (new JToggleButton (PAN, GUIServices.getIcon ("view.pan")), PAN_TIP);
+    addButton (new JToggleButton (RECENTER, GUIServices.getIcon ("view.recenter")), RECENTER_TIP);
+    addButton (new JButton (FIT, GUIServices.getIcon ("view.fit")), FIT_TIP);
+    addButton (new JButton (RESET, GUIServices.getIcon ("view.reset")), RESET_TIP);
 
     // Create hidden button
     // --------------------
@@ -288,11 +312,7 @@ public class ViewOperationChooser
     String text
   ) {    
 
-    for (AbstractButton button : buttonList) {
-      if (button.getText().equals (text)) return (button);
-    } // for
-
-    return (null);
+    return (buttonMap.get (text));
 
   } // getButton
 
