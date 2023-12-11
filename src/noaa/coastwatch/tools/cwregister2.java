@@ -133,19 +133,18 @@ import java.util.logging.Level;
  *
  * <ol type="i">
  *
- *   <li>selecting the most appropriate resampling algorithm automatically
- *   rather than making the user choose,</li>
+ *   <li>Selecting the most appropriate resampling algorithm automatically
+ *   rather than making the user choose</li>
  *
- *   <li>automatically creating an optimal master projection for the input
- *   file,</li>
+ *   <li>Automatically creating an optimal master projection for the input
+ *   file</li>
  *
- *   <li>performing diagnostics on the accuracy of the resampling
- *   algorithm,</li>
+ *   <li>Performing diagnostics on the accuracy of the resampling
+ *   algorithm</li>
  *
- *   <li>handling terrain-corrected data with sensor-specific algorithms,
- *   and</li>
+ *   <li>Handling terrain-corrected data with sensor-specific algorithms</li>
  *
- *   <li>performing registration on 2D tiles of data in parallel.</li>
+ *   <li>Performing registration on 2D tiles of data in parallel</li>
  *
  *  </ol>
  *
