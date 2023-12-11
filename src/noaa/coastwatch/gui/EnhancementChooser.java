@@ -33,6 +33,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.Action;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -44,10 +46,14 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
+import javax.swing.Box;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+
 import noaa.coastwatch.gui.EnhancementFunctionPanel;
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.HistogramPanel;
@@ -75,6 +81,10 @@ import noaa.coastwatch.util.Statistics;
  * <code>EnhancementChooser.FUNCTION_PROPERTY</code>, and new value
  * contains an object of type {@link
  * noaa.coastwatch.render.EnhancementFunction}.</p>
+ * 
+ * <p>The chooser alsp uses the <code>EnhancementChooser.SAVE_PROPERTY</code>
+ * to signal that the preferences should be updated for the current variable
+ * using the active palette and function.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.6
@@ -114,8 +124,11 @@ public class EnhancementChooser
   /** The standard deviation units for normalization windows. */
   private static final double STDEV_UNITS = 1.5;
 
-  /** The enhancement property. */
+  /** The enhancement function property. */
   public static final String FUNCTION_PROPERTY = "function";
+
+  /** The enhancement save preferences property. */
+  public static final String SAVE_PROPERTY = "save";
 
   /** The enhancement tooltip. */
   private static final String ENHANCEMENT_TOOLTIP = "Color Enhancement";
@@ -221,109 +234,111 @@ public class EnhancementChooser
     JPanel enhancementRangeContainer = new JPanel (new GridBagLayout());
     enhancementRangeContainer.setBorder (new TitledBorder (new EtchedBorder(), 
       "Enhancement Range"));
-    GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.HORIZONTAL,
-      1, 0);
+    GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
     this.add (enhancementRangeContainer, gc);
 
     minSlider = new JSlider();
-    GUIServices.setConstraints (gc, 0, 0, 2, 1, GridBagConstraints.HORIZONTAL,
-      1, 0);
+    GUIServices.setConstraints (gc, 0, 0, 2, 1, GridBagConstraints.HORIZONTAL, 1, 0);
     gc.insets = new Insets (2,0,2,0);
     enhancementRangeContainer.add (minSlider, gc);
 
     maxSlider = new JSlider();
-    GUIServices.setConstraints (gc, 0, 1, 2, 1, GridBagConstraints.HORIZONTAL,
-      1, 0);
+    GUIServices.setConstraints (gc, 0, 1, 2, 1, GridBagConstraints.HORIZONTAL, 1, 0);
     enhancementRangeContainer.add (maxSlider, gc);
 
     JLabel minLabel = new JLabel ("Minimum:");
-    GUIServices.setConstraints (gc, 0, 2, 1, 1, GridBagConstraints.HORIZONTAL,
-      1, 0);
+    GUIServices.setConstraints (gc, 0, 2, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
     enhancementRangeContainer.add (minLabel, gc);
     
     JLabel maxLabel = new JLabel ("Maximum:");
-    GUIServices.setConstraints (gc, 1, 2, 1, 1, GridBagConstraints.HORIZONTAL,
-      1, 0);
+    GUIServices.setConstraints (gc, 1, 2, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
     enhancementRangeContainer.add (maxLabel, gc);
 
     minField = new JTextField();
-    GUIServices.setConstraints (gc, 0, 3, 1, 1, GridBagConstraints.HORIZONTAL,
-      1, 0);
+    GUIServices.setConstraints (gc, 0, 3, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
     enhancementRangeContainer.add (minField, gc);
 
     maxField = new JTextField();
-    GUIServices.setConstraints (gc, 1, 3, 1, 1, GridBagConstraints.HORIZONTAL,
-      1, 0);
+    GUIServices.setConstraints (gc, 1, 3, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
     enhancementRangeContainer.add (maxField, gc);
 
-    JPanel rangeButtonPanel = new JPanel (new GridLayout (1, 3));
-    GUIServices.setConstraints (gc, 0, 4, 2, 1, GridBagConstraints.NONE,
-      0, 0);
+    Box rangeButtonPanel = Box.createHorizontalBox();
+    GUIServices.setConstraints (gc, 0, 4, 2, 1, GridBagConstraints.HORIZONTAL, 1, 0);
     gc.anchor = GridBagConstraints.WEST;
     enhancementRangeContainer.add (rangeButtonPanel, gc);
     gc.anchor = GridBagConstraints.CENTER;
 
-    normalizeButton = GUIServices.getTextButton (NORMALIZE_COMMAND);
-    RangeButtonAction buttonAction = new RangeButtonAction();
-    normalizeButton.addActionListener (buttonAction);
+    normalizeButton = GUIServices.getIconButton ("enhancement.normalize");
+    GUIServices.setSquare (normalizeButton);
+    normalizeButton.setToolTipText ("Automatically enhance data");
+    normalizeButton.addActionListener (event -> normalizeEvent());
     rangeButtonPanel.add (normalizeButton);
 
-    JButton reverseButton = GUIServices.getTextButton (REVERSE_COMMAND);
-    reverseButton.addActionListener (buttonAction);
+    JButton reverseButton = GUIServices.getIconButton ("enhancement.reverse");
+    GUIServices.setSquare (reverseButton);
+    reverseButton.setToolTipText ("Swap minimum and maximum");
+    reverseButton.addActionListener (event -> reverseEvent());
     rangeButtonPanel.add (reverseButton);
 
-    JButton resetButton = GUIServices.getTextButton (RESET_COMMAND);
-    resetButton.addActionListener (buttonAction);
+    JButton resetButton = GUIServices.getIconButton ("enhancement.reset");
+    GUIServices.setSquare (resetButton);
+    resetButton.setToolTipText ("Reset range to full extent");
+    resetButton.addActionListener (event -> resetEvent());
     rangeButtonPanel.add (resetButton);
+
+    rangeButtonPanel.add (Box.createHorizontalGlue());
+
+    JButton configButton = GUIServices.getIconButton ("enhancement.config");
+    GUIServices.setSquare (configButton);
+    configButton.setToolTipText ("Reconfigure range extents");
+    configButton.addActionListener (event -> configEvent());
+    rangeButtonPanel.add (configButton);
+
+    JButton saveButton = GUIServices.getIconButton ("enhancement.save");
+    GUIServices.setSquare (saveButton);
+    saveButton.setToolTipText ("Save enhancement to preferences");
+    saveButton.addActionListener (event -> saveEvent());
+    rangeButtonPanel.add (saveButton);
 
     // Create enhancement function panel
     // ---------------------------------
     JPanel enhancementFunctionContainer = new JPanel (new GridBagLayout());
     enhancementFunctionContainer.setBorder (new TitledBorder (
       new EtchedBorder(), "Enhancement Function"));
-    GUIServices.setConstraints (gc, 0, 2, 1, 1, GridBagConstraints.BOTH,
-      1, 1);
+    GUIServices.setConstraints (gc, 0, 2, 1, 1, GridBagConstraints.BOTH, 1, 1);
     gc.insets = new Insets (0,0,0,0);
     this.add (enhancementFunctionContainer, gc);
 
     enhancementFunctionPanel = new EnhancementFunctionPanel();
-    enhancementFunctionPanel.setPreferredSize (new Dimension (FUNCTION_HEIGHT,
-      FUNCTION_HEIGHT));
-    GUIServices.setConstraints (gc, 0, 0, 1, 1, GridBagConstraints.BOTH,
-      1, 1);
+    enhancementFunctionPanel.setPreferredSize (new Dimension (FUNCTION_HEIGHT, FUNCTION_HEIGHT));
+    GUIServices.setConstraints (gc, 0, 0, 1, 1, GridBagConstraints.BOTH, 1, 1);
     gc.insets = new Insets (2,0,2,0);
     enhancementFunctionContainer.add (enhancementFunctionPanel, gc);
 
     JPanel functionButtonPanel = new JPanel (new GridBagLayout());
-    GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.NONE,
-      0, 0);
+    GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.NONE, 0, 0);
     gc.anchor = GridBagConstraints.WEST;
     enhancementFunctionContainer.add (functionButtonPanel, gc);
     gc.anchor = GridBagConstraints.CENTER;
 
     JLabel functionLabel = new JLabel ("Function:");
-    GUIServices.setConstraints (gc, 0, 0, 1, 1, GridBagConstraints.HORIZONTAL, 
-      0, 0);
+    GUIServices.setConstraints (gc, 0, 0, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
     gc.insets = new Insets (2, 0, 2, 10);
     functionButtonPanel.add (functionLabel, gc);
     gc.insets = new Insets (2, 0, 2, 0);
     functionCombo = new JComboBox (new Object[] {
       FUNCTION_LINEAR, FUNCTION_STEP, FUNCTION_LOG, FUNCTION_GAMMA});
-    GUIServices.setConstraints (gc, 1, 0, 1, 1, GridBagConstraints.HORIZONTAL, 
-      0, 0);
+    GUIServices.setConstraints (gc, 1, 0, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
     functionButtonPanel.add (functionCombo, gc);
     
     JLabel stepsLabel = new JLabel ("Steps:");
-    GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.HORIZONTAL, 
-      0, 0);
+    GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
     gc.insets = new Insets (2, 0, 2, 10);
     functionButtonPanel.add (stepsLabel, gc);
     gc.insets = new Insets (2, 0, 2, 0);
    
-    stepsSpinner = new JSpinner (new SpinnerNumberModel (10, 
-      1, 100, 1));
-    GUIServices.setConstraints (gc, 1, 1, 1, 1, GridBagConstraints.HORIZONTAL, 
-      0, 0);
+    stepsSpinner = new JSpinner (new SpinnerNumberModel (10, 1, 100, 1));
+    GUIServices.setConstraints (gc, 1, 1, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
     functionButtonPanel.add (stepsSpinner, gc);
 
     // Save fields and sliders for easy processing
@@ -341,7 +356,7 @@ public class EnhancementChooser
 
     // Set an predefined enhancement for debugging
     // -------------------------------------------
-    if (System.getProperty ("debug", "false").equals ("true")) {
+    if (System.getProperty ("cw.debug", "false").equals ("true")) {
       setRange (new double[] {1, 100});
       setFunction (new LinearEnhancement (new double[] {1, 100}));
       setPalette (PaletteFactory.create ("HSL256"));
@@ -606,42 +621,99 @@ public class EnhancementChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Handles enhancement range button actions. */
-  private class RangeButtonAction extends AbstractAction {
-    public void actionPerformed (ActionEvent event) {
+  // These are various event handlers in response to buttons.
 
-      String command = event.getActionCommand();
+  private void normalizeEvent() {
+    Statistics stats = histogramPanel.getStatistics();
+    if (stats == null || Double.isNaN (stats.getStdev())) return;
+    func.normalize (stats, STDEV_UNITS);
+    double[] funcRange = func.getRange();
+    funcRange[0] = Math.max (Math.floor (funcRange[0]), allowedRange[0]);
+    funcRange[1] = Math.min (Math.ceil (funcRange[1]), allowedRange[1]);
+    func.setRange (funcRange);
+    setFunction (func);
+  } // normalizeEvent
 
-      // Normalize enhancement range
-      // ---------------------------
-      if (command.equals (NORMALIZE_COMMAND)) {
-        Statistics stats = histogramPanel.getStatistics();
-        if (stats == null || Double.isNaN (stats.getStdev())) return;
-        func.normalize (stats, STDEV_UNITS);
-        double[] funcRange = func.getRange();
-        funcRange[0] = Math.max (Math.floor (funcRange[0]), allowedRange[0]);
-        funcRange[1] = Math.min (Math.ceil (funcRange[1]), allowedRange[1]);
-        func.setRange (funcRange);
-      } // if
+  private void reverseEvent() {
+    func.setRange (new double[] {actualRange[1], actualRange[0]});
+    setFunction (func);
+  } // reverseEvent
 
-      // Reverse enhancement range values
-      // --------------------------------
-      else if (command.equals (REVERSE_COMMAND)) {
-        func.setRange (new double[] {actualRange[1], actualRange[0]});
-      } // else if
+  private void resetEvent() {
+    func.setRange (allowedRange);
+    setFunction (func);
+  } // resetEvent
 
-      // Reset enhancement range to extremes
-      // -----------------------------------
-      else if (command.equals (RESET_COMMAND)) {
-        func.setRange (allowedRange);
-      } // else if
+  private void configEvent() {
 
-      // Update annotation elements
-      // --------------------------
-      setFunction (func);
+    JPanel dimPanel = new JPanel();
+    dimPanel.setLayout (new GridBagLayout());
+    GridBagConstraints gc = new GridBagConstraints();
+    gc.anchor = GridBagConstraints.WEST;
 
-    } // actionPerformed
-  } // RangeButtonAction class
+    double[] range = lastAllowedRange != null ? lastAllowedRange : allowedRange;
+
+    GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
+    gc.insets = new Insets (2, 0, 2, 10);
+    dimPanel.add (new JLabel ("Minimum:        "), gc);
+    gc.insets = new Insets (2, 0, 2, 0);
+    GUIServices.setConstraints (gc, 1, 1, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
+    final JTextField minField = new JTextField();
+    minField.setText (Double.toString (range[0]));
+    minField.setEditable (true);
+    minField.setColumns (8);
+    dimPanel.add (minField, gc);
+    
+    GUIServices.setConstraints (gc, 0, 2, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
+    gc.insets = new Insets (2, 0, 2, 10);
+    dimPanel.add (new JLabel ("Maximum:        "), gc);
+    gc.insets = new Insets (2, 0, 2, 0);
+    GUIServices.setConstraints (gc, 1, 2, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
+    final JTextField maxField = new JTextField();
+    maxField.setText (Double.toString (range[1]));
+    maxField.setEditable (true);
+    maxField.setColumns (8);
+    dimPanel.add (maxField, gc);
+
+    final JDialog[] dialog = new JDialog[1];
+    Action okAction = GUIServices.createAction ("OK", new Runnable() {
+      public void run () {
+
+        double[] newRange = new double[2];
+        boolean update = false;
+        try {
+          newRange[0] = Double.parseDouble (minField.getText());
+          newRange[1] = Double.parseDouble (maxField.getText());
+          update = true;
+        } // try
+        catch (NumberFormatException e) {
+          JOptionPane.showMessageDialog (dialog[0],
+            "Error parsing text field:\n" + e.toString(),
+            "Error", JOptionPane.ERROR_MESSAGE);
+        } // catch
+
+        if (update) {
+          setRange (newRange);
+          resetEvent();
+          dialog[0].dispose();
+        } // if
+
+      } // run
+    });
+
+    Action cancelAction = GUIServices.createAction ("Cancel", null);
+
+    dialog[0] = GUIServices.createDialog (
+      EnhancementChooser.this, "Configure range extents", true, dimPanel,
+      null, new Action[] {okAction, cancelAction}, new boolean[] {false, true}, 
+      true);
+    dialog[0].setVisible (true);
+
+  } // configEvent
+
+  private void saveEvent() {
+    EnhancementChooser.this.firePropertyChange (SAVE_PROPERTY, null, null);
+  } // saveEvent
 
   ////////////////////////////////////////////////////////////
 
@@ -760,34 +832,44 @@ public class EnhancementChooser
   /** 
    * Sets the range for use in the enhancement sliders.
    * 
-   * @param range the slider range as [min, max].
+   * @param range the slider range as either [min, max] or [max,min].
    */
   public void setRange (
     double[] range
   ) {
 
-    // Set actual and allowed range
-    // ----------------------------
-    allowedRange = (double[]) range.clone();
-    if (allowedRange[0] > allowedRange[1]) {
-      allowedRange[0] = range[1];
-      allowedRange[1] = range[0];
+    // Update the allowed range and swap if necessary.
+    double[] newRange = (
+      range[0] < range[1] ? 
+      (double[]) range.clone() : 
+      new double[] {range[1], range[0]}
+    );
+    allowedRange = (double[]) newRange.clone();  
+
+    // Take account of log function mode by selectively modifying 
+    // the range if zero or less.
+    if (func instanceof LogEnhancement) {
+      if (allowedRange[0] <= 0 || allowedRange[1] <= 0) {
+        lastAllowedRange = (double[]) allowedRange.clone();
+        if (allowedRange[0] <= 0) allowedRange[0] = 1e-6;
+        if (allowedRange[1] <= 0) allowedRange[1] = 1e-6;
+      } // if
+      else lastAllowedRange = null;
     } // if
-    actualRange = (double[]) allowedRange.clone();
 
     // Set palette and histogram extents
     // ---------------------------------
-    histogramPanel.setRange (allowedRange);
-    palettePanel.setRange (allowedRange);
-    enhancementFunctionPanel.setRange (allowedRange);
+    histogramPanel.setRange (newRange);
+    palettePanel.setRange (newRange);
+    enhancementFunctionPanel.setRange (newRange);
 
     // Set slider extents
     // ------------------
     deactivateListeners();
-    minSlider.setMinimum ((int) Math.floor (allowedRange[0]));
-    minSlider.setMaximum ((int) Math.ceil (allowedRange[1]));
-    maxSlider.setMinimum ((int) Math.floor (allowedRange[0]));
-    maxSlider.setMaximum ((int) Math.ceil (allowedRange[1]));
+    minSlider.setMinimum ((int) Math.floor (newRange[0]));
+    minSlider.setMaximum ((int) Math.ceil (newRange[1]));
+    maxSlider.setMinimum ((int) Math.floor (newRange[0]));
+    maxSlider.setMaximum ((int) Math.ceil (newRange[1]));
     activateListeners();
 
   } // setRange
