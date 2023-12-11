@@ -91,6 +91,29 @@ public class Preferences
   /** The data tile cache size in megabytes. */
   private int cacheSize = 512;
 
+  /** The plot legend logo. */
+  private String logo;
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the legend logo. 
+   * 
+   * @since 3.8.1
+   */
+  public String getLogo () { return (logo); }
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Sets the legend logo. 
+   * 
+   * @param logo the new logo to use.
+   * 
+   * @since 3.8.1
+   */
+  public void setLogo (String logo) { this.logo = logo; }
+
   ////////////////////////////////////////////////////////////
 
   /** Gets the map of variable name to units. */
@@ -330,6 +353,11 @@ public class Preferences
     printStream.print ("value=\"" + cacheSize + "\" ");
     printStream.println ("/>");
 
+    printStream.print ("  <export ");
+    printStream.print ("item=\"logo\" ");
+    printStream.print ("value=\"" + logo + "\" ");
+    printStream.println ("/>");
+
     // Write footer
     // ------------
     printStream.println ("</preferences>");
@@ -492,7 +520,15 @@ public class Preferences
           heapSize = Integer.parseInt (value);
         else if (item.equals ("cacheSize"))
           cacheSize = Integer.parseInt (value);
-      } // if
+      } // else if
+
+      // Get any export settings.
+      else if (qName.equals ("export")) {
+        String item = attributes.getValue ("item");
+        String value = attributes.getValue ("value");
+        if (item.equals ("logo"))
+          logo = value;
+      } // else if
 
       /** 
        * Other preference settings should go here.
