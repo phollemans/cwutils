@@ -114,31 +114,34 @@ public abstract class AbstractOverlayListPanel
   public static String SELECTION_PROPERTY = "selection";
 
   /** The overlay remove command. */
-  private static final String REMOVE_COMMAND = "Delete";
+  private static final String REMOVE_COMMAND = "Remove layer(s) from list";
 
   /** The overlay edit command. */
-  private static final String EDIT_COMMAND = "Edit Properties";
+  private static final String EDIT_COMMAND = "Edit layer properties";
 
   /** The overlay hide command. */
-  private static final String HIDE_COMMAND = "Hide All";
+  private static final String HIDE_COMMAND = "Hide all layers";
 
   /** The overlay show command. */
-  private static final String SHOW_COMMAND = "Show All";
+  private static final String SHOW_COMMAND = "Show all layers";
 
   /** The overlay up command. */
-  private static final String UP_COMMAND = "Move Up";
+  private static final String UP_COMMAND = "Move layer up";
 
   /** The overlay down command. */
-  private static final String DOWN_COMMAND = "Move Down";
+  private static final String DOWN_COMMAND = "Move layer down";
 
   /** The group load command. */
-  private static final String LOAD_COMMAND = "Open Group";
+  private static final String LOAD_COMMAND = "Load saved overlay group";
 
   /** The group save command. */
-  private static final String SAVE_COMMAND = "Save Group";
+  private static final String SAVE_COMMAND = "Create new overlay group";
 
   /** The group delete command. */
-  private static final String DELETE_COMMAND = "Delete Group";
+  private static final String DELETE_COMMAND = "Delete overlay group";
+
+  /** The group restore command. */
+  private static final String RESTORE_COMMAND = "Restore default overlay groups";
 
   // Variables
   // ---------
@@ -336,29 +339,6 @@ public abstract class AbstractOverlayListPanel
         });
     } // if
 
-    // Create group save button
-    // ------------------------
-    if (showGroup) {
-      saveButton = GUIServices.getIconButton ("list.save");
-      GUIServices.setSquare (saveButton);
-      saveButton.setActionCommand (SAVE_COMMAND);
-      saveButton.addActionListener (overlayButtonListener);
-      saveButton.setEnabled (false);
-      saveButton.setToolTipText (SAVE_COMMAND);
-      listButtonPanel.add (saveButton);
-      groupManager = ResourceManager.getOverlayManager();
-      groupListener = new GroupListListener();
-      groupManager.addPropertyChangeListener (groupListener);
-      addHierarchyListener (new HierarchyListener () {
-          public void hierarchyChanged (HierarchyEvent e) {
-            if ((e.getChangeFlags() & HierarchyEvent.DISPLAYABILITY_CHANGED) 
-                != 0 && !isDisplayable()) {
-              groupManager.removePropertyChangeListener (groupListener);
-            } // if
-          } // hierarchyChanged
-        });
-    } // if
-
     // Create remove button
     // --------------------
     if (showRemove) {
@@ -426,6 +406,19 @@ public abstract class AbstractOverlayListPanel
     // Create group panel
     // ------------------
     if (showGroup) {
+
+      groupManager = ResourceManager.getOverlayManager();
+      groupListener = new GroupListListener();
+      groupManager.addPropertyChangeListener (groupListener);
+      addHierarchyListener (new HierarchyListener () {
+          public void hierarchyChanged (HierarchyEvent e) {
+            if ((e.getChangeFlags() & HierarchyEvent.DISPLAYABILITY_CHANGED) 
+                != 0 && !isDisplayable()) {
+              groupManager.removePropertyChangeListener (groupListener);
+            } // if
+          } // hierarchyChanged
+        });
+
       JPanel groupPanel = new JPanel (new BorderLayout());
       String groupTitle = getGroupTitle();
       if (groupTitle != null) {
@@ -447,7 +440,15 @@ public abstract class AbstractOverlayListPanel
       Box groupButtonPanel = Box.createHorizontalBox();
       groupPanel.add (groupButtonPanel, BorderLayout.SOUTH);
 
-      loadButton = GUIServices.getIconButton ("list.load");
+      saveButton = GUIServices.getIconButton ("list.group.save");
+      GUIServices.setSquare (saveButton);
+      saveButton.setActionCommand (SAVE_COMMAND);
+      saveButton.addActionListener (overlayButtonListener);
+      saveButton.setEnabled (false);
+      saveButton.setToolTipText (SAVE_COMMAND);
+      groupButtonPanel.add (saveButton);
+
+      loadButton = GUIServices.getIconButton ("list.group.load");
       GUIServices.setSquare (loadButton);
       loadButton.setActionCommand (LOAD_COMMAND);
       loadButton.addActionListener (overlayButtonListener);
@@ -455,7 +456,7 @@ public abstract class AbstractOverlayListPanel
       loadButton.setToolTipText (LOAD_COMMAND);
       groupButtonPanel.add (loadButton);
 
-      deleteButton = GUIServices.getIconButton ("list.delete");
+      deleteButton = GUIServices.getIconButton ("list.group.delete");
       GUIServices.setSquare (deleteButton);
       deleteButton.setActionCommand (DELETE_COMMAND);
       deleteButton.addActionListener (overlayButtonListener);
@@ -464,6 +465,13 @@ public abstract class AbstractOverlayListPanel
       groupButtonPanel.add (deleteButton);
 
       groupButtonPanel.add (Box.createHorizontalGlue());
+
+      var restoreButton = GUIServices.getIconButton ("list.group.restore");
+      GUIServices.setSquare (restoreButton);
+      restoreButton.setActionCommand (RESTORE_COMMAND);
+      restoreButton.addActionListener (overlayButtonListener);
+      restoreButton.setToolTipText (RESTORE_COMMAND);
+      groupButtonPanel.add (restoreButton);
 
     } // if
 
@@ -521,7 +529,7 @@ public abstract class AbstractOverlayListPanel
         } // try
         catch (Exception e) { 
           String message = 
-            "An error occurred while loading the overlay group:\n" + e;
+            "Error loading overlay group:\n" + e;
           JOptionPane.showMessageDialog (AbstractOverlayListPanel.this, 
             message, "Error", JOptionPane.ERROR_MESSAGE);
         } // catch
@@ -532,8 +540,8 @@ public abstract class AbstractOverlayListPanel
       else if (command.equals (DELETE_COMMAND)) {
         String name = (String) groupList.getSelectedValue();
         String question = 
-          "The selected overlay group will be deleted from disk.\n" +
-          "This operation cannot be undone.  Continue?";
+          "The selected overlay group will be\n" +
+          "deleted.  Are you sure?";
         int result = JOptionPane.showConfirmDialog (
           AbstractOverlayListPanel.this, question, "Confirmation", 
           JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -543,7 +551,32 @@ public abstract class AbstractOverlayListPanel
           } // try
           catch (Exception e) { 
             String message = 
-              "An error occurred while deleting the overlay group:\n\n" + e;
+              "Error deleting overlay group:\n" + e;
+            JOptionPane.showMessageDialog (AbstractOverlayListPanel.this, 
+              message, "Error", JOptionPane.ERROR_MESSAGE);
+          } // catch
+        } // if
+      } // else if
+
+      // Restore the overlay groups from the default ones installed with the
+      // software.  We check with the user first to make sure this is what
+      // they want.
+      else if (command.equals (RESTORE_COMMAND)) {
+        String question = 
+          "The default overlay groups will be restored.\n" +
+          "This will overwrite changes made to any existing\n" +
+          "group of the same name. Are you sure?";
+        int result = JOptionPane.showConfirmDialog (
+          AbstractOverlayListPanel.this, question, "Confirmation", 
+          JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (result == JOptionPane.YES_OPTION) {
+          try {
+            ResourceManager.restoreOverlays();
+            groupManager.signalGroupsChanged();
+          } // try
+          catch (Exception e) { 
+            String message = 
+              "Error restoring default overlay groups:\n" + e;
             JOptionPane.showMessageDialog (AbstractOverlayListPanel.this, 
               message, "Error", JOptionPane.ERROR_MESSAGE);
           } // catch
@@ -621,19 +654,16 @@ public abstract class AbstractOverlayListPanel
         // Save selected overlays
         // ----------------------
         else if (command.equals (SAVE_COMMAND)) {
-          List overlayList = new ArrayList();
-          for (int i = 0; i < indices.length; i++)
-            overlayList.add (getOverlay (indices[i]));
-          String name = OverlayGroupSavePanel.showDialog (
-            AbstractOverlayListPanel.this, "Select a group name",
-            overlayList, groupManager.getGroups());
-          if (name != null) {
+          List overlayList = getOverlayList();
+          var data = OverlayGroupSavePanel.showDialog (
+            AbstractOverlayListPanel.this, "Create new overlay group",
+            (List<EarthDataOverlay>) overlayList, (List<String>) groupManager.getGroups());
+          if (data != null) {
             try { 
-              groupManager.saveGroup (overlayList, name);
+              groupManager.saveGroup (data.overlayList, data.groupName);
             } // try
             catch (Exception e) {
-              String message = 
-                "An error occurred while saving the overlay group:\n\n" + e;
+              String message = "An error occurred while saving the overlay group:\n\n" + e;
               JOptionPane.showMessageDialog (AbstractOverlayListPanel.this, 
                 message, "Error", JOptionPane.ERROR_MESSAGE);
             } // catch
@@ -694,12 +724,15 @@ public abstract class AbstractOverlayListPanel
       // --------------------
       int[] indices = overlayList.getSelectedIndices();
 
+      // Enable the save button as long as there is at least one
+      // overlay in the list to save.
+      if (saveButton != null) saveButton.setEnabled (overlayList.getElements() != 0);
+
       // Disable all buttons
       // -------------------
       if (indices.length == 0) {
         if (editButton != null) editButton.setEnabled (false);
         if (removeButton != null) removeButton.setEnabled (false);
-        if (saveButton != null) saveButton.setEnabled (false);
         if (upButton != null) upButton.setEnabled (false);
         if (downButton != null) downButton.setEnabled (false);
       } // if
@@ -709,7 +742,6 @@ public abstract class AbstractOverlayListPanel
       else if (indices.length == 1) {
         if (editButton != null) editButton.setEnabled (true);
         if (removeButton != null) removeButton.setEnabled (true);
-        if (saveButton != null) saveButton.setEnabled (true);
         if (upButton != null) upButton.setEnabled (true);
         if (downButton != null) downButton.setEnabled (true);
       } // else if
@@ -719,7 +751,6 @@ public abstract class AbstractOverlayListPanel
       else {
         if (editButton != null) editButton.setEnabled (false);
         if (removeButton != null) removeButton.setEnabled (true);
-        if (saveButton != null) saveButton.setEnabled (true);
         if (upButton != null) upButton.setEnabled (false);
         if (downButton != null) downButton.setEnabled (false);
       } // else
@@ -961,7 +992,7 @@ public abstract class AbstractOverlayListPanel
    *
    * @return the list of overlays.
    */
-  public List getOverlayList(){
+  public List getOverlayList() {
 
     List overlays = new ArrayList();
     int count = overlayList.getElements();

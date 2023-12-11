@@ -36,6 +36,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -67,36 +68,37 @@ public class OverlayGroupSavePanel
   /** The group name text field. */
   private JTextField groupField;
 
+  /** The group overlay list. */
+  private JList<EarthDataOverlay> overlayJList;
+
   /** The group name list. */
-  private JList groupList;
+  private JComboBox<String> groupCombo;
 
   ////////////////////////////////////////////////////////////
 
   /** Gets the selected group name. */
-  public String getGroup () { return (groupField.getText()); }
+  public String getGroupName () { return ((String) groupCombo.getSelectedItem()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns true if the specified group name exists in the list. */
-  public boolean contains (
-    String group
-  ) {
+  /** Gets the selected overlays. */
+  public List<EarthDataOverlay> getSelectedOverlays () { 
 
-    return (((DefaultListModel) groupList.getModel()).contains (group));
+    return (overlayJList.getSelectedValuesList()); 
 
-  } // contains
+  } // getSelectedOverlays
 
   ////////////////////////////////////////////////////////////
 
   /** 
    * Creates a new save panel.
    * 
-   * @param overlayList the overlay list to be saved as a group.
+   * @param overlayList the overlay list to selectively be saved to a group.
    * @param groupNameList the group name list to choose a name from.
    */
   public OverlayGroupSavePanel (
-    List overlayList,
-    List groupNameList
+    List<EarthDataOverlay> overlayList,
+    List<String> groupNameList
   ) {
 
     super (new GridBagLayout());
@@ -106,46 +108,37 @@ public class OverlayGroupSavePanel
     gc.anchor = GridBagConstraints.WEST;
     gc.insets = new Insets (2, 0, 2, 0);
     setBorder (new CompoundBorder (
-      new TitledBorder (new EtchedBorder(), "Overlay Group Save"),
+      new TitledBorder (new EtchedBorder(), "Overlay Group Properties"),
       new EmptyBorder (4, 4, 4, 4)
     ));
 
-    // Add initial label
-    // -----------------
-    StringBuffer buffer = new StringBuffer();
-    buffer.append ("<html>");
-    buffer.append ("The following overlays will be saved to the group:");
-    buffer.append ("<ul>");
-    for (Iterator iter = overlayList.iterator(); iter.hasNext(); )
-      buffer.append ("<li>"+ ((EarthDataOverlay) iter.next()).getName() 
-        + "</li>");
-    buffer.append ("</ul>");
-    buffer.append ("</html>");
-    add (new JLabel (buffer.toString()), gc);
+    // Add a selectable list of overlays to save.
+    add (new JLabel ("Select overlays to save to group:"), gc);
+    overlayJList = new JList<> (overlayList.toArray (new EarthDataOverlay[0]));
+    overlayJList.setVisibleRowCount (6);
+    add (new JScrollPane (overlayJList), gc);
 
-    // Add group list
-    // --------------
-    add (new JLabel ("Overlay groups:"), gc);
-    DefaultListModel model = new DefaultListModel();
-    for (Iterator iter = groupNameList.iterator(); iter.hasNext(); )
-      model.addElement (iter.next());
-    groupList = new JList (model);
-    groupList.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
-    groupList.setVisibleRowCount (6);
-    groupList.addListSelectionListener (new ListSelectionListener () {
-        public void valueChanged (ListSelectionEvent e) {
-          groupField.setText ((String) groupList.getSelectedValue());
-        } // valueChanged
-      });
-    add (new JScrollPane (groupList), gc);
-
-    // Add group field
-    // ---------------
-    add (new JLabel ("New group name:"), gc);
-    groupField = new JTextField();
-    add (groupField, gc);
+    // Add a dropdown of which overlay group to overwrite and make it editable
+    // for the user to add their own name.
+    add (new JLabel ("Specify an overlay group name:"), gc);
+    groupCombo = new JComboBox<> (groupNameList.toArray (new String[0]));
+    groupCombo.setEditable (true);
+    add (groupCombo, gc);
 
   } // OverlayGroupSavePanel constructor
+
+  ////////////////////////////////////////////////////////////
+
+  /** Holds the results from an overlay group save operation. */
+  public static class SaveData {
+
+    /** The list of overlays to save. */
+    public List<EarthDataOverlay> overlayList;
+
+    /** The name of the group to save. */
+    public String groupName;
+
+  } // SaveData class
 
   ////////////////////////////////////////////////////////////
 
@@ -154,17 +147,17 @@ public class OverlayGroupSavePanel
    *
    * @param parent the component to use for the dialog parent.
    * @param title the dialog title string.
-   * @param overlayList the overlay list to be saved as a group.
-   * @param groupList the group list to choose a name from.
+   * @param overlayList the overlay list to selectively be saved to a group.
+   * @param groupList the group name list to choose a name from.
    *
    * @return the new overlay group name, or null if the save was
    * cancelled.
    */
-  public static String showDialog (
+  public static SaveData showDialog (
     Component parent, 
     String title, 
-    List overlayList,
-    List groupList
+    List<EarthDataOverlay> overlayList,
+    List<String> groupList
   ) {
 
     // Create panel
@@ -174,46 +167,61 @@ public class OverlayGroupSavePanel
 
     // Create actions
     // --------------
-    final String[] returnValue = new String[1];
+    final SaveData[] returnValue = new SaveData[1];
     final JDialog[] dialog = new JDialog[1];
     Action saveAction = GUIServices.createAction ("Save", new Runnable() {
-        public void run () {
+      public void run () {
 
-          // Get group name
-          // --------------
-          String name = savePanel.getGroup();
-          boolean save = true;
+        // Get group name
+        // --------------
+        var groupName = savePanel.getGroupName();
+        var selectedOverlays = savePanel.getSelectedOverlays();
+        boolean save = true;
 
-          // Check if group name is empty
-          // ----------------------------
-          if (name == null || name.equals ("")) {
-            JOptionPane.showMessageDialog (dialog[0],
-              "You must enter a group name.",
-              "Error", JOptionPane.ERROR_MESSAGE);
-            save = false;
-          } // if
+        // Check if any overlays have been selected to include in the
+        // new overlay group.
+        if (selectedOverlays.size() == 0) {
+          JOptionPane.showMessageDialog (dialog[0],
+            "Select at least one overlay in the list to\n" +
+            "create a new overlay group.",
+            "Error", JOptionPane.ERROR_MESSAGE);
+          save = false;
+        } // if
 
-          // Check if group exists
-          // ---------------------
-          if (savePanel.contains (name)) {
-            String question = 
-              "The selected overlay group already exists.\n" +
-              "The existing group will be overwritten.  Continue?";
-            int result = JOptionPane.showConfirmDialog (
-              dialog[0], question, "Confirmation", 
-              JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-              save = (result == JOptionPane.YES_OPTION);
-          } // if
+        // Check if group name is empty
+        // ----------------------------
+        else if (groupName == null || groupName.trim().equals ("")) {
+          JOptionPane.showMessageDialog (dialog[0],
+            "Specify an overlay group name to create.",
+            "Error", JOptionPane.ERROR_MESSAGE);
+          save = false;
+        } // if
 
-          // Save group
-          // ----------
-          if (save) {
-            returnValue[0] = name;
-            dialog[0].dispose();
-          } // if
+        // Check if group exists
+        // ---------------------
+        if (save && groupList.contains (groupName)) {
+          String question = 
+            "The selected overlay group already exists.\n" +
+            "The group will be overwritten with the\n" +
+            "selected overlays.  Are you sure?";
+          int result = JOptionPane.showConfirmDialog (
+            dialog[0], question, "Confirmation", 
+            JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            save = (result == JOptionPane.YES_OPTION);
+        } // if
 
-        } // run
-      });
+        // Save group
+        // ----------
+        if (save) {
+          var data = new SaveData();
+          data.overlayList = selectedOverlays;
+          data.groupName = groupName;
+          returnValue[0] = data;
+          dialog[0].dispose();
+        } // if
+
+      } // run
+    });
 
     Action cancelAction = GUIServices.createAction ("Cancel", null);
 

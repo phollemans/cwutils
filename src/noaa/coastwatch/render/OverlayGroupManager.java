@@ -228,6 +228,21 @@ public class OverlayGroupManager {
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * Signals all listeners that the overlay groups have changed.  This is
+   * useful when some other class has changed the overlay groups and we
+   * need to force an update.
+   * 
+   * @since 3.8.1
+   */
+  public void signalGroupsChanged() {
+
+    changeSupport.firePropertyChange (OVERLAY_GROUPS_PROPERTY, null, getGroups());
+
+  } // signalGroupsChanged
+
+  ////////////////////////////////////////////////////////////
+
 } // OverlayGroupManager class
 
 ////////////////////////////////////////////////////////////////////////
