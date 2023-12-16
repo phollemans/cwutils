@@ -615,7 +615,7 @@ public class cwtccorrect {
       // Find the solar zenith angle variable needed to compute reflectance 
       // from radiance
       if (sunzen == null) 
-        sunzen = findVariable (reader, List.of ("solar zenith", "sun zenith"), 0.8);
+        sunzen = reader.findVariable (List.of ("solar zenith", "sun zenith"), 0.8);
       Grid sunzenGrid = null;
 
       // Access each true color band and determine if it needs to be normalized 
@@ -768,7 +768,7 @@ public class cwtccorrect {
       for (int i = 0; i < angleNames.length; i++) {
 
         if (angleNames[i] == null)
-          angleNames[i] = findVariable (reader, angleTerms.get (i), 0.8);
+          angleNames[i] = reader.findVariable (angleTerms.get (i), 0.8);
 
         var angle = angleTerms.get (i).get (0);
         if (angleNames[i] != null) {
@@ -952,53 +952,6 @@ public class cwtccorrect {
     } // else
 
   } // perform
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Searches for a variable in a dataset using a set of search terms.
-   * 
-   * @param reader the data reader to search for the variable.
-   * @param searchTerms the search terms to use.
-   * @param minScore the minimum acceptable matching score in the range [0..1].
-   * 
-   * @return the variable name with the best match for the search terms, or 
-   * null if no variables could be found.  Match quality is measured based on how
-   * similar the variable name or its long name are to one of to search terms.
-   */
-  private static String findVariable (
-    EarthDataReader reader,
-    List<String> searchTerms,
-    double minScore
-  ) throws IOException {
-
-    var variableList = reader.getAllGrids();
-    double highScore = 0;
-    String match = null;
-    for (var name : variableList) {
-
-      var variable = reader.getPreview (name);
-
-      for (var term : searchTerms) {
-        double score = MetadataServices.similarity (term, name);
-        var longName = variable.getLongName();
-        if (longName != null && !longName.isEmpty())
-          score = Math.max (MetadataServices.similarity (term, longName), score);
-        if (score > highScore) {
-          highScore = score;
-          match = name;
-        } // if
-      } // for
-
-    } // for
-
-    if (highScore < minScore) match = null;
-
-    if (match != null) LOGGER.fine ("Found variable " + match + " with score " + highScore + " (minimum " + minScore + ")");
-
-    return (match);
-
-  } // findVariable
 
   ////////////////////////////////////////////////////////////
   

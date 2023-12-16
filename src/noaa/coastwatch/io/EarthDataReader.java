@@ -41,6 +41,8 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.Statistics;
 import noaa.coastwatch.util.chunk.ChunkProducer;
 import noaa.coastwatch.util.chunk.GridChunkProducer;
+import noaa.coastwatch.util.MetadataServices;
+
 import ucar.nc2.dataset.CoordinateSystem;
 
 import java.util.logging.Logger;
@@ -645,6 +647,53 @@ public abstract class EarthDataReader {
     return (new ArrayList<String>());
 
   } // getVariablesForSystem
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Searches for a variable in a dataset using a set of search terms.
+   * 
+   * @param searchTerms the search terms to use.
+   * @param minScore the minimum acceptable matching score in the range [0..1].
+   * 
+   * @return the variable name with the best match for the search terms, or 
+   * null if no variables could be found.  Match quality is measured based on how
+   * similar the variable name or its long name are to one of to search terms.
+   * 
+   * @since 3.8.1
+   */
+  public String findVariable (
+    List<String> searchTerms,
+    double minScore
+  ) throws IOException {
+
+    var variableList = this.getAllGrids();
+    double highScore = 0;
+    String match = null;
+    for (var name : variableList) {
+
+      var variable = this.getPreview (name);
+
+      for (var term : searchTerms) {
+        double score = MetadataServices.similarity (term, name);
+        var longName = variable.getLongName();
+        if (longName != null && !longName.isEmpty())
+          score = Math.max (MetadataServices.similarity (term, longName), score);
+        if (score > highScore) {
+          highScore = score;
+          match = name;
+        } // if
+      } // for
+
+    } // for
+
+    if (highScore < minScore) match = null;
+
+    if (match != null) LOGGER.fine ("Found variable " + match + " with score " + highScore + " (minimum " + minScore + ")");
+
+    return (match);
+
+  } // findVariable
 
   ////////////////////////////////////////////////////////////
 
