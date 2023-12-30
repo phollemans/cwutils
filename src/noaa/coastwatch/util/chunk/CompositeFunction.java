@@ -145,6 +145,12 @@ public class CompositeFunction implements ChunkFunction {
       int valueIndex;
       switch (chunkType) {
 
+      // Why do we not use the Visitor pattern here with the ChunkVisitor 
+      // interface?  It's because that pattern is determined by the DataChunk
+      // subclass, where as we're computing data composites using the 
+      // chunk external data type here.  We don't have a visitor pattern for 
+      // the external data type.
+
       // Handle byte data
       // ----------------
       case BYTE:

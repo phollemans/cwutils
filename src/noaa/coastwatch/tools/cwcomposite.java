@@ -32,6 +32,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -44,8 +45,10 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.stream.Collectors;
+import java.text.NumberFormat;
 
 import noaa.coastwatch.io.CWHDFWriter;
+import noaa.coastwatch.io.CWHDFReader;
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
 import noaa.coastwatch.io.CachedGrid;
@@ -66,6 +69,7 @@ import noaa.coastwatch.util.MeanReduction;
 import noaa.coastwatch.util.GeoMeanReduction;
 import noaa.coastwatch.util.MedianReduction;
 import noaa.coastwatch.util.LastReduction;
+import noaa.coastwatch.util.MetadataServices;
 
 import noaa.coastwatch.util.chunk.DataChunk;
 import noaa.coastwatch.util.chunk.DataChunk.DataType;
@@ -76,10 +80,13 @@ import noaa.coastwatch.util.chunk.GridChunkProducer;
 import noaa.coastwatch.util.chunk.GridChunkConsumer;
 import noaa.coastwatch.util.chunk.ChunkingScheme;
 import noaa.coastwatch.util.chunk.ChunkComputation;
+import noaa.coastwatch.util.chunk.ChunkOperation;
 import noaa.coastwatch.util.chunk.ChunkPosition;
 import noaa.coastwatch.util.chunk.ChunkFunction;
 import noaa.coastwatch.util.chunk.PoolProcessor;
 import noaa.coastwatch.util.chunk.CompositeFunction;
+import noaa.coastwatch.util.chunk.CompositeMapFunction;
+import noaa.coastwatch.util.chunk.CompositeMapApplicationFunction;
 
 import static noaa.coastwatch.util.Grid.ROW;
 import static noaa.coastwatch.util.Grid.COL;
@@ -113,6 +120,7 @@ import java.util.logging.Level;
  * -k, --keephistory <br>
  * -m, --match=PATTERN <br>
  * -M, --method=TYPE <br>
+ * -o, --optimal=VARIABLE/TYPE <br>
  * -p, --pedantic <br>
  * --serial <br>
  * --threads=MAX <br>
@@ -167,8 +175,9 @@ import java.util.logging.Level;
  *
  *   <dt>-c, --coherent=VARIABLE1[/VARIABLE2[...]]</dt>
  *
- *   <dd>Turns on coherent mode (only valid with <b>--method
- *   latest or --method explicit</b>).  In coherent mode, the output
+ *   <dd>Turns on coherent mode (can only be used with <b>--method
+ *   latest</b>, <b>--method explicit</b>, or <b>--method optimal</b>).  
+ *   In coherent mode, the output
  *   values for all variables at a given pixel location are 
  *   guaranteed to originate from the same input file.  The specified
  *   variable list is used to prioritize variables to check for a 
@@ -228,9 +237,26 @@ import java.util.logging.Level;
  *     This would yield the same results as the 'latest' method if the
  *     files were listed in chronological order on the command line.</li>
  *
+ *     <li>optimal - Finds the best pixel from the set of input files
+ *     based on the minimum or maximum of an optimization variable.
+ *     See the <b>--optimal</b> option for more details.  This method
+ *     turns on coherent mode as specified by the <b>--coherent</b> 
+ *     option.</li>
+ * 
  *   </ul>
  *   The default is to compute the mean value.</dd>
  *   
+ *   <dt>-o, --optimal=VARIABLE/TYPE</dt>
+ *   
+ *   <dd>The optimization variable and type to use for optimal compositing (see
+ *   <b>--method optimal</b> above).
+ *   The type may be either 'min' or 'max'.  Optimal compositing is done by 
+ *   searching for the input file whose data value is either minimum or 
+ *   maximum.  The output values for all variables at a given pixel location are 
+ *   then guaranteed to originate from this same input file.  By default,
+ *   the input files are searched for a satellite zenith angle variable and optimized
+ *   by selecting the minimum satellite zenith angle.</dd>
+ * 
  *   <dt>-p, --pedantic</dt>
  *
  *   <dd>Turns pedantic mode on.  In pedantic mode, metadata from
@@ -239,6 +265,16 @@ import java.util.logging.Level;
  *   pedantic mode is off, composite attributes are collapsed so that
  *   only unique values appear.  By default, pedantic mode is
  *   off.</dd>
+ *
+ *   <dt>-S, --savemap</dt>
+ *
+ *   <dd>Saves the source index mapping to the output file in coherent mode.  
+ *   The variable 'source_index' is written as a 16-bit signed integer, 
+ *   and for each destination pixel in the output, represents the 0-based index 
+ *   of the input file used to copy variable values into the output file.
+ *   An attribute is written to the mapping variable specifying, in index order,
+ *   the names of the input files used.  See the <b>--coherent</b> option
+ *   above for details on coherent mode.</dd>
  *
  *   <dt>--serial</dt>
  *
@@ -369,9 +405,12 @@ public final class cwcomposite {
     Option inputsOpt = cmd.addStringOption ('i', "inputs");
     Option coherentOpt = cmd.addStringOption ('c', "coherent");
     Option serialOpt = cmd.addBooleanOption ("serial");
-    Option keephistoryOpt = cmd.addBooleanOption ("keepHistory");
+    Option keephistoryOpt = cmd.addBooleanOption ('k', "keephistory");
     Option versionOpt = cmd.addBooleanOption ("version");
     Option threadsOpt = cmd.addIntegerOption ("threads");
+    Option optimalOpt = cmd.addStringOption ('o', "optimal");
+    Option savemapOpt = cmd.addBooleanOption ('S', "savemap");
+
     try { cmd.parse (argv); }
     catch (OptionException e) {
       LOGGER.warning (e.getMessage());
@@ -418,26 +457,29 @@ public final class cwcomposite {
     int minValid = (validObj == null ? 1 : validObj.intValue());
     boolean pedanticOutput = (cmd.getOptionValue (pedanticOpt) != null);
     String inputs = (String) cmd.getOptionValue (inputsOpt);
-    String coherentOutput = (String) cmd.getOptionValue (coherentOpt);
+    String coherent = (String) cmd.getOptionValue (coherentOpt);
     boolean serialOperations = (cmd.getOptionValue (serialOpt) != null);
     boolean collapseTime = (cmd.getOptionValue (collapsetimeOpt) != null);
     boolean keepHistory = (cmd.getOptionValue (keephistoryOpt) != null);
     Integer threadsObj = (Integer) cmd.getOptionValue (threadsOpt);
     int threads = (threadsObj == null ? -1 : threadsObj.intValue());
+    String optimal = (String) cmd.getOptionValue (optimalOpt);
+    boolean saveMap = (cmd.getOptionValue (savemapOpt) != null);
 
     // Check for coherent mode
     // -----------------------
-/*
-    if (coherentOutput != null && !(method.equals ("latest") || method.equals ("explicit"))) {
-      LOGGER.severe ("Coherent mode can only be used with --method latest or --method explicit");
-      ToolServices.exitWithCode (2);
-      return;
-    } // if
-*/
-    if (coherentOutput != null) {
-      LOGGER.severe ("Coherent mode is temporarily disabled in this version");
-      ToolServices.exitWithCode (2);
-      return;
+    boolean coherentMode = false;
+    if (method.equals ("optimal")) coherentMode = true;
+    else if (coherent != null) coherentMode = true;
+
+    List<String> coherentVars = null;
+    if (coherent != null) {
+      if (!(method.equals ("latest") || method.equals ("explicit") || method.equals ("optimal"))) {
+        LOGGER.severe ("Coherent mode cannot by used with method '" + method + "'");
+        ToolServices.exitWithCode (2);
+        return;
+      } // if
+      else coherentVars = Arrays.asList (coherent.split (ToolServices.getSplitRegex()));
     } // if
 
     // Read input filenames from file
@@ -558,26 +600,6 @@ public final class cwcomposite {
       CleanupHook.getInstance().scheduleDelete (output);
       CWHDFWriter writer = new CWHDFWriter (outputInfo, output);
 
-      // Create chunk operator
-      // ---------------------
-      ArrayReduction operator = null;
-      if (method.equals ("mean")) operator = new MeanReduction();
-      else if (method.equals ("geomean")) operator = new GeoMeanReduction();
-      else if (method.equals ("median")) operator = new MedianReduction();
-      else if (method.equals ("min")) operator = new MinReduction();
-      else if (method.equals ("max")) operator = new MaxReduction();
-      else if (method.equals ("latest")) operator = new LastReduction();
-      else if (method.equals ("explicit")) operator = new LastReduction();
-      else {
-        LOGGER.severe ("Unsupported composite method '" + method + "'");
-        ToolServices.exitWithCode (2);
-        return;
-      } // else
-      boolean orderingMethod = (
-        method.equals ("latest") || 
-        method.equals ("explicit")
-      );
-
       // Report computation properties
       // -----------------------------
       int[] dims = earthTransform.getDimensions();
@@ -592,114 +614,282 @@ public final class cwcomposite {
         VERBOSE.info ("Using " + maxOps + " parallel threads for processing");
       } // if
 
-      // Loop over each composite variable
-      // ---------------------------------
+      // If operating in coherent mode, we first need to create the map of
+      // input file index for each pixel.  Then we transfer the data 
+      // into the output file after that.
+      EarthDataReader coherentMapReader = null;
+      ChunkProducer mapChunkProducer = null;
+      if (coherentMode) {
+
+        ChunkCollector coherentCollector = new ChunkCollector();
+
+        // Start by setting up the chunk producers and comparator for the 
+        // optimization if needed.
+        String optVarName = null;
+        Comparator<Double> optComparator = null;
+        if (method.equals ("optimal")) {
+
+          // If we've been given the optimal option, then extract the variable
+          // name and the comparator type.
+          if (optimal != null) {
+            String[] optArray = optimal.split (ToolServices.getSplitRegex());
+            if (optArray.length != 2) {
+              LOGGER.severe ("Invalid optimal option '" + optimal + "'");
+              ToolServices.exitWithCode (2);
+              return;
+            } // if
+            optVarName = optArray[0];
+            var optType = optArray[1];
+            if (optType.equals ("max")) optComparator = (a,b) -> Double.compare (a, b);
+            else if (optType.equals ("min")) optComparator = (a,b) -> Double.compare (b, a);
+            else {
+              LOGGER.severe ("Invalid optimization type '" + optType + "', specify either min or max");
+              ToolServices.exitWithCode (2);
+              return;
+            } // else
+          } // if         
+
+          // If we haven't been given an optimal option, try looking for the 
+          // satellite zenith angle, and set the comparator to select the
+          // minimum angle as the optimal.
+          else {
+            var reader = readerMap.get (inputFileList.get (0));
+            optVarName = reader.findVariable (List.of ("satellite zenith", "sat zenith", "sensor zenith"), 0.8);
+            if (optVarName == null) {
+              LOGGER.severe ("Cannot locate satellite zenith angle data, use --optimal option");
+              ToolServices.exitWithCode (2);
+              return;
+            } // if
+            VERBOSE.info ("Using variable " + optVarName + " with optimization type min");
+            optComparator = (a,b) -> Double.compare (b, a);
+          } // else
+
+          // Now create chunk producers for the optimization using the 
+          // variable data from each input file.  We need all the files to
+          // contain optimization data.
+          for (String inputFile : inputFileList) {
+            EarthDataReader reader = readerMap.get (inputFile);
+            if (!reader.containsVariable (optVarName)) {
+              LOGGER.severe ("Optimization variable " + optVarName + " not found in input file " + inputFile);
+              ToolServices.exitWithCode (2);
+              return;
+            } // if
+            else {
+              var producer = reader.getChunkProducer (optVarName);
+              coherentCollector.addProducer (producer);
+            } // else
+          } // for
+
+        } // if
+
+        // Next, set up the chunk producers for the priority variables.
+        if (coherentVars != null) {
+          for (String coherentVar : coherentVars) {
+            for (String inputFile : inputFileList) {
+              EarthDataReader reader = readerMap.get (inputFile);
+              if (!reader.containsVariable (coherentVar)) {
+                LOGGER.severe ("Coherent mode variable " + coherentVar + " not found in input file " + inputFile);
+                ToolServices.exitWithCode (2);
+                return;
+              } // if
+              else {
+                ChunkProducer producer = reader.getChunkProducer (coherentVar);
+                coherentCollector.addProducer (producer);
+              } // else
+            } // for
+          } // for
+        } // if
+
+        // If the savemap option is used, we write the coherent map data 
+        // directly into the output file.  Otherwise, we create a temporary 
+        // file here to hold the map data and schedule the temporary file 
+        // for deletion.
+        CWHDFWriter coherentMapWriter;
+        String tempFileName;
+        if (saveMap) {
+          tempFileName = null;
+          coherentMapWriter = writer;
+        } // if
+        else {
+          tempFileName = File.createTempFile ("map", ".hdf").getPath();
+          CleanupHook.getInstance().scheduleDelete (tempFileName);
+          LOGGER.fine ("Creating temporary integer map file " + tempFileName);
+          coherentMapWriter = new CWHDFWriter (outputInfo, tempFileName);
+        } // else
+
+        // In the file, create a new short integer grid and also the 
+        // chunk consumer that we'll use to run the computation.
+        String coherentMapVarName = "source_index";
+        var mapGrid = new Grid (coherentMapVarName, "Composite source input index", 
+          null, dims[Grid.ROWS], dims[Grid.COLS], new short[0], 
+          NumberFormat.getIntegerInstance(), null, Short.MIN_VALUE);
+        String inputFiles = null;
+        for (var file : inputFileList) inputFiles = MetadataServices.append (inputFiles, file);
+        mapGrid.getMetadataMap().put ("input_files", inputFiles);
+        var cachedMapGrid = new HDFCachedGrid (mapGrid, coherentMapWriter);
+        var mapConsumer = new GridChunkConsumer (cachedMapGrid);
+        var scheme = mapConsumer.getNativeScheme();
+        if (saveMap) {
+          int[] chunkSize = scheme.getChunkSize();
+          VERBOSE.info ("Creating " +  coherentMapVarName +
+            " variable with chunk size " + chunkSize[ROW] + "x" + chunkSize[COL]);
+        } // if
+
+        // Perform the computation to get the integer coherent mapping.
+        VERBOSE.info ("Computing coherent integer map");
+        int chunkCount = inputFileList.size();
+        int coherentVarCount = coherentVars == null ? 0 : coherentVars.size();
+        var mapFunction = new CompositeMapFunction (chunkCount, optComparator, coherentVarCount);
+        var op = new ChunkComputation (coherentCollector, mapConsumer, mapFunction);
+        runChunkComputation (op, scheme, serialOperations, maxOps);
+
+        // If we're saving the coherent map, then create a new reader from
+        // the output file.  Otherwise, close the map writer and re-open as a 
+        // reader so that we can use it as a chunk producer for the integer 
+        // map for the next stage when we apply the map to the input chunks.
+
+        cachedMapGrid.flush();
+        cachedMapGrid.clearCache();
+        coherentMapWriter.close();
+        if (saveMap) {
+          writer = new CWHDFWriter (output);
+          coherentMapReader = new CWHDFReader (writer);
+        } // if
+        else {
+          coherentMapReader = new CWHDFReader (tempFileName);
+        } // else
+        mapChunkProducer = coherentMapReader.getChunkProducer (coherentMapVarName);
+
+      } // if
+
+      // When operating in non-coherent mode, we need to set the array operator
+      // here that will be used in the function for compositing each chunk of 
+      // data.
+      ArrayReduction operator = null;
+      boolean valueOrderMethod = false;
+      if (!coherentMode) {
+        if (method.equals ("mean")) operator = new MeanReduction();
+        else if (method.equals ("geomean")) operator = new GeoMeanReduction();
+        else if (method.equals ("median")) operator = new MedianReduction();
+        else if (method.equals ("min")) operator = new MinReduction();
+        else if (method.equals ("max")) operator = new MaxReduction();
+        else if (method.equals ("latest")) operator = new LastReduction();
+        else if (method.equals ("explicit")) operator = new LastReduction();
+        else {
+          LOGGER.severe ("Unsupported composite method '" + method + "'");
+          ToolServices.exitWithCode (2);
+          return;
+        } // else
+        valueOrderMethod = (
+          method.equals ("latest") || 
+          method.equals ("explicit")
+        );
+      } // if
+
+      // Now we loop over each variable.  In the case of arithmetic or ordering
+      // operators, we can tolerate having variables exist in some data files
+      // and not in others.  For the coherent mode though, we need all
+      // compositing variables available in each file.  This is so that we
+      // have coinsistency between the indices generated in the integer map,
+      // and the indices of the chunks obtained from each input file.
       for (String variableName : variableNames) {
 
-        // Create a chunk collector for the input variable
-        // -----------------------------------------------
+        // Start by creating a chunk collector.  In coherent mode, the first
+        // chunk for the function will be the integer map chunk, and then
+        // all the input variable chunks.  For arithmetic operators, we only
+        // need the input variable chunks.
         ChunkCollector collector = new ChunkCollector();
+        if (coherentMode) collector.addProducer (mapChunkProducer);
+
+        // Create and add a chunk producer for this variable for 
+        // each input file.  Along the way, we need to save the external 
+        // type so we can check if any variable has a different external
+        // type -- that would completely sabotage the composite.
         DataChunk.DataType externalType = null;
-        Grid prototypeGrid = null;
+        Grid protoGrid = null;
         for (String inputFile : inputFileList) {
           EarthDataReader reader = readerMap.get (inputFile);
-          if (reader.containsVariable (variableName)) {
 
-            // Get prototype grid
-            // ------------------
-            if (prototypeGrid == null)
-              prototypeGrid = (Grid) reader.getVariable (variableName);;
+          // Cancel the operation entirely if we find a missing variable
+          // in coherent mode.
+          if (!reader.containsVariable (variableName)) {
+            if (coherentMode) {
+              LOGGER.severe ("Input file " + inputFile + " does not contain variable " + variableName);
+              LOGGER.severe ("In coherent mode, all input files must contain all composited variables");
+              LOGGER.severe ("To specify a subset of variables, use the --match option");
+              ToolServices.exitWithCode (2);
+              return;
+            } // if
+          } // if
 
-            // Get producer for this reader
-            // ----------------------------
+          else {
+            if (protoGrid == null) protoGrid = (Grid) reader.getVariable (variableName);
             ChunkProducer producer = reader.getChunkProducer (variableName);
-
-            // Check producer external type
-            // ----------------------------
             if (externalType == null) externalType = producer.getExternalType();
             else if (externalType != producer.getExternalType()) {
               LOGGER.severe ("Non-matching external data types found between input files for variable " + variableName);
               ToolServices.exitWithCode (2);
               return;
             } // else if
-
             collector.addProducer (producer);
+          } // else
 
-          } // if
         } // for
         
         // Warn the user about compositing variables that are integer types
-        // that may represent a mask
-        if (!orderingMethod && !(externalType == DataType.FLOAT || externalType == DataType.DOUBLE)) {
-          LOGGER.warning ("Composite method '" + method + "' with variable '" + variableName + "' of integer external type");
+        // using an arithmetic type of operator.  This could mean that mask
+        // or quality variables are being averaged for example.  
+        if (!coherentMode && !valueOrderMethod && !(externalType == DataType.FLOAT || externalType == DataType.DOUBLE)) {
+          LOGGER.warning ("Composite method '" + method + "' used with variable " + variableName + " of external type " + externalType);
           LOGGER.warning ("For mask or quality flag variables, this may not be what you want");
         } // if
 
-        // Create a chunk consumer for the output variable
-        // -----------------------------------------------
-        TilingScheme inputTilingScheme = prototypeGrid.getTilingScheme();
+        // Create a new variable in the output file to hold the composite
+        // data, and a chunk consumer to use in the operation.  Also configure
+        // the output chunking scheme to match the input scheme if possible. 
+        TilingScheme inputTilingScheme = protoGrid.getTilingScheme();
         if (inputTilingScheme != null)
           writer.setTileDims (inputTilingScheme.getTileDimensions());
         else
           writer.setTileDims (null);
-        CachedGrid outputGrid = new HDFCachedGrid (prototypeGrid, writer);
+        CachedGrid outputGrid = new HDFCachedGrid (protoGrid, writer);
         ChunkConsumer consumer = new GridChunkConsumer (outputGrid);
 
+        // Find out what the output chunking scheme actually is and report
+        // on the variable that we are about to composite.
         ChunkingScheme outputChunkingScheme = consumer.getNativeScheme();
         int[] chunkSize = outputChunkingScheme.getChunkSize();
         VERBOSE.info ("Creating " +  variableName +
           " variable with chunk size " + chunkSize[ROW] + "x" + chunkSize[COL]);
 
-        // Create chunk computation
-        // ------------------------
-        ChunkFunction function = new CompositeFunction (operator, minValid, consumer.getPrototypeChunk());
+        // In coherent mode, create a chunk function to map the 
+        // input data values into the output variable using the integer map.
+        // Otherwise create a chunk function to composite the data
+        // with an arimetic-based function.
+        ChunkFunction function = null;
+        DataChunk protoChunk = consumer.getPrototypeChunk();
+        if (coherentMode) function = new CompositeMapApplicationFunction (inputFileList.size(), protoChunk);
+        else function = new CompositeFunction (operator, minValid, protoChunk);
+
+        // Create and run a new chunk computation to composite the data.
         ChunkComputation op = new ChunkComputation (collector, consumer, function);
+        runChunkComputation (op, outputChunkingScheme, serialOperations, maxOps);
 
-        // Debugging
-        if (LOGGER.isLoggable (Level.FINE))
-          op.setTracked (true);
-
-        // Perform chunk processing
-        // ------------------------
-        List<ChunkPosition> positions = new ArrayList<>();
-        outputChunkingScheme.forEach (positions::add);
-
-        if (serialOperations) {
-          positions.forEach (pos -> op.perform (pos));
-        } // if
-        else {
-          PoolProcessor processor = new PoolProcessor();
-          processor.init (positions, op);
-          processor.setMaxOperations (maxOps);
-          processor.start();
-          processor.waitForCompletion();
-        } // if
-
-        // Debugging
-        if (LOGGER.isLoggable (Level.FINE)) {
-          StringBuilder types = new StringBuilder();
-          StringBuilder times = new StringBuilder();
-          op.getTrackingData().forEach ((type, time) -> {
-            types.append ((types.length() == 0 ? "" : "/") + type);
-            times.append ((times.length() == 0 ? "" : "/") + String.format ("%.3f", time));
-          });
-          LOGGER.fine ("Computation " + types + " = " + times + " s");
-        } // if
-
-        // Flush any unwritten tiles
-        // -------------------------
+        // Flush any unwritten tiles in the output grid and clear its
+        // cache since we won't be using it anymore.  This helps to keep the
+        // overall memory footprint only as large as needed for each individual
+        // variable composite.
         outputGrid.flush();
         outputGrid.clearCache();
 
       } // for
 
-      // Close input files
-      // -----------------
+      // Close the input files and the coherent map reader if applicable.
       for (String inputFile : inputFileList)
         readerMap.get (inputFile).close();
+      if (coherentMapReader != null) coherentMapReader.close();
 
-      // Close output file
-      // -----------------
+      // Close the output file.
       writer.close();
       CleanupHook.getInstance().cancelDelete (output);
 
@@ -715,6 +905,59 @@ public final class cwcomposite {
     ToolServices.finishExecution (PROG);
 
   } // main
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Runs a chunk computation either in serial or via a pool of threads.
+   * 
+   * @param op the chunk operation to perform.
+   * @param scheme the chunking scheme to use for the the operation.
+   * @param serial the serial flag, true to run the operation in serial.
+   * @param maxOps the maximum number of threads to run the operation if
+   * running in parallel mode.
+   * 
+   * @since 3.8.1
+   */
+  private static void runChunkComputation (
+    ChunkComputation op,
+    ChunkingScheme scheme,
+    boolean serial,
+    int maxOps
+  ) {
+
+    // Debugging
+    if (LOGGER.isLoggable (Level.FINE))
+      op.setTracked (true);
+
+    // Perform chunk processing
+    // ------------------------
+    List<ChunkPosition> positions = new ArrayList<>();
+    scheme.forEach (positions::add);
+
+    if (serial) {
+      positions.forEach (pos -> op.perform (pos));
+    } // if
+    else {
+      PoolProcessor processor = new PoolProcessor();
+      processor.init (positions, op);
+      processor.setMaxOperations (maxOps);
+      processor.start();
+      processor.waitForCompletion();
+    } // if
+
+    // Debugging
+    if (LOGGER.isLoggable (Level.FINE)) {
+      StringBuilder types = new StringBuilder();
+      StringBuilder times = new StringBuilder();
+      op.getTrackingData().forEach ((type, time) -> {
+        types.append ((types.length() == 0 ? "" : "/") + type);
+        times.append ((times.length() == 0 ? "" : "/") + String.format ("%.3f", time));
+      });
+      LOGGER.fine ("Computation " + types + " = " + times + " s");
+    } // if
+
+  } // runChunkComputation
 
   ////////////////////////////////////////////////////////////
 
@@ -740,7 +983,9 @@ public final class cwcomposite {
     info.option ("-k, --keephistory", "Retain all input file history metadata");
     info.option ("-m, --match=PATTERN", "Composite only variables matching regular expression");
     info.option ("-M, --method=TYPE", "Set composite type");
+    info.option ("-o, --optimal=VARIABLE/TYPE", "Set optimization variable and type");
     info.option ("-p, --pedantic", "Retain repeated metadata values");
+    info.option ("-S, --savemap", "Save source index mapping in coherent mode");
     info.option ("--serial", "Perform serial operations");
     info.option ("--threads=MAX", "Set maximum number of parallel threads");
     info.option ("-t, --collapsetime", "Collapse and simplify time metadata");

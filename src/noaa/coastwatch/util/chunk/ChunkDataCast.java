@@ -63,6 +63,51 @@ public class ChunkDataCast {
   ////////////////////////////////////////////////////////////
 
   /**
+   * Casts the data values from a {@link DataChunk} object into a primitive 
+   * double array.
+   * 
+   * @param chunk the chunk to cast.
+   * @param doubleArray the primitive double array to fill with data.  Missing
+   * values in the chunk are marked as Double.NaN in the primitive array.
+   * 
+   * @since 3.8.1
+   */
+  public static void toDoubleArray (DataChunk chunk, double[] doubleArray) {
+
+    var access = new ChunkDataAccessor();
+    chunk.accept (access);
+
+    int values = chunk.getValues();
+    switch (chunk.getExternalType()) {
+    case BYTE:
+      for (int i = 0; i < values; i++) 
+        doubleArray[i] = access.isMissingValue (i) ? Double.NaN : access.getByteValue (i);
+      break;
+    case SHORT:
+      for (int i = 0; i < values; i++) 
+        doubleArray[i] = access.isMissingValue (i) ? Double.NaN : access.getShortValue (i);
+      break;
+    case INT:
+      for (int i = 0; i < values; i++) 
+        doubleArray[i] = access.isMissingValue (i) ? Double.NaN : access.getIntValue (i);
+      break;
+    case LONG:
+      for (int i = 0; i < values; i++) 
+        doubleArray[i] = access.isMissingValue (i) ? Double.NaN : access.getLongValue (i);
+      break;
+    case FLOAT:
+      for (int i = 0; i < values; i++) doubleArray[i] = access.getFloatValue (i);
+      break;
+    case DOUBLE:
+      for (int i = 0; i < values; i++) doubleArray[i] = access.getDoubleValue (i);
+      break;
+    } // switch
+
+  } // toDoubleArray
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Casts the data values to a {@link DataChunk} object from a primitive 
    * float array.
    * 
