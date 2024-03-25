@@ -177,7 +177,7 @@ public class GUIServices {
   /** The current directory for file chooser. */
   private static File userDir;
 
-  /** The hlpe index URL to use for help panels. */
+  /** The help index URL to use for help panels. */
   private static URL helpIndex;
   
   /** The currently active full screen window on Mac. */
@@ -1097,13 +1097,11 @@ public class GUIServices {
     String className = helpClass.getName();
     String helpFile = helpProperties.getProperty (className);
     if (helpFile == null) {
-      throw new IllegalArgumentException ("Cannot find help file for class " + 
-        className);
+      throw new IllegalArgumentException ("Cannot find help file for class " + className);
     } // if
     final URL resource = helpClass.getResource (helpFile);
     if (resource == null) {
-      throw new IllegalArgumentException ("Cannot find resource for file " +
-        helpFile);
+      throw new IllegalArgumentException ("Cannot find resource for file " + helpFile);
     } // if
 
     // Create button
