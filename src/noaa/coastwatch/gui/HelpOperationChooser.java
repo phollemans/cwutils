@@ -106,6 +106,7 @@ public class HelpOperationChooser extends JToolBar {
     if (!showText) button.setText ("");
     button.addActionListener (operationAction);
     if (GUIServices.IS_AQUA) button.setBorderPainted (false);
+//    button.setFocusable (false);
 
     // Add button
     // ----------

@@ -156,7 +156,7 @@ public class ViewOperationChooser
   ////////////////////////////////////////////////////////////
 
   /**
-   * Sets the visiblity of the toolbar text labels.
+   * Sets the visibility of the toolbar text labels.
    * 
    * @param flag the new text visibility flag value.
    * 
@@ -194,6 +194,7 @@ public class ViewOperationChooser
     if (!showText) button.setText ("");
     button.addActionListener (operationAction);
     if (GUIServices.IS_AQUA) button.setBorderPainted (false);
+//    button.setFocusable (false);
 
     // Add button
     // ----------

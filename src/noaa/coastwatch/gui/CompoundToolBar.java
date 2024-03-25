@@ -29,10 +29,13 @@ import java.awt.FlowLayout;
 import java.awt.Dimension;
 import javax.swing.BoxLayout;
 import javax.swing.Box;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
+import javax.swing.BorderFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import noaa.coastwatch.gui.FileOperationChooser;
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.TestContainer;
@@ -58,17 +61,22 @@ public class CompoundToolBar
    * Creates a new compound toolbar from the specified toolbars.
    *
    * @param toolbars the toolbars to combine.
+   * @param separators the list of separator flags, true to put a separator
+   * after the toolbar, or false to put a space (not applicable to the last
+   * toolbar).
    * @param sameSize the same size flag, true to make all components
    * the same size as the maximum size component.
    */
   public CompoundToolBar (
     JToolBar[] toolbars,
+    boolean[] separators,
     boolean sameSize
   ) {
 
     // Initialize
     // ----------
     this.setLayout (new BoxLayout (this, BoxLayout.X_AXIS));
+    this.setBorder (BorderFactory.createEmptyBorder (2, 5, 2, 5));
 
     // Add components
     // --------------
@@ -76,12 +84,17 @@ public class CompoundToolBar
     for (int i = 0; i < toolbars.length; i++) {
       while (toolbars[i].getComponentCount() != 0) {
         JComponent comp = (JComponent) toolbars[i].getComponentAtIndex (0);
+        comp.setBorder (BorderFactory.createEmptyBorder (5, 5, 5, 5));
         this.add (comp);
+        this.add (Box.createHorizontalStrut (2));
         componentList.add (comp);
       } // while
-      if (i == toolbars.length-2) this.add (Box.createHorizontalGlue());
-      else if (i != toolbars.length-1) this.addSeparator (new Dimension (20, 20));
+      if (i < toolbars.length-1) {
+        if (separators[i]) this.addSeparator (new Dimension (20, 20));
+        else this.add (Box.createHorizontalGlue());
+      } // if
     } // for
+    this.add (Box.createHorizontalGlue());
 
     // Make same size
     // --------------
@@ -110,7 +123,7 @@ public class CompoundToolBar
     FileOperationChooser fileChooser = FileOperationChooser.getInstance();
     ViewOperationChooser viewChooser = ViewOperationChooser.getInstance();
     CompoundToolBar compound = new CompoundToolBar (
-      new JToolBar[] {fileChooser, viewChooser}, true);
+      new JToolBar[] {fileChooser, viewChooser}, new boolean[] {true, false}, true);
     compound.setFloatable (false);
     noaa.coastwatch.gui.TestContainer.showFrame (compound);
 

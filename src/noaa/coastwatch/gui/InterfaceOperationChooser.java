@@ -1,30 +1,11 @@
-////////////////////////////////////////////////////////////////////////
 /*
+ * CoastWatch Software Library and Utilities
+ * Copyright (c) 2024 National Oceanic and Atmospheric Administration
+ * All rights reserved.
+ */
 
-     File: FileOperationChooser.java
-   Author: Peter Hollemans
-     Date: 2004/05/10
-
-  CoastWatch Software Library and Utilities
-  Copyright (c) 2004 National Oceanic and Atmospheric Administration
-  All rights reserved.
-
-  Developed by: CoastWatch / OceanWatch
-                Center for Satellite Applications and Research
-                http://coastwatch.noaa.gov
-
-  For conditions of distribution and use, see the accompanying
-  license.txt file.
-
-*/
-////////////////////////////////////////////////////////////////////////
-
-// Package
-// -------
 package noaa.coastwatch.gui;
 
-// Imports
-// -------
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,7 +13,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
-import javax.swing.ButtonModel;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
@@ -42,14 +22,9 @@ import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.TestContainer;
 
 /**
- * <p>The <code>FileOperationChooser</code> class is a
- * <code>JToolBar</code> that allows the user to perform basic file
- * operations: Open, Close, Export.</p>
- *
- * <p>The operation chooser signals a change in the selected operation by
- * firing a <code>PropertyChangeEvent</code> whose property name is
- * <code>FileOperationChooser.OPERATION_PROPERTY</code>, and new value
- * contains an operation name from the constants in this class.</p>
+ * <p>The <code>InterfaceOperationChooser</code> class is a
+ * <code>JToolBar</code> that allows the user to perform basic interface change
+ * operations.</p>
  *
  * <p>A static instance of this class is available via
  * <code>getInstance()</code> so that a single chooser may be used
@@ -57,10 +32,9 @@ import noaa.coastwatch.gui.TestContainer;
  * layout manager.</p>
  *
  * @author Peter Hollemans
- * @since 3.1.7
+ * @since 3.8.1
  */
-public class FileOperationChooser
-  extends JToolBar {
+public class InterfaceOperationChooser extends JToolBar {
 
   // Constants
   // ---------
@@ -68,21 +42,13 @@ public class FileOperationChooser
   /** The operation property. */
   public static final String OPERATION_PROPERTY = "operation";
 
-  /** The open operation. */
-  public static final String OPEN = "Open";
-  private static final String OPEN_TIP = "Open new data file";
+  /** The controls operation. */
+  public static final String CONTROLS = "Controls";
+  private static final String CONTROLS_TIP = "Show/hide control tabs";
 
-  /** The close operation. */
-  public static final String CLOSE = "Close";
-  private static final String CLOSE_TIP = "Close current data file";
-
-  /** The save as operation. */
-  public static final String EXPORT = "Export";
-  private static final String EXPORT_TIP = "Export to image or data";
-
-  /** The file information operation. */
-  public static final String INFO = "Info";
-  private static final String INFO_TIP = "Show data file information";
+  /** The full screen operation. */
+  public static final String FULLSCREEN = "Fullscreen";
+  private static final String FULLSCREEN_TIP = "Enter full screen presentation mode";
 
   // Variables
   // ---------
@@ -94,60 +60,10 @@ public class FileOperationChooser
   private boolean showText;
 
   /** The static instance. */
-  private static FileOperationChooser instance;
+  private static InterfaceOperationChooser instance;
 
   /** The map of all buttons. */
   private Map<String, AbstractButton> buttonMap;
-
-  ////////////////////////////////////////////////////////////
-
-  /** 
-   * Sets the closable flag.
-   *
-   * @param flag the closable flag, true if the close button should be enabled 
-   * or false if not.
-   */
-  public void setClosable (
-    boolean flag
-  ) {
-
-    buttonMap.get (CLOSE).setEnabled (flag);
-
-  } // setClosable
-
-  ////////////////////////////////////////////////////////////
-
-  /** 
-   * Sets the savable flag.
-   *
-   * @param flag the savable flag, true if the save as button should be enabled 
-   * or false if not.
-   */
-  public void setSavable (
-    boolean flag
-  ) {
-
-    buttonMap.get (EXPORT).setEnabled (flag);
-
-  } // setSavable
-
-  ////////////////////////////////////////////////////////////
-
-  /** 
-   * Sets the info flag.
-   *
-   * @param flag the info flag, true if the info button should be enabled 
-   * or false if not.
-   * 
-   * @since 3.8.1
-   */
-  public void setInfo (
-    boolean flag
-  ) {
-
-    buttonMap.get (INFO).setEnabled (flag);
-
-  } // setInfo
 
   ////////////////////////////////////////////////////////////
 
@@ -155,8 +71,6 @@ public class FileOperationChooser
    * Sets the visiblity of the toolbar text labels.
    * 
    * @param flag the new text visibility flag value.
-   * 
-   * @since 3.8.1
    */
   public void setShowText (boolean flag) {
 
@@ -202,7 +116,7 @@ public class FileOperationChooser
    * Creates a new horizontal operation chooser with text and icons.
    * By default, the chooser is set to be not floatable.
    */
-  public FileOperationChooser () { this (JToolBar.HORIZONTAL, true); }
+  public InterfaceOperationChooser () { this (JToolBar.HORIZONTAL, true); }
 
   ////////////////////////////////////////////////////////////
 
@@ -216,7 +130,7 @@ public class FileOperationChooser
    * the icon in each button.  If false, no text is shown, but a tool
    * tip is set for the button.
    */
-  public FileOperationChooser (
+  public InterfaceOperationChooser (
     int orientation,
     boolean showText
   ) {
@@ -237,10 +151,8 @@ public class FileOperationChooser
 
     // Create buttons
     // --------------
-    addButton (new JButton (OPEN, GUIServices.getIcon ("file.open")), OPEN_TIP);
-    addButton (new JButton (CLOSE, GUIServices.getIcon ("file.close")), CLOSE_TIP);
-    addButton (new JButton (EXPORT, GUIServices.getIcon ("file.export")), EXPORT_TIP); 
-    addButton (new JButton (INFO, GUIServices.getIcon ("file.info")), INFO_TIP); 
+    addButton (new JButton (CONTROLS, GUIServices.getIcon ("interface.control.tabs")), CONTROLS_TIP);
+    addButton (new JButton (FULLSCREEN, GUIServices.getIcon ("interface.fullscreen")), FULLSCREEN_TIP);
 
   } // FileOperationChooser constructor
 
@@ -250,11 +162,19 @@ public class FileOperationChooser
     public void actionPerformed (ActionEvent event) {
 
       String operation = event.getActionCommand();
-      FileOperationChooser.this.firePropertyChange (OPERATION_PROPERTY, null, 
-        operation);
+      InterfaceOperationChooser.this.firePropertyChange (OPERATION_PROPERTY, null, operation);
 
     } // actionPerformed
   } // OperationAction class
+
+  ////////////////////////////////////////////////////////////
+
+  /** Sets the enabled status of the chooser buttons. */
+  public void setEnabled (boolean flag) {
+
+    buttonMap.forEach ((k,button) -> button.setEnabled (flag));
+
+  } // setEnabled
 
   ////////////////////////////////////////////////////////////
 
@@ -264,9 +184,9 @@ public class FileOperationChooser
    *
    * @return the static instance of this class.
    */
-  public static FileOperationChooser getInstance () {
+  public static InterfaceOperationChooser getInstance () {
 
-    if (instance == null) instance = new FileOperationChooser();
+    if (instance == null) instance = new InterfaceOperationChooser();
     return (instance);
 
   } // getInstance
@@ -280,7 +200,7 @@ public class FileOperationChooser
    */
   public static void main (String[] argv) {
 
-    FileOperationChooser chooser = FileOperationChooser.getInstance();
+    var chooser = InterfaceOperationChooser.getInstance();
     chooser.addPropertyChangeListener (
       FileOperationChooser.OPERATION_PROPERTY,
       new PropertyChangeListener () {
@@ -294,6 +214,6 @@ public class FileOperationChooser
 
   ////////////////////////////////////////////////////////////
 
-} // FileOperationChooser class
+} // InterfaceOperationChooser class
 
 ////////////////////////////////////////////////////////////////////////

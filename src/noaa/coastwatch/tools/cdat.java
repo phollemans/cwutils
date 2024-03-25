@@ -80,6 +80,7 @@ import javax.swing.JCheckBoxMenuItem;
 import noaa.coastwatch.gui.CloseIcon;
 import noaa.coastwatch.gui.CompoundToolBar;
 import noaa.coastwatch.gui.EarthDataAnalysisPanel;
+import noaa.coastwatch.gui.InterfaceOperationChooser;
 import noaa.coastwatch.gui.FileOperationChooser;
 import noaa.coastwatch.gui.FileTransferHandler;
 import noaa.coastwatch.gui.FullScreenWindow;
@@ -236,6 +237,9 @@ public final class cdat
 
   /** The help operation chooser. */
   private HelpOperationChooser helpChooser;
+
+  /** The interface operation chooser. */
+  private InterfaceOperationChooser interfaceChooser;
 
   /** The compound toolbar. */
   private CompoundToolBar toolBar;
@@ -513,6 +517,7 @@ public final class cdat
     boolean areControlTabsVisible = GUIServices.recallBooleanSettingForClass (true, "controltabs.visibility", cdat.class);
     checkBoxMenuItem.setState (areControlTabsVisible);
     checkBoxMenuItem.addActionListener (event -> updateControlTabsVisibility (event));
+    var controlTabsMenuItem = checkBoxMenuItem;
     viewMenu.add (checkBoxMenuItem);
 
     // Create the tools menu with preferences, profiles, file info, etc.
@@ -613,6 +618,15 @@ public final class cdat
       )
     ));
 
+    // Create the interface chooser toolbar.
+    interfaceChooser = InterfaceOperationChooser.getInstance();
+    interfaceChooser.addPropertyChangeListener (InterfaceOperationChooser.OPERATION_PROPERTY,
+      new PropertyChangeAdapter (Map.of (
+        InterfaceOperationChooser.CONTROLS, () -> controlTabsMenuItem.doClick(),
+        InterfaceOperationChooser.FULLSCREEN, () -> fullScreenEvent()
+      )
+    ));
+
     // Create the profile chooser that saves and loads profiles of
     // CDAT enhancements and overlays.
     String currentDir = System.getProperty ("user.home");
@@ -622,7 +636,10 @@ public final class cdat
     profileChooser.setFileFilter (filter);
 
     // Combine the various tool bars into a compound one that holds them all.
-    toolBar = new CompoundToolBar (new JToolBar[] {fileChooser, viewChooser, helpChooser}, true);
+    toolBar = new CompoundToolBar (
+      new JToolBar[] {interfaceChooser, fileChooser, viewChooser, helpChooser}, 
+      new boolean[] {true, true, true, true},
+      true);
     toolBar.setFloatable (false);
     toolBar.setBorder (new BevelBorder (BevelBorder.RAISED));
     updateToolbarLabelVisibility (isToolbarLabelVisible);
@@ -683,6 +700,7 @@ public final class cdat
   /** Updates the visibility of the toolbar labels. */
   private void updateToolbarLabelVisibility (boolean flag) {
 
+    interfaceChooser.setShowText (flag);
     fileChooser.setShowText (flag);
     viewChooser.setShowText (flag);
     helpChooser.setShowText (flag);
@@ -808,6 +826,7 @@ public final class cdat
     // Update toolbars
     // ---------------
     boolean enabled = (tabbedPane.getTabCount() != 0);
+    interfaceChooser.setEnabled (enabled);
     fileChooser.setClosable (enabled);
     fileChooser.setSavable (enabled);
     fileChooser.setInfo (enabled);
@@ -1027,6 +1046,8 @@ public final class cdat
     dialog.setVisible (true);
 
   } // windowCustomSizeEvent
+
+  private void controlTabsEvent () { }
 
   private void fullScreenEvent () { getAnalysisPanel().showFullScreen(); }
 
