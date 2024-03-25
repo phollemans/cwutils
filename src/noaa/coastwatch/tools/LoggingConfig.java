@@ -60,21 +60,39 @@ public class LoggingConfig {
         null
       );
 
+      // Detect what type of logging format we want.  A short format just
+      // prints the logging level, message, and error if applicable.  The
+      // long format also adds the time stamp and class.
+      String logFormatProperty = System.getProperty ("cw.log.format");
+      String logFormat = (
+        logFormatProperty == null ? null :
+        logFormatProperty.equals ("short") ? "[%4$s] %5$s%6$s%n" :
+        logFormatProperty.equals ("long") ? "%1$tF %1$tT %4$s [%2$s] - %5$s%6$s%n" : 
+        null
+      );
+
       // Set up the log manager
       // ----------------------
       LogManager logManager = LogManager.getLogManager();
       try {
         logManager.reset();
 
-        // Inject a FINE or FINER log level if debugging requested
-        // -------------------------------------------------------
-        Function<String, BiFunction<String, String, String>> mapper =
-          (key) -> key.equals ("noaa.coastwatch.level") && (debugLevel != null)
-          ? ((oldVal, newVal) -> debugLevel)
-          : ((oldVal, newVal) -> newVal);
+        // Create a logging config injection that remaps the logging level
+        // and the format upon request.
+        Function<String, BiFunction<String, String, String>> mapper = key -> {
 
-        // Read/update the config
-        // ----------------------
+          BiFunction<String, String, String> function;
+
+          if (key.equals ("noaa.coastwatch.level") && (debugLevel != null))
+            function = (oldVal, newVal) -> debugLevel;
+          else if (key.equals ("java.util.logging.SimpleFormatter.format") && (logFormat != null))
+            function = (oldVal, newVal) -> logFormat;
+          else 
+            function = (oldVal, newVal) -> newVal;
+
+          return (function);
+
+        };
         logManager.updateConfiguration (stream, mapper);
 
       } // try
