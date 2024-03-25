@@ -117,7 +117,7 @@ public class ToolServices {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Logs a starting time for a executable task.
+   * Logs a starting time for an executable task.
    *
    * @param name the name of the task starting.
    *
@@ -152,7 +152,7 @@ public class ToolServices {
 
     startTimeMap.remove (name);
 
-  } // startExecution
+  } // finishExecution
 
   ////////////////////////////////////////////////////////////
 
