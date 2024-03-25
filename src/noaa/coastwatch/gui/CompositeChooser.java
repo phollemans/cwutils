@@ -25,21 +25,28 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
+
+import java.util.List;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.List;
+
 import javax.swing.Icon;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JToggleButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.TabComponent;
 import noaa.coastwatch.gui.TestContainer;
@@ -88,19 +95,11 @@ public class CompositeChooser
   private static final String COMPOSITE_TOOLTIP = "Color Composite";
 
   // Variables
-  // ---------    
-
-  /** The red component combo. */
-  private JComboBox<String> redCombo;
-
-  /** The green component combo. */
-  private JComboBox<String> greenCombo;
-
-  /** The blue component combo. */
-  private JComboBox<String> blueCombo;
-
-  /** The composite mode check box. */
-  private JCheckBox modeCheck;
+  // ---------
+  private JList<String> redList;
+  private JList<String> greenList;
+  private JList<String> blueList;
+  private JToggleButton modeButton;
 
   ////////////////////////////////////////////////////////////
 
@@ -111,7 +110,7 @@ public class CompositeChooser
    */
   public String getRedComponent () {
 
-    return ((String) redCombo.getSelectedItem()); 
+    return (redList.getSelectedValue());
 
   } // getRedComponent
 
@@ -124,7 +123,7 @@ public class CompositeChooser
    */
   public String getGreenComponent () { 
 
-    return ((String) greenCombo.getSelectedItem()); 
+    return (greenList.getSelectedValue());
 
   } // getGreenComponent
 
@@ -137,7 +136,7 @@ public class CompositeChooser
    */
   public String getBlueComponent () {
 
-    return ((String) blueCombo.getSelectedItem()); 
+    return (blueList.getSelectedValue());
 
   } // getBlueComponent
 
@@ -149,7 +148,7 @@ public class CompositeChooser
    * @return the mode flag, true if color composite mode is on
    * or false if not.
    */
-  public boolean getCompositeMode () { return (modeCheck.isSelected()); }
+  public boolean getCompositeMode () { return (modeButton.isSelected()); }
 
   ////////////////////////////////////////////////////////////
 
@@ -162,93 +161,85 @@ public class CompositeChooser
     List<String> variableList
   ) {
 
-    // Initialize
-    // ----------
     super (new GridBagLayout());
 
-    // Create component panel
-    // ----------------------
-    JPanel componentPanel = new JPanel (new GridBagLayout());
-    componentPanel.setBorder (new TitledBorder (new EtchedBorder(), 
-      "Color Components"));
+    String[] items = variableList.toArray (new String[]{});
+
     GridBagConstraints gc = new GridBagConstraints();
     gc.anchor = GridBagConstraints.WEST;
-    GUIServices.setConstraints (gc, 0, 0, 1, 1, GridBagConstraints.HORIZONTAL,
-      1, 0);
-    this.add (componentPanel, gc);
 
-    String[] items = variableList.toArray (new String[]{});
-    ComponentComboListener componentListener = new ComponentComboListener();
-    redCombo = new JComboBox (items);
-    redCombo.addActionListener (componentListener);
-    GUIServices.setConstraints (gc, 0, 0, 1, 1, GridBagConstraints.NONE,
-      0, 0);
-    gc.insets = new Insets (2, 0, 2, 10);
-    componentPanel.add (new JLabel ("Red component:"), gc);
-    GUIServices.setConstraints (gc, 1, 0, 1, 1, GridBagConstraints.NONE,
-      1, 0);
-    gc.insets = new Insets (2, 0, 2, 0);
-    componentPanel.add (redCombo, gc);
+    var redPanel = new JPanel (new BorderLayout());
+    redPanel.setBorder (new TitledBorder (new EtchedBorder(), "Red Component"));
+    GUIServices.setConstraints (gc, 0, 0, 1, 1, GridBagConstraints.BOTH, 1, 1);
+    this.add (redPanel, gc);
 
-    greenCombo = new JComboBox (items);
-    greenCombo.addActionListener (componentListener);
-    GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.NONE,
-      0, 0);
-    gc.insets = new Insets (2, 0, 2, 10);
-    componentPanel.add (new JLabel ("Green component:"), gc);
-    GUIServices.setConstraints (gc, 1, 1, 1, 1, GridBagConstraints.NONE,
-      1, 0);
-    gc.insets = new Insets (2, 0, 2, 0);
-    componentPanel.add (greenCombo, gc);
+    redList = new JList<> (items);
+    redList.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
+    redList.setSelectedIndex (0);
+    redList.addListSelectionListener (event -> selectionChangedEvent (event));
+    redPanel.add (new JScrollPane (redList), BorderLayout.CENTER);
 
-    blueCombo = new JComboBox (items);
-    blueCombo.addActionListener (componentListener);
-    GUIServices.setConstraints (gc, 0, 2, 1, 1, GridBagConstraints.NONE,
-      0, 0);
-    gc.insets = new Insets (2, 0, 2, 10);
-    componentPanel.add (new JLabel ("Blue component:"), gc);
-    GUIServices.setConstraints (gc, 1, 2, 1, 1, GridBagConstraints.NONE,
-      1, 0);
-    gc.insets = new Insets (2, 0, 2, 0);
-    componentPanel.add (blueCombo, gc);
-    
-    // Create mode checkbox
-    // --------------------
-    modeCheck = new JCheckBox ("Perform color composite");
-    modeCheck.addActionListener (new ActionListener () {
-        public void actionPerformed (ActionEvent event) {
-          firePropertyChange (COMPOSITE_MODE_PROPERTY, null, 
-            Boolean.valueOf (modeCheck.isSelected()));
-        } // actionPerformed
-      });
-    GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.NONE,
-      1, 1);
+    var greenPanel = new JPanel (new BorderLayout());
+    greenPanel.setBorder (new TitledBorder (new EtchedBorder(), "Green Component"));
+    GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.BOTH, 1, 1);
+    this.add (greenPanel, gc);
+
+    greenList = new JList<> (items);
+    greenList.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
+    greenList.setSelectedIndex (0);
+    greenList.addListSelectionListener (event -> selectionChangedEvent (event));
+    greenPanel.add (new JScrollPane (greenList), BorderLayout.CENTER);
+
+    var bluePanel = new JPanel (new BorderLayout());
+    bluePanel.setBorder (new TitledBorder (new EtchedBorder(), "Blue Component"));
+    GUIServices.setConstraints (gc, 0, 2, 1, 1, GridBagConstraints.BOTH, 1, 1);
+    this.add (bluePanel, gc);
+
+    blueList = new JList<> (items);
+    blueList.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
+    blueList.setSelectedIndex (0);
+    blueList.addListSelectionListener (event -> selectionChangedEvent (event));
+    bluePanel.add (new JScrollPane (blueList), BorderLayout.CENTER);
+
+    modeButton = new JToggleButton ("Toggle Color Composite Mode (OFF)");
+    modeButton.addActionListener (event -> modeChangedEvent (event));
+
     gc.anchor = GridBagConstraints.NORTHWEST;
-    this.add (modeCheck, gc);
+    gc.insets = new Insets (2, 0, 2, 0);
+    GUIServices.setConstraints (gc, 0, 3, 1, 1, GridBagConstraints.NONE, 0, 0);
+    this.add (modeButton, gc);
 
   } // CompositeChooser constructor
 
   ////////////////////////////////////////////////////////////
 
-  /** Handles component combo events. */
-  private class ComponentComboListener implements ActionListener {
-    public void actionPerformed (ActionEvent event) {
+  private void modeChangedEvent (ActionEvent event) {
 
-      // Get property
-      // ------------
+    var modeOn = modeButton.isSelected();
+    modeButton.setText ("Toggle Color Composite Mode (" + (modeOn ? "ON" : "OFF") + ")");
+    firePropertyChange (COMPOSITE_MODE_PROPERTY, null, Boolean.valueOf (modeOn));
+
+  } // modeChangedEvent
+
+  ////////////////////////////////////////////////////////////
+
+  private void selectionChangedEvent (ListSelectionEvent event) {
+
+    if (!event.getValueIsAdjusting()) {
+
       String property = null;
-      Object source = event.getSource();
-      if (source == redCombo) property = RED_COMPONENT_PROPERTY;
-      else if (source == greenCombo) property = GREEN_COMPONENT_PROPERTY;
-      else if (source == blueCombo) property = BLUE_COMPONENT_PROPERTY;
+      var source = (JList<String>) event.getSource();
 
-      // Fire change event
-      // -----------------
-      firePropertyChange (property, null, 
-        ((JComboBox) source).getSelectedItem());
+      if (source == redList) property = RED_COMPONENT_PROPERTY;
+      else if (source == greenList) property = GREEN_COMPONENT_PROPERTY;
+      else if (source == blueList) property = BLUE_COMPONENT_PROPERTY;
 
-    } // actionPerformed
-  } // ComponentComboListener class
+      var value = source.getSelectedValue();
+      if (value != null) firePropertyChange (property, null, value);
+
+    } // if
+
+  } // selectionChangedEvent
 
   ////////////////////////////////////////////////////////////
 
@@ -265,14 +256,12 @@ public class CompositeChooser
      * panels and data caches that were associated with this class.
      */
     removeAll();
-    for (JComboBox combo : new JComboBox[] {redCombo, greenCombo, blueCombo}) {
-      for (ActionListener listener : combo.getActionListeners()) {
-        combo.removeActionListener (listener);
-      } // for
+    for (var list : List.of (redList, greenList, blueList)) {
+      for (var listener : list.getListSelectionListeners()) list.removeListSelectionListener (listener);
     } // for
-    redCombo = null;
-    greenCombo = null;
-    blueCombo = null;
+    redList = null;
+    greenList = null;
+    blueList = null;
 
   } // dispose
   
@@ -308,12 +297,9 @@ public class CompositeChooser
     } // try
     catch (Exception e) { e.printStackTrace(); System.exit (1); }
     CompositeChooser chooser = new CompositeChooser (gridList);
-    chooser.addPropertyChangeListener (new PropertyChangeListener () {
-        public void propertyChange (PropertyChangeEvent event) {
-          System.out.println ("got property change, name = " + 
-            event.getPropertyName() + ", new value = " + event.getNewValue());
-        } // propertyChange
-      });
+    chooser.addPropertyChangeListener (event -> {
+      System.out.println ("Property " + event.getPropertyName() + " changed to " + event.getNewValue());
+    });
     noaa.coastwatch.gui.TestContainer.showFrame (chooser);
 
   } // main
