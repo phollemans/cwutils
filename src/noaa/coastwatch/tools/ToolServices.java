@@ -375,6 +375,18 @@ public class ToolServices {
 
     LOGGER.fine ("Command line was " + commandLine);
 
+    // Check to see if a memory monitor is requested in the system properties.
+    var memoryOpt = System.getProperty ("cw.memory.monitor", "false");
+    var interval = -1;
+    if (!memoryOpt.equals ("false")) {
+      if (memoryOpt.equals ("true")) interval = 5;
+      else {
+        try { interval = Integer.parseInt (memoryOpt); }
+        catch (Exception e) { }
+      } // else
+    } // if
+    if (interval != -1) startMemoryMonitor (interval);
+
   } // setCommandLine
 
   ////////////////////////////////////////////////////////////
@@ -387,8 +399,13 @@ public class ToolServices {
   /**
    * Starts a memory monitor task that repeatedly outputs the status
    * of memory usage to standard output until the VM exits.
+   * 
+   * @param interval the interval in seconds for the memory status
+   * message.
+   * 
+   * @since 3.8.1
    */
-  public static void startMemoryMonitor () {
+  public static void startMemoryMonitor (int interval) {
 
     Timer timer = new Timer();
     TimerTask task = new TimerTask() {
@@ -403,7 +420,19 @@ public class ToolServices {
         System.out.println ("--------------");
       } // run
     };
-    timer.schedule (task, 0, 5000);
+    timer.schedule (task, 0, interval*1000);
+
+  } // startMemoryMonitor
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Starts a memory monitor task that repeatedly outputs the status
+   * of memory usage to standard output until the VM exits.
+   */
+  public static void startMemoryMonitor () {
+
+    startMemoryMonitor (5);
   
   } // startMemoryMonitor
 
