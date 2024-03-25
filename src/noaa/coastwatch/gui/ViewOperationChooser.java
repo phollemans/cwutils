@@ -113,7 +113,7 @@ public class ViewOperationChooser
 
   /** The close operation (full screen only). */
   public static final String CLOSE = "Close";
-  private static final String CLOSE_TIP = "Close full screen mode";
+  private static final String CLOSE_TIP = "Exit full screen";
 
   // Variables
   // ---------
@@ -330,22 +330,16 @@ public class ViewOperationChooser
     // --------------
     if (fsToolbar == null) {
       fsToolbar = new FullScreenToolBar();
-      fsToolbar.addButton (getButton (MAGNIFY), 
-        GUIServices.getIcon ("view.magnify.fullscreen"));
-      fsToolbar.addButton (getButton (SHRINK),
-        GUIServices.getIcon ("view.shrink.fullscreen"));
-      fsToolbar.addButton (getButton (ONE_TO_ONE),
-        GUIServices.getIcon ("view.one_to_one.fullscreen"));
-      fsToolbar.addButton (getButton (ZOOM),
-        GUIServices.getIcon ("view.zoom.fullscreen"));
-      fsToolbar.addButton (getButton (PAN),
-        GUIServices.getIcon ("view.pan.fullscreen"));
+      fsToolbar.addButton (getButton (MAGNIFY), GUIServices.getIcon ("view.magnify.fullscreen"), MAGNIFY_TIP);
+      fsToolbar.addButton (getButton (SHRINK), GUIServices.getIcon ("view.shrink.fullscreen"), SHRINK_TIP);
+      fsToolbar.addButton (getButton (ONE_TO_ONE), GUIServices.getIcon ("view.one_to_one.fullscreen"), ONE_TO_ONE_TIP);
+      fsToolbar.addButton (getButton (ZOOM), GUIServices.getIcon ("view.zoom.fullscreen"), ZOOM_TIP);
+      fsToolbar.addButton (getButton (PAN), GUIServices.getIcon ("view.pan.fullscreen"), PAN_TIP);
       fsToolbar.addSeparator();
-      JButton closeButton = 
-        new JButton (CLOSE, GUIServices.getIcon ("view.close.fullscreen"));
+      JButton closeButton = new JButton (CLOSE, GUIServices.getIcon ("view.close.fullscreen"));
       closeButton.getModel().setActionCommand (CLOSE);
       closeButton.addActionListener (operationAction);
-      fsToolbar.addButton (closeButton);
+      fsToolbar.addButton (closeButton, CLOSE_TIP);
     } // if
     
     return (fsToolbar);

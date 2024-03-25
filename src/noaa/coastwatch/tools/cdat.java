@@ -434,7 +434,7 @@ public final class cdat
     menuItem.addActionListener (event -> windowCustomSizeEvent());
     submenu.add (menuItem);
 
-    menuItem = new JMenuItem ("Full Screen Mode");
+    menuItem = new JMenuItem ("Fullscreen Presentation Mode");
     menuItem.setMnemonic (KeyEvent.VK_F);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_F, keymask));
     menuItem.addActionListener (event -> fullScreenEvent());

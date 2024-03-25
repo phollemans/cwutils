@@ -57,6 +57,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.text.BreakIterator;
 
@@ -179,6 +180,9 @@ public class GUIServices {
   /** The hlpe index URL to use for help panels. */
   private static URL helpIndex;
   
+  /** The currently active full screen window on Mac. */
+  private static Window fullScreenMacWindow;
+
   ////////////////////////////////////////////////////////////
 
   /** Loads the icon properties file. */
@@ -1538,6 +1542,135 @@ public class GUIServices {
     return ((int) new JLabel ("abcdef").getPreferredSize().getHeight());
 
   } // getLabelHeight
+
+  ////////////////////////////////////////////////////////////
+
+  // These next two methods get direct access to the native OSX fullscreen 
+  // mode.  We added these due to issues with entering full screen mode on
+  // MacOS under Java 17 on Macbook Pro 16" 2019 hardware which just seems to
+  // show a black screen when entering full screen mode usinfg the default 
+  // Java desktop methods that work properly on Linux and Windows.  For these
+  // methods, see https://stackoverflow.com/questions/11570356/jframe-in-full-screen-java
+
+  // Note that if these methods are actually used, the following option must
+  // be added to the VM options: --add-exports java.desktop/com.apple.eawt=ALL-UNNAMED
+  
+  private static void enableOSXFullscreen (Window window) {
+
+    try {
+      Class util = Class.forName ("com.apple.eawt.FullScreenUtilities");
+      Class params[] = new Class[] {Window.class, Boolean.TYPE};
+      Method method = util.getMethod ("setWindowCanFullScreen", params);
+      method.invoke (util, window, true);
+    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
+      throw new RuntimeException (e);
+    } // catch
+
+  } // enableOSXFullscreen
+
+  public static void toggleOSXFullscreen (Window window) {
+
+    try {
+      Class appClass = Class.forName ("com.apple.eawt.Application");
+      Class params[] = new Class[]{};
+      Method getApplication = appClass.getMethod ("getApplication", params);
+      Object application = getApplication.invoke (appClass);
+      Method requestToggleFulLScreen = application.getClass().getMethod ("requestToggleFullScreen", Window.class);
+      requestToggleFulLScreen.invoke (application, window);
+    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
+      throw new RuntimeException (e);
+    } // catch
+
+  } // toggleOSXFullscreen
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Determines if a window is currently the full screen window.
+   * 
+   * @param window the window to check for full screen.
+   * 
+   * @return true if the windoew is full screen or false if not.
+   * 
+   * @since 3.8.1
+   */
+  public static boolean isFullScreen (Window window) {
+
+    boolean full = false;
+
+    if (IS_MAC && fullScreenMacWindow != null) {
+      full = (window == fullScreenMacWindow);
+    } // if
+    else {
+      var device = window.getGraphicsConfiguration().getDevice();
+      Window fullScreenWindow = device.getFullScreenWindow();
+      full = (fullScreenWindow != null && window == fullScreenWindow);
+    } // else
+
+    return (full);
+
+  } // isFullScreen
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Enters full screen mode for a window.  The window must not already
+   * be in full screen mode.
+   * 
+   * @param window the window to enter full screen.
+   * 
+   * @see #isFullScreen
+   * 
+   * @since 3.8.1
+   */
+  public static void enterFullScreen (Window window) {
+
+    if (IS_MAC) {
+      if (fullScreenMacWindow != null) 
+        throw new IllegalStateException ("Already in full screen mode");
+      enableOSXFullscreen (window);
+      toggleOSXFullscreen (window);
+      fullScreenMacWindow = window;
+    } // if
+    else {
+      var device = window.getGraphicsConfiguration().getDevice();
+      if (device.getFullScreenWindow() != null) 
+        throw new IllegalStateException ("Already in full screen mode");
+      device.setFullScreenWindow (window);
+    } // else
+
+  } // enterFullScreen
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Exits full screen mode for a window.  The window must be in full 
+   * screen mode.
+   * 
+   * @param window the window to exit full screen.
+   * 
+   * @see #isFullScreen
+   * 
+   * @since 3.8.1
+   */
+  public static void exitFullScreen (Window window) {
+
+    if (IS_MAC) {
+      if (window != fullScreenMacWindow) 
+        throw new IllegalStateException ("Specified window is not in full screen mode");
+      enableOSXFullscreen (window);
+      toggleOSXFullscreen (window);
+      fullScreenMacWindow = null;
+    } // if
+    else {
+      var device = window.getGraphicsConfiguration().getDevice();
+      var fullScreenWindow = device.getFullScreenWindow();
+      if (window != fullScreenWindow) 
+        throw new IllegalStateException ("Specified window is not in full screen mode");
+      device.setFullScreenWindow (null);
+    } // exitFullScreen
+
+  } // enterFullScreen
 
   ////////////////////////////////////////////////////////////
 

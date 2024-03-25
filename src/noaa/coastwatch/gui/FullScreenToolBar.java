@@ -74,7 +74,7 @@ public class FullScreenToolBar
   // ---------
 
   /** The border between buttons and edge of panel. */
-  private static final int BORDER = 5;
+  private static final int BORDER = 20;
 
   /** The margin between border and buttons. */
   private static final int MARGIN = 10;
@@ -269,12 +269,14 @@ public class FullScreenToolBar
    * Adds a new button to the toolbar.
    *
    * @param button the new button to add.
+   * @param label the label to use for the button.
    */
   public void addButton (
-    AbstractButton button
+    AbstractButton button,
+    String label
   ) {
 
-    addButton (button, button.getIcon());
+    addButton (button, button.getIcon(), label);
 
   } // addButton
 
@@ -285,10 +287,12 @@ public class FullScreenToolBar
    *
    * @param button the new button to add.
    * @param icon the icon to use, or null to use the button's own icon.
+   * @param label the label to use for the button.
    */
   public void addButton (
     AbstractButton button,
-    Icon icon
+    Icon icon,
+    String label
   ) {
 
     // Add button to list
@@ -308,7 +312,7 @@ public class FullScreenToolBar
     } // else
     fsButton.bounds = new Rectangle (x, LABEL_SPACE + MARGIN, 
       icon.getIconWidth(), icon.getIconHeight());
-    fsButton.textElement = new TextElement (button.getText(), LABEL_FONT, 
+    fsButton.textElement = new TextElement (label, LABEL_FONT, 
       new Point (fsButton.bounds.x + fsButton.bounds.width/2, 
       fsButton.bounds.y - 2*MARGIN), new double[] {0.5, 0}, 0);
     buttonList.add (fsButton);
@@ -321,7 +325,7 @@ public class FullScreenToolBar
     buttonBorder = new RoundRectangle2D.Double (
       BORDER,
       LABEL_SPACE,
-      (fsButton.bounds.x + 1) + fsButton.bounds.width + MARGIN,
+      (fsButton.bounds.x + 1) + fsButton.bounds.width + MARGIN - BORDER,
       maxButtonHeight + 2*MARGIN,
       ARC,
       ARC
@@ -519,10 +523,10 @@ public class FullScreenToolBar
     // --------------
     FullScreenToolBar toolbar = new FullScreenToolBar();
     for (int i = 0; i < argv.length; i++) {
-      JButton button = new JButton ("Button " + (i+1), 
-        new ImageIcon (argv[i]));
+      String label = "Button " + (i+1);
+      JButton button = new JButton (label, new ImageIcon (argv[i]));
       button.setActionCommand ("Button " + (i+1));
-      toolbar.addButton (button);
+      toolbar.addButton (button, label);
       if (i == argv.length-2) toolbar.addSeparator();
     } // for
 

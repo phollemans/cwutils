@@ -52,6 +52,8 @@ import javax.swing.event.MouseInputAdapter;
 import noaa.coastwatch.gui.FullScreenToolBar;
 import noaa.coastwatch.gui.GUIServices;
 
+import java.util.logging.Logger;
+
 /**
  * <p>The <code>FullScreenWindow</code> class display a full screen
  * component with optional tool bar.  The displayed component is taken
@@ -74,6 +76,8 @@ import noaa.coastwatch.gui.GUIServices;
  * @since 3.2.2
  */
 public class FullScreenWindow {
+
+  private static final Logger LOGGER = Logger.getLogger (FullScreenWindow.class.getName());
 
   // Constants
   // ---------
@@ -238,10 +242,11 @@ public class FullScreenWindow {
    */
   public void start () {
 
+    LOGGER.fine ("Entering full screen mode");
+
     // Check for full screen mode
     // --------------------------
-    Window window = device.getFullScreenWindow();
-    if (window != null)
+    if (isFullScreen())
       throw new IllegalStateException ("Already in full screen mode");
 
     // Save component parent and layout constraints
@@ -288,8 +293,10 @@ public class FullScreenWindow {
       Window topWindow = SwingUtilities.getWindowAncestor (parent);
       topWindow.setVisible (false);
     } // if
-
+    
     device.setFullScreenWindow (frame);
+    frame.setBounds (bounds);
+    frame.setVisible (true);
     frame.validate();
 
   } // start
@@ -303,6 +310,8 @@ public class FullScreenWindow {
    * full screen mode.
    */
   public void stop () {
+
+    LOGGER.fine ("Exiting full screen mode");
 
     // Check for full screen mode
     // --------------------------
