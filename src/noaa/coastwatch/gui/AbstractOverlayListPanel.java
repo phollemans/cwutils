@@ -116,6 +116,9 @@ public abstract class AbstractOverlayListPanel
   /** The overlay remove command. */
   private static final String REMOVE_COMMAND = "Remove layer(s) from list";
 
+  /** The overlay clear command. */
+  private static final String CLEAR_COMMAND = "Remove all layers";
+
   /** The overlay edit command. */
   private static final String EDIT_COMMAND = "Edit layer properties";
 
@@ -154,6 +157,9 @@ public abstract class AbstractOverlayListPanel
 
   /** The remove button. */
   private JButton removeButton;
+
+  /** The clear button. */
+  private JButton clearButton;
 
   /** The hide button. */
   private JButton hideButton;
@@ -342,6 +348,7 @@ public abstract class AbstractOverlayListPanel
     // Create remove button
     // --------------------
     if (showRemove) {
+
       removeButton = GUIServices.getIconButton ("list.delete");
       GUIServices.setSquare (removeButton);
       removeButton.setActionCommand (REMOVE_COMMAND);
@@ -349,6 +356,15 @@ public abstract class AbstractOverlayListPanel
       removeButton.setEnabled (false);
       removeButton.setToolTipText (REMOVE_COMMAND);
       listButtonPanel.add (removeButton);
+
+      // clearButton = GUIServices.getIconButton ("list.clear");
+      // GUIServices.setSquare (clearButton);
+      // clearButton.setActionCommand (CLEAR_COMMAND);
+      // clearButton.addActionListener (overlayButtonListener);
+      // clearButton.setEnabled (false);
+      // clearButton.setToolTipText (CLEAR_COMMAND);
+      // listButtonPanel.add (clearButton);
+
     } // if
 
     // Create show all / hide all buttons
@@ -591,13 +607,21 @@ public abstract class AbstractOverlayListPanel
         } // if
       } // else if
 
+      // Clear all the overlays.
+      else if (command.equals (CLEAR_COMMAND)) {
+        while (overlayList.getElements() != 0) {
+          VisualOverlay visual = (VisualOverlay) overlayList.removeElement (0);
+          firePropertyChange (OVERLAY_PROPERTY, visual.getValue(), null);
+        } // for
+      } // else if
+
       // Perform a command on selected overlays
       // --------------------------------------
       else {
 
         // Get selected rows
         // -----------------
-        int[] indices = overlayList.getSelectedIndices(); 
+        int[] indices = overlayList.getSelectedIndices();         
         if (indices.length == 0) return;
 
         // Remove overlays
@@ -741,6 +765,7 @@ public abstract class AbstractOverlayListPanel
       if (indices.length == 0) {
         if (editButton != null) editButton.setEnabled (false);
         if (removeButton != null) removeButton.setEnabled (false);
+        if (clearButton != null) clearButton.setEnabled (false);
         if (upButton != null) upButton.setEnabled (false);
         if (downButton != null) downButton.setEnabled (false);
       } // if
@@ -750,6 +775,7 @@ public abstract class AbstractOverlayListPanel
       else if (indices.length == 1) {
         if (editButton != null) editButton.setEnabled (true);
         if (removeButton != null) removeButton.setEnabled (true);
+        if (clearButton != null) clearButton.setEnabled (true);
         if (upButton != null) upButton.setEnabled (true);
         if (downButton != null) downButton.setEnabled (true);
       } // else if
@@ -759,6 +785,7 @@ public abstract class AbstractOverlayListPanel
       else {
         if (editButton != null) editButton.setEnabled (false);
         if (removeButton != null) removeButton.setEnabled (true);
+        if (clearButton != null) clearButton.setEnabled (true);
         if (upButton != null) upButton.setEnabled (false);
         if (downButton != null) downButton.setEnabled (false);
       } // else
