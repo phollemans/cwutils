@@ -1467,7 +1467,7 @@ public class GUIServices {
    * Stores a string value for the target class.
    *
    * @param value the value to store.
-   * @param key the key to use for storing the string value.
+   * @param key the key to use for storing the string value, may not be null.
    * @param targetClass the class to associate with the value.
    *
    * @since 3.6.0
