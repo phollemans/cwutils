@@ -75,8 +75,8 @@ public class OverlayPropertyChooserFactory {
         (MultilayerBitmaskOverlay) overlay);
     } // if
     
-    // Create multilayer chooser
-    // -------------------------
+    // Create expression mask chooser
+    // ------------------------------
     else if (overlay instanceof ExpressionMaskOverlay) {
       chooser = new ExpressionMaskOverlayPropertyChooser (
         (ExpressionMaskOverlay) overlay);
