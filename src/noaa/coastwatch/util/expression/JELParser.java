@@ -199,6 +199,11 @@ public class JELParser implements ExpressionParser {
   ////////////////////////////////////////////////////////////
 
   @Override
+  public String getVariableType (String name) { return (parseImp.typeOfVariable (name)); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
   public Object evaluate (EvaluateImp evalImp) {
 
     Object resultValue;

@@ -127,6 +127,20 @@ public interface ExpressionParser {
   public List<String> getVariables();
 
   /**
+   * Gets the variable type used in the expression.
+   * 
+   * @param name the variable name from the list returned by 
+   * {@link #getVariables}.
+   * 
+   * @return the variable class name: Byte, Short, Integer, Long, Float,
+   * or Double.  The returned value is null if the variable type is
+   * unknown.
+   * 
+   * @since 3.8.1
+   */
+  public String getVariableType (String name);
+
+  /**
    * Evaluates the expression to a primitive wrapper object.
    *
    * @param evalImp the evalutation implementation that provides variable

@@ -44,8 +44,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 import noaa.coastwatch.io.CWHDFReader;
 import noaa.coastwatch.io.CWHDFWriter;
@@ -71,7 +69,6 @@ import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.trans.EarthTransform;
 
 import noaa.coastwatch.util.chunk.DataChunk;
-import noaa.coastwatch.util.chunk.DataChunk.DataType;
 import noaa.coastwatch.util.chunk.ChunkCollector;
 import noaa.coastwatch.util.chunk.ChunkProducer;
 import noaa.coastwatch.util.chunk.ChunkConsumer;
@@ -79,12 +76,11 @@ import noaa.coastwatch.util.chunk.GridChunkProducer;
 import noaa.coastwatch.util.chunk.GridChunkConsumer;
 import noaa.coastwatch.util.chunk.ChunkingScheme;
 import noaa.coastwatch.util.chunk.ChunkComputation;
-import noaa.coastwatch.util.chunk.ChunkPosition;
 import noaa.coastwatch.util.chunk.ExpressionFunction;
-import noaa.coastwatch.util.chunk.PoolProcessor;
-import noaa.coastwatch.util.chunk.PackingScheme;
-import noaa.coastwatch.util.chunk.DoublePackingScheme;
-import noaa.coastwatch.util.chunk.DataChunkFactory;
+import noaa.coastwatch.util.chunk.ChunkComputationHelper;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * <p>The math tool combines earth data using a mathematical expression.</p>
@@ -794,7 +790,7 @@ public final class cwmath {
       // Check format
       // ------------
       if (!exprVarName.matches ("^file[1-9]+_.+$")) {
-        throw new RuntimeException ("Invalid expression variable " + exprVarName);
+        throw new RuntimeException ("Invalid input variable " + exprVarName);
       } // if
       
       // Get file index and variable name
@@ -1188,6 +1184,11 @@ public final class cwmath {
       // ---------------------
       DataVariable templateVar = null;
       if (template != null) {
+        if (readers.length > 1 && !template.startsWith ("file")) {
+          LOGGER.severe ("Template variable must start with 'fileN_' when using multiple input files");
+          ToolServices.exitWithCode (2);
+          return;
+        } // if
         templateVar = getInputVariable (readers, template);
       } // if
 
@@ -1376,53 +1377,27 @@ public final class cwmath {
         parser.adapt (ResultType.valueOf (chunkType.toUpperCase()));
       } // if
 
-      // Create chunk function
-      // ---------------------
-      ExpressionFunction function = new ExpressionFunction();
-      function.setSkipMissing (skipMissing);
-      function.init (parser, prototypeChunk);
-
-      // Create chunk computation
-      // ------------------------
-      ChunkComputation op = new ChunkComputation (collector, consumer, function);
-      //op.setTracked (true); // testing
-      List<ChunkPosition> positions = new ArrayList<>();
-      scheme.forEach (positions::add);
-
-      // Perform chunk processing
-      // ------------------------
-      boolean isParallel = parser.isThreadSafe() && !serialOperations;
+      // Report computation properties
+      // -----------------------------
       int[] chunkingDims = scheme.getDims();
       VERBOSE.info ("Total grid size is " + chunkingDims[0] + "x" + chunkingDims[1]);
 
+      boolean isParallel = parser.isThreadSafe() && !serialOperations;
       int maxOps = 0;
       if (isParallel) {
         int processors = Runtime.getRuntime().availableProcessors();
         if (threads < 0) maxOps = processors;
         else maxOps = Math.min (threads, processors);
         if (maxOps < 1) maxOps = 1;
-        VERBOSE.info ("Using " + maxOps + " parallel threads for processing");
+        VERBOSE.info ("Using max " + maxOps + " parallel threads for processing");
       } // if
 
-      int[] chunkSize = scheme.getChunkSize();
-      VERBOSE.info ("Processing " + positions.size() +
-        " data chunks of size " + chunkSize[0] + "x" + chunkSize[1]);
-
-      if (isParallel) {
-        PoolProcessor processor = new PoolProcessor();
-        processor.init (positions, op);
-        processor.setMaxOperations (maxOps);
-        processor.start();
-        processor.waitForCompletion();
-      } // if
-      else {
-        positions.forEach (pos -> op.perform (pos));
-      } // else
-
-      // For testing
-      //op.getTrackingData().forEach ((type, time) -> {
-      //  System.out.println ("Total " + type + " time = " + time + "s");
-      //});
+      // Create and run a new chunk computation to evaluate the expression.
+      ExpressionFunction function = new ExpressionFunction();
+      function.setSkipMissing (skipMissing);
+      function.init (parser, prototypeChunk);
+      ChunkComputation op = new ChunkComputation (collector, consumer, function);
+      ChunkComputationHelper.getInstance().run (op, scheme, !isParallel, maxOps, VERBOSE);
 
       // Close files
       // -----------

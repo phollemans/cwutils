@@ -492,6 +492,11 @@ public class JEPEmulationParser implements ExpressionParser {
   ////////////////////////////////////////////////////////////
 
   @Override
+  public String getVariableType (String name) { return (jelParser.getVariableType (name)); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
   public Object evaluate (EvaluateImp evalImp) { return (evaluateToDouble (evalImp)); }
 
   ////////////////////////////////////////////////////////////

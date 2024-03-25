@@ -62,7 +62,7 @@ import java.util.ArrayList;
  * </ul>
  * 
  * <p>Output chunks from this method are {@link ShortChunk} objects with the 
- * missing value set to {@link java.lang.Short.MIN_VALUE}.</p>
+ * missing value set to {@link java.lang.Short#MIN_VALUE}.</p>
  *
  * @author Peter Hollemans
  * @since 3.8.1
@@ -114,7 +114,45 @@ public class CompositeMapFunction implements ChunkFunction {
   ////////////////////////////////////////////////////////////
 
   @Override
-  public DataChunk apply (List<DataChunk> inputChunks) {
+  public long getMemory (
+    ChunkPosition pos, 
+    int chunks
+  ) { 
+
+    // Note that in this function, we ignore the chunks parameter passed in 
+    // because we have other information about the number of chunks being 
+    // composited together from the constructor.  The chunks parameter is 
+    // not correct here because it takes into account all the chunks passed 
+    // in and doesn't distinguish optimization chunks versus priority chunks 
+    // which we handle differently.
+
+    long mem = 0;
+
+    // Add in the temporary array used to store the double-valued 
+    // optimization data.
+    int chunkValues = pos.getValues();
+    if (optComparator != null) {
+      mem += chunkCount*chunkValues*8;
+    } // if
+
+    // Add in the temporary array used to store the boolean-valued 
+    // priority data and the data accessor memory.
+    if (priorityVars != 0) {
+      mem += priorityVars*chunkCount*chunkValues;
+      mem += chunkCount*chunkValues;
+    } // if
+
+    return (mem);
+
+  } // getMemory
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public DataChunk apply (
+    ChunkPosition pos,
+    List<DataChunk> inputChunks
+  ) {
 
     // Check the input chunk list size here.  We expect a full set of chunks 
     // for the optimization, plus each priority variable.
@@ -127,19 +165,50 @@ public class CompositeMapFunction implements ChunkFunction {
     // The final result chunk will be a short integer map of the indices of
     // the input chunks that should be used in a final composite assembly.
     // We don't actually perform the assembly here, we just create the map.
-    int chunkValues = inputChunks.get (0).getValues();
+    int chunkValues = pos.getValues();
     short[] outputIndexArray = new short[chunkValues];
 
     // Start by extracting the data to use for the optimization if we've
     // been given a comparator.  We need the data values as something that
     // a comparator can use, so we cast them here to double arrays.
     double[][] inputOptArray = null;
+    int[] optChunkIndexMap = new int[chunkCount];
+    int[] optChunkBackIndexMap = null;
+    int validOptChunkCount = 0;
     if (optComparator != null) {
-      inputOptArray = new double[chunkCount][chunkValues];
+
+      // First detect all the chunks with entirely invalid data so
+      // that we can skip expanding those into the arrays we'll use for 
+      // comparison.  We need to save the original index of each chunk so 
+      // that it can be used to populate the coherent map.
       var optChunks = inputChunks.subList (0, chunkCount);
       for (int chunkIndex = 0; chunkIndex < chunkCount; chunkIndex++) {
-        ChunkDataCast.toDoubleArray (optChunks.get (chunkIndex), inputOptArray[chunkIndex]);
+        var optChunk = optChunks.get (chunkIndex);
+        var detector = new ValidChunkDetector();
+        optChunk.accept (detector);
+        if (detector.isValid()) {
+          optChunkIndexMap[chunkIndex] = validOptChunkCount;
+          validOptChunkCount++;
+        } // if
+        else {
+          optChunkIndexMap[chunkIndex] = -1;
+        } // else
       } // for
+      optChunkBackIndexMap = new int[validOptChunkCount];
+      for (int chunkIndex = 0, validChunkIndex = 0; chunkIndex < chunkCount; chunkIndex++) {
+        if (optChunkIndexMap[chunkIndex] != -1) {
+          optChunkBackIndexMap[validChunkIndex] = chunkIndex;
+          validChunkIndex++;
+        } // if
+      } // for
+
+      // Now expand only the valid optimization chunks that we need
+      // into an array that we can use for comparison.
+      inputOptArray = new double[validOptChunkCount][chunkValues];
+      for (int validChunkIndex = 0; validChunkIndex < validOptChunkCount; validChunkIndex++) {        
+        ChunkDataCast.toDoubleArray (optChunks.get (optChunkBackIndexMap[validChunkIndex]), inputOptArray[validChunkIndex]);
+      } // for
+
     } // if
 
     // Extract the data for the priority variables -- we only need to save 
@@ -147,19 +216,63 @@ public class CompositeMapFunction implements ChunkFunction {
     // this later on to determine which chunk in the priority variable should
     // be selected.
     boolean[][][] inputPriorityArray = null;    
+    int[][] priorityChunkIndexMap = new int[priorityVars][chunkCount];
+    int[][] priorityChunkBackIndexMap = new int[priorityVars][];
+    int[] validPriorityChunkCount = new int[priorityVars];
     if (priorityVars != 0) {
 
-      inputPriorityArray = new boolean[priorityVars][chunkCount][chunkValues];
+      // The same as above, first detect all the priority chunks with entirely 
+      // invalid data so that we can skip expanding those into the arrays 
+      // we'll use for checking for priority.  We again save maps between 
+      // chunk indices.
       int optChunks = optComparator == null ? 0 : chunkCount;
       for (int priorityVarIndex = 0; priorityVarIndex < priorityVars; priorityVarIndex++) {
 
         int startChunk = optChunks + priorityVarIndex*chunkCount;
         var priorityChunks = inputChunks.subList (startChunk, startChunk + chunkCount);
         for (int chunkIndex = 0; chunkIndex < chunkCount; chunkIndex++) {
+
+          var priorityChunk = priorityChunks.get (chunkIndex);
+          var detector = new ValidChunkDetector();
+          priorityChunk.accept (detector);
+          if (detector.isValid()) {
+            priorityChunkIndexMap[priorityVarIndex][chunkIndex] = validPriorityChunkCount[priorityVarIndex];
+            validPriorityChunkCount[priorityVarIndex]++;
+          } // if
+          else {
+            priorityChunkIndexMap[priorityVarIndex][chunkIndex] = -1;
+          } // else
+
+        } // for
+
+        priorityChunkBackIndexMap[priorityVarIndex] = new int[validPriorityChunkCount[priorityVarIndex]];
+        for (int chunkIndex = 0, validChunkIndex = 0; chunkIndex < chunkCount; chunkIndex++) {
+          if (priorityChunkIndexMap[priorityVarIndex][chunkIndex] != -1) {
+            priorityChunkBackIndexMap[priorityVarIndex][validChunkIndex] = chunkIndex;
+            validChunkIndex++;
+          } // if
+        } // for
+
+      } // for
+
+      // Now as before, expand only the valid priority chunks that we need
+      // into an array that we can use for comparison.
+      inputPriorityArray = new boolean[priorityVars][][];
+      for (int priorityVarIndex = 0; priorityVarIndex < priorityVars; priorityVarIndex++) {
+
+        int startChunk = optChunks + priorityVarIndex*chunkCount;
+        var priorityChunks = inputChunks.subList (startChunk, startChunk + chunkCount);
+
+        int validChunkCount = validPriorityChunkCount[priorityVarIndex];
+        inputPriorityArray[priorityVarIndex] = new boolean[validChunkCount][chunkValues];
+
+        for (int validChunkIndex = 0; validChunkIndex < validChunkCount; validChunkIndex++) {
           var accessor = new ChunkDataAccessor();
+          accessor.setMissingMode (true);
+          int chunkIndex = priorityChunkBackIndexMap[priorityVarIndex][validChunkIndex];
           priorityChunks.get (chunkIndex).accept (accessor);
           for (int valueIndex = 0; valueIndex < chunkValues; valueIndex++) {
-            inputPriorityArray[priorityVarIndex][chunkIndex][valueIndex] = !accessor.isMissingValue (valueIndex);
+            inputPriorityArray[priorityVarIndex][validChunkIndex][valueIndex] = !accessor.isMissingValue (valueIndex);
           } // for
         } // for
 
@@ -171,7 +284,12 @@ public class CompositeMapFunction implements ChunkFunction {
     // both optimization data and priority data.
     if (optComparator != null && priorityVars != 0) {
 
-      LOGGER.fine ("Creating integer composite map using " + chunkCount + " optimization chunks and " + priorityVars + " priority variables");
+      int validPriorityChunkCountTotal = Arrays.stream (validPriorityChunkCount).sum();
+      LOGGER.fine ("Creating integer composite map using optimization and " + priorityVars + " priority variables, chunk counts " + 
+        "{opt=(" + validOptChunkCount + "/" + optChunkCount + ")" +
+        ", priority=(" + validPriorityChunkCountTotal + "/" + priorityChunkCount + ")" +
+        ", total=(" + (validOptChunkCount + validPriorityChunkCountTotal) + "/" + expectedInputChunks + ")}"
+      );
 
       for (int valueIndex = 0; valueIndex < chunkValues; valueIndex++) {
 
@@ -181,17 +299,27 @@ public class CompositeMapFunction implements ChunkFunction {
 
         while (priorityVarIndex < priorityVars && outputIndexArray[valueIndex] == -1) {
 
-          for (int chunkIndex = 0; chunkIndex < chunkCount; chunkIndex++) {
-            if (inputPriorityArray[priorityVarIndex][chunkIndex][valueIndex]) {
-              double optValue = inputOptArray[chunkIndex][valueIndex];
-              if (!Double.isNaN (optValue)) {
-                if (Double.isNaN (maxOpt) || optComparator.compare (optValue, maxOpt) > 0) {
-                  maxOpt = optValue;
-                  outputIndexArray[valueIndex] = (short) chunkIndex;
+          int thisValidPriorityChunkCount = validPriorityChunkCount[priorityVarIndex];
+
+          for (int validPriorityChunkIndex = 0; validPriorityChunkIndex < thisValidPriorityChunkCount; validPriorityChunkIndex++) {
+            if (inputPriorityArray[priorityVarIndex][validPriorityChunkIndex][valueIndex]) {
+
+              int chunkIndex = priorityChunkBackIndexMap[priorityVarIndex][validPriorityChunkIndex];
+              int validOptChunkIndex = optChunkIndexMap[chunkIndex];
+
+              if (validOptChunkIndex != -1) {
+                double optValue = inputOptArray[validOptChunkIndex][valueIndex];
+                if (!Double.isNaN (optValue)) {
+                  if (Double.isNaN (maxOpt) || optComparator.compare (optValue, maxOpt) > 0) {
+                    maxOpt = optValue;
+                    outputIndexArray[valueIndex] = (short) chunkIndex;
+                  } // if
                 } // if
               } // if
+
             } // if
           } // for
+
           priorityVarIndex++;
 
         } // while
@@ -204,22 +332,21 @@ public class CompositeMapFunction implements ChunkFunction {
     // data.
     else if (optComparator != null) {
 
-      LOGGER.fine ("Creating integer composite map using " + chunkCount + " optimization chunks");
+      LOGGER.fine ("Creating integer composite map using optimization, chunk count (" + validOptChunkCount + "/" + optChunkCount + ")");
 
       for (int valueIndex = 0; valueIndex < chunkValues; valueIndex++) {
 
         outputIndexArray[valueIndex] = -1;
         double maxOpt = Double.NaN;
 
-        for (int chunkIndex = 0; chunkIndex < chunkCount; chunkIndex++) {
-          double optValue = inputOptArray[chunkIndex][valueIndex];
+        for (int validOptChunkIndex = 0; validOptChunkIndex < validOptChunkCount; validOptChunkIndex++) {
+          double optValue = inputOptArray[validOptChunkIndex][valueIndex];
           if (!Double.isNaN (optValue)) {
             if (Double.isNaN (maxOpt) || optComparator.compare (optValue, maxOpt) > 0) {
               maxOpt = optValue;
-              outputIndexArray[valueIndex] = (short) chunkIndex;
+              outputIndexArray[valueIndex] = (short) optChunkBackIndexMap[validOptChunkIndex];
             } // if
           } // if
-
         } // for
 
       } // for
@@ -231,7 +358,8 @@ public class CompositeMapFunction implements ChunkFunction {
     // priority variables.  
     else if (priorityVars != 0) {
 
-      LOGGER.fine ("Creating integer composite map using " + priorityVars + " priority variables");
+      int validPriorityChunkCountTotal = Arrays.stream (validPriorityChunkCount).sum();
+      LOGGER.fine ("Creating integer composite map using " + priorityVars + " priority variables, chunk count (" + validPriorityChunkCountTotal + "/" + priorityChunkCount + ")");
 
       for (int valueIndex = 0; valueIndex < chunkValues; valueIndex++) {
 
@@ -240,9 +368,10 @@ public class CompositeMapFunction implements ChunkFunction {
 
         while (priorityVarIndex < priorityVars && outputIndexArray[valueIndex] == -1) {
 
-          for (int chunkIndex = chunkCount-1; chunkIndex >=0 ; chunkIndex--) {
-            if (inputPriorityArray[priorityVarIndex][chunkIndex][valueIndex]) {
-              outputIndexArray[valueIndex] = (short) chunkIndex;
+          int thisValidPriorityChunkCount = validPriorityChunkCount[priorityVarIndex];
+          for (int validPriorityChunkIndex = thisValidPriorityChunkCount-1; validPriorityChunkIndex >=0 ; validPriorityChunkIndex--) {
+            if (inputPriorityArray[priorityVarIndex][validPriorityChunkIndex][valueIndex]) {
+              outputIndexArray[valueIndex] = (short) priorityChunkBackIndexMap[priorityVarIndex][validPriorityChunkIndex];
               break;
             } // if
           } // for
@@ -284,7 +413,8 @@ public class CompositeMapFunction implements ChunkFunction {
     var opt4 = fact.create (new short[] {1,2,3,4,m}, false, m, packing);
     var optChunks = List.of (opt0, opt1, opt2, opt3, opt4);
     var optFunc = new CompositeMapFunction (optChunks.size(), (a,b) -> Double.compare (a, b), 0);
-    var optResult = optFunc.apply (optChunks);
+    var pos = new ChunkPosition (1); pos.length[0] = 5;
+    var optResult = optFunc.apply (pos, optChunks);
     short[] optResultData = (short[]) optResult.getPrimitiveData();
     LOGGER.fine ("optResultData = " + Arrays.toString (optResultData));
     assert (Arrays.equals (optResultData, new short[] {1,1,2,3,-1}));
@@ -292,7 +422,7 @@ public class CompositeMapFunction implements ChunkFunction {
 
     logger.test ("apply() with min optimization");
     optFunc = new CompositeMapFunction (optChunks.size(), (a,b) -> Double.compare (b, a), 0);
-    optResult = optFunc.apply (optChunks);
+    optResult = optFunc.apply (pos, optChunks);
     optResultData = (short[]) optResult.getPrimitiveData();
     LOGGER.fine ("optResultData = " + Arrays.toString (optResultData));
     assert (Arrays.equals (optResultData, new short[] {4,0,1,2,-1}));
@@ -300,7 +430,7 @@ public class CompositeMapFunction implements ChunkFunction {
 
     logger.test ("apply() with incorrect chunk list length");
     boolean failed = false;
-    try { optFunc.apply (optChunks.subList (0, optChunks.size()-1)); }
+    try { optFunc.apply (pos, optChunks.subList (0, optChunks.size()-1)); }
     catch (Exception e) { failed = true; }
     assert (failed);
     logger.passed();
@@ -313,7 +443,7 @@ public class CompositeMapFunction implements ChunkFunction {
     var pri4 = fact.create (new short[] {m,m,m,m,m}, false, m, packing);
     var priChunks = List.of (pri0, pri1, pri2, pri3, pri4);
     var priFunc = new CompositeMapFunction (priChunks.size(), null, 1);
-    var priResult = priFunc.apply (priChunks);
+    var priResult = priFunc.apply (pos, priChunks);
     short[] priResultData = (short[]) priResult.getPrimitiveData();
     LOGGER.fine ("priResultData = " + Arrays.toString (priResultData));
     assert (Arrays.equals (priResultData, new short[] {3,2,1,0,-1}));
@@ -332,7 +462,7 @@ public class CompositeMapFunction implements ChunkFunction {
     var pri2_4 = fact.create (new short[] {m,m,m,m,m}, false, m, packing);
     var pri12Chunks = List.of (pri1_0, pri1_1, pri1_2, pri1_3, pri1_4, pri2_0, pri2_1, pri2_2, pri2_3, pri2_4);
     var pri12Func = new CompositeMapFunction (pri12Chunks.size()/2, null, 2);
-    var pri12Result = pri12Func.apply (pri12Chunks);
+    var pri12Result = pri12Func.apply (pos, pri12Chunks);
     short[] pri12ResultData = (short[]) pri12Result.getPrimitiveData();
     LOGGER.fine ("pri12ResultData = " + Arrays.toString (pri12ResultData));
     assert (Arrays.equals (pri12ResultData, new short[] {3,2,1,0,-1}));
@@ -343,7 +473,7 @@ public class CompositeMapFunction implements ChunkFunction {
     optPri12Chunks.addAll (optChunks);
     optPri12Chunks.addAll (pri12Chunks);
     var optPri12Func = new CompositeMapFunction (optChunks.size(), (a,b) -> Double.compare (a, b), 2);
-    var optPri12Result = optPri12Func.apply (optPri12Chunks);
+    var optPri12Result = optPri12Func.apply (pos, optPri12Chunks);
     short[] optPri12ResultData = (short[]) optPri12Result.getPrimitiveData();
 
     // var opt0 = fact.create (new short[] {m,1,2,3,m}, false, m, packing);
@@ -370,7 +500,7 @@ public class CompositeMapFunction implements ChunkFunction {
 
     logger.test ("apply() with min optimization and priority (two variables)");
     optPri12Func = new CompositeMapFunction (optChunks.size(), (a,b) -> Double.compare (b, a), 2);
-    optPri12Result = optPri12Func.apply (optPri12Chunks);
+    optPri12Result = optPri12Func.apply (pos, optPri12Chunks);
     optPri12ResultData = (short[]) optPri12Result.getPrimitiveData();
     LOGGER.fine ("optPri12ResultData = " + Arrays.toString (optPri12ResultData));
     assert (Arrays.equals (optPri12ResultData, new short[] {3,0,1,0,-1}));
@@ -381,6 +511,4 @@ public class CompositeMapFunction implements ChunkFunction {
   ////////////////////////////////////////////////////////////
 
 } // CompositeMapFunction class
-
-////////////////////////////////////////////////////////////////////////
 

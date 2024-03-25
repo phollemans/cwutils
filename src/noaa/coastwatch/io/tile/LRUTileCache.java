@@ -284,19 +284,19 @@ public class LRUTileCache
     
     logger.test ("put");
 
-    TilePosition pos1 = scheme.new TilePosition (0, 0);
+    TilePosition pos1 = scheme.getTilePositionForIndex (0, 0);
     Tile tile1 = source.readTile (pos1);
     TileCacheKey key1 = new TileCacheKey (source, pos1);
 
-    TilePosition pos2 = scheme.new TilePosition (1, 1);
+    TilePosition pos2 = scheme.getTilePositionForIndex (1, 1);
     Tile tile2 = source.readTile (pos2);
     TileCacheKey key2 = new TileCacheKey (source, pos2);
 
-    TilePosition pos3 = scheme.new TilePosition (2, 2);
+    TilePosition pos3 = scheme.getTilePositionForIndex (2, 2);
     Tile tile3 = source.readTile (pos3);
     TileCacheKey key3 = new TileCacheKey (source, pos3);
 
-    TilePosition pos4 = scheme.new TilePosition (1, 3);
+    TilePosition pos4 = scheme.getTilePositionForIndex (1, 3);
     Tile tile4 = source.readTile (pos4);
     TileCacheKey key4 = new TileCacheKey (source, pos4);
 

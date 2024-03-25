@@ -606,9 +606,8 @@ public abstract class HDFWriter
 
           // Get tile data
           // -------------
-          int[] dataStart = new int[] {i*tileDims[Grid.ROWS], 
-            j*tileDims[Grid.COLS]};
-          int[] dataDims = tiling.new TilePosition (i, j).getDimensions();
+          int[] dataStart = new int[] {i*tileDims[Grid.ROWS], j*tileDims[Grid.COLS]};
+          int[] dataDims = tiling.getTilePositionForIndex (i, j).getDimensions();
           Object data = ((Grid) var).getData (dataStart, dataDims);
           if (dataDims[Grid.ROWS] != tileDims[Grid.ROWS] || 
             dataDims[Grid.COLS] != tileDims[Grid.COLS]) {

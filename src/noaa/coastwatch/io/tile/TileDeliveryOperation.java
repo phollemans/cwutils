@@ -282,9 +282,9 @@ public class TileDeliveryOperation
     };
 
     final List<TilePosition> positions = new ArrayList<TilePosition>();
-    positions.add (scheme.new TilePosition (0, 1));
-    positions.add (scheme.new TilePosition (2, 3));
-    positions.add (scheme.new TilePosition (1, 0));
+    positions.add (scheme.getTilePositionForIndex (0, 1));
+    positions.add (scheme.getTilePositionForIndex (2, 3));
+    positions.add (scheme.getTilePositionForIndex (1, 0));
 
     logger.passed();
 

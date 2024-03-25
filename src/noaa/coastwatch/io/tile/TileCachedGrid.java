@@ -183,7 +183,7 @@ public class TileCachedGrid
     if (lastTile != null && lastTile.contains (row, col))
       tile = lastTile;
     else {
-      TilePosition pos = source.getScheme().createTilePosition (row, col);
+      TilePosition pos = source.getScheme().getTilePositionForCoords (row, col);
       try { tile = TileCacheManager.getInstance().getTile (source, pos); }
       catch (IOException e) {
         throw new RuntimeException ("Error getting tile: " + e.getMessage());
@@ -219,14 +219,7 @@ public class TileCachedGrid
     // Find required tiles
     // -------------------
     TilingScheme scheme = source.getScheme();
-    int[] minCoords = scheme.createTilePosition(start[ROWS],
-      start[COLS]).getCoords();
-    int[] maxCoords = scheme.createTilePosition(start[ROWS]+count[ROWS]-1,
-      start[COLS]+count[COLS]-1).getCoords();
-    List<TilePosition> tilePositionList = new ArrayList<TilePosition>();
-    for (int i = minCoords[ROWS]; i <= maxCoords[ROWS]; i++)
-      for (int j = minCoords[COLS]; j <= maxCoords[COLS]; j++)
-        tilePositionList.add (scheme.new TilePosition (i, j));
+    List<TilePosition> tilePositionList = scheme.getCoveringPositions (start, count);
 
     // Create subset array
     // -------------------

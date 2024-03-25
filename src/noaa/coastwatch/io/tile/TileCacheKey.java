@@ -172,7 +172,7 @@ public class TileCacheKey {
       public Class getDataClass() { return (Byte.TYPE); }
       public TilingScheme getScheme() { return (scheme); }
     };
-    TilePosition pos = scheme.new TilePosition (2, 3);
+    TilePosition pos = scheme.getTilePositionForIndex (2, 3);
     logger.passed();
 
     logger.test ("constructor");
@@ -182,10 +182,10 @@ public class TileCacheKey {
     logger.passed();
 
     logger.test ("equals");
-    TilePosition pos2 = scheme.new TilePosition (2, 2);
+    TilePosition pos2 = scheme.getTilePositionForIndex (2, 2);
     TileCacheKey key2 = new TileCacheKey (source, pos2);
     assert (!key.equals (key2));
-    TilePosition pos3 = scheme.new TilePosition (2, 3);
+    TilePosition pos3 = scheme.getTilePositionForIndex (2, 3);
     TileCacheKey key3 = new TileCacheKey (source, pos3);
     assert (key.equals (key3));
     

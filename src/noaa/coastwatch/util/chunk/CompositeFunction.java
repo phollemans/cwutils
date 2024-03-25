@@ -95,7 +95,48 @@ public class CompositeFunction implements ChunkFunction {
   ////////////////////////////////////////////////////////////
 
   @Override
-  public DataChunk apply (List<DataChunk> inputChunks) {
+  public long getMemory (
+    ChunkPosition pos, 
+    int chunks
+  ) { 
+
+    long mem = 0;
+
+    // Add in chunk accessor data used to store the external chunk data
+    // prior to compositing, plus the missing data.
+    int chunkValues = pos.getValues();
+    int bytesPerValue = 0;
+    switch (protoChunk.getExternalType()) {
+    case BYTE: bytesPerValue = 1; break;
+    case SHORT: bytesPerValue = 2; break;
+    case INT: bytesPerValue = 4; break;
+    case LONG: bytesPerValue = 8; break;
+    case FLOAT: bytesPerValue = 4; break;
+    case DOUBLE: bytesPerValue = 8; break;
+    } // switch
+    mem += bytesPerValue*chunkValues * chunks;
+    mem += chunkValues * chunks;
+
+    // Add in the temporary array used to store the boolean-valued missing 
+    // flags for the output integer data.
+    switch (protoChunk.getExternalType()) {
+    case BYTE: mem += chunkValues; break;
+    case SHORT: mem += chunkValues; break;
+    case INT: mem += chunkValues; break;
+    case LONG: mem += chunkValues; break;
+    } // switch
+
+    return (mem);
+
+  } // getMemory
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public DataChunk apply (
+    ChunkPosition pos,
+    List<DataChunk> inputChunks
+  ) {
 
     DataChunk resultChunk;
 
@@ -133,7 +174,7 @@ public class CompositeFunction implements ChunkFunction {
 
       // Create result chunk
       // -------------------
-      int chunkValues = inputChunks.get (0).getValues();
+      int chunkValues = pos.getValues();
       resultChunk = protoChunk.blankCopyWithValues (chunkValues);
       ChunkDataModifier modifier = new ChunkDataModifier();
     

@@ -163,6 +163,10 @@ public class HDFCachedGrid
         chunked = true;     
         super.setTileDims (chunk_lengths);
         super.setOptimizedCacheSize (DEFAULT_CACHE_SIZE);
+
+        // super.setCacheSize (DEFAULT_CACHE_SIZE);
+        // super.setDynamic (true);
+
       } // else
 
       // End access
@@ -178,8 +182,12 @@ public class HDFCachedGrid
     // Set tile and cache sizes
     // ------------------------
     if (!chunked) {
-      setTileSize (DEFAULT_TILE_SIZE);
-      setOptimizedCacheSize (DEFAULT_CACHE_SIZE);
+      super.setTileSize (DEFAULT_TILE_SIZE);
+      super.setOptimizedCacheSize (DEFAULT_CACHE_SIZE);
+
+      // super.setCacheSize (DEFAULT_CACHE_SIZE);
+      // super.setDynamic (true);
+
     } // if
 
   } // HDFCachedGrid constructor
@@ -250,6 +258,10 @@ public class HDFCachedGrid
             tileDims = CachedGrid.getTileDims (writer.getChunkSize(), grid);
           super.setTileDims (tileDims);
           super.setOptimizedCacheSize (DEFAULT_CACHE_SIZE);
+
+          // super.setCacheSize (DEFAULT_CACHE_SIZE);
+          // super.setDynamic (true);
+
         } // if
         HDFWriter.setChunkCompress (sdsid, compressed, tileDims);
       } // if
@@ -267,8 +279,12 @@ public class HDFCachedGrid
     // Set tile and cache sizes
     // ------------------------
     if (!chunked) {
-      setTileSize (DEFAULT_TILE_SIZE);
-      setOptimizedCacheSize (DEFAULT_CACHE_SIZE);
+      super.setTileSize (DEFAULT_TILE_SIZE);
+      super.setOptimizedCacheSize (DEFAULT_CACHE_SIZE);
+
+      // super.setCacheSize (DEFAULT_CACHE_SIZE);
+      // super.setDynamic (true);
+
     } // if
 
     // Add this grid to the writer
@@ -406,8 +422,7 @@ public class HDFCachedGrid
         // Check for compression
         // ---------------------
         if (compressed)
-          throw new IOException (
-            "Cannot write tile to compressed, unchunked variable");
+          throw new IOException ("Cannot write tile to compressed, unchunked variable");
 
         // Write tile data
         // ---------------

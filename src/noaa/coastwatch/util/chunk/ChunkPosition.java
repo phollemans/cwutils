@@ -63,6 +63,25 @@ public class ChunkPosition {
 
   ////////////////////////////////////////////////////////
 
+  /**
+   * Gets the number of data values held by a chunk at this
+   * chunk position.
+   * 
+   * @return the number of data values.
+   * 
+   * @since 3.8.1
+   */
+  public int getValues () {
+
+    int values = 1;    
+    for (int i : length) values *= i;
+
+    return (values);
+
+  } // getValues
+
+  ////////////////////////////////////////////////////////
+
   @Override
   public ChunkPosition clone () {
 

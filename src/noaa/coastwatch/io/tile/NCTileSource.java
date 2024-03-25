@@ -451,17 +451,17 @@ public class NCTileSource
       int[] tileDims = scheme.getTileDimensions();
       assert (tileDims[0] == chunkSize);
       assert (tileDims[1] == chunkSize);
-      int[] posDims = scheme.new TilePosition (0, 0).getDimensions();
+      int[] posDims = scheme.getTilePositionForIndex (0, 0).getDimensions();
       assert (posDims[0] == chunkSize);
       assert (posDims[1] == chunkSize);
-      posDims = scheme.new TilePosition (1, 1).getDimensions();
+      posDims = scheme.getTilePositionForIndex (1, 1).getDimensions();
       assert (posDims[0] == (rows - chunkSize));
       assert (posDims[1] == (cols - chunkSize));
       logger.passed();
       
       logger.test ("readTile");
 
-      Tile tile = source.readTile (scheme.new TilePosition (0, 0));
+      Tile tile = source.readTile (scheme.getTilePositionForIndex (0, 0));
       Object data = tile.getData();
       int dataLength = java.lang.reflect.Array.getLength (data);
       assert (dataLength == chunkSize*chunkSize);
@@ -472,7 +472,7 @@ public class NCTileSource
       j = chunkSize-1;
       assert (java.lang.reflect.Array.getDouble (data, dataLength-1) == (i*1000000 + j*1000));
       
-      tile = source.readTile (scheme.new TilePosition (1, 1));
+      tile = source.readTile (scheme.getTilePositionForIndex (1, 1));
       data = tile.getData();
       dataLength = java.lang.reflect.Array.getLength (data);
       assert (dataLength == (rows - chunkSize)*(cols - chunkSize));
@@ -486,7 +486,7 @@ public class NCTileSource
       TilingScheme otherScheme = new TilingScheme (new int[] {10, 10}, new int[] {2, 2});
     
       try {
-        tile = source.readTile (otherScheme.new TilePosition (1, 1));
+        tile = source.readTile (otherScheme.getTilePositionForIndex (1, 1));
         assert (false);
       } // try
       catch (IllegalArgumentException e) { }

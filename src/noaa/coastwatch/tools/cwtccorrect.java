@@ -649,7 +649,7 @@ public class cwtccorrect {
         ChunkFunction function = null;
         if (isReflectance) {
           VERBOSE.info ("Creating copy of " + bandColors[i] + " reflectance band '" + bandNames[i] + "'");
-          function = chunks -> { return (chunks.get (bandIndex)); };
+          function = (pos, chunks) -> { return (chunks.get (bandIndex)); };
         } // if
 
         else {
@@ -680,10 +680,10 @@ public class cwtccorrect {
           if (sunzenGrid == null) sunzenGrid = (Grid) reader.getVariable (sunzen);
           collector.addProducer (new GridChunkProducer (sunzenGrid));
 
-          function = chunks -> {
+          function = (pos, chunks) -> {
             
             var bandChunk = chunks.get (bandIndex);
-            int values = bandChunk.getValues();
+            int values = pos.getValues();
             float[] bandData = new float[values];
             ChunkDataCast.toFloatArray (bandChunk, bandData);
                 

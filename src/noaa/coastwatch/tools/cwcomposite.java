@@ -74,12 +74,14 @@ import noaa.coastwatch.util.MetadataServices;
 import noaa.coastwatch.util.chunk.DataChunk;
 import noaa.coastwatch.util.chunk.DataChunk.DataType;
 import noaa.coastwatch.util.chunk.ChunkCollector;
+import noaa.coastwatch.util.chunk.CompositeMapApplicationCollector;
 import noaa.coastwatch.util.chunk.ChunkProducer;
 import noaa.coastwatch.util.chunk.ChunkConsumer;
 import noaa.coastwatch.util.chunk.GridChunkProducer;
 import noaa.coastwatch.util.chunk.GridChunkConsumer;
 import noaa.coastwatch.util.chunk.ChunkingScheme;
 import noaa.coastwatch.util.chunk.ChunkComputation;
+import noaa.coastwatch.util.chunk.ChunkComputationHelper;
 import noaa.coastwatch.util.chunk.ChunkOperation;
 import noaa.coastwatch.util.chunk.ChunkPosition;
 import noaa.coastwatch.util.chunk.ChunkFunction;
@@ -122,6 +124,7 @@ import java.util.logging.Level;
  * -M, --method=TYPE <br>
  * -o, --optimal=VARIABLE/TYPE <br>
  * -p, --pedantic <br>
+ * -S, --savemap <br>
  * --serial <br>
  * --threads=MAX <br>
  * -t, --collapsetime <br>
@@ -611,7 +614,7 @@ public final class cwcomposite {
         if (threads < 0) maxOps = processors;
         else maxOps = Math.min (threads, processors);
         if (maxOps < 1) maxOps = 1;
-        VERBOSE.info ("Using " + maxOps + " parallel threads for processing");
+        VERBOSE.info ("Using max " + maxOps + " parallel threads for processing");
       } // if
 
       // If operating in coherent mode, we first need to create the map of
@@ -622,11 +625,13 @@ public final class cwcomposite {
       if (coherentMode) {
 
         ChunkCollector coherentCollector = new ChunkCollector();
+        Map<IntArray,Integer> chunkSizeMap = new HashMap<>();
 
         // Start by setting up the chunk producers and comparator for the 
         // optimization if needed.
         String optVarName = null;
         Comparator<Double> optComparator = null;
+        var coherentVarNames = new ArrayList<String>();
         if (method.equals ("optimal")) {
 
           // If we've been given the optimal option, then extract the variable
@@ -677,8 +682,19 @@ public final class cwcomposite {
             else {
               var producer = reader.getChunkProducer (optVarName);
               coherentCollector.addProducer (producer);
+
+              // Add the chunk size to a map here -- we'll use it later to
+              // optimize the coherent map chunk size.
+              var scheme = producer.getNativeScheme();
+              if (scheme != null) {
+                var size = scheme.getChunkSize();
+                var key = new IntArray (size);
+                chunkSizeMap.compute (key, (k,v) -> (v == null) ? 0 : v + 1);
+              } // if
+
             } // else
           } // for
+          coherentVarNames.add (optVarName);
 
         } // if
 
@@ -695,8 +711,19 @@ public final class cwcomposite {
               else {
                 ChunkProducer producer = reader.getChunkProducer (coherentVar);
                 coherentCollector.addProducer (producer);
+
+                // Add the chunk size to a map here -- we'll use it later to
+                // optimize the coherent map chunk size.
+                var scheme = producer.getNativeScheme();
+                if (scheme != null) {
+                  var size = scheme.getChunkSize();
+                  var key = new IntArray (size);
+                  chunkSizeMap.compute (key, (k,v) -> (v == null) ? 0 : v + 1);
+                } // if
+
               } // else
             } // for
+            coherentVarNames.add (coherentVar);
           } // for
         } // if
 
@@ -717,6 +744,11 @@ public final class cwcomposite {
           coherentMapWriter = new CWHDFWriter (outputInfo, tempFileName);
         } // else
 
+        // Set up the tile size in the writer so that it matches the most
+        // commonly used tile size from the input files.
+        var intArray = chunkSizeMap.entrySet().stream().max (Comparator.comparing (Entry::getValue)).get().getKey();
+        coherentMapWriter.setTileDims (intArray.data);
+
         // In the file, create a new short integer grid and also the 
         // chunk consumer that we'll use to run the computation.
         String coherentMapVarName = "source_index";
@@ -729,25 +761,28 @@ public final class cwcomposite {
         var cachedMapGrid = new HDFCachedGrid (mapGrid, coherentMapWriter);
         var mapConsumer = new GridChunkConsumer (cachedMapGrid);
         var scheme = mapConsumer.getNativeScheme();
+        int[] chunkSize = scheme.getChunkSize();
         if (saveMap) {
-          int[] chunkSize = scheme.getChunkSize();
-          VERBOSE.info ("Creating " +  coherentMapVarName +
-            " variable with chunk size " + chunkSize[ROW] + "x" + chunkSize[COL]);
+          VERBOSE.info ("Creating " + coherentMapVarName +
+            " variable in output file with chunk size " + chunkSize[ROW] + "x" + chunkSize[COL]);
+        } // if
+        else {
+          VERBOSE.info ("Creating " + coherentMapVarName +
+            " variable in temporary cache file with chunk size " + chunkSize[ROW] + "x" + chunkSize[COL]);
         } // if
 
         // Perform the computation to get the integer coherent mapping.
-        VERBOSE.info ("Computing coherent integer map");
+        VERBOSE.info ("Computing coherent integer map from inputs " + Arrays.toString (coherentVarNames.toArray()));
         int chunkCount = inputFileList.size();
         int coherentVarCount = coherentVars == null ? 0 : coherentVars.size();
         var mapFunction = new CompositeMapFunction (chunkCount, optComparator, coherentVarCount);
         var op = new ChunkComputation (coherentCollector, mapConsumer, mapFunction);
-        runChunkComputation (op, scheme, serialOperations, maxOps);
+        ChunkComputationHelper.getInstance().run (op, scheme, serialOperations, maxOps, VERBOSE);
 
         // If we're saving the coherent map, then create a new reader from
         // the output file.  Otherwise, close the map writer and re-open as a 
         // reader so that we can use it as a chunk producer for the integer 
         // map for the next stage when we apply the map to the input chunks.
-
         cachedMapGrid.flush();
         cachedMapGrid.clearCache();
         coherentMapWriter.close();
@@ -798,8 +833,14 @@ public final class cwcomposite {
         // chunk for the function will be the integer map chunk, and then
         // all the input variable chunks.  For arithmetic operators, we only
         // need the input variable chunks.
-        ChunkCollector collector = new ChunkCollector();
-        if (coherentMode) collector.addProducer (mapChunkProducer);
+        ChunkCollector collector;
+        if (coherentMode) {
+          collector = new CompositeMapApplicationCollector();
+          collector.addProducer (mapChunkProducer);
+        } // if 
+        else {
+          collector = new ChunkCollector();
+        } // else
 
         // Create and add a chunk producer for this variable for 
         // each input file.  Along the way, we need to save the external 
@@ -868,17 +909,22 @@ public final class cwcomposite {
         // with an arimetic-based function.
         ChunkFunction function = null;
         DataChunk protoChunk = consumer.getPrototypeChunk();
-        if (coherentMode) function = new CompositeMapApplicationFunction (inputFileList.size(), protoChunk);
-        else function = new CompositeFunction (operator, minValid, protoChunk);
+        if (coherentMode)
+          function = new CompositeMapApplicationFunction (inputFileList.size(), protoChunk);
+        else 
+          function = new CompositeFunction (operator, minValid, protoChunk);
 
         // Create and run a new chunk computation to composite the data.
         ChunkComputation op = new ChunkComputation (collector, consumer, function);
-        runChunkComputation (op, outputChunkingScheme, serialOperations, maxOps);
+        ChunkComputationHelper.getInstance().run (op, outputChunkingScheme, serialOperations, maxOps, VERBOSE);
 
         // Flush any unwritten tiles in the output grid and clear its
         // cache since we won't be using it anymore.  This helps to keep the
         // overall memory footprint only as large as needed for each individual
         // variable composite.
+
+        // TODO: Should we also do this for the input grids?
+
         outputGrid.flush();
         outputGrid.clearCache();
 
@@ -908,56 +954,34 @@ public final class cwcomposite {
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Runs a chunk computation either in serial or via a pool of threads.
-   * 
-   * @param op the chunk operation to perform.
-   * @param scheme the chunking scheme to use for the the operation.
-   * @param serial the serial flag, true to run the operation in serial.
-   * @param maxOps the maximum number of threads to run the operation if
-   * running in parallel mode.
-   * 
-   * @since 3.8.1
-   */
-  private static void runChunkComputation (
-    ChunkComputation op,
-    ChunkingScheme scheme,
-    boolean serial,
-    int maxOps
-  ) {
+  /** Holds an integer array for use as a map key. */
+  private static class IntArray {
 
-    // Debugging
-    if (LOGGER.isLoggable (Level.FINE))
-      op.setTracked (true);
+    public int[] data;
 
-    // Perform chunk processing
-    // ------------------------
-    List<ChunkPosition> positions = new ArrayList<>();
-    scheme.forEach (positions::add);
+    public IntArray (int[] data) { this.data = data; }
 
-    if (serial) {
-      positions.forEach (pos -> op.perform (pos));
-    } // if
-    else {
-      PoolProcessor processor = new PoolProcessor();
-      processor.init (positions, op);
-      processor.setMaxOperations (maxOps);
-      processor.start();
-      processor.waitForCompletion();
-    } // if
+    @Override
+    public boolean equals (Object obj) {
+      boolean result = false;
+      if (obj instanceof IntArray) {
+        result = Arrays.equals (this.data, ((IntArray) obj).data);
+      } // if
+      return (result);
+    } // equals
 
-    // Debugging
-    if (LOGGER.isLoggable (Level.FINE)) {
-      StringBuilder types = new StringBuilder();
-      StringBuilder times = new StringBuilder();
-      op.getTrackingData().forEach ((type, time) -> {
-        types.append ((types.length() == 0 ? "" : "/") + type);
-        times.append ((times.length() == 0 ? "" : "/") + String.format ("%.3f", time));
-      });
-      LOGGER.fine ("Computation " + types + " = " + times + " s");
-    } // if
+    @Override
+    public int hashCode() {
+      return (Arrays.hashCode (data));
+    } // hashCode
 
-  } // runChunkComputation
+    @Override
+    public String toString () {
+      return ("IntArray" + Arrays.toString (data));
+    } // toString
+
+
+  } // IntArray
 
   ////////////////////////////////////////////////////////////
 

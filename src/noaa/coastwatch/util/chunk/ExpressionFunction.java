@@ -175,12 +175,66 @@ public class ExpressionFunction implements ChunkFunction {
   ////////////////////////////////////////////////////////////
 
   @Override
-  public DataChunk apply (List<DataChunk> inputChunks) {
+  public long getMemory (
+    ChunkPosition pos, 
+    int chunks
+  ) { 
+
+    long mem = 0;
+    
+    // Add in chunk accessor data used to store the external chunk data
+    // prior to expression evaluation, plus the missing data.
+    int chunkValues = pos.getValues();
+    var varNames = parser.getVariables();
+
+    if (varNames.size() != chunks) {
+      throw new IllegalArgumentException ("Variable name count " + varNames.size() + 
+        " does not match input chunk count " + chunks);
+    } // if
+
+    for (var name : varNames) {
+
+      int bytesPerValue = 0;
+      var type = parser.getVariableType (name);
+      if (type != null) {
+        if (type.equals ("Byte")) bytesPerValue = 1;
+        else if (type.equals ("Short")) bytesPerValue = 2;
+        else if (type.equals ("Integer")) bytesPerValue = 4;
+        else if (type.equals ("Long")) bytesPerValue = 8;
+        else if (type.equals ("Float")) bytesPerValue = 4;
+        else if (type.equals ("Double")) bytesPerValue = 8;
+      } // if
+      mem += bytesPerValue*chunkValues;
+      mem += chunkValues;
+
+    } // for
+
+    // Add in the temporary array used to store the boolean-valued missing 
+    // flags for the output integer data.
+    switch (parser.getResultType()) {
+    case BOOLEAN: mem += chunkValues; break;
+    case BYTE: mem += chunkValues; break;
+    case SHORT: mem += chunkValues; break;
+    case INT: mem += chunkValues; break;
+    case LONG: mem += chunkValues; break;
+    } // switch
+
+    return (mem);
+
+  } // getMemory
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public DataChunk apply (
+    ChunkPosition pos,
+    List<DataChunk> inputChunks
+  ) {
 
     // Initialize
     // ----------
     VariableValueSource valueSource = new VariableValueSource (inputChunks);
-    DataChunk resultChunk = resultPrototype.blankCopyWithValues (inputChunks.get (0).getValues());
+    DataChunk resultChunk = resultPrototype.blankCopyWithValues (pos.getValues());
     ChunkDataModifier modifier = new ChunkDataModifier();
     int count = resultChunk.getValues();
     int i;

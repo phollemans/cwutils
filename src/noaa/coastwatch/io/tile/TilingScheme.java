@@ -27,6 +27,10 @@ package noaa.coastwatch.io.tile;
 // -------
 import java.awt.Rectangle;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 // Testing
 import noaa.coastwatch.test.TestLogger;
@@ -84,6 +88,7 @@ public class TilingScheme {
 
   // Variables
   // ---------
+
   /** The global dimensions as [rows, columns]. */
   private int[] dims;
 
@@ -92,6 +97,9 @@ public class TilingScheme {
 
   /** The tile count in each dimension as [rows, columns]. */
   private int[] tileCounts;
+
+  /** The cache of all tile positions. */
+  private Map<Integer, TilePosition> positionCache;
 
   ////////////////////////////////////////////////////////////
 
@@ -119,6 +127,15 @@ public class TilingScheme {
     };
     if (tileCounts[ROWS]*tileDims[ROWS] < dims[ROWS]) tileCounts[ROWS]++;
     if (tileCounts[COLS]*tileDims[COLS] < dims[COLS]) tileCounts[COLS]++;
+
+    // Create a cache of all tile positions to use for this scheme.
+    positionCache = new LinkedHashMap<>();
+    for (int tileRow = 0; tileRow < tileCounts[ROWS]; tileRow++) {
+      for (int tileCol = 0; tileCol < tileCounts[COLS]; tileCol++) {
+        var pos = new TilePosition (tileRow, tileCol);
+        positionCache.put (pos.hashCode(), pos);
+      } // for
+    } // for
 
   } // TilingScheme constructor
 
@@ -157,7 +174,22 @@ public class TilingScheme {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the tile counts as [rows, columns]. */
+  /** 
+   * Gets the total tile count in this scheme.
+   *
+   * @return the total tile count.
+   * 
+   * @since 3.8.1
+   */
+  public int getTileCount () { return (positionCache.size()); }
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the tile counts along each dimension.
+   * 
+   * @return the tile counts as [rows, columns]. 
+   */
   public int[] getTileCounts () { return ((int[]) tileCounts.clone()); }
 
   ////////////////////////////////////////////////////////////
@@ -170,7 +202,10 @@ public class TilingScheme {
    *
    * @throws IndexOutOfBoundsException if the coordinates do not reference
    * a valid tile in the tiling scheme.
+   * 
+   * @deprecated As of 3.8.1, use {@link #getTilePositionForCoords}.
    */
+  @Deprecated
   public TilePosition createTilePosition (
     int row,
     int col
@@ -189,9 +224,157 @@ public class TilingScheme {
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * Gets a shared instance of a tile position whose tile contains the
+   * specified global coordinates.
+   * 
+   * @param row the data row coordinate.
+   * @param col the data column coordinate.
+   * 
+   * @return the instance of the tile position containing the coordinates.
+   *
+   * @throws IndexOutOfBoundsException if the coordinates do not reference
+   * a valid tile in the tiling scheme.
+   * 
+   * @since 3.8.1
+   */
+  public TilePosition getTilePositionForCoords (
+    int row,
+    int col
+  ) {
+
+    if (row < 0 || row > dims[ROWS]-1)
+      throw new IndexOutOfBoundsException ("Row coordinate " + row + " out of bounds");
+    else if (col < 0 || col > dims[COLS]-1)
+      throw new IndexOutOfBoundsException ("Column coordinate " + col + " out of bounds");
+    
+    int tileRow = row/tileDims[ROWS];
+    int tileCol = col/tileDims[COLS];
+    int tileHash = tileRow*tileCounts[COLS] + tileCol;
+
+    var pos = getTilePositionFromCache (tileRow, tileCol);
+    return (pos);
+
+  } // getTilePositionForCoords
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets a tile position object using the tile position coordinates.
+   * 
+   * @param tileRow the tile row index.
+   * @param tileCol the tile column index.
+   * 
+   * @return the instance of the tile position of the specified tile indices.
+   * 
+   * @throws IndexOutOfBoundsException if the indices do not reference
+   * a valid tile in the tiling scheme.
+   * 
+   * @since 3.8.1
+   * 
+   * @see #getTileCounts
+   */
+  public TilePosition getTilePositionForIndex (
+    int tileRow,
+    int tileCol
+  ) {
+
+    if (tileRow < 0 || tileRow > tileCounts[ROWS]-1)
+      throw new IndexOutOfBoundsException ("Tile row index " + tileRow + " out of bounds");
+    else if (tileCol < 0 || tileCol > tileCounts[COLS]-1)
+      throw new IndexOutOfBoundsException ("Tile column index " + tileCol + " out of bounds");
+
+    return (getTilePositionFromCache (tileRow, tileCol));
+
+  } // getTilePositionForIndex
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets a tile position object from the cache using the tile position
+   * coordinates.
+   * 
+   * @param tileRow the tile row coordinate.
+   * @param tileCol the tile column coordinate.
+   * 
+   * @return the instance of the tile position of the specified tile indices.
+   * 
+   * @throws IllegalArgumentException if the indices do not match a position
+   * in the cache.
+   *
+   * @since 3.8.1
+   */
+  private TilePosition getTilePositionFromCache (
+    int tileRow,
+    int tileCol
+  ) {
+
+    int tileHash = tileRow*tileCounts[COLS] + tileCol;
+    var pos = positionCache.get (tileHash);
+    if (pos == null) throw new IllegalArgumentException ("Tile position for [" + tileRow + "," + tileCol + "] is not available");
+
+    return (pos);
+
+  } // getTilePositionFromCache
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets a minimal list of tile positions that cover a subset of the global
+   * coordinates.
+   *
+   * @param start the data subset starting [row, column].
+   * @param count the data subset dimension [rows, columns].
+   *
+   * @return the list of tile positions.
+   *
+   * @throws IndexOutOfBoundsException if the subset falls outside the
+   * grid dimensions.
+   * 
+   * @since 3.8.1
+   */
+  public List<TilePosition> getCoveringPositions (
+    int[] start,
+    int[] count
+  ) {
+
+    // Check the we haven't been passed invalid sizes.  The start and end
+    // coordinates will be checked automatically in the next step.
+    if (count[ROWS] <= 0) throw new IllegalArgumentException ("Row count " + count[ROWS] + " invalid for subset");
+    if (count[COLS] <= 0) throw new IllegalArgumentException ("Column count " + count[COLS] + " invalid for subset");
+
+    // Get the tile positions coordinates for the two extreme corners, and then 
+    // fill in the remaining ones between them.
+    int[] minCoords = getTilePositionForCoords (start[ROWS], start[COLS]).getCoords();
+    int[] maxCoords = getTilePositionForCoords (start[ROWS]+count[ROWS]-1, start[COLS]+count[COLS]-1).getCoords();
+    List<TilePosition> tilePositions = new ArrayList<>();
+    for (int i = minCoords[ROWS]; i <= maxCoords[ROWS]; i++) {
+      for (int j = minCoords[COLS]; j <= maxCoords[COLS]; j++) {
+        tilePositions.add (getTilePositionFromCache (i, j));
+      } // for
+    } // for
+
+    return (tilePositions);
+
+  } // getCoveringPositions
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets a list of all tile positions for this tiling scheme.
+   * 
+   * @return the list of all tile positions.  Changes to the returned list
+   * have no effect on the tiling scheme.
+   * 
+   * @since 3.8.1
+   */
+  public List<TilePosition> getAllPositions () { return (new ArrayList (positionCache.values())); }
+
+  ////////////////////////////////////////////////////////////
+
   /**
    * A tile position stores the row and column location coordinates of
-   * a tile in a tiling scheme.  The tile position is simply an int[2]
+   * a tile in a tiling scheme.  The tile position is mainly an int[2]
    * array wrapped in an object so that it may be used as a key in a
    * hash map.
    */
@@ -230,7 +413,7 @@ public class TilingScheme {
      * @throws IndexOutOfBoundsException if the coordinates do not reference 
      * a valid tile in the tiling scheme.
      */
-    public TilePosition (
+    protected TilePosition (
       int row,
       int col
     ) {
@@ -610,13 +793,13 @@ public class TilingScheme {
     assert (tileCounts[ROWS] == 3);
     assert (tileCounts[COLS] == 5);
 
-    TilePosition pos = scheme.createTilePosition (85, 30);
+    TilePosition pos = scheme.getTilePositionForCoords (85, 30);
     int[] posCoords = pos.getCoords();
     assert (posCoords[ROWS] == 2);
     assert (posCoords[COLS] == 0);
 
     boolean isException0 = false;
-    try { scheme.createTilePosition (100, 0); }
+    try { scheme.getTilePositionForCoords (100, 0); }
     catch (IndexOutOfBoundsException e) { isException0 = true; }
     assert (isException0);
 
@@ -624,25 +807,25 @@ public class TilingScheme {
 
     logger.test ("TilePosition");
 
-    TilePosition pos1 = scheme.new TilePosition (1, 2);
+    TilePosition pos1 = scheme.getTilePositionForIndex (1, 2);
     int[] pos1Coords = pos1.getCoords();
     assert (pos1Coords[ROWS] == 1);
     assert (pos1Coords[COLS] == 2);
     
-    int[] testTileDims2 = scheme.new TilePosition (0, 0).getDimensions();
+    int[] testTileDims2 = scheme.getTilePositionForIndex (0, 0).getDimensions();
     assert (testTileDims2[ROWS] == 40);
     assert (testTileDims2[COLS] == 40);
 
-    int[] testTileDims3 = scheme.new TilePosition (2, 0).getDimensions();
+    int[] testTileDims3 = scheme.getTilePositionForIndex (2, 0).getDimensions();
     assert (testTileDims3[ROWS] == 20);
     assert (testTileDims3[COLS] == 40);
 
-    int[] testTileDims4 = scheme.new TilePosition (0, 4).getDimensions();
+    int[] testTileDims4 = scheme.getTilePositionForIndex (0, 4).getDimensions();
     assert (testTileDims4[ROWS] == 40);
     assert (testTileDims4[COLS] == 40);
 
-    TilePosition pos2 = scheme.new TilePosition (1, 2);
-    TilePosition pos3 = scheme.new TilePosition (2, 2);
+    TilePosition pos2 = scheme.getTilePositionForIndex (1, 2);
+    TilePosition pos3 = scheme.getTilePositionForIndex (2, 2);
     assert (pos1.hashCode() == pos2.hashCode());
     assert (pos1.hashCode() != pos3.hashCode());
     
@@ -657,9 +840,9 @@ public class TilingScheme {
     assert (pos1.getScheme() == scheme);
 
     boolean isException = false;
-    try { scheme.new TilePosition (0, 5); }
+    try { scheme.getTilePositionForIndex (0, 5); }
     catch (IndexOutOfBoundsException e) { isException = true; }
-    assert (isException);
+    assert (isException);    
 
     logger.passed();
     

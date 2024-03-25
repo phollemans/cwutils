@@ -137,6 +137,59 @@ public class ChunkComputation implements ChunkOperation {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Estimates the memory requirements for processing a chunk of 
+   * data at the specified position.
+   * 
+   * @param pos the position to estimate the memory usage.
+   * 
+   * @return the memory in bytes.
+   * 
+   * @since 3.8.1
+   */
+  public long getMemory (ChunkPosition pos) {
+
+    long mem = 0;
+
+    // Add up the memory for the chunks that will be delivered by the various
+    // chunk producers.  We assume that the data structures underlying the 
+    // producers also hold onto a copy of at least one chunk of data in the 
+    // native chunking scheme.
+    int values = pos.getValues();
+    int chunkCount = 0;
+    long producerMem = 0;
+    for (var producer : collector) {
+
+      var proto = producer.getPrototypeChunk();
+      producerMem += proto.valueBytes() * values;
+
+      var nativeScheme = producer.getNativeScheme();
+      var nativePos = nativeScheme.getPosition (pos.start);
+      int nativeValues = nativePos.getValues();
+      producerMem += proto.valueBytes() * nativeValues;
+
+      chunkCount++;
+
+    } // for
+    mem += producerMem;
+    LOGGER.fine ("Memory used by chunk producers approx " + (producerMem/1024) + " kb");
+
+    // Add up the memory for the chunks that will be pushed to the consumer.
+    var consumerMem = consumer.getPrototypeChunk().valueBytes() * values;
+    mem += consumerMem;
+    LOGGER.fine ("Memory used by chunk consumer approx " + (consumerMem/1024) + " kb");
+
+    // Finally, add the memory needed inside the function.
+    var functionMem = function.getMemory (pos, chunkCount);
+    mem += functionMem;
+    LOGGER.fine ("Memory used by function approx " + (functionMem/1024) + " kb");
+
+    return (mem);
+
+  } // getMemory
+
+  ////////////////////////////////////////////////////////////
+
   @Override
   public void perform (ChunkPosition pos) {
 
@@ -150,7 +203,7 @@ public class ChunkComputation implements ChunkOperation {
 
       acc.reset();
       acc.start();
-      DataChunk result = function.apply (chunks);
+      DataChunk result = function.apply (pos, chunks);
       acc.end();
       functionTime.add (acc);
 
@@ -166,7 +219,7 @@ public class ChunkComputation implements ChunkOperation {
 
     else {
       List<DataChunk> chunks = collector.getChunks (pos);
-      DataChunk result = function.apply (chunks);
+      DataChunk result = function.apply (pos, chunks);
       if (result != null) consumer.putChunk (pos, result);
     } // else
 

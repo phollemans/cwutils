@@ -79,7 +79,55 @@ public class CompositeMapApplicationFunction implements ChunkFunction {
   ////////////////////////////////////////////////////////////
 
   @Override
-  public DataChunk apply (List<DataChunk> inputChunks) {
+  public long getMemory (
+    ChunkPosition pos, 
+    int chunks
+  ) { 
+
+    // Note that in this function, we ignore the chunks parameter passed in 
+    // because we have other information about the number of chunks being 
+    // composited together from the constructor.  The chunks parameter is 
+    // not correct here because it takes into account all the chunks passed 
+    // in and doesn't distinguish between chunks of variable data and the
+    // chunk of integer map data.
+
+    long mem = 0;
+
+    // Add in chunk accessor data used to store the external chunk data
+    // prior to compositing, plus the missing data.
+    int chunkValues = pos.getValues();
+    int bytesPerValue = 0;
+    switch (protoChunk.getExternalType()) {
+    case BYTE: bytesPerValue = 1; break;
+    case SHORT: bytesPerValue = 2; break;
+    case INT: bytesPerValue = 4; break;
+    case LONG: bytesPerValue = 8; break;
+    case FLOAT: bytesPerValue = 4; break;
+    case DOUBLE: bytesPerValue = 8; break;
+    } // switch
+    mem += bytesPerValue*chunkValues * chunkCount;
+    mem += chunkValues * chunkCount;
+
+    // Add in the temporary array used to store the boolean-valued missing 
+    // flags for the output integer data.
+    switch (protoChunk.getExternalType()) {
+    case BYTE: mem += chunkValues; break;
+    case SHORT: mem += chunkValues; break;
+    case INT: mem += chunkValues; break;
+    case LONG: mem += chunkValues; break;
+    } // switch
+
+    return (mem);
+
+  } // getMemory
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public DataChunk apply (
+    ChunkPosition pos,
+    List<DataChunk> inputChunks
+  ) {
 
     DataChunk resultChunk;
 
@@ -89,16 +137,20 @@ public class CompositeMapApplicationFunction implements ChunkFunction {
     if (inputChunks.size() != expectedInputChunks)
       throw new IllegalArgumentException ("Found " + inputChunks.size() + " input chunks but expected " + expectedInputChunks);
 
-    // Access the integer map chunk and the data chunks.
+    // Access the integer map chunk and the data chunks.  Note that
+    // we allow null input chunks here, which signify that no data is needed
+    // from that chunk index for the application of the map, so to save
+    // time it was never obtained from the chunk producer.
     short[] mapArray = (short[]) ((inputChunks.get (0)).getPrimitiveData());
     ChunkDataAccessor[] accessors = new ChunkDataAccessor[chunkCount];
     for (int chunkIndex = 0; chunkIndex < chunkCount; chunkIndex++) {
       accessors[chunkIndex] = new ChunkDataAccessor();
-      inputChunks.get (1+chunkIndex).accept (accessors[chunkIndex]);
+      var inputChunk = inputChunks.get (1+chunkIndex);
+      if (inputChunk != null) inputChunk.accept (accessors[chunkIndex]);
     } // for
 
     // Create the result chunk.
-    int chunkValues = inputChunks.get (0).getValues();
+    int chunkValues = pos.getValues();
     resultChunk = protoChunk.blankCopyWithValues (chunkValues);
     ChunkDataModifier modifier = new ChunkDataModifier();
   
@@ -238,7 +290,8 @@ public class CompositeMapApplicationFunction implements ChunkFunction {
     var var4 = fact.create (new short[] {20,21,22,23,m}, false, m, packing);
     var inputChunks = List.of (map, var0, var1, var2, var3, var4);
     var func = new CompositeMapApplicationFunction (inputChunks.size()-1, proto);
-    var result = func.apply (inputChunks);
+    var pos = new ChunkPosition (1); pos.length[0] = 5;
+    var result = func.apply (pos, inputChunks);
     short[] resultData = (short[]) result.getPrimitiveData();
     LOGGER.fine ("resultData = " + Arrays.toString (resultData));
     assert (Arrays.equals (resultData, new short[] {0,6,12,18,m}));
@@ -246,9 +299,24 @@ public class CompositeMapApplicationFunction implements ChunkFunction {
 
     logger.test ("apply() with incorrect chunk list length");
     boolean failed = false;
-    try { func.apply (inputChunks.subList (1, inputChunks.size())); }
+    try { func.apply (pos, inputChunks.subList (1, inputChunks.size())); }
     catch (Exception e) { failed = true; }
     assert (failed);
+    logger.passed();
+
+    logger.test ("apply() with null value in chunk list");
+    failed = false;
+    try { func.apply (pos, List.of (map, var0, var1, null, var3, var4)); }
+    catch (Exception e) { failed = true; }
+    assert (failed);
+    logger.passed();
+
+    logger.test ("apply() with null value in chunk list (should work now)");
+    var altmap = fact.create (new short[] {0,1,-1,3,4}, false, m, null);
+    result = func.apply (pos, List.of (altmap, var0, var1, null, var3, var4));
+    resultData = (short[]) result.getPrimitiveData();
+    LOGGER.fine ("resultData = " + Arrays.toString (resultData));
+    assert (Arrays.equals (resultData, new short[] {0,6,m,18,m}));
     logger.passed();
 
   } // main
@@ -256,6 +324,4 @@ public class CompositeMapApplicationFunction implements ChunkFunction {
   ////////////////////////////////////////////////////////////
 
 } // CompositeMapApplicationFunction class
-
-////////////////////////////////////////////////////////////////////////
 

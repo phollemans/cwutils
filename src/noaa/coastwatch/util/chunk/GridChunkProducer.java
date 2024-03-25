@@ -31,6 +31,7 @@ import noaa.coastwatch.util.chunk.ChunkingScheme;
 import noaa.coastwatch.util.chunk.PackingScheme;
 import noaa.coastwatch.util.chunk.DoublePackingScheme;
 import noaa.coastwatch.util.Grid;
+import noaa.coastwatch.util.DataVariable.AccessType;
 import java.lang.reflect.Array;
 
 import java.util.logging.Logger;
@@ -78,6 +79,7 @@ public class GridChunkProducer implements ChunkProducer {
   ) {
   
     this.grid = grid;
+    grid.setAccessType (AccessType.FULL_TILE);
 
     // Create chunking scheme
     // ----------------------

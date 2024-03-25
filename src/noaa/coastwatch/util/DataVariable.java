@@ -1064,6 +1064,63 @@ public abstract class DataVariable
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * The <code>AccessType</code> class describes a type of data accesss 
+   * that is anticipated.  This can sometimes help to optimize internal 
+   * structures to better deliver data.
+   *
+   * @since 3.8.1
+   */
+  public enum AccessType {
+
+    /** 
+     * Single pixel access, for example when performing a point
+     * survey or a random sampling.
+     */
+    POINT,
+
+    /**
+     * A line of pixels being accessed, for example when performing
+     * a line survey or passing the mouse cursor over the screen.
+     */
+    LINE,
+
+    /**
+     * Full resolution tiles of data, for example when performing data
+     * processing or displaying data at full resolution.
+     */
+    FULL_TILE,
+
+    /**
+     * Sparse resolution tiles of data, for example computing data stats,
+     * and displaying data at sub-full resolution.
+     */
+    SPARSE_TILE
+
+  } // AccessType enum
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Sets a hint to the variable that subsequent data access will
+   * be of the specified access type.  This is an opportunity for the
+   * underlying data structures to be rearranged to better accomodate
+   * the specified access type.
+   * 
+   * @param type the access type hint.
+   * 
+   * @since 3.8.1
+   */
+  public void setAccessType (
+    AccessType type
+  ) {
+
+    // Do nothing
+
+  } // setAccessType
+
+  ////////////////////////////////////////////////////////////
+
   /** Gets a string representation of this variable. */
   public String toString () { return (name); }
 

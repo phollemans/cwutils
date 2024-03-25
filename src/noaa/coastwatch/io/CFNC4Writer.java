@@ -948,11 +948,7 @@ public class CFNC4Writer
     // Create tile position list for main variables
     // --------------------------------------------
     TilingScheme scheme = new TilingScheme (dims, new int[] {TILE_SIZE, TILE_SIZE});
-    tilePositions = new ArrayList<TilePosition>();
-    int[] tileCounts = scheme.getTileCounts();
-    for (int tileRow = 0; tileRow < tileCounts[TilingScheme.ROWS]; tileRow++)
-      for (int tileCol = 0; tileCol < tileCounts[TilingScheme.COLS]; tileCol++)
-        tilePositions.add (scheme.new TilePosition (tileRow, tileCol));
+    tilePositions = scheme.getAllPositions();
 
     // Set chunk lengths for main variables
     // ------------------------------------

@@ -100,6 +100,17 @@ public interface DataChunk {
    */
   public boolean isCompatible (DataChunk chunk);
 
+  /** 
+   * Gets the number of bytes each value uses.
+   * 
+   * @return the bytes per data value in the primitive data.
+   * 
+   * @see #getPrimitiveData
+   * 
+   * @since 3.8.1
+   */
+  public int valueBytes();
+
 } // DataChunk interface
 
 ////////////////////////////////////////////////////////////////////////

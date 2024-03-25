@@ -1298,7 +1298,7 @@ utilities when:
 
           // Read tile
           // ---------
-          TilePosition tilePos = source.getScheme().createTilePosition (pos.start[ROW], pos.start[COL]);
+          TilePosition tilePos = source.getScheme().getTilePositionForCoords (pos.start[ROW], pos.start[COL]);
           Tile tile = source.readTile (tilePos);
 
           LOGGER.fine ("Got chunk for " + grid.getName() + " at pos " + pos + " in file " +

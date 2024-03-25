@@ -28,6 +28,7 @@ package noaa.coastwatch.util.chunk;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
+import java.util.Iterator;
 
 import noaa.coastwatch.util.chunk.ChunkProducer;
 import noaa.coastwatch.util.chunk.DataChunk;
@@ -40,13 +41,13 @@ import noaa.coastwatch.util.chunk.ChunkPosition;
  * @author Peter Hollemans
  * @since 3.4.0
  */
-public class ChunkCollector {
+public class ChunkCollector implements Iterable<ChunkProducer> {
 
   // Variables
   // ---------
 
   /** The list of chunk producers. */
-  private List<ChunkProducer> producerList = new ArrayList<>();
+  protected List<ChunkProducer> producerList = new ArrayList<>();
 
   ////////////////////////////////////////////////////////////
 
@@ -75,6 +76,11 @@ public class ChunkCollector {
     return (chunks);
   
   } // getChunks
+
+  ////////////////////////////////////////////////////////////
+
+  @Override 
+  public Iterator<ChunkProducer> iterator() { return (new ArrayList<>(producerList).iterator()); }
 
   ////////////////////////////////////////////////////////////
 

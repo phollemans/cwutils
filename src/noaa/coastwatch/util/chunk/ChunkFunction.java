@@ -43,12 +43,41 @@ public interface ChunkFunction {
   /**
    * Applies some function to a list of chunks.
    *
+   * @param pos the position to perform the function.
    * @param inputChunks the list of chunks as input to the function.
    *
    * @return the output chunk of the function, or null if no valid output
    * chunk could be computed.
    */
-  public DataChunk apply (List<DataChunk> inputChunks);
+  public DataChunk apply (
+    ChunkPosition pos,
+    List<DataChunk> inputChunks
+  );
+
+  /**
+   * Estimates the memory requirements for processing a chunk of 
+   * data at the specified position, not including the input and output chunk
+   * internal data arrays.
+   * 
+   * @param pos the position to estimate the memory usage.
+   * @param chunks the number of input chunks that will be processed
+   * at once.
+   * 
+   * @return the memory in bytes.
+   * 
+   * @throws UnsupportedOperationException if the memory calculation is not
+   * implemented by this function.
+   * 
+   * @since 3.8.1
+   */
+  public default long getMemory (
+    ChunkPosition pos, 
+    int chunks
+  ) { 
+
+    throw new UnsupportedOperationException(); 
+
+  } // getMemory
 
 } // ChunkFunction interface
 

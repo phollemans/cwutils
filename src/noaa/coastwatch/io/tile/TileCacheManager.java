@@ -190,15 +190,7 @@ public class TileCacheManager {
     // Create list of tile positions to request
     // ----------------------------------------
     TilingScheme scheme = source.getScheme();
-    int[] startTilePos = scheme.createTilePosition (start[0], start[1]).getCoords();
-    int[] endTilePos = scheme.createTilePosition (start[0]+length[0]-1,
-      start[1]+length[1]-1).getCoords();
-    List<TilePosition> positions = new ArrayList<TilePosition>();
-    for (int row = startTilePos[0]; row <= endTilePos[0]; row++) {
-      for (int col = startTilePos[1]; col <= endTilePos[1]; col++) {
-        positions.add (scheme.new TilePosition (row, col));
-      } // for
-    } // for
+    List<TilePosition> positions = scheme.getCoveringPositions (start, length);
 
     // Notify observer for tiles already available
     // -------------------------------------------
@@ -305,7 +297,7 @@ public class TileCacheManager {
       public Class getDataClass() { return (Byte.TYPE); }
       public TilingScheme getScheme() { return (scheme); }
     };
-    final TilePosition pos = scheme.new TilePosition (2, 3);
+    final TilePosition pos = scheme.getTilePositionForIndex (2, 3);
 
     logger.test ("getTile");
     Tile tile = manager.getTile (source, pos);
