@@ -25,6 +25,11 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
+
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Arrays;
+
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.GridSubsetReader;
 import noaa.coastwatch.io.NCReader;
@@ -62,11 +67,32 @@ public class EarthDataViewFactory {
 
   private static final Logger LOGGER = Logger.getLogger (EarthDataViewFactory.class.getName());
 
-  // Variables
-  // ---------
-  
-  /** The maximum grid subset size in rows or columns. */
-  private static int subsetSize = 256;
+  // The maximum grid subset size in rows or columns.
+  private int subsetSize = 256;
+
+  // We hold onto a cache of settings so that we don't need to recalculate
+  // the statistics each time we're asked for a variable with the same name
+  // from the same reader.
+  private Map<String, Map<String, ColorEnhancementSettings>> settingsMap = new HashMap<>();
+
+  // The singleton instance of this class.
+  private static EarthDataViewFactory instance;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets a shared instance of this class.
+   * 
+   * @return the shared instance.
+   * 
+   * @since 3.8.1
+   */
+  public static EarthDataViewFactory getInstance() {
+
+    if (instance == null) instance = new EarthDataViewFactory();
+    return (instance);
+
+  } // getInstance
 
   ////////////////////////////////////////////////////////////
 
@@ -91,6 +117,62 @@ public class EarthDataViewFactory {
  ////////////////////////////////////////////////////////////
 
   /**
+   * Recalls a set of enhancement settings if they were previously
+   * stored during this session.
+   * 
+   * @param reader earth data reader to recall the settings.
+   * @param varName the variable name to recall the settings.
+   * 
+   * @return the settings or null if the settings were not previously
+   * stored.
+   * 
+   * @since 3.8.1
+   */
+  private ColorEnhancementSettings recallSettings (
+    EarthDataReader reader,
+    String varName
+  ) { 
+
+    ColorEnhancementSettings settings = null;
+    var map = settingsMap.get (reader.getSource());
+    if (map != null) {
+      settings = map.get (varName);
+    } // if
+
+    return (settings);
+
+  } // recallSettings
+
+ ////////////////////////////////////////////////////////////
+
+  /**
+   * Stores a set of enhancement settings for the current session.
+   * 
+   * @param reader earth data reader to store the settings.
+   * @param varName the variable name to store the settings.
+   * @param settings the settings to store.
+   * 
+   * @since 3.8.1
+   */
+  private void storeSettings (
+    EarthDataReader reader,
+    String varName,
+    ColorEnhancementSettings settings
+  ) { 
+
+    var source = reader.getSource();
+    var map = settingsMap.get (source);
+    if (map == null) {
+      map = new HashMap<>();
+      settingsMap.put (source, map);
+    } // if
+    map.put (varName, settings);
+
+  } // storeSettings
+
+ ////////////////////////////////////////////////////////////
+
+  /**
    * Creates a new data view.
    *
    * @param reader the reader to use for variable data.
@@ -98,10 +180,12 @@ public class EarthDataViewFactory {
    *
    * @return a new view of the data variable, or null on error.
    */
-  public static EarthDataView create (
+  public EarthDataView create (
     EarthDataReader reader,
     String varName
   ) {
+
+    ColorEnhancement view = null;
 
     try {
 
@@ -144,43 +228,66 @@ public class EarthDataViewFactory {
         grid = (Grid) reader.getVariable (varName);
       } // else
 
-      // Get enhancement settings
-      // ------------------------
-      ColorEnhancementSettings settings = 
-        ResourceManager.getPreferences().getEnhancement (varName);
-
-      // If the settings aren't found, we try stripping the group name
-      // from the variable if there is one, and try again.
+      // Try getting the enhancement settings from the user preferences,
+      // using either the variable name or the stripped variable name
+      // (in case of a group name).
+      var settings = ResourceManager.getPreferences().getEnhancement (varName);
       if (settings == null) {
         String baseVarName = IOServices.stripGroup (varName);
         if (!baseVarName.equals (varName)) settings = 
           ResourceManager.getPreferences().getEnhancement (baseVarName);
       } // if
 
+      // If the settings aren't found in the user preferences, look in the 
+      // stored preferences in this factory instance.
+      if (settings == null) {
+        settings = recallSettings (reader, varName);
+      } // if
+
+      // If the settings aren't found in either the user preferences or in
+      // the stored settings, as a last resort we compute statistics to 
+      // create a reasonable view.
+
+
+// TODO: Should we try to detect a log distribution here, rather than using 
+// a linear scale?
+
+
       if (settings == null) {
         DataLocationConstraints lc = new DataLocationConstraints();
         lc.fraction = 0.01;
         Statistics stats = VariableStatisticsGenerator.getInstance().generate (grid, lc);
+
+
+      // LOGGER.fine ("Creating earth data view with " + palette.getName() + 
+      //   " palette and " + function.describe() + " function with range " + 
+      //   Arrays.toString (function.getRange()));
+
+        
         EnhancementFunction func = new LinearEnhancement (
-          new double[] {Math.floor (stats.getMin()), 
-          Math.ceil (stats.getMax())});
+          new double[] {Math.floor (stats.getMin()), Math.ceil (stats.getMax())}
+        );
         Palette pal = PaletteFactory.create ("BW-Linear");
         settings = new ColorEnhancementSettings (varName, pal, func);
+        storeSettings (reader, varName, settings);
       } // if
 
-      // Create view
-      // -----------
-      ColorEnhancement view = new ColorEnhancement (trans, grid, 
-        settings.getPalette(), settings.getFunction());
+      var palette = settings.getPalette();
+      var function = settings.getFunction();
+      LOGGER.fine ("Creating earth data view with " + palette.getName() + 
+        " palette and " + function.describe() + " function with range " + 
+        Arrays.toString (function.getRange()));
 
-      return (view);
+      // Create a view using the settings we just created or recalled.
+      view = new ColorEnhancement (trans, grid, settings.getPalette(), settings.getFunction());
 
     } // try
 
     catch (Exception e) { 
       LOGGER.log (Level.WARNING, "Failed to create view from reader and variable", e);
-      return (null);
     } // catch
+
+    return (view);
 
   } // create
 

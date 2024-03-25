@@ -198,7 +198,7 @@ import java.util.logging.Level;
  *
  * // Set up the view
  * reader = EarthDataReaderFactory.create (file);
- * view = EarthDataViewFactory.create (reader, var);
+ * view = EarthDataViewFactory.getInstance().create (reader, var);
  * view.addOverlay (new CoastOverlay (Color.WHITE));
  * view.addOverlay (new LatLonOverlay (Color.WHITE));
  * view.resizeHeight (600);
