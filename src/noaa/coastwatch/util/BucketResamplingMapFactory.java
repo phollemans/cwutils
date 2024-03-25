@@ -121,6 +121,7 @@ public class BucketResamplingMapFactory implements ResamplingMapFactory {
     // -----------------------------------------------------
     double resInDegrees = Math.toDegrees (res / SpheroidConstants.STD_RADIUS);
     int binsPerDegree = (int) Math.round (1.0/(5*resInDegrees));
+    if (binsPerDegree < 1) binsPerDegree = 1;
     this.locationSet = new EarthLocationSet<> (binsPerDegree);
 
     LOGGER.fine ("Resolution " + res + " km (" + resInDegrees + " deg)");
