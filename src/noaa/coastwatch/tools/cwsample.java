@@ -44,7 +44,9 @@ import noaa.coastwatch.io.EarthDataReaderFactory;
 import noaa.coastwatch.io.SimpleParser;
 import noaa.coastwatch.tools.ToolServices;
 import noaa.coastwatch.util.DataLocation;
+import noaa.coastwatch.util.DataLocationConstraints;
 import noaa.coastwatch.util.DataVariable;
+import noaa.coastwatch.util.VariableStatisticsGenerator;
 import noaa.coastwatch.util.EarthDataInfo;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.Grid;
@@ -89,7 +91,9 @@ import java.util.logging.Level;
  * -M, --missing=VALUE <br>
  * -n, --nocoords <br>
  * -R, --reverse <br>
+ * -t, --statsvar=NAME <br>
  * -V, --variable=NAME1[/NAME2/...] <br>
+ * -w, --window=N <br>
  * --version <br>
  * </p>
  *
@@ -191,6 +195,24 @@ import java.util.logging.Level;
  *   order, 'longitude latitude'.  The default is 'latitude
  *   longitude'. </dd>
  *
+ *   <dt> -t, --statsvar=NAME </dt>
+ *   <dd> The variable name to compute statistics.  If specified, the named
+ *   variable is used to compute statistics using the values within an NxN 
+ *   window surrounding each sample point.  The statistics are reported 
+ *   on each output line as:
+ *   <ul>
+ *     <li> Count - the count of total data values sampled </li>
+ *     <li> Valid - the number of valid (not missing) data values </li>
+ *     <li> Min - the minimum data value </li>
+ *     <li> Max - the maximum data value </li>
+ *     <li> Mean - the average data value </li>
+ *     <li> Stdev - the standard deviation from the mean </li>
+ *     <li> Median - the median data value </li>
+ *   </ul>
+ *   See also the <b>--window</b> option to set the window size.  The default
+ *   is not to compute statistics and only report the variable sample values 
+ *   at the sample points.</dd>
+ * 
  *   <dt> -V, --variable=NAME1[/NAME2/...] </dt>
  *   <dd> The variable names to sample.  If specified, the variable
  *   sample values are printed in columns in exactly the same order as
@@ -202,6 +224,12 @@ import java.util.logging.Level;
  *   this option or the <b>--match</b> option, all variables are
  *   sampled.  Note that either <b>--variable</b> or <b>--match</b>
  *   may be specified, but not both.</dd>
+ * 
+ *   <dt> -w, --window=N </dt>
+ *   <dd> The window size in pixels for computing statistics.  The default is
+ *   to use a 3x3 window.  Only odd values are allowed: 3, 5, 7, etc.  This 
+ *   option is only relevant when the <b>--statsvar</b> option is also 
+ *   specified.</dd>
  * 
  *   <dt>--version</dt>
  *
@@ -305,6 +333,8 @@ public class cwsample {
     Option delimitOpt = cmd.addStringOption ('D', "delimit");
     Option imagecoordsOpt = cmd.addBooleanOption ('i', "imagecoords");
     Option variableOpt = cmd.addStringOption ('V', "variable");
+    Option statsOpt = cmd.addStringOption ('t', "stats");
+    Option windowOpt = cmd.addIntegerOption ('w', "window");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -359,6 +389,9 @@ public class cwsample {
     if (delimit == null) delimit = " ";
     boolean imagecoords = (cmd.getOptionValue (imagecoordsOpt) != null);
     String variable = (String) cmd.getOptionValue (variableOpt);
+    String statsVarName = (String) cmd.getOptionValue (statsOpt);
+    Integer windowObj = (Integer) cmd.getOptionValue (windowOpt);
+    int window = (windowObj == null ? 3 : windowObj.intValue());
 
     // Check for sample option
     // -----------------------
@@ -372,6 +405,13 @@ public class cwsample {
     // --------------------------------
     if (match != null && variable != null) {
       LOGGER.severe ("Cannot specify both --variable and --match options");
+      ToolServices.exitWithCode (2);
+      return;
+    } // if
+
+    // Check that the window value is positive and an odd number
+    if (window < 3 || window%2 != 1) {
+      LOGGER.severe ("Invalid window value: " + window + ", must be odd and >= 3");
       ToolServices.exitWithCode (2);
       return;
     } // if
@@ -462,6 +502,12 @@ public class cwsample {
         } // if
       } // else
 
+      // Get the requested stats variable from the reader
+      DataVariable statsVar = null;
+      if (statsVarName != null) {
+        statsVar = reader.getVariable (statsVarName);
+      } // if
+
       // Create array of variables from list
       // -----------------------------------
       DataVariable[] varArray = (DataVariable[]) variables.toArray (
@@ -476,19 +522,36 @@ public class cwsample {
       // Print header
       // ------------
       if (header) {
+
+        // First print the geographic coordinates ...
         if (!nocoords) {
           if (reverse) 
             outStream.print ("longitude" + delimit + "latitude" + delimit);
           else
             outStream.print ("latitude" + delimit + "longitude" + delimit);
         } // if
+
+        // ... then the image coordinates if requested
         if (imagecoords)
           outStream.print ("row" + delimit + "column" + delimit);
+
+        // ... now the variable names
         for (int i = 0; i < varArray.length; i++) {
           outStream.print (varArray[i].getName());
-          if (i < varArray.length-1) outStream.print (delimit);
+          if (i < varArray.length-1 || statsVar != null) outStream.print (delimit);
         } // for
+
+        // .. finally, the stats headers if requested
+        if (statsVar != null) {
+          var statsArray = new String[] {"count", "valid", "min", "max", "mean", "stdev", "median"};
+          for (int i = 0; i < statsArray.length; i++) {
+            outStream.print (statsArray[i]);
+            if (i < statsArray.length-1) outStream.print (delimit);
+          } // for
+        } // if
+
         outStream.println();
+
       } // if
 
       // Loop over each location
@@ -528,11 +591,47 @@ public class cwsample {
           } // if
           else
             outStream.print (varArray[i].format (value));
-          if (i < varArray.length-1) outStream.print (delimit);
+          if (i < varArray.length-1 || statsVar != null) outStream.print (delimit);
         } // for
+
+        // We compute and print the stats here, if requested by the user
+        DecimalFormat fmt = new DecimalFormat ("0.######");
+        if (statsVar != null) {
+
+          int offset = window/2;
+          DataLocation centerLoc = dataLoc.round();
+          int[] dims = statsVar.getDimensions();
+          var constraints = new DataLocationConstraints();
+          constraints.start = centerLoc.translate (-offset, -offset).truncate (dims);
+          constraints.end = centerLoc.translate (offset, offset).truncate (dims);
+          constraints.fraction = 1;
+          var stats = VariableStatisticsGenerator.getInstance().generate (statsVar, constraints);
+
+          int valid = stats.getValid();
+          String[] statsArray = new String[] {
+            Integer.toString (stats.getValues()),
+            Integer.toString (valid),
+            (valid == 0 ? "NaN" : statsVar.format (stats.getMin())),
+            (valid == 0 ? "NaN" : statsVar.format (stats.getMax())),
+            (valid == 0 ? "NaN" : fmt.format (stats.getMean())),
+            (valid == 0 ? "NaN" : fmt.format (stats.getStdev())),
+            (valid == 0 ? "NaN" : statsVar.format (stats.getMedian()))
+           };
+          for (int i = 0; i < statsArray.length; i++) {
+            outStream.print (statsArray[i]);
+            if (i < statsArray.length-1) outStream.print (delimit);
+          } // for
+
+        } // if
+
         outStream.println();
 
       } // for
+
+
+
+
+
 
 
       // TODO: Should we explicitly close the reader here?  An issue was found
@@ -586,9 +685,11 @@ public class cwsample {
     info.option ("-M, --missing=VALUE", "Set value to print for missing data");
     info.option ("-n, --nocoords", "Do not print geographic coordinates");
     info.option ("-R, --reverse", "Reverse order of geographic coordinates");
+    info.option ("-t, --statsvar=NAME", "Set variable name for statistics computation");
     info.option ("-V, --variable=NAME1[/NAME2/...]", "Sample only variables listed");
+    info.option ("-w, --window=N", "Set window size for statistics computation");
     info.option ("--version", "Show version information");
-    
+
     return (info);
     
   } // usage
