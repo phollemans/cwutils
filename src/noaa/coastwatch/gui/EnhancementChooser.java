@@ -68,6 +68,8 @@ import noaa.coastwatch.render.PaletteFactory;
 import noaa.coastwatch.render.StepEnhancement;
 import noaa.coastwatch.util.Statistics;
 
+import java.util.logging.Logger;
+
 /**
  * <p>An enhancement chooser is a panel that allows the user to select
  * the specifications of a data enhancement function.  An enhancement
@@ -92,6 +94,8 @@ import noaa.coastwatch.util.Statistics;
 public class EnhancementChooser
   extends JPanel
   implements TabComponent {
+
+  private static final Logger LOGGER = Logger.getLogger (EnhancementChooser.class.getName());
 
   // Constants
   // ---------
@@ -133,6 +137,13 @@ public class EnhancementChooser
   /** The enhancement tooltip. */
   private static final String ENHANCEMENT_TOOLTIP = "Color Enhancement";
 
+  /** The min and msax constants for array access. */
+  private static final int MIN = 0;
+  private static final int MAX = 1;
+
+  /** The log10 minimum when the user has specified <=0. */
+  private static final double LOG10_MIN = 0.001;
+
   // Variables
   // ---------    
   /** The histogram panel. */
@@ -145,10 +156,12 @@ public class EnhancementChooser
   private EnhancementFunctionPanel enhancementFunctionPanel;
 
   /** The minimum value slider. */
-  private JSlider minSlider;
+//  private JSlider minSlider;
+  private DoubleSlider minSlider;
  
   /** The maximum value slider. */
-  private JSlider maxSlider;
+//  private JSlider maxSlider;
+  private DoubleSlider maxSlider;
 
   /** The enhancement function. */
   private EnhancementFunction func;
@@ -169,7 +182,7 @@ public class EnhancementChooser
   private JTextField[] fields;
 
   /** The range sliders. */
-  private JSlider[] sliders;
+  private DoubleSlider[] sliders;
 
   /** The allowed enhancement range. */
   private double[] allowedRange;
@@ -194,6 +207,74 @@ public class EnhancementChooser
 
   /** The normalize button. */
   private JButton normalizeButton;
+
+  ////////////////////////////////////////////////////////////
+
+  /** Extends a slider to handle double-valued settings and ranges. */
+  private class DoubleSlider extends JSlider {
+
+    private static final int SLIDER_MIN = 0;
+    private static final int SLIDER_MAX = 100;
+    private double min, max;
+    private double tick;
+    private String format;
+
+    public DoubleSlider () {
+
+      super();
+      setMinimum (SLIDER_MIN);
+      setMaximum (SLIDER_MAX);
+
+    } // DoubleSlider
+
+    public void setDoubleRange (double min, double max) { 
+
+      this.min = min;
+      this.max = max;
+      calculateTickSize (Math.abs (max - min));
+
+      LOGGER.fine ("Slider range [" + min + "," + max + "] using tick size " + this.tick + " and format " + this.format);
+
+    } // setDoubleRange
+
+    public void calculateTickSize (double range) {
+
+      double interval = range/(SLIDER_MAX - SLIDER_MIN);
+      int power = (int) Math.floor (Math.log10 (interval));
+      double mantissa = interval / Math.pow (10, power);
+      if (mantissa < 2) this.tick = 2 * Math.pow (10, power);
+      else if (mantissa < 5) this.tick = 5 * Math.pow (10, power);
+      else this.tick = 10 * Math.pow (10, power);
+
+      int decimals  = this.tick >= 1 ? 0 : Math.abs ((int) Math.floor (Math.log10 (this.tick)));
+      this.format = (decimals == 0 ? "%.1f" : "%." + decimals + "f"); 
+
+    } // calculateTickSize
+
+    public void setDoubleValue (double value) { 
+
+      setValue (SLIDER_MIN + (int) Math.round ((SLIDER_MAX - SLIDER_MIN)*(value - min)/(max - min))); 
+
+    } // setDoubleValue
+
+    public double getDoubleValue () { 
+
+      int value = getValue();
+      double doubleValue;
+      if (value == SLIDER_MIN) doubleValue = min;
+      else if (value == SLIDER_MAX) doubleValue = max;
+      else {
+        doubleValue = min + (value - SLIDER_MIN)/((double) SLIDER_MAX)*(max - min);
+        doubleValue = ((int) Math.round (doubleValue / tick)) * tick;
+      } // else
+
+      return (doubleValue);
+
+    } // getDoubleValue
+
+    public String formatValue (double value) { return (String.format (format, value)); }
+
+  } // DoubleSlider class
 
   ////////////////////////////////////////////////////////////
 
@@ -237,12 +318,12 @@ public class EnhancementChooser
     GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
     this.add (enhancementRangeContainer, gc);
 
-    minSlider = new JSlider();
+    minSlider = new DoubleSlider();
     GUIServices.setConstraints (gc, 0, 0, 2, 1, GridBagConstraints.HORIZONTAL, 1, 0);
     gc.insets = new Insets (2,0,2,0);
     enhancementRangeContainer.add (minSlider, gc);
 
-    maxSlider = new JSlider();
+    maxSlider = new DoubleSlider();
     GUIServices.setConstraints (gc, 0, 1, 2, 1, GridBagConstraints.HORIZONTAL, 1, 0);
     enhancementRangeContainer.add (maxSlider, gc);
 
@@ -270,13 +351,13 @@ public class EnhancementChooser
 
     normalizeButton = GUIServices.getIconButton ("enhancement.normalize");
     GUIServices.setSquare (normalizeButton);
-    normalizeButton.setToolTipText ("Automatically enhance data");
+    normalizeButton.setToolTipText ("Normalize range around mean value");
     normalizeButton.addActionListener (event -> normalizeEvent());
     rangeButtonPanel.add (normalizeButton);
 
     JButton reverseButton = GUIServices.getIconButton ("enhancement.reverse");
     GUIServices.setSquare (reverseButton);
-    reverseButton.setToolTipText ("Swap minimum and maximum");
+    reverseButton.setToolTipText ("Reverse minimum and maximum");
     reverseButton.addActionListener (event -> reverseEvent());
     rangeButtonPanel.add (reverseButton);
 
@@ -344,7 +425,7 @@ public class EnhancementChooser
     // Save fields and sliders for easy processing
     // -------------------------------------------
     fields = new JTextField[] {minField, maxField};
-    sliders = new JSlider[] {minSlider, maxSlider};
+    sliders = new DoubleSlider[] {minSlider, maxSlider};
 
     // Create and activate listeners
     // -----------------------------
@@ -356,7 +437,7 @@ public class EnhancementChooser
 
     // Set an predefined enhancement for debugging
     // -------------------------------------------
-    if (System.getProperty ("cw.debug", "false").equals ("true")) {
+    if (!System.getProperty ("cw.debug", "false").equals ("false")) {
       setRange (new double[] {1, 100});
       setFunction (new LinearEnhancement (new double[] {1, 100}));
       setPalette (PaletteFactory.create ("HSL256"));
@@ -370,7 +451,7 @@ public class EnhancementChooser
   /** Adds listeners to the slider and field components. */
   private void activateListeners () {
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = MIN; i <= MAX; i++) {
       fields[i].addActionListener (fieldListener);
       sliders[i].addChangeListener (sliderListener);
     } // for
@@ -384,7 +465,7 @@ public class EnhancementChooser
   /** Removes listeners from the slider and field components. */
   private void deactivateListeners () {
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = MIN; i <= MAX; i++) {
       fields[i].removeActionListener (fieldListener);
       sliders[i].removeChangeListener (sliderListener);
     } // for
@@ -418,44 +499,42 @@ public class EnhancementChooser
 
       // Get slider value
       // ----------------
-      JSlider slider = (JSlider) event.getSource();
-      double value = slider.getValue();
+      var slider = (DoubleSlider) event.getSource();
+      double value = slider.getDoubleValue();
 
       // Limit value to allowed range
       // ----------------------------
       boolean outOfRange = false;
-      if (value < allowedRange[0]) {
-        value = allowedRange[0];
+      if (value < allowedRange[MIN]) {
+        value = allowedRange[MIN];
         outOfRange = true;
       } // if
-      else if (value > allowedRange[1]) {
-        value = allowedRange[1];
+      else if (value > allowedRange[MAX]) {
+        value = allowedRange[MAX];
         outOfRange = true;
       } // else if
 
       // Jump slider to actual value
       // ---------------------------
       if (outOfRange && !slider.getValueIsAdjusting()) {
-        final JSlider fSlider = slider;
-        final int fValue = (int) Math.round (value);
-        SwingUtilities.invokeLater (new Runnable () {
-            public void run () { 
-              deactivateListeners();
-              fSlider.setValue (fValue);
-              activateListeners();
-            } // run
-          });
+        final double newValue = value;
+        SwingUtilities.invokeLater (() -> {
+          deactivateListeners();
+          slider.setDoubleValue (newValue);
+          activateListeners();
+        });
       } // if
 
       // Set text string and range values
       // --------------------------------
-      String text = Double.toString (value);
+      String text = (value > allowedRange[MIN] && value < allowedRange[MAX] ? 
+        slider.formatValue (value) : Double.toString (value));
       if (slider == minSlider) {
-        actualRange[0] = value;
+        actualRange[MIN] = value;
         minField.setText (text);
       } // if
       else if (slider == maxSlider) { 
-        actualRange[1] = value;
+        actualRange[MAX] = value;
         maxField.setText (text); 
       } // else if
 
@@ -465,8 +544,7 @@ public class EnhancementChooser
         func.setRange (actualRange);
         palettePanel.setFunction (func);
         enhancementFunctionPanel.setFunction (func);
-        EnhancementChooser.this.firePropertyChange (FUNCTION_PROPERTY, null, 
-          getFunction());
+        EnhancementChooser.this.firePropertyChange (FUNCTION_PROPERTY, null, getFunction());
       } // if
 
     } // stateChanged
@@ -511,15 +589,15 @@ public class EnhancementChooser
       // -----------------------
       else if (functionType == FUNCTION_LOG) {
         if (func instanceof LogEnhancement) return;
-        if (allowedRange[0] <= 0 || allowedRange[1] <= 0) {
+        if (allowedRange[MIN] <= 0 || allowedRange[MAX] <= 0) {
           lastAllowedRange = (double[]) allowedRange.clone();
-          if (allowedRange[0] <= 0) allowedRange[0] = 1e-6;
-          if (allowedRange[1] <= 0) allowedRange[1] = 1e-6;
+          if (allowedRange[MIN] <= 0) allowedRange[MIN] = LOG10_MIN;
+          if (allowedRange[MAX] <= 0) allowedRange[MAX] = LOG10_MIN;
         } // if
-        actualRange[0] = Math.min (Math.max (actualRange[0], allowedRange[0]), 
-          allowedRange[1]);
-        actualRange[1] = Math.min (Math.max (actualRange[1], allowedRange[0]), 
-          allowedRange[1]);
+        actualRange[MIN] = Math.min (Math.max (actualRange[MIN], allowedRange[MIN]), 
+          allowedRange[MAX]);
+        actualRange[MAX] = Math.min (Math.max (actualRange[MAX], allowedRange[MIN]), 
+          allowedRange[MAX]);
         setFunction (new LogEnhancement (actualRange));
       } // else if
 
@@ -568,7 +646,7 @@ public class EnhancementChooser
       // Loop over each slider/field pair
       // --------------------------------
       deactivateListeners();
-      for (int i = 0; i < 2; i++) {
+      for (int i = MIN; i <= MAX; i++) {
 
         // Get field value
         // ---------------
@@ -578,12 +656,15 @@ public class EnhancementChooser
 
         // Check field value
         // -----------------
-        if (value < allowedRange[0]) value = allowedRange[0];
-        else if (value > allowedRange[1]) value = allowedRange[1];
+        if (value < allowedRange[MIN]) value = allowedRange[MIN];
+        else if (value > allowedRange[MAX]) value = allowedRange[MAX];
 
         // Set slider and field
         // --------------------
-        sliders[i].setValue ((int) Math.round (value));
+        // sliders[i].setValue ((int) Math.round (value));
+        // fields[i].setText (Double.toString (value));
+
+        sliders[i].setDoubleValue (value);
         fields[i].setText (Double.toString (value));
         
         // Set actual range
@@ -599,8 +680,7 @@ public class EnhancementChooser
         func.setRange (actualRange);
         palettePanel.setFunction (func);
         enhancementFunctionPanel.setFunction (func);
-        EnhancementChooser.this.firePropertyChange (FUNCTION_PROPERTY, null, 
-          getFunction());
+        EnhancementChooser.this.firePropertyChange (FUNCTION_PROPERTY, null, getFunction());
       } // if
 
     } // actionPerformed
@@ -628,14 +708,14 @@ public class EnhancementChooser
     if (stats == null || Double.isNaN (stats.getStdev())) return;
     func.normalize (stats, STDEV_UNITS);
     double[] funcRange = func.getRange();
-    funcRange[0] = Math.max (Math.floor (funcRange[0]), allowedRange[0]);
-    funcRange[1] = Math.min (Math.ceil (funcRange[1]), allowedRange[1]);
+    funcRange[MIN] = Math.max (Math.floor (funcRange[MIN]), allowedRange[MIN]);
+    funcRange[MAX] = Math.min (Math.ceil (funcRange[MAX]), allowedRange[MAX]);
     func.setRange (funcRange);
     setFunction (func);
   } // normalizeEvent
 
   private void reverseEvent() {
-    func.setRange (new double[] {actualRange[1], actualRange[0]});
+    func.setRange (new double[] {actualRange[MAX], actualRange[MIN]});
     setFunction (func);
   } // reverseEvent
 
@@ -659,7 +739,7 @@ public class EnhancementChooser
     gc.insets = new Insets (2, 0, 2, 0);
     GUIServices.setConstraints (gc, 1, 1, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
     final JTextField minField = new JTextField();
-    minField.setText (Double.toString (range[0]));
+    minField.setText (Double.toString (range[MIN]));
     minField.setEditable (true);
     minField.setColumns (8);
     dimPanel.add (minField, gc);
@@ -670,7 +750,7 @@ public class EnhancementChooser
     gc.insets = new Insets (2, 0, 2, 0);
     GUIServices.setConstraints (gc, 1, 2, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
     final JTextField maxField = new JTextField();
-    maxField.setText (Double.toString (range[1]));
+    maxField.setText (Double.toString (range[MAX]));
     maxField.setEditable (true);
     maxField.setColumns (8);
     dimPanel.add (maxField, gc);
@@ -682,8 +762,8 @@ public class EnhancementChooser
         double[] newRange = new double[2];
         boolean update = false;
         try {
-          newRange[0] = Double.parseDouble (minField.getText());
-          newRange[1] = Double.parseDouble (maxField.getText());
+          newRange[MIN] = Double.parseDouble (minField.getText());
+          newRange[MAX] = Double.parseDouble (maxField.getText());
           update = true;
         } // try
         catch (NumberFormatException e) {
@@ -752,13 +832,16 @@ public class EnhancementChooser
     // Adjust sliders
     // --------------    
     deactivateListeners();
-    minSlider.setValue ((int) Math.round (actualRange[0]));
-    maxSlider.setValue ((int) Math.round (actualRange[1]));
+    // minSlider.setValue ((int) Math.round (actualRange[MIN]));
+    // maxSlider.setValue ((int) Math.round (actualRange[MAX]));
 
-    // Adjust sliders
-    // --------------    
-    minField.setText (Double.toString (actualRange[0]));
-    maxField.setText (Double.toString (actualRange[1]));
+    minSlider.setDoubleValue (actualRange[MIN]);
+    maxSlider.setDoubleValue (actualRange[MAX]);
+
+    // Adjust fields
+    // -------------    
+    minField.setText (Double.toString (actualRange[MIN]));
+    maxField.setText (Double.toString (actualRange[MAX]));
 
     // Adjust function parameters
     // --------------------------
@@ -840,19 +923,19 @@ public class EnhancementChooser
 
     // Update the allowed range and swap if necessary.
     double[] newRange = (
-      range[0] < range[1] ? 
+      range[MIN] < range[MAX] ? 
       (double[]) range.clone() : 
-      new double[] {range[1], range[0]}
+      new double[] {range[MAX], range[MIN]}
     );
     allowedRange = (double[]) newRange.clone();  
 
     // Take account of log function mode by selectively modifying 
     // the range if zero or less.
     if (func instanceof LogEnhancement) {
-      if (allowedRange[0] <= 0 || allowedRange[1] <= 0) {
+      if (allowedRange[MIN] <= 0 || allowedRange[MAX] <= 0) {
         lastAllowedRange = (double[]) allowedRange.clone();
-        if (allowedRange[0] <= 0) allowedRange[0] = 1e-6;
-        if (allowedRange[1] <= 0) allowedRange[1] = 1e-6;
+        if (allowedRange[MIN] <= 0) allowedRange[MIN] = LOG10_MIN;
+        if (allowedRange[MAX] <= 0) allowedRange[MAX] = LOG10_MIN;
       } // if
       else lastAllowedRange = null;
     } // if
@@ -866,10 +949,14 @@ public class EnhancementChooser
     // Set slider extents
     // ------------------
     deactivateListeners();
-    minSlider.setMinimum ((int) Math.floor (newRange[0]));
-    minSlider.setMaximum ((int) Math.ceil (newRange[1]));
-    maxSlider.setMinimum ((int) Math.floor (newRange[0]));
-    maxSlider.setMaximum ((int) Math.ceil (newRange[1]));
+    // minSlider.setMinimum ((int) Math.floor (newRange[MIN]));
+    // minSlider.setMaximum ((int) Math.ceil (newRange[MAX]));
+    // maxSlider.setMinimum ((int) Math.floor (newRange[MIN]));
+    // maxSlider.setMaximum ((int) Math.ceil (newRange[MAX]));
+
+    minSlider.setDoubleRange (newRange[MIN], newRange[MAX]);
+    maxSlider.setDoubleRange (newRange[MIN], newRange[MAX]);
+
     activateListeners();
 
   } // setRange
