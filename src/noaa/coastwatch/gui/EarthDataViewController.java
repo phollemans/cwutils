@@ -262,7 +262,7 @@ public class EarthDataViewController {
     list.add (surveyChooser);
     list.add (annotationChooser);
     list.add (compositeChooser);
-    list.add (navigationChooser);
+//    list.add (navigationChooser);
     return (list);
 
   } // getTabComponentPanels
