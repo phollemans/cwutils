@@ -507,7 +507,7 @@ public final class cdat
     checkBoxMenuItem.addActionListener (event -> updateToolbarVisibility (event));
     submenu.add (checkBoxMenuItem);
 
-    checkBoxMenuItem = new JCheckBoxMenuItem ("Show text labels");
+    checkBoxMenuItem = new JCheckBoxMenuItem ("Show icons + text");
     boolean isToolbarLabelVisible = GUIServices.recallBooleanSettingForClass (false, "toolbar.label.visibility", cdat.class);
     checkBoxMenuItem.setState (isToolbarLabelVisible);
     checkBoxMenuItem.addActionListener (event -> updateToolbarLabelVisibility (event));
