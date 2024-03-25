@@ -33,9 +33,11 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
+import java.util.Collections;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import noaa.coastwatch.render.Palette;
@@ -67,83 +69,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * <p>Users may generate files of this form and use them as input to the
  * palette constructor.  Alternately, palettes may be created by
  * specifying the name and index color model data.  A number of predefined
- * palettes are also available by name or index:</p>
- * <pre>
- *   0  BW-Linear
- *   1  HSL256
- *   2  RAMSDIS
- *   3  Blue-Red
- *   4  Blue-White
- *   5  Grn-Red-Blu-Wht
- *   6  Red-Temperature
- *   7  Blue-Green-Red-Yellow
- *   8  Std-Gamma-II
- *   9  Prism
- *   10 Red-Purple
- *   11 Green-White-Linear
- *   12 Grn-Wht-Exponential
- *   13 Green-Pink
- *   14 Blue-Red2
- *   15 16-Level
- *   16 Rainbow
- *   17 Steps
- *   18 Stern-Special
- *   19 Haze
- *   20 Blue-Pastel-Red
- *   21 Pastels
- *   22 Hue-Sat-Lightness-1
- *   23 Hue-Sat-Lightness-2
- *   24 Hue-Sat-Value-1
- *   25 Hue-Sat-Value-2
- *   26 Purple-Red-Stripes
- *   27 Beach
- *   28 Mac-Style
- *   29 Eos-A
- *   30 Eos-B
- *   31 Hardcandy
- *   32 Nature
- *   33 Ocean
- *   34 Peppermint
- *   35 Plasma
- *   36 Rainbow2
- *   37 Blue-Waves
- *   38 Volcano
- *   39 Waves
- *   40 Rainbow18
- *   41 Rainbow-white
- *   42 Rainbow-black
- *   43 NDVI
- *   44 GLERL-Archive
- *   45 GLERL-30-Degrees
- *   46 Chlora-1
- *   47 Chlora-anom
- *   48 Spectrum
- *   49 Wind-0-50
- *   50 CRW_SST
- *   51 CRW_SSTANOMALY
- *   52 CRW_HOTSPOT
- *   53 CRW_DHW
- *   54 StepSeq25
- *   55 HSB-Cycle
- *   56 Ocean-algae
- *   57 Ocean-amp
- *   58 Ocean-balance
- *   59 Ocean-curl
- *   60 Ocean-deep
- *   61 Ocean-delta
- *   62 Ocean-dense
- *   63 Ocean-gray
- *   64 Ocean-haline
- *   65 Ocean-ice
- *   66 Ocean-matter
- *   67 Ocean-oxy
- *   68 Ocean-phase
- *   69 Ocean-solar
- *   70 Ocean-speed
- *   71 Ocean-tempo
- *   72 Ocean-thermal
- *   73 Ocean-turbid
- * </pre> 
+ * palettes are also available using the names returned by the {@link #getPredefined}
+ * method.</p>
  *
  * @author Peter Hollemans
  * @since 3.1.7
@@ -229,7 +156,8 @@ public class PaletteFactory {
     "Ocean-tempo",
     "Ocean-thermal",
     "Ocean-turbid",
-    "NCCOS-chla"
+    "NCCOS-chla",
+    "Turbo"
   };
 
   /** The palette DTD URL. */
@@ -246,17 +174,17 @@ public class PaletteFactory {
   // ---------
 
   /** The map of predefined palettes. */
-  private static HashMap paletteMap;
+  private static Map<String, Palette> paletteMap;
 
   /** The list of predefined palette names. */
-  private static ArrayList predefinedList;
+  private static List<String> predefinedList;
 
   ////////////////////////////////////////////////////////////
 
   /** Gets the list of predefined palette names. */
-  public static List getPredefined () { 
+  public static List<String> getPredefined () { 
 
-    return ((List) predefinedList.clone()); 
+    return (new ArrayList<>(predefinedList));
 
   } // getPredefined
 
@@ -271,8 +199,10 @@ public class PaletteFactory {
     Palette palette
   ) { 
 
-    predefinedList.add (palette.getName());
-    paletteMap.put (palette.getName(), palette);
+    var name = palette.getName();
+    predefinedList.add (name);
+    Collections.sort (predefinedList);
+    paletteMap.put (name, palette);
 
   } // addPredefined
 
@@ -315,8 +245,9 @@ public class PaletteFactory {
   /** Initializes the palette hash map and list. */
   static {
 
-    paletteMap = new HashMap();
-    predefinedList = new ArrayList (Arrays.asList (PREDEFINED));
+    paletteMap = new HashMap<>();
+    predefinedList = new ArrayList<> (Arrays.asList (PREDEFINED));
+    Collections.sort (predefinedList);
 
   } // static
 
@@ -515,6 +446,38 @@ public class PaletteFactory {
   ////////////////////////////////////////////////////////////
 
   /** 
+   * Constructs a new palette from a resource name.
+   *
+   * @param resource the resource name.
+   *
+   * @return the new palette.
+   *
+   * @throws RuntimeException if the palette specified by the resource 
+   * had input format errors or the resource is invalid.
+   * 
+   * #since 3.8.1
+   */
+  private static Palette createFromResource (String resource) {
+
+    Palette palette;
+
+    try { 
+      InputStream stream = PaletteFactory.class.getResourceAsStream (resource);
+      if (stream == null) throw new IOException ("Resource not found");
+      palette = create (stream);
+    } // try
+    catch (IOException e) {
+      String error = "Error creating new palette instance from resource " + resource + ": " + e.getMessage();
+      throw new RuntimeException (error);
+    } // catch
+
+    return (palette);
+
+  } // createFromResource
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
    * Constructs a new palette from a predefined palette name.  This
    * method returns the same instance of the predefined palette when
    * called multiple times with the same name.  A hash map is kept of
@@ -532,29 +495,7 @@ public class PaletteFactory {
     String name
   ) {
 
-    // Try getting palette from map
-    // ----------------------------
-    Palette palette = (Palette) paletteMap.get (name);
-
-    // Update map
-    // ----------
-    if (palette == null) {
-      try { 
-        String resource = name + FILE_EXTENSION;
-        InputStream stream = 
-          PaletteFactory.class.getResourceAsStream (resource);
-        if (stream == null)
-          throw new IOException ("Cannot find resource '" + resource + "'");
-        palette = create (stream);
-        paletteMap.put (name, palette);
-      } // try
-      catch (IOException e) {
-        String error = "Error creating new palette instance for " + 
-          name + ": " + e.getMessage();
-        throw new RuntimeException (error);
-      } // catch
-    } // if
-
+    var palette = paletteMap.computeIfAbsent (name, key -> createFromResource (key + FILE_EXTENSION));
     return (palette);
 
   } // create
