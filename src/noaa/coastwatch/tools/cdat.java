@@ -95,7 +95,8 @@ import noaa.coastwatch.gui.UpdateAgent;
 import noaa.coastwatch.gui.ViewOperationChooser;
 import noaa.coastwatch.gui.HelpOperationChooser;
 import noaa.coastwatch.gui.WindowMonitor;
-import noaa.coastwatch.gui.open.EarthDataChooser;
+import noaa.coastwatch.gui.open.EarthDataReaderChooser;
+import noaa.coastwatch.gui.open.EarthDataReaderChooser.State;
 import noaa.coastwatch.gui.save.EarthDataExporter;
 import noaa.coastwatch.gui.HelpOperationChooser;
 
@@ -888,7 +889,13 @@ public final class cdat
       String dir = GUIServices.recallStringSettingForClass (null, "last.directory", cdat.class);
       if (dir != null) file = new File (dir);
     } // if
-    EarthDataReader reader = EarthDataChooser.showDialog (this, file);
+
+//    EarthDataReader reader = EarthDataChooser.showDialog (this, file);
+    var chooser = EarthDataReaderChooser.getInstance();
+    chooser.showDialog (this, file);
+//    var reader = EarthDataChooser.showDialog (this, file);
+    EarthDataReader reader = (chooser.getState() == State.SELECTED ? chooser.getReader() : null);
+
 
 
 

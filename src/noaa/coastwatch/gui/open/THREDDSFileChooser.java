@@ -57,6 +57,7 @@ import noaa.coastwatch.gui.open.XMLTree;
  * @author Xiaoming Liu
  * @since 3.3.0
  */
+@Deprecated
 public class THREDDSFileChooser
   extends JPanel {
 

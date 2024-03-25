@@ -265,6 +265,45 @@ public class SwathProjection
 
   ////////////////////////////////////////////////////////////
 
+  private boolean createdInNullMode () { return (latEst == null && lonEst == null); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public void getWorldAxes (
+    EarthLocation earthLoc,
+    double[] northVector,
+    double[] eastVector
+  ) {
+
+    // If we were created in null mode, then we need to use another method
+    // to return the world axes.  In this case we invent them using the north
+    // is up flag.
+    if (createdInNullMode()) {
+      if (northIsUp) {
+        northVector[ROW] = -1;
+        northVector[COL] = 0;
+        eastVector[ROW] = 0;
+        eastVector[COL] = 1;
+      } // if
+      else {
+        northVector[ROW] = 1;
+        northVector[COL] = 0;
+        eastVector[ROW] = 0;
+        eastVector[COL] = -1;
+      } // else
+    } // if
+
+    // Otherwise we defer to the superclass method to compute the world axes
+    // in the original way.
+    else {
+      super.getWorldAxes (earthLoc, northVector, eastVector);
+    } // else
+
+  } // getWorldAxes
+
+  ////////////////////////////////////////////////////////////
+
   /**
    * Constructs a swath projection from the specified latitude and
    * longitude data and desired polynomial size.  A default tolerance
@@ -456,8 +495,13 @@ public class SwathProjection
     // Estimate geographic coords
     // --------------------------
     else {
-      earthLoc.setCoords (latEst.getValue (dataLoc), 
-        lonEst.getValue (dataLoc));
+      if (createdInNullMode()) {
+        earthLoc.markInvalid();
+      } // if
+      else {
+        earthLoc.setCoords (latEst.getValue (dataLoc), 
+          lonEst.getValue (dataLoc));
+      } // else
     } // else
 
   } // transformImpl

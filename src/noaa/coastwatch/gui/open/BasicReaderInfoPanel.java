@@ -62,6 +62,7 @@ import static noaa.coastwatch.util.MetadataServices.TIME_FMT;
  * @author Peter Hollemans
  * @since 3.2.0
  */
+@Deprecated
 public class BasicReaderInfoPanel
   extends JPanel {
 

@@ -32,6 +32,7 @@ package noaa.coastwatch.gui.open;
  * @author Peter Hollemans
  * @since 3.2.0
  */
+@Deprecated
 public class OpendapURLFilter implements StringFilter {
 
   /** Filters the input string. */

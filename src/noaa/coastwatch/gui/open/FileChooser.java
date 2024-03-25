@@ -76,6 +76,7 @@ import noaa.coastwatch.gui.open.OpendapURLFilter;
  * @author Peter Hollemans
  * @since 3.2.0
  */
+@Deprecated
 public class FileChooser
   extends JPanel {
 

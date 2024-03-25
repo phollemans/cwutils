@@ -214,11 +214,11 @@ public abstract class EarthTransform2D
    *
    * @since 3.3.1
    */
-   public void getWorldAxes (
-     EarthLocation earthLoc,
-     double[] northVector,
-     double[] eastVector
-   ) {
+  public void getWorldAxes (
+    EarthLocation earthLoc,
+    double[] northVector,
+    double[] eastVector
+  ) {
 
     DataLocation baseLoc = new DataLocation (2);
     DataLocation tipLoc = new DataLocation (2);

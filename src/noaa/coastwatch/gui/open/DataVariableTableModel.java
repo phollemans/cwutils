@@ -29,6 +29,7 @@ import java.awt.Container;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -47,6 +48,7 @@ import noaa.coastwatch.util.DataVariable;
  * @author Peter Hollemans
  * @since 3.2.0
  */
+@Deprecated
 public class DataVariableTableModel
   extends AbstractTableModel {
 
@@ -63,21 +65,21 @@ public class DataVariableTableModel
   // ---------
 
   /** The list of variables for the model. */
-  private List variableList;
+  private List<DataVariable> variableList;
 
   ////////////////////////////////////////////////////////////
 
   /** Creates a new table model with no data. */
   public DataVariableTableModel () {
 
-    this.variableList = new ArrayList();
+    this.variableList = new ArrayList<>();
 
   } // DataVariableTableModel constructor
 
   ////////////////////////////////////////////////////////////
 
   /** Creates a new table model using the varible list. */
-  public DataVariableTableModel (List variableList) { 
+  public DataVariableTableModel (List<DataVariable> variableList) { 
 
     this.variableList = variableList;
 
@@ -86,12 +88,12 @@ public class DataVariableTableModel
   ////////////////////////////////////////////////////////////
 
   /** Clears the variable list so that no data is contained. */
-  public void clear () { setVariableList (new ArrayList()); }
+  public void clear () { setVariableList (new ArrayList<DataVariable>()); }
 
   ////////////////////////////////////////////////////////////
 
   /** Sets the variable list for this model. */
-  public void setVariableList (List variableList) {
+  public void setVariableList (List<DataVariable> variableList) {
 
     this.variableList = variableList;
     fireTableDataChanged();
@@ -113,7 +115,7 @@ public class DataVariableTableModel
   /** Gets the table data value. */
   public Object getValueAt (int row, int column) {
 
-    DataVariable var = (DataVariable) variableList.get (row);
+    DataVariable var = variableList.get (row);
     switch (column) {
     case NAME_COLUMN: return (var.getName());
     case UNITS_COLUMN: return (var.getUnits());
@@ -128,7 +130,7 @@ public class DataVariableTableModel
   /** Gets the variable at the specified row. */
   public DataVariable getVariable (int row) { 
 
-    return ((DataVariable) variableList.get (row));
+    return (variableList.get (row));
 
   } // getVariable
 
@@ -158,10 +160,13 @@ public class DataVariableTableModel
     // Create table
     // ------------
     EarthDataReader reader = EarthDataReaderFactory.create (argv[0]);
-    List gridNames = reader.getAllGrids();
-    List gridPreviews = new ArrayList();
-    for (Iterator iter = gridNames.iterator(); iter.hasNext();)
-      gridPreviews.add (reader.getPreview ((String) iter.next()));
+    List<DataVariable> gridPreviews = new ArrayList<>();
+
+    try {
+      List<String> gridNames = reader.getAllGrids();
+      for (var name : gridNames) gridPreviews.add (reader.getPreview (name));
+    } // try
+    catch (IOException e) { }
     AbstractTableModel model = new DataVariableTableModel (gridPreviews);
     JTable table = new JTable (model);
     JScrollPane scrollpane = new JScrollPane (table);

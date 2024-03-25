@@ -64,6 +64,7 @@ import com.braju.format.Format;
  * @author Peter Hollemans
  * @since 3.2.0
  */
+@Deprecated
 public class HTTPDirectoryLister 
   extends AbstractDirectoryLister {
 

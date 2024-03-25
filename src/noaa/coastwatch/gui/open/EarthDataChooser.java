@@ -107,7 +107,10 @@ import java.util.logging.Logger;
  *
  * @author Peter Hollemans
  * @since 3.2.0
+ * 
+ * @deprecated As of 3.8.1 use {@link EarthDataReaderChooser}.
  */
+@Deprecated
 public class EarthDataChooser extends JPanel {
 
   private static final Logger LOGGER = Logger.getLogger (EarthDataChooser.class.getName());
@@ -347,15 +350,29 @@ public class EarthDataChooser extends JPanel {
         clearPreview();
       } // if
       else if (listSize == 1) {
+
+
+LOGGER.fine ("Starting process of getting new data view");
+LOGGER.fine ("Getting data from reader " + reader.getSource());
+
+
+
         clearPreview();
         String varName = (String) variableList.get (0);
         Cursor saved = variableTable.getCursor();
         variableTable.setCursor (Cursor.getPredefinedCursor (
           Cursor.WAIT_CURSOR));
-        EarthDataView view = EarthDataViewFactory.create (reader, varName);
+        EarthDataView view = EarthDataViewFactory.getInstance().create (reader, varName);
         if (view != null) {
           if (!(reader.getInfo().getTransform() instanceof SwathProjection))
             view.addOverlay (coast);
+
+
+
+LOGGER.fine ("Setting the data view in the preview panel");
+
+
+
           previewPanel.setView (view);
           previewPanel.repaint();
         } // if
@@ -392,8 +409,7 @@ public class EarthDataChooser extends JPanel {
       new Object[] {"Reading data from " + GUIServices.ellipsisString (fileName, 40), note, bar},
       JOptionPane.INFORMATION_MESSAGE);
     pane.setOptions (new Object[] {});
-    final JDialog progressDialog = pane.createDialog (openDialog, 
-      "Progress...");
+    final JDialog progressDialog = pane.createDialog (openDialog, "Progress...");
     progressDialog.setDefaultCloseOperation (JDialog.DO_NOTHING_ON_CLOSE);
     note.setText (" ");
 
@@ -410,56 +426,57 @@ public class EarthDataChooser extends JPanel {
     // Create statistics thread
     // ------------------------
     Thread statsThread = new Thread () {
-        public void run () {
+      public void run () {
 
-          // Reopen reader
-          // -------------
-          try { 
-            reader.close();
-            reader = EarthDataReaderFactory.create (reader.getSource());
-          } // try
-          catch (IOException e) {
-            throw new RuntimeException ("Error reopening reader");
-          } // catch
+        // Reopen reader
+        // -------------
+        try { 
+          reader.close();
+          reader = EarthDataReaderFactory.create (reader.getSource());
+        } // try
+        catch (IOException e) {
+          throw new RuntimeException ("Error reopening reader");
+        } // catch
 
-          // Loop over each variable name
-          // ----------------------------
-          for (int i = 0; i < variableNames.size(); i++) {
+        // Loop over each variable name
+        // ----------------------------
+        for (int i = 0; i < variableNames.size(); i++) {
 
-            // Update monitor
-            // --------------
-            final String name = (String) variableNames.get(i);
-            final int progress = i;
-            SwingUtilities.invokeLater (new Runnable () {
-                public void run () {
-                  note.setText ("Computing statistics for " + name);
-                  bar.setValue (progress);
-                } // run
-              });
-
-            // Compute stats
-            // -------------
-            DataVariable var;
-            try { var = reader.getVariable (name); }
-            catch (IOException e) { continue; }
-            DataLocationConstraints lc = new DataLocationConstraints();
-            lc.fraction = 0.01;
-            Statistics stats = VariableStatisticsGenerator.getInstance().generate (var, lc);
-            reader.putStatistics (name, stats);
-            
-          } // for
-
-          // Dispose of dialogs
-          // ------------------
+          // Update monitor
+          // --------------
+          final String name = (String) variableNames.get(i);
+          final int progress = i;
           SwingUtilities.invokeLater (new Runnable () {
-              public void run () {
-                progressDialog.dispose();
-                openDialog.dispose();
-              } // run
-            });
+            public void run () {
+              note.setText ("Computing statistics for " + name);
+              bar.setValue (progress);
+            } // run
+          });
+
+          // Compute stats
+          // -------------
+          DataVariable var;
+          try { var = reader.getVariable (name); }
+          catch (IOException e) { continue; }
+          DataLocationConstraints lc = new DataLocationConstraints();
+          lc.fraction = 0.01;
+          Statistics stats = VariableStatisticsGenerator.getInstance().generate (var, lc);
+          reader.putStatistics (name, stats);
           
-        } // run
-      };
+        } // for
+
+        // Dispose of dialogs
+        // ------------------
+        SwingUtilities.invokeLater (new Runnable () {
+            public void run () {
+              progressDialog.dispose();
+              openDialog.dispose();
+            } // run
+          });
+
+      } // run
+    };
+
     statsThread.start();
     progressDialog.setVisible (true);
 

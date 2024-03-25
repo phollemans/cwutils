@@ -70,6 +70,7 @@ import noaa.coastwatch.gui.open.ServerTableModel;
  * @author Peter Hollemans
  * @since 3.2.0
  */
+@Deprecated
 public class NetworkFileChooser
   extends JPanel {
 
