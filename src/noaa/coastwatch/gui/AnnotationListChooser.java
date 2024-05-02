@@ -28,12 +28,19 @@
 // TODO: Is there a way of inserting an "arrow mode" so that lines,
 // polylines, and curves can have arrows on one or both ends?
 
+// TODO: The default annotation lines would benefit from having a drop shadow.
+
 // Package
 // -------
 package noaa.coastwatch.gui;
 
 // Imports
 // -------
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -49,18 +56,18 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.JButton;
+import javax.swing.AbstractButton;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+
 import noaa.coastwatch.gui.AbstractOverlayListPanel;
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.TabComponent;
@@ -109,7 +116,7 @@ import noaa.coastwatch.render.TextOverlay;
  */
 public class AnnotationListChooser
   extends JPanel
-  implements TabComponent {
+  implements TabComponent, RequestHandler {
 
   // Constants
   // ---------
@@ -125,7 +132,7 @@ public class AnnotationListChooser
   public static final String POLYLINE_COMMAND = "Polyline";
 
   /** The box annotation command. */
-  public static final String BOX_COMMAND = "Box";
+  public static final String BOX_COMMAND = "Rectangle";
 
   /** The polygon annotation command. */
   public static final String POLYGON_COMMAND = "Polygon";
@@ -152,10 +159,60 @@ public class AnnotationListChooser
   private AnnotationListPanel listPanel;
 
   /** The list of action listeners. */
-  private List actionListeners;
+  private List<ActionListener> actionListeners;
 
   /** The last annotation command executed. */
   private String annotationCommand;
+
+  private DispatchTable dispatch;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * 
+   * @since 3.8.1
+   */
+  public static List<AbstractButton> getToolBarButtons () {
+
+    var className = AnnotationListChooser.class.getName();
+
+    var buttons = new ArrayList<AbstractButton>();
+
+    var button = new DropDownButton (GUIServices.createAction (className, "draw_shape", "Draw", "layers.annotation", "Draw annotation shape"));
+    button.addItem (GUIServices.createAction (className, "annotation_line", "Line", "annotation.menu.line", null));
+    button.addItem (GUIServices.createAction (className, "annotation_polyline", "Polyline", "annotation.menu.polyline", null));
+    button.addItem (GUIServices.createAction (className, "annotation_curve", "Curve", "annotation.menu.curve", null));
+    button.addItem (GUIServices.createAction (className, "annotation_box", "Rectangle", "annotation.menu.box", null));
+    button.addItem (GUIServices.createAction (className, "annotation_polygon", "Polygon", "annotation.menu.polygon", null));
+    button.addItem (GUIServices.createAction (className, "annotation_circle", "Circle", "annotation.menu.circle", null));
+    buttons.add (button);
+
+    var textButton = new JButton (GUIServices.createAction (className, "annotation_text", "Text", "layers.text", "Add text"));
+    buttons.add (textButton);
+
+    return (buttons);
+
+  } // getToolBarButtons
+
+  ////////////////////////////////////////////////////////////
+
+  private void startAnnotationMode (String command) {
+
+    annotationCommand = command;    
+    var event = new ActionEvent (this, 0, annotationCommand);  
+    for (var listener : actionListeners) listener.actionPerformed (event);
+
+  } // startAnnotationMode
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public void handleRequest (Request request) { dispatch.handleRequest (request); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean canHandleRequest (Request request) { return (dispatch.canHandleRequest (request)); }
 
   ////////////////////////////////////////////////////////////
 
@@ -207,7 +264,16 @@ public class AnnotationListChooser
 
     // Create list of annotation action listeners
     // --------------------------------------
-    actionListeners = new ArrayList();
+    actionListeners = new ArrayList<>();
+
+    dispatch = new DispatchTable (AnnotationListChooser.class.getName());
+    dispatch.addDispatch ("annotation_line", () -> startAnnotationMode (LINE_COMMAND));
+    dispatch.addDispatch ("annotation_polyline", () -> startAnnotationMode (POLYLINE_COMMAND));
+    dispatch.addDispatch ("annotation_box", () -> startAnnotationMode (BOX_COMMAND));
+    dispatch.addDispatch ("annotation_polygon", () -> startAnnotationMode (POLYGON_COMMAND));
+    dispatch.addDispatch ("annotation_circle", () -> startAnnotationMode (CIRCLE_COMMAND));
+    dispatch.addDispatch ("annotation_curve", () -> startAnnotationMode (CURVE_COMMAND));
+    dispatch.addDispatch ("annotation_text", () -> startAnnotationMode (TEXT_COMMAND));
 
   } // AnnotationListChooser constructor
 
@@ -314,6 +380,7 @@ public class AnnotationListChooser
     ) {
       ShapeOverlay shapeOverlay = new ShapeOverlay (getDrawingColor());
       shapeOverlay.setStroke (getLineStroke());
+      shapeOverlay.setDropShadow (true);
       shapeOverlay.addShape (shape);
       overlay = shapeOverlay;
     } // if
@@ -328,6 +395,7 @@ public class AnnotationListChooser
       FilledShapeOverlay filledOverlay = new FilledShapeOverlay (
         getDrawingColor());
       filledOverlay.setStroke (getLineStroke());
+      filledOverlay.setDropShadow (true);
       filledOverlay.setFillColor (getFillColor());
       filledOverlay.addShape (shape);
       overlay = filledOverlay;
@@ -360,8 +428,7 @@ public class AnnotationListChooser
 
     // Set name and add to list
     // ------------------------
-    overlay.setName (annotationCommand + listPanel.getOverlayCount (
-      annotationCommand));
+    overlay.setName (annotationCommand + listPanel.getOverlayCount (annotationCommand));
     overlay.setTransparency (getTransparency());
     listPanel.addOverlay (overlay);
 
@@ -370,7 +437,7 @@ public class AnnotationListChooser
   ////////////////////////////////////////////////////////////
 
   /** Deactivates the annotation chooser so that no annotation is selected. */
-  public void deactivate () { listPanel.hidden.setSelected (true); }
+  public void deactivate () { } //listPanel.hidden.setSelected (true); }
 
   ////////////////////////////////////////////////////////////
   
@@ -413,69 +480,79 @@ public class AnnotationListChooser
     /** Creates the overlay list add buttons. */
     protected List getAddButtons () {
 
-      // Create button list and listener
-      // -------------------------------
-      List buttons = new LinkedList();
-      ActionListener buttonListener = new AnnotationListener();
+//       // Create button list and listener
+//       // -------------------------------
+//       List buttons = new LinkedList();
+//       ActionListener buttonListener = new AnnotationListener();
 
-      // Create buttons
-      // --------------
-      ButtonGroup group = new ButtonGroup();
-      JToggleButton button;
+//       // Create buttons
+//       // --------------
+//       ButtonGroup group = new ButtonGroup();
+// //      JToggleButton button;
+//       JButton button;
 
-      button = GUIServices.getIconToggle ("annotation.line");
-      button.setActionCommand (LINE_COMMAND);
-      button.addActionListener (buttonListener);
-      button.setToolTipText (LINE_COMMAND);
-      buttons.add (button);
-      group.add (button);
+// //      button = GUIServices.getIconToggle ("annotation.line");
+//       button = GUIServices.getIconButton ("annotation.line");
+//       button.setActionCommand (LINE_COMMAND);
+//       button.addActionListener (buttonListener);
+//       button.setToolTipText (LINE_COMMAND);
+//       buttons.add (button);
+// //      group.add (button);
 
-      button = GUIServices.getIconToggle ("annotation.polyline");
-      button.setActionCommand (POLYLINE_COMMAND);
-      button.addActionListener (buttonListener);
-      button.setToolTipText (POLYLINE_COMMAND);
-      buttons.add (button);
-      group.add (button);
+// //      button = GUIServices.getIconToggle ("annotation.polyline");
+//       button = GUIServices.getIconButton("annotation.polyline");
+//       button.setActionCommand (POLYLINE_COMMAND);
+//       button.addActionListener (buttonListener);
+//       button.setToolTipText (POLYLINE_COMMAND);
+//       buttons.add (button);
+// //      group.add (button);
 
-      button = GUIServices.getIconToggle ("annotation.box");
-      button.setActionCommand (BOX_COMMAND);
-      button.addActionListener (buttonListener);
-      button.setToolTipText (BOX_COMMAND);
-      buttons.add (button);
-      group.add (button);
+// //      button = GUIServices.getIconToggle ("annotation.box");
+//       button = GUIServices.getIconButton ("annotation.box");
+//       button.setActionCommand (BOX_COMMAND);
+//       button.addActionListener (buttonListener);
+//       button.setToolTipText (BOX_COMMAND);
+//       buttons.add (button);
+// //      group.add (button);
 
-      button = GUIServices.getIconToggle ("annotation.polygon");
-      button.setActionCommand (POLYGON_COMMAND);
-      button.addActionListener (buttonListener);
-      button.setToolTipText (POLYGON_COMMAND);
-      buttons.add (button);
-      group.add (button);
+// //      button = GUIServices.getIconToggle ("annotation.polygon");
+//       button = GUIServices.getIconButton ("annotation.polygon");
+//       button.setActionCommand (POLYGON_COMMAND);
+//       button.addActionListener (buttonListener);
+//       button.setToolTipText (POLYGON_COMMAND);
+//       buttons.add (button);
+// //      group.add (button);
 
-      button = GUIServices.getIconToggle ("annotation.circle");
-      button.setActionCommand (CIRCLE_COMMAND);
-      button.addActionListener (buttonListener);
-      button.setToolTipText (CIRCLE_COMMAND);
-      buttons.add (button);
-      group.add (button);
+// //      button = GUIServices.getIconToggle ("annotation.circle");
+//       button = GUIServices.getIconButton ("annotation.circle");
+//       button.setActionCommand (CIRCLE_COMMAND);
+//       button.addActionListener (buttonListener);
+//       button.setToolTipText (CIRCLE_COMMAND);
+//       buttons.add (button);
+// //      group.add (button);
 
-      button = GUIServices.getIconToggle ("annotation.curve");
-      button.setActionCommand (CURVE_COMMAND);
-      button.addActionListener (buttonListener);
-      button.setToolTipText (CURVE_COMMAND);
-      buttons.add (button);
-      group.add (button);
+// //      button = GUIServices.getIconToggle ("annotation.curve");
+//       button = GUIServices.getIconButton ("annotation.curve");
+//       button.setActionCommand (CURVE_COMMAND);
+//       button.addActionListener (buttonListener);
+//       button.setToolTipText (CURVE_COMMAND);
+//       buttons.add (button);
+// //      group.add (button);
 
-      button = GUIServices.getIconToggle ("annotation.text");
-      button.setActionCommand (TEXT_COMMAND);
-      button.addActionListener (buttonListener);
-      button.setToolTipText (TEXT_COMMAND);
-      buttons.add (button);
-      group.add (button);
+// //      button = GUIServices.getIconToggle ("annotation.text");
+//       button = GUIServices.getIconButton ("annotation.text");
+//       button.setActionCommand (TEXT_COMMAND);
+//       button.addActionListener (buttonListener);
+//       button.setToolTipText (TEXT_COMMAND);
+//       buttons.add (button);
+// //      group.add (button);
 
-      hidden = new JToggleButton();
-      group.add (hidden);
+//       hidden = new JToggleButton();
+//       group.add (hidden);
 
-      return (buttons);
+//       return (buttons);
+
+      return (null);
 
     } // getAddButtons
 
@@ -490,75 +567,64 @@ public class AnnotationListChooser
       // Create panel
       // ------------
       JPanel panel = new JPanel (new GridBagLayout());
-      panel.setBorder (new TitledBorder (new EtchedBorder(), 
-        "Drawing Defaults"));
+      panel.setBorder (new TitledBorder (new EtchedBorder(), "Drawing Defaults"));
       GridBagConstraints gc = new GridBagConstraints();
       gc.anchor = GridBagConstraints.WEST;
 
       // Add drawing color chooser
       // -------------------------
-      GUIServices.setConstraints (gc, 0, 0, 1, 1, 
-        GridBagConstraints.HORIZONTAL, 0, 0);
+      GUIServices.setConstraints (gc, 0, 0, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
       gc.insets = new Insets (2, 0, 2, 10);
       panel.add (new JLabel ("Drawing color:"), gc);
       gc.insets = new Insets (2, 0, 2, 0);
 
       visualColor = new VisualColor (Color.WHITE);
-      GUIServices.setConstraints (gc, 1, 0, 1, 1, 
-        GridBagConstraints.NONE, 1, 0);
+      GUIServices.setConstraints (gc, 1, 0, 1, 1, GridBagConstraints.NONE, 1, 0);
       panel.add (visualColor.getComponent(), gc);
 
       // Add line style chooser
       // ----------------------
-      GUIServices.setConstraints (gc, 0, 1, 1, 1, 
-        GridBagConstraints.HORIZONTAL, 0, 0);
+      GUIServices.setConstraints (gc, 0, 1, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
       gc.insets = new Insets (2, 0, 2, 10);
       panel.add (new JLabel ("Line style:"), gc);
       gc.insets = new Insets (2, 0, 2, 0);
 
-      visualStroke = new VisualStroke (new BasicStroke());
-      GUIServices.setConstraints (gc, 1, 1, 1, 1, 
-        GridBagConstraints.NONE, 1, 0);
+      visualStroke = new VisualStroke (new BasicStroke (2));
+      GUIServices.setConstraints (gc, 1, 1, 1, 1, GridBagConstraints.NONE, 1, 0);
       panel.add (visualStroke.getComponent(), gc);
 
       // Add fill color chooser
       // ----------------------
-      GUIServices.setConstraints (gc, 0, 2, 1, 1, 
-        GridBagConstraints.HORIZONTAL, 0, 0);
+      GUIServices.setConstraints (gc, 0, 2, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
       gc.insets = new Insets (2, 0, 2, 10);
       panel.add (new JLabel ("Fill color:"), gc);
       gc.insets = new Insets (2, 0, 2, 0);
 
       visualFill = new VisualColor (null);
-      GUIServices.setConstraints (gc, 1, 2, 1, 1, 
-        GridBagConstraints.NONE, 1, 0);
+      GUIServices.setConstraints (gc, 1, 2, 1, 1, GridBagConstraints.NONE, 1, 0);
       panel.add (visualFill.getComponent(), gc);
 
       // Add font chooser
       // ----------------
-      GUIServices.setConstraints (gc, 0, 3, 1, 1, 
-        GridBagConstraints.HORIZONTAL, 0, 0);
+      GUIServices.setConstraints (gc, 0, 3, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
       gc.insets = new Insets (2, 0, 2, 10);
       panel.add (new JLabel ("Text font:"), gc);
       gc.insets = new Insets (2, 0, 2, 0);
 
       visualFont = new VisualFont (new Font (null, Font.PLAIN, 12));
-      GUIServices.setConstraints (gc, 1, 3, 1, 1, 
-        GridBagConstraints.NONE, 1, 0);
+      GUIServices.setConstraints (gc, 1, 3, 1, 1, GridBagConstraints.NONE, 1, 0);
       panel.add (visualFont.getComponent(), gc);
 
       // Add transparency chooser
       // ------------------------
-      GUIServices.setConstraints (gc, 0, 4, 1, 1, 
-        GridBagConstraints.HORIZONTAL, 0, 0);
+      GUIServices.setConstraints (gc, 0, 4, 1, 1, GridBagConstraints.HORIZONTAL, 0, 0);
       gc.insets = new Insets (2, 0, 2, 10);
       panel.add (new JLabel ("Transparency:"), gc);
       gc.insets = new Insets (2, 0, 2, 0);
 
       visualTransparency = new VisualInteger (Integer.valueOf (0));
       visualTransparency.setRestrictions (new int[] {0, 100, 5});
-      GUIServices.setConstraints (gc, 1, 4, 1, 1, 
-        GridBagConstraints.NONE, 1, 0);
+      GUIServices.setConstraints (gc, 1, 4, 1, 1, GridBagConstraints.NONE, 1, 0);
       panel.add (visualTransparency.getComponent(), gc);
 
       return (panel);

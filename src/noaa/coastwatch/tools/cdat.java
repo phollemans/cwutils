@@ -73,12 +73,13 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.JButton;
+import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBoxMenuItem;
 
-import noaa.coastwatch.gui.CloseIcon;
 import noaa.coastwatch.gui.CompoundToolBar;
+import noaa.coastwatch.gui.ApplicationToolBar;
 import noaa.coastwatch.gui.EarthDataAnalysisPanel;
 import noaa.coastwatch.gui.InterfaceOperationChooser;
 import noaa.coastwatch.gui.FileOperationChooser;
@@ -100,6 +101,10 @@ import noaa.coastwatch.gui.open.EarthDataReaderChooser;
 import noaa.coastwatch.gui.open.EarthDataReaderChooser.State;
 import noaa.coastwatch.gui.save.EarthDataExporter;
 import noaa.coastwatch.gui.HelpOperationChooser;
+import noaa.coastwatch.gui.IconFactory;
+import noaa.coastwatch.gui.DispatchTable;
+import noaa.coastwatch.gui.Request;
+import noaa.coastwatch.gui.DropDownButton;
 
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.render.EarthDataView;
@@ -198,8 +203,7 @@ import java.util.logging.Level;
  * @author Peter Hollemans
  * @since 3.1.7
  */
-public final class cdat
-  extends JFrame {
+public final class cdat extends JFrame {
 
   private static final String PROG = cdat.class.getName();
   private static final Logger LOGGER = Logger.getLogger (PROG);
@@ -232,17 +236,27 @@ public final class cdat
   /** The file operation chooser. */
   private FileOperationChooser fileChooser;
 
+
+  private Action fileOpenAction;
+  private Action fileCloseAction;
+  private Action fileExportAction;
+  private Action fileInfoAction;
+  private Action controlsAction;
+
+
   /** The view operation chooser. */
-  private ViewOperationChooser viewChooser;
+//  private ViewOperationChooser viewChooser;
 
   /** The help operation chooser. */
-  private HelpOperationChooser helpChooser;
+  // private HelpOperationChooser helpChooser;
 
   /** The interface operation chooser. */
-  private InterfaceOperationChooser interfaceChooser;
+//  private InterfaceOperationChooser interfaceChooser;
 
   /** The compound toolbar. */
-  private CompoundToolBar toolBar;
+//  private CompoundToolBar toolBar;
+  ApplicationToolBar toolBar;
+
 
   /** The tabbed pane used to hold analysis panels. */
   private JTabbedPane tabbedPane;
@@ -268,6 +282,11 @@ public final class cdat
   /** The saved view scale. */
   private double savedViewScale;
   
+  private DispatchTable toolBarDispatch;
+  private List<AbstractButton> toolBarButtons;
+
+
+
   ////////////////////////////////////////////////////////////
 
   /**
@@ -355,6 +374,43 @@ public final class cdat
     JMenuBar menuBar = new JMenuBar();
     this.setJMenuBar (menuBar);
 
+
+    String className = cdat.class.getName();
+    toolBarDispatch = new DispatchTable (className);
+
+
+
+
+
+    // Create a group of file-related actions.  We use these to populate
+    // the menu bar and also the toolbar, and later to enable/disable
+    // the export and info actions.
+    fileOpenAction = GUIServices.createAction (className, "file_open", "Open", "file.open", "Open new data file");
+    fileCloseAction = GUIServices.createAction (className, "file_close", "Close", "file.close", "Close current data file");
+    fileExportAction = GUIServices.createAction (className, "file_export", "Export", "file.export", "Export to image or data");
+    fileInfoAction = GUIServices.createAction (className, "file_info", "Info", "file.info", "Show data file information");
+
+
+
+
+    controlsAction = GUIServices.createAction (className, "controls_show", "Controls", "interface.control.tabs", "Show/hide control tabs");
+
+
+
+    // Create a group of help and other related actions.
+    // var helpAction = GUIServices.createAction (className, "help_show", "Help", "help.help", "Show software help");
+    // var prefsAction = GUIServices.createAction (className, "prefs_edit", "Prefs", "help.preferences", "Edit preferences");
+    // var tutorialAction = GUIServices.createAction (className, "course_open", "Tutorial", "help.online.course", "Open tutorial");
+
+
+
+
+
+
+
+
+
+
     // TODO: Should we handle the About, Preferences, and Quit
     // commands differently for MacOS X?  Same for cwstatus and
     // cwmaster.  On Mac, these menu items are normally put into the
@@ -370,7 +426,11 @@ public final class cdat
 
     JMenuItem menuItem;
     int keymask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-    menuItem = new JMenuItem (FileOperationChooser.OPEN);
+
+//    menuItem = new JMenuItem (FileOperationChooser.OPEN);
+    menuItem = new JMenuItem (fileOpenAction);
+    menuItem.setIcon (null);
+
     menuItem.setMnemonic (KeyEvent.VK_O);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_O, keymask));
     menuItem.addActionListener (event -> openFileEvent());
@@ -380,14 +440,24 @@ public final class cdat
     fileMenu.add (openRecentMenu);
     rebuildRecentFilesMenu();
 
-    menuItem = new JMenuItem (FileOperationChooser.CLOSE);
+//    menuItem = new JMenuItem (FileOperationChooser.CLOSE);
+    menuItem = new JMenuItem (fileCloseAction);
+    menuItem.setIcon (null);
+
+
+
     menuItem.setMnemonic (KeyEvent.VK_C);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_W, keymask));
     menuItem.addActionListener (event -> closeFileEvent());
     fileMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
-    menuItem = new JMenuItem (FileOperationChooser.EXPORT);
+
+//    menuItem = new JMenuItem (FileOperationChooser.EXPORT);
+    menuItem = new JMenuItem (fileExportAction);
+    menuItem.setIcon (null);
+
+
     menuItem.setMnemonic (KeyEvent.VK_E);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_E, keymask));
     menuItem.addActionListener (event -> exportFileEvent()); 
@@ -413,23 +483,22 @@ public final class cdat
     submenu.setMnemonic (KeyEvent.VK_S);
     viewMenu.add (submenu);
 
-    var smallWindow = "Small (960x720)";
-    menuItem = new JMenuItem (smallWindow);
+    menuItem = new JMenuItem ("Small (1024x768)");
     menuItem.setMnemonic (KeyEvent.VK_S);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_1, keymask));
-    menuItem.addActionListener (event -> windowSizeEvent (new Dimension (960, 720)));
+    menuItem.addActionListener (event -> windowSizeEvent (new Dimension (1024, 768)));
     submenu.add (menuItem);
 
-    menuItem = new JMenuItem ("Medium (1200x900)");
+    menuItem = new JMenuItem ("Medium (1194x896)");
     menuItem.setMnemonic (KeyEvent.VK_M);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_2, keymask));
-    menuItem.addActionListener (event -> windowSizeEvent (new Dimension (1200, 900)));
+    menuItem.addActionListener (event -> windowSizeEvent (new Dimension (1194, 896)));
     submenu.add (menuItem);
 
-    menuItem = new JMenuItem ("Large (1440x1080)");
+    menuItem = new JMenuItem ("Large (1366x1024)");
     menuItem.setMnemonic (KeyEvent.VK_L);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_3, keymask));
-    menuItem.addActionListener (event -> windowSizeEvent (new Dimension (1440, 1080)));
+    menuItem.addActionListener (event -> windowSizeEvent (new Dimension (1366, 1024)));
     submenu.add (menuItem);
 
     menuItem = new JMenuItem ("Custom Window Size");
@@ -449,35 +518,35 @@ public final class cdat
 
     menuItem = new JMenuItem ("Fit Image to Window");
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_0, keymask));
-    menuItem.addActionListener (event -> viewChooser.performOperation (ViewOperationChooser.RESET));
+    menuItem.addActionListener (event -> getAnalysisPanel().resetView());
     viewMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
     menuItem = new JMenuItem ("Actual Size");
-    menuItem.addActionListener (event -> viewChooser.performOperation (ViewOperationChooser.ONE_TO_ONE));
+    menuItem.addActionListener (event -> getAnalysisPanel().actualSizeView());
     viewMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
     menuItem = new JMenuItem ("Fill Window");
-    menuItem.addActionListener (event -> viewChooser.performOperation (ViewOperationChooser.FIT));
+    menuItem.addActionListener (event -> getAnalysisPanel().fillWindowView());
     viewMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
     menuItem = new JMenuItem ("Zoom In");
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_EQUALS, keymask));
-    menuItem.addActionListener (event -> viewChooser.performOperation (ViewOperationChooser.MAGNIFY));
+    menuItem.addActionListener (event -> getAnalysisPanel().magnifyView());
     viewMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
     menuItem = new JMenuItem ("Zoom Out");
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_MINUS, keymask));
-    menuItem.addActionListener (event -> viewChooser.performOperation (ViewOperationChooser.SHRINK));
+    menuItem.addActionListener (event -> getAnalysisPanel().shrinkView());
     viewMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
     menuItem = new JMenuItem ("Zoom to Selection");
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_Z, keymask));
-    menuItem.addActionListener (event -> viewChooser.performOperation (ViewOperationChooser.ZOOM));
+    menuItem.addActionListener (event -> getAnalysisPanel().zoomSelectionView());
     viewMenu.add (menuItem);
     menuItemDisableList.add (menuItem);
 
@@ -497,27 +566,29 @@ public final class cdat
 
     viewMenu.addSeparator();
 
-    submenu = new JMenu ("Tool bar");
+    submenu = new JMenu ("Tool Bar");
     viewMenu.add (submenu);
 
     JCheckBoxMenuItem checkBoxMenuItem;
-    checkBoxMenuItem = new JCheckBoxMenuItem ("Show bar");
+    checkBoxMenuItem = new JCheckBoxMenuItem ("Show Tool Bar");
     boolean isToolbarVisible = GUIServices.recallBooleanSettingForClass (true, "toolbar.visibility", cdat.class);
     checkBoxMenuItem.setState (isToolbarVisible);
     checkBoxMenuItem.addActionListener (event -> updateToolbarVisibility (event));
     submenu.add (checkBoxMenuItem);
 
-    checkBoxMenuItem = new JCheckBoxMenuItem ("Show icons + text");
-    boolean isToolbarLabelVisible = GUIServices.recallBooleanSettingForClass (false, "toolbar.label.visibility", cdat.class);
+    checkBoxMenuItem = new JCheckBoxMenuItem ("Show Icons + Text");
+    boolean isToolbarLabelVisible = GUIServices.recallBooleanSettingForClass (true, "toolbar.label.visibility", cdat.class);
     checkBoxMenuItem.setState (isToolbarLabelVisible);
     checkBoxMenuItem.addActionListener (event -> updateToolbarLabelVisibility (event));
     submenu.add (checkBoxMenuItem);
 
-    checkBoxMenuItem = new JCheckBoxMenuItem ("Show Control tabs");
+    checkBoxMenuItem = new JCheckBoxMenuItem ("Show Control Tabs");
     boolean areControlTabsVisible = GUIServices.recallBooleanSettingForClass (true, "controltabs.visibility", cdat.class);
     checkBoxMenuItem.setState (areControlTabsVisible);
     checkBoxMenuItem.addActionListener (event -> updateControlTabsVisibility (event));
+    menuItemDisableList.add (checkBoxMenuItem);
     var controlTabsMenuItem = checkBoxMenuItem;
+
     viewMenu.add (checkBoxMenuItem);
 
     // Create the tools menu with preferences, profiles, file info, etc.
@@ -577,13 +648,13 @@ public final class cdat
     helpMenu.setMnemonic (KeyEvent.VK_H);
     menuBar.add (helpMenu);
 
-    menuItem = new JMenuItem ("Help and Support");
+    menuItem = new JMenuItem ("Application Help");
     menuItem.setMnemonic (KeyEvent.VK_H);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_F1, 0));
     menuItem.addActionListener (event -> showHelpEvent()); 
     helpMenu.add (menuItem);
 
-    menuItem = new JMenuItem ("Open Online Course");
+    menuItem = new JMenuItem ("Open Online Tutorial Course");
     menuItem.addActionListener (event -> openCourseEvent());
     helpMenu.add (menuItem);
 
@@ -595,37 +666,41 @@ public final class cdat
     helpMenu.add (menuItem);
 
     // Create the file chooser toolbar
-    fileChooser = FileOperationChooser.getInstance();
-    fileChooser.addPropertyChangeListener (FileOperationChooser.OPERATION_PROPERTY,
-      new PropertyChangeAdapter (Map.of (
-        FileOperationChooser.OPEN, () -> openFileEvent(),
-        FileOperationChooser.CLOSE, () -> closeFileEvent(),
-        FileOperationChooser.EXPORT, () -> exportFileEvent(),
-        FileOperationChooser.INFO, () -> fileInfoEvent()
-      )
-    ));
+    // fileChooser = FileOperationChooser.getInstance();
+    // fileChooser.addPropertyChangeListener (FileOperationChooser.OPERATION_PROPERTY,
+    //   new PropertyChangeAdapter (Map.of (
+    //     FileOperationChooser.OPEN, () -> openFileEvent(),
+    //     FileOperationChooser.CLOSE, () -> closeFileEvent(),
+    //     FileOperationChooser.EXPORT, () -> exportFileEvent(),
+    //     FileOperationChooser.INFO, () -> fileInfoEvent()
+    //   )
+    // ));
+
+
+
+
 
     // Create the view chooser toolbar.
-    viewChooser = ViewOperationChooser.getInstance(); 
+//    viewChooser = ViewOperationChooser.getInstance(); 
 
     // Create the help chooser toolbar.
-    helpChooser = HelpOperationChooser.getInstance();
-    helpChooser.addPropertyChangeListener (HelpOperationChooser.OPERATION_PROPERTY,
-      new PropertyChangeAdapter (Map.of (
-        HelpOperationChooser.HELP, () -> showHelpEvent(),
-        HelpOperationChooser.PREFERENCES, () -> editPreferencesEvent(),
-        HelpOperationChooser.COURSE, () -> openCourseEvent()
-      )
-    ));
+    // helpChooser = HelpOperationChooser.getInstance();
+    // helpChooser.addPropertyChangeListener (HelpOperationChooser.OPERATION_PROPERTY,
+    //   new PropertyChangeAdapter (Map.of (
+    //     HelpOperationChooser.HELP, () -> showHelpEvent(),
+    //     HelpOperationChooser.PREFERENCES, () -> editPreferencesEvent(),
+    //     HelpOperationChooser.COURSE, () -> openCourseEvent()
+    //   )
+    // ));
 
     // Create the interface chooser toolbar.
-    interfaceChooser = InterfaceOperationChooser.getInstance();
-    interfaceChooser.addPropertyChangeListener (InterfaceOperationChooser.OPERATION_PROPERTY,
-      new PropertyChangeAdapter (Map.of (
-        InterfaceOperationChooser.CONTROLS, () -> controlTabsMenuItem.doClick(),
-        InterfaceOperationChooser.FULLSCREEN, () -> fullScreenEvent()
-      )
-    ));
+    // interfaceChooser = InterfaceOperationChooser.getInstance();
+    // interfaceChooser.addPropertyChangeListener (InterfaceOperationChooser.OPERATION_PROPERTY,
+    //   new PropertyChangeAdapter (Map.of (
+    //     InterfaceOperationChooser.CONTROLS, () -> controlTabsMenuItem.doClick(),
+    //     InterfaceOperationChooser.FULLSCREEN, () -> fullScreenEvent()
+    //   )
+    // ));
 
     // Create the profile chooser that saves and loads profiles of
     // CDAT enhancements and overlays.
@@ -636,22 +711,85 @@ public final class cdat
     profileChooser.setFileFilter (filter);
 
     // Combine the various tool bars into a compound one that holds them all.
-    toolBar = new CompoundToolBar (
-      new JToolBar[] {interfaceChooser, fileChooser, viewChooser, helpChooser}, 
-      new boolean[] {true, true, true, true},
-      true);
+//     toolBar = new CompoundToolBar (
+// //      new JToolBar[] {interfaceChooser, fileChooser, viewChooser, helpChooser}, 
+// //      new JToolBar[] {interfaceChooser, fileChooser, helpChooser}, 
+//       new JToolBar[] {fileChooser, helpChooser}, 
+//       new boolean[] {true, true, true, true},
+//       true);
+//     toolBar.setFloatable (false);
+//     toolBar.setBorder (new BevelBorder (BevelBorder.RAISED));
+//     updateToolbarLabelVisibility (isToolbarLabelVisible);
+//     toolBar.setVisible (isToolbarVisible);
+//     this.getContentPane().add (toolBar, BorderLayout.NORTH);
+
+
+
+
+    var buttonGroupList = new ArrayList<List<AbstractButton>>();
+    buttonGroupList.add (List.of (
+      new JButton (fileOpenAction)
+    ));
+    toolBarDispatch.addDispatch ("file_open", () -> openFileEvent());
+
+
+
+    toolBarButtons = EarthDataAnalysisPanel.getToolBarButtons();
+    buttonGroupList.add (toolBarButtons);
+
+
+
+    buttonGroupList.add (List.of (
+      new JButton (fileExportAction),
+      new JButton (fileInfoAction)
+    ));
+    toolBarDispatch.addDispatch ("file_export", () -> exportFileEvent());
+    toolBarDispatch.addDispatch ("file_info", () -> fileInfoEvent());
+
+
+
+    var helpButton = new DropDownButton (GUIServices.createAction (className, "help", "Help", "help.help", null));
+    helpButton.addItem (GUIServices.createAction (className, "help_show", "Show application help", "help.menu.help", null));
+    helpButton.addItem (GUIServices.createAction (className, "course_open", "Open online tutorial course", "help.menu.course", null));
+    var prefsAction = GUIServices.createAction (className, "prefs_edit", "Prefs", "help.preferences", "Edit preferences");
+
+
+    buttonGroupList.add (List.of (
+      new JButton (prefsAction),
+      helpButton
+    ));
+    toolBarDispatch.addDispatch ("prefs_edit", () -> editPreferencesEvent());
+    toolBarDispatch.addDispatch ("help_show", () -> showHelpEvent());
+    toolBarDispatch.addDispatch ("course_open", () -> openCourseEvent());
+
+
+
+
+    buttonGroupList.add (List.of (
+      new JButton (controlsAction)
+    ));
+    toolBarDispatch.addDispatch ("controls_show", () -> controlTabsMenuItem.doClick());
+
+
+
+
+
+    toolBar = new ApplicationToolBar (buttonGroupList);
     toolBar.setFloatable (false);
     toolBar.setBorder (new BevelBorder (BevelBorder.RAISED));
-    updateToolbarLabelVisibility (isToolbarLabelVisible);
+    toolBar.setShowText (isToolbarLabelVisible);
     toolBar.setVisible (isToolbarVisible);
+    toolBar.addActionListener (event -> toolBarEvent (event));
     this.getContentPane().add (toolBar, BorderLayout.NORTH);
+
+
 
     // Create the tabbed pane.
     tabbedPane = new JTabbedPane();
     tabbedPane.setTabLayoutPolicy (JTabbedPane.SCROLL_TAB_LAYOUT);
     this.getContentPane().add (tabbedPane, BorderLayout.CENTER);
     
-    // Set all the various GUI elements to their initialk enabled/disabled
+    // Set all the various GUI elements to their initial enabled/disabled
     // modes.
     updateEnabled();
 
@@ -686,6 +824,28 @@ public final class cdat
 
   ////////////////////////////////////////////////////////////
 
+  private void toolBarEvent (ActionEvent event) {
+
+    var command = event.getActionCommand();
+    var split = command.split (":");
+    var request = new Request () {
+      public String getTypeID() { return (split[0]); }
+      public Object getContent() { return (split[1]); }
+    };
+
+    if (toolBarDispatch.canHandleRequest (request)) toolBarDispatch.handleRequest (request);
+    else {
+      var activePanel = getAnalysisPanel();
+      if (activePanel.canHandleRequest (request)) activePanel.handleRequest (request);
+      else {
+        throw new IllegalStateException ("No handler found for request " + command);
+      } // else
+    } // else
+
+  } // toolBarEvent
+
+  ////////////////////////////////////////////////////////////
+
   /** Updates the visibility of the toolbar. */
   private void updateToolbarVisibility (ActionEvent event) {
 
@@ -700,11 +860,14 @@ public final class cdat
   /** Updates the visibility of the toolbar labels. */
   private void updateToolbarLabelVisibility (boolean flag) {
 
-    interfaceChooser.setShowText (flag);
-    fileChooser.setShowText (flag);
-    viewChooser.setShowText (flag);
-    helpChooser.setShowText (flag);
-    toolBar.updateButtonSize();
+    // interfaceChooser.setShowText (flag);
+    // fileChooser.setShowText (flag);
+    // viewChooser.setShowText (flag);
+    // helpChooser.setShowText (flag);
+    // toolBar.updateButtonSize();
+
+    toolBar.setShowText (flag);
+
 
   } // updateToolbarLabelVisibility
 
@@ -826,11 +989,18 @@ public final class cdat
     // Update toolbars
     // ---------------
     boolean enabled = (tabbedPane.getTabCount() != 0);
-    interfaceChooser.setEnabled (enabled);
-    fileChooser.setClosable (enabled);
-    fileChooser.setSavable (enabled);
-    fileChooser.setInfo (enabled);
-    viewChooser.setEnabled (enabled);
+//    interfaceChooser.setEnabled (enabled);
+    // fileChooser.setClosable (enabled);
+    // fileChooser.setSavable (enabled);
+    // fileChooser.setInfo (enabled);
+//    viewChooser.setEnabled (enabled);
+
+    fileCloseAction.setEnabled (enabled);
+    fileExportAction.setEnabled (enabled);
+    fileInfoAction.setEnabled (enabled);
+    controlsAction.setEnabled (enabled);
+    for (var button : toolBarButtons) button.setEnabled (enabled);
+
 
     // Update menu items
     // -----------------
@@ -867,15 +1037,7 @@ public final class cdat
 
     // Add the close button
     // --------------------
-    int size = 14;
-    JButton closeButton = new JButton (new CloseIcon (CloseIcon.Mode.NORMAL, size));
-    closeButton.setRolloverIcon (new CloseIcon (CloseIcon.Mode.HOVER, size));
-    closeButton.setPressedIcon (new CloseIcon (CloseIcon.Mode.PRESSED, size));
-    closeButton.setOpaque (false);
-    closeButton.setContentAreaFilled (false);
-    closeButton.setBorderPainted (false);
-    closeButton.setFocusPainted (false);
-    closeButton.setMargin (new Insets (2, 2, 2, 2));
+    var closeButton = GUIServices.createOnScreenStyleButton (16, IconFactory.Purpose.CLOSE_ROUNDED);
     closeButton.addActionListener (listener);
     tabPanel.add (closeButton);
     tabPanel.add (Box.createHorizontalStrut (5));
@@ -948,7 +1110,8 @@ public final class cdat
       tabbedPane.setTabComponentAt (tabbedPane.indexOfComponent (panel), tabTitlePanel);
       tabbedPane.setSelectedComponent (panel);
       updateEnabled();
-      
+      SwingUtilities.invokeLater (() -> panel.panView());
+
       // Save the file opened to the recently opened list and rebuild the
       // menu for the list.  We also store the directory here so that we
       // can use it later to open the next file.
@@ -1137,7 +1300,7 @@ public final class cdat
 
   private void showAboutEvent() {
     JOptionPane.showMessageDialog (cdat.this, 
-      ToolServices.getAbout (LONG_NAME), "About", 
+      GUIServices.getAboutComponent (LONG_NAME), "About", 
       JOptionPane.INFORMATION_MESSAGE);
   } // showAboutEvent
 
@@ -1205,7 +1368,7 @@ public final class cdat
    */
   public static void main (String argv[]) {
 
-    SplashScreenManager.updateSplash (LONG_NAME);
+    SplashScreenManager.updateSplash (null, ToolServices.getVersion());
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line
@@ -1278,6 +1441,18 @@ public final class cdat
       } // catch
     } // if
     final Dimension frameSize = (userFrameSize != null ? userFrameSize : lastFrameSize);
+
+    // Print an advice message to Linux users to help with display scaling.
+    // On Linux systems with display scaling turned on, the CDAT window
+    // appears too small with small icons and fonts.
+    if (GUIServices.IS_LINUX) {      
+      System.out.println (
+        "** Linux detected -- if you experience issues with the size of the window,\n" +
+        "** icons, or fonts being too small, try adding -J-Dsun.java2d.uiScale=2.0\n" +
+        "** to your command line.  To make this permanent, you can add this line to your\n" +
+        "** startup resources: export INSTALL4J_ADD_VM_PARAMS=-Dsun.java2d.uiScale=2.0"
+      );
+    } // if
 
     // Create and show frame
     // ---------------------
@@ -1352,6 +1527,7 @@ public final class cdat
 
         // Show frame
         // ----------
+        GUIServices.centerOnScreen (frame);
         frame.setVisible (true);
 
         // Open file

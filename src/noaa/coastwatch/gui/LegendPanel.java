@@ -48,6 +48,9 @@ public class LegendPanel
 
   private static final Logger LOGGER = Logger.getLogger (LegendPanel.class.getName());
 
+  /** The legend property for property listeners. */
+  public static final String LEGEND_PROPERTY = "legend";
+
   // Variables
   // ---------
 
@@ -93,8 +96,8 @@ public class LegendPanel
       legend.setPreferredSize (preferred);
       Dimension actual = legend.getSize ((Graphics2D) g);
 
-      LOGGER.fine ("Legend panel preferred size is " + preferred);
-      LOGGER.fine ("Legend actual size is " + actual);
+      // LOGGER.fine ("Legend panel preferred size is " + preferred);
+      // LOGGER.fine ("Legend actual size is " + actual);
 
       // Dim disabled legend
       // -------------------
@@ -121,7 +124,21 @@ public class LegendPanel
   ////////////////////////////////////////////////////////////
 
   /** Sets the legned for this panel. */
-  public void setLegend (Legend legend) { this.legend = legend; }
+  public void setLegend (Legend legend) { 
+
+    this.legend = legend; 
+    firePropertyChange (LEGEND_PROPERTY, null, legend);
+
+  } // setLegend
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * 
+   * 
+   * @since 3.8.1
+   */
+  public Legend getLegend () { return (legend); }
 
   ////////////////////////////////////////////////////////////
 

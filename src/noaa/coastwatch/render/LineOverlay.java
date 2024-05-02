@@ -141,7 +141,7 @@ public abstract class LineOverlay
 
     // Draw drop shadow
     // ----------------
-    if (dropShadow) drawShadow (g, view);
+    if (dropShadow && getColor() != null) drawShadow (g, view);
 
     // Draw graphics
     // -------------

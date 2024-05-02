@@ -168,7 +168,7 @@ public class GhostButton
 
     ////////////////////////////////////////////////////////
 
-    public int filterRGB(int x, int y, int rgb) {
+    public int filterRGB (int x, int y, int rgb) {
 
       int r = (rgb & 0xff0000) >> 16;
       r = (int) Math.max (0, Math.min (r*factor, 255));

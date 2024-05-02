@@ -32,6 +32,9 @@ import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.BoxLayout;
+import javax.swing.Box;
+import javax.swing.BorderFactory;
 import noaa.coastwatch.gui.TestContainer;
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.EarthDataReaderFactory;
@@ -73,7 +76,7 @@ public class VariableChooser
     List variableList
   ) {
 
-    super (new FlowLayout (FlowLayout.LEFT, 5, 2));
+   super (new FlowLayout (FlowLayout.CENTER, 5, 5));
 
     // Create label and combo box
     // --------------------------

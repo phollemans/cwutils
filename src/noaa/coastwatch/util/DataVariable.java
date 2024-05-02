@@ -1128,12 +1128,16 @@ public abstract class DataVariable
 
   /**
    * Disposes of any resources used by this variable prior to being
-   * finalized.  This method does nothing at this level, but may be
-   * overridden in the subclass to release resources.
+   * finalized.  After calling this method, any calls to retrieve data
+   * values may generate errors.
    *
    * @since 3.3.1
    */
-  public void dispose () { }
+  public void dispose () { 
+
+    if (data != null) data = null;
+
+  } // dispose
 
   ////////////////////////////////////////////////////////////
 

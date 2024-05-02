@@ -68,7 +68,7 @@ public class ToolServices {
   public static final String SUPPORT = "coastwatch.info@noaa.gov";
 
   /** The software website. */
-  public static final String WEBSITE = "http://coastwatch.noaa.gov";
+  public static final String WEBSITE = "https://coastwatch.noaa.gov";
 
   /** The software copyright. */
   public static final String COPYRIGHT = 

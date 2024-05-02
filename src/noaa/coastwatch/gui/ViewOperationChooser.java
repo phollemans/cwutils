@@ -25,14 +25,19 @@ package noaa.coastwatch.gui;
 
 // Imports
 // -------
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Color;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.function.BiFunction;
+
 import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -41,8 +46,16 @@ import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
+import javax.swing.JComponent;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
+
 import noaa.coastwatch.gui.FullScreenToolBar;
 import noaa.coastwatch.gui.GUIServices;
+import noaa.coastwatch.gui.IconFactory;
+
+import java.util.logging.Logger;
 
 /**
  * <p>The <code>ViewOperationChooser</code> class is a
@@ -72,6 +85,8 @@ import noaa.coastwatch.gui.GUIServices;
  */
 public class ViewOperationChooser
   extends JToolBar {
+
+  private static final Logger LOGGER = Logger.getLogger (ViewOperationChooser.class.getName());    
 
   // Constants
   // ---------

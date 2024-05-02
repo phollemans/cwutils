@@ -130,14 +130,6 @@ public class PreferencesChooser
   /** The category name for export settings. */
   private static final String EXPORT_CATEGORY = "Export";
 
-  /** The icon for general settings. */
-  private static final Icon GENERAL_ICON = 
-    GUIServices.getIcon ("prefs.general");
-
-  /** The icon for enhancement settings. */
-  private static final Icon ENHANCEMENT_ICON = 
-    GUIServices.getIcon ("prefs.enhancement");
-
   /** The constant for no units conversion. */
   private static final String NO_UNITS_PREF = "FROM DATA";
 
@@ -673,12 +665,12 @@ public class PreferencesChooser
             addEntry();
           } // actionPerformed
         });
-      addButton.setToolTipText ("Add");
+      addButton.setToolTipText ("Add new variable to list");
       variableControlPanel.add (addButton, gc);
 
       // Create remove button
       // --------------------
-      removeButton = GUIServices.getIconButton ("list.remove");
+      removeButton = GUIServices.getIconButton ("list.delete");
       GUIServices.setSquare (removeButton);
       removeButton.addActionListener (new ActionListener () {
           public void actionPerformed (ActionEvent event) {
@@ -686,7 +678,7 @@ public class PreferencesChooser
           } // actionPerformed
         });
       removeButton.setEnabled (false);
-      removeButton.setToolTipText ("Remove");
+      removeButton.setToolTipText ("Remove variable from list");
       variableControlPanel.add (removeButton, gc);
 
       // Create settings panel
@@ -694,7 +686,7 @@ public class PreferencesChooser
       settingsPanel = new JPanel (new BorderLayout());
       GUIServices.setConstraints (gc, 1, 0, 1, 1, GridBagConstraints.BOTH, 
         1, 1);
-      gc.insets = new Insets (0, 2, 0, 2);
+      gc.insets = new Insets (0, 10, 0, 2);
       this.add (settingsPanel, gc);
   
       // Create palette list

@@ -101,6 +101,7 @@ public class TestContainer {
     // ----------
     SwingUtilities.invokeLater (new Runnable () {
         public void run () {
+          GUIServices.centerOnScreen (frame);
           frame.setVisible (true);
         } // run
       });

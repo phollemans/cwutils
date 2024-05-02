@@ -43,6 +43,7 @@ import java.util.Date;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.AbstractButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
@@ -76,6 +77,8 @@ import noaa.coastwatch.render.PolygonOverlay;
 import noaa.coastwatch.render.PointFeatureOverlay;
 import noaa.coastwatch.render.TopographyOverlay;
 
+import java.util.logging.Logger;
+
 /**
  * <p>The <code>OverlayListChooser</code> class is a panel that
  * allows the user to manipulate a list of {@link
@@ -103,7 +106,9 @@ import noaa.coastwatch.render.TopographyOverlay;
  */
 public class OverlayListChooser
   extends JPanel
-  implements TabComponent {
+  implements TabComponent, RequestHandler {
+
+  private static final Logger LOGGER = Logger.getLogger (OverlayListChooser.class.getName());
 
   // Constants
   // ---------
@@ -172,6 +177,137 @@ public class OverlayListChooser
   /** The popup menu for grid overlays. */
   private JPopupMenu gridMenu;
 
+  private DispatchTable dispatch;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * 
+   * @since 3.8.1
+   */
+  public static List<AbstractButton> getToolBarButtons () {
+
+    var className = OverlayListChooser.class.getName();
+
+    var buttons = new ArrayList<AbstractButton>();
+
+    var button = new DropDownButton (GUIServices.createAction (className, "add_overlay", "Overlay", "layers.overlays", "Add geographic overlay"));
+    button.addItem (GUIServices.createAction (className, "add_coast", "Coastlines", "overlay.menu.coast", null));
+    button.addItem (GUIServices.createAction (className, "add_latlon", "Latitude / longitude grid", "overlay.menu.latlon", null));
+    button.addItem (GUIServices.createAction (className, "add_dataref", "Row / column grid", "overlay.menu.dataref", null));
+    button.addItem (GUIServices.createAction (className, "add_political", "Country and state borders", "overlay.menu.political", null));
+    button.addItem (GUIServices.createAction (className, "add_topo", "Topographic and bathymetric contours", "overlay.menu.topography", null));
+    button.addItem (GUIServices.createAction (className, "add_shape", "Shape files", "overlay.menu.shape", null));
+    buttons.add (button);
+
+    button = new DropDownButton (GUIServices.createAction (className, "add_mask", "Mask", "layers.masks", "Mask data"));
+    button.addItem (GUIServices.createAction (className, "add_bitmask", "Single layer bitmask", "overlay.menu.bitmask", null));
+    button.addItem (GUIServices.createAction (className, "add_multilayer", "Multilayer bitmask", "overlay.menu.multilayer", null));
+    button.addItem (GUIServices.createAction (className, "add_exprmask", "Expression mask", "overlay.menu.expression", null));
+    buttons.add (button);
+
+    return (buttons);
+
+  } // getToolBarButtons
+
+  ////////////////////////////////////////////////////////////
+
+  private void addCoastEvent() {
+
+    var overlay = new CoastOverlay (Color.WHITE);
+    listPanel.addNewOverlay (overlay, "Coast");
+
+  } // addCoastEvent
+
+  ////////////////////////////////////////////////////////////
+
+  private void addLatLonEvent() {
+
+    var overlay = new LatLonOverlay (Color.WHITE);
+    listPanel.addNewOverlay (overlay, "Lat/Lon");
+
+  } // addLatLonEvent
+
+  ////////////////////////////////////////////////////////////
+
+  private void addDataRefEvent() {
+
+    var overlay = new DataReferenceOverlay (Color.WHITE);
+    listPanel.addNewOverlay (overlay, "Row/Col");
+
+  } // addDataRefEvent
+
+  ////////////////////////////////////////////////////////////
+
+  private void addPoliticalEvent() {
+
+    var overlay = new PoliticalOverlay (Color.WHITE);
+    listPanel.addNewOverlay (overlay, "Political");
+
+  } // addPoliticalEvent
+
+  ////////////////////////////////////////////////////////////
+
+  private void addTopoEvent() {
+
+    try {
+      var overlay = new TopographyOverlay (Color.WHITE);
+      overlay.setLevels (TopographyOverlay.BATH_LEVELS);
+      listPanel.addNewOverlay (overlay, "Topographic");
+    } // try
+    catch (Exception e) { throw new RuntimeException (e); }
+
+  } // addTopoEvent
+
+  ////////////////////////////////////////////////////////////
+
+  private void addBitmaskEvent() {
+
+    var overlay = new BitmaskOverlay (Color.GRAY, reader, variableList, (String) variableList.get (0), 255);
+    var chooserPanel = OverlayPropertyChooserFactory.create (overlay);
+    listPanel.showDialog (chooserPanel, "Bitmask");
+
+  } // addBitmaskEvent
+
+  ////////////////////////////////////////////////////////////
+
+  private void addMultilayerEvent() {
+
+    var chooserPanel = OverlayPropertyChooserFactory.create (listPanel.createDefaultMultilayer());
+    listPanel.showDialog (chooserPanel, "Multilayer");
+
+  } // addMultilayerEvent
+
+  ////////////////////////////////////////////////////////////
+
+  private void addExprMaskEvent() {
+
+    var overlay = new ExpressionMaskOverlay (Color.GRAY, reader, variableList, "");
+    var chooserPanel = OverlayPropertyChooserFactory.create (overlay);
+    listPanel.showDialog (chooserPanel, "Expression");
+
+  } // addExprMaskEvent
+
+  ////////////////////////////////////////////////////////////
+
+  private void addShapeEvent() {
+
+    var overlayList = listPanel.createShapeOverlays();
+    for (var overlay : overlayList)
+      listPanel.addNewOverlay (overlay, overlay.getName());
+
+  } // addShapeEvent
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public void handleRequest (Request request) { dispatch.handleRequest (request); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean canHandleRequest (Request request) { return (dispatch.canHandleRequest (request)); }
+
   ////////////////////////////////////////////////////////////
 
   /** 
@@ -196,6 +332,17 @@ public class OverlayListChooser
     // -----------------
     listPanel = new OverlayListPanel();
     this.add (listPanel, BorderLayout.CENTER);
+
+    dispatch = new DispatchTable (OverlayListChooser.class.getName());
+    dispatch.addDispatch ("add_coast", () -> addCoastEvent());
+    dispatch.addDispatch ("add_latlon", () -> addLatLonEvent());
+    dispatch.addDispatch ("add_dataref", () -> addDataRefEvent());
+    dispatch.addDispatch ("add_political", () -> addPoliticalEvent());
+    dispatch.addDispatch ("add_topo", () -> addTopoEvent());
+    dispatch.addDispatch ("add_bitmask", () -> addBitmaskEvent());
+    dispatch.addDispatch ("add_multilayer", () -> addMultilayerEvent());
+    dispatch.addDispatch ("add_exprmask", () -> addExprMaskEvent());
+    dispatch.addDispatch ("add_shape", () -> addShapeEvent());
 
   } // OverlayListChooser constructor
 
@@ -269,76 +416,78 @@ public class OverlayListChooser
     /** Creates the overlay list add buttons. */
     protected List getAddButtons () {
 
-      // Create button list and listener
-      // -------------------------------
-      List buttons = new LinkedList();
-      ActionListener buttonListener = new OverlayListener();
+      // // Create button list and listener
+      // // -------------------------------
+      // List buttons = new LinkedList();
+      // ActionListener buttonListener = new OverlayListener();
       
-      // Create buttons
-      // --------------
-      String[] commandArray = new String[] {
-        GRID_COMMAND,
-        COAST_COMMAND,
-        POLITICAL_COMMAND,
-        TOPOGRAPHY_COMMAND,
-        MASK_COMMAND,
-        SHAPE_COMMAND
-      };
-      String[] iconArray = new String[] {
-        "overlay.grid",
-        "overlay.coast",
-        "overlay.political",
-        "overlay.topography",
-        "overlay.masks",
-        "overlay.shape"
-      };
-      for (int i = 0; i < commandArray.length; i++) {
-        JButton button = GUIServices.getIconButton (iconArray[i]);
-        button.setActionCommand (commandArray[i]);
-        button.addActionListener (buttonListener);
-        button.setToolTipText (commandArray[i]);
-        buttons.add (button);
-      } // for
+      // // Create buttons
+      // // --------------
+      // String[] commandArray = new String[] {
+      //   GRID_COMMAND,
+      //   COAST_COMMAND,
+      //   POLITICAL_COMMAND,
+      //   TOPOGRAPHY_COMMAND,
+      //   MASK_COMMAND,
+      //   SHAPE_COMMAND
+      // };
+      // String[] iconArray = new String[] {
+      //   "overlay.grid",
+      //   "overlay.coast",
+      //   "overlay.political",
+      //   "overlay.topography",
+      //   "overlay.masks",
+      //   "overlay.shape"
+      // };
+      // for (int i = 0; i < commandArray.length; i++) {
+      //   JButton button = GUIServices.getIconButton (iconArray[i]);
+      //   button.setActionCommand (commandArray[i]);
+      //   button.addActionListener (buttonListener);
+      //   button.setToolTipText (commandArray[i]);
+      //   buttons.add (button);
+      // } // for
 
-      // Create mask overlay menu
-      // ------------------------
-      maskMenu = new JPopupMenu();
-      String[] maskCommands = new String[] {
-        BITMASK_COMMAND,
-        MULTILAYER_COMMAND,
-        EXPRMASK_COMMAND
-      };
-      String[] maskIcons = new String[] {
-        "overlay.menu.bitmask",
-        "overlay.menu.multilayer",
-        "overlay.menu.expression"
-      };
-      for (int i = 0; i < maskCommands.length; i++) {
-        JMenuItem item = new JMenuItem (maskCommands[i], 
-          GUIServices.getIcon (maskIcons[i]));
-        maskMenu.add (item);
-        item.addActionListener (buttonListener);
-      } // for
+      // // Create mask overlay menu
+      // // ------------------------
+      // maskMenu = new JPopupMenu();
+      // String[] maskCommands = new String[] {
+      //   BITMASK_COMMAND,
+      //   MULTILAYER_COMMAND,
+      //   EXPRMASK_COMMAND
+      // };
+      // String[] maskIcons = new String[] {
+      //   "overlay.menu.bitmask",
+      //   "overlay.menu.multilayer",
+      //   "overlay.menu.expression"
+      // };
+      // for (int i = 0; i < maskCommands.length; i++) {
+      //   JMenuItem item = new JMenuItem (maskCommands[i], 
+      //     GUIServices.getIcon (maskIcons[i]));
+      //   maskMenu.add (item);
+      //   item.addActionListener (buttonListener);
+      // } // for
 
-      // Create grid overlay menu
-      // ------------------------
-      gridMenu = new JPopupMenu();
-      String[] gridCommands = new String[] {
-        LATLON_COMMAND,
-        DATAREF_COMMAND
-      };
-      String[] gridIcons = new String[] {
-        "overlay.menu.latlon",
-        "overlay.menu.dataref"
-      };
-      for (int i = 0; i < gridCommands.length; i++) {
-        JMenuItem item = new JMenuItem (gridCommands[i], 
-          GUIServices.getIcon (gridIcons[i]));
-        gridMenu.add (item);
-        item.addActionListener (buttonListener);
-      } // for
+      // // Create grid overlay menu
+      // // ------------------------
+      // gridMenu = new JPopupMenu();
+      // String[] gridCommands = new String[] {
+      //   LATLON_COMMAND,
+      //   DATAREF_COMMAND
+      // };
+      // String[] gridIcons = new String[] {
+      //   "overlay.menu.latlon",
+      //   "overlay.menu.dataref"
+      // };
+      // for (int i = 0; i < gridCommands.length; i++) {
+      //   JMenuItem item = new JMenuItem (gridCommands[i], 
+      //     GUIServices.getIcon (gridIcons[i]));
+      //   gridMenu.add (item);
+      //   item.addActionListener (buttonListener);
+      // } // for
 
-      return (buttons);
+      // return (buttons);
+
+      return (null);
 
     } // getAddButtons
 
@@ -488,8 +637,10 @@ public class OverlayListChooser
           } // run
         });
       Action cancelAction = GUIServices.createAction ("Cancel", null);
+      var showing = OverlayListChooser.this.isShowing();
+      var parent = showing ? OverlayListChooser.this : JOptionPane.getFrameForComponent (OverlayListChooser.this);
       dialog[0] = GUIServices.createDialog (
-        OverlayListChooser.this, "Select the overlay properties", true, 
+        parent, "Select the overlay properties", true, 
         chooserPanel, null, new Action[] {okAction, cancelAction}, 
         new boolean[] {false, true}, true);
 

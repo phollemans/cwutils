@@ -204,6 +204,9 @@ public class LightTable
   /** The color for inside the zoom drag area. */
   private static final Color IN_ZOOM_COLOR = new Color (0, 0, 0, 0);
 
+  private static final Color ZOOM_GRID_SHADOW_COLOR = new Color (0, 0, 0, 64);
+  private static final Color ZOOM_GRID_LINE_COLOR = new Color (255, 255, 255, 96);
+
   // Variables
   // ---------
 
@@ -255,8 +258,20 @@ public class LightTable
   private double wheelRotationTotal;
   private Timer wheelRotationTimer;
   private Point wheelRotationPoint;
+  private List<MouseListener> doubleClickListeners;
 
+  ////////////////////////////////////////////////////////////
 
+  /**
+   * 
+   * 
+   * @since 3.8.1
+   */
+  public void addDoubleClickListener (MouseListener listener) {
+
+    doubleClickListeners.add (listener);
+
+  } // addDoubleClickListener
 
   ////////////////////////////////////////////////////////////
 
@@ -298,17 +313,38 @@ public class LightTable
       g2.setRenderingHint (RenderingHints.KEY_ANTIALIASING, 
         RenderingHints.VALUE_ANTIALIAS_ON);
 
-      // Draw zoom box
-      // -------------
+      // Draw the zoom rectangle and grid in two parts: first shade the
+      // area inside and outside of the zoom box, then draw a grid of lines
+      // at the 1/3 and 2/3 marks.
       if (drawingMode == Mode.BOX_ZOOM) {
+
         Area insideZoom = new Area (tableShape);
-        Area outsideZoom = 
-          new Area (new Rectangle (0, 0, getWidth(), getHeight()));
+        Area outsideZoom = new Area (new Rectangle (0, 0, getWidth(), getHeight()));
         outsideZoom.subtract (insideZoom);
         g2.setColor (OUT_ZOOM_COLOR);
         g2.fill (outsideZoom);
         g2.setColor (IN_ZOOM_COLOR);
         g2.fill (insideZoom);
+
+        var rect = (Rectangle) tableShape;
+        var path = new GeneralPath();
+        path.moveTo (rect.x, rect.y+rect.height/3.0f);
+        path.lineTo (rect.x+rect.width-1, rect.y+rect.height/3.0f);
+        path.moveTo (rect.x, rect.y+rect.height*2/3.0f);
+        path.lineTo (rect.x+rect.width-1, rect.y+rect.height*2/3.0f);
+        path.moveTo (rect.x+rect.width/3.0f, rect.y);
+        path.lineTo (rect.x+rect.width/3.0f, rect.y+rect.height-1);
+        path.moveTo (rect.x+rect.width*2/3.0f, rect.y);
+        path.lineTo (rect.x+rect.width*2/3.0f, rect.y+rect.height-1);
+
+        g2.setStroke (SHADOW_STROKE);
+        g2.setColor (ZOOM_GRID_SHADOW_COLOR);
+        g2.draw (path);
+
+        g2.setStroke (LINE_STROKE);
+        g2.setColor (ZOOM_GRID_LINE_COLOR);
+        g2.draw (path);
+
       } // if
 
       // Draw shape
@@ -349,6 +385,7 @@ public class LightTable
     dragging = false;
     active = false;
     listeners = new ArrayList<ChangeListener>();
+    doubleClickListeners = new ArrayList<>();
     setBackground (component.getBackground());
     setOpaque (true);
 
@@ -366,8 +403,16 @@ public class LightTable
     MouseEventForwarder forwarder = new MouseEventForwarder();
     glassPane.addMouseListener (forwarder);
     glassPane.addMouseMotionListener (forwarder);
-    
+
   } // LightTable constructor
+
+  ////////////////////////////////////////////////////////////
+
+  private void fireDoubleClickEvent (MouseEvent event) {
+
+    for (var listener : doubleClickListeners) listener.mouseClicked (event);
+
+  } // fireDoubleClickEvent
 
   ////////////////////////////////////////////////////////////
 
@@ -397,7 +442,7 @@ public class LightTable
 
     // TODO: This is an attempt to explore the use of a mouse wheel 
     // for sending back magnification events to the panel using this
-    // light table.  See the TODO item in EarthDataViewPanel for more 
+    // light table.  See the TODO item in EarthDataViewController for more 
     // details and other code.  For now we disable this by not subscribing 
     // to mouse wheel events in the constructor.
 
@@ -582,6 +627,15 @@ LOGGER.fine ("wheelRotationTotal = " + wheelRotationTotal);
             appendPoly (truncate (e.getPoint()));
         } // else
       } // if
+
+
+
+      else if (active && (e.getClickCount() % 2 == 0)) {
+        fireDoubleClickEvent (e);
+      } // else if
+
+
+
     } // mouseClicked
     
     public void mouseMoved (MouseEvent e) { 

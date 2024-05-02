@@ -58,10 +58,8 @@ import java.util.logging.Logger;
  * <p>The <code>FullScreenWindow</code> class display a full screen
  * component with optional tool bar.  The displayed component is taken
  * from its parent component (if it exists) and displayed in full
- * screen mode by the {@link #start} method.  The component is
- * restored to its parent by the {@link #stop} method.  If a parent
- * component exists, it should have a <code>BorderLayout</code> layout
- * manager for the component to be restored correctly.</p>
+ * screen mode by the {@link #start} method.  The caller must restore the 
+ * component to its parent after calling the {@link #stop} method.</p>
  *
  * <p>Java support for full screen mode is not required for a
  * component to be displayed full screen, but some performance
@@ -111,9 +109,6 @@ public class FullScreenWindow {
 
   /** The parent container to use for restoring the full screen component. */
   private Container parent;
-
-  /** The constraint object for the component in its parent. */
-  private Object constraints;
 
   /** The disappearance timer for the toolbar. */
   private Timer toolbarTimer;
@@ -249,15 +244,9 @@ public class FullScreenWindow {
     if (isFullScreen())
       throw new IllegalStateException ("Already in full screen mode");
 
-    // Save component parent and layout constraints
-    // --------------------------------------------
+    // Save component parent
+    // ---------------------
     parent = (Container) component.getParent();
-    if (parent != null) {
-      constraints = 
-        ((BorderLayout) parent.getLayout()).getConstraints (component);
-    } // if
-    else
-      constraints = null;
 
     // Add component to frame
     // ----------------------
@@ -320,7 +309,7 @@ public class FullScreenWindow {
 
     // Stop the toolbar timer
     // ----------------------
-    toolbarTimer.stop();
+    if (toolbar != null) toolbarTimer.stop();
 
     // Stop full screen mode
     // ---------------------
@@ -337,13 +326,6 @@ public class FullScreenWindow {
 
     device.setFullScreenWindow (null);
     frame.setVisible (false);
-
-    // Restore component to parent
-    // ---------------------------
-    if (parent != null) {
-      parent.add (component, constraints);
-      parent.validate();
-    } // if
 
   } // stop
 

@@ -19,12 +19,8 @@
 */
 ////////////////////////////////////////////////////////////////////////
 
-// Package
-// -------
 package noaa.coastwatch.gui;
 
-// Imports
-// -------
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -42,30 +38,23 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
+
 import java.io.IOException;
+
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import noaa.coastwatch.gui.AnnotationListChooser;
-import noaa.coastwatch.gui.CompositeChooser;
-import noaa.coastwatch.gui.EarthDataViewPanel;
-import noaa.coastwatch.gui.EnhancementChooser;
-import noaa.coastwatch.gui.LegendPanel;
-import noaa.coastwatch.gui.LightTable;
-import noaa.coastwatch.gui.LightTable.Mode;
-import noaa.coastwatch.gui.NavigationChooser;
-import noaa.coastwatch.gui.OverlayListChooser;
-import noaa.coastwatch.gui.PaletteChooser;
-import noaa.coastwatch.gui.SurveyListChooser;
-import noaa.coastwatch.gui.VariableChooser;
-import noaa.coastwatch.gui.ViewOperationChooser;
+
 import noaa.coastwatch.gui.nav.NavigationAnalysisPanel;
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.IOServices;
@@ -99,13 +88,12 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 /**
- * The <code>EarthDataViewController</code> class handles
- * interactions between an {@link EarthDataView} object and the
- * chooser objects used to manipulate its properties.  All
- * changes in the view overlays, palette, enhancement function,
- * zoom, etc. are handled by the controller.  The controller
- * methods may be used to access the property chooser panels in
- * order to arrange them in a layout manager.
+ * The <code>EarthDataViewController</code> class handles interactions between 
+ * an {@link EarthDataView} object and the chooser objects used to manipulate 
+ * its properties.  All changes in the view overlays, palette, enhancement 
+ * function, zoom, etc. are handled by the controller.  The controller methods 
+ * may be used to access the property chooser panels in order to arrange them 
+ * in a layout manager.
  *
  * @see EarthDataView
  * @see EarthDataViewPanel
@@ -126,131 +114,54 @@ public class EarthDataViewController {
 
   private static final Logger LOGGER = Logger.getLogger (EarthDataViewController.class.getName());
 
-  // Constants
-  // ---------
+  private enum InteractionMode {
+    VIEW_MODE,
+    SURVEY_MODE,
+    ANNOTATION_MODE,
+    NAVIGATION_MODE,
+    NAV_ANALYSIS_MODE
+  }; // InteractionMode
 
-  /** 
-   * The view interaction mode, used when the view operation chooser
-   * is active, which is most of the time.
-   */
-  private static final int VIEW_MODE = 0;
-
-  /** 
-   * The survey interaction mode, used when a survey is being
-   * performed.
-   */
-  private static final int SURVEY_MODE = 1;
-
-  /** 
-   * The annotation interaction mode, used when an annotation is being
-   * performed.
-   */
-  private static final int ANNOTATION_MODE = 2;
-
-  /** 
-   * The navigation interaction mode, used when navigation
-   * correction is being performed.
-   */
-  private static final int NAVIGATION_MODE = 3;
-
-  /**
-   * The navigation analysis mode, used when navigation
-   * analysis is being performed.
-   */
-  private static final int NAV_ANALYSIS_MODE = 4;
-
-  // Variables
-  // ---------
-
-  /** The color enhancement view. */
   private ColorEnhancement enhancementView;
-
-  /** The color composite view. */
   private ColorComposite compositeView;
-
-  /** 
-   * The composite flag, true for color composite, false for color
-   * enhancement.  By default, the controller starts up with a color
-   * enhancement.
-   */
   private boolean viewIsComposite;
-
-  /** The main view panel. */
   private EarthDataViewPanel viewPanel;
-
-  /** The legend panel for the view. */
+  private LightTable lightTable;
   private LegendPanel legendPanel;
 
-  /** The palette chooser. */
   private PaletteChooser paletteChooser;
-
-  /** The enhancement chooser. */
   private EnhancementChooser enhancementChooser;
-
-  /** The variable chooser. */
   private VariableChooser variableChooser;
-
-  /** The overlay list chooser. */
   private OverlayListChooser overlayChooser;
-
-  /** The survey list chooser. */
   private SurveyListChooser surveyChooser;
-
-  /** The annotation list chooser. */
   private AnnotationListChooser annotationChooser;
+  private CompositeChooser compositeChooser;
+  private NavigationChooser navigationChooser;
+  private NavigationAnalysisPanel navAnalysisPanel;
+  private OnScreenViewOperationChooser viewOperationChooser;
+  private MessageDisplayOperation messageOperation;
 
-  /** The map of variable name to enhancement settings. */
   private HashMap settingsMap;
-
-  /** The reader object. */
   private EarthDataReader reader;
 
-  /** The composite chooser. */
-  private CompositeChooser compositeChooser;
+  // The user interaction mode.  This is normally set to the view
+  // interaction mode, but may in some cases be changed to the survey
+  // or other to perform drawing operations.
+  private InteractionMode interactionMode;
 
-  /** The navigation chooser. */
-  private NavigationChooser navigationChooser;
-
-  /** The light table for the view panel. */
-  private LightTable lightTable;
-
-  /** 
-   * The user interaction mode.  This is normally set to the view
-   * interaction mode, but may in some cases be changed to the survey
-   * or other to perform drawing operations.
-   */
-  private int interactionMode;
-
-  /** 
-   * The listener for view operations.  This must be kept as a
-   * variable so that we can later remove it from the list of
-   * listeners when this class is being disposed.
-   */
-  private OperationListener operationListener;
-
-  /** The flag for warning about navigation corrections. */
+  // The flag for warning about navigation corrections.
   private static boolean showWarning = true;
 
-  /** The navigation analysis panel. */
-  private NavigationAnalysisPanel navAnalysisPanel;
+  ////////////////////////////////////////////////////////////
+
+  public NavigationAnalysisPanel getNavAnalysisPanel () { return (navAnalysisPanel); }
 
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Gets the navigation analysis panel for this controller.
-   *
-   * @return the analysis panel.
-   */
-  public NavigationAnalysisPanel getNavAnalysisPanel () {
-
-    return (navAnalysisPanel);
-
-  } // getNavAnalysisPanel
-
-  ////////////////////////////////////////////////////////////
-
-  /** 
-   * Gets a list of tab component panels created by this controller.
+   * Gets a list of tab component panels created by this controller.  The
+   * tab components are the controls that the user can use to manipulate 
+   * aspects of the view.
    *
    * @return the component panels.
    */
@@ -270,39 +181,41 @@ public class EarthDataViewController {
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Gets the variable chooser created by this controller.
-   *
-   * @return the variable chooser.
+  /**
+   * @since 3.8.1
    */
+  public SurveyListChooser getSurveyChooser () { return (surveyChooser); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * @since 3.8.1
+   */
+  public AnnotationListChooser getAnnotationChooser () { return (annotationChooser); }
+
+  ////////////////////////////////////////////////////////////
+
   public VariableChooser getVariableChooser () { return (variableChooser); }
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Gets the view panel created by this controller.
-   *
-   * @return the view panel.
-   */
   public EarthDataViewPanel getViewPanel () { return (viewPanel); }
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Gets the light table created by this controller.
-   *
-   * @return the light table.
-   */
   public LightTable getLightTable () { return (lightTable); }
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Gets the legend panel created by this controller.
-   *
-   * @return the legend panel.
-   */
   public LegendPanel getLegendPanel () { return (legendPanel); }
+
+  ////////////////////////////////////////////////////////////
+
+  public OnScreenViewOperationChooser getViewOperationChooser() { return (viewOperationChooser); }
+
+  ////////////////////////////////////////////////////////////
+
+  public MessageDisplayOperation getMessageOperation() { return (messageOperation); }
 
   ////////////////////////////////////////////////////////////
 
@@ -461,36 +374,20 @@ public class EarthDataViewController {
     List<String> variableList
   ) {
 
-    // Set reader
-    // ----------
     this.reader = reader;
 
-    // Initialize view settings maps
-    // -----------------------------
     settingsMap = new HashMap();
     
-    // Create variable chooser
-    // -----------------------
     variableChooser = new VariableChooser (variableList);
-    variableChooser.addPropertyChangeListener (
-      VariableChooser.VARIABLE_PROPERTY, new VariableListener());
+    variableChooser.addPropertyChangeListener (VariableChooser.VARIABLE_PROPERTY, new VariableListener());
 
-    // Create enhancement chooser
-    // --------------------------
     enhancementChooser = new EnhancementChooser();
-    enhancementChooser.addPropertyChangeListener (
-      EnhancementChooser.FUNCTION_PROPERTY, new EnhancementListener());
-    enhancementChooser.addPropertyChangeListener (
-      EnhancementChooser.SAVE_PROPERTY, new EnhancementSaveListener());
+    enhancementChooser.addPropertyChangeListener (EnhancementChooser.FUNCTION_PROPERTY, new EnhancementListener());
+    enhancementChooser.addPropertyChangeListener (EnhancementChooser.SAVE_PROPERTY, new EnhancementSaveListener());
 
-    // Create palette chooser
-    // ----------------------
     paletteChooser = new PaletteChooser();
-    paletteChooser.addPropertyChangeListener (
-      PaletteChooser.PALETTE_PROPERTY, new PaletteListener());
+    paletteChooser.addPropertyChangeListener (PaletteChooser.PALETTE_PROPERTY, new PaletteListener());
 
-    // Create view panel
-    // -----------------
     try {
       enhancementView = new ColorEnhancement (
         reader.getInfo().getTransform(), 
@@ -507,51 +404,42 @@ public class EarthDataViewController {
     restoreEnhancementSettings (enhancementView);
     viewPanel = new EarthDataViewPanel (enhancementView);
 
-    // Create legend panel
-    // -------------------
     legendPanel = new LegendPanel (viewPanel.getView().getLegend());
 
-    // Create overlay chooser
-    // ----------------------
     overlayChooser = new OverlayListChooser (reader, variableList);
     OverlayListener overlayListener = new OverlayListener();
-    overlayChooser.addPropertyChangeListener (
-      OverlayListChooser.OVERLAY_LIST_PROPERTY, overlayListener);
+    overlayChooser.addPropertyChangeListener (OverlayListChooser.OVERLAY_LIST_PROPERTY, overlayListener);
 
-    // Create survey chooser
-    // ---------------------
     surveyChooser = new SurveyListChooser();
-    surveyChooser.addPropertyChangeListener (
-      SurveyListChooser.SURVEY_LIST_PROPERTY, overlayListener);
+    surveyChooser.addPropertyChangeListener (SurveyListChooser.SURVEY_LIST_PROPERTY, overlayListener);
     surveyChooser.addSurveyActionListener (new SurveyListener());
 
-    // Create annotation chooser
-    // ---------------------
     annotationChooser = new AnnotationListChooser();
-    annotationChooser.addPropertyChangeListener (
-      AnnotationListChooser.ANNOTATION_LIST_PROPERTY, overlayListener);
+    annotationChooser.addPropertyChangeListener (AnnotationListChooser.ANNOTATION_LIST_PROPERTY, overlayListener);
     annotationChooser.addAnnotationActionListener (new AnnotationListener());
 
-    // Create composite chooser
-    // ------------------------
     compositeChooser = new CompositeChooser (variableList);
     compositeChooser.addPropertyChangeListener (new CompositeListener());
 
-    // Create navigation chooser
-    // -------------------------
     navigationChooser = new NavigationChooser (variableList);
     navigationChooser.addPropertyChangeListener (new NavigationListener());
 
-    // Attach listener to operation chooser
-    // ------------------------------------
-    operationListener = new OperationListener();
-    ViewOperationChooser.getInstance().addPropertyChangeListener (
-      ViewOperationChooser.OPERATION_PROPERTY, operationListener);
-    
-    // Create light table
-    // ------------------
+    viewOperationChooser = new OnScreenViewOperationChooser();
+    viewOperationChooser.addPropertyChangeListener (ViewOperationChooser.OPERATION_PROPERTY, event -> viewOperationEvent (event));
+
     lightTable = new LightTable (viewPanel);
-    lightTable.addChangeListener (new DrawListener()); 
+    lightTable.addChangeListener (event -> lightTableEvent());
+
+    lightTable.addDoubleClickListener (new MouseAdapter() {
+      public void mouseClicked (MouseEvent event) { 
+        if (SwingUtilities.isLeftMouseButton (event)) leftMouseDoubleClickEvent (event.getPoint());
+        else if (SwingUtilities.isRightMouseButton (event)) rightMouseDoubleClickEvent (event.getPoint());
+      } // mouseClicked
+    });
+
+    messageOperation = new MessageDisplayOperation();
+    messageOperation.setCancelAction (() -> messageCancelEvent());
+
 
 
 
@@ -578,10 +466,10 @@ public class EarthDataViewController {
 
 
 
-    // Create navigation analysis panel
-    // --------------------------------
     navAnalysisPanel = new NavigationAnalysisPanel (reader, variableList);
     navAnalysisPanel.addPropertyChangeListener (new NavAnalysisListener());
+
+
 
     // TODO: Do we need to make it so that navigation boxes have
     // overlays that show the box outlines?  That was the
@@ -589,15 +477,46 @@ public class EarthDataViewController {
     // work OK without it.
 
 
+
+
   } // EarthDataViewController
+
+  ////////////////////////////////////////////////////////////
+
+  private void magnifyAroundPoint (Point point, double factor) {
+
+    var size = viewPanel.getSize();
+    viewPanel.setCenter (point);
+    viewPanel.magnify (factor);
+    viewPanel.setCenter (new Point (size.width - point.x, size.height - point.y));
+    viewPanel.repaint();
+
+  } // magnifyAroundPoint
+
+  ////////////////////////////////////////////////////////////
+
+  private void leftMouseDoubleClickEvent (Point point) {
+
+    magnifyAroundPoint (point, 1.5);
+
+  } // leftMouseDoubleClickEvent
+
+  ////////////////////////////////////////////////////////////
+
+  private void rightMouseDoubleClickEvent (Point point) {
+
+    magnifyAroundPoint (point, 1/1.5);
+
+  } // rightMouseDoubleClickEvent
 
   ////////////////////////////////////////////////////////////
 
   /** Disposes of any resources used by this controller. */
   public void dispose () {
 
-    ViewOperationChooser.getInstance().removePropertyChangeListener (
-      ViewOperationChooser.OPERATION_PROPERTY, operationListener);
+    // ViewOperationChooser.getInstance().removePropertyChangeListener (
+    //   ViewOperationChooser.OPERATION_PROPERTY, operationListener);
+
     variableChooser.dispose();
     compositeChooser.dispose();
 
@@ -733,10 +652,7 @@ public class EarthDataViewController {
       // ----------------------
       if (property.equals (NavigationAnalysisPanel.OPERATION_MODE_PROPERTY)) {
         LightTable.Mode mode = (LightTable.Mode) event.getNewValue();
-        lightTable.setDrawingMode (mode);
-        setInteractionMode (NAV_ANALYSIS_MODE);
-        lightTable.setActive (true);
-        viewPanel.setDefaultCursor (lightTable.getCursor());
+        startShapeRetrieval (InteractionMode.NAV_ANALYSIS_MODE, mode);
       } // if
 
     } // propertyChange
@@ -754,13 +670,14 @@ public class EarthDataViewController {
       // ----------------------
       if (property.equals (NavigationChooser.NAVIGATION_MODE_PROPERTY)) {
         String mode = (String) event.getNewValue();
+        LightTable.Mode lightMode;
         if (mode.equals (NavigationChooser.TRANSLATION))
-          lightTable.setDrawingMode (Mode.IMAGE_TRANSLATE);
+          lightMode = LightTable.Mode.IMAGE_TRANSLATE;
         else if (mode.equals (NavigationChooser.ROTATION))
-          lightTable.setDrawingMode (Mode.IMAGE_ROTATE);
-        setInteractionMode (NAVIGATION_MODE);
-        lightTable.setActive (true);
-        viewPanel.setDefaultCursor (lightTable.getCursor());
+          lightMode = LightTable.Mode.IMAGE_ROTATE;
+        else
+          throw new IllegalArgumentException ("Unknown navigation mode " + mode);
+        startShapeRetrieval (InteractionMode.NAVIGATION_MODE, lightMode);
       } // if
 
       // Set manual correction
@@ -1134,7 +1051,7 @@ public class EarthDataViewController {
   /** Resets the interaction mode. */
   public void resetInteraction () {
 
-    ViewOperationChooser.getInstance().deactivate();
+//    ViewOperationChooser.getInstance().deactivate();
     surveyChooser.deactivate();
     annotationChooser.deactivate(); 
     navigationChooser.deactivate();
@@ -1151,14 +1068,14 @@ public class EarthDataViewController {
    * accordingly. 
    */
   private void setInteractionMode (
-    int interactionMode
+    InteractionMode interactionMode
   ) {
 
     this.interactionMode = interactionMode;
     switch (interactionMode) {
     case SURVEY_MODE:
-      ViewOperationChooser.getInstance().deactivate();
-      annotationChooser.deactivate(); 
+//      ViewOperationChooser.getInstance().deactivate();
+      annotationChooser.deactivate();
       navigationChooser.deactivate();
       navAnalysisPanel.deactivate();
       break;
@@ -1169,19 +1086,19 @@ public class EarthDataViewController {
       navAnalysisPanel.deactivate();
       break;
     case ANNOTATION_MODE:
-      ViewOperationChooser.getInstance().deactivate();
+//      ViewOperationChooser.getInstance().deactivate();
       surveyChooser.deactivate(); 
       navigationChooser.deactivate();
       navAnalysisPanel.deactivate();
       break;
     case NAVIGATION_MODE:
-      ViewOperationChooser.getInstance().deactivate();
+//      ViewOperationChooser.getInstance().deactivate();
       surveyChooser.deactivate(); 
       annotationChooser.deactivate(); 
       navAnalysisPanel.deactivate();
       break;
     case NAV_ANALYSIS_MODE:
-      ViewOperationChooser.getInstance().deactivate();
+//      ViewOperationChooser.getInstance().deactivate();
       surveyChooser.deactivate(); 
       annotationChooser.deactivate(); 
       navigationChooser.deactivate();
@@ -1202,24 +1119,21 @@ public class EarthDataViewController {
 
       // Set light table
       // ---------------
+      LightTable.Mode lightMode;
       if (command.equals (SurveyListChooser.POINT_COMMAND))
-        lightTable.setDrawingMode (Mode.POINT);
+        lightMode = LightTable.Mode.POINT;
       else if (command.equals (SurveyListChooser.LINE_COMMAND))
-        lightTable.setDrawingMode (Mode.LINE);
+        lightMode = LightTable.Mode.LINE;
       else if (command.equals (SurveyListChooser.BOX_COMMAND))
-        lightTable.setDrawingMode (Mode.BOX);
+        lightMode = LightTable.Mode.BOX;
       else if (command.equals (SurveyListChooser.POLYGON_COMMAND))
-        lightTable.setDrawingMode (Mode.POLYLINE);
-      else {
-        throw new IllegalArgumentException (
-          "Unknown survey command " + command);
-      } // else
+        lightMode = LightTable.Mode.POLYLINE;
+      else
+        throw new IllegalArgumentException ("Unknown survey command " + command);
 
       // Setup for survey
       // ----------------
-      setInteractionMode (SURVEY_MODE);
-      lightTable.setActive (true);
-      viewPanel.setDefaultCursor (lightTable.getCursor());
+      startShapeRetrieval (InteractionMode.SURVEY_MODE, lightMode);
 
     } // actionPerformed
   } // SurveyListener class
@@ -1234,99 +1148,219 @@ public class EarthDataViewController {
 
       // Set light table
       // ---------------
+      LightTable.Mode lightMode;
       if (command.equals (AnnotationListChooser.LINE_COMMAND))
-        lightTable.setDrawingMode (Mode.LINE);
+        lightMode = LightTable.Mode.LINE;
       else if (command.equals (AnnotationListChooser.POLYLINE_COMMAND))
-        lightTable.setDrawingMode (Mode.POLYLINE);
+        lightMode = LightTable.Mode.POLYLINE;
       else if (command.equals (AnnotationListChooser.BOX_COMMAND))
-        lightTable.setDrawingMode (Mode.BOX);
+        lightMode = LightTable.Mode.BOX;
       else if (command.equals (AnnotationListChooser.POLYGON_COMMAND))
-        lightTable.setDrawingMode (Mode.POLYLINE);
+        lightMode = LightTable.Mode.POLYLINE;
       else if (command.equals (AnnotationListChooser.CIRCLE_COMMAND))
-        lightTable.setDrawingMode (Mode.CIRCLE);
+        lightMode = LightTable.Mode.CIRCLE;
       else if (command.equals (AnnotationListChooser.CURVE_COMMAND))
-        lightTable.setDrawingMode (Mode.POLYLINE);
+        lightMode = LightTable.Mode.POLYLINE;
       else if (command.equals (AnnotationListChooser.TEXT_COMMAND))
-        lightTable.setDrawingMode (Mode.POINT);
-      else {
-        throw new IllegalArgumentException (
-          "Unknown annotation command " + command);
-      } // else
+        lightMode = LightTable.Mode.POINT;
+      else
+        throw new IllegalArgumentException ("Unknown annotation command " + command);
 
       // Setup for annotation
       // --------------------
-      setInteractionMode (ANNOTATION_MODE);
-      lightTable.setActive (true);
-      Cursor cursor;
-      if (command.equals (AnnotationListChooser.TEXT_COMMAND))
-        cursor = Cursor.getPredefinedCursor (Cursor.TEXT_CURSOR);
-      else
-        cursor = lightTable.getCursor();
-      viewPanel.setDefaultCursor (cursor);
+      startShapeRetrieval (InteractionMode.ANNOTATION_MODE, lightMode);
 
     } // actionPerformed
   } // AnnotationListener class
 
   ////////////////////////////////////////////////////////////
 
-  /** Handles change events generated by the operation chooser. */
-  private class OperationListener implements PropertyChangeListener {
-    public void propertyChange (PropertyChangeEvent event) {
+  private void messageCancelEvent() {
 
-      // Get view operation
-      // ------------------
-      String operation = (String) event.getNewValue();
+    viewOperationChooser.performViewOperation (OnScreenViewOperationChooser.Mode.PAN);
 
-      // Find out if view is currently showing
-      // -------------------------------------
-      boolean showing = viewPanel.isShowing();
+  } // messageCancelEvent
 
-      // Perform proxy-related operations
-      // --------------------------------
-      if (operation.equals (ViewOperationChooser.ZOOM)) {
-        setInteractionMode (VIEW_MODE);
-        lightTable.setDrawingMode (Mode.BOX_ZOOM);
-        lightTable.setActive (true);
-        viewPanel.setDefaultCursor (lightTable.getCursor());
+  ////////////////////////////////////////////////////////////
+
+  private void startShapeRetrieval (
+    InteractionMode interact,
+    LightTable.Mode light
+  ) {
+
+    // We need to create a message for the user about what to do next
+    // to create the shape needed. This next part assembles and shows
+    // the message to the user and gives the option to cancel.
+
+    String instrStr, object = null;
+    switch (light) {
+    case POINT: 
+      instrStr = "Single click"; 
+      object = "point"; 
+      break;
+    case LINE: 
+      instrStr = "Click and drag"; 
+      object = "line"; 
+      break;
+    case POLYLINE: 
+      instrStr = "Click each point then double-click"; 
+      object = "line segments"; 
+      break;
+    case BOX_ZOOM: 
+      instrStr = "Click and drag"; 
+      object = "zoom rectangle"; 
+      break;
+    case BOX: 
+      instrStr = "Click and drag"; 
+      object = "rectangle";
+      break;
+    case CIRCLE: 
+      instrStr = "Click and drag"; 
+      object = "circle";
+      break;
+    case GENERAL_PATH: 
+      instrStr = "Click each point then double-click"; 
+      object = "line path";
+      break;
+    case IMAGE: 
+      instrStr = null; 
+      break;
+    case IMAGE_TRANSLATE: 
+      instrStr = "Click and drag"; 
+      object = "image translation";
+      break;
+    case IMAGE_ROTATE: 
+      instrStr = "Click and drag"; 
+      object = "image rotation";
+      break;
+    default: throw new IllegalStateException();
+    } // switch
+
+    String typeStr;
+    String verbStr;
+    switch (interact) {
+    case SURVEY_MODE: 
+      typeStr = "survey"; 
+      verbStr = "specify"; 
+      break;
+    case VIEW_MODE: 
+      typeStr = null;
+      verbStr = "specify";
+      break;
+    case ANNOTATION_MODE:
+      var isText = (annotationChooser.getAnnotationCommand().equals (AnnotationListChooser.TEXT_COMMAND));
+      if (isText) {
+        object = "text position";
+        typeStr = "annotation";
+        verbStr = "specify";
       } // if
-      else if (operation.equals (ViewOperationChooser.PAN)) {
-        setInteractionMode (VIEW_MODE);
-        lightTable.setDrawingMode (Mode.IMAGE);
-        lightTable.setActive (true);
-        viewPanel.setDefaultCursor (lightTable.getCursor());
-      } // else if
-      else if (operation.equals (ViewOperationChooser.RECENTER)) {
-        setInteractionMode (VIEW_MODE);
-        lightTable.setDrawingMode (Mode.POINT);
-        lightTable.setActive (true);
-        viewPanel.setDefaultCursor (lightTable.getCursor());
-      } // else if
+      else {
+        typeStr = "annotation";
+        verbStr = "draw";
+      } // else
+      break;
+    case NAVIGATION_MODE: 
+      typeStr = "correction"; 
+      verbStr = "specify";
+      break;
+    case NAV_ANALYSIS_MODE: 
+      typeStr = "navigation analysis";
+      verbStr = "specify";
+      break;
+    default: throw new IllegalStateException();
+    } // switch
 
-      // Perform single-click operations
-      // -------------------------------
-      else if (showing && operation.equals (ViewOperationChooser.MAGNIFY)) {
-        viewPanel.magnify (2);
-        viewPanel.repaint();
-      } // if
-      else if (showing && operation.equals (ViewOperationChooser.SHRINK)) {
-        viewPanel.magnify (0.5);
-        viewPanel.repaint();
-      } // else if
-      else if (showing && operation.equals (ViewOperationChooser.ONE_TO_ONE)) {
-        viewPanel.unityMagnify();
-        viewPanel.repaint();
-      } // else if
-      else if (showing && operation.equals (ViewOperationChooser.FIT)) {
-        viewPanel.fitReset();
-        viewPanel.repaint();
-      } // else if
-      else if (showing && operation.equals (ViewOperationChooser.RESET)) {
-        viewPanel.reset();
-        viewPanel.repaint();
-      } // else if
+    String message = instrStr == null ? null : 
+      instrStr + 
+      (" to " + verbStr + " the ") + 
+      (typeStr == null ? "" : (typeStr + " ")) + 
+      (object == null ? "" : object);
+    if (message != null) {
+      messageOperation.showMessage (message);
+    } // if
 
-    } // propertyChange
-  } // OperationListener class
+    // Now set up the light table with the new drawing mode, and set
+    // the cursor to use.
+    setInteractionMode (interact);
+    lightTable.setDrawingMode (light);
+    lightTable.setActive (true);
+    var cursor = lightTable.getCursor();
+    viewPanel.setDefaultCursor (cursor);
+    lightTable.setCursor (cursor);
+
+  } // startShapeRetrieval
+
+  ////////////////////////////////////////////////////////////
+
+  private void viewOperationEvent (PropertyChangeEvent event) {
+
+    var operation = (OnScreenViewOperationChooser.Mode) event.getNewValue();
+
+    LOGGER.fine ("Got view operation event for " + operation);
+
+    boolean needsShape = false;
+    switch (operation) {
+
+    // For certain view operations, we need to activate the light 
+    // table and get the input shape from it before we can perform
+    // an operation.
+
+    case ZOOM:
+      startShapeRetrieval (InteractionMode.VIEW_MODE, LightTable.Mode.BOX_ZOOM);
+      needsShape = true;
+      break;
+
+    case PAN:
+      startShapeRetrieval (InteractionMode.VIEW_MODE, LightTable.Mode.IMAGE);
+      needsShape = true;
+      break;
+
+    // case RECENTER:
+    //   setInteractionMode (VIEW_MODE);
+    //   lightTable.setDrawingMode (LightTable.Mode.POINT);
+    //   lightTable.setActive (true);
+    //   viewPanel.setDefaultCursor (lightTable.getCursor());
+    //   break;
+
+    // For other view operations, we don't need any extra input and can
+    // just perform the operation.
+
+    case MAGNIFY:
+      viewPanel.magnify (1.5);
+      viewPanel.repaint();
+      break;
+
+    case SHRINK:
+      viewPanel.magnify (1/1.5);
+      viewPanel.repaint();
+      break;
+
+    case ONE_TO_ONE:
+      viewPanel.unityMagnify();
+      viewPanel.repaint();
+      break;
+
+    case FIT:
+      viewPanel.fitReset();
+      viewPanel.repaint();
+      break;
+
+    case RESET:
+      viewPanel.reset();
+      viewPanel.repaint();
+      break;
+
+    } // switch
+
+    // If the operation doesn't need a shape, we can revert the interaction
+    // mode back to the view panning mode.  We also dispose of any message
+    // from a previous operation.
+    if (!needsShape) {
+      messageOperation.dispose();    
+      viewOperationChooser.performViewOperation (OnScreenViewOperationChooser.Mode.PAN);
+    } // if
+
+  } // viewOperationEvent
 
   ////////////////////////////////////////////////////////////
 
@@ -1335,26 +1369,21 @@ public class EarthDataViewController {
     Shape s
   ) {
 
-    // Get view operation
-    // ------------------
-    String operation = ViewOperationChooser.getInstance().getOperation();
-    if (operation == null) return;
-    
-    // Perform zoom
-    // ------------
-    if (operation.equals (ViewOperationChooser.ZOOM)) {
+    var operation = viewOperationChooser.getViewOperation();
+
+    switch (operation) {
+
+    case ZOOM:
       Rectangle rect = ((Rectangle2D) s).getBounds();
       if (rect.width == 0 || rect.height == 0) return;
       viewPanel.magnify (rect);
       viewPanel.repaint();
-    } // if
+      break;
 
-    // Perform pan
-    // -----------
-    else if (operation.equals (ViewOperationChooser.PAN)) {
-      Line2D line = (Line2D) s;
-      Point2D p1 = line.getP1();
-      Point2D p2 = line.getP2();
+    case PAN:
+      Line2D panLine = (Line2D) s;
+      Point2D p1 = panLine.getP1();
+      Point2D p2 = panLine.getP2();
       if (p1.equals (p2)) return;
       Dimension dims = viewPanel.getSize();
       Point2D center = new Point2D.Double (dims.width/2, dims.height/2);
@@ -1364,15 +1393,15 @@ public class EarthDataViewController {
       );
       viewPanel.setCenter (center);
       viewPanel.repaint();
-    } // else if
-    
-    // Perform recenter
-    // ----------------
-    else if (operation.equals (ViewOperationChooser.RECENTER)) {
-      Line2D line = (Line2D) s;
-      viewPanel.setCenter (line.getP1());
-      viewPanel.repaint();
-    } // else if
+      break;
+
+    // case RECENTER:
+    //   Line2D recenterLine = (Line2D) s;
+    //   viewPanel.setCenter (recenterLine.getP1());
+    //   viewPanel.repaint();
+    //   break;
+
+    } // switch
 
   } // performViewOperation
 
@@ -1648,31 +1677,33 @@ public class EarthDataViewController {
 
   ////////////////////////////////////////////////////////////
 
-  /** Handles events generated by the light table. */
-  private class DrawListener implements ChangeListener {
-    public void stateChanged (ChangeEvent event) {
+  private void lightTableEvent() {
 
-      // Check if panel is showing
-      // -------------------------
-      if (!viewPanel.isShowing()) return;
+    if (viewPanel.isShowing()) {
 
-      // Get drawing shape
-      // -----------------
-      Shape s = lightTable.getShape();
+      // Dispose of any message that was being shown to the user
+      // about what to do.
+      messageOperation.dispose();
 
-      // Perform operation
-      // -----------------
+      // Perform an operation with the shape available using the current
+      // interaction mode.
+      var shape = lightTable.getShape();
       switch (interactionMode) {
-      case VIEW_MODE: performViewOperation (s); break;
-      case SURVEY_MODE: performSurvey (s); break;
-      case ANNOTATION_MODE: performAnnotation (s); break;
-      case NAVIGATION_MODE: performNavigation (s); break;
-      case NAV_ANALYSIS_MODE: performNavAnalysis (s); break;
+      case VIEW_MODE: performViewOperation (shape); break;
+      case SURVEY_MODE: performSurvey (shape); break;
+      case ANNOTATION_MODE: performAnnotation (shape); break;
+      case NAVIGATION_MODE: performNavigation (shape); break;
+      case NAV_ANALYSIS_MODE: performNavAnalysis (shape); break;
       default: throw new IllegalStateException();
       } // if
 
-    } // stateChanged
-  } // DrawListener class
+      // After performing the operation with the active interaction 
+      // mode, switch the mode back to the default pan mode.
+      viewOperationChooser.performViewOperation (OnScreenViewOperationChooser.Mode.PAN);
+
+    } // if
+
+  } // lightTableEvent
 
   ////////////////////////////////////////////////////////////
 

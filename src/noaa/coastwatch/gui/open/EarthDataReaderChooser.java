@@ -9,6 +9,7 @@ package noaa.coastwatch.gui.open;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -105,7 +106,27 @@ public class EarthDataReaderChooser extends JPanel {
   private JProgressBar dialogProgressBar;
   private EarthDataReader selectedReader;
   private Map<EarthDataReader, Integer> readerRefs;
+  private List<DataViewRenderingContext> viewRenderingContextList;
+
   public static EarthDataReaderChooser instance;
+
+  ////////////////////////////////////////////////////////////
+
+  public enum State { UNSELECTED, READY, SELECTED };
+
+  ////////////////////////////////////////////////////////////
+
+  private static class DataViewRenderingContext {
+
+    public EarthDataViewPanel panel;
+    public EarthDataReader reader;
+
+    public DataViewRenderingContext (EarthDataViewPanel panel, EarthDataReader reader) {
+      this.panel = panel;
+      this.reader = reader;
+    } // DataViewRenderingContext
+
+  } // DataViewRenderingContext class
 
   ////////////////////////////////////////////////////////////
 
@@ -122,6 +143,7 @@ public class EarthDataReaderChooser extends JPanel {
 
     readerRefs.compute (reader, (obj,count) -> ((count == null) ? Integer.valueOf (1) : Integer.valueOf (count+1)));
     LOGGER.fine ("Acquired reader " + reader + " with new reference count of " + readerRefs.get (reader));
+    LOGGER.fine ("Reader refs now contains " + readerRefs.size() + " entries");
 
   } // acquire
 
@@ -145,12 +167,9 @@ public class EarthDataReaderChooser extends JPanel {
     } // else
 
     LOGGER.fine ("Released reader " + reader + " with new reference count of " + (count-1));
+    LOGGER.fine ("Reader refs now contains " + readerRefs.size() + " entries");
 
   } // release
-
-  ////////////////////////////////////////////////////////////
-
-  public enum State { UNSELECTED, READY, SELECTED };
 
   ////////////////////////////////////////////////////////////
 
@@ -185,15 +204,35 @@ public class EarthDataReaderChooser extends JPanel {
   private void dataViewRenderingEvent (PropertyChangeEvent event) {
 
     var rendering = (boolean) event.getNewValue();
-    if (dataViewPanel.getView() != nullDataView) {
-      LOGGER.fine ("Data preview image " + (rendering ? "started" : "finished") + " rendering");
-      if (rendering) {
-        acquire (activeReader);
+    var sourcePanel = (EarthDataViewPanel) event.getSource();
+
+    // If the property event indicates that we just started rendering a new 
+    // view, and the view is not the null view, then store a context that saves
+    // the panel and the reader so that we can make sure that the reader 
+    // stays open while the view is being rendered.
+    if (rendering) {
+      if (sourcePanel.getView() != nullDataView) {
+        var context = new DataViewRenderingContext (sourcePanel, activeReader);
+        viewRenderingContextList.add (context);
+        acquire (context.reader);
+        LOGGER.fine ("Data preview image started rendering, context list contains " + viewRenderingContextList.size() + " entries");
       } // if
-      else {
-        release (activeReader);
-      } // else
     } // if
+
+    // If the property event indicates that the view is finished rendering,
+    // then we can release the reader.
+    else {
+      if (sourcePanel.getView() != nullDataView) {
+        DataViewRenderingContext context = null;
+        for (var candidate : viewRenderingContextList) {
+          if (candidate.panel == sourcePanel) { context = candidate; break; }
+        }  // for
+        if (context == null) throw new IllegalStateException ("Cannot locate context for data view rendering");
+        release (context.reader);
+        viewRenderingContextList.remove (context);
+        LOGGER.fine ("Data preview image finished rendering, context list contains " + viewRenderingContextList.size() + " entries");
+      } // if
+    } // else
 
   } // dataViewRenderingEvent
 
@@ -318,7 +357,7 @@ public class EarthDataReaderChooser extends JPanel {
       @Override
       public void paint (Graphics g) {
         Graphics2D g2 = (Graphics2D) g.create();
-        g2.setComposite (AlphaComposite.getInstance (AlphaComposite.SRC_OVER, 0.3f));
+        g2.setComposite (AlphaComposite.getInstance (AlphaComposite.SRC_OVER, 0.2f));
         super.paint (g2);
         g2.dispose();
       } // paint
@@ -403,6 +442,11 @@ public class EarthDataReaderChooser extends JPanel {
     // Create a cache of EarthDataReaders that may need to be closed.
     readerRefs = new HashMap<>();
 
+    // Create a list of view rendering contexts that store the data view panel
+    // and reader used when the data view is rendering.  This way we can
+    // properly release the reader when it's no longer needed.
+    viewRenderingContextList = new ArrayList<>();
+
     // Explicitly set the initial state to unselected.
     state = State.UNSELECTED;
 
@@ -452,7 +496,7 @@ public class EarthDataReaderChooser extends JPanel {
 
   private void variableSelectEvent (ListSelectionEvent event) {
 
-    if (!event.getValueIsAdjusting()) {
+    if (!event.getValueIsAdjusting() && activeReader != null) {
 
       // If there is a single variable selected, update the view and 
       // show that variable preview using a background process.
@@ -628,6 +672,7 @@ public class EarthDataReaderChooser extends JPanel {
       File file = fileChooser.getSelectedFile();
       if (file != null && file.isFile() && file.exists()) {
         var name = file.getPath();
+        fileChooser.setCursor (Cursor.getPredefinedCursor (Cursor.WAIT_CURSOR));
         readerOperation = new ReaderOpenOperation (name);
         readerOperation.execute();
       } // if
@@ -658,6 +703,8 @@ public class EarthDataReaderChooser extends JPanel {
     else {
       clearPreviewContent();
     } // else
+
+    fileChooser.setCursor (Cursor.getPredefinedCursor (Cursor.DEFAULT_CURSOR));
 
   } // completeReaderOpen
 
@@ -758,6 +805,7 @@ public class EarthDataReaderChooser extends JPanel {
     dialogProgressBar.setMinimum (0);
     var variables = variableList.getSelectedValuesList();
     dialogProgressBar.setMaximum (variables.size());
+    dialogProgressBar.setValue (0);
     dialogProgressBar.setIndeterminate (true);
     dialogInfoLabel.setVisible (true);
     dialogProgressBar.setVisible (true);
@@ -849,7 +897,10 @@ public class EarthDataReaderChooser extends JPanel {
           LOGGER.fine ("Computing statistics [" + (i+1) + "/" + variables.size() + "] for " + name);
           DataVariable var;
           try { var = reader.getVariable (name); }
-          catch (IOException e) { continue; }
+          catch (IOException e) { 
+            LOGGER.log (Level.FINE, "Error getting variable " + name, e);
+            continue;
+          } // catch
           var constraints = new DataLocationConstraints();
           constraints.fraction = 0.01;
           var stats = VariableStatisticsGenerator.getInstance().generate (var, constraints);
@@ -870,12 +921,13 @@ public class EarthDataReaderChooser extends JPanel {
     protected void done() {
       EarthDataReader reader;
       try { reader = get(); }
-      catch (Exception e) { reader = null; }
+      catch (Exception e) { 
+        LOGGER.log (Level.WARNING, "Error getting reader from background process", e);
+        reader = null; 
+      } // catch
       completeStatsComputation (reader);
       LOGGER.fine ("Statistics computation operation is now complete");
-
       statsOperation = null;
-
     } // done
 
   } // StatisticsComputationOperation class
@@ -926,9 +978,10 @@ public class EarthDataReaderChooser extends JPanel {
 
     dialogInfoLabel = new JLabel();
     dialogProgressBar = new JProgressBar();
-    dialogProgressBar.setStringPainted (true);
+    if (!GUIServices.IS_AQUA) dialogProgressBar.setStringPainted (true);
     dialogInfoLabel.setVisible (false);
     dialogProgressBar.setVisible (false);
+
     var controls = new Component[] {
       GUIServices.getHelpButton (EarthDataReaderChooser.class),
       Box.createHorizontalGlue(),
@@ -946,6 +999,9 @@ public class EarthDataReaderChooser extends JPanel {
       public void windowClosing (WindowEvent we) { dialogCancelEvent(); }
     });
     dialog.setGlassPane (createInputBlockingPanel());
+    var size = dialog.getPreferredSize();
+    size.height = 510;
+    dialog.setSize (size);
 
     return (dialog);
 
@@ -1040,5 +1096,3 @@ public class EarthDataReaderChooser extends JPanel {
   ////////////////////////////////////////////////////////////
 
 } // EarthDataReaderChooser class
-
-////////////////////////////////////////////////////////////////////////

@@ -63,10 +63,10 @@ public class SimpleColorChooser
   public static String COLOR_PROPERTY = "color";
 
   /** The swatch size. */
-  private static final int SWATCH_SIZE = 10;
+  private static final int SWATCH_SIZE = 15;
 
   /** The gap size. */
-  private static final int GAP_SIZE = 1;
+  private static final int GAP_SIZE = 2;
 
   // Variables
   // ---------

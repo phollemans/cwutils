@@ -238,7 +238,7 @@ public class FileOperationChooser
     // Create buttons
     // --------------
     addButton (new JButton (OPEN, GUIServices.getIcon ("file.open")), OPEN_TIP);
-    addButton (new JButton (CLOSE, GUIServices.getIcon ("file.close")), CLOSE_TIP);
+//    addButton (new JButton (CLOSE, GUIServices.getIcon ("file.close")), CLOSE_TIP);
     addButton (new JButton (EXPORT, GUIServices.getIcon ("file.export")), EXPORT_TIP); 
     addButton (new JButton (INFO, GUIServices.getIcon ("file.info")), INFO_TIP); 
 

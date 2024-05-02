@@ -26,6 +26,7 @@ package noaa.coastwatch.gui;
 // Imports
 // -------
 import java.awt.Cursor;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -45,8 +46,13 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Rectangle;
+import java.awt.BorderLayout;
 
 import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -62,6 +68,8 @@ import javax.swing.event.MouseInputAdapter;
 import javax.swing.Timer;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 import noaa.coastwatch.gui.DelayedRenderingComponent;
 import noaa.coastwatch.gui.TransformableImageComponent;
@@ -1029,6 +1037,128 @@ public class EarthDataViewPanel
     return (affine);
 
   } // getAffine
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * 
+   * 
+   * @since 3.8.1
+   */
+  public OnScreenTrackBar createTrackBar() { return (new OnScreenTrackBar()); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * 
+   * 
+   * @since 3.8.1
+   */
+  public class OnScreenTrackBar extends OnScreenStylePanel {
+
+    private JLabel leftLabel;
+    private JLabel rightLabel;
+
+    public OnScreenTrackBar () {
+
+      super (false);
+      setLayout (new GridLayout (1, 2));
+
+      var font = (Font) UIManager.getFont ("Label.font");
+      font = font.deriveFont (font.getSize() * 0.9f);
+
+      leftLabel = new JLabel();
+      leftLabel.setForeground (Color.WHITE);
+      leftLabel.setVerticalAlignment (SwingConstants.CENTER);
+      leftLabel.setHorizontalAlignment (SwingConstants.LEFT);
+      leftLabel.setFont (font);
+      leftLabel.setBorder (BorderFactory.createEmptyBorder (2, 5, 2, 5));
+      this.add (leftLabel);
+
+      rightLabel = new JLabel();
+      rightLabel.setForeground (Color.WHITE);
+      rightLabel.setVerticalAlignment (SwingConstants.CENTER);
+      rightLabel.setHorizontalAlignment (SwingConstants.RIGHT);
+      rightLabel.setFont (font);
+      rightLabel.setBorder (BorderFactory.createEmptyBorder (2, 5, 2, 5));
+      this.add (rightLabel);
+
+      var testLabel = new JLabel ("42.4206 N 123.3689 W");
+      testLabel.setFont (font);
+      int height = testLabel.getPreferredSize().height;
+      setPreferredSize (new Dimension (0, height + 4));
+
+      var handler = new MouseInputAdapter() {
+        public void mouseExited (MouseEvent e) { mouseExitedEvent(); }
+        public void mouseMoved (MouseEvent e) { mouseMovedEvent (e.getPoint()); }
+      };
+      EarthDataViewPanel.this.addMouseListener (handler);
+      EarthDataViewPanel.this.addMouseMotionListener (handler);
+
+    } // OnScreenTrackBar
+
+    private void mouseExitedEvent () { clearTracking(); }
+
+    private void mouseMovedEvent (Point p) { 
+
+      EarthLocation earthLoc = null;
+      DataLocation dataLoc = null;
+      EarthTransform earthTrans = null;
+      ImageTransform imageTrans = null;
+      if (!isRendering()) {
+        var trans = view.getTransform();
+        imageTrans = trans.getImageTransform();
+        earthTrans = trans.getEarthTransform();
+        if (origin != null) {
+          p.translate (-origin.x, -origin.y);
+          var valid = new Rectangle (view.getSize (null)).contains (p);
+          if (valid && imageTrans != null && earthTrans != null) {
+            dataLoc = imageTrans.transform (p);
+            earthLoc = earthTrans.transform (dataLoc);
+          } // if
+        } // if
+      } // if
+
+      String trackingStr = "";
+      String separator = "&nbsp;&nbsp;|&nbsp;&nbsp;";
+
+      if (dataLoc != null && dataLoc.isValid()) {
+        if (view instanceof ColorEnhancement) {
+          var variable = ((ColorEnhancement) view).getGrid();
+          var value = variable.getValue (dataLoc);
+          if (!Double.isNaN (value)) trackingStr += variable.format (value);
+        } // if
+      } // if
+
+      if (earthLoc != null) {
+
+        if (dataLoc.isContained (earthTrans.getDimensions())) {
+          var row = Integer.toString ((int) Math.round (dataLoc.get (Grid.ROWS)));
+          var col = Integer.toString ((int) Math.round (dataLoc.get (Grid.COLS)));
+          if (trackingStr.length() != 0) trackingStr += separator;
+          trackingStr += "[" + row + "," + col + "]";
+        } // if
+
+        if (earthLoc.isValid()) {
+          var lat = earthLoc.formatSingle (EarthLocation.LAT).replaceFirst ("d", "&#176;");
+          var lon = earthLoc.formatSingle (EarthLocation.LON).replaceFirst ("d", "&#176;");
+          if (trackingStr.length() != 0) trackingStr += separator;
+          trackingStr += lat + " " + lon;
+        } // if
+
+      } // if
+
+      rightLabel.setText ("<html><nobr>" + trackingStr + "</nobr></html>");
+
+    } // mouseMovedEvent
+
+    private void clearTracking() {
+      rightLabel.setText ("");
+    } // clearTracking
+
+    public void setLeftLabelText (String text) { leftLabel.setText (text); }
+
+  } // OnScreenTrackBar
 
   ////////////////////////////////////////////////////////////
 

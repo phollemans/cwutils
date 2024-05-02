@@ -68,11 +68,20 @@ public class DataColorScale
   /** The default number of desired tick marks. */
   private final static int TICKS = 10;
 
-  /** The default scale width. */
+  /** The default scale width for vertical scales. */
   private final static int SCALE_WIDTH = 20;
+
+  /** The default scale height for horizontal scales. */
+  private final static int SCALE_HEIGHT = 18;
 
   /** The default tick size. */
   private final static int TICK_SIZE = 5;
+
+  /** The axis constatn for a horizontal legend. */
+  public final static int HORIZONTAL_AXIS = 0;
+
+  /** The axis constatn for a vertical legend. */
+  public final static int VERTICAL_AXIS = 1;
 
   // Variables
   // ---------
@@ -88,6 +97,26 @@ public class DataColorScale
 
   /** An array of tick label strings. */
   private String[] labels;
+
+  private int legendAxis;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * 
+   * 
+   * @since 3.8.1
+   */
+  public void setLegendAxis (int axis) { this.legendAxis = axis; }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * 
+   * 
+   * @since 3.8.1
+   */
+  public int getLegendAxis () { return (legendAxis); }
 
   ////////////////////////////////////////////////////////////
 
@@ -118,123 +147,275 @@ public class DataColorScale
     // ----------
     Dimension size = getSize (g);
     Dimension required = getRequiredSize (g);
-    int xoff = (required.width < size.width ? (size.width - required.width)/2 : 0);
 
-    int x1, y1, x2, y2;
-    int scaleHeight = size.height - 4*SPACE_SIZE - 2;
-    double[] range = new double[] {function.getInverse (0), 
-      function.getInverse (1)};
-    boolean reverse = (range[0] > range[1]);
-    g.setStroke (DEFAULT_STROKE);
+    if (legendAxis == VERTICAL_AXIS) {
 
-    // Draw background
-    // ---------------
-    if (back != null) {
-      g.setColor (back);
-      g.fillRect (x, y, size.width, size.height);
-      g.setColor (fore);
-      GraphicsServices.drawRect (g, new Rectangle (x, y, size.width, 
-        size.height));
-    } // if
+      int xoff = (required.width < size.width ? (size.width - required.width)/2 : 0);
 
-    // Draw scale colors
-    // -----------------
-    x1 = x + xoff + SPACE_SIZE*2;
-    x2 = x1 + SCALE_WIDTH;
+      int x1, y1, x2, y2;
+      int scaleHeight = size.height - 4*SPACE_SIZE - 2;
+      double[] range = new double[] {function.getInverse (0), 
+        function.getInverse (1)};
+      boolean reverse = (range[0] > range[1]);
+      g.setStroke (DEFAULT_STROKE);
 
-    Dimension imageDims = new Dimension (SCALE_WIDTH, scaleHeight);
-    BufferedImage image = new BufferedImage (imageDims.width, imageDims.height,
-      BufferedImage.TYPE_INT_RGB);
-    Graphics2D imageGraphics = image.createGraphics();
-    imageGraphics.setStroke (DEFAULT_STROKE);
+      // Draw background
+      // ---------------
+      if (back != null) {
+        g.setColor (back);
+        g.fillRect (x, y, size.width, size.height);
+        g.setColor (fore);
+        GraphicsServices.drawRect (g, new Rectangle (x, y, size.width, 
+          size.height));
+      } // if
 
-    IndexColorModel model = palette.getModel();
-    int colors = model.getMapSize();
-    for (int i = 0; i < scaleHeight; i++) {
-      y1 = y2 = scaleHeight-1-i;
-      double norm = (double) i / (scaleHeight-1);
-      if (function instanceof StepEnhancement)
-        norm = function.getValue (function.getInverse (norm));
-      if (reverse) norm = 1-norm;
-      int index = (int) Math.round (norm*(colors-1));
-      imageGraphics.setColor (new Color (model.getRGB (index)));
-      imageGraphics.drawLine (0, y1, imageDims.width-1, y2);
-    } // for
+      // Draw scale colors
+      // -----------------
+      x1 = x + xoff + SPACE_SIZE*2;
+      x2 = x1 + SCALE_WIDTH;
 
-    g.drawImage (image, x1, y + SPACE_SIZE*2, null);
-    imageGraphics.dispose();
+      Dimension imageDims = new Dimension (SCALE_WIDTH, scaleHeight);
+      BufferedImage image = new BufferedImage (imageDims.width, imageDims.height,
+        BufferedImage.TYPE_INT_RGB);
+      Graphics2D imageGraphics = image.createGraphics();
+      imageGraphics.setStroke (DEFAULT_STROKE);
 
-    // Draw scale border
-    // -----------------
-    g.setColor (fore);
-    GraphicsServices.drawRect (g, new Rectangle (x + xoff + SPACE_SIZE*2, 
-      y + SPACE_SIZE*2, SCALE_WIDTH, scaleHeight));
-
-    // Draw scale ticks
-    // ----------------
-    x1 = x2 + 1;
-    x2 = x1 + TICK_SIZE - 1;
-    int maxx = x2 + SPACE_SIZE;
-
-    if (Double.isFinite (range[0]) && Double.isFinite (range[1]) && (range[0] != range[1])) {
-
-      boolean invert = (range[0] > range[1]);
-      EnhancementFunction tickFunction;
-      /** 
-       * Note that this next statement may only appear to work in
-       * testing because there is currently no way to set the reversal
-       * flag for StepEnhancement objects in cdat (and cwrender
-       * currently does not support step enhancements).
-       */
-      if (function instanceof StepEnhancement)
-        tickFunction = new LinearEnhancement (function.getRange());
-      else 
-        tickFunction = function;
-      for (int i = 0; i < labels.length; i++) {
-
-        // Draw tick
-        // ---------
-        double val = Double.parseDouble (labels[i]);
-        double norm = tickFunction.getValue (val);
+      IndexColorModel model = palette.getModel();
+      int colors = model.getMapSize();
+      for (int i = 0; i < scaleHeight; i++) {
+        y1 = y2 = scaleHeight-1-i;
+        double norm = (double) i / (scaleHeight-1);
+        if (function instanceof StepEnhancement)
+          norm = function.getValue (function.getInverse (norm));
         if (reverse) norm = 1-norm;
-        y1 = y2 = (y + SPACE_SIZE*2 + scaleHeight) - 
-          (int) (norm * (scaleHeight-1));
-        g.drawLine (x1, y1, x2, y2);
+        int index = (int) Math.round (norm*(colors-1));
+        imageGraphics.setColor (new Color (model.getRGB (index)));
+        imageGraphics.drawLine (0, y1, imageDims.width-1, y2);
+      } // for
 
-        // Draw label
-        // ----------
-        TextElement labelElement = new TextElement (labels[i], font,
-          new Point (x2 + SPACE_SIZE, y1), new double[] {0, 0.5}, 0);
-        labelElement.render (g, fore, null);
-        int endx = x2 + SPACE_SIZE + labelElement.getBounds(g).width;
-        if (endx > maxx) maxx = endx;
+      g.drawImage (image, x1, y + SPACE_SIZE*2, null);
+      imageGraphics.dispose();
 
-        // Draw extra ticks
-        // ----------------
-        if (tickFunction instanceof LogEnhancement && i < labels.length-1) {
-          double nextVal = Double.parseDouble (labels[i+1]);
-          for (int j = 2; j < 10; j++) {
-            double betweenVal = val * j;
-            if (betweenVal >= nextVal) continue;
-            norm = tickFunction.getValue (betweenVal);
+      // Draw scale border
+      // -----------------
+      g.setColor (fore);
+      GraphicsServices.drawRect (g, new Rectangle (x + xoff + SPACE_SIZE*2, 
+        y + SPACE_SIZE*2, SCALE_WIDTH, scaleHeight));
+
+      // Draw scale ticks
+      // ----------------
+      x1 = x2 + 1;
+      x2 = x1 + TICK_SIZE - 1;
+      int maxx = x2 + SPACE_SIZE;
+
+      if (Double.isFinite (range[0]) && Double.isFinite (range[1]) && (range[0] != range[1])) {
+
+        boolean invert = (range[0] > range[1]);
+        EnhancementFunction tickFunction;
+        /** 
+         * Note that this next statement may only appear to work in
+         * testing because there is currently no way to set the reversal
+         * flag for StepEnhancement objects in cdat (and cwrender
+         * currently does not support step enhancements).
+         */
+        if (function instanceof StepEnhancement)
+          tickFunction = new LinearEnhancement (function.getRange());
+        else 
+          tickFunction = function;
+        for (int i = 0; i < labels.length; i++) {
+
+          // Convert tick label to tick position and check to see
+          // if we're within the color scale range.
+          double val = Double.parseDouble (labels[i]);
+          double norm = tickFunction.getValue (val);
+          if (norm <= 1) {
+
+            // Draw the tick mark line.
             if (reverse) norm = 1-norm;
             y1 = y2 = (y + SPACE_SIZE*2 + scaleHeight) - 
               (int) (norm * (scaleHeight-1));
             g.drawLine (x1, y1, x2, y2);
-          } // for
-        } // if
 
-      } //for
+            // Draw the tick mark label and keep track of the label
+            // width.
+            TextElement labelElement = new TextElement (labels[i], font,
+              new Point (x2 + SPACE_SIZE, y1), new double[] {0, 0.5}, 0);
+            labelElement.render (g, fore, null);
+            int endx = x2 + SPACE_SIZE + labelElement.getBounds(g).width;
+            if (endx > maxx) maxx = endx;
+
+          } // if
+
+          // Draw extra tick marks for log scale enhancements in between
+          // the labelled tick marks.
+          if (tickFunction instanceof LogEnhancement && i < labels.length-1) {
+            double nextVal = Double.parseDouble (labels[i+1]);
+            for (int j = 2; j < 10; j++) {
+              double betweenVal = val * j;
+              if (betweenVal >= nextVal) continue;
+              norm = tickFunction.getValue (betweenVal);
+              if (norm <= 1) {
+                if (reverse) norm = 1-norm;
+                y1 = y2 = (y + SPACE_SIZE*2 + scaleHeight) - 
+                  (int) (norm * (scaleHeight-1));
+                g.drawLine (x1, y1, x2, y2);
+              } // if
+            } // for
+          } // if
+
+        } //for
+
+      } // if
+
+      // Draw scale legend
+      // -----------------
+      x1 = maxx + SPACE_SIZE*2;
+      y1 = y + size.height/2;
+      var bold = font.deriveFont (Font.BOLD);      
+      TextElement annotationElement = new TextElement (annotation, bold,
+        new Point (x1, y1), new double[] {0.5, 1}, 90);
+      annotationElement.render (g, fore, null);
 
     } // if
 
-    // Draw scale legend
-    // -----------------
-    x1 = maxx + SPACE_SIZE*2;
-    y1 = y + size.height/2;
-    TextElement annotationElement = new TextElement (annotation, font,
-      new Point (x1, y1), new double[] {0.5, 1}, 90);
-    annotationElement.render (g, fore, null);
+    else {
+
+      int yoff = (required.height < size.height ? (size.height - required.height)/2 : 0);
+
+      int x1, y1, x2, y2;
+      int scaleWidth = size.width - 8*SPACE_SIZE - 2;
+      double[] range = new double[] {function.getInverse (0), function.getInverse (1)};
+      boolean reverse = (range[0] > range[1]);
+      g.setStroke (DEFAULT_STROKE);
+
+      // Draw background
+      // ---------------
+      if (back != null) {
+        g.setColor (back);
+        g.fillRect (x, y, size.width, size.height);
+        g.setColor (fore);
+        GraphicsServices.drawRect (g, new Rectangle (x, y, size.width, size.height));
+      } // if
+
+      // Draw scale colors
+      // -----------------
+      y1 = y + yoff + SPACE_SIZE*2;
+      y2 = y1 + SCALE_HEIGHT;
+
+      Dimension imageDims = new Dimension (scaleWidth, SCALE_HEIGHT);
+      BufferedImage image = new BufferedImage (imageDims.width, imageDims.height, BufferedImage.TYPE_INT_RGB);
+      Graphics2D imageGraphics = image.createGraphics();
+      imageGraphics.setStroke (DEFAULT_STROKE);
+
+      IndexColorModel model = palette.getModel();
+      int colors = model.getMapSize();
+      for (int i = 0; i < scaleWidth; i++) {
+        x1 = x2 = i;
+        double norm = (double) i / (scaleWidth-1);
+        if (function instanceof StepEnhancement)
+          norm = function.getValue (function.getInverse (norm));
+        if (reverse) norm = 1-norm;
+        int index = (int) Math.round (norm*(colors-1));
+        imageGraphics.setColor (new Color (model.getRGB (index)));
+        imageGraphics.drawLine (x1, 0, x2, imageDims.height-1);
+      } // for
+
+      g.drawImage (image, x + SPACE_SIZE*4, y1, null);
+      imageGraphics.dispose();
+
+      // Draw scale border
+      // -----------------
+      g.setColor (fore);
+      GraphicsServices.drawRect (g, new Rectangle (x + SPACE_SIZE*4, 
+        y + yoff + SPACE_SIZE*2, scaleWidth, SCALE_HEIGHT));
+
+      // Draw scale ticks
+      // ----------------
+      y1 = y2 + 1;
+      y2 = y1 + TICK_SIZE - 1;
+      int maxy = y2 + SPACE_SIZE;
+      var labelElementBoundsList = new ArrayList<Rectangle>();
+
+      if (Double.isFinite (range[0]) && Double.isFinite (range[1]) && (range[0] != range[1])) {
+
+        boolean invert = (range[0] > range[1]);
+        EnhancementFunction tickFunction;
+        /** 
+         * Note that this next statement may only appear to work in
+         * testing because there is currently no way to set the reversal
+         * flag for StepEnhancement objects in cdat (and cwrender
+         * currently does not support step enhancements).
+         */
+        if (function instanceof StepEnhancement)
+          tickFunction = new LinearEnhancement (function.getRange());
+        else 
+          tickFunction = function;
+        for (int i = 0; i < labels.length; i++) {
+
+          // Convert tick label to tick position and check to see
+          // if we're within the color scale range.
+          double val = Double.parseDouble (labels[i]);
+          double norm = tickFunction.getValue (val);
+          if (norm <= 1) {
+
+            // Draw the tick mark line.
+            if (reverse) norm = 1-norm;
+            x1 = x2 = (x + SPACE_SIZE*4) + (int) (norm * (scaleWidth-1));
+            g.drawLine (x1, y1, x2, y2);
+
+            // Create the tick mark label and draw only if it doesn't
+            // intersect with another label.  Also keep track of the label
+            // height.
+            TextElement labelElement = new TextElement (labels[i], font,
+              new Point (x1, y2 + SPACE_SIZE), new double[] {0.5, 1}, 0);
+            var bounds = labelElement.getBounds (g);
+            boolean intersects = false;
+            for (var candidate : labelElementBoundsList) {
+              if (candidate.intersects (bounds)) {
+                intersects = true;
+                break;
+              } // if
+            } // for
+            if (!intersects) {
+              labelElementBoundsList.add (bounds);
+              labelElement.render (g, fore, null);
+              int endy = y2 + SPACE_SIZE + bounds.height;
+              if (endy > maxy) maxy = endy;
+            } // if
+
+          } // if
+
+          // Draw extra tick marks for log scale enhancements in between
+          // the labelled tick marks.
+          if (tickFunction instanceof LogEnhancement && i < labels.length-1) {
+            double nextVal = Double.parseDouble (labels[i+1]);
+            for (int j = 2; j < 10; j++) {
+              double betweenVal = val * j;
+              if (betweenVal >= nextVal) continue;
+              norm = tickFunction.getValue (betweenVal);
+              if (norm <= 1) {
+                if (reverse) norm = 1-norm;
+                x1 = x2 = (x + SPACE_SIZE*4) + (int) (norm * (scaleWidth-1));
+                g.drawLine (x1, y1, x2, y2);
+              } // if
+            } // for
+
+          } // if
+
+        } //for
+
+      } // if
+
+      // Draw scale legend
+      // -----------------
+      y1 = maxy + SPACE_SIZE;
+      x1 = x + size.width/2;
+      var bold = font.deriveFont (Font.BOLD);      
+      TextElement annotationElement = new TextElement (annotation, bold,
+        new Point (x1, y1), new double[] {0.5, 1}, 0);
+      annotationElement.render (g, fore, null);
+
+    } // else
 
   } // render
 
@@ -252,31 +433,63 @@ public class DataColorScale
     Graphics2D g
   ) {
 
-    // Find longest label
-    // ------------------
-    String label = " ";
-    for (int i = 0; i < labels.length; i++) {
-      if (labels[i].length() > label.length())
-        label = labels[i];
-    } // for
+    Dimension size;
 
-    // Create text bounds
-    // ------------------
-    TextElement labelElement = new TextElement (label, font, new Point(), 
-      null, 0);
-    Rectangle labelBounds = labelElement.getBounds(g);
-    TextElement annotationElement = new TextElement (annotation, font, 
-      new Point(), null, 90);
-    Rectangle annotationBounds = annotationElement.getBounds(g);
+    if (legendAxis == VERTICAL_AXIS) {
 
-    // Calculate size
-    // --------------
-    int requiredWidth = SPACE_SIZE*2 + 1 + SCALE_WIDTH + 1 + TICK_SIZE + SPACE_SIZE +
-      labelBounds.width + SPACE_SIZE*2 + annotationBounds.width + SPACE_SIZE*2;
-    int requiredHeight = Math.max (labelBounds.height * labels.length * 2,
-      annotationBounds.height);
-    requiredHeight += SPACE_SIZE*4;
-    Dimension size = new Dimension (requiredWidth, requiredHeight);
+      // Find longest label
+      // ------------------
+      String label = " ";
+      for (int i = 0; i < labels.length; i++) {
+        if (labels[i].length() > label.length())
+          label = labels[i];
+      } // for
+
+      // Create text bounds
+      // ------------------
+      TextElement labelElement = new TextElement (label, font, new Point(), null, 0);
+      Rectangle labelBounds = labelElement.getBounds(g);
+      var bold = font.deriveFont (Font.BOLD);
+      TextElement annotationElement = new TextElement (annotation, bold, new Point(), null, 90);
+      Rectangle annotationBounds = annotationElement.getBounds(g);
+
+      // Calculate size
+      // --------------
+      int requiredWidth = SPACE_SIZE*2 + 1 + SCALE_WIDTH + 1 + TICK_SIZE + SPACE_SIZE +
+        labelBounds.width + SPACE_SIZE*2 + annotationBounds.width + SPACE_SIZE*2;
+      int requiredHeight = Math.max (labelBounds.height * labels.length * 2,
+        annotationBounds.height);
+      requiredHeight += SPACE_SIZE*4;
+      size = new Dimension (requiredWidth, requiredHeight);
+
+    } // if
+
+    else {
+
+      // Concatenate labels
+      // ------------------
+      String label = " ";
+      for (int i = 0; i < labels.length; i++) {
+        label += " " + labels[i];
+      } // for
+
+      // Create text bounds
+      // ------------------
+      TextElement labelElement = new TextElement (label, font, new Point(), null, 0);
+      Rectangle labelBounds = labelElement.getBounds(g);
+      var bold = font.deriveFont (Font.BOLD);
+      TextElement annotationElement = new TextElement (annotation, bold, new Point(), null, 0);
+      Rectangle annotationBounds = annotationElement.getBounds(g);
+
+      // Calculate size
+      // --------------
+      int requiredHeight = SPACE_SIZE*2 + 1 + SCALE_HEIGHT + 1 + TICK_SIZE + SPACE_SIZE +
+        labelBounds.height + SPACE_SIZE + annotationBounds.height + SPACE_SIZE*2;
+      int requiredWidth = Math.max (labelBounds.width, annotationBounds.width);
+      requiredWidth += SPACE_SIZE*8;
+      size = new Dimension (requiredWidth, requiredHeight);
+
+    } // else
 
     return (size);
 
@@ -471,10 +684,8 @@ public class DataColorScale
 
     // Nudge min and max
     // -----------------
-    double newMin = Math.ceil ((min + Double.MIN_VALUE - 
-      interval)/interval)*interval;
-    double newMax = Math.floor ((max - Double.MIN_VALUE + 
-      interval)/interval)*interval;
+    double newMin = Math.ceil ((Math.nextUp (min) - interval)/interval)*interval;
+    double newMax = Math.floor ((Math.nextDown (max) + interval)/interval)*interval;
 
     LOGGER.fine ("Nudged min is " + newMin);
     LOGGER.fine ("Nudged max is " + newMax);    
@@ -486,9 +697,9 @@ public class DataColorScale
       int nticks = (int) Math.round ((newMax - newMin)/interval) + 1;
       List<String> labelList = new ArrayList<>();
       for (int i = 0; i < nticks; i++) {
-        double val = newMin + i*interval;
-        if (val < min || val > max) continue;
-        labelList.add (format.format (val));
+        double val = Math.fma (i, interval, newMin);
+        if (val >= Math.nextDown (min) && val <= Math.nextUp (max))
+          labelList.add (format.format (val));
       } // for
       labels = labelList.toArray (new String[0]);
     } // if
@@ -567,8 +778,9 @@ public class DataColorScale
 
     // Create tick labels
     // ------------------
-    double min = function.getInverse (0);
-    double max = function.getInverse (1);
+    var range = function.getRange();
+    var min = range[0];
+    var max = range[1];
     if (min > max) { double tmp = min; min = max; max = tmp; }
     if (function instanceof LogEnhancement)
       labels = getLogTickLabels (min, max);
@@ -585,6 +797,8 @@ public class DataColorScale
       buffer.append (")");
     } // if
     annotation = buffer.toString().replace ('_', ' ');
+
+    legendAxis = VERTICAL_AXIS;
 
   } // DataColorScale constructor
 

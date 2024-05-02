@@ -644,7 +644,7 @@ public class EarthLocation
         int dd = (int) deg;
         int mm = (int) ((deg - dd)*60);
         double ss = (deg - dd - mm/60.0)*3600;
-        str = dd + "d" + mm + "'" + fmt.format(ss) + "\"" + hemisphere;
+        str = dd + "d" + String.format ("%02d", mm) + "'" + String.format ("%05.2f", ss) + "\"" + hemisphere;
         break;
       } // case
       default:
@@ -766,7 +766,7 @@ public class EarthLocation
   public boolean isValid () {
 
     boolean locIsValid = true;
-    if (Double.isNaN (lat))
+    if (Double.isNaN (lat) || lat > 90 || lat < -90)
       locIsValid = false;
     else if (Double.isNaN (lon))
       locIsValid = false;

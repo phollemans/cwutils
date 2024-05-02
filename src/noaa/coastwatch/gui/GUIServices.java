@@ -37,6 +37,23 @@ import java.awt.GridBagConstraints;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Window;
+import java.awt.Cursor;
+import java.awt.Desktop;
+import java.awt.GridLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.BasicStroke;
+import java.awt.Composite;
+import java.awt.CompositeContext;
+import java.awt.Toolkit;
+import java.awt.GraphicsEnvironment;
+import java.awt.image.ColorModel;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.RGBImageFilter;
+import java.awt.image.ImageFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -46,6 +63,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.image.BaseMultiResolutionImage;
+import java.awt.geom.RoundRectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -59,6 +77,7 @@ import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.net.URI;
 import java.text.BreakIterator;
 
 import java.util.ArrayList;
@@ -69,6 +88,8 @@ import java.util.Properties;
 import java.util.prefs.Preferences;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.function.BiFunction;
+import java.util.function.BiConsumer;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -95,16 +116,22 @@ import javax.swing.LookAndFeel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.JFrame;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 
+import noaa.coastwatch.gui.IconFactory;
+import noaa.coastwatch.gui.IconFactory.Purpose;
+import noaa.coastwatch.gui.IconFactory.Mode;
 import noaa.coastwatch.gui.HTMLPanel;
 import noaa.coastwatch.gui.PanelOutputStream;
 import noaa.coastwatch.tools.ToolServices;
 
 import com.install4j.api.launcher.StartupNotification;
+
+import java.util.logging.Logger;
 
 // Testing
 import noaa.coastwatch.test.TestLogger;
@@ -118,6 +145,8 @@ import noaa.coastwatch.test.TestLogger;
  */
 @noaa.coastwatch.test.Testable
 public class GUIServices {
+
+  private static final Logger LOGGER = Logger.getLogger (GUIServices.class.getName());  
 
   // Constants
   // ---------
@@ -135,6 +164,10 @@ public class GUIServices {
   /** The Windows boolean, true if we are running on Windows. **/
   public static final boolean IS_WIN = 
     System.getProperty ("os.name").toLowerCase().indexOf ("win") != -1;
+
+  /** The Linux boolean, true if we are running on Linux. **/
+  public static final boolean IS_LINUX = 
+    System.getProperty ("os.name").toLowerCase().indexOf ("linux") != -1;
 
   /** The Aqua boolean, true if we are running on a Mac with Aqua look. */
   public static final boolean IS_AQUA = 
@@ -201,8 +234,83 @@ public class GUIServices {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * 
+   * 
+   * @since 3.8.1
+   */
+  public Icon getGray (Icon icon) {
+
+    // final int w = icon.getIconWidth();
+    // final int h = icon.getIconHeight();
+    // GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    // GraphicsDevice gd = ge.getDefaultScreenDevice();
+    // GraphicsConfiguration gc = gd.getDefaultConfiguration();
+    // BufferedImage image = gc.createCompatibleImage (w, h, Transparency.TRANSLUCENT);
+    // Graphics2D g2d = image.createGraphics();
+    // icon.paintIcon (null, g2d, 0, 0);
+    // Image gray = GrayFilter.createDisabledImage (image);
+    // return (new ImageIcon (gray));
+
+    return (null);
+
+  } // getGray
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * 
+   * 
+   * @since 3.8.1
+   */
+  public static Action createAction (
+    String className,
+    String command,
+    String text,
+    String iconPurpose,
+    String desc
+  ) {
+
+    var action = new AbstractAction (text, getIcon (iconPurpose)) {
+      public void actionPerformed (ActionEvent e) { }
+    };
+    action.putValue (Action.ACTION_COMMAND_KEY, className + ":" + command);
+    if (desc != null) action.putValue (Action.SHORT_DESCRIPTION, desc);
+
+    return (action);
+
+  } // createAction
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * 
+   * 
+   * @since 3.8.1
+   */
+  public static void centerOnScreen (JFrame frame) {
+
+    var device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    var config = device.getDefaultConfiguration();
+    var bounds = config.getBounds();
+    var insets = Toolkit.getDefaultToolkit().getScreenInsets (config);
+
+    bounds.x += insets.left;
+    bounds.y += insets.top;
+    bounds.width -= (insets.left + insets.right);
+    bounds.height -= (insets.top + insets.bottom);
+
+    var size = frame.getSize();
+    var x = bounds.x + bounds.width/2 - size.width/2;
+    var y = bounds.y + bounds.height/2 - size.height/2;
+    frame.setLocation (x, y);
+
+  } // centerOnScreen
+
+  ////////////////////////////////////////////////////////////
+
   /** 
-   * Initializes the environment prior to creating a GUI components.
+   * Initializes the environment prior to creating any GUI components.
    * 
    * @since 3.7.1
    */
@@ -215,6 +323,341 @@ public class GUIServices {
     } // if
 
   } // initializeLaf
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a button with an on screen display type of style and translucent
+   * properties.
+   * 
+   * @param icon the icon to use.
+   * 
+   * @return the button.
+   *
+   * @since 3.8.1
+   */
+  public static TranslucentButton createTranslucentButton (
+    ImageIcon icon
+  ) {
+
+    var image = icon.getImage();
+
+    var defaultImage = createModifiedImage (image, (pixelIn, pixelOut) -> {
+      for (int i = 0; i < 3; i++) pixelOut[i] = (int) Math.max (0, Math.min (pixelIn[i]*0.75, 255));
+      pixelOut[3] = pixelIn[3];
+    });
+    var defaultIcon = new ImageIcon (defaultImage);
+
+    var rolloverIcon = icon;
+
+    var pressedImage = createModifiedImage (image, (pixelIn, pixelOut) -> {
+      for (int i = 0; i < 3; i++) pixelOut[i] = (int) Math.max (0, Math.min (pixelIn[i]*0.85, 255));
+      pixelOut[3] = pixelIn[3];
+    });
+    var pressedIcon = new ImageIcon (pressedImage);
+
+    var button = new TranslucentButton (defaultIcon);
+    button.setRolloverIcon (rolloverIcon);
+    button.setPressedIcon (pressedIcon);
+
+    button.setOpaque (false);
+    button.setContentAreaFilled (false);
+    button.setBorderPainted (false);
+    button.setFocusPainted (false);
+
+    return (button);
+
+  } // createTranslucentButton
+
+  ////////////////////////////////////////////////////////////
+
+  private static class OperatorImageFilter extends RGBImageFilter {
+
+    private BiConsumer<int[],int[]> operator;
+
+    public OperatorImageFilter (BiConsumer<int[],int[]> operator) { 
+      canFilterIndexColorModel = true; 
+      this.operator = operator;
+    } // OperatorImageFilter
+
+    private void decodeRGB (int rgb, int[] pixel) {
+      pixel[0] = (rgb & 0x00ff0000) >> 16;
+      pixel[1] = (rgb & 0x0000ff00) >> 8;
+      pixel[2] = (rgb & 0x000000ff);
+      pixel[3] = (rgb & 0xff000000) >> 24;
+    } // decodeRGB
+
+    private int encodeRGB (int[] pixel) {
+      int rgb = (pixel[3] << 24) | (pixel[0] << 16) | (pixel[1] << 8) | pixel[2];
+      return (rgb);      
+    } // encodeRGB
+
+    public int filterRGB (int x, int y, int rgb) {
+
+      int[] pixelIn = new int[4];
+      int[] pixelOut = new int[4];
+      decodeRGB (rgb, pixelIn);
+      operator.accept (pixelIn, pixelOut);
+      return (encodeRGB (pixelOut));
+
+    } // filterRGB
+
+  } // OperatorImageFilter class
+
+  ////////////////////////////////////////////////////////////
+
+  private static ImageFilter createImageFilter (
+    BiConsumer<int[], int[]> operator
+  ) {
+
+    return (new OperatorImageFilter (operator));
+
+  } // createImageFilter
+
+  ////////////////////////////////////////////////////////////
+
+  public static Image createModifiedImage (
+    Image image, 
+    BiConsumer<int[],int[]> operator
+  ) {
+
+    var filter = new OperatorImageFilter (operator);
+    var modifiedImage = Toolkit.getDefaultToolkit().createImage (
+      new FilteredImageSource (image.getSource(), filter));
+
+    return (modifiedImage);
+
+  } // createModifiedImage
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a button with an on screen display type of style.
+   * 
+   * @param size the width and height of the button.
+   * @param purpose the button purpose.
+   * 
+   * @return the button.
+   *
+   * @since 3.8.1
+   */
+  public static JButton createOnScreenStyleButton (
+    int size, 
+    Purpose purpose
+  ) {
+
+    var factory = IconFactory.getInstance();
+    var button = new JButton (factory.createIcon (purpose, Mode.NORMAL, size));
+    button.setRolloverIcon (factory.createIcon (purpose, Mode.HOVER, size));
+    button.setPressedIcon (factory.createIcon (purpose, Mode.PRESSED, size));
+    button.setOpaque (false);
+    button.setContentAreaFilled (false);
+    button.setBorderPainted (false);
+    button.setFocusPainted (false);
+
+    return (button);
+
+  } // createOnScreenStyleButton
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a darkening function to be use with a composite.
+   * 
+   * @param f the darkening factor.
+   * 
+   * @return the darkening function.
+   * 
+   * @since 3.8.1
+   * 
+   * @see #createComposite
+   */
+  public static BiFunction<int[], int[], Boolean> createDarkenFunction (double f) {
+
+    BiFunction<int[], int[], Boolean> func = (src,dest) -> {
+
+      var write = false;
+
+      if (src[3] != 0) {
+        float srcAlpha = src[3] / 255.0f;
+        for (int i = 0; i < 3; i++) {
+          src[i] = (int) Math.round (src[i]*f);
+          int value = (int) Math.round (src[i]*srcAlpha + dest[i]*(1-srcAlpha));
+          if (value < 0) value = 0;
+          else if (value > 255) value = 255;
+          dest[i] = value;
+        } // for
+        write = true;
+      } // if
+
+      return (write);
+
+    };
+
+    return (func);
+
+  } // createDarkenFunction
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a composite that uses a function to specify the mapping from
+   * source to destination pixels.
+   * 
+   * @param function a function that takes (srcPixels, destPixels) and 
+   * overwrites destPixels with the output composite pixel values.  The function
+   * returns true if successful and the destPixels values should be written
+   * to the output, or false if not.  The source and destination pixels are
+   * stored as int[] arrays that contain [red, green, blue, alpha] in the 
+   * range of 0-255.
+   * 
+   * @return the composite object.
+   * 
+   * @since 3.8.1
+   */
+  public static Composite createComposite (
+    BiFunction<int[], int[], Boolean> function
+  ) {
+
+    var composite = new Composite() {
+
+      @Override
+      public CompositeContext createContext (ColorModel srcColorModel, ColorModel dstColorModel, RenderingHints hints) {
+
+        var context = new CompositeContext() {
+
+          @Override
+          public void dispose () { }
+
+          @Override
+          public void compose (Raster src, Raster dstIn, WritableRaster dstOut) {
+
+            int[] srcPixels = new int[4]; 
+            int[] dstPixels = new int[4];
+
+            for (int x = 0; x < src.getWidth(); x++) {
+              for (int y = 0; y < src.getHeight(); y++) {
+                src.getPixel (x, y, srcPixels);
+                dstIn.getPixel (x, y, dstPixels);
+                var success = function.apply (srcPixels, dstPixels);
+                if (success) dstOut.setPixel (x, y, dstPixels);
+              } // for
+            } // for
+
+          } // compose
+
+        };
+        return (context);
+      } // createContext
+
+    };
+
+    return (composite);
+
+  } // createComposite
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Creates a label with text and URL that opens a browser window.
+   * 
+   * @param text the text for the label.
+   * @param url the URL to open when the label is clicked.
+   * 
+   * @return the hyperlink label.
+   * 
+   * @since 3.8.1
+   */
+  public static JLabel createLinkLabel (
+    String text,
+    String url
+  ) {
+
+    var html = "<html><a href=\"" + url + "\">" + text + "</a></html>";
+    var label = new JLabel (html);
+    label.setCursor (Cursor.getPredefinedCursor (Cursor.HAND_CURSOR));
+    label.setToolTipText (url);
+    label.addMouseListener (new MouseAdapter() {
+      @Override
+      public void mouseClicked (MouseEvent event) {
+        try { Desktop.getDesktop().browse (new URI (url)); }
+        catch (Exception e) {
+          throw new RuntimeException (e);
+        } // catch
+      } // mouseClicked     
+    });
+
+    return (label);
+
+  } // createLinkLabel
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets an about component appropriate for an about dialog box.
+   * 
+   * @param tool the tool or program name.
+   *
+   * @return the about component.
+   * 
+   * @since 3.8.1
+   */
+  public static Component getAboutComponent (
+    String tool
+  ) {
+
+    String os = 
+      System.getProperty ("os.name") + " " + 
+      System.getProperty ("os.version") + " " + 
+      System.getProperty ("os.arch");
+    String jvm = System.getProperty ("java.version") + " on " + os;
+
+    var items = List.of (
+      "Program",
+      "Package",
+      "Version",
+      "Java version",
+      "Website",
+      "Author",
+      "Support",
+      "Copyright"
+    );
+    var itemCount = items.size();
+    var values = List.of (
+      tool,
+      ToolServices.PACKAGE,
+      ToolServices.getVersion(),
+      jvm,
+      ToolServices.WEBSITE,
+      ToolServices.AUTHOR,
+      ToolServices.SUPPORT,
+      ToolServices.COPYRIGHT
+    );
+
+    var panel = Box.createHorizontalBox();
+    var itemBox = Box.createVerticalBox();
+    panel.add (itemBox);
+    panel.add (Box.createHorizontalStrut (10));
+    var valueBox = Box.createVerticalBox();
+    panel.add (valueBox);
+
+    var bold = UIManager.getFont ("Label.font").deriveFont (Font.BOLD);
+
+    for (int i = 0; i < itemCount; i++) {
+      var item = items.get (i);
+      var itemLabel = new JLabel (item + ":");
+      itemLabel.setFont (bold);
+      itemBox.add (itemLabel);
+      var value = values.get (i);
+      valueBox.add (item.equals ("Website") ? 
+        createLinkLabel (value.substring (value.lastIndexOf ("/")+1, value.length()), value) : 
+        new JLabel (value)
+      );
+    } // for
+
+    return (panel);
+
+  } // getAboutComponent
 
   ////////////////////////////////////////////////////////////
 
@@ -383,7 +826,7 @@ public class GUIServices {
     button.addMouseListener (listener);
     button.addFocusListener (listener);
 */
-  
+
   } // applyAquaButtonTreatment
 
   ////////////////////////////////////////////////////////////
@@ -668,8 +1111,50 @@ public class GUIServices {
         dialog.getRootPane().setDefaultButton (button);
 
 
- // TODO: This doesn't work well, see note in applyAquaButtonTreatment
- //         if (IS_AQUA) button.setForeground (Color.WHITE);
+
+        // This is the latest attempt to modify a dialog button text color 
+        // under the Aqua look and feel on MacOS to be more natural.
+        if (IS_AQUA) {
+
+          button.getModel().addChangeListener (event -> {
+            var model = button.getModel();
+            if (model.isEnabled()) {
+              if (!model.isPressed() || !model.isArmed()) button.setForeground (Color.WHITE);
+              else button.setForeground (UIManager.getColor ("Button.foreground"));
+            } // if
+          });
+
+          dialog.addWindowFocusListener (new java.awt.event.WindowFocusListener() {
+
+            public void windowLostFocus (java.awt.event.WindowEvent event) {
+              button.setForeground (UIManager.getColor ("Button.foreground"));
+            } // windowLostFocus
+
+            public void windowGainedFocus (java.awt.event.WindowEvent e) {
+              var model = button.getModel();
+              if (model.isEnabled()) {
+                if (!model.isPressed()) button.setForeground (Color.WHITE);
+                else button.setForeground (UIManager.getColor ("Button.foreground"));
+              } // if            
+            } // windowGainedFocus
+
+          });
+
+          // button.getModel().addChangeListener (event -> {
+          //   var text = "";
+          //   var model = button.getModel();
+          //   if (model.isArmed()) text += " ARMED";
+          //   if (model.isEnabled()) text += " ENABLED";
+          //   if (model.isPressed()) text += " PRESSED";
+          //   if (model.isRollover()) text += " ROLLOVER";
+          //   if (model.isSelected()) text += " SELECTED";
+          //   text = text.trim();
+          //   LOGGER.fine ("Default button state changed to '" + text + "'");
+          // });
+
+        } // if
+
+
 
 
       } // if

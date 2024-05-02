@@ -69,7 +69,7 @@
           <entry location="doc/cw_cf_metadata.pdf" />
           <entry location="doc/metadata_comparison_v1_1_jan_2010.pdf" />
           <entry location="doc/license.txt" />
-          <entry location="doc/cwutils_ug_3_8_1.pdf" />
+          <entry location="doc/cwutils_ug_4_0_0.pdf" />
           <entry location="data" />
         </include>
       </component>
@@ -109,7 +109,7 @@
   <launchers>
     <launcher name="CoastWatch Data Analysis Tool" id="1233" menuName="CoastWatch Data Analysis Tool" icnsFile="${compiler:iconDir}/cdat.icns">
       <executable name="${compiler:cdatExecutable}" iconSet="true" iconFile="${compiler:iconDir}/cdat.ico" executableDir="bin" executableMode="gui" changeWorkingDirectory="false" singleInstance="true" />
-      <splashScreen show="true" width="400" height="220" bitmapFile="./resources/noaa/coastwatch/gui/cwf_splash_2_export.png">
+      <splashScreen show="true" width="480" height="270" bitmapFile="./resources/noaa/coastwatch/gui/cdat_splash.png">
         <text>
           <statusLine x="165" y="161" text="CoastWatch Data Analysis Tool" fontSize="10" fontColor="255,255,255" bold="true" />
           <versionLine x="165" y="178" text="v${compiler:sys.version} ${compiler:osName}_${compiler:arch}" fontSize="10" fontColor="255,255,255" bold="true" />
@@ -142,7 +142,7 @@
     </launcher>
     <launcher name="CoastWatch Master Tool" id="1434" menuName="CoastWatch Master Tool" icnsFile="${compiler:iconDir}/cwmaster.icns">
       <executable name="${compiler:cwmasterExecutable}" iconSet="true" iconFile="${compiler:iconDir}/cwmaster.ico" executableDir="bin" redirectStderr="false" executableMode="gui" changeWorkingDirectory="false" />
-      <splashScreen show="true" bitmapFile="./resources/noaa/coastwatch/gui/cwf_splash_2_export.png" />
+      <splashScreen show="true" bitmapFile="./resources/noaa/coastwatch/gui/cdat_splash.png" />
       <java mainClass="noaa.coastwatch.tools.cwmaster" vmParameters="${compiler:vmLafOptions} ${compiler:vm32BitOption} ${compiler:vmLogOptions}">
         <classPath>
           <directory location="extensions" failOnError="false" />
@@ -717,7 +717,7 @@ OTHER DEALINGS WITH THE SOFTWARE.
                         <property name="name" type="string">User's Guide</property>
                         <property name="target">
                           <object class="java.io.File">
-                            <string>doc/cwutils_ug_3_8_1.pdf</string>
+                            <string>doc/cwutils_ug_4_0_0.pdf</string>
                           </object>
                         </property>
                       </object>

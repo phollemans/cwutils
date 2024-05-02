@@ -48,6 +48,7 @@ import noaa.coastwatch.gui.open.LocalDirectoryLister;
  * @author Peter Hollemans
  * @since 3.2.0
  */
+@Deprecated
 public class FileTable
   extends JTable {
 

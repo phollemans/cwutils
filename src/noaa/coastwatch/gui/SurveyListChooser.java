@@ -57,6 +57,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToggleButton;
+import javax.swing.JButton;
+import javax.swing.AbstractButton;
 import javax.swing.JEditorPane;
 import javax.swing.UIManager;
 
@@ -95,7 +97,7 @@ import noaa.coastwatch.util.HTMLReportFormatter;
  */
 public class SurveyListChooser
   extends JPanel
-  implements TabComponent {
+  implements TabComponent, RequestHandler {
 
   // Constants
   // ---------
@@ -129,7 +131,7 @@ public class SurveyListChooser
   private SurveyListPanel listPanel;
 
   /** The list of action listeners. */
-  private List actionListeners;
+  private List<ActionListener> actionListeners;
 
   /** The last survey command executed. */
   private String surveyCommand;
@@ -142,6 +144,48 @@ public class SurveyListChooser
 
   /** The map of surveys to plot panels. */
   private Map surveyPlotMap;
+
+  private DispatchTable dispatch;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * 
+   * @since 3.8.1
+   */
+  public static List<AbstractButton> getToolBarButtons () {
+
+    var className = SurveyListChooser.class.getName();
+
+    var button = new DropDownButton (GUIServices.createAction (className, "perform_survey", "Survey", "layers.survey", "Perform data survey"));
+    button.addItem (GUIServices.createAction (className, "survey_point", "Single point", "survey.menu.point", null));
+    button.addItem (GUIServices.createAction (className, "survey_line", "Line", "survey.menu.line", null));
+    button.addItem (GUIServices.createAction (className, "survey_box", "Rectangular area", "survey.menu.box", null));
+    button.addItem (GUIServices.createAction (className, "survey_polygon", "Polygon area", "survey.menu.polygon", null));
+
+    return (List.of (button));
+
+  } // getToolBarButtons
+
+  ////////////////////////////////////////////////////////////
+
+  private void startSurveyMode (String command) {
+
+    surveyCommand = command;    
+    var event = new ActionEvent (this, 0, surveyCommand);  
+    for (var listener : actionListeners) listener.actionPerformed (event);
+
+  } // startSurveyMode
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public void handleRequest (Request request) { dispatch.handleRequest (request); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean canHandleRequest (Request request) { return (dispatch.canHandleRequest (request)); }
 
   ////////////////////////////////////////////////////////////
 
@@ -206,7 +250,13 @@ public class SurveyListChooser
 
     // Create list of survey action listeners
     // --------------------------------------
-    actionListeners = new ArrayList();
+    actionListeners = new ArrayList<>();
+
+    dispatch = new DispatchTable (SurveyListChooser.class.getName());
+    dispatch.addDispatch ("survey_point", () -> startSurveyMode (POINT_COMMAND));
+    dispatch.addDispatch ("survey_line", () -> startSurveyMode (LINE_COMMAND));
+    dispatch.addDispatch ("survey_box", () -> startSurveyMode (BOX_COMMAND));
+    dispatch.addDispatch ("survey_polygon", () -> startSurveyMode (POLYGON_COMMAND));
 
   } // SurveyListChooser constructor
 
@@ -259,7 +309,8 @@ public class SurveyListChooser
 
     // Add survey overlay to list
     // --------------------------
-    SurveyOverlay overlay = new SurveyOverlay (survey, Color.RED);
+    SurveyOverlay overlay = new SurveyOverlay (survey, new Color (255, 84, 207));
+    overlay.setDropShadow (true);
     overlay.setStroke (new BasicStroke (2));
     String className = survey.getClass().getName();
     overlay.setName (className.replaceAll (".*\\.([A-Za-z]*)Survey", "$1") + 
@@ -271,7 +322,7 @@ public class SurveyListChooser
   ////////////////////////////////////////////////////////////
 
   /** Deactivates the survey so that no survey is selected. */
-  public void deactivate () { listPanel.hidden.setSelected (true); }
+  public void deactivate () { } //listPanel.hidden.setSelected (true); }
 
   ////////////////////////////////////////////////////////////
 
@@ -353,48 +404,55 @@ public class SurveyListChooser
     /** Creates the overlay list add buttons. */
     protected List getAddButtons () {
 
-      // Create button list and listener
-      // -------------------------------
-      List buttons = new LinkedList();
-      ActionListener buttonListener = new SurveyListener();
+//       // Create button list and listener
+//       // -------------------------------
+//       List buttons = new LinkedList();
+//       ActionListener buttonListener = new SurveyListener();
 
-      // Create buttons
-      // --------------
-      ButtonGroup group = new ButtonGroup();
-      JToggleButton button;
+//       // Create buttons
+//       // --------------
+//       ButtonGroup group = new ButtonGroup();
+// //      JToggleButton button;
+//       JButton button;
 
-      button = GUIServices.getIconToggle ("survey.point");
-      button.setActionCommand (POINT_COMMAND);
-      button.addActionListener (buttonListener);
-      button.setToolTipText (POINT_COMMAND);
-      buttons.add (button);
-      group.add (button);
+// //      button = GUIServices.getIconToggle ("survey.point");
+//       button = GUIServices.getIconButton ("survey.point");
+//       button.setActionCommand (POINT_COMMAND);
+//       button.addActionListener (buttonListener);
+//       button.setToolTipText (POINT_COMMAND);
+//       buttons.add (button);
+// //      group.add (button);
 
-      button = GUIServices.getIconToggle ("survey.line");
-      button.setActionCommand (LINE_COMMAND);
-      button.addActionListener (buttonListener);
-      button.setToolTipText (LINE_COMMAND);
-      buttons.add (button);
-      group.add (button);
+// //      button = GUIServices.getIconToggle ("survey.line");
+//       button = GUIServices.getIconButton ("survey.line");
+//       button.setActionCommand (LINE_COMMAND);
+//       button.addActionListener (buttonListener);
+//       button.setToolTipText (LINE_COMMAND);
+//       buttons.add (button);
+// //      group.add (button);
 
-      button = GUIServices.getIconToggle ("survey.box");
-      button.setActionCommand (BOX_COMMAND);
-      button.addActionListener (buttonListener);
-      button.setToolTipText (BOX_COMMAND);
-      buttons.add (button);
-      group.add (button);
+// //      button = GUIServices.getIconToggle ("survey.box");
+//       button = GUIServices.getIconButton ("survey.box");
+//       button.setActionCommand (BOX_COMMAND);
+//       button.addActionListener (buttonListener);
+//       button.setToolTipText (BOX_COMMAND);
+//       buttons.add (button);
+// //      group.add (button);
 
-      button = GUIServices.getIconToggle ("survey.polygon");
-      button.setActionCommand (POLYGON_COMMAND);
-      button.addActionListener (buttonListener);
-      button.setToolTipText (POLYGON_COMMAND);
-      buttons.add (button);
-      group.add (button);
+// //      button = GUIServices.getIconToggle ("survey.polygon");
+//       button = GUIServices.getIconButton ("survey.polygon");
+//       button.setActionCommand (POLYGON_COMMAND);
+//       button.addActionListener (buttonListener);
+//       button.setToolTipText (POLYGON_COMMAND);
+//       buttons.add (button);
+// //      group.add (button);
 
-      hidden = new JToggleButton();
-      group.add (hidden);
+//       hidden = new JToggleButton();
+//       group.add (hidden);
 
-      return (buttons);
+//       return (buttons);
+
+      return (null);
 
     } // getAddButtons
 
