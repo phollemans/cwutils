@@ -74,7 +74,7 @@
           <entry location="data" />
         </include>
       </component>
-      <component name="Command line tools" id="198" selected="false">
+      <component name="Command line tools" id="198">
         <include>
           <entry location="bin/cwangles" fileType="launcher" />
           <entry location="bin/cwcomposite" fileType="launcher" />
@@ -99,7 +99,7 @@
           <entry location="doc/man" />
         </include>
       </component>
-      <component name="Source code and API docs" id="118" selected="false">
+      <component name="Source code and API docs" id="118">
         <include>
           <entry location="src.zip" />
           <entry location="doc/api.zip" />
