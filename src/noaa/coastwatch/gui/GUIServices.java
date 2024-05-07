@@ -48,6 +48,11 @@ import java.awt.Composite;
 import java.awt.CompositeContext;
 import java.awt.Toolkit;
 import java.awt.GraphicsEnvironment;
+import java.awt.AlphaComposite;
+import java.awt.Rectangle;
+import java.awt.GraphicsEnvironment;
+import java.awt.Transparency;
+import java.awt.geom.AffineTransform;
 import java.awt.image.ColorModel;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
@@ -239,30 +244,6 @@ public class GUIServices {
    * 
    * @since 3.8.1
    */
-  public Icon getGray (Icon icon) {
-
-    // final int w = icon.getIconWidth();
-    // final int h = icon.getIconHeight();
-    // GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-    // GraphicsDevice gd = ge.getDefaultScreenDevice();
-    // GraphicsConfiguration gc = gd.getDefaultConfiguration();
-    // BufferedImage image = gc.createCompatibleImage (w, h, Transparency.TRANSLUCENT);
-    // Graphics2D g2d = image.createGraphics();
-    // icon.paintIcon (null, g2d, 0, 0);
-    // Image gray = GrayFilter.createDisabledImage (image);
-    // return (new ImageIcon (gray));
-
-    return (null);
-
-  } // getGray
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * 
-   * 
-   * @since 3.8.1
-   */
   public static Action createAction (
     String className,
     String command,
@@ -330,35 +311,23 @@ public class GUIServices {
    * Creates a button with an on screen display type of style and translucent
    * properties.
    * 
-   * @param icon the icon to use.
+   * @param defaultIcon the icon to use.
+   * @param rolloverIcon the rollover icon to use or null.
+   * @param pressedIcon the pressed icon to use or null.
    * 
    * @return the button.
    *
    * @since 3.8.1
    */
   public static TranslucentButton createTranslucentButton (
-    ImageIcon icon
+    Icon defaultIcon,
+    Icon rolloverIcon,
+    Icon pressedIcon
   ) {
 
-    var image = icon.getImage();
-
-    var defaultImage = createModifiedImage (image, (pixelIn, pixelOut) -> {
-      for (int i = 0; i < 3; i++) pixelOut[i] = (int) Math.max (0, Math.min (pixelIn[i]*0.75, 255));
-      pixelOut[3] = pixelIn[3];
-    });
-    var defaultIcon = new ImageIcon (defaultImage);
-
-    var rolloverIcon = icon;
-
-    var pressedImage = createModifiedImage (image, (pixelIn, pixelOut) -> {
-      for (int i = 0; i < 3; i++) pixelOut[i] = (int) Math.max (0, Math.min (pixelIn[i]*0.85, 255));
-      pixelOut[3] = pixelIn[3];
-    });
-    var pressedIcon = new ImageIcon (pressedImage);
-
     var button = new TranslucentButton (defaultIcon);
-    button.setRolloverIcon (rolloverIcon);
-    button.setPressedIcon (pressedIcon);
+    if (rolloverIcon != null) button.setRolloverIcon (rolloverIcon);
+    if (pressedIcon != null) button.setPressedIcon (pressedIcon);
 
     button.setOpaque (false);
     button.setContentAreaFilled (false);

@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.Box;
@@ -116,8 +118,17 @@ public class OnScreenViewOperationChooser extends TranslucentPanel {
 
     var ext = large ? ".large" : "";
 
-    var icon = GUIServices.getIcon (infoMap.get (mode).icon + ext);
-    var button = GUIServices.createTranslucentButton (icon);
+    var defaultIcon = GUIServices.getIcon (infoMap.get (mode).icon + ext);
+    Icon rolloverIcon, pressedIcon;
+    try {
+      rolloverIcon = GUIServices.getIcon (infoMap.get (mode).icon + ext + ".rollover");
+      pressedIcon = GUIServices.getIcon (infoMap.get (mode).icon + ext + ".pressed");
+    } // try 
+    catch (Exception e) {
+      rolloverIcon = null;
+      pressedIcon = null;
+    } // catch
+    var button = GUIServices.createTranslucentButton (defaultIcon, rolloverIcon, pressedIcon);
     button.getModel().setActionCommand (mode.name());
     button.addActionListener (listener);
     button.setToolTipText (infoMap.get (mode).tip);
