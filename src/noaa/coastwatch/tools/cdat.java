@@ -776,11 +776,13 @@ public final class cdat extends JFrame {
 
     toolBar = new ApplicationToolBar (buttonGroupList);
     toolBar.setFloatable (false);
-    toolBar.setBorder (new BevelBorder (BevelBorder.RAISED));
     toolBar.setShowText (isToolbarLabelVisible);
     toolBar.setVisible (isToolbarVisible);
     toolBar.addActionListener (event -> toolBarEvent (event));
-    this.getContentPane().add (toolBar, BorderLayout.NORTH);
+    var toolBarPanel = new JPanel (new BorderLayout());
+    toolBarPanel.add (toolBar, BorderLayout.CENTER);
+    toolBarPanel.setBorder (new BevelBorder (BevelBorder.RAISED));
+    this.getContentPane().add (toolBarPanel, BorderLayout.NORTH);
 
 
 

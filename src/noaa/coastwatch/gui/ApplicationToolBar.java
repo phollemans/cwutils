@@ -43,7 +43,7 @@ public class ApplicationToolBar extends JToolBar {
   ) {
 
     this.setLayout (new BoxLayout (this, BoxLayout.X_AXIS));
-    this.setBorder (BorderFactory.createEmptyBorder (2, 5, 2, 5));
+    this.setBorder (BorderFactory.createEmptyBorder (2, 2, 2, 2));
     actionListenerList = new ArrayList<>();
     buttonList = new ArrayList<>();
 
@@ -68,8 +68,8 @@ public class ApplicationToolBar extends JToolBar {
       button.setVerticalTextPosition (SwingConstants.BOTTOM);
       button.setIconTextGap (0);
       button.setBorder (BorderFactory.createEmptyBorder (5, 5, 5, 5));
+//      if (GUIServices.IS_AQUA) button.setBorderPainted (false);
       button.addActionListener (event -> buttonClickEvent (event));
-      if (GUIServices.IS_AQUA) button.setBorderPainted (false);
       this.add (button);
       if (button != lastButton) this.add (Box.createHorizontalStrut (5));
     } // for
