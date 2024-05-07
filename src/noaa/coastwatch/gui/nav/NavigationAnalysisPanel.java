@@ -40,8 +40,12 @@ import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import java.io.IOException;
 import java.util.List;
+
 import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -73,6 +77,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+
 import noaa.coastwatch.gui.DataViewOverlayControl;
 import noaa.coastwatch.gui.EarthDataViewPanel;
 import noaa.coastwatch.gui.GUIServices;
@@ -931,18 +936,13 @@ public class NavigationAnalysisPanel
     Component parent
   ) { 
 
-    // Create dialog reference
-    // -----------------------
-    final JDialog[] dialog = new JDialog[1];
-
-    // Create save action
-    // ------------------
+    // Create a save action here.  We want to only enable the save action
+    // if there are points in the table to save.
     final Frame frame = JOptionPane.getFrameForComponent (parent);
-    Action saveAction = GUIServices.createAction ("Save...", new Runnable () {
-        public void run () { 
-          savePoints();
-        } // run
-      });
+    Action saveAction = GUIServices.createAction ("Save...", () -> savePoints());
+    saveAction.setEnabled (getTableModel().getRowCount() != 0);
+    TableModelListener saveListener = event -> saveAction.setEnabled (getTableModel().getRowCount() != 0);
+    getTableModel().addTableModelListener (saveListener);
 
     // Create close action
     // -------------------
@@ -954,14 +954,19 @@ public class NavigationAnalysisPanel
       GUIServices.getHelpButton (NavigationAnalysisPanel.class),
       Box.createHorizontalGlue()
     };
-    dialog[0] = GUIServices.createDialog (frame, "Navigation Analysis", false,
+    var dialog = GUIServices.createDialog (frame, "Navigation Analysis", false,
       this, controls, new Action[] {closeAction, saveAction}, 
       new boolean[] {true, false}, true);
     //    dialog[0].setLocationRelativeTo (frame);
 
-    // Show dialog
-    // -----------
-    dialog[0].setVisible (true);
+    // Set the dialog visible and add a close event to clean up the save button
+    // listener.
+    dialog.setVisible (true);
+    dialog.addWindowListener (new WindowAdapter() {
+      public void windowClosed (WindowEvent event) {
+        getTableModel().removeTableModelListener (saveListener);
+      } // windowClosed
+    });
 
   } // showDialog
 
