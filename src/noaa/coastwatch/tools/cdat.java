@@ -1370,7 +1370,7 @@ public final class cdat extends JFrame {
    */
   public static void main (String argv[]) {
 
-    SplashScreenManager.updateSplash (null, ToolServices.getVersion());
+    SplashScreenManager.updateSplash (LONG_NAME, ToolServices.getVersion());
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line

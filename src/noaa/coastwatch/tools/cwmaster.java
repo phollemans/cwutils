@@ -1100,7 +1100,7 @@ import java.util.logging.Level;
    */
   public static void main (String argv[]) {
 
-    SplashScreenManager.updateSplash (LONG_NAME);
+    SplashScreenManager.updateSplash (LONG_NAME, ToolServices.getVersion());
     ToolServices.setCommandLine (PROG, argv);
 
     // Parse command line

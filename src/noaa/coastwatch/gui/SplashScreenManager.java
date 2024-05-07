@@ -77,31 +77,35 @@ public class SplashScreenManager {
       if (g2d != null) {
 
         g2d.setPaintMode();
-        var text = "Initializing ";
+        String initText = "Initializing ";
         if (longName != null) {
-          text += longName;
-          text += " ";
+          initText += longName;
+          initText += " ";
         } // if
-        if (version != null) {
-          text += "version " + version; 
-          text += " ";
-        } // if
-        text += "...";
+        initText += "...";
 
         var font = g2d.getFont();
-        g2d.setFont (font.deriveFont (Font.BOLD));
+//        g2d.setFont (font.deriveFont (Font.BOLD));
 
         int x = 36;
-        int y = 250;
-        float offset = 0.8f;
-
-        g2d.setColor (Color.BLACK);
-        g2d.drawString (text, x+offset, y+offset);
-
+        int y = 232;
+        float offset = 0.6f;
+        g2d.setColor (new Color (0, 0, 0, 128));
+        g2d.drawString (initText, x+offset, y+offset);
         g2d.setColor (Color.WHITE);
-        g2d.drawString (text, x, y);
+        g2d.drawString (initText, x, y);
+
+        if (version != null) {
+          y += (int) (font.getSize() * 1.25);
+          var versionText = "Version " + version; 
+          g2d.setColor (new Color (0, 0, 0, 128));
+          g2d.drawString (versionText, x+offset, y+offset);
+          g2d.setColor (Color.WHITE);
+          g2d.drawString (versionText, x, y);
+        } // if
 
         splashScreen.update();
+
       } // if
     } // if
 
