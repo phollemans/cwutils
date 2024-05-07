@@ -12,13 +12,118 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Version 4.0.0 -- May 2024}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\begin{itemize}
+
+\item A new -{-}tiffsize option was added to cwexport to write GeoTIFF 
+files of either 8-bit integer, 16-bit integer, or 32-bit IEEE float data.
+Previously only 32-bit float data was supported.
+
+\item New levels of verbose debugging messages from command line tools can be 
+displayed using the -J-Dcw.debug=fine and -J-Dcw.debug=finer options.  The log
+message format can also be made longer by setting the -J-Dcw.log.format=long
+options.
+
+\item Network data access for files that start with HTTPS is now supported 
+by command line tools.  Network data is typically accessed on a THREDDS server
+via OpeNDAP.  Previously only HTTP was supported.
+
+\item The data color scale in CDAT and output from cwrender now more 
+intelligently handles long tick label values.
+
+\item Installation of the command line tools under Windows now sets the 
+user's PATH variable automatically.
+
+\item A new -{-}noinfo option was added to cwrender to turn off the plot 
+legend in output images.  There is also a new similar option when exporting 
+data from CDAT.
+
+\item CDAT users can now restore the original overlay groups if an overlay
+group is accidentally deleted.  Users can also display the user resource
+directory so that setup files are easier to access.
+
+\item CDAT users can now specify a custom logo file for exported data.
+
+\item CDAT users can now set the full enhancement range even after opening
+the data file.  Previously, a user needed to close the file, adjust the 
+preferences, and open the file again.  The enhancement range, palette, 
+and function can also now be saved directly from the enhancement slider area.
+
+\item The CDAT overlay group load/save functionality is now more user 
+friendly.
+
+\item The cwcomposite tool has new -{-}optimal and -{-}savemap options 
+that control which data values are prioritized in the output file.  This allows
+the user to use data variables such as satellite zenith angle to prioritize
+the output data.
+
+\item The CDAT file chooser has been rewritten to be more compact, user 
+friendly, and reliable.
+
+\item CDAT now has new functionality to save a set of favourite palettes, 
+and a new palette named Turbo.
+
+\item The CDAT color composite functionality is now more user friendly.
+
+\item A new functionality for showing the memory usage for command line tools 
+can be turned on using the -J-Dcw.memory.monitor=true option.
+
+\item The CDAT enhancement sliders are now smoother and more accurate and 
+update the number of decimal places in the text boxes based on the slider 
+minimum and maximum range.  Previously the minimum slider increment was an 
+integer.
+
+\item Added a new behaviour to cwcomposite and cwmath to dynamically scale
+the number of parallel threads used to fit within the maximum heap space
+available.  This greatly simplifies command line operations when processing
+many data files of unknown chunks sizes and data types.
+
+\item The cwsample tool now has new options -{-}statsvar and -{-}window 
+used to compute and print statistics for a window surrounding each
+sample point.
+
+\item The CDAT user interface has been rearranged to work more like a modern
+map viewer and updated for overall ease of use.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+\item Reading and writing NetCDF files with null attribute values in the
+metadata were causing errors.  Null values attributes are now detected
+and handled.
+
+\item Launching CDAT on the Mac now properly handles double-clicking 
+a file in the Mac Finder.  Previously CDAT would launch but not 
+open the file.
+
+\item When reading NetCDF files, temporal metadata was being truncated in 
+some cases.  Now reading uses the full temporal metadata accuracy.
+
+\item CDAT full screen mode was broken on some versions of MacOS -- starting 
+full screen mode caused the screen to go blank with no way to exit the mode.
+Full screen mode now works again on all operating systems.
+
+\item When adjusting the view enhancement sliders in CDAT with composite mode
+turned on, some variable enhancement ranges reverted back to their previous 
+values when composite mode was switched off.  This has been fixed and works 
+correctly.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Version 3.8.0 -- May 2023}
 
 \subsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
 
- \item A new file format of latitude/longitude location lists was added 
+\item A new file format of latitude/longitude location lists was added 
 for use in cwrender and CDAT, where only ESRI shapefiles were previously
 supported.
 
