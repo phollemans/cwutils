@@ -369,6 +369,8 @@ public class DataColorScale
             TextElement labelElement = new TextElement (labels[i], font,
               new Point (x1, y2 + SPACE_SIZE), new double[] {0.5, 1}, 0);
             var bounds = labelElement.getBounds (g);
+            bounds.x -= bounds.height/2;
+            bounds.width += bounds.height;
             boolean intersects = false;
             for (var candidate : labelElementBoundsList) {
               if (candidate.intersects (bounds)) {
