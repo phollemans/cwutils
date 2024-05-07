@@ -68,8 +68,9 @@
           <entry location="lib" />
           <entry location="doc/cw_cf_metadata.pdf" />
           <entry location="doc/metadata_comparison_v1_1_jan_2010.pdf" />
-          <entry location="doc/license.txt" />
           <entry location="doc/cwutils_ug_4_0_0.pdf" />
+          <entry location="doc/license.txt" />
+          <entry location="doc/help" />
           <entry location="data" />
         </include>
       </component>
@@ -121,6 +122,7 @@
           <scanDirectory location="lib/java" failOnError="false" />
           <scanDirectory location="lib/java/depend" failOnError="false" />
           <directory location="data" failOnError="false" />
+          <directory location="doc/help" failOnError="false" />
         </classPath>
         <nativeLibraryDirectories>
           <directory name="lib/native/${compiler:libDir}" />
@@ -149,6 +151,7 @@
           <scanDirectory location="lib/java" failOnError="false" />
           <scanDirectory location="lib/java/depend" failOnError="false" />
           <directory location="data" failOnError="false" />
+          <directory location="doc/help" failOnError="false" />
         </classPath>
         <nativeLibraryDirectories>
           <directory name="lib/native/${compiler:libDir}" />

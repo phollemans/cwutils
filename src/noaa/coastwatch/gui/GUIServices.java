@@ -1553,7 +1553,8 @@ public class GUIServices {
     if (helpFile == null) {
       throw new IllegalArgumentException ("Cannot find help file for class " + className);
     } // if
-    final URL resource = helpClass.getResource (helpFile);
+//    final URL resource = helpClass.getResource (helpFile);
+    URL resource = ClassLoader.getSystemResource (helpFile); 
     if (resource == null) {
       throw new IllegalArgumentException ("Cannot find resource for file " + helpFile);
     } // if
@@ -1571,12 +1572,20 @@ public class GUIServices {
     } // else    
     helpButton.addActionListener (new ActionListener () {
         public void actionPerformed (ActionEvent event) {
-          HTMLPanel helpPanel = new HTMLPanel (helpIndex, false);
-          helpPanel.setPreferredSize (ToolServices.HELP_DIALOG_SIZE);
-          helpPanel.setPage (resource);
-          Window window = SwingUtilities.getWindowAncestor ((Component) 
-            event.getSource());
-          helpPanel.showDialog (window, "Help");
+
+          try {
+            Desktop.getDesktop().browse (resource.toURI());
+          } // try
+          catch (Exception e) {
+            throw new RuntimeException ("Error opening the help page: " + e.toString());
+          } // catch
+
+          // HTMLPanel helpPanel = new HTMLPanel (helpIndex, false);
+          // helpPanel.setPreferredSize (ToolServices.HELP_DIALOG_SIZE);
+          // helpPanel.setPage (resource);
+          // Window window = SwingUtilities.getWindowAncestor ((Component) event.getSource());
+          // helpPanel.showDialog (window, "Help");
+
         } // actionPerformed
       });
 

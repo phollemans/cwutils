@@ -271,7 +271,8 @@ public final class cdat extends JFrame {
   private JFileChooser profileChooser;
 
   /** The help index URL. */
-  private static URL helpIndex = cdat.class.getResource (HELP_INDEX);
+//  private static URL helpIndex = cdat.class.getResource (HELP_INDEX);
+  private static URL helpIndex = ClassLoader.getSystemResource (HELP_INDEX);
   
   /** The open recent menu item. */
   private JMenu openRecentMenu;
@@ -1286,9 +1287,20 @@ public final class cdat extends JFrame {
   } // loadProfileEvent
 
   private void showHelpEvent() {
-    HTMLPanel helpPanel = new HTMLPanel (helpIndex, false);
-    helpPanel.setPreferredSize (ToolServices.HELP_DIALOG_SIZE);
-    helpPanel.showDialog (cdat.this, "Help");
+
+    try {
+      Desktop.getDesktop().browse (helpIndex.toURI());
+    } // try
+    catch (Exception e) {
+      JOptionPane.showMessageDialog (cdat.this,
+        "Error opening the application help:\n" + e.toString(),
+        "Error", JOptionPane.ERROR_MESSAGE);
+    } // catch
+
+    // HTMLPanel helpPanel = new HTMLPanel (helpIndex, false);
+    // helpPanel.setPreferredSize (ToolServices.HELP_DIALOG_SIZE);
+    // helpPanel.showDialog (cdat.this, "Help");
+
   } // showHelpEvent
 
   private void openCourseEvent() {

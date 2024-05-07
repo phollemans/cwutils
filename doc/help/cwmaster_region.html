@@ -1,0 +1,51 @@
+<html>
+
+<head>
+  <title>CoastWatch Master Tool Help: Region parameters</title>
+  <link rel="stylesheet" type="text/css" href="helpstyle.css">
+</head>
+
+<body>
+
+<h1>CoastWatch Master Tool Help: Region parameters</h1>
+
+<p>The region parameters panel allows you to modify the master
+region rows and columns, center earth location, and pixel width
+and height:</p>
+
+<p class="centered"><img src="cwmaster_region.png" width="273" class="shadow"></p>
+
+<p>The <span class="gui">Dimensions</span> specify the physical
+number of pixels in the rows and columns directions and directly
+determine the grid size and amount of disk space used by data
+registered to the master region.</p>
+
+<p>The <span class="gui">Center location</span> specifies the
+earth location of the point that occurs at the center of the
+master region in decimal degrees, [-90..90] for latitude and
+[-180..180] for longitude.  This is not to be confused with the
+central meridian or projection origin parameters required for
+some projection systems such as Mercator or Polar Stereographic.
+The projection parameters and region parameters operate
+independently -- the projection parameters provide an overall map
+projection context, while the region parameters specify a
+rectangular box within that context.</p>
+
+<p>The <span class="gui">Pixel size</span> specifies the physical
+width and height of each pixel in the map coordinate space in
+kilometers.  The exception is for Geographic projections which
+use pixel sizes in degrees.  Click <span
+class="button">Use square pixels</span> to keep pixels the same width and height, which is
+the default setting.</p>
+
+<p>Once the new region parameters are entered, click <span
+class="button">Apply</span> to update the master view.  You can also
+click <span class="button">Revert</span> to reset the region
+parameters back to the current master view if you make a
+mistake.</p>
+
+<p>&larr; <a href="cwmaster_index.html">Back to overview</a></p>
+
+</body>
+
+</html>

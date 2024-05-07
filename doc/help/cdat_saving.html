@@ -1,0 +1,136 @@
+<html>
+
+<head>
+  <title>CoastWatch Data Analysis Tool Help: Exporting to other formats</title>
+  <link rel="stylesheet" type="text/css" href="helpstyle.css">
+</head>
+
+<body>
+
+<h1>CoastWatch Data Analysis Tool Help: Exporting to other formats</h1>
+
+<p>In this section:</p>
+<ul>
+  <li><a href="#exporting">About exporting</a></li>
+  <li><a href="#image">Image formats</a></li>
+  <li><a href="#data">Data formats</a></li>
+</ul>
+
+<a name="exporting"></a>
+<h2>About exporting</h2>
+
+<p>Data may be exported to a variety of formats.  Image formats
+such as JPEG and PNG contain color pixel data computed by
+converting data values to colors using the active enhancement and
+palette.  The output file contains an image similar to the
+current data view.  Data formats such as HDF and binary raster
+contain one or more grids of 8-bit to 64-bit data values computed
+directly from the source data.  Select 
+<span class="gui">File&#8594;Export</span> from the menu or click 
+<span class="button"><img src="export2.png" class="icon"> Export</span> on the 
+toolbar to export data.</p>
+
+<a name="image"></a>
+<h2>Image formats</h2>
+
+<dl>
+
+  <dt>PNG image</dt>
+
+  <dd>A non-lossy compressed image format supported by most web
+  browsers and image manipulation software. PNG has similar data
+  compression characteristics to GIF and additionally supports 24-bit
+  color images.</dd>
+
+  <dt>GIF image</dt>
+
+  <dd>A non-lossy compressed format also supported by most web
+  browsers and image manipulation software.  The GIF files produced
+  use LZW compression.  Images stored in GIF format are run through a
+  color quantization algorithm to reduce the color map to 256 colors
+  or less.  Although file sizes are generally smaller than PNG, image
+  quality may be compromised by the reduced color map.</dd>
+
+  <dt>JPEG image</dt>
+
+  <dd>A lossy compressed format that should be used with caution for
+  images with sharp color lines such as those found in text and
+  annotation graphics.  The JPEG format generally achieves higher
+  compression than PNG or GIF resulting in smaller image file
+  sizes.</dd>
+
+  <dt>GeoTIFF image</dt>
+
+  <dd>A flexible image format with support for earth location
+  metadata.  Many popular GIS packages handle GeoTIFF images and allow
+  the user to combine a GeoTIFF base map image with other sources of
+  raster and vector data.  The GeoTIFF images generated are non-lossy
+  uncompressed image data (unless a compression is specified in the
+  options), and can be much larger than the corresponding PNG, GIF, or
+  JPEG.  In general the GeoTIFFs generated are 24-bit colour images,
+  but when no overlays are used or the image color option is set, a
+  special 8-bit paletted image file is generated and comments
+  describing the data value scaling are inserting into the image
+  description tags.</dd>
+
+  <dt>PDF document</dt>
+
+  <dd>A standard document format for high quality publishing developed
+  by Adobe Systems and used for output to a printer via such tools as
+  the Adobe Acrobat Reader.  In general, PDF files are slightly larger
+  than the equivalent PNG but retain highly accurate vector graphics
+  components such as lines and fonts. </dd>
+
+</dl>
+
+<a name="data"></a>
+<h2>Data formats</h2>
+
+<dl>
+
+  <dt>CoastWatch HDF</dt>
+
+  <dd>Hierarchical Data Format (HDF) version 4 with CoastWatch
+  metadata.  HDF is a scientific data format used by CoastWatch and
+  others to distribute satellite data.  Information and access
+  software may be found at https://www.hdfgroup.org.  A description of
+  current CoastWatch metadata standards is available in the
+  CoastWatch Utilities user's guide.</dd>
+
+  <dt>NetCDF 3/4</dt>
+
+  <dd>Network Common Data Format with CF 1.4 metadata.  NetCDF is a scientific
+  data format similar to HDF.  Information and access software may be found 
+  at https://www.unidata.ucar.edu/software/netcdf.  The CF metadata conventions
+  are described at http://cfconventions.org.</dd>
+
+  <dt>Binary raster</dt>
+
+  <dd>A simple stream of binary data values -- either 8-bit unsigned
+  bytes, 16-bit signed integers, or 32-bit IEEE floating point values.
+  Data values may optionally be scaled to integers using the equation
+  <span class="code">integer = value/factor + offset</span>.  Each
+  data variable may be prepended with a 72-bit dimension header: 8-bit
+  dimension count (always 2) with 32-bit row count, 32-bit column
+  count.</dd>
+
+  <dt>Text file</dt>
+
+  <dd>An ASCII text file with latitude, longitude, and data value
+  printed -- one data value per line.  Each data variable may be
+  prepended with a 1-line dimension header: dimension count (always
+  2), row count, column count.</dd>
+
+  <dt>ArcGIS binary grid</dt>
+
+  <dd>A stream of 32-bit IEEE floating point values, ready for input
+  to ESRI's ArcGIS as a binary grid file.  A header file may also be
+  created to specify the earth location and other parameters.</dd>
+
+</dl>
+
+<p>&#8592; <a href="cdat_index.html">Back to overview</a></p>
+
+</body>
+
+</html>

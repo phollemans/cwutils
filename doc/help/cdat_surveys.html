@@ -1,0 +1,80 @@
+<html>
+
+<head>
+  <title>CoastWatch Data Analysis Tool Help: Data Surveys</title>
+  <link rel="stylesheet" type="text/css" href="helpstyle.css">
+</head>
+
+<body>
+
+<h1>CoastWatch Data Analysis Tool Help: Data Surveys</h1>
+
+<p>In this section:</p>
+<ul>
+  <li><a href="#surveys">What are surveys?</a></li>
+  <li><a href="#modes">Survey modes</a></li>
+  <li><a href="#list">Survey list</a></li>
+</ul>
+
+<a name="surveys"></a>
+<h2>What are surveys?</h2>
+
+<p>Surveys allow you to compute statistics on areas of the data
+view.  Performing a data survey results in a printout of
+statistics, a plot of the survey data, and an outline of the
+survey area on the data view.  Surveys can be performed at a
+point, along a line, or within a rectangle or polygon.</p>
+
+<a name="modes"></a>
+<h2>Survey modes</h2>
+
+<p>The following figure shows the current list of surveys, and the 
+survey results and plot tabs:</p>
+
+<p class="centered"><img src="cdat_surveys.png" width="260" class="shadow"></p>
+
+<p>You can perform a survey on the data using the CDAT toolbar buttons as 
+follows:</p>
+
+<dl>
+
+  <dt><span class="button"><img src="graph_node.png" class="icon"> Point</span></dt>
+  <dd>A single point is surveyed, with no statistics or plot.  A point
+  survey is a good way to mark a certain position and easily be able
+  to recall its data value, such as for an ocean buoy.</dd>
+
+  <dt><span class="button"><img src="graph_edge.png" class="icon"> Line</span></dt>
+  <dd>A straight line is surveyed, with statistics and a plot of the
+  data values along the line.  A line survey simulates an airplane or
+  ship track of the data values, and is useful for gradient and front
+  analysis.</dd>
+
+  <dt><span class="button"><img src="shape_square.png" class="icon"> Rectangle</span></dt>
+  <dd>A rectangular box is surveyed, with statistics and a plot of the
+  histogram bins within the box.  A box survey is useful for a
+  clustering analysis to show groups of similar data values in an area
+  as peaks in the histogram.</dd>
+
+  <dt><span class="button"><img src="shape_pentagon.png" class="icon"> Polygon</span></dt>
+  <dd>A polygon is surveyed, with statistics and a plot of the
+  histogram bins within the polygon.  Polygon surveys are similar to
+  box surveys, but can help when the area has an irregular shape.</dd>
+
+</dl>
+
+<a name="list"></a>
+<h2>Survey list</h2>
+
+<p>Once added to the survey list, surveys are similar to
+overlays, in that they can be modified, renamed, set visible or
+invisible, moved up or down in the list, and removed &#8212; see the <a
+href="cdat_overlays.html#list">overlays</a> section for details.
+Select a survey in the list to recall its specific data in the
+<span class="button">Results</span> and <span
+class="button">Plot</span> tabs.</p>
+
+<p>&#8592; <a href="cdat_index.html">Back to overview</a></p>
+
+</body>
+
+</html>

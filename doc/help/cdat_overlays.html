@@ -1,0 +1,146 @@
+<html>
+
+<head>
+  <title>CoastWatch Data Analysis Tool Help: Geographic and mask overlays</title>
+  <link rel="stylesheet" type="text/css" href="helpstyle.css">
+</head>
+
+<body>
+
+<h1>CoastWatch Data Analysis Tool Help: Geographic and mask overlays</h1>
+
+<p>In this section:</p>
+<ul>
+  <li><a href="#overlays">What are overlays?</a></li>
+  <li><a href="#adding">Adding an overlay to the view</a></li>
+  <li><a href="#list">Overlay list</a></li>
+  <li><a href="#groups">Overlay groups</a></li>
+</ul>
+
+<a name="overlays"></a>
+<h2>What are overlays?</h2>
+
+<p>CDAT uses data overlays to help give context to the data view.  An
+overlay can show where latitude and longitude lines fall, where
+physical boundaries such as coastline, political borders, and
+bathymetric contours lie, and can also mask off certain parts of the
+view so that only the relevant data is visible.</p>
+
+<a name="adding"></a>
+<h2>Adding an overlay to the view</h2>
+
+<p>The following figure shows the current overlays and the saved overlay
+groups:</p>
+
+<p class="centered"><img src="cdat_overlays.png" width="260" class="shadow"></p>
+
+<p>You can add one of several types of overlays to the data view
+using the CDAT toolbar buttons as follows:</p>
+
+<dl>
+
+  <dt><span class="button"><img src="earth2.png" class="icon"> Coastlines</span></dt>
+  <dd>Land/water boundaries derived from Global
+  Self-consistent Hierarchical High-resolution Shorelines (GSHHS)
+  data: http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html.</dd>
+
+  <dt><span class="button"><img src="environment.png" class="icon"> Latitude / longitude grid</span></dt>
+  <dd>Latitude and longitude grid lines with labels.  By default, the
+  grid spacing adapts to the view, but can be set manually.</dd>
+
+  <dt><span class="button"><img src="cube_molecule.png" class="icon"> Row / column grid</span></dt>
+  <dd>Data row and column grid lines with labels.</dd>
+
+  <dt><span class="button"><img src="flag_red.png" class="icon"> Country and state borders</span></dt>
+  <dd>Lines are derived from CIA WDB-II data.  By default, only international 
+  borders are shown &#8212; state borders can be added manually by editing 
+  the overlay.</dd>
+
+  <dt><span class="button"><img src="photo_scenery.png" class="icon"> Topographic and bathymetric contours</span></dt>
+  <dd>Contour data is computed from ETOPO5
+  elevation data: https://www.ngdc.noaa.gov/mgg/global/etopo5.HTML.  By
+  default, only the 200&nbsp;m and 2000&nbsp;m bathymetric contours
+  are shown, but the overlay can be modified to include any set of
+  topographic or bathymetric contours.</dd>
+
+  <dt><span class="button"><img src="shapes.png" class="icon"> Shape files</span></dt>
+  <dd>Line and polygon data stored in ESRI shapefile format or simple text
+  files with lists of lat/lon values.
+  Currently, shapefile support is limited: point data cannot be
+  displayed, shape overlays cannot be saved to an overlay group, and
+  shapefile rendering may be slow for large shapefiles.</dd>
+
+  <dt><span class="button"><img src="cubes_green.png" class="icon"> Single layer bitmask</span></dt>
+  <dd>A single-color mask that uses a data variable and integer
+  mask value to mask certain data pixels that contain the same
+  bits as the mask value.  For example, a bitmask can be used to
+  mask clouds as gray.</dd>
+
+  <dt><span class="button"><img src="cubes.png" class="icon"> Multilayer bitmask</span></dt>
+  <dd>A multiple-color mask that uses a data variable and color
+  for each bit to mask certain data pixels that contain the bit
+  values with the corresponding color.  For example, a multilayer
+  mask can be used to analyze the detailed output of a cloud
+  masking algorithm.</dd>
+
+  <dt><span class="button"><img src="calculator.png" class="icon"> Expression Mask</span></dt>
+  <dd>A single-color mask that uses a mathematical expression and
+  color for each bit to mask certain data pixels for which the
+  result of the expression is true.  An expression mask is slower
+  to compute than a bitmask or multilayer, but is much more
+  flexible.  See the User's Guide cwmath command for the syntax
+  of the expressions.  Only variables imported when the data was
+  opened can be used in the expression.</dd>
+
+</dl>
+
+<a name="list"></a>
+<h2>Overlay list</h2>
+
+<p>Once added to the list, overlays can be edited, renamed, set
+visible or invisible, moved up or down in the list, and removed.
+To edit an overlay's properties, double-click the overlay in the
+list or select the overlay and click the 
+<span class="button"><img src="document_edit.png" class="icon"></span> <span class="gui">Edit</span> button.  
+You can change simple line properties
+such as color and thickness directly from the list.  To rename an
+overlay, edit the overlay's name text field.  Overlay visibility
+can be changed by checking or unchecking the visibility box on
+the left.  The overlay list represents a vertical stack and
+overlays are rendered in order from bottom to top.  You can use
+the 
+<span class="button"><img src="arrow_up_green.png" class="icon"></span> <span class="gui">Move Up</span> and 
+<span class="button"><img src="arrow_down_green.png" class="icon"></span> <span class="gui">Move Down</span> 
+buttons to rearrange the overlay stacking order.
+Finally, you can remove overlays by selecting a set of overlays
+from the list using Ctrl-click (&#8984;-click on the Mac) or
+Shift-click, and clicking 
+<span class="button"><img src="garbage_empty.png" class="icon"></span> <span class="gui">Remove</span>.</p>
+
+<a name="groups"></a>
+<h2>Overlay groups</h2>
+
+<p>Overlay groups are a convenient way of saving a set of
+overlays to be used later.  Create a new overlay group using the
+<span class="button"><img src="folder_add.png" class="icon"></span> <span class="gui">Create</span> button,
+selecting the overlays to save to the group, and then entering a group name.
+Click the 
+<span class="button"><img src="folder_out.png" class="icon"></span> <span class="gui">Load</span> button
+to load an overlay group or just double-click on the group name.
+The overlays are restored with the same properties they had when saved, 
+and stacked on top of any other overlays already in the list.  Delete an overlay group by
+clicking 
+<span class="button"><img src="folder_delete.png" class="icon"></span> <span class="gui">Delete</span>.</p>
+
+<p>CDAT comes with a default set of overlay groups that you may find
+useful; see the <a href="cdat_preferences.html#resources">preferences and
+resources</a> section for more on where overlay groups are stored and other
+things you can do with them.  If you make a mistake and delete or modify these default groups, you can click 
+<span class="button"><img src="refresh.png" class="icon"></span> <span class="gui">Restore</span>
+to recover them.</p>
+
+<p>&#8592; <a href="cdat_index.html">Back to overview</a></p>
+
+</body>
+
+</html>

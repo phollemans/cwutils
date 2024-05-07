@@ -1,0 +1,96 @@
+<html>
+
+<head>
+  <title>CoastWatch Data Analysis Tool Help: Color enhancements</title>
+  <link rel="stylesheet" type="text/css" href="helpstyle.css">
+</head>
+
+<body>
+
+<h1>CoastWatch Data Analysis Tool Help: Color enhancements</h1>
+
+<p>In this section:</p>
+<ul>
+  <li><a href="#what">What is a color enhancement?</a></li>
+  <li><a href="#range">Enhancement range and function</a></li>
+  <li><a href="#palette">Enhancement palette</a></li>
+</ul>
+
+<a name="what"></a>
+<h2>What is a color enhancement?</h2>
+
+<p>CDAT uses color enhancement to convert data values into colors
+for display.  A color enhancement is specified by the enhancement
+range (minimum and maximum), function (linear, step, log), and
+palette (black-to-white, blue-to-red, etc.).  Each variable in
+the data view has its own color enhancement so that you can
+toggle between variables and keep the appropriate enhancement for
+each variable.  For example, visible albedo data normally uses a
+a black (dark) to white (light) palette, while temperature data
+uses a blue (cold) to red (hot) palette and different enhancement
+range.  The color enhancement control tabs are shown here
+(enhancement tab on the left, palette tab on the right):</p>
+
+<p><center><table>
+  <tr>
+    <td><img src="cdat_enhancement.png" width="260" class="shadow"></td>
+    <td>&nbsp;</td>
+    <td><img src="cdat_palette.png" width="260" class="shadow"></td>
+  </tr>
+</table></center></p>
+
+<a name="range"></a>
+<h2>Enhancement range and function</h2>
+
+<p>You can modify the color enhancement range and function using
+the enhancement controls. The enhancement tab shows a histogram
+of the data values with the current palette mapping, and allows
+you to change the minimum and maximum data value in the range by
+means of sliders and text fields.  Click and drag the sliders, or
+change the text field values and hit <span class="button">Enter</span> to accept the new values.
+The buttons below the text fields are useful to quickly change or reconfigure the enhancement:</p>
+
+<ul> 
+
+  <li><span class="button"><img src="chart.png" class="icon"></span> <span class="gui">Normalize</span>
+  sets the range to 1.5 standard deviation units above and below the data mean.</li>
+
+  <li><span class="button"><img src="replace2.png" class="icon"></span> <span class="gui">Reverse</span> 
+  swaps the minimum and maximum range values.</li>
+
+  <li><span class="button"><img src="undo.png" class="icon"></span> <span class="gui">Reset</span>
+  sets the range back to its full extent.</li>
+
+  <li><span class="button"><img src="gear.png" class="icon"></span> <span class="gui">Reconfigure</span>
+  changes the full extent of the range.  This is originally set automatically 
+  when the data file is opened.</li>
+
+  <li><span class="button"><img src="preferences.png" class="icon"></span> <span class="gui">Save</span>
+  writes the currently displayed minimum, maximum, palette, and function to
+  the preferences.  The next time a data file is opened with this variable,
+  it will use the saved preferences.</li>
+
+</ul>
+
+<p>You can select and modify the enhancement function using the function controls.  
+The function shape is shown as an XY curve plot, and the palette
+mapping under the data histogram changes according to the
+function.</p>
+
+<a name="palette"></a>
+<h2>Enhancement palette</h2>
+
+<p>You can change the color enhancement palette using the palette
+controls. The palette tab shows the currently selected palette
+with a list of available palettes.  Click a new palette name from
+the list to change the palette.  You can search for palette names
+and save your favourite palettes by dragging them into the favourites
+list.  You can also use your own custom palettes; see the <a
+href="cdat_preferences.html#resources">preferences and
+resources</a> section for details.</p>
+
+<p>&#8592; <a href="cdat_index.html">Back to overview</a></p>
+
+</body>
+
+</html>

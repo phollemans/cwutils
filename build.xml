@@ -374,6 +374,7 @@
     <fileset dir="lib/java" includes="**/*.jar,**/*.zip"/>
     <pathelement location="data"/>
     <pathelement location="extensions"/>
+    <pathelement location="doc/help"/>
     <pathelement location="${java.home}/lib/plugin.jar"/>
     <pathelement location="${install4j.dir}/resource/i4jruntime.jar"/>
   </path>

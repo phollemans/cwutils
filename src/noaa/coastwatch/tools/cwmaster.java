@@ -28,6 +28,7 @@ package noaa.coastwatch.tools;
 import jargs.gnu.CmdLineParser;
 import jargs.gnu.CmdLineParser.Option;
 import jargs.gnu.CmdLineParser.OptionException;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -40,18 +41,22 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Shape;
 import java.awt.Toolkit;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
 import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -74,6 +79,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import noaa.coastwatch.gui.EarthDataViewPanel;
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.HTMLPanel;
@@ -217,7 +223,7 @@ import java.util.logging.Level;
   private static final String STATE_COMMAND = "Show state borders";
 
   /** The help commands. */
-  private static final String HELP_COMMAND = "Help and support";
+  private static final String HELP_COMMAND = "Application help";
   private static final String ABOUT_COMMAND = "About " + LONG_NAME;
 
   /** The chooser commands. */
@@ -695,10 +701,22 @@ import java.util.logging.Level;
       // ----------------
       String command = event.getActionCommand();
       if (command.equals (HELP_COMMAND)) {
-        URL helpIndex = cwmaster.this.getClass().getResource (HELP_INDEX);
-        HTMLPanel helpPanel = new HTMLPanel (helpIndex, false);
-        helpPanel.setPreferredSize (ToolServices.HELP_DIALOG_SIZE);
-        helpPanel.showDialog (cwmaster.this, "Help");
+
+        try {
+          var helpIndex = ClassLoader.getSystemResource (HELP_INDEX);
+          Desktop.getDesktop().browse (helpIndex.toURI());
+        } // try
+        catch (Exception e) {
+          JOptionPane.showMessageDialog (cwmaster.this,
+            "Error opening the application help:\n" + e.toString(),
+            "Error", JOptionPane.ERROR_MESSAGE);
+        } // catch
+
+        // URL helpIndex = cwmaster.this.getClass().getResource (HELP_INDEX);
+        // HTMLPanel helpPanel = new HTMLPanel (helpIndex, false);
+        // helpPanel.setPreferredSize (ToolServices.HELP_DIALOG_SIZE);
+        // helpPanel.showDialog (cwmaster.this, "Help");
+
       } // if
 
       // Show about dialog
@@ -1168,6 +1186,7 @@ import java.util.logging.Level;
         frame.addWindowListener (new UpdateAgent (PROG));
         frame.pack();
         GUIServices.createErrorDialog (frame, "Error", ToolServices.ERROR_INSTRUCTIONS);
+        GUIServices.centerOnScreen (frame);
         frame.setVisible (true);
       } // run
     });
