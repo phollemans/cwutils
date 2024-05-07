@@ -259,14 +259,14 @@ public class ViewOperationChooser
 
     // Create buttons
     // --------------
-    addButton (new JButton (MAGNIFY, GUIServices.getIcon ("view.magnify")), MAGNIFY_TIP);
-    addButton (new JButton (SHRINK, GUIServices.getIcon ("view.shrink")), SHRINK_TIP);
-    addButton (new JButton (ONE_TO_ONE, GUIServices.getIcon ("view.one_to_one")), ONE_TO_ONE_TIP);
-    addButton (new JToggleButton (ZOOM, GUIServices.getIcon ("view.zoom")), ZOOM_TIP);
-    addButton (new JToggleButton (PAN, GUIServices.getIcon ("view.pan")), PAN_TIP);
-    addButton (new JToggleButton (RECENTER, GUIServices.getIcon ("view.recenter")), RECENTER_TIP);
-    addButton (new JButton (FIT, GUIServices.getIcon ("view.fit")), FIT_TIP);
-    addButton (new JButton (RESET, GUIServices.getIcon ("view.reset")), RESET_TIP);
+    addButton (new JButton (MAGNIFY, GUIServices.getIcon ("view.magnify.large")), MAGNIFY_TIP);
+    addButton (new JButton (SHRINK, GUIServices.getIcon ("view.shrink.large")), SHRINK_TIP);
+    addButton (new JButton (ONE_TO_ONE, GUIServices.getIcon ("view.one_to_one.large")), ONE_TO_ONE_TIP);
+    addButton (new JToggleButton (ZOOM, GUIServices.getIcon ("view.zoom.large")), ZOOM_TIP);
+    addButton (new JToggleButton (PAN, GUIServices.getIcon ("view.pan.large")), PAN_TIP);
+    addButton (new JToggleButton (RECENTER, GUIServices.getIcon ("view.recenter.large")), RECENTER_TIP);
+    addButton (new JButton (FIT, GUIServices.getIcon ("view.fit.large")), FIT_TIP);
+    addButton (new JButton (RESET, GUIServices.getIcon ("view.reset.large")), RESET_TIP);
 
     // Create hidden button
     // --------------------

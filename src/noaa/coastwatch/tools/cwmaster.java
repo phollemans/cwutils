@@ -603,14 +603,14 @@ import java.util.logging.Level;
     this.getContentPane().add (toolBarPanel, BorderLayout.NORTH);
 
     JButton button;
-    button = new JButton (OPEN_COMMAND, GUIServices.getIcon ("file.open"));
+    button = new JButton (OPEN_COMMAND, GUIServices.getIcon ("file.open.large"));
     button.setHorizontalTextPosition (SwingConstants.CENTER);
     button.setVerticalTextPosition (SwingConstants.BOTTOM);
     button.setIconTextGap (0);
     button.addActionListener (fileAction);
     toolBar.add (button);
 
-    button = new JButton (SAVE_COMMAND, GUIServices.getIcon ("file.save"));
+    button = new JButton (SAVE_COMMAND, GUIServices.getIcon ("file.save.large"));
     button.setHorizontalTextPosition (SwingConstants.CENTER);
     button.setVerticalTextPosition (SwingConstants.BOTTOM);
     button.setIconTextGap (0);
@@ -618,14 +618,14 @@ import java.util.logging.Level;
     toolBar.add (button);
 
     ViewAction viewAction = new ViewAction();
-    button = new JButton (ZOOMIN_COMMAND, GUIServices.getIcon ("view.magnify"));
+    button = new JButton (ZOOMIN_COMMAND, GUIServices.getIcon ("view.magnify.large"));
     button.setHorizontalTextPosition (SwingConstants.CENTER);
     button.setVerticalTextPosition (SwingConstants.BOTTOM);
     button.setIconTextGap (0);
     button.addActionListener (viewAction);
     toolBar.add (button);
 
-    button = new JButton (ZOOMOUT_COMMAND, GUIServices.getIcon ("view.shrink"));
+    button = new JButton (ZOOMOUT_COMMAND, GUIServices.getIcon ("view.shrink.large"));
     button.setHorizontalTextPosition (SwingConstants.CENTER);
     button.setVerticalTextPosition (SwingConstants.BOTTOM);
     button.setIconTextGap (0);
@@ -634,7 +634,7 @@ import java.util.logging.Level;
 
     toolButtonGroup = new ButtonGroup ();
     JToggleButton toggleButton;
-    toggleButton = new JToggleButton (ZOOM_COMMAND, GUIServices.getIcon ("view.zoom"));
+    toggleButton = new JToggleButton (ZOOM_COMMAND, GUIServices.getIcon ("view.zoom.large"));
     toggleButton.setHorizontalTextPosition (SwingConstants.CENTER);
     toggleButton.setVerticalTextPosition (SwingConstants.BOTTOM);
     toggleButton.setIconTextGap (0);
@@ -643,7 +643,7 @@ import java.util.logging.Level;
     toolButtonGroup.add (toggleButton);
     toolBar.add (toggleButton);
 
-    toggleButton = new JToggleButton (PAN_COMMAND, GUIServices.getIcon ("view.pan"));
+    toggleButton = new JToggleButton (PAN_COMMAND, GUIServices.getIcon ("view.pan.large"));
     toggleButton.setHorizontalTextPosition (SwingConstants.CENTER);
     toggleButton.setVerticalTextPosition (SwingConstants.BOTTOM);
     toggleButton.setIconTextGap (0);
@@ -652,7 +652,7 @@ import java.util.logging.Level;
     toolButtonGroup.add (toggleButton);
     toolBar.add (toggleButton);
 
-    toggleButton = new JToggleButton (RECENTER_COMMAND, GUIServices.getIcon ("view.recenter"));
+    toggleButton = new JToggleButton (RECENTER_COMMAND, GUIServices.getIcon ("view.recenter.large"));
     toggleButton.setHorizontalTextPosition (SwingConstants.CENTER);
     toggleButton.setVerticalTextPosition (SwingConstants.BOTTOM);
     toggleButton.setIconTextGap (0);
@@ -661,7 +661,7 @@ import java.util.logging.Level;
     toolButtonGroup.add (toggleButton);
     toolBar.add (toggleButton);
 
-    button = new JButton (RESET_COMMAND, GUIServices.getIcon ("view.reset"));
+    button = new JButton (RESET_COMMAND, GUIServices.getIcon ("view.reset.large"));
     button.setHorizontalTextPosition (SwingConstants.CENTER);
     button.setVerticalTextPosition (SwingConstants.BOTTOM);
     button.setIconTextGap (0);
