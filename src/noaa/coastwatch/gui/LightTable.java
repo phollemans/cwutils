@@ -599,8 +599,7 @@ LOGGER.fine ("wheelRotationTotal = " + wheelRotationTotal);
   /** Handles mouse events. */
   private class MouseHandler extends MouseInputAdapter {
 
-    // Event handlers for simple press/drag/release drawing modes
-    // ----------------------------------------------------------
+    // Handle click, drag, and release events.
     public void mousePressed (MouseEvent e) { 
       if (active && !isPolyMode) 
         start (truncate (e.getPoint())); 
@@ -614,8 +613,8 @@ LOGGER.fine ("wheelRotationTotal = " + wheelRotationTotal);
         finish (truncate (e.getPoint())); 
     } // mouseReleased
 
-    // Event handlers for polyline click/click/click drawing modes
-    // -----------------------------------------------------------
+    // Handle click events for polygons and lines, and also
+    // the double click left and right mouse buttons.
     public void mouseClicked (MouseEvent e) { 
       if (active && isPolyMode) {
         if (!polyStarted)
@@ -627,17 +626,12 @@ LOGGER.fine ("wheelRotationTotal = " + wheelRotationTotal);
             appendPoly (truncate (e.getPoint()));
         } // else
       } // if
-
-
-
       else if (active && (e.getClickCount() % 2 == 0)) {
         fireDoubleClickEvent (e);
       } // else if
-
-
-
     } // mouseClicked
-    
+
+    // Handle movement between clicks, outside of a drag mode.    
     public void mouseMoved (MouseEvent e) { 
       if (active && isPolyMode && polyStarted) 
         update (truncate (e.getPoint()));
@@ -781,13 +775,13 @@ LOGGER.fine ("wheelRotationTotal = " + wheelRotationTotal);
       cursor = Cursor.CROSSHAIR_CURSOR;
       break;
     case GENERAL_PATH:
-    case IMAGE:
       cursor = Cursor.MOVE_CURSOR;
       break;
     case IMAGE_TRANSLATE:
     case IMAGE_ROTATE:
       cursor = Cursor.HAND_CURSOR;
       break;
+    case IMAGE:
     default:
       cursor = Cursor.DEFAULT_CURSOR;
     } // switch
