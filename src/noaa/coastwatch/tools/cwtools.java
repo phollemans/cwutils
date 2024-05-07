@@ -57,6 +57,7 @@ public final class cwtools {
       cwsample.getUsage(),
       cwscript.getUsage(),
       cwstats.getUsage(),
+      cwtccorrect.getUsage(),
       hdatt.getUsage()
     );
     System.out.println ("The CoastWatch Utilities contains the following tools:\n");
