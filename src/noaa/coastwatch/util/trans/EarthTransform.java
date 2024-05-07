@@ -136,6 +136,39 @@ operations to perform.
   ////////////////////////////////////////////////////////////
 
   /**
+   * Gets the closest integer data location to a specified geographic
+   * location. 
+   * 
+   * @param targetEarthLoc the target earth location to locate the closest 
+   * valid data location.
+   * @param targetDataLoc the data location or null.  If null, an object
+   * is created and returned.  If non-null, the object is simply
+   * modified.
+   *
+   * @return the data location.  The data location may be marked invalid
+   * if no closest data location can be found within the data location 
+   * bounds of this transform.  
+   * 
+   * @since 3.8.1
+   */
+  public DataLocation closest ( 
+    EarthLocation targetEarthLoc,
+    DataLocation targetDataLoc
+  ) {
+
+    var dataLoc = transform (targetEarthLoc);
+    dataLoc.round();
+    if (!dataLoc.isContained (dims)) dataLoc.markInvalid();
+    if (targetDataLoc == null) targetDataLoc = new DataLocation (dims.length);
+    targetDataLoc.setCoords (dataLoc);
+
+    return (targetDataLoc);
+
+  } // closest
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Gets the boundary handler for this transform that handles boundary
    * checking and splitting.
    *

@@ -65,17 +65,19 @@ public class SensorIdentifier {
   ////////////////////////////////////////////////////////////
 
   /**
-   * Gets a sensor type using the earth transform to identify sensor-
-   * specific scan patterns.
+   * Gets a sensor scan length by looking for discontinuities in geolocation
+   * data.
    *
    * @param trans the earth transform from a sensor scan.
    *
-   * @return the matching sensor type or unknown.
+   * @return the scan length.
+   * 
+   * @since 3.8.1
    */
-  public static Sensor getSensorFromScan (
+  public static int getSensorScanLength (
     EarthTransform trans
   ) {
-  
+
     int[] dims = trans.getDimensions();
     DataLocation dataLoc = new DataLocation (2);
     EarthLocation earthLoc = new EarthLocation();
@@ -122,6 +124,27 @@ public class SensorIdentifier {
       scanList.sort (null);
       scanLength = scanList.get (scanList.size()/2);
     } // else
+
+    return (scanLength);
+
+  } // getSensorScanLength
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Gets a sensor type using the earth transform to identify sensor-
+   * specific scan patterns.
+   *
+   * @param trans the earth transform from a sensor scan.
+   *
+   * @return the matching sensor type or unknown.
+   */
+  public static Sensor getSensorFromScan (
+    EarthTransform trans
+  ) {
+  
+    int[] dims = trans.getDimensions();
+    int scanLength = getSensorScanLength (trans);
 
     LOGGER.fine ("Detected scan length of " + scanLength + " rows per scan");
     LOGGER.fine ("Scan width is " + dims[COL] + " columns");
