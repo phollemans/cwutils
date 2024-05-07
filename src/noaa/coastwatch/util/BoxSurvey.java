@@ -52,7 +52,7 @@ public class BoxSurvey
   ////////////////////////////////////////////////////////////
 
   /** Gets the survey type for results reporting. */
-  protected String getSurveyType () { return ("Box"); }
+  protected String getSurveyType () { return ("Rectangle"); }
 
   ////////////////////////////////////////////////////////////
 

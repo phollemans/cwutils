@@ -113,7 +113,7 @@ public class SurveyListChooser
   public static final String LINE_COMMAND = "Line";
 
   /** The box survey command. */
-  public static final String BOX_COMMAND = "Box";
+  public static final String BOX_COMMAND = "Rectangle";
 
   /** The polygon survey command. */
   public static final String POLYGON_COMMAND = "Polygon";
@@ -313,8 +313,9 @@ public class SurveyListChooser
     overlay.setDropShadow (true);
     overlay.setStroke (new BasicStroke (2));
     String className = survey.getClass().getName();
-    overlay.setName (className.replaceAll (".*\\.([A-Za-z]*)Survey", "$1") + 
-      listPanel.getOverlayCount (survey.getClass()));
+    var surveyType = className.replaceAll (".*\\.([A-Za-z]*)Survey", "$1");
+    if (surveyType.equals ("Box")) surveyType = "Rectangle";
+    overlay.setName (surveyType + listPanel.getOverlayCount (survey.getClass()));
     listPanel.addOverlay (overlay);
 
   } // addSurvey
