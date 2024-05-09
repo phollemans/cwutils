@@ -1,3 +1,10 @@
-UserInterfaceState.xcuserstate
-version.properties
 *.class
+doc/api
+doc/man
+doc/cwutils*.pdf
+doc/users_guide/cwutils_users_guide.*
+!doc/users_guide/cwutils_users_guide.tex
+doc/users_guide/manual_pages.tex
+src.zip
+lib/java/cwutils.jar
+doc/api.zip
