@@ -253,12 +253,15 @@ import java.util.logging.Level;
  *   
  *   <dd>The optimization variable and type to use for optimal compositing (see
  *   <b>--method optimal</b> above).
- *   The type may be either 'min' or 'max'.  Optimal compositing is done by 
- *   searching for the input file whose data value is either minimum or 
- *   maximum.  The output values for all variables at a given pixel location are 
+ *   The valid types are 'min', 'minabs', 'max', and 'maxabs'.  Optimal compositing is done by 
+ *   searching for the input file whose data value is either minimum (min), 
+ *   maximum (max), minimum absolute value (minabs), or maximum absolute value (maxabs).
+ *   The output values for all variables at a given pixel location are 
  *   then guaranteed to originate from this same input file.  By default,
  *   the input files are searched for a satellite zenith angle variable and optimized
- *   by selecting the minimum satellite zenith angle.</dd>
+ *   by selecting the minimum absolute satellite zenith angle value, which 
+ *   corresponds to the minimum atmospheric path length and maximum sensor
+ *   resolution.</dd>
  * 
  *   <dt>-p, --pedantic</dt>
  *
@@ -646,7 +649,9 @@ public final class cwcomposite {
             optVarName = optArray[0];
             var optType = optArray[1];
             if (optType.equals ("max")) optComparator = (a,b) -> Double.compare (a, b);
+            else if (optType.equals ("maxabs")) optComparator = (a,b) -> Double.compare (Math.abs (a), Math.abs (b));
             else if (optType.equals ("min")) optComparator = (a,b) -> Double.compare (b, a);
+            else if (optType.equals ("minabs")) optComparator = (a,b) -> Double.compare (Math.abs (b), Math.abs (a));
             else {
               LOGGER.severe ("Invalid optimization type '" + optType + "', specify either min or max");
               ToolServices.exitWithCode (2);
@@ -656,17 +661,22 @@ public final class cwcomposite {
 
           // If we haven't been given an optimal option, try looking for the 
           // satellite zenith angle, and set the comparator to select the
-          // minimum angle as the optimal.
+          // minimum absolute angle value as the optimal.
           else {
             var reader = readerMap.get (inputFileList.get (0));
-            optVarName = reader.findVariable (List.of ("satellite zenith", "sat zenith", "sensor zenith"), 0.8);
+            optVarName = reader.findVariable (List.of (
+              "satellite zenith", 
+              "sat zenith", 
+              "sensor zenith",
+              "satellite zenith angle"
+            ), 0.8);
             if (optVarName == null) {
               LOGGER.severe ("Cannot locate satellite zenith angle data, use --optimal option");
               ToolServices.exitWithCode (2);
               return;
             } // if
-            VERBOSE.info ("Using variable " + optVarName + " with optimization type min");
-            optComparator = (a,b) -> Double.compare (b, a);
+            VERBOSE.info ("Using variable " + optVarName + " with optimization type minabs");
+            optComparator = (a,b) -> Double.compare (Math.abs (b), Math.abs (a));
           } // else
 
           // Now create chunk producers for the optimization using the 
