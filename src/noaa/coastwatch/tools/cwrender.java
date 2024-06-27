@@ -164,7 +164,7 @@ import ucar.units.Unit;
  * -i, --indexed <br>
  * -I, --imagecolors=NUMBER <br>
  * -l, --nolegends <br>
- * -l, --noinfo <br>
+ * --noinfo <br>
  * -m, --magnify=LATITUDE/LONGITUDE/FACTOR <br>
  * -o, --logo=NAME <br>
  * --logolist <br>
