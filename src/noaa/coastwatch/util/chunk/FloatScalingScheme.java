@@ -45,6 +45,18 @@ public class FloatScalingScheme implements ScalingScheme {
 
   ////////////////////////////////////////////////////////////
 
+  @Override
+  public String toString () {
+
+    return (this.getClass().getName() + "[" +
+      "scale=" + scale + "," +
+      "offset=" + offset + "]"
+    );
+
+  } // toString
+
+  ////////////////////////////////////////////////////////////
+
   /**
    * Creates a new scaling instance.
    *

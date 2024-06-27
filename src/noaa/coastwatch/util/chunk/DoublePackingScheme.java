@@ -51,6 +51,18 @@ public class DoublePackingScheme implements PackingScheme {
   ////////////////////////////////////////////////////////////
 
   @Override
+  public String toString () {
+
+    return (this.getClass().getName() + "[" +
+      "scale=" + scale + "," +
+      "offset=" + offset + "]"
+    );
+
+  } // toString
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
   public DataType getUnpackedType() { return (DataType.DOUBLE); }
 
   ////////////////////////////////////////////////////////////

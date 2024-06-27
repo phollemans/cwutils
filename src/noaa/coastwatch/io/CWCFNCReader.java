@@ -464,7 +464,7 @@ public class CWCFNCReader
       scaling[1] = -scaling[1]/scaling[0];
     } // try
     catch (Exception e) {
-      scaling = new double[] {1.0, 0.0};
+      scaling = null;
     } // catch
 
     // Get missing value

@@ -88,6 +88,13 @@ public class GridChunkProducer implements ChunkProducer {
       int[] chunkingDims = tiling.getDimensions();
       int[] chunkSize = tiling.getTileDimensions();
       scheme = new ChunkingScheme (chunkingDims, chunkSize);
+
+      LOGGER.finer (
+        "Created grid chunk producer for " + grid.getName() + 
+        " with dimensions " + java.util.Arrays.toString (chunkingDims) + 
+        " and chunk size " + java.util.Arrays.toString (chunkSize)
+      );
+
     } // if
 
     // Create packing or scaling scheme
@@ -113,6 +120,10 @@ public class GridChunkProducer implements ChunkProducer {
       else {
         packing = new DoublePackingScheme (scalingArray[0], scalingArray[1]);
       } // else
+
+      if (scaling != null) LOGGER.fine ("Chunk scaling is " + scaling);
+      else if (packing != null) LOGGER.fine ("Chunk packing is " + packing);
+
     } // if
 
     // Create the prototype chunk
