@@ -457,120 +457,202 @@ utilities when:
 
 
 
-
-
     
-    
-    
-/**
- * Here we have a very nasty hack in order to get the transform information
- * correct for Himawari and GOES data.  The issue is that we cannot get the CDM class
- * for geostationary data to produce the correct lat/lon transformation.
- * So we insert our own detection of Himawari and GOES geostationary parameters in the
- * global metadata, and create an EllipsoidPerspectiveProjection in response
- * This is very similar to the code in the ACSPONCReader.
- */
+    // Here we have a very nasty hack in order to get the transform information
+    // correct for Himawari and GOES data.  The issue is that we cannot get the 
+    // CDM class for geostationary data to produce the correct lat/lon 
+    // transformation.  So we insert our own detection of Himawari and GOES 
+    // geostationary parameters in the global metadata, and create an 
+    // EllipsoidPerspectiveProjection in response. This is very similar 
+    // to the code in the now deprecated ACSPONCReader.
 
-
-/*
-
-  Version 2.41b02:
- 
-		:sub_lon = 140.7 ;
-		:dist_virt_sat = 42164. ;
-		:earth_radius_equator = 6378.137 ;
-		:earth_radius_polar = 6356.7523 ;
-		:cfac = 20466275 ;
-		:lfac = 20466275 ;
-		:coff = 2750.5f ;
-		:loff = 2750.5f ;
-
-*/
-
+    // First test to see if we even have an ACSPO file.  
+    boolean isAcspo = false;
     try {
-      double subpointLon = ((Number) getAttribute ("sub_lon")).doubleValue();
-      double satDist = ((Number) getAttribute ("dist_virt_sat")).doubleValue();
-      int columnFactor = ((Number) getAttribute ("cfac")).intValue();
-      int lineFactor = ((Number) getAttribute ("lfac")).intValue();
-      double eqRadius = ((Number) getAttribute ("earth_radius_equator")).doubleValue();
-      double polarRadius = ((Number) getAttribute ("earth_radius_polar")).doubleValue();
-      double columnOffset = ((Number) getAttribute ("coff")).doubleValue();
-      double lineOffset = ((Number) getAttribute ("loff")).doubleValue();
-      CoordinateAxis xHorizAxis = coordSystem.getXHorizAxis();
-      int[] dims = xHorizAxis.getShape();
-      trans = new EllipsoidPerspectiveProjection (
-        new double[] {
-          0,
-          subpointLon,
-          satDist,
-          Math.toRadians (65536.0/lineFactor),
-          Math.toRadians (65536.0/columnFactor)
-        },
-        dims
-      );
-      return (trans);
+      var acspoVersion = (String) getAttribute ("ACSPO_VERSION");
+      if (acspoVersion != null) {
+        isAcspo = true;
+        LOGGER.fine ("Found ACSPO data version " + acspoVersion);
+      } // if
     } // try
     catch (Exception e) { }
 
-/*
+    // If we have an ACSPO file, try reading various metadata versions of
+    // geostationary attributes.
+    if (isAcspo) {
 
-  Version 2.41b03:
+      // One of the versions is 2.41b02 which had a series of lower case 
+      // attribute names as follows:
+   
+  		// :sub_lon = 140.7 ;
+  		// :dist_virt_sat = 42164. ;
+  		// :earth_radius_equator = 6378.137 ;
+  		// :earth_radius_polar = 6356.7523 ;
+  		// :cfac = 20466275 ;
+  		// :lfac = 20466275 ;
+  		// :coff = 2750.5f ;
+  		// :loff = 2750.5f ;
+
+      try {
+
+        LOGGER.fine ("Attempting to read ACSPO 2.41b02 geostationary style attributes");
+
+        double subpointLon = ((Number) getAttribute ("sub_lon")).doubleValue();
+        double satDist = ((Number) getAttribute ("dist_virt_sat")).doubleValue();
+        int columnFactor = ((Number) getAttribute ("cfac")).intValue();
+        int lineFactor = ((Number) getAttribute ("lfac")).intValue();
+        double eqRadius = ((Number) getAttribute ("earth_radius_equator")).doubleValue();
+        double polarRadius = ((Number) getAttribute ("earth_radius_polar")).doubleValue();
+        double columnOffset = ((Number) getAttribute ("coff")).doubleValue();
+        double lineOffset = ((Number) getAttribute ("loff")).doubleValue();
+        CoordinateAxis xHorizAxis = coordSystem.getXHorizAxis();
+        int[] dims = xHorizAxis.getShape();
+        trans = new EllipsoidPerspectiveProjection (
+          new double[] {
+            0,
+            subpointLon,
+            satDist,
+            Math.toRadians (65536.0/lineFactor),
+            Math.toRadians (65536.0/columnFactor)
+          },
+          dims
+        );
+        return (trans);
+      } // try
+      catch (Exception e) { 
+        LOGGER.log (Level.FINE, "Failed to read ACSPO 2.41b02 geostationary attributes", e);
+      } // catch
+
+      // One of the versions is 2.41b03 which had a series of mixed and upper 
+      // case attribute names as follows:
  
-                :Sub_Lon = 140.7 ;
-                :Dist_Virt_Sat = 42164. ;
-                :Earth_Radius_Equator = 6378.137 ;
-                :Earth_Radius_Polar = 6356.7523 ;
-                :CFAC = 20466275 ;
-                :LFAC = 20466275 ;
-                :COFF = 2750.5f ;
-                :LOFF = 2750.5f ;
+      // :Sub_Lon = 140.7 ;
+      // :Dist_Virt_Sat = 42164. ;
+      // :Earth_Radius_Equator = 6378.137 ;
+      // :Earth_Radius_Polar = 6356.7523 ;
+      // :CFAC = 20466275 ;
+      // :LFAC = 20466275 ;
+      // :COFF = 2750.5f ;
+      // :LOFF = 2750.5f ;
+      // :sensor = "ABI" ;
+
+      // Note that this version also includes support for both ABI and 
+      // Himawari sensors which scan slightly differently.  We also allow 
+      // for a different way of specifying the x/y coordinate axes sizes.
  
-*/
+      try {
 
-    try {
+        LOGGER.fine ("Attempting to read ACSPO 2.41b03 geostationary style attributes");
+        
+        double subpointLon = ((Number) getAttribute ("Sub_Lon")).doubleValue();
+        double satDist = ((Number) getAttribute ("Dist_Virt_Sat")).doubleValue();
+        int columnFactor = ((Number) getAttribute ("CFAC")).intValue();
+        int lineFactor = ((Number) getAttribute ("LFAC")).intValue();
+        double eqRadius = ((Number) getAttribute ("Earth_Radius_Equator")).doubleValue();
+        double polarRadius = ((Number) getAttribute ("Earth_Radius_Polar")).doubleValue();
+        double columnOffset = ((Number) getAttribute ("COFF")).doubleValue();
+        double lineOffset = ((Number) getAttribute ("LOFF")).doubleValue();
+        String sensor = (String) getAttribute ("sensor");
+        double isVertical = (sensor.equals ("ABI") ? 1 : 0);
+
+        CoordinateAxis xHorizAxis = coordSystem.getXHorizAxis();
+        int[] dims = xHorizAxis.getShape();
+
+        if (dims.length == 1) {
+          int[] xDims = dims;
+          CoordinateAxis yHorizAxis = coordSystem.getYHorizAxis();
+          int[] yDims = yHorizAxis.getShape();
+          dims = new int[] {yDims[0], xDims[0]};
+        } // if
+        
+        double rowStep = Math.toRadians (65536.0/lineFactor);
+        double colStep = Math.toRadians (65536.0/columnFactor);
+        trans = new EllipsoidPerspectiveProjection (
+          new double[] {
+            0,
+            subpointLon,
+            satDist,
+            rowStep,
+            colStep,
+            isVertical
+          },
+          dims
+        );
+        
+        return (trans);
+
+      } // try
+      catch (Exception e) {    
+        LOGGER.log (Level.FINE, "Failed to read ACSPO 2.41b03 geostationary attributes", e);
+      } // catch
+          
+      // Another versions is 2.90 which had a series of slightly different 
+      // mixed and upper case attribute names as follows:
+ 
+      // :Sub_Lon = 140.7 ;
+      // :Dist_Virt_Sat = 42164. ;
+      // :Earth_Radius_Equator = 6378.137 ;
+      // :Earth_Radius_Polar = 6356.7523 ;
+      // :CFAC = 20466275 ;
+      // :LFAC = 20466275 ;
+      // :COFF = 2750.5f ;
+      // :LOFF = 2750.5f ;
+      // :SENSOR = "ABI" ;
+
+      // Note that this version also includes support for both ABI and 
+      // Himawari sensors which scan slightly differently.  We also allow 
+      // for a different way of specifying the x/y coordinate axes sizes.
+ 
+      try {
+
+        LOGGER.fine ("Attempting to read ACSPO 2.90 geostationary style attributes");
+        
+        double subpointLon = ((Number) getAttribute ("Sub_Lon")).doubleValue();
+        double satDist = ((Number) getAttribute ("Dist_Virt_Sat")).doubleValue();
+        int columnFactor = ((Number) getAttribute ("CFAC")).intValue();
+        int lineFactor = ((Number) getAttribute ("LFAC")).intValue();
+        double eqRadius = ((Number) getAttribute ("Earth_Radius_Equator")).doubleValue();
+        double polarRadius = ((Number) getAttribute ("Earth_Radius_Polar")).doubleValue();
+        double columnOffset = ((Number) getAttribute ("COFF")).doubleValue();
+        double lineOffset = ((Number) getAttribute ("LOFF")).doubleValue();
+        String sensor = (String) getAttribute ("SENSOR");
+        double isVertical = (sensor.equals ("ABI") ? 1 : 0);
+
+        CoordinateAxis xHorizAxis = coordSystem.getXHorizAxis();
+        int[] dims = xHorizAxis.getShape();
+
+        if (dims.length == 1) {
+          int[] xDims = dims;
+          CoordinateAxis yHorizAxis = coordSystem.getYHorizAxis();
+          int[] yDims = yHorizAxis.getShape();
+          dims = new int[] {yDims[0], xDims[0]};
+        } // if
+        
+        double rowStep = Math.toRadians (65536.0/lineFactor);
+        double colStep = Math.toRadians (65536.0/columnFactor);
+        trans = new EllipsoidPerspectiveProjection (
+          new double[] {
+            0,
+            subpointLon,
+            satDist,
+            rowStep,
+            colStep,
+            isVertical
+          },
+          dims
+        );
+        
+        return (trans);
+
+      } // try
+      catch (Exception e) {    
+        LOGGER.log (Level.FINE, "Failed to read ACSPO 2.90 geostationary attributes", e);
+      } // catch
       
-      double subpointLon = ((Number) getAttribute ("Sub_Lon")).doubleValue();
-      double satDist = ((Number) getAttribute ("Dist_Virt_Sat")).doubleValue();
-      int columnFactor = ((Number) getAttribute ("CFAC")).intValue();
-      int lineFactor = ((Number) getAttribute ("LFAC")).intValue();
-      double eqRadius = ((Number) getAttribute ("Earth_Radius_Equator")).doubleValue();
-      double polarRadius = ((Number) getAttribute ("Earth_Radius_Polar")).doubleValue();
-      double columnOffset = ((Number) getAttribute ("COFF")).doubleValue();
-      double lineOffset = ((Number) getAttribute ("LOFF")).doubleValue();
-      String sensor = (String) getAttribute ("sensor");
-      double isVertical = (sensor.equals ("ABI") ? 1 : 0);
-
-      CoordinateAxis xHorizAxis = coordSystem.getXHorizAxis();
-      int[] dims = xHorizAxis.getShape();
-
-      if (dims.length == 1) {
-        int[] xDims = dims;
-        CoordinateAxis yHorizAxis = coordSystem.getYHorizAxis();
-        int[] yDims = yHorizAxis.getShape();
-        dims = new int[] {yDims[0], xDims[0]};
-      } // if
-      
-      double rowStep = Math.toRadians (65536.0/lineFactor);
-      double colStep = Math.toRadians (65536.0/columnFactor);
-      trans = new EllipsoidPerspectiveProjection (
-        new double[] {
-          0,
-          subpointLon,
-          satDist,
-          rowStep,
-          colStep,
-          isVertical
-        },
-        dims
-      );
-      
-      return (trans);
-
-    } // try
-    catch (Exception e) {    }
+    } // if      
     
-    
-    
+
+
 
 
 
