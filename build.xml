@@ -168,6 +168,13 @@
     </copy>
   </target>
 
+  <target name="copy-help"
+    description="Copies the CW utilities in-application help pages into the install directory">
+    <copy todir="${install.dir}/doc/help">
+      <fileset dir="doc/help"/>
+    </copy>
+  </target>
+
   <target name="api-zip"
     description="Creates Java API ZIP file in doc/">
     <zip destfile="doc/api.zip">
