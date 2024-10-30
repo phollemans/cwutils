@@ -484,14 +484,14 @@ utilities when:
       // One of the versions is 2.41b02 which had a series of lower case 
       // attribute names as follows:
    
-  		// :sub_lon = 140.7 ;
-  		// :dist_virt_sat = 42164. ;
-  		// :earth_radius_equator = 6378.137 ;
-  		// :earth_radius_polar = 6356.7523 ;
-  		// :cfac = 20466275 ;
-  		// :lfac = 20466275 ;
-  		// :coff = 2750.5f ;
-  		// :loff = 2750.5f ;
+      // :sub_lon = 140.7 ;
+      // :dist_virt_sat = 42164. ;
+      // :earth_radius_equator = 6378.137 ;
+      // :earth_radius_polar = 6356.7523 ;
+      // :cfac = 20466275 ;
+      // :lfac = 20466275 ;
+      // :coff = 2750.5f ;
+      // :loff = 2750.5f ;
 
       try {
 
