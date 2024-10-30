@@ -25,6 +25,9 @@ package noaa.coastwatch.tools;
 
 // Imports
 // --------
+import noaa.coastwatch.gui.ScriptConsole;
+import noaa.coastwatch.gui.WindowMonitor;
+
 import jargs.gnu.CmdLineParser;
 import jargs.gnu.CmdLineParser.Option;
 import jargs.gnu.CmdLineParser.OptionException;
@@ -53,12 +56,13 @@ import java.util.logging.Level;
  * </p>
  *
  * <h2>Synopsis</h2>
- * <p> cwscript input [ARGUMENTS]</p>
+ * <p> cwscript [OPTIONS] input [ARGUMENTS]</p>
  *
  * <h3>Options:</h3>
  *
  * <p>
  * -h, --help <br>
+ * -c, --console <br>
  * --version <br>
  * </p>
  *
@@ -88,6 +92,9 @@ import java.util.logging.Level;
  *
  *   <dt> -h, --help </dt>
  *   <dd> Prints a brief help message. </dd>
+ *
+ *   <dt> -c, --console </dt>
+ *   <dd> Shows an interactive console for running scripts, ignoring any script input. </dd>
  *
  *   <dt>--version</dt>
  *   <dd>Prints the software version.</dd>
@@ -253,6 +260,7 @@ import java.util.logging.Level;
     // ------------------
     CmdLineParser cmd = new CmdLineParser ();
     Option helpOpt = cmd.addBooleanOption ('h', "help");
+    Option consoleOpt = cmd.addBooleanOption ('c', "console");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -275,6 +283,21 @@ import java.util.logging.Level;
     if (cmd.getOptionValue (versionOpt) != null) {
       System.out.println (ToolServices.getFullVersion (PROG));
       ToolServices.exitWithCode (0);
+      return;
+    } // if
+
+    // Run script console
+    // ------------------
+    if (cmd.getOptionValue (consoleOpt) != null) {
+      if (java.awt.GraphicsEnvironment.isHeadless()) {
+        LOGGER.severe ("Error starting script console in headless environment");
+        LOGGER.severe ("Call cwgscript instead of cwscript");
+        ToolServices.exitWithCode (2);
+        return;
+      } // if
+      var console = ScriptConsole.getInstance();
+      console.getFrame().addWindowListener (new WindowMonitor());
+      console.showRelativeTo (null);
       return;
     } // if
 
@@ -327,6 +350,7 @@ import java.util.logging.Level;
     info.param ("[ARGUMENTS]", "Arguments passed to the shell script");
 
     info.option ("-h, --help", "Show help message");
+    info.option ("-c, --console", "Show interactive script console");
     info.option ("--version", "Show version information");
 
     return (info);

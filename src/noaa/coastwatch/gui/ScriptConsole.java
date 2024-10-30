@@ -35,6 +35,7 @@ import javax.swing.UIManager;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.border.Border;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.BorderLayout;
@@ -81,6 +82,7 @@ public class ScriptConsole {
     closeButton.addActionListener (new ActionListener () {
       public void actionPerformed (ActionEvent event) {
         scriptFrame.setVisible (false);
+        scriptFrame.dispatchEvent (new WindowEvent (scriptFrame, WindowEvent.WINDOW_CLOSING));
       } // actionPerformed
     });
     buttonBox.add (closeButton);
@@ -99,6 +101,7 @@ public class ScriptConsole {
     Interpreter interpreter = new Interpreter (console);
     interpreter.setExitOnEOF (false);
     Thread thread = new Thread (interpreter);
+    thread.setDaemon (true);
     thread.start();
   
   } // ScriptConsole constructor
@@ -137,6 +140,17 @@ public class ScriptConsole {
     } // if
     
   } // showRelativeTo
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the frame for this console.
+   * 
+   * @return the consolve frame.
+   * 
+   * @since 4.0.1
+   */
+  public JFrame getFrame() { return (scriptFrame); }
 
   ////////////////////////////////////////////////////////////
 
