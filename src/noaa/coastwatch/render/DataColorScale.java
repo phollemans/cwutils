@@ -77,10 +77,10 @@ public class DataColorScale
   /** The default tick size. */
   private final static int TICK_SIZE = 5;
 
-  /** The axis constatn for a horizontal legend. */
+  /** The axis constant for a horizontal legend. */
   public final static int HORIZONTAL_AXIS = 0;
 
-  /** The axis constatn for a vertical legend. */
+  /** The axis constant for a vertical legend. */
   public final static int VERTICAL_AXIS = 1;
 
   // Variables
