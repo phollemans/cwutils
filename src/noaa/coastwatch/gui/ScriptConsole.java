@@ -27,6 +27,7 @@ package noaa.coastwatch.gui;
 // -------
 import bsh.util.JConsole;
 import bsh.Interpreter;
+import bsh.EvalError;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -100,10 +101,22 @@ public class ScriptConsole {
     // ------------------
     Interpreter interpreter = new Interpreter (console);
     interpreter.setExitOnEOF (false);
+
+    try {
+      interpreter.eval ("import noaa.coastwatch.io.*;");
+      interpreter.eval ("import noaa.coastwatch.render.*;");
+      interpreter.eval ("import noaa.coastwatch.util.*;");
+      interpreter.eval ("import noaa.coastwatch.util.trans.*;");
+      interpreter.eval ("import noaa.coastwatch.gui.*;");
+    } // try
+    catch (EvalError e) {
+      throw new RuntimeException ("Error importing CoastWatch packages:", e);
+    } // catch
+
     Thread thread = new Thread (interpreter);
     thread.setDaemon (true);
     thread.start();
-  
+
   } // ScriptConsole constructor
 
   ////////////////////////////////////////////////////////////
