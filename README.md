@@ -1,4 +1,4 @@
-# The CoastWatch Utilities
+# The CoastWatch Utilities &nbsp; [![DOI](https://zenodo.org/badge/191264610.svg)](https://doi.org/10.5281/zenodo.14225884)
 
 The CoastWatch Utilities let you work with earth science data created by NOAA CoastWatch / OceanWatch, a program within 
 the U.S. Department of Commerce.  You can easily view and convert data in various formats: HDF 4, NOAA 1b, and NetCDF 4
@@ -10,6 +10,16 @@ Tool (CDAT).
 
 The user's guide and installable builds of the CoastWatch Utilities for Linux, Windows, and Mac are distributed from the 
 https://coastwatch.noaa.gov website, with beta and past builds available at http://www.terrenus.ca/download/cwutils. 
+
+# Citation
+
+If you use this software in your research or projects, please cite it as follows:
+
+**Project Name**: CoastWatch Utilities  
+**Author**: NOAA CoastWatch  
+**DOI**: 10.5281/zenodo.14225885  
+**Version**: 4.0.0  
+**URL**: github.com/phollemans/cwutils
 
 # Development Setup
 
