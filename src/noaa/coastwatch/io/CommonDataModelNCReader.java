@@ -905,6 +905,9 @@ utilities when:
         else if (axisType.equals (AxisType.GeoZ)) axisPrefix[i] = "Z";
         else if (axisType.equals (AxisType.Pressure)) axisPrefix[i] = "P";
         else if (axisType.equals (AxisType.Height)) axisPrefix[i] = "H";
+        else if (axisType.equals (AxisType.RunTime)) axisPrefix[i] = "R";
+        else if (axisType.equals (AxisType.Ensemble)) axisPrefix[i] = "E";
+        else if (axisType.equals (AxisType.Spectral)) axisPrefix[i] = "S";
         else axisPrefix[i] = "I";
         hasNonHorizontal = true;
         group.extraDims++;
@@ -1062,7 +1065,7 @@ utilities when:
    */
   private String getBaseVariableName (String name) {
 
-    return (name.replaceFirst ("^(.*)" + START + "[TZPHI][0-9]+_.*" + END + "$", "$1"));
+    return (name.replaceFirst ("^(.*)" + START + "[TZPHRESI][0-9]+_.*" + END + "$", "$1"));
     
   } // getBaseVariableName
 

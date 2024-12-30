@@ -51,6 +51,7 @@ import noaa.coastwatch.render.GraphicsServices;
 import noaa.coastwatch.render.ImageTransform;
 import noaa.coastwatch.render.feature.LineFeature;
 import noaa.coastwatch.render.feature.LineFeatureSource;
+import noaa.coastwatch.render.feature.PolygonFeatureSource;
 import noaa.coastwatch.render.PictureElement;
 import noaa.coastwatch.render.TextElement;
 import noaa.coastwatch.util.DataLocation;
@@ -137,7 +138,10 @@ public class EarthContextElement
   // Variables
   // ---------
   /** The coastline data for display. */
-  private static LineFeatureSource coast = null;
+  private static PolygonFeatureSource coast = null;
+
+  /** The land fill color or null for none. */
+  private Color landColor;
 
   /** The list of polygons to draw for bounding boxes. */
   private List polygons;
@@ -183,6 +187,18 @@ public class EarthContextElement
 
   /** The font for drawing bounding box labels. */
   private Font labelFont = new Font (null, Font.PLAIN, 12);
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Sets the colour for filling land polygons.
+   * 
+   * @param landColor the new land color or null to leave land polygons
+   * unfilled and only draw outlines.
+   * 
+   * @since 4.0.1
+   */
+  public void setLandColor (Color landColor) { this.landColor = landColor; }
 
   ////////////////////////////////////////////////////////////
 
@@ -654,7 +670,7 @@ public class EarthContextElement
   ////////////////////////////////////////////////////////////
 
   /** Gets the global coastline data. */
-  private LineFeatureSource getCoast () {
+  private PolygonFeatureSource getCoast () {
 
     // Get global coastline data
     // -------------------------
@@ -664,9 +680,10 @@ public class EarthContextElement
         BinnedGSHHSReaderFactory.getDatabaseName (
           BinnedGSHHSReaderFactory.COAST, BinnedGSHHSReaderFactory.CRUDE));
       coast.setMinArea (AREA_CUTOFF);
+      coast.setPolygonRendering (true);
       EarthArea area = new EarthArea();
       area.addAll();
-      coast.select (area); 
+      coast.select (area);
       return (coast);
     } // try
 
@@ -861,8 +878,8 @@ public class EarthContextElement
 
     // Set clip
     // --------
-    Rectangle clip = g.getClipBounds();
-    g.setClip (rect);
+    var originalClip = g.getClip();
+    if (originalClip == null) g.setClip (rect);
 
     // Translate drawing frame
     // -----------------------
@@ -1004,7 +1021,14 @@ public class EarthContextElement
 
     // Draw coastlines
     // ---------------
-    if (coast != null) coast.render (g, earthImageTrans);
+    if (coast != null) {
+      if (landColor != null) {
+        g.setColor (landColor);
+        coast.renderPolygons (g, earthImageTrans);
+      } // if
+      g.setColor (foreground);
+      coast.render (g, earthImageTrans);
+    } // if
 
     // Draw grid points
     // ----------------
@@ -1085,7 +1109,7 @@ public class EarthContextElement
  
     // Restore clip
     // ------------
-    g.setClip (clip);
+    g.setClip (originalClip);
 
     // Render buffer to destination
     // ----------------------------

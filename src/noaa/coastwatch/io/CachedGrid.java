@@ -436,6 +436,16 @@ public abstract class CachedGrid
 
   ////////////////////////////////////////////////////////////
 
+  @Override
+  public void dispose () {
+  
+    clearCache();
+    super.dispose();
+  
+  } // dispose
+
+  ////////////////////////////////////////////////////////////
+
   /**
    * Clears the existing cache.  All tiles are removed and the cache set
    * to empty.  Use this method to release the memory used by the cache

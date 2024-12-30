@@ -12,6 +12,38 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Version 4.0.1 -- Dec 2024}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\begin{itemize}
+
+\item The -{-}optimal option in cwcomposite now supports two new function
+types for selecting the optimization variable data value: minabs and maxabs
+for the minimum and maximum absolute value respectively.
+
+\item ACSPO geostationary data format reading is updated to handle the metadata
+conventions in version 2.90 files.
+
+\item A new -{-}console option to cwgscript starts a BeanShell script console
+for interactive testing of script snippets.
+
+\item The new tool {\em cwanimate} creates animations of data from either local
+files or datasets on ERDDAP, THREDDS, and OPeNDAP servers.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+\item The hybrid CoastWatch / CF metadata NetCDF data format reader no 
+longer incorrectly promotes integer data variables to double-precision 
+floating-point data.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Version 4.0.0 -- May 2024}
 
 \subsection*{\bigicon{box_software} Updates}
@@ -29,7 +61,7 @@ options.
 
 \item Network data access for files that start with HTTPS is now supported 
 by command line tools.  Network data is typically accessed on a THREDDS server
-via OpeNDAP.  Previously only HTTP was supported.
+via OPeNDAP.  Previously only HTTP was supported.
 
 \item The data color scale in CDAT and output from cwrender now more 
 intelligently handles long tick label values.

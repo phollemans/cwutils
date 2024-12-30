@@ -76,6 +76,7 @@
       </component>
       <component name="Command line tools" id="198">
         <include>
+          <entry location="bin/cwanimate" fileType="launcher" />
           <entry location="bin/cwangles" fileType="launcher" />
           <entry location="bin/cwcomposite" fileType="launcher" />
           <entry location="bin/cwcoverage" fileType="launcher" />
@@ -164,6 +165,21 @@
         <file path="${compiler:iconDir}/cwmaster_64.png" />
         <file path="${compiler:iconDir}/cwmaster_128.png" />
       </iconImageFiles>
+    </launcher>
+    <launcher name="cwanimate" id="1660" excludeFromMenu="true">
+      <executable name="cwanimate" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
+      <java mainClass="noaa.coastwatch.tools.cwanimate" vmParameters="-Djava.awt.headless=true -Xmx512m ${compiler:vm32BitOption} ${compiler:vmLogOptions} ${compiler:nativeLibOption}">
+        <classPath>
+          <directory location="extensions" failOnError="false" />
+          <scanDirectory location="lib/java" failOnError="false" />
+          <scanDirectory location="lib/java/depend" failOnError="false" />
+          <directory location="data" failOnError="false" />
+        </classPath>
+        <nativeLibraryDirectories>
+          <directory name="lib/native/${compiler:libDir}" />
+        </nativeLibraryDirectories>
+      </java>
+      <vmOptionsFile mode="none" />
     </launcher>
     <launcher name="cwangles" id="35" excludeFromMenu="true">
       <executable name="cwangles" executableDir="bin" redirectStderr="false" executableMode="console" changeWorkingDirectory="false" />
