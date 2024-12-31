@@ -280,7 +280,6 @@
       appleIdPassword="${install4j.appleid.password}"
       verbose="true">
       <vmParameter value="-Xmx1024m"/>
-      <variable name="winKeystoreFile" value="${win.keystore.file}"/>
       <variable name="macKeystoreFile" value="${mac.keystore.file}"/>
       <variable name="appleIdLogin" value="${install4j.appleid.login}"/>
     </install4j>

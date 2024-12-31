@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="10.0.6" transformSequenceNumber="10">
+<install4j version="10.0.9" transformSequenceNumber="10">
   <directoryPresets config="../../../Terrenus/Code Signing/Microsoft Authenticode/DigiCert/Terrenus_Microsoft_Certificates_Mar_23_2022.p12" />
   <application name="CoastWatch Utilities" applicationId="1290-4459-1345-6363" mediaDir="${compiler:pkgDir}" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}-${compiler:osName}-${compiler:arch}${compiler:novm}" compression="9" lzmaCompression="true" pack200Compression="true" shortName="cwutils" publisher="National Oceanic and Atmospheric Administration" publisherWeb="http://coastwatch.noaa.gov" version="3.0.0" allPathsRelative="true" macVolumeId="7b43b8e08af23735" javaMinVersion="11.0">
     <variables>
@@ -22,7 +22,8 @@
       <variable name="macKeystoreFile" />
       <variable name="appleIdLogin" />
     </variables>
-    <codeSigning macEnabled="true" macPkcs12File="${compiler:macKeystoreFile}" windowsEnabled="true" windowsPkcs12File="${compiler:winKeystoreFile}" macNotarize="true" appleId="${compiler:appleIdLogin}">
+    <codeSigning macEnabled="true" macPkcs12File="${compiler:macKeystoreFile}" windowsEnabled="true" windowsKeySource="pkcs11" windowsPkcs12File="${compiler:winKeystoreFile}" windowsPkcs11Library="/usr/local/lib/libeTPkcs11.dylib" macNotarize="true" appleId="${compiler:appleIdLogin}">
+      <windowsPkcs11Identifier issuer="DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1" serial="fc407058eefcdbc86e3316c3c9946e2" subject="Terrenus Earth Sciences Software" />
       <macSearchedJars>
         <entry>jna-*</entry>
         <entry>swt-*</entry>
@@ -68,7 +69,7 @@
           <entry location="lib" />
           <entry location="doc/cw_cf_metadata.pdf" />
           <entry location="doc/metadata_comparison_v1_1_jan_2010.pdf" />
-          <entry location="doc/cwutils_ug_4_0_0.pdf" />
+          <entry location="doc/cwutils_ug_4_0_1.pdf" />
           <entry location="doc/license.txt" />
           <entry location="doc/help" />
           <entry location="data" />

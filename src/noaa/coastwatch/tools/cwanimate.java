@@ -113,6 +113,10 @@ import java.util.logging.Level;
  *   $ cwanimate --list-vars input.nc4
  *   $ cwanimate --query-var sst input.nc4
  * </pre>
+ * <p>The output MP4 file contains metadata including the software version used
+ * and the command line parameters, so that you can create new animations based
+ * on existing ones.  Use the exiftool on Linux or Mac to query the output 
+ * file metadata.</p>
  * 
  * <h2>Parameters</h2>
  *
