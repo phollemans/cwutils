@@ -17,8 +17,8 @@ If you use this software in your research or projects, please cite it as follows
 
 **Project Name**: CoastWatch Utilities  
 **Author**: NOAA CoastWatch  
-**DOI**: 10.5281/zenodo.14225885  
-**Version**: 4.0.0  
+**DOI**: 10.5281/zenodo.14225884  
+**Version**: (VERSION USED) eg: 4.0.0
 **URL**: github.com/phollemans/cwutils
 
 # Development Setup
