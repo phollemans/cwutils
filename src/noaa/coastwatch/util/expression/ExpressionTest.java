@@ -40,6 +40,12 @@ import noaa.coastwatch.util.expression.EvaluateImp;
  */
 public class ExpressionTest implements Runnable {
 
+  // Allowable relative error
+  private static final double REL_TOL = 1e-6; 
+
+  // Allowable absolute error for very small values
+  private static final double ABS_TOL = 1e-12; 
+
   // Variables
   // ---------
   private String expression;
@@ -49,6 +55,25 @@ public class ExpressionTest implements Runnable {
   private double result;
   private boolean isNot;
   private boolean isCorrect;
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Tests if two numbers are close, taking into account their 
+   * relative magnitudes.
+   * 
+   * @param a the first number.
+   * @param b the second number.
+   * 
+   * @return true if the numbers are very close, or false otherwise.
+   * 
+   * @since 4.1.0
+   */
+  private static boolean areClose (double a, double b) {
+
+    return (Math.abs (a - b) <= Math.max (ABS_TOL, REL_TOL * Math.max (Math.abs(a), Math.abs(b))));
+
+  } // areClose
 
   ////////////////////////////////////////////////////////////
 
@@ -116,10 +141,10 @@ public class ExpressionTest implements Runnable {
       isCorrect = Double.isNaN (result);
     } // if
     else
-      isCorrect = (this.result == result);
+      isCorrect = areClose (this.result, result);
 
     if (isNot) isCorrect = !isCorrect;
-  
+
   } // run
 
   ////////////////////////////////////////////////////////////
