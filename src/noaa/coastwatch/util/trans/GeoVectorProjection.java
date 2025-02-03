@@ -31,6 +31,10 @@ import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform2D;
 
+// Testing
+import java.util.logging.Logger;
+import noaa.coastwatch.test.TestLogger;
+
 /**
  * The <code>GeoVectorProjection</code> class uses arrays of latitude
  * and longitude data to transform coordinates.  It is assumed that
@@ -45,8 +49,11 @@ import noaa.coastwatch.util.trans.EarthTransform2D;
  * @author Peter Hollemans
  * @since 3.2.0
  */
+@noaa.coastwatch.test.Testable
 public class GeoVectorProjection 
   extends EarthTransform2D {
+
+  private static final Logger LOGGER = Logger.getLogger (GeoVectorProjection.class.getName());
 
   // Constants
   // ---------
@@ -121,13 +128,63 @@ public class GeoVectorProjection
     double value
   ) {
 
-    for (int i = 0; i < array.length-1; i++) {
-      if (array[i] <= value && array[i+1] >= value) {
-        return (i + (value - array[i])/(array[i+1] - array[i]));
-      } // if
-    } // for
+    double result = -1;
 
-    return (-1);
+    // Base case, there is no array to search
+    if (array.length == 1) {
+      if (array[0] == value)
+        result = 0;
+    } // if
+
+    else {
+
+      // Initialize the loop
+      int low = 0;
+      int high = array.length - 1;
+      boolean isAscending = (array[0] < array[high]);
+
+      // Perform binary search to find bracketing indices
+      while ((high - low) > 1) {
+
+        int mid = low + (high - low) / 2;
+
+        // Check for an exact match at the midpoint
+        if (array[mid] == value) {
+          result = mid;
+          break;
+        } // if
+
+        // Deal with ascending array
+        if (isAscending) {
+          if (array[mid] < value)
+            low = mid;
+          else
+            high = mid;
+        } // if
+
+        // Deal with descending array
+        else {
+          if (array[mid] > value)
+            low = mid;
+          else
+            high = mid;
+        } // else
+
+      } // while
+
+      // Calculate fractional index if needed.  At the same time, we check
+      // that the value is bracketed by low and high.
+      if (result == -1) {
+        double lowerValue = isAscending ? array[low] : array[high];
+        double upperValue = isAscending ? array[high] : array[low];
+        if (lowerValue <= value && value <= upperValue) {
+          result = low + (upperValue - value) / (upperValue - lowerValue);
+        } // if
+      } // if
+
+    } // if
+
+    return (result);
 
   } // getIndex
 
@@ -211,6 +268,81 @@ public class GeoVectorProjection
     
   } // equals
   
+  ////////////////////////////////////////////////////////////
+
+  // Test helper function
+  private static void testGetIndex (double[] array, double value, double expected) {
+
+    double result = getIndex (array, value);
+    LOGGER.fine ("Got value = " + result + ", expected value = " + expected);
+    assert (!Double.isNaN (result));
+    assert (Math.abs (result - expected) < 1e-6);
+
+  } // testGetIndex
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Tests this class.
+   *
+   * @param argv the array of command line parameters.
+   */
+  public static void main (String[] argv) throws Exception {
+
+    TestLogger logger = TestLogger.getInstance();
+    logger.startClass (GeoVectorProjection.class);
+
+    logger.test ("Ascending array, value between elements");
+    testGetIndex (new double[]{10.0, 20.0, 30.0, 40.0, 50.0}, 35.0, 2.5);
+    logger.passed();
+
+    logger.test ("Descending array, value between elements");
+    testGetIndex(new double[]{50.0, 40.0, 30.0, 20.0, 10.0}, 35.0, 1.5);
+    logger.passed();
+
+    logger.test ("Exact match in ascending array");
+    testGetIndex(new double[]{10.0, 20.0, 30.0, 40.0, 50.0}, 20.0, 1.0);
+    logger.passed();
+
+    logger.test ("Exact match in descending array");
+    testGetIndex(new double[]{50.0, 40.0, 30.0, 20.0, 10.0}, 40.0, 1.0);
+    logger.passed();
+
+    logger.test ("Value below/above the array range in ascending array");
+    testGetIndex(new double[]{10.0, 20.0, 30.0, 40.0, 50.0}, 5.0, -1);
+    testGetIndex(new double[]{10.0, 20.0, 30.0, 40.0, 50.0}, 60.0, -1);
+    logger.passed();
+
+    logger.test ("Value below/above the array range in descending array");
+    testGetIndex(new double[]{50.0, 40.0, 30.0, 20.0, 10.0}, 5.0, -1);
+    testGetIndex(new double[]{50.0, 40.0, 30.0, 20.0, 10.0}, 60.0, -1);
+    logger.passed();
+
+    logger.test ("Single-element array");
+    testGetIndex(new double[]{10.0}, 10.0, 0.0);
+    testGetIndex(new double[]{10.0}, 5.0, -1);
+    testGetIndex(new double[]{10.0}, 15.0, -1);
+    logger.passed();
+
+    logger.test ("Two-element array, value between elements");
+    testGetIndex(new double[]{10.0, 20.0}, 15.0, 0.5);
+    testGetIndex(new double[]{20.0, 10.0}, 15.0, 0.5);
+    logger.passed();
+
+    logger.test ("Two-element array, value outside range");
+    testGetIndex(new double[]{10.0, 20.0}, 5.0, -1);
+    testGetIndex(new double[]{10.0, 20.0}, 25.0, -1);
+    testGetIndex(new double[]{20.0, 10.0}, 5.0, -1);
+    testGetIndex(new double[]{20.0, 10.0}, 25.0, -1);
+    logger.passed();
+
+    logger.test ("Negative numbers in the array");
+    testGetIndex(new double[]{-50.0, -40.0, -30.0, -20.0, -10.0}, -35.0, 1.5);
+    testGetIndex(new double[]{-10.0, -20.0, -30.0, -40.0, -50.0}, -35.0, 2.5);
+    logger.passed();
+
+  } // main
+
   ////////////////////////////////////////////////////////////
 
 } // GeoVectorProjection class
