@@ -62,7 +62,7 @@ import java.util.ArrayList;
  * </ul>
  * 
  * <p>Output chunks from this method are {@link ShortChunk} objects with the 
- * missing value set to {@link java.lang.Short#MIN_VALUE}.</p>
+ * missing value set to -1.</p>
  *
  * @author Peter Hollemans
  * @since 3.8.1
@@ -385,7 +385,7 @@ public class CompositeMapFunction implements ChunkFunction {
 
     // Finally, we package up the raw integer map data and send it back 
     // as the result.
-    DataChunk resultChunk = DataChunkFactory.getInstance().create (outputIndexArray, false, Short.MIN_VALUE, null);
+    DataChunk resultChunk = DataChunkFactory.getInstance().create (outputIndexArray, false, (short) -1, null);
     return (resultChunk);
 
   } // apply

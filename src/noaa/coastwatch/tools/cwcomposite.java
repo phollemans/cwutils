@@ -764,7 +764,7 @@ public final class cwcomposite {
         String coherentMapVarName = "source_index";
         var mapGrid = new Grid (coherentMapVarName, "Composite source input index", 
           null, dims[Grid.ROWS], dims[Grid.COLS], new short[0], 
-          NumberFormat.getIntegerInstance(), null, Short.MIN_VALUE);
+          NumberFormat.getIntegerInstance(), null, (short) -1);
         String inputFiles = null;
         for (var file : inputFileList) inputFiles = MetadataServices.append (inputFiles, file);
         mapGrid.getMetadataMap().put ("input_files", inputFiles);

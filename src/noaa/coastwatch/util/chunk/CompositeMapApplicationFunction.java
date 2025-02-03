@@ -41,6 +41,7 @@ import java.util.ArrayList;
  * @author Peter Hollemans
  * @since 3.8.1
  */
+@noaa.coastwatch.test.Testable
 public class CompositeMapApplicationFunction implements ChunkFunction {
 
   private static final Logger LOGGER = Logger.getLogger (CompositeMapApplicationFunction.class.getName());
@@ -300,20 +301,34 @@ public class CompositeMapApplicationFunction implements ChunkFunction {
     logger.test ("apply() with incorrect chunk list length");
     boolean failed = false;
     try { func.apply (pos, inputChunks.subList (1, inputChunks.size())); }
-    catch (Exception e) { failed = true; }
+    catch (IllegalArgumentException e) { failed = true; }
     assert (failed);
     logger.passed();
 
     logger.test ("apply() with null value in chunk list");
     failed = false;
-    try { func.apply (pos, List.of (map, var0, var1, null, var3, var4)); }
+    inputChunks = new ArrayList<DataChunk>();    
+    inputChunks.add (map);
+    inputChunks.add (var0);
+    inputChunks.add (var1);
+    inputChunks.add (null);
+    inputChunks.add (var3);
+    inputChunks.add (var4);
+    try { func.apply (pos, inputChunks); }
     catch (Exception e) { failed = true; }
     assert (failed);
     logger.passed();
 
     logger.test ("apply() with null value in chunk list (should work now)");
     var altmap = fact.create (new short[] {0,1,-1,3,4}, false, m, null);
-    result = func.apply (pos, List.of (altmap, var0, var1, null, var3, var4));
+    inputChunks = new ArrayList<DataChunk>();
+    inputChunks.add (altmap);
+    inputChunks.add (var0);
+    inputChunks.add (var1);
+    inputChunks.add (null);
+    inputChunks.add (var3);
+    inputChunks.add (var4);
+    result = func.apply (pos, inputChunks);
     resultData = (short[]) result.getPrimitiveData();
     LOGGER.fine ("resultData = " + Arrays.toString (resultData));
     assert (Arrays.equals (resultData, new short[] {0,6,m,18,m}));
