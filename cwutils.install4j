@@ -31,7 +31,7 @@
         <entry>toolsUI-*</entry>
       </macSearchedJars>
     </codeSigning>
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="17/jdk-17.0.2+8" />
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="23/jdk-23.0.2+7" />
   </application>
   <files>
     <mountPoints>
