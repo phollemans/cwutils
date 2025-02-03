@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import noaa.coastwatch.util.EarthLocation;
 
 // Testing
+import java.util.logging.Logger;
 import noaa.coastwatch.test.TestLogger;
 
 /**
@@ -46,6 +47,8 @@ import noaa.coastwatch.test.TestLogger;
  */
 @noaa.coastwatch.test.Testable
 public class EarthLocationSet<T> {
+
+  private static final Logger LOGGER = Logger.getLogger (EarthLocationSet.class.getName());
 
   // Constants
   // ---------
@@ -585,7 +588,7 @@ public class EarthLocationSet<T> {
 
     {
     
-    logger.test ("insert (north pole)");
+    logger.test ("insert -- North Pole)");
 
     int locations = 10000;
     List<EarthLocation> locList = new ArrayList<>();
@@ -624,7 +627,7 @@ public class EarthLocationSet<T> {
 
     {
     
-    logger.test ("insert (south pole)");
+    logger.test ("insert -- South Pole");
 
     int locations = 10000;
     List<EarthLocation> locList = new ArrayList<>();
@@ -642,9 +645,7 @@ public class EarthLocationSet<T> {
 
     logger.test ("nearest");
 
-
-long startTime = System.nanoTime();
-
+    long startTime = System.nanoTime();
 
     boolean notFound = false;
     Object context = locationSet.getContext();
@@ -655,21 +656,15 @@ long startTime = System.nanoTime();
         break;
       } // if
     }// for
-    assert (notFound != true);
 
-
-long elapsedNanos = System.nanoTime() - startTime;
-
+    long elapsedNanos = System.nanoTime() - startTime;
 
     assert (notFound != true);
-
     logger.passed();
-    
 
-System.out.println ("Elapsed: " + elapsedNanos + " ns");
-System.out.println ("Elapsed: " + (elapsedNanos*1e-9) + " s");
-System.out.println ("Per nearest call time: " + (elapsedNanos/locations) + " ns");
-
+    LOGGER.fine ("Nearest method test results (South Pole):"); 
+    LOGGER.fine ("Total elapsed time = " + elapsedNanos + " ns" + " (" + (elapsedNanos*1e-9) + " s)");
+    LOGGER.fine ("Time per call to nearest = " + (elapsedNanos/locations) + " ns");
 
     }
     
@@ -679,7 +674,7 @@ System.out.println ("Per nearest call time: " + (elapsedNanos/locations) + " ns"
 
     {
     
-    logger.test ("insert (equator, prime meridian)");
+    logger.test ("insert -- Equator, Prime Meridian");
 
     int locations = 10000;
     List<EarthLocation> locList = new ArrayList<>();
@@ -695,10 +690,7 @@ System.out.println ("Per nearest call time: " + (elapsedNanos/locations) + " ns"
 
     // ------------------------->
 
-
-long startTime = System.nanoTime();
-
-
+    long startTime = System.nanoTime();
 
     logger.test ("nearest");
 
@@ -710,21 +702,16 @@ long startTime = System.nanoTime();
         notFound = true;
         break;
       } // if
-    }// for
+    } // for
 
-
-long elapsedNanos = System.nanoTime() - startTime;
-
+    long elapsedNanos = System.nanoTime() - startTime;
 
     assert (notFound != true);
-
     logger.passed();
     
-
-System.out.println ("Elapsed: " + elapsedNanos + " ns");
-System.out.println ("Elapsed: " + (elapsedNanos*1e-9) + " s");
-System.out.println ("Per nearest call time: " + (elapsedNanos/locations) + " ns");
-    
+    LOGGER.fine ("Nearest method test results (Equator, Prime Meridian):"); 
+    LOGGER.fine ("Total elapsed time = " + elapsedNanos + " ns" + " (" + (elapsedNanos*1e-9) + " s)");
+    LOGGER.fine ("Time per call to nearest = " + (elapsedNanos/locations) + " ns");
 
     }
     
@@ -734,7 +721,7 @@ System.out.println ("Per nearest call time: " + (elapsedNanos/locations) + " ns"
 
     {
     
-    logger.test ("insert (equator, date line)");
+    logger.test ("insert -- Equator, Date line");
 
     int locations = 10000;
     List<EarthLocation> locList = new ArrayList<>();
