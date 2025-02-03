@@ -193,20 +193,18 @@ public class CWCFNCReader
     List<TimePeriod> periodList = getPeriodList();
     EarthTransform transform = getTransform();
 
-    // Create info object
-    // ------------------
+    // We create a specialized info object here if we find that either satellite
+    // and/or sensor are specified.  If not, we create a generalized object 
+    // from a data source.
     EarthDataInfo info;
-    if (sat == null && sensor == null && source == null)
-      source = "Unknown";
-    if (source != null) {
-      info = new EarthDataInfo (source, periodList, transform, 
-        origin, history);
-    } // if
-    else {
+    if (sat != null || sensor != null) {
       if (sat == null) sat = "Unknown";
       if (sensor == null) sensor = "Unknown";
-      info = new SatelliteDataInfo (sat, sensor, periodList, transform, 
-        origin, history);
+      info = new SatelliteDataInfo (sat, sensor, periodList, transform, origin, history);
+    } // if
+    else {
+      if (source == null) source = "Unknown";
+      info = new EarthDataInfo (source, periodList, transform, origin, history);
     } // else
 
     return (info);
