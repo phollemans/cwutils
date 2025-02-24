@@ -821,7 +821,7 @@ public final class cwanimate {
 	      		view.setGrid (grid);
 
 						axisSliderKnob.x += axisSliderKnobIncrementX;
-						axisSliderLabelIndex++;
+						axisSliderLabelIndex += animationAxisStep;
 		        axisSliderLabelText = formatAxisValue (animationAxis, axisSliderLabelIndex);
 					  axisSliderLabel = new TextElement (axisSliderLabelText, axisSliderLabelFont, 
 					    new Point ((int) (axisSliderKnob.x + axisSliderKnob.width/2), (int) (axisSliderKnob.y + axisSliderKnob.height + 10)), 
