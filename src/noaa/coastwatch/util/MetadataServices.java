@@ -294,7 +294,7 @@ public class MetadataServices {
 
     String line = prog;
     for (int i = 0; i < argv.length; i++)
-      line += " " + argv[i];
+      line += " " + (argv[i].contains (" ") ? "\"" + argv[i] + "\"" : argv[i]);
 
     return (line);
 
