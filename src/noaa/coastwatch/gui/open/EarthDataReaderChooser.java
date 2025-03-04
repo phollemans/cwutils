@@ -24,11 +24,16 @@ import java.awt.GridBagConstraints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentAdapter;
 import java.beans.PropertyChangeEvent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.AlphaComposite;
 import java.awt.Insets;
+import java.awt.Container;
+import java.awt.Component;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -48,6 +53,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JList;
 import javax.swing.InputVerifier;
 import javax.swing.JButton;
+import javax.swing.JTable;
 
 import noaa.coastwatch.io.EarthDataReader;
 import noaa.coastwatch.io.ReaderSummaryProducer;
@@ -142,8 +148,8 @@ public class EarthDataReaderChooser extends JPanel {
   private void acquire (EarthDataReader reader) {
 
     readerRefs.compute (reader, (obj,count) -> ((count == null) ? Integer.valueOf (1) : Integer.valueOf (count+1)));
-    LOGGER.fine ("Acquired reader " + reader + " with new reference count of " + readerRefs.get (reader));
-    LOGGER.fine ("Reader refs now contains " + readerRefs.size() + " entries");
+    LOGGER.fine ("Acquired reader " + reader + " for " + new File (reader.getSource()).getName() + " with new reference count of " + readerRefs.get (reader));
+    LOGGER.fine ("Reader references map now contains " + readerRefs.size() + " entries");
 
   } // acquire
 
@@ -155,7 +161,7 @@ public class EarthDataReaderChooser extends JPanel {
     if (count == null) throw new IllegalStateException ("Release called on untracked object");
 
     if (count == 1) {
-      LOGGER.fine ("Closing released reader " + reader);
+      LOGGER.fine ("Closing released reader " + reader + " for " + new File (reader.getSource()).getName());
       try { reader.close(); }
       catch (IOException e) { 
         LOGGER.log (Level.FINE, "Error closing reader", e);
@@ -166,8 +172,8 @@ public class EarthDataReaderChooser extends JPanel {
       readerRefs.put (reader, Integer.valueOf (count-1));
     } // else
 
-    LOGGER.fine ("Released reader " + reader + " with new reference count of " + (count-1));
-    LOGGER.fine ("Reader refs now contains " + readerRefs.size() + " entries");
+    LOGGER.fine ("Released reader " + reader + " for " + new File (reader.getSource()).getName() + " with new reference count of " + (count-1));
+    LOGGER.fine ("Reader references map now contains " + readerRefs.size() + " entries");
 
   } // release
 
@@ -396,6 +402,17 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  private String logFileValueToString (Object value) {
+
+    String ret;
+    if (value == null) ret = "null";
+    else ret = "\"" + value.toString() + "\"";
+    return (ret);
+
+  } // logFileValueToString
+
+  ////////////////////////////////////////////////////////////
+
   /** Creates a new chooser panel. */
   public EarthDataReaderChooser () {
 
@@ -411,9 +428,21 @@ public class EarthDataReaderChooser extends JPanel {
     fileChooser.setDialogType (JFileChooser.OPEN_DIALOG);
     fileChooser.setControlButtonsAreShown (false);
     fileChooser.setFileFilter (filter);
-    fileChooser.addPropertyChangeListener (JFileChooser.DIRECTORY_CHANGED_PROPERTY, event -> fileChooser.setSelectedFile (new File ("")));
-    fileChooser.addPropertyChangeListener (JFileChooser.FILE_FILTER_CHANGED_PROPERTY, event -> fileChooser.setSelectedFile (new File ("")));
-    fileChooser.addPropertyChangeListener (JFileChooser.SELECTED_FILE_CHANGED_PROPERTY, event -> fileChangedEvent (event));
+
+    // fileChooser.addPropertyChangeListener (JFileChooser.DIRECTORY_CHANGED_PROPERTY, event -> {
+    //   LOGGER.fine ("Detected directory changed event, " + logFileValueToString (event.getOldValue()) + " -> " + logFileValueToString (event.getNewValue())); 
+    //   fileChooser.setSelectedFile (new File (""));
+    // });
+
+    // fileChooser.addPropertyChangeListener (JFileChooser.FILE_FILTER_CHANGED_PROPERTY, event -> {
+    //   LOGGER.fine ("Detected file filter changed event, " + logFileValueToString (event.getOldValue()) + " -> " + logFileValueToString (event.getNewValue())); 
+    //   fileChooser.setSelectedFile (new File (""));
+    // });
+
+    fileChooser.addPropertyChangeListener (JFileChooser.SELECTED_FILE_CHANGED_PROPERTY, event -> {
+      LOGGER.fine ("Detected selected file changed event, " + logFileValueToString (event.getOldValue()) + " -> " + logFileValueToString (event.getNewValue())); 
+      fileChangedEvent (event);
+    });
 
     this.add (fileChooser, BorderLayout.CENTER);
 
@@ -564,6 +593,11 @@ public class EarthDataReaderChooser extends JPanel {
 
   private class PreviewLoadOperation extends SwingWorker<EarthDataView, Object> {
 
+
+    DataViewRenderingContext context;
+
+
+
     private EarthDataReader reader;
     private String varName;
 
@@ -612,6 +646,25 @@ public class EarthDataReaderChooser extends JPanel {
       previewOperation = null;
       release (reader);
 
+
+
+      // FIXME: Something happens here if the preview load is complete but
+      // data view is still rendering in a background thread, then releasing 
+      // the reader causes the view rendering to throw an exception, because
+      // the underlying reader is closed.  We need to somehow wait until the
+      // reader is done being used, or force the rendering to operate in the
+      // worker thread, ie: render to an offscreen image rather than using a 
+      // live data view as the preview.
+
+      // The problem is that when the data rendering starts in the 
+      // dataViewRenderingEvent, the data rendering context saves the active 
+      // reader which has been updated to the newly selected reader, and is
+      // no longer the reader that was active when the preview load operation 
+      // started.  So the rendering context reader has been closed by this 
+      // point.
+
+
+
     } // done
 
   } // PreviewLoadOperation class
@@ -652,37 +705,63 @@ public class EarthDataReaderChooser extends JPanel {
 
     if (event.getNewValue() != null) {
 
-      // Start by closing any existing active reader.  Whether the new reader
-      // is null or not, we'll be replacing the active.
+      boolean updateNeeded = true;
+      File newFile = fileChooser.getSelectedFile();
+
+      // Check first if the active reader is the same as the new file
+      // in the chooser.
       if (activeReader != null) {
-        release (activeReader);
-        activeReader = null;
+        var activeFile = new File (activeReader.getSource());
+        if (activeFile.equals (newFile)) {
+          LOGGER.fine ("Active reader matches requested file, no update needed");
+          updateNeeded = false;
+        } // if
       } // if
 
-      // First we cancel any reader operation that may be in progress.  A new
-      // operation will either take its place or we'll need to clear out the 
-      // preview content.
-      if (readerOperation != null && !readerOperation.isDone()) {
-        readerOperation.cancel (false);
+      // Now check if the file being opened by a reader operation
+      // is the same as the new file in the chooser.
+      if (updateNeeded && readerOperation != null) {
+        var openingFile = new File (readerOperation.getFilename());
+        if (openingFile.equals (newFile)) {
+          LOGGER.fine ("Opening reader matches requested file, no update needed");
+          updateNeeded = false;
+        } // if
       } // if
 
-      // If the file selected is legitimate and exists, we start a new
-      // process in a background thread to open the file and see if 
-      // a reader can be created from it.
-      File file = fileChooser.getSelectedFile();
-      if (file != null && file.isFile() && file.exists()) {
-        var name = file.getPath();
-        fileChooser.setCursor (Cursor.getPredefinedCursor (Cursor.WAIT_CURSOR));
-        readerOperation = new ReaderOpenOperation (name);
-        readerOperation.execute();
+      if (updateNeeded) {
+
+        // Start by closing any existing active reader.  Whether the new reader
+        // is null or not, we'll be replacing the active.
+        if (activeReader != null) {
+          release (activeReader);
+          activeReader = null;
+        } // if
+
+        // First we cancel any reader operation that may be in progress.  A new
+        // operation will either take its place or we'll need to clear out the 
+        // preview content.
+        if (readerOperation != null && !readerOperation.isDone()) {
+          readerOperation.cancel (false);
+        } // if
+
+        // If the file selected is legitimate and exists, we start a new
+        // process in a background thread to open the file and see if 
+        // a reader can be created from it.
+        if (newFile != null && newFile.isFile() && newFile.exists()) {
+          var name = newFile.getPath();
+          fileChooser.setCursor (Cursor.getPredefinedCursor (Cursor.WAIT_CURSOR));
+          readerOperation = new ReaderOpenOperation (name);
+          readerOperation.execute();
+        } // if
+
+        // Otherwise, we clear out the preview content.
+        else {
+          clearPreviewContent();
+        } // else
+
+        updateState();
+
       } // if
-
-      // Otherwise, we clear out the preview content.
-      else {
-        clearPreviewContent();
-      } // else
-
-      updateState();
 
     } // if
 
@@ -719,6 +798,8 @@ public class EarthDataReaderChooser extends JPanel {
     ) {
       this.filename = filename;
     } // ReaderOpenOperation
+
+    public String getFilename () { return (filename); }
 
     @Override
     public EarthDataReader doInBackground() {
@@ -1003,6 +1084,18 @@ public class EarthDataReaderChooser extends JPanel {
     size.height = 510;
     dialog.setSize (size);
 
+    // We have to add this listener in because we discovered that
+    // a file chooser doesn't highlight the entry in the list when
+    // the current file is updated.  So we force it to highlight the
+    // entry.  This may be prone to breaking if there's a laf that
+    // doesn't contain a list or table with the file name.
+    dialog.addComponentListener (new ComponentAdapter() {
+      @Override
+      public void componentShown (ComponentEvent e) {
+        SwingUtilities.invokeLater(() -> highlightFileInChooser (fileChooser));
+      } // componentShown
+    });
+
     return (dialog);
 
   } // createDialog
@@ -1045,6 +1138,109 @@ public class EarthDataReaderChooser extends JPanel {
     fileOpenDialog.setVisible (true);
 
   } // showDialog
+
+  ////////////////////////////////////////////////////////////
+
+  private static void highlightFileInChooser (JFileChooser fileChooser) {
+
+    var selectedFile = fileChooser.getSelectedFile();
+    if (selectedFile != null && selectedFile.isFile() && selectedFile.exists()) {
+
+      var table = findComponentInContainer (fileChooser, JTable.class);
+      if (table != null) {
+        highlightFileInTable (table, selectedFile);
+      } // if
+      else {
+        var list = findComponentInContainer (fileChooser, JList.class);
+        if (list != null) {
+          highlightFileInList (list, selectedFile);
+        } // if
+        else {
+          LOGGER.fine ("No table or list found, file not highlighted");
+        } // else
+      } // else
+
+    } // if
+
+  } // highlightFileInChooser
+
+  ////////////////////////////////////////////////////////////
+
+  private static void highlightFileInTable (JTable table, File selectedFile) {
+
+    for (int row = 0; row < table.getRowCount(); row++) {
+      var tableObject = table.getValueAt (row, 0);
+      if (tableObject instanceof File) {
+        var fileInRow = (File) tableObject;
+        if (fileInRow.getName().equals (selectedFile.getName())) {
+          LOGGER.fine ("Highlighting file " + selectedFile.getName() + " in table");
+          table.setRowSelectionInterval (row, row);
+          table.scrollRectToVisible (table.getCellRect (row, 0, true));
+          break;
+        } // if
+      } // if
+    } // for
+
+  } // highlightFileInTable
+
+  ////////////////////////////////////////////////////////////
+
+  private static void highlightFileInList (JList<?> list, File selectedFile) {
+
+    var model = list.getModel();
+    var found = false;
+    for (int i = 0; i < model.getSize(); i++) {
+      if (model.getElementAt (i).equals (selectedFile)) {
+        found = true;
+        break;
+      } // if
+    } // for
+
+    if (found) {
+      LOGGER.fine ("Highlighting file " + selectedFile.getName() + " in list");
+      list.setSelectedValue (selectedFile, true);
+    } // if
+
+  } // highlightFileInList
+
+  ////////////////////////////////////////////////////////////
+
+  private static <T extends Component> T findComponentInContainer (Container container, Class<T> classType) {
+
+    T foundComponent = null;
+    
+    for (Component component : container.getComponents()) {
+      if (classType.isInstance (component)) {
+        foundComponent = classType.cast (component);
+      }  // if
+      else if (component instanceof Container) {
+        foundComponent = findComponentInContainer ((Container) component, classType);
+      } // else if      
+      if (foundComponent != null) break;
+    } // for
+    
+    return (foundComponent);
+
+  } // findComponentInContainer
+
+  ////////////////////////////////////////////////////////////
+
+  private static JTable findTableInContainer (Container container) {
+
+    JTable table = null;
+    for (var component : container.getComponents()) {
+      if (component instanceof JTable) {
+        table = (JTable) component;
+      } // if
+      else if (component instanceof Container) {
+        table = findTableInContainer ((Container) component);
+      } // else if
+      if (table != null) break;
+    } // for
+
+    return (table);
+
+  } // findTableInContainer
 
   ////////////////////////////////////////////////////////////
 
