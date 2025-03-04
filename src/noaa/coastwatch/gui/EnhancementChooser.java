@@ -33,6 +33,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
 
 import javax.swing.Action;
 import javax.swing.AbstractAction;
@@ -53,6 +55,10 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
+
+import java.util.Collections;
 
 import noaa.coastwatch.gui.EnhancementFunctionPanel;
 import noaa.coastwatch.gui.GUIServices;
@@ -278,6 +284,31 @@ public class EnhancementChooser
 
   ////////////////////////////////////////////////////////////
 
+  /** Maps the tab kay for a text field to perform the same action as enter. */
+  private void mapTabToEnterAction (JTextField textField) {
+
+    // First inhibit the normal function of the TAB key
+    textField.setFocusTraversalKeys (KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.emptySet());    
+
+    // Next set the input map the perform an action when TAB is pressed
+    var inputMap = textField.getInputMap (JComponent.WHEN_FOCUSED);
+    inputMap.put (KeyStroke.getKeyStroke (KeyEvent.VK_TAB, 0, false), "performEnterAction");
+
+    // Finally add an action to the map that posts an action event and then
+    // moves focus
+    var actionMap = textField.getActionMap();
+    actionMap.put ("performEnterAction", new AbstractAction() {
+      @Override
+      public void actionPerformed (ActionEvent e) {
+        textField.postActionEvent();
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().focusNextComponent();
+      } // actionPerformed
+    });
+
+  } // mapTabToEnterAction
+
+  ////////////////////////////////////////////////////////////
+
   /** 
    * Creates a new enhancement chooser panel.  If the system property
    * <code>debug</code> is set to <code>true</code>, the enhancement
@@ -336,10 +367,12 @@ public class EnhancementChooser
     enhancementRangeContainer.add (maxLabel, gc);
 
     minField = new JTextField();
+    mapTabToEnterAction (minField);
     GUIServices.setConstraints (gc, 0, 3, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
     enhancementRangeContainer.add (minField, gc);
 
     maxField = new JTextField();
+    mapTabToEnterAction (maxField);
     GUIServices.setConstraints (gc, 1, 3, 1, 1, GridBagConstraints.HORIZONTAL, 1, 0);
     enhancementRangeContainer.add (maxField, gc);
 
