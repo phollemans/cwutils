@@ -1131,7 +1131,7 @@ public final class cdat extends JFrame {
 
   ////////////////////////////////////////////////////////////
 
-  // THese are various events performed in response to clicks from 
+  // These are various events performed in response to clicks from 
   // buttons or menus.
 
   private void openFileEvent () { openFile (null); }
