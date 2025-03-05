@@ -202,6 +202,13 @@ public class EarthImageWriter {
 
     if (isVerbose) VERBOSE.setLevel (Level.INFO);
 
+    // We need to save the state of the view progress flag here, because we
+    // discovered that if it's set to true, then the PDF writer writes a new
+    // image for each stage of the view being rendered which can make the files
+    // 3-4 times larger.
+    boolean viewProgressFlag = view.getProgress();
+    view.setProgress (false);
+
     // Create renderable object
     // ------------------------
     Renderable renderable;
@@ -684,6 +691,9 @@ public class EarthImageWriter {
     // Unsupported format
     // ------------------
     else throw new IllegalArgumentException ("Unsupported format: " + format);
+
+    // Restore the view progress flag
+    view.setProgress (viewProgressFlag);
 
     return (renderable);
 
