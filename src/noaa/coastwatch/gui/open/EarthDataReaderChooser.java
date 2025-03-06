@@ -113,26 +113,11 @@ public class EarthDataReaderChooser extends JPanel {
   private EarthDataReader selectedReader;
   private Map<EarthDataReader, Integer> readerRefs;
   private List<DataViewRenderingContext> viewRenderingContextList;
-
   public static EarthDataReaderChooser instance;
 
   ////////////////////////////////////////////////////////////
 
   public enum State { UNSELECTED, READY, SELECTED };
-
-  ////////////////////////////////////////////////////////////
-
-  private static class DataViewRenderingContext {
-
-    public EarthDataViewPanel panel;
-    public EarthDataReader reader;
-
-    public DataViewRenderingContext (EarthDataViewPanel panel, EarthDataReader reader) {
-      this.panel = panel;
-      this.reader = reader;
-    } // DataViewRenderingContext
-
-  } // DataViewRenderingContext class
 
   ////////////////////////////////////////////////////////////
 
@@ -145,7 +130,10 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
-  private void acquire (EarthDataReader reader) {
+  /** 
+   * Acquires access to a data reader and increments the access count. 
+   */
+  private synchronized void acquire (EarthDataReader reader) {
 
     readerRefs.compute (reader, (obj,count) -> ((count == null) ? Integer.valueOf (1) : Integer.valueOf (count+1)));
     LOGGER.fine ("Acquired reader " + reader + " for " + new File (reader.getSource()).getName() + " with new reference count of " + readerRefs.get (reader));
@@ -155,7 +143,11 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
-  private void release (EarthDataReader reader) {
+  /** 
+   * Releases access to a data reader and decrements the access count.
+   * If the access count decrements to zero, closes the file.
+   */
+  private synchronized void release (EarthDataReader reader) {
 
     var count = readerRefs.get (reader);
     if (count == null) throw new IllegalStateException ("Release called on untracked object");
@@ -190,6 +182,11 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * Formats a JLabel with text so that the width of the label is no longer
+   * then a specified width.  Longer strings will be truncated in the middle
+   * by removing characters and inserting an elipsis.
+   */
   private JLabel formatLabel (String text, Font font, int width) {
 
     JLabel label = new JLabel();
@@ -207,6 +204,38 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * Holds references to a data view and reader to store together as a
+   * context for a current rendering operation in the data view.
+   */
+  private static class DataViewRenderingContext {
+
+    public EarthDataViewPanel panel;
+    public EarthDataReader reader;
+
+    public DataViewRenderingContext (EarthDataViewPanel panel, EarthDataReader reader) {
+      this.panel = panel;
+      this.reader = reader;
+    } // DataViewRenderingContext
+
+  } // DataViewRenderingContext class
+
+  ////////////////////////////////////////////////////////////
+
+  private DataViewRenderingContext renderingContextForPanel (EarthDataViewPanel panel) {
+
+    DataViewRenderingContext context = null;
+    for (var candidate : viewRenderingContextList) {
+      if (candidate.panel == panel) { context = candidate; break; }
+    }  // for
+
+    return (context);
+
+  } // renderingContextForPanel
+
+  ////////////////////////////////////////////////////////////
+
+  /** Handles a change in the rendering state in an EarthDataViewPanel. */
   private void dataViewRenderingEvent (PropertyChangeEvent event) {
 
     var rendering = (boolean) event.getNewValue();
@@ -229,10 +258,7 @@ public class EarthDataReaderChooser extends JPanel {
     // then we can release the reader.
     else {
       if (sourcePanel.getView() != nullDataView) {
-        DataViewRenderingContext context = null;
-        for (var candidate : viewRenderingContextList) {
-          if (candidate.panel == sourcePanel) { context = candidate; break; }
-        }  // for
+        DataViewRenderingContext context = renderingContextForPanel (sourcePanel);
         if (context == null) throw new IllegalStateException ("Cannot locate context for data view rendering");
         release (context.reader);
         viewRenderingContextList.remove (context);
@@ -244,7 +270,13 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Updates the content of the preview area to show the information
+   * about the specified reader.
+   */
   private void updatePreviewContent (EarthDataReader reader) {
+
+    cancelPreviewLoad();
 
     previewContent.removeAll();
     int previewWidth = 300;
@@ -350,6 +382,7 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** Adds instructions to the preview area to select a new reader. */
   private void addInstructionsContent() {
 
     GridBagConstraints gc = new GridBagConstraints();
@@ -390,7 +423,10 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** Clears the preview content area and shows the instructions. */
   private void clearPreviewContent () {
+
+    cancelPreviewLoad();
 
     previewContent.removeAll();
     addInstructionsContent();
@@ -483,6 +519,7 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** Clears the data preview panel. */
   private void clearDataPreview () {
 
     dataViewPanel.setView (nullDataView);
@@ -492,6 +529,7 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** Updates the state of readiness for the user to click OK in the dialog. */
   private void updateState () {
 
     // The state of readiness depends on if we have a valid reader, and
@@ -515,6 +553,7 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** Handles the user clicking to select all the variables in the file. */
   private void variableSelectAllEvent () {
 
     variableList.setSelectionInterval (0, variableList.getModel().getSize()-1);
@@ -523,6 +562,7 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** Handles the user clicking a variable, or selecting multiple variables. */
   private void variableSelectEvent (ListSelectionEvent event) {
 
     if (!event.getValueIsAdjusting() && activeReader != null) {
@@ -549,12 +589,27 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** Cancels any preview load currently running. */
+  private void cancelPreviewLoad () {
+
+    if (previewOperation != null && !previewOperation.isDone()) {
+      LOGGER.fine ("Cancelling preview load in progress");
+      previewOperation.cancel (false);
+      previewOperation = null;
+    } // if
+
+  } // cancelPreviewLoad
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Creates and starts a new image being loaded into the data preview panel
+   * on the Swing event dispatch thread using a SwingWorker background thread.
+   */
   private void startPreviewLoad (String varName) {
 
     // First cancel any previous preview load operation that is still running.
-    if (previewOperation != null && !previewOperation.isDone()) {
-      previewOperation.cancel (false);
-    } // if
+    cancelPreviewLoad();
 
     // Now start executing a new preview load operation.
     variableList.setCursor (Cursor.getPredefinedCursor (Cursor.WAIT_CURSOR));
@@ -565,6 +620,10 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * Completes the data view load by updating the data view panel on the 
+   * Swing event dispatch thread.
+   */
   private void completePreviewLoad (
     EarthDataReader reader,
     String varName,
@@ -587,16 +646,24 @@ public class EarthDataReaderChooser extends JPanel {
 
     variableList.setCursor (Cursor.getPredefinedCursor (Cursor.DEFAULT_CURSOR));
 
+    previewOperation = null;
+
   } // completePreviewLoad
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Encapsulates a data preview loading operation as a SwingWorker operation.
+   * The operation is performed in a background thread in two stages:
+   *
+   * (i) Create a view of a data variable which may include computing
+   * statistics for the variable so that proper scaling can be done
+   * (background thread).
+   * 
+   * (ii) Complete the load by setting the new view in the data view panel
+   * (Swing event dispatch thread).
+   */
   private class PreviewLoadOperation extends SwingWorker<EarthDataView, Object> {
-
-
-    DataViewRenderingContext context;
-
-
 
     private EarthDataReader reader;
     private String varName;
@@ -605,9 +672,10 @@ public class EarthDataReaderChooser extends JPanel {
       EarthDataReader reader,
       String varName
     ) {      
-      acquire (reader);
+
       this.reader = reader;
       this.varName = varName;
+
     } // PreviewLoadOperation
 
     @Override
@@ -619,7 +687,9 @@ public class EarthDataReaderChooser extends JPanel {
       if (!isCancelled()) {
         LOGGER.fine ("Loading preview for " + varName + " in background thread");
         var factory = EarthDataViewFactory.getInstance();
+        acquire (reader);
         synchronized (factory) { view = factory.create (reader, varName); }
+        release (reader);
       } // if
 
       // If we were cancelled during the operation, set the view to null. 
@@ -643,34 +713,13 @@ public class EarthDataReaderChooser extends JPanel {
         LOGGER.fine ("Preview load operation is now complete");
       } // if
 
-      previewOperation = null;
-      release (reader);
-
-
-
-      // FIXME: Something happens here if the preview load is complete but
-      // data view is still rendering in a background thread, then releasing 
-      // the reader causes the view rendering to throw an exception, because
-      // the underlying reader is closed.  We need to somehow wait until the
-      // reader is done being used, or force the rendering to operate in the
-      // worker thread, ie: render to an offscreen image rather than using a 
-      // live data view as the preview.
-
-      // The problem is that when the data rendering starts in the 
-      // dataViewRenderingEvent, the data rendering context saves the active 
-      // reader which has been updated to the newly selected reader, and is
-      // no longer the reader that was active when the preview load operation 
-      // started.  So the rendering context reader has been closed by this 
-      // point.
-
-
-
     } // done
 
   } // PreviewLoadOperation class
 
   ////////////////////////////////////////////////////////////
 
+  /** Updates the data file being displayed by the preview area. */
   private void fileChangedEvent (PropertyChangeEvent event) {
 
     // The file change event spawns a sequences of operations to open and
@@ -769,6 +818,10 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * Completes the reader open by updating the preview area content on the 
+   * Swing event dispatch thread.
+   */
   private void completeReaderOpen (EarthDataReader reader) {
 
     // Update the active reader and display if non-null.
@@ -789,6 +842,16 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Encapsulates a reader open operation as a SwingWorker operation.
+   * The operation is performed in a background thread in two stages:
+   *
+   * (i) Use the reader factory to create a reader instance (background 
+   * thread).
+   * 
+   * (ii) Complete the open by updating the preview area (Swing event 
+   * dispatch thread).
+   */
   private class ReaderOpenOperation extends SwingWorker<EarthDataReader, Object> {
 
     private String filename;
@@ -871,6 +934,12 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Starts a new statistics computation on the Swing event dispatch thread 
+   * using a SwingWorker background thread after the user has clicked OK in the
+   * dialog to compute statistics for each variable to be displayed in a
+   * histogram later.
+   */
   private void startStatsComputation () {
 
     // Check that we don't have a stats operation already in progress.  That
@@ -905,6 +974,10 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * Updates the statistics progress bar with a new count of the variables
+   * completed.
+   */
   private void statsProgressEvent (int value) {
 
     if (dialogProgressBar.isIndeterminate()) dialogProgressBar.setIndeterminate (false);
@@ -914,6 +987,10 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Completes the statistics computation by updating the selected reader
+   * and cleaning up the file chooser dialog on the Swing event dispatch thread.
+   */
   private void completeStatsComputation (EarthDataReader reader) {
 
     // Set the final selected reader to the reader just returned.
@@ -937,6 +1014,16 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Encapsulates a statistics computation operation as a SwingWorker operation.
+   * The operation is performed in a background thread in two stages:
+   *
+   * (i) Use the reader factory to open the file and compute a set of statistics
+   * for each variable, storing the statistics generated in the reader object.
+   * 
+   * (ii) Complete the computation by passing control back to the Swing event
+   * dispatch thread to close the dialog and pass the reader back to the user.
+   */
   private class StatsComputationOperation extends SwingWorker<EarthDataReader, Integer> {
 
     private String filename;
@@ -1015,6 +1102,7 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** Responds to the user clicking OK. */
   private void dialogOKEvent () {
 
     LOGGER.fine ("Detected a dialog OK event");
@@ -1024,6 +1112,7 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** Responds to the user clicking Cancel. */
   private void dialogCancelEvent () {
 
     LOGGER.fine ("Detected a dialog cancel event");
@@ -1033,6 +1122,10 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * Creates an input blocking panel that intercepts all mouse and keyboard
+   * events.
+   */
   private JPanel createInputBlockingPanel () {
 
     var panel = new JPanel();
@@ -1050,6 +1143,7 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** Creates the dialog for the chooser. */
   private JDialog createDialog (Component parent) {
 
     var okAction = GUIServices.createAction ("OK", () -> dialogOKEvent());
@@ -1141,6 +1235,12 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * This is a special hack because when a file chooser has a new
+   * file selected programmatically, it doesn't highlight the file name
+   * in the list or table.  So we found a way to do it manually, either in
+   * a table if we can find it, or in a list.
+   */
   private static void highlightFileInChooser (JFileChooser fileChooser) {
 
     var selectedFile = fileChooser.getSelectedFile();
@@ -1166,6 +1266,10 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * Highlights a file in a table, assuming that the file name appears in the
+   * first column of the table.
+   */
   private static void highlightFileInTable (JTable table, File selectedFile) {
 
     for (int row = 0; row < table.getRowCount(); row++) {
@@ -1185,6 +1289,10 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** 
+   * Highlights a file in a list, assuming that the file is in an element in
+   * the list model.
+   */
   private static void highlightFileInList (JList<?> list, File selectedFile) {
 
     var model = list.getModel();
@@ -1205,6 +1313,7 @@ public class EarthDataReaderChooser extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** Finds a component of a specified type inside a container. */
   private static <T extends Component> T findComponentInContainer (Container container, Class<T> classType) {
 
     T foundComponent = null;
@@ -1222,25 +1331,6 @@ public class EarthDataReaderChooser extends JPanel {
     return (foundComponent);
 
   } // findComponentInContainer
-
-  ////////////////////////////////////////////////////////////
-
-  private static JTable findTableInContainer (Container container) {
-
-    JTable table = null;
-    for (var component : container.getComponents()) {
-      if (component instanceof JTable) {
-        table = (JTable) component;
-      } // if
-      else if (component instanceof Container) {
-        table = findTableInContainer ((Container) component);
-      } // else if
-      if (table != null) break;
-    } // for
-
-    return (table);
-
-  } // findTableInContainer
 
   ////////////////////////////////////////////////////////////
 
