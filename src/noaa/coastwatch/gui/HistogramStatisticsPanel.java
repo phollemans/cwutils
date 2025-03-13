@@ -37,6 +37,9 @@ import noaa.coastwatch.gui.XYPlotPanel;
 import noaa.coastwatch.render.DataColorScale;
 import noaa.coastwatch.util.Statistics;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * The <code>HistogramStatisticsPanel</code> shows a simple data plot
  * of statistics as a histogram.  The x axis is labelled with a
@@ -48,6 +51,8 @@ import noaa.coastwatch.util.Statistics;
  */
 public class HistogramStatisticsPanel
   extends StatisticsPanel {
+
+  private static final Logger LOGGER = Logger.getLogger (HistogramStatisticsPanel.class.getName());
 
   // Variables
   // ---------
@@ -148,6 +153,7 @@ public class HistogramStatisticsPanel
       dataPoint2.setLocation (dataPoint1.x, 
         stats.getNormalizedCount (dataPoint1.x));
       affine.transform (dataPoint2, plotPoint2);
+      plotPoint2.x = plotPoint1.x;
       line.setLine (plotPoint1, plotPoint2);
       g2d.draw (line);
     } // for
