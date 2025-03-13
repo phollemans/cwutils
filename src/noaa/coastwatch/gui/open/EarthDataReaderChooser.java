@@ -343,6 +343,8 @@ public class EarthDataReaderChooser extends JPanel {
     variableList.setVisibleRowCount (5);
     variableList.addListSelectionListener (event -> variableSelectEvent (event));
     var variableScrollPane = new JScrollPane (variableList);
+    variableScrollPane.setPreferredSize (new Dimension (300, 100));
+    variableScrollPane.setMaximumSize (new Dimension (300, 100));
     previewContent.add (variableScrollPane, gc);
 
     previewContent.add (Box.createVerticalStrut (10), gc);
@@ -458,12 +460,13 @@ public class EarthDataReaderChooser extends JPanel {
     // files of various extensions.  We get it from GUIServices so that it
     // tracks and recalls the current directory between program invocations.
     fileChooser = GUIServices.getFileChooser();
-    var extensions = new String[] {"hdf", "nc4", "nc"};
-    SimpleFileFilter filter = new SimpleFileFilter (extensions, "Scientific data files");
-    fileChooser.addChoosableFileFilter (filter);
+    SimpleFileFilter hdfAndNetcdf = new SimpleFileFilter (new String[] {"hdf", "h5", "nc", "nc4"}, "HDF/NetCDF files");
+    SimpleFileFilter grib = new SimpleFileFilter (new String[] {"grib", "grb", "grib2", "grb2"}, "GRIB files");
+    fileChooser.addChoosableFileFilter (hdfAndNetcdf);
+    fileChooser.addChoosableFileFilter (grib);
     fileChooser.setDialogType (JFileChooser.OPEN_DIALOG);
     fileChooser.setControlButtonsAreShown (false);
-    fileChooser.setFileFilter (filter);
+    fileChooser.setFileFilter (hdfAndNetcdf);
 
     // fileChooser.addPropertyChangeListener (JFileChooser.DIRECTORY_CHANGED_PROPERTY, event -> {
     //   LOGGER.fine ("Detected directory changed event, " + logFileValueToString (event.getOldValue()) + " -> " + logFileValueToString (event.getNewValue())); 
