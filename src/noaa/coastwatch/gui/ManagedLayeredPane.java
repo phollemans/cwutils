@@ -53,7 +53,8 @@ public class ManagedLayeredPane extends JLayeredPane {
 
   ////////////////////////////////////////////////////////////
 
-  private void updateBounds() {
+  /** Updates the bounds of the managed components. */
+  public void updateBounds() {
 
     var paneDims = this.getSize();
     var paneinsets = this.getInsets();
