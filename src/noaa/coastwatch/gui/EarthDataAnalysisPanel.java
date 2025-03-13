@@ -377,17 +377,22 @@ public class EarthDataAnalysisPanel
 
   private void legendChangeEvent () {
 
-    // TODO: We need to set the legend size here based on the minimum
-    // size required by the color scale.
-
-
+    // Set up the new color scale 
     var legendPanel = controller.getLegendPanel();
     var colorScale = (DataColorScale) legendPanel.getLegend();
     colorScale.setLegendAxis (DataColorScale.HORIZONTAL_AXIS);    
     var font = UIManager.getFont ("Label.font");
     colorScale.setFont (font.deriveFont (font.getSize() * 0.8f));
 
-
+    // Resize the legend and update the layered pane layout
+    var g2d = (Graphics2D) legendPanel.getGraphics();
+    if (g2d != null) {
+      var requiredSize = colorScale.getSize (g2d);
+      if (requiredSize.width < 360) requiredSize.width = 360;
+      legendPanel.setPreferredSize (requiredSize);
+      legendPanel.setSize (requiredSize);
+      viewLayeredPane.updateBounds();
+    } // if
 
   } // legendChangeEvent
 
@@ -476,9 +481,13 @@ public class EarthDataAnalysisPanel
     legendPanel.addPropertyChangeListener (LegendPanel.LEGEND_PROPERTY, event -> legendChangeEvent());
     legendChangeEvent();
 
-
-
-
+    legendPanel.addHierarchyListener (e -> {
+      if ((e.getChangeFlags() & java.awt.event.HierarchyEvent.DISPLAYABILITY_CHANGED) != 0) {
+        if (legendPanel.isDisplayable()) {
+          legendChangeEvent();
+        } // if
+      } // if
+    });
     
     // Create tabbed pane
     // ------------------

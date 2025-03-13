@@ -470,10 +470,11 @@ public class DataColorScale
 
       // Concatenate labels
       // ------------------
-      String label = " ";
+      String label = "_";
       for (int i = 0; i < labels.length; i++) {
-        label += " " + labels[i];
+        label += "__" + labels[i];
       } // for
+      label += "_";
 
       // Create text bounds
       // ------------------
