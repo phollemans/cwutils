@@ -1458,16 +1458,19 @@ public class EarthDataViewController {
       Point endPoint = new Point (rect.x + rect.width, 
         rect.y + rect.height);
       DataLocation end = 
-        imageTrans.transform (viewPanel.translate (endPoint)).round();
-      if (start.get(0) > end.get(0)) {
-        DataLocation temp = start;
-        start = end;
-        end = temp;
-      } // if
-      if (start.equals (end))
-        survey = new PointSurvey (var, earthTrans, start);
+        imageTrans.transform (viewPanel.translate (endPoint)).round();      
+      DataLocation topLeft = new DataLocation (
+        Math.min (start.get (Grid.ROW), end.get (Grid.ROW)),
+        Math.min (start.get (Grid.COL), end.get (Grid.COL))
+      );
+      DataLocation bottomRight = new DataLocation (
+        Math.max (start.get (Grid.ROW), end.get (Grid.ROW)),
+        Math.max (start.get (Grid.COL), end.get (Grid.COL))
+      );
+      if (topLeft.equals (bottomRight))
+        survey = new PointSurvey (var, earthTrans, topLeft);
       else
-        survey = new BoxSurvey (var, earthTrans, start, end);
+        survey = new BoxSurvey (var, earthTrans, topLeft, bottomRight);
     } // else if
 
     // Survey polygon
