@@ -146,11 +146,7 @@ public class EarthGridSetFactory {
       @Override
       public List<Axis> getAxes (String varName) { return (variableAxes.get (varName)); }
 
-      @Override
-      public Grid accessGrid (String varName, List<Integer> axisIndexList) {
-
-        LOGGER.fine ("Retrieving grid for " + varName + " with axes " + 
-          Arrays.toString (axisIndexList.toArray()));
+      private String expandVarName (String varName, List<Integer> axisIndexList) {
 
         var axes = getAxes (varName);
         var gridVarName = varName;
@@ -165,6 +161,19 @@ public class EarthGridSetFactory {
           } // for
           gridVarName += "_x_x";
         } // if
+  
+        return (gridVarName);      
+
+      } // expandVarName
+
+      @Override
+      public Grid accessGrid (String varName, List<Integer> axisIndexList) {
+
+        LOGGER.fine ("Retrieving grid for " + varName + " with axes " + 
+          Arrays.toString (axisIndexList.toArray()));
+
+        // Expand the variable name if needed
+        var gridVarName = expandVarName (varName, axisIndexList);
 
         // Get the grid and return
         Grid grid;
@@ -174,6 +183,37 @@ public class EarthGridSetFactory {
         return (grid);
 
       } // accessGrid
+
+      @Override
+      public Grid accessGridSubset (
+        String varName,
+        List<Integer> axisIndexList,
+        int[] start,
+        int[] stride,
+        int[] length
+      ) {
+
+        LOGGER.fine ("Retrieving grid for " + varName + " with axes " + 
+          Arrays.toString (axisIndexList.toArray()) + 
+          " and start " + Arrays.toString (start) + 
+          ", stride " + Arrays.toString (stride) + 
+          ", length " + Arrays.toString (length)
+        );
+
+        // Expand the variable name if needed
+        var gridVarName = expandVarName (varName, axisIndexList);
+
+        // Get the grid and return
+        Grid grid;
+        LOGGER.fine ("Retrieving grid " + gridVarName);
+        try { grid = ((GridSubsetReader) reader).getGridSubset (gridVarName, start, stride, length); }
+        catch (IOException e) { throw new RuntimeException ("Error getting grid", e); }
+        return (grid);
+
+      } // accessGridSubset
+
+      @Override      
+      public boolean gridSubsetSupported () { return (reader instanceof GridSubsetReader); }
 
       @Override
       public void releaseGrid (Grid grid) { grid.dispose(); }

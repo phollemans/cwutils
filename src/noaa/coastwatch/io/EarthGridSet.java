@@ -115,6 +115,44 @@ public interface EarthGridSet {
   public Grid accessGrid (String varName, List<Integer> axisIndexList);
 
   /**
+   * Gets a version of a grid specified by a set of axes and a subset 
+   * specification.
+   * 
+   * @param varName the variable name for the grid.
+   * @param axisIndexList the list of axis indicies, one for each axis,
+   * that specifies which grid to retrieve.  The list may be empty if the
+   * variable has no axes.
+   * @param start the starting spatial data coordinates.
+   * @param stride the spatial data stride.
+   * @param length the total number of values to access in each spatial 
+   * dimension.
+   *
+   * @return the grid corresponding to the variable name, axes, and subset
+   * specified.
+   * 
+   * @since 4.1.0
+   */
+  default public Grid accessGridSubset (
+    String varName,
+    List<Integer> axisIndexList,
+    int[] start,
+    int[] stride,
+    int[] length
+  ) {
+
+    throw new UnsupportedOperationException();
+
+  } // accessGridSubset
+
+  /**
+   * Returns the status of support for calling the {@link #accessGridSubset} 
+   * method.
+   * 
+   * @since 4.1.0
+   */
+  default public boolean gridSubsetSupported () { return (false); }
+
+  /**
    * Releases the resources used by a grid accessed by this set.
    * 
    * @param grid the grid to release.
