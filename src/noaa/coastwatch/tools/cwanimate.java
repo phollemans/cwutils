@@ -12,7 +12,9 @@ import jargs.gnu.CmdLineParser.OptionException;
 
 import noaa.coastwatch.io.EarthGridSet;
 import noaa.coastwatch.io.EarthGridSetFactory;
+import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.EarthLocation;
+import noaa.coastwatch.util.trans.MapProjection;
 import noaa.coastwatch.render.ColorEnhancement;
 import noaa.coastwatch.render.EarthDataView;
 import noaa.coastwatch.render.DataColorScale;
@@ -51,9 +53,13 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import java.time.format.DateTimeFormatter;
-import java.time.ZoneOffset;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneOffset;
+import java.time.DateTimeException;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAccessor;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -89,6 +95,7 @@ import java.util.logging.Level;
  * -L, --logo NAME | FILE <br>
  * -q, --query-var VARIABLE <br>
  * -r, --rate FPS <br>
+ * -T, --test <br>
  * -t, --title TEXT <br>
  * -u, --units UNITS <br>
  * -V, --variable VARIABLE <br>
@@ -143,7 +150,16 @@ import java.util.logging.Level;
  *   <dd>The axis name and index/range for animation.  Only one axis can be specified 
  *   with a range and optional step value to animate, and all other axes with a single 
  *   index value.  If an axis name is not specfied, the zero index is assumed 
- *   for that axis.</dd>
+ *   for that axis.  For a time axis, the start and end can be either integer 
+ *   indices or date values specified in one of several ISO date specifications:
+ *   <ul>
+ *     <li><b>yyyy-mm-dd</b> - date only, eg: 2011-12-03</li>
+ *     <li><b>yyyy-mm-ddThh:mm:ss</b> - date and time assuming UTC time zone, eg: 2011-12-03T10:15:30</li>
+ *     <li><b>yyyy-mm-ddThh:mm:ssZ</b> - date and time in UTC, eg: 2011-12-03T10:15:30Z</li>
+ *     <li><b>yyyy-mm-ddThh:mm:ss+zz:zz</b> - date and time with zone offset, eg: 2011-12-03T10:15:30+01:00</li>
+ *     <li><b>yyyy-ddd</b> - date only by year and zero-padded day-of-year [001..366], eg: 2011-337</li>
+ *   </ul>
+ *   </dd>
  *
  *   <dt>-c, --colormap PALETTE/MIN/MAX[/FUNCTION]</dt>
  *   <dd>The color map assignment for the data, consisting of the palette name
@@ -173,6 +189,9 @@ import java.util.logging.Level;
  *
  *   <dt>-r, --rate FPS</dt>
  *   <dd>The frame rate of the output in frames per second, default is 15.</dd>
+ *
+ *   <dt>-T, --test</dt>
+ *   <dd>Turns on test mode and creates a video file with no data displayed.</dd>
  *
  *   <dt>-t, --title TEXT</dt>
  *   <dd>The title text, default is the variable long name metadata value.</dd>
@@ -246,11 +265,6 @@ import java.util.logging.Level;
  *   </li>
  * 
  * </ul>
- * 
- * 
- * 
- * 
- * 
  *
  * <!-- END MAN PAGE -->
  *
@@ -262,6 +276,14 @@ public final class cwanimate {
   private static final String PROG = cwanimate.class.getName();
   private static final Logger LOGGER = Logger.getLogger (PROG);
   private static final Logger VERBOSE = Logger.getLogger (PROG + ".verbose");
+
+  private static final List<DateTimeFormatter> DATE_FORMAT_LIST = List.of (
+    DateTimeFormatter.ISO_LOCAL_DATE.withZone (ZoneOffset.UTC),       // 2011-12-03
+    DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone (ZoneOffset.UTC),  // 2011-12-03T10:15:30
+    DateTimeFormatter.ISO_INSTANT,                                    // 2011-12-03T10:15:30Z
+    DateTimeFormatter.ISO_OFFSET_DATE_TIME,                           // 2011-12-03T10:15:30+01:00
+    DateTimeFormatter.ISO_ORDINAL_DATE.withZone (ZoneOffset.UTC)      // 2012-337
+  );
 
   ////////////////////////////////////////////////////////////
 
@@ -293,6 +315,7 @@ public final class cwanimate {
     Option versionOpt = cmd.addBooleanOption ("version");
     Option widthOpt = cmd.addIntegerOption ('W', "width");
     Option zoomOpt = cmd.addStringOption ('z', "zoom");
+    Option testOpt = cmd.addBooleanOption ('T', "test");
 
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -432,13 +455,24 @@ public final class cwanimate {
       	// Get the index along the axis that the user requested and
       	// store it in our list of axis indices
       	int axisIndex = axisIndexMap.get (name);
-       	int axisValue = Integer.parseInt (specArray[1]);
+        var axis = axes.get (axisIndex);
+        int axisValue = parseAxisValueFromSpec (axis, specArray[1]);
+        if (axisValue == -1) {
+          LOGGER.severe ("Axis value " + specArray[1] + " is invalid");
+          ToolServices.exitWithCode (2);
+          return;
+        } // if
        	axisIndexList.set (axisIndex, axisValue);
 
        	// Get the index along the axis for the end of the animation
        	if (specArray.length >= 3) {
        		animationAxisListIndex = axisIndex;
-       		animationAxisEnd = Integer.parseInt (specArray[2]);
+       		animationAxisEnd = parseAxisValueFromSpec (axis, specArray[2]);
+          if (animationAxisEnd == -1) {
+            LOGGER.severe ("Axis value " + specArray[2] + " is invalid");
+            ToolServices.exitWithCode (2);
+            return;
+          } // if
        	} // if
 
        	// Get the step value along the animation axis
@@ -508,7 +542,13 @@ public final class cwanimate {
 	    var widthSpec = (Integer) cmd.getOptionValue (widthOpt);
 	    var width = widthSpec == null ? -1 : widthSpec.intValue();
 
+      // Check for the test mode flag to render frames with no data
+      boolean testMode = (cmd.getOptionValue (testOpt) != null);
+
 	    ColorEnhancement view = null;
+      boolean isGridSubset = false;
+      int[] start = null, length = null, stride = null;
+
 	    try {
 
   	    // Create the color enhancement for the data view
@@ -580,7 +620,7 @@ public final class cwanimate {
 					    VERBOSE.info ("Setting data view to zoom level " + zoomLevel + ", " + kmPerPixel + " km/pixel");
 		      	} // else if 
 
-		      	// Parse as a factor dfirectly from the user -- we assume the user
+		      	// Parse as a factor directly from the user -- we assume the user
 		      	// knows the data resolution in this case
 		      	else {
 							factor = Double.parseDouble (factorSpec);
@@ -593,12 +633,12 @@ public final class cwanimate {
 	        view.magnify (dataLoc, factor);
 
 	        // Adjust the height and width of the view
-	        if (height > 0 && width > 0) 
-	        	view.setSize (new Dimension (width, height));
-	        else if (height > 0)
-	        	view.setSize (new Dimension ((int) Math.round (height/0.5625), height));
-	        else if (width > 0)
-	        	view.setSize (new Dimension (width, (int) Math.round (width*0.5625)));
+          if (height > 0 && width > 0) 
+            view.setSize (new Dimension (width, height));
+          else if (height > 0)
+            view.setSize (new Dimension ((int) Math.round (height/0.5625), height));
+          else if (width > 0)
+            view.setSize (new Dimension (width, (int) Math.round (width*0.5625)));
 
 				} // if
 
@@ -611,6 +651,63 @@ public final class cwanimate {
 	        else if (width > 0)
 	        	view.resizeWidth (width);
 				} // else
+
+        // Make sure that the view has an even pixel count size in both directions
+        var viewSize = view.getSize (null);
+        if (viewSize.height % 2 != 0) viewSize.height--;
+        if (viewSize.width % 2 != 0) viewSize.width--;
+        view.setSize (viewSize);
+
+        // Try to optimize the data access and get a subset of the grid 
+        var viewScale = view.getScale();
+        if (!testMode && viewScale > 1 && gridSet.gridSubsetSupported() && trans instanceof MapProjection) {
+
+          // Compute the subset specifications
+          var bounds = view.getBounds();
+
+          start = new int[] {
+            Math.max (0, (int) Math.floor (bounds[0].get (Grid.ROW))),
+            Math.max (0, (int) Math.floor (bounds[0].get (Grid.COL)))
+          };
+
+          var dims = grid.getDimensions();
+          var end = new int[] {
+            Math.min (dims[Grid.ROW]-1, (int) Math.ceil (bounds[1].get (Grid.ROW))),
+            Math.min (dims[Grid.COL]-1, (int) Math.ceil (bounds[1].get (Grid.COL)))
+          };
+
+          var strideValue = (int) Math.ceil (viewScale);
+          stride = new int[] {strideValue, strideValue};
+
+          length = new int[] {
+            (end[0] - start[0] + 1) / stride[0],
+            (end[1] - start[1] + 1) / stride[1]
+          };
+          if ((start[0] + length[0]*stride[0]) < end[0]) length[0]++;
+          if ((start[1] + length[1]*stride[1]) < end[1]) length[1]++;
+
+          LOGGER.fine ("Grid subset start " + Arrays.toString (start));
+          LOGGER.fine ("Grid subset end " + Arrays.toString (end));
+          LOGGER.fine ("Grid subset stride " + Arrays.toString (stride));
+          LOGGER.fine ("Grid subset dimension lengths " + Arrays.toString (length));
+
+          // Subset the grid and transform
+          VERBOSE.info ("Accessing grid subset of stride " + strideValue);
+          var centerEarthLoc = trans.transform (view.getCenter());
+          var viewDims = view.getSize (null);
+          grid = accessGridSubset (gridSet, animateVar, axisIndexList, start, stride, length);
+          if (unitsSpec != null) grid.convertUnits (unitsSpec);
+          trans = ((MapProjection) trans).getSubset (start, stride, length);
+          view = new ColorEnhancement (trans, grid, palette, function);
+          double newScale = viewScale / strideValue;
+          view.setCenterAndScale (trans.transform (centerEarthLoc), newScale);
+          view.setSize (viewDims);
+          isGridSubset = true;
+
+          LOGGER.fine ("Grid subset center " + centerEarthLoc);
+          LOGGER.fine ("Grid subset scale " + newScale);
+
+        } // if
 
 			} // try
 
@@ -760,7 +857,13 @@ public final class cwanimate {
 					frame++;
 
 					// Render the data view to the frame 
-	    		view.render (graphics);
+	    		if (testMode) {
+            graphics.setColor (new Color (128, 128, 128));
+            graphics.fillRect (0, 0, viewDims.width, viewDims.height);
+          } // if
+          else {
+            view.render (graphics);
+          } // else
 
 	    		// Add in the color scale
 	    		graphics.setColor (boxColor);
@@ -814,12 +917,21 @@ public final class cwanimate {
 					animationComplete = (animationAxisIndex > animationAxisEnd);
 					if (!animationComplete) {
 
+            // Update the view to render the next grid 
 	      		axisIndexList.set (animationAxisListIndex, animationAxisIndex);
-	      		gridSet.releaseGrid (grid);
-	      		grid = gridSet.accessGrid (animateVar, axisIndexList);
-      	    if (unitsSpec != null) grid.convertUnits (unitsSpec);
-	      		view.setGrid (grid);
+            if (!testMode) {
+  	      		gridSet.releaseGrid (grid);
+              if (isGridSubset) {
+                grid = accessGridSubset (gridSet, animateVar, axisIndexList, start, stride, length);
+              } // if
+              else { 
+    	      		grid = gridSet.accessGrid (animateVar, axisIndexList);
+              } // else
+        	    if (unitsSpec != null) grid.convertUnits (unitsSpec);
+  	      		view.setGrid (grid);
+            } // if
 
+            // Update the animation axis slider
 						axisSliderKnob.x += axisSliderKnobIncrementX;
 						axisSliderLabelIndex += animationAxisStep;
 		        axisSliderLabelText = formatAxisValue (animationAxis, axisSliderLabelIndex);
@@ -830,6 +942,10 @@ public final class cwanimate {
 	      	} // if
 
 		    } while (!animationComplete);
+
+        // Close the data resources
+        gridSet.releaseGrid (grid);
+        gridSet.dispose();
 
 		    // Finish encoding the animation
 		    VERBOSE.info ("Finishing encoding");
@@ -856,6 +972,147 @@ public final class cwanimate {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets a grid subset with a possible connection retry if failed.
+   * 
+   * @param gridSet the grid set to access the grid.
+   * @param animateVar the variable name for the grid.
+   * @param axisIndexList the list of axis indicies, one for each axis,
+   * that specifies which grid to retrieve.  The list may be empty if the
+   * variable has no axes.
+   * @param start the starting spatial data coordinates.
+   * @param stride the spatial data stride.
+   * @param length the total number of values to access in each spatial 
+   * dimension.
+   *
+   * @return the grid corresponding to the variable name, axes, and subset
+   * specified.
+   */
+  private static Grid accessGridSubset (
+    EarthGridSet gridSet,
+    String animateVar,
+    List<Integer> axisIndexList,
+    int[] start,
+    int[] stride,
+    int[] length
+  ) throws IOException {
+
+    int tries = 0;
+    Grid grid = null;
+    do {
+
+      try {
+        grid = gridSet.accessGridSubset (animateVar, axisIndexList, start, stride, length);
+      } // try
+      catch (Exception e) {
+        LOGGER.warning ("Error accessing grid subset for " + animateVar + ", retrying in 30 seconds...");
+        try { Thread.sleep (30000); }
+        catch (InterruptedException ie) { }
+      } // catch
+      tries++;
+    } while (grid == null && tries < 5);
+
+    if (grid == null) {
+      throw new IOException ("Error accessing grid subset after 5 failed attempts");
+    } // if
+
+    return (grid);
+
+  } // accessGridSubset
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Parses an axis value specification to an axis index.
+   * 
+   * @param axis the axis to parse a value for.
+   * @param spec the axis value specification, either an integer or a date
+   * value in various ISO formats.  If a date value, the closest axis index 
+   * to the data is found.
+   * 
+   * @return the axis index corresponding to the specification or -1 if an
+   * index cannot be found.
+   */
+  private static int parseAxisValueFromSpec (
+    EarthGridSet.Axis axis, 
+    String spec
+  ) throws NumberFormatException {
+
+    int axisValue = -1;
+
+    // Parse just an axis index value
+    if (spec.matches ("^[0-9]+$")) {
+      axisValue = Integer.parseInt (spec);
+    } // if
+
+    // Parse as a date and find the corresponding axis value
+    else {
+      if (axis.getAxisType().equals ("Time")) {
+        var instant = parseToInstant (spec);
+        if (instant != null) {
+
+          // Search for the closest axis value to the specified instant
+          int closest = -1;
+          long minDiff = Long.MAX_VALUE;
+          for (int i = 0; i < axis.getSize(); i++) {
+            var candidate = (Instant) axis.getValue (i);
+            long diff = Math.abs (candidate.toEpochMilli() - instant.toEpochMilli());
+            if (diff < minDiff) {
+              minDiff = diff;
+              closest = i;
+            } // if 
+          } // for
+          if (closest != -1) axisValue = closest;
+
+        } // if
+      } // if
+    } // else
+
+    return (axisValue);
+
+  } // parseAxisValueFromSpec
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Parses an ISO date value to an instant.
+   * 
+   * @param str the ISO date value string.
+   * 
+   * @return the instant corresponding to the date string, or null if the
+   * date cannot be parsed.
+   */
+  private static Instant parseToInstant (String str) {
+
+    Instant instant = null;
+    for (var format : DATE_FORMAT_LIST) {
+      try {
+        var accessor = format.parse (str);
+        if (accessor.isSupported (ChronoField.HOUR_OF_DAY))
+          instant = Instant.from (accessor);
+        else {
+          var localDate = LocalDate.from (accessor);
+          instant = localDate.atStartOfDay (ZoneOffset.UTC).toInstant();
+        } // else
+        break;
+      } // try
+      catch (DateTimeException e) { }
+    } // for
+
+    return (instant);
+
+  } // parseToInstant
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Formats an axis index value as a number in some units or a date.
+   * 
+   * @param axis the axis to format a value.
+   * @param index the index along the axis to format a value.
+   * 
+   * @return a formatted axis value.
+   */
  	private static String formatAxisValue (
  		EarthGridSet.Axis axis,
  		int index
@@ -931,6 +1188,7 @@ public final class cwanimate {
     info.option ("-L, --logo NAME | FILE", "Set output logo");
     info.option ("-q, --query-var VARIABLE", "Prints axis extents");
     info.option ("-r, --rate FPS", "Set frame rate");
+    info.option ("-T, --test", "Run in test mode");
     info.option ("-t, --title TEXT", "Set title text");
     info.option ("-u, --units UNITS", "Set color map units");
     info.option ("-V, --variable VARIABLE", "Set variable to animate");
