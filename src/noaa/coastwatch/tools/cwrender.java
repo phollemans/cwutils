@@ -183,6 +183,7 @@ import ucar.units.Unit;
  * -g, --grid=COLOR <br>
  * -H, --shape=FILE/COLOR[/FILL] <br>
  * -L, --land=COLOR <br>
+ * --marker=LAT/LON/COLOR[/FILL[/SYMBOL[/TEXT]]]<br>
  * -p, --political=COLOR <br>
  * -S, --nostates <br>
  * -t, --topo=COLOR[/LEVEL1/LEVEL2/...] <br>
