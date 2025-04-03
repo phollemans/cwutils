@@ -150,7 +150,7 @@ import java.util.logging.Level;
  *   <dd>The axis name and index/range for animation.  Only one axis can be specified 
  *   with a range and optional step value to animate, and all other axes with a single 
  *   index value.  If an axis name is not specfied, the zero index is assumed 
- *   for that axis.  For a time axis, the start and end can be either integer 
+ *   for that axis.  For a time axis, the index or start/end can either be integer 
  *   indices or date values specified in one of several ISO date specifications:
  *   <ul>
  *     <li><b>yyyy-mm-dd</b> - date only, eg: 2011-12-03</li>
