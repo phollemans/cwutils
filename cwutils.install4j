@@ -564,7 +564,7 @@ return console.askOkCancel(message, true);
                 <serializedBean>
                   <property name="displayedText" type="string">&lt;html&gt;
 &lt;p&gt;
-&lt;b&gt;Copyright (c) 1998-2024 National Oceanic and Atmospheric Administration&lt;br&gt;
+&lt;b&gt;Copyright (c) 1998-2025 National Oceanic and Atmospheric Administration&lt;br&gt;
 All rights reserved.&lt;/b&gt;
 &lt;/p&gt;
 

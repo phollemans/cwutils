@@ -87,7 +87,7 @@ need for using the software, and a primer for software developers as well to wri
 The doc/ directory contains a copy of this license statement:
 
 CoastWatch Software Library and Utilities<br>
-Copyright (c) 1998-2024 National Oceanic and Atmospheric Administration<br>
+Copyright (c) 1998-2025 National Oceanic and Atmospheric Administration<br>
 All rights reserved.
 
 Developed by:<br>

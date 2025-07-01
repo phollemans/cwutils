@@ -1,5 +1,5 @@
 CoastWatch Software Library and Utilities
-Copyright (c) 1998-2024 National Oceanic and Atmospheric Administration
+Copyright (c) 1998-2025 National Oceanic and Atmospheric Administration
 All rights reserved.
 
 Developed by: CoastWatch / OceanWatch
