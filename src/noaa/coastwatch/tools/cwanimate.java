@@ -316,6 +316,7 @@ public final class cwanimate {
     Option widthOpt = cmd.addIntegerOption ('W', "width");
     Option zoomOpt = cmd.addStringOption ('z', "zoom");
     Option testOpt = cmd.addBooleanOption ('T', "test");
+    Option perspectOpt = cmd.addBooleanOption ('p', "perspect");
 
     try { cmd.parse (argv); }
     catch (OptionException e) {
@@ -552,7 +553,24 @@ public final class cwanimate {
 	    try {
 
   	    // Create the color enhancement for the data view
+
+
+        // boolean perspectMode = (cmd.getOptionValue (perspectOpt) != null);
+
+
+
+
+
+
+        
+
+
+
       	view = new ColorEnhancement (trans, grid, palette, function);
+
+
+
+
 
 	      // Zoom in and resize on a specified area
 	      var zoomSpec = (String) cmd.getOptionValue (zoomOpt);
@@ -969,6 +987,71 @@ public final class cwanimate {
   	} // else
 
   } // main
+
+  ////////////////////////////////////////////////////////////
+
+
+/*
+
+  private void getPerspectiveView (
+    ColorEnhancement view
+  ) {
+
+
+    var trans = view.getTransform().getEarthTransform();
+    var dims = trans.getDimensions();
+    var centerDataLoc = view.getCenter();
+
+    var viewRadius = SpheroidConstants.STD_RADIUS * 5;
+    double heightAboveSurfaceInMeters = (viewRadius - SpheroidConstants.STD_RADIUS)*1000;
+    var centerEarthLoc = trans.transform (centerDataLoc);
+    var perspProj = new GeneralVerticalNearsidePerspectiveProjection (
+      SpheroidConstants.STD_RADIUS*1000,
+      dims,
+      new AffineTransform(),
+      heightAboveSurfaceInMeters,
+      Math.toRadians (centerEarthLoc.lon),
+      Math.toRadians (centerEarthLoc.lat),
+      0, 0
+    );
+
+    var resArray = trans.getResolution (centerDataLoc);
+    var resInMeters = Math.min (resArray[Grid.ROWS], resArray[Grid.COLS]) * 1000;
+    perspProj = perspProj.getModified (centerEarthLoc, new double {res, res});
+
+
+
+
+
+
+
+*/
+
+
+
+  // params = new double[] {
+  //   0, 0,
+  //   distAboveSurface,
+  //   0,
+  //   GCTP.pack_angle (lon),
+  //   GCTP.pack_angle (lat),
+  //   0, 0
+  // };
+  // dims = new int[] {2000,2000};
+  // trans = MapProjectionFactory.getInstance().create (
+  //   ProjectionConstants.GVNSP,
+  //   0,
+  //   params,
+  //   SpheroidConstants.SPHERE,
+  //   dims,
+  //   new EarthLocation (lat, lon),
+  //   new double[] {distAboveSurface*5.3e-5, distAboveSurface*5.3e-5} 
+  // );
+
+
+
+
+//  } // getPerspectiveView
 
   ////////////////////////////////////////////////////////////
 
