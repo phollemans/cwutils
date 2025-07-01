@@ -546,8 +546,7 @@ public class CWHDFWriter
     // Unsupported transform
     // ---------------------
     else
-      throw new UnsupportedEncodingException (
-        "Unsupported earth transform");
+      throw new UnsupportedEncodingException ("Unsupported earth transform");
 
     // Write transform dimensions
     // --------------------------
