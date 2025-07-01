@@ -23,7 +23,7 @@
       <variable name="appleIdLogin" />
     </variables>
     <codeSigning macEnabled="true" macPkcs12File="${compiler:macKeystoreFile}" windowsEnabled="true" windowsKeySource="pkcs11" windowsPkcs12File="${compiler:winKeystoreFile}" windowsPkcs11Library="/usr/local/lib/libeTPkcs11.dylib" macNotarize="true" appleId="${compiler:appleIdLogin}">
-      <windowsPkcs11Identifier issuer="DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1" serial="fc407058eefcdbc86e3316c3c9946e2" subject="Terrenus Earth Sciences Software" />
+      <windowsPkcs11Identifier issuer="DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1" serial="437775dcb9ead5ea21d0023c8192fb4" subject="Terrenus Earth Sciences Software" />
       <macSearchedJars>
         <entry>jna-*</entry>
         <entry>swt-*</entry>
@@ -31,7 +31,7 @@
         <entry>toolsUI-*</entry>
       </macSearchedJars>
     </codeSigning>
-    <jreBundles jdkProviderId="AdoptOpenJDK" release="23/jdk-23.0.2+7" />
+    <jreBundles jdkProviderId="AdoptOpenJDK" release="17/jdk-17.0.14+7" />
   </application>
   <files>
     <mountPoints>
@@ -483,7 +483,7 @@
       <vmOptionsFile mode="none" />
     </launcher>
   </launchers>
-  <installerGui autoUpdateDescriptorUrl="http://www.terrenus.ca/download/cwutils/latest/updates.xml">
+  <installerGui autoUpdateDescriptorUrl="https://terrenus-storage.s3.amazonaws.com/cwutils/latest/updates.xml">
     <applications>
       <application id="installer" beanClass="com.install4j.runtime.beans.applications.InstallerApplication" styleId="1033" customIcnsFile="${compiler:iconDir}/software.icns" customIcoFile="${compiler:iconDir}/software.ico" launchInNewProcess="false">
         <serializedBean>

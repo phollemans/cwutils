@@ -224,7 +224,7 @@
   </target>
 
   <target name="packages" depends="all"
-    description="Creates package files specified by ${builds}, or default set if no builds specified (-Dtag=true tags the build)">
+    description="Creates package files specified by ${builds}, or default set if no builds specified (-Dtag=true tags the build in git, -Dsign=true signs the packages)">
 
     <!-- Check builds -->
     <if>
@@ -269,6 +269,20 @@
       </sequential>
     </for>
 
+    <!-- Check if -Dsign=true was specified at the command line -->
+
+    <if>
+      <equals arg1="${sign}" arg2="true"/>
+      <then>
+        <property name="disable.signing" value="false"/>
+        <echo message="Package signing is ENABLED"/>
+      </then>
+      <else>
+        <property name="disable.signing" value="true"/>
+        <echo message="Package signing is DISABLED"/>
+      </else>
+    </if>
+
     <!-- Call install4j task -->
     <install4j
       projectfile="cwutils.install4j"
@@ -288,6 +302,7 @@
     <if>
       <equals arg1="${tag}" arg2="true"/>
       <then>
+        <echo message="Tagging package with version ${version.full} under git"/>
         <exec executable="git">
           <arg line="tag ${version.full}"/>
         </exec>
