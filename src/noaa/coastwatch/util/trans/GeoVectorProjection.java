@@ -210,7 +210,7 @@ public class GeoVectorProjection
     if (upper < 0 || upper > array.length-1) return (Double.NaN);
     return (array[lower] + (index - lower)*(array[upper] - array[lower]));
 
-  } // getIndex
+  } // getValue
 
   ////////////////////////////////////////////////////////////
 
