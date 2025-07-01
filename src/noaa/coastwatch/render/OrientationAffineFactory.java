@@ -25,7 +25,10 @@ package noaa.coastwatch.render;
 
 // Import
 // ------
+
 import java.awt.geom.AffineTransform;
+import java.util.List;
+
 import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.GCTP;
@@ -107,14 +110,28 @@ public class OrientationAffineFactory {
 
       // Get north and east vectors
       // --------------------------
-      double[] north = new double[2];
-      double[] east = new double[2];
+      double[] zero = new double[] {0, 0}; 
+      double[] north = new double[] {0, 0};
+      double[] east = new double[] {0, 0};
       int[] dims = trans.getDimensions();
-      DataLocation dataLoc = new DataLocation ((dims[Grid.ROWS]-1)/2.0,
-        (dims[Grid.COLS]-1)/2.0);
-      EarthLocation earthLoc = trans.transform (dataLoc);
-      trans.getWorldAxes (earthLoc, north, east);
-
+      var candidateList = List.of (
+        new DataLocation ((dims[Grid.ROWS]-1)/2.0, (dims[Grid.COLS]-1)/2.0),
+        new DataLocation ((dims[Grid.ROWS]-1)*0.25, (dims[Grid.COLS]-1)/2.0),
+        new DataLocation ((dims[Grid.ROWS]-1)*0.75, (dims[Grid.COLS]-1)/2.0),
+        new DataLocation ((dims[Grid.ROWS]-1)/2.0, (dims[Grid.COLS]-1)*0.25),
+        new DataLocation ((dims[Grid.ROWS]-1)/2.0, (dims[Grid.COLS]-1)*0.75)
+      );
+      int candidateIndex = 0;
+      DataLocation dataLoc = null;
+      EarthLocation earthLoc = null;
+      while (candidateIndex < candidateList.size() && (Arrays.equals (north, zero) || Arrays.equals (east, zero))) {
+        dataLoc = candidateList.get (candidateIndex);
+        earthLoc = trans.transform (dataLoc);
+        trans.getWorldAxes (earthLoc, north, east);
+        candidateIndex++;
+      } // while
+      LOGGER.fine ("Orientation candidate data location = " + dataLoc +
+        ", earth location = " + earthLoc);
       LOGGER.fine ("World axes north = " + Arrays.toString (north) +
         ", east = " + Arrays.toString (east));
 
@@ -147,14 +164,23 @@ public class OrientationAffineFactory {
        * (negative value of the z-component).
        *
        * Before correction we may have the following cases:
+       * 
+       * z3 < 0 (ie: z axis of NxE into the screen, rotation required):
        *
-       *    N                   N        +-----> E    E <-----+
-       *    ^                   ^        |                    |
-       *    |                   |        |                    |
-       *    |                   |        V                    V
-       *    +-----> E   E <-----+        N                    N
+       *            N     +-----> E    N <-----+     E  
+       *            ^     |                    |     ^
+       *            |     |                    |     |
+       *            |     V                    V     |
+       *    E <-----+     N                    E     +-----> N
        *
-       *     z3 < 0       z3 > 0          z3 > 0        z3 < 0
+       * z3 > 0 (ie: z axis of NxE out of the screen, axis flip required):
+       * 
+       *            E     +-----> N    E <-----+     N  
+       *            ^     |                    |     ^
+       *            |     |                    |     |
+       *            |     V                    V     |
+       *    N <-----+     E                    N     +-----> E
+       *
        */
       if (z3 < 0) {
         /**
