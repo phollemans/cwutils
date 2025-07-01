@@ -31,6 +31,12 @@ import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.Grid;
 import noaa.coastwatch.util.trans.SensorScanProjection;
 
+import java.util.List;
+import java.util.ArrayList;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
+
 /**
  * The <code>EllipsoidPerspectiveProjection</code> class simulates the
  * earth view that a theoretical satellite would have from orbit.  The
@@ -51,6 +57,8 @@ import noaa.coastwatch.util.trans.SensorScanProjection;
  */
 public class EllipsoidPerspectiveProjection
   extends SensorScanProjection {
+
+  private static final Logger LOGGER = Logger.getLogger (EllipsoidPerspectiveProjection.class.getName());
 
   // Constants
   // ---------
@@ -681,6 +689,11 @@ public class EllipsoidPerspectiveProjection
     // ---------------------------------------------------------
     gamma = ELL_C + dot (satVector, multiply (ELL_A, satVector, null));
 
+
+//    createBoundaryHandler();
+
+
+
   } // EllipsoidPerspectiveProjection constructor
 
   ////////////////////////////////////////////////////////////
@@ -867,6 +880,178 @@ public class EllipsoidPerspectiveProjection
     } // else
 
   } // transformImpl
+
+  ////////////////////////////////////////////////////////////
+
+  /** The ellipsoid implementation of the boundary cut test. */
+  private boolean isBoundaryCut (
+    EarthLocation a,
+    EarthLocation b
+  ) {
+
+    boolean cut;
+
+    DataLocation dataLoc = new DataLocation (2);
+
+    transform (a, dataLoc);
+    boolean aValid = dataLoc.isValid();
+    transform (b, dataLoc);
+    boolean bValid = dataLoc.isValid();
+
+    cut = (!aValid || !bValid);
+
+    return (cut);
+    
+  } // isBoundaryCut
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Computes the intersection of the ellipsoid with the specfied line,
+   * x(t) = p + t*d_hat.
+   * 
+   * @param p the line base point.
+   * @param d_hat the line unit direction vector.
+   * @param t the output solution values to fill for t, will contain Double.NaN 
+   * values for no solution.
+   */
+  private void intersect (
+    double[] p,
+    double[] d_hat,
+    double[] t
+  ) {
+
+    double[] product_A_d_hat = new double[3];
+    multiply (ELL_A, d_hat, product_A_d_hat);
+    double alpha = dot (d_hat, product_A_d_hat);
+    double beta = 2*dot (p, product_A_d_hat);
+    double this_gamma =  ELL_C + dot (p, multiply (ELL_A, p, null));
+
+    qsolve (alpha, beta, this_gamma, t);
+
+  } // intersect
+
+  ////////////////////////////////////////////////////////////
+
+  /** Creates a boundary handler for this projection. */
+  private void createBoundaryHandler () {
+
+    List<EarthLocation> locList = new ArrayList<>();
+
+    // What we do here is as follows:
+    //
+    // 1) For a boundary point b on the ellipsoid there are two conditions
+    // 
+    //   (b-p).nhat(b) = 0    (vector from p to b is perpendicular to unit ellipsoid surface normal at b)
+    //   b.Ab = 1             (point b is on the ellipsoid surface)
+    // 
+    // Combining these equations, we find that:
+    // 
+    //   p.Ab = 1
+    //
+    // Which is the equation of a plane, on which all points b lie.
+    //
+    // 2) Calculate the intersection "center" c along the line connecting p and 
+    // the origin through the plane:
+    //
+    //   c = p / (p.Ap)
+    //
+    // 3) Compute three orthogonal basis vectors for the plane.  The first
+    // is the normal to the plane n_c:
+    //
+    //   nc = (d/dx, d/dy, d/dz) (p.Ax - 1)
+    //       = (px, py, pz Re^2/Rp^2)
+    //       = Ap
+    //   nc_hat = nc / | nc | = (ncx, ncy, ncz)   (unit vector normal to the plane)
+    //
+    // The second and third are u_hat and v_hat defined as follow:
+    //
+    //   u_hat = ( nc_hat x x_hat, if ncx = n_min
+    //           ( nc_hat x y_hat, if ncy = n_min
+    //           ( nc_hat x z_hat, if ncz = n_min
+    //   v = nc_hat x u_hat
+    // 
+    // 4) Compute a series of unit vectors that are linear combinations 
+    // of u_hat and v_hat using an angle theta as a parameter:
+    //
+    //   r_hat(theta) = u_hat cos(theta) + v_hat sin(theta)
+    //
+    // 5) For each unit vector computed, solve for the intersection with the
+    // ellipsoid surface of the line given by:
+    //
+    //   l(t) = c + t r_hat(theta)
+    //
+    // The points of the intersection are the boundary points needed.
+
+    // Compute intersection point c with plane 
+    double[] tempVector = new double[3];
+    double[] c = new double[3];
+    double alpha = dot (satVector, multiply (ELL_A, satVector, tempVector));
+    multiply (satVector, (1/alpha), c);
+
+    // Compute orthogonal basis vectors
+    double[] nc_hat = new double[3];
+    multiply (ELL_A, satVector, nc_hat);
+    normalize (nc_hat, nc_hat);
+
+    double n_min = Double.MAX_VALUE;
+    int n_min_component = -1;
+    for (int i = X; i <= Z; i++) {
+      if (nc_hat[i] < n_min) {
+        n_min = nc_hat[i];
+        n_min_component = i;
+      } // if
+    } // for
+    if (n_min_component == -1) {
+      throw new IllegalStateException ("No minimum component found for surface normal vector nc_hat");
+    } // if
+    double[] u_hat = new double[3];
+    double[] v_hat = new double[3];
+    switch (n_min_component) {
+    case X: cross (nc_hat, XHAT, u_hat); break;
+    case Y: cross (nc_hat, YHAT, u_hat); break;
+    case Z: cross (nc_hat, ZHAT, u_hat); break;
+    } // switch
+    cross (nc_hat, u_hat, v_hat);
+
+    // Compute unit vectors parameterized by angle theta and then intersection points
+    double[] r_hat = new double[3];
+    double[] u_hat_cos_theta = new double[3];
+    double[] v_hat_sin_theta = new double[3];
+    double[] t_array = new double[2];
+    double[] intersection_ecef = new double[3];    
+    int points = 720;
+    double d_theta = 2*Math.PI / points;
+
+    for (int point = 0; point <= points; point++) {
+      double theta = d_theta * point;
+      multiply (u_hat, Math.cos (theta), u_hat_cos_theta);
+      multiply (v_hat, Math.sin (theta), v_hat_sin_theta);
+      add (u_hat_cos_theta, v_hat_sin_theta, r_hat);
+      intersect (c, r_hat, t_array);
+      double t = Math.max (t_array[0], t_array[1]);
+      if (Double.isNaN (t)) {
+        throw new IllegalStateException ("No intersection found for r_hat vector at theta = " + theta);
+      } // if
+      multiply (r_hat, t, intersection_ecef);
+      add (c, intersection_ecef, intersection_ecef);
+      var intersectionEarthLoc = ECEFToGD (intersection_ecef, 0, null);
+      LOGGER.finer ("Found location " + intersectionEarthLoc.format (EarthLocation.RAW) + " at theta " + theta);
+      locList.add (intersectionEarthLoc);
+    } // for
+
+
+
+    // FIXME: Something goes wrong when polygons are cut using this boundary.  In some
+    // cases there's an exception from the geometry processing classes, and in
+    // other cases the polygons aren't cut properly.  We comment out the call to
+    // this method in the constructor for now.
+
+
+
+    boundaryHandler = new BoundaryHandler ((a, b) -> isBoundaryCut (a, b), List.of (locList));
+
+  } // createBoundaryHandler
 
   ////////////////////////////////////////////////////////////
 
