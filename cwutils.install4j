@@ -69,7 +69,7 @@
           <entry location="lib" />
           <entry location="doc/cw_cf_metadata.pdf" />
           <entry location="doc/metadata_comparison_v1_1_jan_2010.pdf" />
-          <entry location="doc/cwutils_ug_4_0_1.pdf" />
+          <entry location="doc/cwutils_ug_4_1_0.pdf" />
           <entry location="doc/license.txt" />
           <entry location="doc/help" />
           <entry location="data" />
@@ -737,7 +737,7 @@ OTHER DEALINGS WITH THE SOFTWARE.
                         <property name="name" type="string">User's Guide</property>
                         <property name="target">
                           <object class="java.io.File">
-                            <string>doc/cwutils_ug_4_0_0.pdf</string>
+                            <string>doc/cwutils_ug_4_1_0.pdf</string>
                           </object>
                         </property>
                       </object>

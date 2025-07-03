@@ -12,7 +12,84 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 4.0.1 -- Dec 2024}
+\section{Version 4.1.0 -- June 2024}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\begin{itemize}
+
+\item The Java VM version for installation packages with bundled Java 
+VMs is now 17.0.14 for the latest bug and security fixes.
+
+\item CDAT now updates the display when the user is using the color
+enhancement text fields and hits the TAB key to move to the next field.
+
+\item The cwanimate tool has been enhanced to:
+\begin{itemize}
+  \item Parse ISO style time values for the -{-}axis option
+  \item Run in test mode using the new -{-}test option
+  \item Access subsets of the gridded needed to render up to 20x faster
+  for global animations
+\end{itemize}
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+\item The hybrid CoastWatch / CF metadata NetCDF data format reader now
+correctly passes on satellite and sensor metadata if specified, even if 
+generic source metadata is also found.
+
+\item The output 'source\_index' variable data from the cwcomposite tool 
+using the -{-}savemap option now uses -1 for the specified fill value 
+attribute instead of -32768 for consistency with actual fill values used in
+the data array.
+
+\item Cylindrical projection calculations from data in NetCDF files now 
+correctly performs a latitude/longitude to row/column lookup in cases
+where 1D geographic location vectors are specified in descending order rather
+than ascending order.
+
+\item Command line calls written as metadata attributes into rendered images 
+and output HDF and NetCDF data files now include quotes in parameters with
+spaces in order to properly recreate command line calls.
+
+\item Output from the cwanimate tool now correctly labels the animation 
+axis for step values greater than 1.
+
+\item The CDAT file chooser now correctly highlights the selected file when
+CDAT is opened by double clicking the file in a file manager, or when the
+file is dragged onto the CDAT window.
+
+\item The PDF files written by CDAT are now the same size as those writen
+from cwrender.  Previously they were 3-4 times larger due to a duplicate
+image rendering issue.
+
+\item The CDAT file chooser was crashing the application if the data preview
+was still rendering when a new variable or file was selected.  This has
+been fixed.
+
+\item The color scale legend in CDAT now correctly adjusts its size when
+the enhancement range is changed.  Previous versions truncated the color
+scale.
+
+\item Rectangular area surveys in CDAT now perform correctly even in cases
+when the data image has been reoriented for display.
+
+\item The histogram statistics panel for rectangular and polygon surveys in
+CDAT now properly displays vertical bars in all cases, rather than diagonal
+lines on some displays.
+
+\item Polar stereographic projection data written in bottom-up rather
+than top-down row ordering now displays correctly in CDAT.  Previously
+it appeared mirrored.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 4.0.1 -- December 2024}
 
 \subsection*{\bigicon{box_software} Updates}
 
