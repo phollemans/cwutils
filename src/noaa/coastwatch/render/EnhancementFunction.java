@@ -222,6 +222,21 @@ public abstract class EnhancementFunction
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * 
+   * @since 4.1.5
+   */
+  public String toString () { 
+
+    return (getClass().getName() + "[" +
+      "range=" + Arrays.toString (range) + "," +
+      "reverse=" + reverse + "]"
+    );
+
+  } // toString
+
+  ////////////////////////////////////////////////////////////
+
 } // EnhancementFunction class
 
 ////////////////////////////////////////////////////////////////////////

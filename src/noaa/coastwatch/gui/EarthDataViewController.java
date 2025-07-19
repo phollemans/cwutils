@@ -897,11 +897,17 @@ public class EarthDataViewController {
 
         viewPanel.stopRendering();
         if (isAdjusting) {
+
+          LOGGER.fine ("Detected adjusting enhancement function for data view");
+
           enhancementView.setAdjustingFunction (newFunction);
           needsRepaint = true;
         } // if
         else {
           if (!enhancementView.getFunction().equals (newFunction)) {
+
+            LOGGER.fine ("Detected final enhancement function for data view");
+
             enhancementView.setFunction (newFunction);
             saveEnhancementSettings (enhancementView);
             needsRepaint = true;
@@ -914,13 +920,18 @@ public class EarthDataViewController {
       // ------------------
       if (needsRepaint) {
 
-        LOGGER.fine ("Repainting view panel for new " + newFunction.describe() + 
-          " enhancement function with range " + Arrays.toString (newFunction.getRange()));
+        LOGGER.fine ("Repainting view panel for new function " + newFunction);
 
         viewPanel.repaint();
         legendPanel.setLegend (enhancementView.getLegend());
         legendPanel.repaint();
       } // if
+
+      else {
+
+        LOGGER.fine ("No view panel repaint needed for new function " + newFunction);
+
+      } // else
 
     } // propertyChange
   } // EnhancementListener class

@@ -577,7 +577,10 @@ public class EnhancementChooser
         func.setRange (actualRange);
         palettePanel.setFunction (func);
         enhancementFunctionPanel.setFunction (func);
+
+        LOGGER.fine ("Firing property change for function, new value = " + func + ", adjusting = " + getValueIsAdjusting());
         EnhancementChooser.this.firePropertyChange (FUNCTION_PROPERTY, null, getFunction());
+
       } // if
 
     } // stateChanged
@@ -713,7 +716,10 @@ public class EnhancementChooser
         func.setRange (actualRange);
         palettePanel.setFunction (func);
         enhancementFunctionPanel.setFunction (func);
+
+        LOGGER.fine ("Firing property change for function, new value = " + func);
         EnhancementChooser.this.firePropertyChange (FUNCTION_PROPERTY, null, getFunction());
+
       } // if
 
     } // actionPerformed
@@ -908,6 +914,9 @@ public class EnhancementChooser
 
     // Fire change event
     // -----------------
+
+    LOGGER.fine ("Firing property change for function, new value = " + func);
+
     EnhancementChooser.this.firePropertyChange (FUNCTION_PROPERTY, null, 
       getFunction());
 
@@ -1004,6 +1013,13 @@ public class EnhancementChooser
    */
   public boolean getValueIsAdjusting () {
   
+    // FIXME: There is a known issue here on MacOS, that sometimes the
+    // OS doesn't report a mouse release event when the mouse cursor
+    // is outside the application window.  So the return value for
+    // this method is true when it should be false.  This makes it so
+    // that the enhancement function may not update to it's non-adjusting
+    // state for users of this method.
+
     return (minSlider.getValueIsAdjusting() || 
       maxSlider.getValueIsAdjusting());
 
