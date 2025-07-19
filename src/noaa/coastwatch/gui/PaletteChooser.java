@@ -41,6 +41,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.BorderFactory;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.JLabel;
@@ -218,9 +219,9 @@ public class PaletteChooser
     paletteListContainer.setBorder (new TitledBorder (new EtchedBorder(), 
       "Palette List"));
 
-    var searchPanel = new JPanel (new FlowLayout (FlowLayout.LEFT, 5, 5));
-    paletteListContainer.add (searchPanel, BorderLayout.NORTH);
-    searchPanel.add (new JLabel ("Search:"));
+    var searchPanel = new JPanel (new BorderLayout (5, 5));
+    searchPanel.setBorder (BorderFactory.createEmptyBorder (5, 2, 5, 2));    paletteListContainer.add (searchPanel, BorderLayout.NORTH);
+    searchPanel.add (new JLabel ("Search:"), BorderLayout.WEST);
     var searchField = new JTextField (10);
     searchField.getDocument().addDocumentListener (new DocumentListener () {
       private void changed () { searchEvent (searchField.getText()); }
@@ -228,10 +229,10 @@ public class PaletteChooser
       public void removeUpdate(DocumentEvent e) { changed(); }
       public void changedUpdate(DocumentEvent e) { changed(); }
     });
-    searchPanel.add (searchField);
+    searchPanel.add (searchField, BorderLayout.CENTER);
     var clearButton = new JButton ("Clear");
     clearButton.addActionListener (event -> searchField.setText (""));
-    searchPanel.add (clearButton);
+    searchPanel.add (clearButton, BorderLayout.EAST);
     bottomPanel.add (paletteListContainer, BorderLayout.CENTER);
 
     var palModel = new DefaultListModel<String>();
@@ -371,7 +372,8 @@ public class PaletteChooser
   private void searchEvent (String text) {
 
     var paletteNameList = PaletteFactory.getPredefined();
-    paletteNameList.removeIf (name -> !name.contains (text));
+    var textLower = text.toLowerCase();
+    paletteNameList.removeIf (name -> !name.toLowerCase().contains (textLower));
 
     var model = (DefaultListModel<String>) paletteList.getModel();
     model.clear();
