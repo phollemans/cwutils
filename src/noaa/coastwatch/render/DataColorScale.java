@@ -188,7 +188,8 @@ public class DataColorScale
         if (function instanceof StepEnhancement)
           norm = function.getValue (function.getInverse (norm));
         if (reverse) norm = 1-norm;
-        int index = (int) Math.round (norm*(colors-1));
+        int index = (int) Math.floor (norm*colors);
+        if (index > colors-1) index = colors - 1;
         imageGraphics.setColor (new Color (model.getRGB (index)));
         imageGraphics.drawLine (0, y1, imageDims.width-1, y2);
       } // for
@@ -315,7 +316,8 @@ public class DataColorScale
         if (function instanceof StepEnhancement)
           norm = function.getValue (function.getInverse (norm));
         if (reverse) norm = 1-norm;
-        int index = (int) Math.round (norm*(colors-1));
+        int index = (int) Math.floor (norm*colors);
+        if (index > colors-1) index = colors - 1;
         imageGraphics.setColor (new Color (model.getRGB (index)));
         imageGraphics.drawLine (x1, 0, x2, imageDims.height-1);
       } // for
