@@ -220,7 +220,8 @@ public class PaletteChooser
       "Palette List"));
 
     var searchPanel = new JPanel (new BorderLayout (5, 5));
-    searchPanel.setBorder (BorderFactory.createEmptyBorder (5, 2, 5, 2));    paletteListContainer.add (searchPanel, BorderLayout.NORTH);
+    searchPanel.setBorder (BorderFactory.createEmptyBorder (5, 2, 5, 2));
+    paletteListContainer.add (searchPanel, BorderLayout.NORTH);
     searchPanel.add (new JLabel ("Search:"), BorderLayout.WEST);
     var searchField = new JTextField (10);
     searchField.getDocument().addDocumentListener (new DocumentListener () {
