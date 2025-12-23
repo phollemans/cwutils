@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="10.0.9" transformSequenceNumber="10">
+<install4j version="11.0.5" transformSequenceNumber="11">
   <directoryPresets config="../../../Terrenus/Code Signing/Microsoft Authenticode/DigiCert/Terrenus_Microsoft_Certificates_Mar_23_2022.p12" />
   <application name="CoastWatch Utilities" applicationId="1290-4459-1345-6363" mediaDir="${compiler:pkgDir}" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}-${compiler:osName}-${compiler:arch}${compiler:novm}" compression="9" lzmaCompression="true" pack200Compression="true" shortName="cwutils" publisher="National Oceanic and Atmospheric Administration" publisherWeb="http://coastwatch.noaa.gov" version="3.0.0" allPathsRelative="true" macVolumeId="7b43b8e08af23735" javaMinVersion="11.0">
     <variables>
@@ -17,12 +17,13 @@
       <variable name="novm" />
       <variable name="cdatExecutable" value="cdat" />
       <variable name="cwmasterExecutable" value="cwmaster" />
-      <variable name="cwstatusExecutable" value="cwstatus" />
       <variable name="winKeystoreFile" />
       <variable name="macKeystoreFile" />
-      <variable name="appleIdLogin" />
+      <variable name="appleIssuerId" />
+      <variable name="appleKeyId" />
+      <variable name="applePrivateKey" />
     </variables>
-    <codeSigning macEnabled="true" macPkcs12File="${compiler:macKeystoreFile}" windowsEnabled="true" windowsKeySource="pkcs11" windowsPkcs12File="${compiler:winKeystoreFile}" windowsPkcs11Library="/usr/local/lib/libeTPkcs11.dylib" macNotarize="true" appleId="${compiler:appleIdLogin}">
+    <codeSigning macEnabled="true" macPkcs12File="${compiler:macKeystoreFile}" windowsEnabled="true" windowsKeySource="pkcs11" windowsPkcs12File="${compiler:winKeystoreFile}" macNotarize="true" macApiIssuer="${compiler:appleIssuerId}" macApiKey="${compiler:appleKeyId}" macApiPrivateKey="${compiler:applePrivateKey}" windowsPkcs11Library="/usr/local/lib/libeTPkcs11.dylib">
       <windowsPkcs11Identifier issuer="DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1" serial="437775dcb9ead5ea21d0023c8192fb4" subject="Terrenus Earth Sciences Software" />
       <macSearchedJars>
         <entry>jna-*</entry>
@@ -69,7 +70,7 @@
           <entry location="lib" />
           <entry location="doc/cw_cf_metadata.pdf" />
           <entry location="doc/metadata_comparison_v1_1_jan_2010.pdf" />
-          <entry location="doc/cwutils_ug_4_1_0.pdf" />
+          <entry location="doc/cwutils_ug_4_1_5.pdf" />
           <entry location="doc/license.txt" />
           <entry location="doc/help" />
           <entry location="data" />
@@ -111,7 +112,7 @@
   </files>
   <launchers>
     <launcher name="CoastWatch Data Analysis Tool" id="1233" menuName="CoastWatch Data Analysis Tool" icnsFile="${compiler:iconDir}/cdat.icns">
-      <executable name="${compiler:cdatExecutable}" iconSet="true" iconFile="${compiler:iconDir}/cdat.ico" executableDir="bin" executableMode="gui" changeWorkingDirectory="false" singleInstance="true" />
+      <executable name="${compiler:cdatExecutable}" iconSet="true" iconFile="${compiler:iconDir}/cdat.ico" executableDir="bin" redirectStderr="false" executableMode="gui" changeWorkingDirectory="false" singleInstance="true" />
       <splashScreen show="true" width="480" height="270" bitmapFile="./resources/noaa/coastwatch/gui/cwutils_splash.png">
         <text>
           <statusLine x="165" y="161" text="CoastWatch Data Analysis Tool" fontSize="10" fontColor="255,255,255" bold="true" />
@@ -797,7 +798,7 @@ OTHER DEALINGS WITH THE SOFTWARE.
               <property name="title" type="string">Select Update Schedule</property>
             </serializedBean>
             <formComponents>
-              <formComponent id="332" beanClass="com.install4j.runtime.beans.formcomponents.UpdateScheduleSelectorComponent">
+              <formComponent id="332" beanClass="com.install4j.runtime.beans.formcomponents.UpdateScheduleSelectorComponent" useExternalParametrization="true" externalParametrizationMode="include">
                 <serializedBean>
                   <property name="initialUpdateSchedule" type="enum" class="com.install4j.api.update.UpdateSchedule" value="WEEKLY" />
                 </serializedBean>
@@ -1548,8 +1549,12 @@ context.goForward(1, true, true);
 }
 return true;</validation>
                 <postActivation>WizardContext wizardContext = context.getWizardContext();
-wizardContext.setNextButtonVisible(false);
-wizardContext.setCancelButtonVisible(false);</postActivation>
+
+//wizardContext.setNextButtonVisible(false);
+//wizardContext.setCancelButtonVisible(false);
+wizardContext.setControlButtonVisible (ControlButtonType.NEXT, false);
+wizardContext.setControlButtonVisible (ControlButtonType.CANCEL, false);
+</postActivation>
                 <formComponents>
                   <formComponent id="978" beanClass="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent" useExternalParametrization="true" externalParametrizationName="Header" externalParametrizationMode="include">
                     <serializedBean>
@@ -1996,7 +2001,6 @@ if (context.isUnattended()) {
         <variable name="vmOptionsFile" value="${APPDATA}\CoastWatch\cwutils.vmoptions" />
         <variable name="cdatExecutable" value="CoastWatch Data Analysis Tool" />
         <variable name="cwmasterExecutable" value="CoastWatch Master Tool" />
-        <variable name="cwstatusExecutable" value="CoastWatch Status Tool" />
       </variables>
       <jreBundle usePack200="false" />
     </windows>
@@ -2013,7 +2017,6 @@ if (context.isUnattended()) {
         <variable name="vmOptionsFile" value="$(APPDATA}\CoastWatch\cwutils.vmoptions" />
         <variable name="cdatExecutable" value="CoastWatch Data Analysis Tool" />
         <variable name="cwmasterExecutable" value="CoastWatch Master Tool" />
-        <variable name="cwstatusExecutable" value="CoastWatch Status Tool" />
       </variables>
     </windowsArchive>
     <unixArchive name="linux64 (tgz)" id="288" installDir="${compiler:baseInstallDir}" overridePrincipalLanguage="true">
@@ -2052,7 +2055,7 @@ if (context.isUnattended()) {
       </variables>
       <jreBundle jreBundleSource="none" />
     </unixArchive>
-    <macosFolder name="macosx64 (dmg)" id="276" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" volumeName="${compiler:sys.fullName} ${compiler:sys.version}">
+    <macosFolder name="macosx64 (dmg)" id="276" installDir="CoastWatch Utilities" overridePrincipalLanguage="true" volumeName="${compiler:sys.fullName} ${compiler:sys.version}" architecture="amd64">
       <exclude>
         <entry location="lib/native/linux_x86_64" />
         <entry location="lib/native/windows_x86_64" />
@@ -2065,7 +2068,6 @@ if (context.isUnattended()) {
         <variable name="vmOptionsFile" value="${HOME}/Library/Application Support/CoastWatch/cwutils.vmoptions" />
         <variable name="cdatExecutable" value="CoastWatch Data Analysis Tool" />
         <variable name="cwmasterExecutable" value="CoastWatch Master Tool" />
-        <variable name="cwstatusExecutable" value="CoastWatch Status Tool" />
         <variable name="nativeLibOption" value="-Djava.library.path=$app_home/lib/native/${compiler:libDir}" />
       </variables>
     </macosFolder>
@@ -2085,10 +2087,22 @@ if (context.isUnattended()) {
         <variable name="vmOptionsFile" value="${HOME}/Library/Application Support/CoastWatch/cwutils.vmoptions" />
         <variable name="cdatExecutable" value="CoastWatch Data Analysis Tool" />
         <variable name="cwmasterExecutable" value="CoastWatch Master Tool" />
-        <variable name="cwstatusExecutable" value="CoastWatch Status Tool" />
       </variables>
       <jreBundle platform="macos-amd64" />
     </unixArchive>
+    <linuxDeb name="linux64 (deb)" id="1680" description="CoastWatch Utilities Software" maintainerEmail="coastwatch.info@noaa.gov" architectureSet="true" architecture="amd64">
+      <exclude>
+        <entry location="lib/native/macosx_x86_64" />
+        <entry location="lib/native/windows_x86_64" />
+        <entry location="lib/native/windows_x86" />
+      </exclude>
+      <variables>
+        <variable name="osName" value="linux" />
+        <variable name="vmLafOptions" value="-Dswing.defaultlaf=com.formdev.flatlaf.FlatLightLaf" />
+        <variable name="arch" value="x86_64" />
+        <variable name="vmOptionsFile" value="S(HOME)/.coastwatch/cwutils.vmoptions" />
+      </variables>
+    </linuxDeb>
   </mediaSets>
   <buildIds buildAll="false">
     <mediaSet refId="278" />

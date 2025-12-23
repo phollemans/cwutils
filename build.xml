@@ -189,9 +189,10 @@
   <!-- Define package targets -->
   <!-- ********************** -->
   <property name="builds.default" value="linux64,linux64.novm,windows64,macosx64"/>
-  <property name="builds.all" value="linux64,linux64.novm,windows64,macosx64"/>
+  <property name="builds.all" value="linux64,linux64.novm,linux64.deb,windows64,macosx64"/>
   <property name="build.id.linux64" value="288"/>
   <property name="build.id.linux64.novm" value="710"/>
+  <property name="build.id.linux64.deb" value="1680"/>
   <property name="build.id.windows64" value="278"/>
   <property name="build.id.windows64.zip" value="1656"/>
   <property name="build.id.macosx64" value="276"/>
@@ -275,11 +276,11 @@
       <equals arg1="${sign}" arg2="true"/>
       <then>
         <property name="disable.signing" value="false"/>
-        <echo message="Package signing is ENABLED"/>
+        <echo message="Package signing and Apple notarization is ENABLED"/>
       </then>
       <else>
         <property name="disable.signing" value="true"/>
-        <echo message="Package signing is DISABLED"/>
+        <echo message="Package signing and Apple notarization is DISABLED"/>
       </else>
     </if>
 
@@ -289,13 +290,15 @@
       release="${version.full}"
       buildids="${build.ids}"
       disableSigning="${disable.signing}"
+      disableNotarization="${disable.signing}"
       macKeystorePassword="${mac.keystore.password}"
       winKeystorePassword="${win.keystore.password}"
-      appleIdPassword="${install4j.appleid.password}"
       verbose="true">
       <vmParameter value="-Xmx1024m"/>
       <variable name="macKeystoreFile" value="${mac.keystore.file}"/>
-      <variable name="appleIdLogin" value="${install4j.appleid.login}"/>
+      <variable name="appleIssuerId" value="${install4j.apple.issuer.id}"/>
+      <variable name="appleKeyId" value="${install4j.apple.key.id}"/>
+      <variable name="applePrivateKey" value="${install4j.apple.private.key}"/>
     </install4j>
 
     <!-- Tag the package version -->
