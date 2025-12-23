@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE servertable SYSTEM "http://coastwatch.noaa.gov/xml/servertable.dtd">
-
-<servertable>
-  <server name="CoastWatch Central" location="http://coastwatch.noaa.gov/cgi-bin/dods/nph-dods/data" />
-  <server name="CoastWatch Caribbean/GOM" location="http://cwcaribbean.aoml.noaa.gov/cgi-bin/DODS/nph-dods/cwatch-web/data" />
-  <server name="Coral Reef Watch" location="http://data.nodc.noaa.gov/cgi-bin/nph-dods/crw/CRW50km" />
-</servertable>
