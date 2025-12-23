@@ -502,9 +502,15 @@ public final class cdat extends JFrame {
     menuItem.addActionListener (event -> windowSizeEvent (new Dimension (1366, 1024)));
     submenu.add (menuItem);
 
-    menuItem = new JMenuItem ("Custom Window Size");
+    menuItem = new JMenuItem ("Wide (1820x1024)");
     menuItem.setMnemonic (KeyEvent.VK_C);
     menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_4, keymask));
+    menuItem.addActionListener (event -> windowSizeEvent (new Dimension (1820, 1024)));
+    submenu.add (menuItem);
+
+    menuItem = new JMenuItem ("Custom Window Size");
+    menuItem.setMnemonic (KeyEvent.VK_C);
+    menuItem.setAccelerator (KeyStroke.getKeyStroke (KeyEvent.VK_5, keymask));
     menuItem.addActionListener (event -> windowCustomSizeEvent());
     submenu.add (menuItem);
 
@@ -1507,18 +1513,30 @@ public final class cdat extends JFrame {
 
         // Initialize resources
         // --------------------
+        String op = null;
         try {
+
+          op = "setting up the palettes";
           ResourceManager.setupPalettes();
+
+          op = "setting up the default overlay groups";
           ResourceManager.setupOverlays();
+
+          op = "accessing the overlay groups";
           ResourceManager.getOverlayManager().getGroups();
+
+          op = "setting up the default user preferences";
           ResourceManager.setupPreferences();
+
+          op = "reading the user preferences";
           Preferences prefs = ResourceManager.getPreferences();
           setEarthLocFormat (prefs);
           EarthDataReader.setUnitsMap (prefs.getUnitsMap());
+
         } // try
         catch (Exception e) {
           JOptionPane.showMessageDialog (frame,
-            "An error has been detected in the user resource files:\n" +
+            "An error has been detected " + op + ":\n" +
             e.toString() + "\n" + 
             "Please correct the problem and try again.", 
             "Error", JOptionPane.ERROR_MESSAGE);
