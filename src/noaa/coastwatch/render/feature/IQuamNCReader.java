@@ -105,10 +105,10 @@ public class IQuamNCReader
   };
 
   /** The expected attribute name. */
-  private final static String EXPECTED_ATT_NAME = "id";
+  private final static String EXPECTED_ATT_NAME = "title";
 
   /** The expected attribute value. */
-  private final static String EXPECTED_ATT_REGEX = "STAR-L2i-iQuam-V2.*";
+  private final static String EXPECTED_ATT_REGEX = ".*iQuam2.*";
   
   /** The default chunk size for unchunked data. */
   private final static int DEFAULT_CHUNK_SIZE = 10000;
