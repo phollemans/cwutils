@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.Collections;
 
 /** 
  * The <code>SerializedObjectManager</code> class can be used to save,
@@ -79,25 +80,18 @@ public class SerializedObjectManager {
   ////////////////////////////////////////////////////////////
 
   /** Gets the list of object names available. */
-  public List getObjectNames () {
+  public List<String> getObjectNames () {
     
-    // Find object files
-    // -----------------
-    File[] files = objectDir.listFiles (new FilenameFilter () {
-        public boolean accept (File dir, String name) {
-          return (name.endsWith (FILE_EXTENSION));
-        } // accept
-      });
-
-    // Strip file extensions
-    // ---------------------
-    List objectList = new ArrayList();
-    for (int i = 0; i < files.length; i++) {
-      String fileName = files[i].getName();
-      String objectName = fileName.substring (0, 
-        fileName.lastIndexOf (FILE_EXTENSION));
+    // List the object file names, strip the file extension, and 
+    // sort in alphabetic order.
+    File[] files = objectDir.listFiles ((dir, name) -> name.endsWith (FILE_EXTENSION));
+    List<String> objectList = new ArrayList<>();
+    for (var file : files) {
+      var fileName = file.getName();
+      var objectName = fileName.substring (0, fileName.lastIndexOf (FILE_EXTENSION));
       objectList.add (objectName);
     } // for
+    Collections.sort (objectList);
 
     return (objectList);
 
