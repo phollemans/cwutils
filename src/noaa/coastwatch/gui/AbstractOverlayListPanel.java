@@ -441,13 +441,17 @@ public abstract class AbstractOverlayListPanel
         groupPanel.setBorder (new TitledBorder (new EtchedBorder(), 
           groupTitle));
       } // if
-      this.add (groupPanel, BorderLayout.SOUTH);
+
+      if (customPanel == null) 
+        topPanel.add (groupPanel, BorderLayout.SOUTH);
+      else
+        this.add (groupPanel, BorderLayout.SOUTH);
 
       // Create group list
       // -----------------
       groupList = new JList (new Vector (groupManager.getGroups()));
       groupList.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
-      groupList.setVisibleRowCount (6);
+      groupList.setVisibleRowCount (10);
       groupList.addListSelectionListener (new GroupSelectionListener());
       groupPanel.add (new JScrollPane (groupList), BorderLayout.CENTER);
 
@@ -587,9 +591,9 @@ public abstract class AbstractOverlayListPanel
       // they want.
       else if (command.equals (RESTORE_COMMAND)) {
         String question = 
-          "The default overlay groups will be restored.\n" +
-          "This will overwrite changes made to any existing\n" +
-          "group of the same name. Are you sure?";
+          "The default overlay groups will now be restored.\n" +
+          "This will not affect any new overlay groups created.\n" +
+          "Are you sure?";
         int result = JOptionPane.showConfirmDialog (
           AbstractOverlayListPanel.this, question, "Confirmation", 
           JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -989,7 +993,7 @@ public abstract class AbstractOverlayListPanel
 
     String title = getTitle();
     if (title == null) return (null);
-    else return (title + " Groups");
+    else return ("Saved " + title + " Groups");
 
   } // getGroupTitle
 
