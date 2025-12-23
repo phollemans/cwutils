@@ -34,6 +34,8 @@ import java.util.Date;
 import java.util.prefs.Preferences;
 import noaa.coastwatch.tools.ToolServices;
 
+import java.util.logging.Logger;
+
 /**
  * The <code>UpdateCheck</code> class checks for updates of the
  * CoastWatch utilities software package online.  The check generates
@@ -44,12 +46,13 @@ import noaa.coastwatch.tools.ToolServices;
  */
 public class UpdateCheck {
   
+  private static final Logger LOGGER = Logger.getLogger (UpdateCheck.class.getName());
+
   // Constants
   // ---------
 
   /** The server URL to check for updates. */
-  private static final String SERVER_URL = 
-    "http://coastwatch.noaa.gov/cw_cwfv3.html";
+  private static final String SERVER_URL = "https://terrenus-storage.s3.amazonaws.com/cwutils/latest/update_check.txt";
 
   /** The update string. */
   private static final String UPDATE_STRING = "cwutils_update=";
@@ -114,6 +117,8 @@ public class UpdateCheck {
                             
     try {
 
+      LOGGER.fine ("Performing update check at " + SERVER_URL);
+
       // Create reader from URL
       // ----------------------
       URL url = new URL (SERVER_URL);
@@ -132,26 +137,32 @@ public class UpdateCheck {
         } // if
       } // while
       reader.close();
-      if (updateURL == null) return;
 
       // Get update message
       // ------------------
-      updateURL = updateURL +
-        "?os=" + URLEncoder.encode (System.getProperty ("os.name"), "UTF-8") +
-        "&arch=" + URLEncoder.encode (System.getProperty ("os.arch"), "UTF-8")+
-        "&tool=" + URLEncoder.encode (tool, "UTF-8") +
-        "&version=" + URLEncoder.encode (ToolServices.getVersion(), "UTF-8") +
-        "&userid="+URLEncoder.encode (Integer.toString (getUserID()), "UTF-8");
-      StringBuffer messageBuffer = new StringBuffer();
-      reader = new BufferedReader (
-        new InputStreamReader (new URL (updateURL).openStream()));
-      while ((line = reader.readLine ()) != null) {
-        messageBuffer.append (line);
-        messageBuffer.append ("\n");
-      } // while
-      reader.close();
+      if (updateURL != null) {
 
-      message = messageBuffer.toString();
+        updateURL = updateURL +
+          "?os=" + URLEncoder.encode (System.getProperty ("os.name"), "UTF-8") +
+          "&arch=" + URLEncoder.encode (System.getProperty ("os.arch"), "UTF-8")+
+          "&tool=" + URLEncoder.encode (tool, "UTF-8") +
+          "&version=" + URLEncoder.encode (ToolServices.getVersion(), "UTF-8") +
+          "&id="+URLEncoder.encode (Integer.toString (getUserID()), "UTF-8");
+
+        LOGGER.fine ("Getting update message at " + updateURL);
+
+        StringBuffer messageBuffer = new StringBuffer();
+        reader = new BufferedReader (
+          new InputStreamReader (new URL (updateURL).openStream()));
+        while ((line = reader.readLine ()) != null) {
+          messageBuffer.append (line);
+          messageBuffer.append ("\n");
+        } // while
+        reader.close();
+
+        message = messageBuffer.toString();
+
+      } // if
 
     } catch (Exception e) {
       /**
@@ -161,6 +172,8 @@ public class UpdateCheck {
        * null.
        */
     } // catch
+
+    if (message == null) LOGGER.fine ("No update message found");
 
   } // UpdateCheck constructor
 
