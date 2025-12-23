@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE palette SYSTEM "http://coastwatch.noaa.gov/xml/palette.dtd">
+<palette name="Coral-Reef-SST-Trend" length="60">
+
+<!-- Less than -3 -->
+<!-- <color r="51" g="0" b="20" /> -->
+
+<!-- -3.0 to -2.5 -->
+<color r="100" g="1" b="100" />
+<color r="100" g="1" b="100" />
+<color r="100" g="1" b="100" />
+<color r="100" g="1" b="100" />
+<color r="100" g="1" b="100" />
+
+<!-- -2.5 to -2.0 -->
+<color r="100" g="0" b="250" />
+<color r="100" g="0" b="250" />
+<color r="100" g="0" b="250" />
+<color r="100" g="0" b="250" />
+<color r="100" g="0" b="250" />
+
+<!-- -2.0 to -1.5 -->
+<color r="0" g="80" b="255" />
+<color r="0" g="80" b="255" />
+<color r="0" g="80" b="255" />
+<color r="0" g="80" b="255" />
+<color r="0" g="80" b="255" />
+
+<!-- -1.5 to -1.0 -->
+<color r="1" g="120" b="255" />
+<color r="1" g="120" b="255" />
+<color r="1" g="120" b="255" />
+<color r="1" g="120" b="255" />
+<color r="1" g="120" b="255" />
+
+<!-- -1.0 to -0.5 -->
+<color r="0" g="190" b="255" />
+<color r="0" g="190" b="255" />
+<color r="0" g="190" b="255" />
+<color r="0" g="190" b="255" />
+<color r="0" g="190" b="255" />
+
+<!-- -0.5 to 0.0 -->
+<color r="0" g="255" b="255" />
+<color r="0" g="255" b="255" />
+<color r="0" g="255" b="255" />
+<color r="0" g="255" b="255" />
+<color r="0" g="255" b="255" />
+
+<!-- 0.0 to 0.5 -->
+<color r="255" g="255" b="0" />
+<color r="255" g="255" b="0" />
+<color r="255" g="255" b="0" />
+<color r="255" g="255" b="0" />
+<color r="255" g="255" b="0" />
+
+<!-- 0.5 to 1.0 -->
+<color r="255" g="190" b="0" />
+<color r="255" g="190" b="0" />
+<color r="255" g="190" b="0" />
+<color r="255" g="190" b="0" />
+<color r="255" g="190" b="0" />
+
+<!-- 1.0 to 1.5 -->
+<color r="255" g="80" b="0" />
+<color r="255" g="80" b="0" />
+<color r="255" g="80" b="0" />
+<color r="255" g="80" b="0" />
+<color r="255" g="80" b="0" />
+
+<!-- 1.5 to 2.0 -->
+<color r="220" g="0" b="1" />
+<color r="220" g="0" b="1" />
+<color r="220" g="0" b="1" />
+<color r="220" g="0" b="1" />
+<color r="220" g="0" b="1" />
+
+<!-- 2.0 to 2.5 -->
+<color r="150" g="0" b="0" />
+<color r="150" g="0" b="0" />
+<color r="150" g="0" b="0" />
+<color r="150" g="0" b="0" />
+<color r="150" g="0" b="0" />
+
+<!-- 2.5 to 3.0 -->
+<color r="100" g="1" b="0" />
+<color r="100" g="1" b="0" />
+<color r="100" g="1" b="0" />
+<color r="100" g="1" b="0" />
+<color r="100" g="1" b="0" />
+
+<!-- Greater than 3 -->
+<!-- <color r="200" g="100" b="50" /> -->
+
+</palette>

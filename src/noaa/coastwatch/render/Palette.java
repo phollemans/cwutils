@@ -96,9 +96,9 @@ public class Palette {
     // Remap original values
     // ---------------------
     int mapSize = model.getMapSize();
-    float inc = (float) mapSize/length;
+    var inc = (double) mapSize/length;
     for (int i = 0; i < length; i++) {
-      int index = Math.round (i*inc);
+      int index = (int) Math.floor (i*inc);
       if (index > mapSize-1) index = mapSize-1;
       r[i] = (byte) model.getRed (index);
       g[i] = (byte) model.getGreen (index);

@@ -17,12 +17,13 @@
   <enhancement variable="chlor_a" palette="Chlora-1" min="0.01" max="64.0" function="log" />
   <enhancement variable="chlorANOMALY" palette="Chlora-anom" min="0.01" max="1.0" function="log" />
   <enhancement variable="chlorMEAN" palette="Chlora-1" min="0.01" max="64.0" function="log" />
-  <enhancement variable="CRW_SST" palette="CRW_SST" min="-2.0" max="34.0" function="linear" />
-  <enhancement variable="CRW_SSTANOMALY" palette="CRW_SSTANOMALY" min="-5.0" max="5.0" function="linear" />
-  <enhancement variable="CRW_HOTSPOT" palette="CRW_HOTSPOT" min="0.0" max="5.0" function="linear" />
-  <enhancement variable="CRW_DHW" palette="CRW_DHW" min="0.0" max="16.0" function="linear" />
+  <enhancement variable="analysed_sst" palette="Coral-Reef-SST" min="-2" max="40" function="linear" />
+  <enhancement variable="sea_surface_temperature_anomaly" palette="Coral-Reef-SST-Anomaly" min="-5" max="5" function="linear" />
+  <enhancement variable="trend" palette="Coral-Reef-SST-Trend" min="-3" max="3" function="linear" />
+  <enhancement variable="bleaching_alert_area" palette="Coral-Reef-Bleaching-Alert-Area" min="0" max="5" function="linear" />
+  <enhancement variable="degree_heating_week" palette="Coral-Reef-Degree-Heating-Week" min="0" max="20" function="linear" />
+  <enhancement variable="hotspot" palette="Coral-Reef-Hotspot" min="0" max="5" function="linear" />
   <general item="earthLocationDisplay" value="dd" />
   <general item="heapSize" value="2048" />
   <general item="cacheSize" value="512" />
 </preferences>
-

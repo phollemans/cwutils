@@ -34,13 +34,19 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.jar.JarFile;
 import java.awt.Desktop;
+
 import noaa.coastwatch.gui.GUIServices;
 import noaa.coastwatch.gui.open.ServerTableModel;
 import noaa.coastwatch.io.SerializedObjectManager;
 import noaa.coastwatch.render.OverlayGroupManager;
 import noaa.coastwatch.render.PaletteFactory;
 import noaa.coastwatch.tools.Preferences;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /** 
  * The <code>ResourceManager</code> class stores and retrieves
@@ -52,6 +58,8 @@ import noaa.coastwatch.tools.Preferences;
  */
 public class ResourceManager {
 
+  private static final Logger LOGGER = Logger.getLogger (ResourceManager.class.getName());
+
   // Constants
   // ---------
 
@@ -59,12 +67,14 @@ public class ResourceManager {
   private static final String RESOURCE_BASE = getAbsoluteResourceBase();
 
   /** The palette resource directory. */
+  private static final String PALETTES_DIR_NAME = "palettes";
   private static final File PALETTES_DIR = new File (
-    RESOURCE_BASE + File.separator + "palettes");
+    RESOURCE_BASE + File.separator + PALETTES_DIR_NAME);
 
   /** The overlay resource directory. */
+  private static final String OVERLAYS_DIR_NAME = "overlays";
   private static final File OVERLAYS_DIR = new File (
-    RESOURCE_BASE + File.separator + "overlays");
+    RESOURCE_BASE + File.separator + OVERLAYS_DIR_NAME);
 
   /** The preferences resource directory. */
   private static final File PREFERENCES_DIR = new File (RESOURCE_BASE);
@@ -72,17 +82,6 @@ public class ResourceManager {
   /** The preferences file. */
   private static final String PREFERENCES_FILE = "prefs.xml";
 
-  /** The OPeNDAP server file. */
-  private static final String OPENDAP_FILE = "opendap_servers.xml";
-
-  /** The default overlays. */
-  private static final String[] OVERLAY_FILES = new String[] {
-    "Atmospheric.jso",
-    "Oceanographic - Cloud Analysis.jso",
-    "Oceanographic.jso",
-    "Oceanographic - Coral Reef Watch.jso"
-  };
-  
   /** The Java VM options file. */
   private static final String VMOPTIONS_FILE = "cwutils.vmoptions";
 
@@ -91,6 +90,35 @@ public class ResourceManager {
 
   /** The preferences for user-specific settings. */
   private static Preferences preferences;
+
+  /** The overlay group file names. */
+  private static String[] overlayFiles;
+
+  ////////////////////////////////////////////////////////////
+
+  static {
+
+    // Find and list the serialized overlay group files in the jar file.
+
+    var jar = ResourceManager.class.getProtectionDomain().getCodeSource().getLocation();
+    var overlayFileList = new ArrayList<String>();
+    try (var jarFile = new JarFile (new File (jar.toURI()))) {
+      jarFile.stream()
+        .filter (entry -> entry.getName().matches (".*/" + OVERLAYS_DIR_NAME + "/.*\\.jso"))
+        .forEach (entry -> { 
+          var fileName = entry.getName();
+          fileName = fileName.substring (fileName.lastIndexOf ("/") + 1);
+          overlayFileList.add (fileName);
+          LOGGER.fine ("Found overlay group file " + entry.getName());
+        });
+    } // try
+    catch (Exception e) {
+      LOGGER.log (Level.FINE, "Error getting jar entries", e);
+    } // catch
+
+    overlayFiles = overlayFileList.toArray (new String[0]);
+
+  } // static
 
   ////////////////////////////////////////////////////////////
 
@@ -268,16 +296,15 @@ public class ResourceManager {
       // Check for incompatible files
       /// ---------------------------
       if (!moveDir) {
-        List groupList = new OverlayGroupManager (OVERLAYS_DIR).getGroups();
-        SerializedObjectManager manager = 
-          new SerializedObjectManager (OVERLAYS_DIR);
-        for (Iterator iter = groupList.iterator(); iter.hasNext();) {
-          try { manager.loadObject ((String) iter.next()); }
-          catch (Exception e) { moveDir = true; break; }
-          
-          // TODO: This would be a good place to put an informational
-          // log message, about the serialization error UID codes.
-          
+        var groupList = new OverlayGroupManager (OVERLAYS_DIR).getGroups();
+        SerializedObjectManager manager = new SerializedObjectManager (OVERLAYS_DIR);
+        for (var iter = groupList.iterator(); iter.hasNext();) {
+          try { manager.loadObject (iter.next()); }
+          catch (Exception e) { 
+            LOGGER.log (Level.FINE, "Error loading group object", e);
+            moveDir = true; 
+            break; 
+          } // catch
         } // for
       } // if
 
@@ -329,11 +356,11 @@ public class ResourceManager {
 
     // Restore the default set of overlay groups.  We delete and overwrite any 
     // overlay groups that already exist.
-    for (int i = 0; i < OVERLAY_FILES.length; i++) {
-      var file = new File (OVERLAYS_DIR, OVERLAY_FILES[i]);
+    for (int i = 0; i < overlayFiles.length; i++) {
+      var file = new File (OVERLAYS_DIR, overlayFiles[i]);
       if (file.exists()) { if (!file.delete()) throw new IOException ("Cannot delete file '" + file + "'"); }
       copyStream (
-        OverlayGroupManager.class.getResourceAsStream (OVERLAY_FILES[i]),
+        OverlayGroupManager.class.getResourceAsStream (OVERLAYS_DIR_NAME + "/" + overlayFiles[i]),
         new FileOutputStream (file),
         true
       );
@@ -371,10 +398,10 @@ public class ResourceManager {
 
       // Copy default overlays 
       // ---------------------
-      for (int i = 0; i < OVERLAY_FILES.length; i++) {
+      for (int i = 0; i < overlayFiles.length; i++) {
         copyStream (
-          OverlayGroupManager.class.getResourceAsStream (OVERLAY_FILES[i]),
-          new FileOutputStream (new File (OVERLAYS_DIR, OVERLAY_FILES[i])),
+          OverlayGroupManager.class.getResourceAsStream (OVERLAYS_DIR_NAME + "/" + overlayFiles[i]),
+          new FileOutputStream (new File (OVERLAYS_DIR, overlayFiles[i])),
           true
         );
       } // for
@@ -443,98 +470,6 @@ public class ResourceManager {
     } // if
 
   } // setupPreferences
-
-  ////////////////////////////////////////////////////////////
-
-  /**
-   * Sets up the user-specified OPeNDAP servers.
-   *
-   * @throws IOException if an error occurred setting up the servers.
-   */
-  public static void setupOpendap () throws IOException {
-
-    // Create preferences directory
-    // ----------------------------
-    if (!PREFERENCES_DIR.exists()) {
-      if (!PREFERENCES_DIR.mkdirs())
-        throw new IOException ("Cannot create resource directory " + 
-          PREFERENCES_DIR);
-    } // if
-
-    // Copy default preferences 
-    // ------------------------
-    File opendapFile = new File (PREFERENCES_DIR, OPENDAP_FILE);
-    if (!opendapFile.exists()) {
-      copyStream (
-        ServerTableModel.class.getResourceAsStream (OPENDAP_FILE),
-        new FileOutputStream (opendapFile),
-        true
-      );
-    } // if
-
-  } // setupOpendap
-
-  ////////////////////////////////////////////////////////////
-  
-  /**
-   * Gets the list of OPeNDAP servers from the user-specified
-   * resources.
-   *
-   * @return the list of {@link
-   * noaa.coastwatch.gui.open.ServerTableModel.Entry} objects.
-   *
-   * @throws RuntimeException if an error occurred setting up the
-   * initial list, or reading the list from disk.
-   */
-  public static List getOpendapList () {
-
-    try {
-
-      // Setup OPeNDAP servers on disk
-      // -----------------------------
-      setupOpendap();
-
-      // Get list
-      // --------
-      File opendapFile = new File (PREFERENCES_DIR, OPENDAP_FILE);
-      InputStream stream = new FileInputStream (opendapFile);
-      return (ServerTableModel.readList (stream));
-
-    } // try
-
-    catch (IOException e) {
-      throw new RuntimeException ("Cannot read OPeNDAP server list: " + 
-        e.getMessage());
-    } // catch
-
-  } // getOpendapList
-
-  ////////////////////////////////////////////////////////////
-
-  /** 
-   * Sets the OPeNDAP server list using the specified list of {@link
-   * noaa.coastwatch.gui.open.ServerTableModel.Entry} objects.
-   * Subsequent calls to <code>getOpendapList()</code> will return the
-   * new list.  The list is also saved to the user-specified
-   * resources.
-   *
-   * @throws RuntimeException if an error occurred writing the
-   * list to disk.
-   */
-  public static void setOpendapList (
-    List opendapList
-  ) {
-
-    try {
-      ServerTableModel.writeList (new FileOutputStream (
-        new File (PREFERENCES_DIR, OPENDAP_FILE)), opendapList);
-    } // try
-    catch (IOException e) {
-      throw new RuntimeException ("Cannot write OPeNDAP server list: " + 
-        e.getMessage());
-    } // catch
-
-  } // setOpendapList
 
   ////////////////////////////////////////////////////////////
 
@@ -607,6 +542,33 @@ public class ResourceManager {
     } // catch
 
   } // getPreferences
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the default set of preferences.
+   * 
+   * @return the default preferences from when the software is installed.
+   *
+   * @throws RuntimeException if an error occurred reading the default 
+   * preferences.
+   * 
+   * @since 4.1.5
+   */
+  public static Preferences getDefaultPreferences () { 
+
+    Preferences prefs = null;
+
+    try {
+      prefs = new Preferences (ResourceManager.class.getResourceAsStream (PREFERENCES_FILE));
+    } // try
+    catch (IOException e) {
+      throw new RuntimeException ("Cannot read preferences file: " + e.getMessage());
+    } // catch
+
+    return (prefs);
+
+  } // getDefaultPreferences
 
   ////////////////////////////////////////////////////////////
 

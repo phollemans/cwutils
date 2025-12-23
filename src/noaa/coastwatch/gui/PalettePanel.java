@@ -143,7 +143,9 @@ public class PalettePanel
       double norm = func.getValue (i*scale + range[0]);
       if (norm < 0) { byteRow[i] = 0; continue; }
       else if (norm > 1) norm = 1;
-      byteRow[i] = (byte) Math.round (norm * (colors-1));
+      int index = (int) Math.floor (norm*colors);
+      if (index > colors-1) index = colors - 1;
+      byteRow[i] = (byte) index;
     } // for
     for (int j = 0; j < dims.height; j++)
       raster.setDataElements (0, j, dims.width, 1, byteRow);

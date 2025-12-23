@@ -342,7 +342,9 @@ public class ColorEnhancement
     double norm = func.getValue (value);
     if (Double.isNaN (norm) || norm < 0) return ((byte) missing);
     else if (norm > 1) norm = 1;
-    return ((byte) Math.round (norm * (colors-1)));
+    int index = (int) Math.floor (norm*colors);
+    if (index > colors-1) index = colors - 1;
+    return ((byte) index);
 
   } // getByte
 

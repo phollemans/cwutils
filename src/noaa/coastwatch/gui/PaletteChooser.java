@@ -30,6 +30,7 @@ import java.awt.FlowLayout;
 import java.awt.Dimension;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 
@@ -372,7 +373,7 @@ public class PaletteChooser
 
   private void searchEvent (String text) {
 
-    var paletteNameList = PaletteFactory.getPredefined();
+    var paletteNameList = new ArrayList<> (PaletteFactory.getPredefined());
     var textLower = text.toLowerCase();
     paletteNameList.removeIf (name -> !name.toLowerCase().contains (textLower));
 

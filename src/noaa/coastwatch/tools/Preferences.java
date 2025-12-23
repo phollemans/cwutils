@@ -44,11 +44,14 @@ import noaa.coastwatch.render.EnhancementFunction;
 import noaa.coastwatch.render.EnhancementFunctionFactory;
 import noaa.coastwatch.render.Palette;
 import noaa.coastwatch.render.PaletteFactory;
+import noaa.coastwatch.render.IconElementFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import java.util.logging.Logger;
 
 /**
  * The <code>Preferences</code> class handles preferences set by the
@@ -59,6 +62,8 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class Preferences
   implements Cloneable { 
+
+  private static final Logger LOGGER = Logger.getLogger (Preferences.class.getName());
 
   // Constants
   // ---------
@@ -74,10 +79,10 @@ public class Preferences
   // ---------
 
   /** The map of variable name to color enhancement settings. */
-  private HashMap enhancementMap;
+  private HashMap<String, ColorEnhancementSettings> enhancementMap;
 
   /** The map of variable name to units. */
-  private HashMap unitsMap;
+  private HashMap<String, String> unitsMap;
 
   /** 
    * The earth location degrees flag, true to display earth locations
@@ -92,7 +97,7 @@ public class Preferences
   private int cacheSize = 512;
 
   /** The plot legend logo. */
-  private String logo;
+  private String logo = IconElementFactory.getInstance().getDefaultIcon();
 
   ////////////////////////////////////////////////////////////
 
@@ -117,7 +122,7 @@ public class Preferences
   ////////////////////////////////////////////////////////////
 
   /** Gets the map of variable name to units. */
-  public Map getUnitsMap() { return ((Map) unitsMap.clone()); }
+  public Map<String, String> getUnitsMap() { return ((Map<String, String>) unitsMap.clone()); }
 
   ////////////////////////////////////////////////////////////
 
@@ -145,7 +150,7 @@ public class Preferences
    */
   public String getUnits (String varName) {
     
-    return ((String) unitsMap.get (varName));
+    return (unitsMap.get (varName));
 
   }  // getUnits
 
@@ -199,14 +204,11 @@ public class Preferences
 
     try {
       Preferences prefs = (Preferences) super.clone();
-      prefs.enhancementMap = new LinkedHashMap();
-      for (Iterator iter = enhancementMap.values().iterator(); 
-        iter.hasNext(); ) {
-        ColorEnhancementSettings settings = 
-          (ColorEnhancementSettings) iter.next();
-        prefs.enhancementMap.put (settings.getName(), settings.clone());
+      prefs.enhancementMap = new LinkedHashMap<>();
+      for (var settings : enhancementMap.values()) {
+        prefs.enhancementMap.put (settings.getName(), (ColorEnhancementSettings) settings.clone());
       } // for
-      prefs.unitsMap = (HashMap) unitsMap.clone();
+      prefs.unitsMap = (HashMap<String, String>) unitsMap.clone();
       return (prefs);
     } // try
     catch (CloneNotSupportedException e) {
@@ -222,9 +224,9 @@ public class Preferences
    *
    * @return a list of variable names.
    */
-  public List getEnhancementVariables () {
+  public List<String> getEnhancementVariables () {
 
-    return (new ArrayList (enhancementMap.keySet()));
+    return (new ArrayList<String> (enhancementMap.keySet()));
 
   } // getEnhancementVariables
 
@@ -242,7 +244,7 @@ public class Preferences
     String variableName
   ) {
 
-    return ((ColorEnhancementSettings) enhancementMap.get (variableName));
+    return (enhancementMap.get (variableName));
 
   } // getEnhancement
 
@@ -318,9 +320,7 @@ public class Preferences
 
     // Write enhancement settings
     // --------------------------
-    for (Iterator iter = enhancementMap.values().iterator(); iter.hasNext();) {
-      ColorEnhancementSettings settings = 
-        (ColorEnhancementSettings) iter.next();
+    for (var settings : enhancementMap.values()) {
       EnhancementFunction func = settings.getFunction();
       double[] range = func.getRange();
       String varName = settings.getName();
@@ -373,8 +373,8 @@ public class Preferences
 
     // Initialize
     // ----------
-    enhancementMap = new LinkedHashMap();
-    unitsMap = new HashMap();
+    enhancementMap = new LinkedHashMap<>();
+    unitsMap = new HashMap<>();
 
   } // Preferences constructor
 
@@ -502,10 +502,15 @@ public class Preferences
 
         // Create settings
         // ---------------
-        ColorEnhancementSettings settings = new ColorEnhancementSettings (
-          variableName, PaletteFactory.create (paletteName), function);
-        enhancementMap.put (variableName, settings);
-        if (!units.equals ("")) unitsMap.put (variableName, units);
+        if (!PaletteFactory.getPredefined().contains (paletteName)) {
+          LOGGER.fine ("Ignoring preference entry with unknown palette '" + paletteName + "'");
+        } // if
+        else {
+          ColorEnhancementSettings settings = new ColorEnhancementSettings (
+            variableName, PaletteFactory.create (paletteName), function);
+          enhancementMap.put (variableName, settings);
+          if (!units.equals ("")) unitsMap.put (variableName, units);
+        } // else
 
       } // if
 
@@ -526,8 +531,15 @@ public class Preferences
       else if (qName.equals ("export")) {
         String item = attributes.getValue ("item");
         String value = attributes.getValue ("value");
-        if (item.equals ("logo"))
-          logo = value;
+
+        if (item.equals ("logo")) {
+          // We do this check because a previous version defined no defualt
+          // logo in this class so the object value "null" was written
+          // instead of an actual value.
+          if (!value.equals ("null"))
+            logo = value;
+        } // if
+
       } // else if
 
       /** 

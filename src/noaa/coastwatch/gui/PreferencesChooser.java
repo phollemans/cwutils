@@ -107,6 +107,8 @@ import noaa.coastwatch.render.GraphicsServices;
 import noaa.coastwatch.tools.Preferences;
 import noaa.coastwatch.tools.ResourceManager;
 
+import java.util.logging.Logger;
+
 /**
  * The <code>PreferencesChooser</code> class is a panel that displays
  * a <code>Preferences</code> object and allows the preferences to be
@@ -117,6 +119,8 @@ import noaa.coastwatch.tools.ResourceManager;
  */
 public class PreferencesChooser
   extends JPanel {
+
+  private static final Logger LOGGER = Logger.getLogger (PreferencesChooser.class.getName());
 
   // Constants
   // ---------
@@ -193,6 +197,7 @@ public class PreferencesChooser
   // The category selected in the preferences chooser.
   private static String selectedCategory = GENERAL_CATEGORY;
 
+  // The card layout and cards that show each chooser under a toggle button.
   private CardLayout cardLayout;
   private JPanel cards;
 
@@ -555,10 +560,10 @@ public class PreferencesChooser
     // ---------
 
     /** The list of variables with color enhancement settings. */
-    private JList variableList;
+    private JList<String> variableList;
     
     /** The variable list data model. */
-    private DefaultListModel variableModel;
+    private DefaultListModel<String> variableModel;
     
     /** The field for typing in new variable names. */
     private JTextField variableField;
@@ -570,7 +575,7 @@ public class PreferencesChooser
     private JButton removeButton;
   
     /** The list of available palettes. */
-    private JList paletteList;
+    private JList<String> paletteList;
   
     /** The field for typing in the minimum value. */
     private JTextField minField;
@@ -585,7 +590,7 @@ public class PreferencesChooser
     private JRadioButton convertUnitsRadio;
 
     /** The combo for selecting units value. */
-    private JComboBox unitsCombo;
+    private JComboBox<String> unitsCombo;
   
     /** The panel used for enhancement settings. */
     private JPanel settingsPanel;
@@ -600,7 +605,7 @@ public class PreferencesChooser
     private JSpinner stepsSpinner;
 
     /** The combo box for function type. */
-    private JComboBox functionCombo;
+    private JComboBox<String> functionCombo;
 
     /** The flag indicating that event listeners are disabled. */
     private boolean listenersDisabled;
@@ -627,11 +632,9 @@ public class PreferencesChooser
   
       // Create variable list
       // --------------------
-      variableModel = new DefaultListModel();
-      for (Iterator iter = prefs.getEnhancementVariables().iterator(); 
-        iter.hasNext(); )
-        variableModel.addElement (iter.next());
-      variableList = new JList (variableModel);
+      variableModel = new DefaultListModel<>();
+      variableModel.addAll (prefs.getEnhancementVariables());
+      variableList = new JList<> (variableModel);
       variableList.addListSelectionListener (new VariableListListener());
       variablePanel.add (new JLabel ("Variable:"), BorderLayout.NORTH);
       variablePanel.add (new JScrollPane (variableList), BorderLayout.CENTER);
@@ -681,6 +684,13 @@ public class PreferencesChooser
       removeButton.setToolTipText ("Remove variable from list");
       variableControlPanel.add (removeButton, gc);
 
+      // Create restore button
+      var restoreButton = GUIServices.getIconButton ("list.restore");
+      GUIServices.setSquare (restoreButton);
+      restoreButton.addActionListener (event -> restoreEntries());
+      restoreButton.setToolTipText ("Restore default variable preferences");
+      variableControlPanel.add (restoreButton, gc);
+
       // Create settings panel
       // ---------------------
       settingsPanel = new JPanel (new BorderLayout());
@@ -691,7 +701,7 @@ public class PreferencesChooser
   
       // Create palette list
       // --------------------
-      paletteList = new JList (PaletteFactory.getPredefined().toArray());
+      paletteList = new JList<> (PaletteFactory.getPredefined().toArray (new String[0]));
       paletteList.addListSelectionListener (new PaletteListListener());
       paletteList.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
       settingsPanel.add (new JLabel ("Palette:"), BorderLayout.NORTH);
@@ -743,7 +753,7 @@ public class PreferencesChooser
       group.add (convertUnitsRadio);
       convertLine.add (convertUnitsRadio);
 
-      unitsCombo = new JComboBox (COMMON_UNITS);
+      unitsCombo = new JComboBox<> (COMMON_UNITS);
       unitsCombo.setEditable (true);
       unitsCombo.addItemListener (new UnitsComboListener());
       convertLine.add (unitsCombo);
@@ -781,7 +791,7 @@ public class PreferencesChooser
         GridBagConstraints.HORIZONTAL, 0, 0);
       gcSub.insets = new Insets (2, 0, 2, 10);
       functionControlPanel.add (new JLabel ("Function:"), gcSub);
-      functionCombo = new JComboBox (new Object[] {
+      functionCombo = new JComboBox (new String[] {
         FUNCTION_LINEAR, FUNCTION_STEP, FUNCTION_LOG, FUNCTION_GAMMA});
       functionCombo.addActionListener (new FunctionComboListener());
       GUIServices.setConstraints (gcSub, 1, 5, 1, 1, 
@@ -824,7 +834,7 @@ public class PreferencesChooser
         // Get current settings
         // --------------------
         ColorEnhancementSettings settings = 
-          prefs.getEnhancement ((String) variableList.getSelectedValue());
+          prefs.getEnhancement (variableList.getSelectedValue());
 
         // Convert to new function
         // -----------------------
@@ -898,7 +908,7 @@ public class PreferencesChooser
         // Get current settings
         // --------------------
         ColorEnhancementSettings settings = 
-          prefs.getEnhancement ((String) variableList.getSelectedValue());
+          prefs.getEnhancement (variableList.getSelectedValue());
 
         // Get new function type
         // ---------------------
@@ -1006,7 +1016,7 @@ public class PreferencesChooser
         Document doc = e.getDocument();
         if (doc == minField.getDocument()) fieldChanged = minField;
         else if (doc == maxField.getDocument()) fieldChanged = maxField;
-        variableChanged = (String) variableList.getSelectedValue();
+        variableChanged = variableList.getSelectedValue();
       } // insertUpdate
       public void removeUpdate (DocumentEvent e) { insertUpdate (e); }
     } // FieldDocumentListener class
@@ -1023,7 +1033,7 @@ public class PreferencesChooser
   
         // Update remove button
         // --------------------
-        Object[] selectedValues = variableList.getSelectedValuesList().toArray();
+        var selectedValues = variableList.getSelectedValuesList().toArray (new String[0]);
         removeButton.setEnabled (selectedValues.length != 0);
   
         // Update preferences
@@ -1031,7 +1041,7 @@ public class PreferencesChooser
         listenersDisabled = true;
         if (selectedValues.length == 1) {
           GUIServices.setContainerEnabled (settingsPanel, true);
-          String varName = (String) selectedValues[0];
+          String varName = selectedValues[0];
           ColorEnhancementSettings settings = prefs.getEnhancement (varName);
           paletteList.setSelectedValue (settings.getPalette().getName(), true);
           double[] range = settings.getFunction().getRange();
@@ -1099,8 +1109,8 @@ public class PreferencesChooser
         // Update preferences
         // ------------------
         ColorEnhancementSettings settings =
-          prefs.getEnhancement ((String) variableList.getSelectedValue());
-        String paletteName = (String) paletteList.getSelectedValue();
+          prefs.getEnhancement (variableList.getSelectedValue());
+        String paletteName = paletteList.getSelectedValue();
         if (paletteName != null) {
           settings.setPalette (PaletteFactory.create (paletteName));
           prefsChanged = true;
@@ -1152,11 +1162,7 @@ public class PreferencesChooser
      */
     private void removeEntry () {
   
-      // Remove selected items
-      // ---------------------
-      Object[] values = variableList.getSelectedValuesList().toArray();
-      for (int i = 0; i < values.length; i++) {
-        String varName = (String) values[i];
+      for (var varName : variableList.getSelectedValuesList()) {
         prefs.removeEnhancement (varName);
         prefs.removeUnits (varName);
         variableModel.removeElement (varName);
@@ -1164,6 +1170,46 @@ public class PreferencesChooser
       prefsChanged = true;
   
     } // removeEntry
+
+    ////////////////////////////////////////////////////////
+  
+    /** Restores the variable list entries from the default preferences. */
+    private void restoreEntries () {
+  
+      String question = 
+        "The default variable preferences will be restored.\n" +
+        "This will override any existing variable settings.\n" + 
+        "Are you sure?\n";
+      int result = JOptionPane.showConfirmDialog (
+        PreferencesChooser.this, question, "Confirmation", 
+        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+      if (result == JOptionPane.YES_OPTION) {
+
+        LOGGER.fine ("Restoring variable list from default preferences");
+
+        try {
+          var defaultPrefs = ResourceManager.getDefaultPreferences();
+          for (var varName : prefs.getEnhancementVariables()) {
+            prefs.removeUnits (varName);
+            prefs.removeEnhancement (varName);
+          } // for
+          for (var varName : defaultPrefs.getEnhancementVariables()) {
+            var units = defaultPrefs.getUnits (varName);
+            if (units != null) prefs.setUnits (varName, units);
+            prefs.setEnhancement (defaultPrefs.getEnhancement (varName));
+          } // for
+          variableModel.clear();
+          variableModel.addAll (defaultPrefs.getEnhancementVariables());
+          prefsChanged = true;
+        } // try 
+        catch (Exception e) { 
+          String message = "Error restoring default variable preferences:\n" + e;
+          JOptionPane.showMessageDialog (PreferencesChooser.this, message, "Error", JOptionPane.ERROR_MESSAGE);
+        } // catch
+
+      } // if
+
+    } // restoreEntries
 
   } // EnhancementPreferencesChooser class
 

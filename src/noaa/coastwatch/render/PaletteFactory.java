@@ -38,14 +38,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Collections;
+import java.util.jar.JarFile;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import noaa.coastwatch.render.Palette;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * <p>The <code>PaletteFactory</code> class handles written tables of
@@ -77,92 +83,15 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class PaletteFactory { 
 
-  // Constants
-  // ---------
+  private static final Logger LOGGER = Logger.getLogger (PaletteFactory.class.getName());
 
-  /** The table of predefined color palette names. */
-  private final static String[] PREDEFINED = {
-    "BW-Linear",
-    "HSL256",
-    "RAMSDIS",
-    "Blue-Red",
-    "Blue-White",
-    "Grn-Red-Blu-Wht",
-    "Red-Temperature",
-    "Blue-Green-Red-Yellow",
-    "Std-Gamma-II",
-    "Prism",
-    "Red-Purple",
-    "Green-White-Linear",
-    "Grn-Wht-Exponential",
-    "Green-Pink",
-    "Blue-Red2",
-    "16-Level",
-    "Rainbow",
-    "Steps",
-    "Stern-Special",
-    "Haze",
-    "Blue-Pastel-Red",
-    "Pastels",
-    "Hue-Sat-Lightness-1",
-    "Hue-Sat-Lightness-2",
-    "Hue-Sat-Value-1",
-    "Hue-Sat-Value-2",
-    "Purple-Red-Stripes",
-    "Beach",
-    "Mac-Style",
-    "Eos-A",
-    "Eos-B",
-    "Hardcandy",
-    "Nature",
-    "Ocean",
-    "Peppermint",
-    "Plasma",
-    "Rainbow2",
-    "Blue-Waves",
-    "Volcano",
-    "Waves",
-    "Rainbow18",
-    "Rainbow-white",
-    "Rainbow-black",
-    "NDVI",
-    "GLERL-Archive",
-    "GLERL-30-Degrees",
-    "Chlora-1",
-    "Chlora-anom",
-    "Spectrum",
-    "Wind-0-50",
-    "CRW_SST",
-    "CRW_SSTANOMALY",
-    "CRW_HOTSPOT",
-    "CRW_DHW",
-    "StepSeq25",
-    "HSB-Cycle",
-    "Ocean-algae",
-    "Ocean-amp",
-    "Ocean-balance",
-    "Ocean-curl",
-    "Ocean-deep",
-    "Ocean-delta",
-    "Ocean-dense",
-    "Ocean-gray",
-    "Ocean-haline",
-    "Ocean-ice",
-    "Ocean-matter",
-    "Ocean-oxy",
-    "Ocean-phase",
-    "Ocean-solar",
-    "Ocean-speed",
-    "Ocean-tempo",
-    "Ocean-thermal",
-    "Ocean-turbid",
-    "NCCOS-chla",
-    "Turbo"
-  };
+  // Constants
+
+  /** The palettes resource prefix. */
+  private static final String PREFIX = "palettes";
 
   /** The palette DTD URL. */
-  private static final String DTD_URL = 
-    "http://coastwatch.noaa.gov/xml/palette.dtd";
+  private static final String DTD_URL = "http://coastwatch.noaa.gov/xml/palette.dtd";
 
   /** The palette DTD local resource. */
   private static final String DTD_RESOURCE = "palette.dtd";
@@ -184,7 +113,7 @@ public class PaletteFactory {
   /** Gets the list of predefined palette names. */
   public static List<String> getPredefined () { 
 
-    return (new ArrayList<>(predefinedList));
+    return (List.copyOf (predefinedList));
 
   } // getPredefined
 
@@ -200,9 +129,14 @@ public class PaletteFactory {
   ) { 
 
     var name = palette.getName();
-    predefinedList.add (name);
-    Collections.sort (predefinedList);
-    paletteMap.put (name, palette);
+    if (!predefinedList.contains (name)) {
+      predefinedList.add (name);
+      Collections.sort (predefinedList);
+      paletteMap.put (name, palette);
+    } // if
+    else {
+      LOGGER.fine ("User palette '" + name + "' ignored, already in predefined list");
+    } // else
 
   } // addPredefined
 
@@ -234,7 +168,7 @@ public class PaletteFactory {
         addPredefined (palette);
       } // try
       catch (IOException e) {
-        throw new IOException ("Error parsing palette " + files[i], e);
+        LOGGER.log (Level.WARNING, "Error parsing palette file " + files[i], e);
       } // catch
     } // for
 
@@ -245,9 +179,27 @@ public class PaletteFactory {
   /** Initializes the palette hash map and list. */
   static {
 
-    paletteMap = new HashMap<>();
-    predefinedList = new ArrayList<> (Arrays.asList (PREDEFINED));
+    // Find and list the palettes in the jar file.
+
+    var jar = PaletteFactory.class.getProtectionDomain().getCodeSource().getLocation();
+    predefinedList = new ArrayList<>();
+    try (var jarFile = new JarFile (new File (jar.toURI()))) {
+      jarFile.stream()
+        .filter (entry -> entry.getName().matches (".*/" + PREFIX + "/.*\\" + FILE_EXTENSION))
+        .forEach (entry -> { 
+          var path = entry.getName();
+          var fileName = path.substring (path.lastIndexOf ("/") + 1);
+          var baseName = fileName.replaceFirst ("\\.[^.]+$", "");
+          predefinedList.add (baseName);
+          LOGGER.fine ("Found palette file " + path);
+        });
+    } // try
+    catch (Exception e) {
+      LOGGER.log (Level.FINE, "Error getting jar entries", e);
+    } // catch
     Collections.sort (predefinedList);
+
+    paletteMap = new HashMap<>();
 
   } // static
 
@@ -495,7 +447,7 @@ public class PaletteFactory {
     String name
   ) {
 
-    var palette = paletteMap.computeIfAbsent (name, key -> createFromResource (key + FILE_EXTENSION));
+    var palette = paletteMap.computeIfAbsent (name, key -> createFromResource (PREFIX + "/" + key + FILE_EXTENSION));
     return (palette);
 
   } // create

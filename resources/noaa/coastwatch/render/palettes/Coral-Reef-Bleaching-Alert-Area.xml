@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE palette SYSTEM "http://coastwatch.noaa.gov/xml/palette.dtd">
+<palette name="Coral-Reef-Bleaching-Alert-Area" length="5">
+
+<!-- 0 (No stress) -->
+<color r="200" g="250" b="250" />
+
+<!-- 1 (Watch) -->
+<color r="255" g="239" b="2" />
+
+<!-- 2 (Warning) -->
+<color r="250" g="170" b="11" />
+
+<!-- 3 (Alert Level 1) -->
+<color r="240" g="0" b="1" />
+
+<!-- 4 (Alert Level 2) -->
+<color r="150" g="1" b="0" />
+
+</palette>
