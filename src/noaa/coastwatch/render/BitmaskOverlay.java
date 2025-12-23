@@ -172,12 +172,24 @@ public class BitmaskOverlay
     // Check for valid list
     // --------------------
     if (variableList == null) 
-      throw new IllegalStateException ("Cannot set grid name when list=null");
+      throw new IllegalStateException ("Cannot set grid name when variable list is null");
 
     // Check for valid grid
-    // --------------------
-    if (!variableList.contains (name))
-      throw new IllegalArgumentException ("Cannot find variable " + name);
+    // --------------------    
+    boolean found = variableList.contains (name);
+    if (!found) {
+
+      // Do some extra work and try to find a base variable name that 
+      // matches the requested name.  That means that we remove any leading
+      // group names before we do the name comparison.
+      for (var varName : (List<String>) variableList) {
+        var baseVarName = varName.contains ("/") ? varName.substring (varName.lastIndexOf ("/") + 1) : varName;
+        var baseNewName = name.contains ("/") ? name.substring (name.lastIndexOf ("/") + 1) : name;
+        if (baseVarName.equals (baseNewName)) { name = varName; found = true; break; }
+      } // for
+
+    } // if
+    if (!found) throw new IllegalArgumentException ("Cannot find variable " + name);
 
     // Set internals
     // -------------
