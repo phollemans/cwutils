@@ -349,6 +349,7 @@
       <fileset file="src.zip"/>
       <fileset dir="doc/tools"/>
       <fileset dir="doc/man"/>
+      <fileset dir="doc/html"/>
       <fileset dir="doc">
         <include name="api.zip"/>
         <include name="cwutils_ug_*.pdf"/>

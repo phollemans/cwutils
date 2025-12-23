@@ -162,6 +162,9 @@ for fname in tools/*.html ; do
 done
 
 # Comment this out for debugging
+rm -rf html
+mkdir html
+cp tools/*.html html
 rm -rf tools
 
 # Create user guide
