@@ -119,11 +119,12 @@ import java.util.logging.Level;
  *
  * <h2>Description</h2>
  * <p>
- * The coverage tool creates an earth data coverage map by accessing a
- * number of user-specified earth data sets and tracing the boundaries
- * onto an orthographic map projection.  The map is output as a PNG
- * graphics file.  Approximate satellite ground station coverage
- * boundaries may also be added to the map.
+ * The coverage tool creates an illustration of the Earth with coastlines
+ * and grid lines, and optionally a set of ground station and earth dataset 
+ * footprints.  The map is output as a PNG image.  The coverage tool is purely
+ * for generating an illustration, not for data processing.  The output
+ * size and resolution of the coverage map is independent of any input 
+ * datasets.
  * </p>
  *
  * <h2>Parameters</h2>

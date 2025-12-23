@@ -104,7 +104,8 @@ import java.util.logging.Level;
  *   <li> Stdev - the standard deviation from the mean </li>
  *   <li> Median - the median data value </li>
  * </ul> 
- * <p>To speed up the statistics calculations, a subset of the data values
+ * <p>Missing data values are not included in the statistics.  To speed up the 
+ * statistics calculations, a subset of the data values
  * in each variable may be specified using either the <b>--stride</b>
  * or <b>--sample</b> options, and one of the <b>--limit</b>, <b>--region</b>, 
  * or <b>--polygon</b> options.  The <b>--match</b> option may also be used 
@@ -132,12 +133,12 @@ import java.util.logging.Level;
  *   <dd> The sampling region for each two-dimensional variable.  The
  *   region is specified by the center latitude and longitude in
  *   degrees, and the radius from the center in kilometers.  Only data
- *   within the rectangle specified by the center and radius is
+ *   within the rectangle that minimally encloses the region center and radius is
  *   sampled.  By default, all data is sampled.  Only one of the
  *   <b>--region</b>, <b>--limit</b>, or <b>--polygon</b> options may be
  *   specified.</dd>
  *
- *   <dt> -l, --limit=STARTROW/ENDROW/STARTCOL/ENDCOL</dt> 
+ *   <dt> -l, --limit=STARTROW/STARTCOL/ENDROW/ENDCOL</dt> 
  *   <dd> The sampling limits for each two-dimensional variable in
  *   image coordinates.  Only data between the limits is sampled.  By
  *   default, all data is sampled.  Only one of the
@@ -146,7 +147,8 @@ import java.util.logging.Level;
  *
  *   <dt> -m, --match=PATTERN </dt>
  *   <dd> The variable name matching pattern.  If specified, the
- *   pattern is used as a regular expression to match variable names.
+ *   pattern is used as a case-sensitive regular expression syntax to match 
+ *   the short variable names.
  *   Only variables matching the pattern are included in the
  *   calculations.  By default, no pattern matching is performed and
  *   all variables are included. </dd>
@@ -164,8 +166,8 @@ import java.util.logging.Level;
  *   options may be specified.</dd>
  *
  *   <dt> -s, --stride=N </dt>
- *   <dd> The sampling frequency for each variable dimension.  The
- *   default is to sample all data values (stride = 1). </dd>
+ *   <dd> The sampling frequency for each variable dimension (row and column).  
+ *   The default is to sample all data values (stride = 1). </dd>
  *
  *   <dt> -S, --sample=FACTOR </dt>
  *   <dd> The sampling factor for each variable.  The sampling factor
@@ -193,30 +195,29 @@ import java.util.logging.Level;
  *
  * <h2>Examples</h2>
  * <p> The following shows a statistics calculation on a
- * CoastWatch HDF file from the Great Lakes:</p>
+ * CoastWatch HDF file from the US east coast:</p>
  * <pre>
- *   phollema$ cwstats 2002_197_1719_n16_gr.hdf
- *
- *   Variable       Count     Valid     Min       Max       Mean       Stdev     
- *   avhrr_ch1      1048576   483728    3.49      74.36     13.059646  11.371605 
- *   avhrr_ch2      1048576   483728    1.97      71.35     18.520041  9.844144  
- *   avhrr_ch3a     1048576   483728    0.53      52.84     14.664213  8.88201   
- *   avhrr_ch4      1048576   483728    -44.8     31.55     11.052207  13.683309 
- *   avhrr_ch5      1048576   483728    -45.48    27.05     7.978351   13.185983 
- *   sst            1048576   483728    -44.51    51.43     20.166333  16.714169 
- *   cloud          1048576   1048576   0         127       23.24175   37.179013 
- *   sat_zenith     1048576   483728    0.36      0.7       0.466376   0.077153  
- *   sun_zenith     1048576   483728    0.87      0.95      0.907019   0.022209  
- *   rel_azimuth    1048576   483728    -0.58     -0.33     -0.465731  0.058149  
- *   graphics       1048576   1048576   0         14        6.84576    2.931459  
+ *   phollema$ cwstats 2020_184_1323_n18_er.hdf
+ *   Variable       Count     Valid     Min        Max        Mean       Stdev      Median    
+ *   avhrr_ch1      1824102   1122368   3.45       95.85      25.934837  17.574619  22.81     
+ *   avhrr_ch2      1824102   1122368   1.39       92.57      25.256839  17.359002  23.69     
+ *   avhrr_ch3      1824102   1122368   -23.87     46.88      17.836249  15.087627  22.03     
+ *   avhrr_ch4      1824102   1122368   -76.71     23.12      -4.989203  23.739741  8.31      
+ *   avhrr_ch5      1824102   1122368   -77.55     20.35      -7.344602  23.413349  5.19      
+ *   cloud          1824102   1096583   1          119        64.856056  46.138203  50        
+ *   cloudx         1824102   1122368   0          3          1.526052   1.455426   2         
+ *   graphics       1824102   583768    2          14         8.089512   0.955183   8         
+ *   rel_azimuth    1824102   1122368   0          13.93      5.477502   3.684254   4.75      
+ *   sat_zenith     1824102   1122368   31         69.02      56.372049  8.751794   57.65     
+ *   sst            1824102   1122368   -74.88     38.27      -0.06013   26.126069  13.54     
+ *   sun_zenith     1824102   1122368   36.25      46.77      41.86954   2.462676   41.93     
  * </pre>
  *
  * <!-- END MAN PAGE -->
  *
  * @author Peter Hollemans
  * @since 3.1.0
- */
- 
+ */ 
 public final class cwstats {
 
   private static final String PROG = cwstats.class.getName();

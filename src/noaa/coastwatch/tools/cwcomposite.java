@@ -291,7 +291,7 @@ import java.util.logging.Level;
  *
  *   <dd>Specifies the maximum number of threads for parallel processing. By
  *   default the program will automatically detect the maximum number of
- *   threads possible.</dd>
+ *   threads available at runtime.</dd>
  *
  *   <dt>-t, --collapsetime</dt>
  *

@@ -41,6 +41,7 @@ public final class cwtools {
     var usageList = List.of (
       cdat.getUsage(),
       cwangles.getUsage(),
+      cwanimate.getUsage(),
       cwautonav.getUsage(),
       cwcomposite.getUsage(),
       cwcoverage.getUsage(),

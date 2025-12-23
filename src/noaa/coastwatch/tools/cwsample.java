@@ -99,13 +99,14 @@ import java.util.logging.Level;
  *
  * <h2>Description</h2>
  * <p>
- * The sampling tool extracts data values at specified Earth
- * locations from 2D data variables.  A sample point may be specified
+ * The sampling tool extracts data values from 2D data variables at the nearest 
+ * neighbour of the specified Earth locations.  A sample point may be specified
  * on the command line using geographic coordinates, or multiple
  * sample points may be specified using a data file.  A number of 2D
  * data variables may be sampled simultaneously.  The sampled values
  * are printed as ASCII text to the output file, one line per sample
- * point.  Various options are available to modify the output decimals
+ * point, or 'NaN' if the data value is missing or outside the coverage
+ * area.  Various options are available to modify the output decimals
  * places, delimiters, and so on.
  * </p>
  *

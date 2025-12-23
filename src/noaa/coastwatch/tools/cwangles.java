@@ -120,7 +120,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  *   <dt>-s, --scale=FACTOR/OFFSET</dt>
  *   <dd>The data scale factor and offset.  Data values are scaled to
- *   integers using the factor and offset under the equation:<br>
+ *   integers using the factor and offset under the equation:
  *   <pre>
  *     integer = value/factor + offset
  *   </pre>

@@ -148,7 +148,7 @@ import java.util.logging.Level;
  *
  *   <dt>-a, --axis NAME/INDEX | NAME/START/END[/STEP]</dt>
  *   <dd>The axis name and index/range for animation.  Only one axis can be specified 
- *   with a range and optional step value to animate, and all other axes with a single 
+ *   with a range and optional stepping value to animate, and all other axes with a single 
  *   index value.  If an axis name is not specfied, the zero index is assumed 
  *   for that axis.  For a time axis, the index or start/end can either be integer 
  *   indices or date values specified in one of several ISO date specifications:
@@ -159,28 +159,33 @@ import java.util.logging.Level;
  *     <li><b>yyyy-mm-ddThh:mm:ss+zz:zz</b> - date and time with zone offset, eg: 2011-12-03T10:15:30+01:00</li>
  *     <li><b>yyyy-ddd</b> - date only by year and zero-padded day-of-year [001..366], eg: 2011-337</li>
  *   </ul>
+ *   The optional stepping value is an integer: 1 for every index along the axis,
+ *   2 for every other index, 3 for every third index, etc.  If no axis options
+ *   are specified, the default behaviour is to search for a time axis and use
+ *   the entire time range found with a step value of 1, setting all other axis
+ *   index values to 0.
  *   </dd>
  *
  *   <dt>-c, --colormap PALETTE/MIN/MAX[/FUNCTION]</dt>
  *   <dd>The color map assignment for the data, consisting of the palette name
  *   (see cwrender), minimum data value, maximum data value, and 
  *   optionally a function type: 'linear' (default), 'log', 'stepN', or 
- *   'gamma'.</dd>
+ *   'gamma'.  This option is required and has no default.</dd>
  *
  *   <dt>-C, --credit TEXT</dt>
- *   <dd>The data credit text, default is the origin/institution metadata value.</dd>
+ *   <dd>The data credit text, the default is the origin/institution metadata value.</dd>
  * 
  *   <dt>-h, --help</dt>
  *   <dd>Prints a brief help message.</dd>
  *
  *   <dt>-H, --height PIXELS</dt>
- *   <dd>The height of the output in pixels, default is 720.</dd>
+ *   <dd>The height of the output in pixels, the default is 720.</dd>
  *
  *   <dt>-l, --list-vars</dt>
  *   <dd>Lists the variables in the input data that are available to animate.</dd>
  *
  *   <dt>-L, --logo NAME | FILE</dt>
- *   <dd>The logo on the plot, default is the NOAA logo.  The logo can either
+ *   <dd>The logo on the plot, the default is the NOAA logo.  The logo can either
  *   be a name like in cwrender, or a custom PNG, GIF, or JPEG file.</dd>
  *
  *   <dt>-q, --query-var VARIABLE</dt>
@@ -188,7 +193,8 @@ import java.util.logging.Level;
  *   out the axis information.</dd>
  *
  *   <dt>-r, --rate FPS</dt>
- *   <dd>The frame rate of the output in frames per second, default is 15.</dd>
+ *   <dd>The frame rate of the output in frames per second, the default is 15 
+ *   frames per second.</dd>
  *
  *   <dt>-T, --test</dt>
  *   <dd>Turns on test mode and creates a video file with no data displayed.</dd>
@@ -197,7 +203,7 @@ import java.util.logging.Level;
  *   <dd>The title text, default is the variable long name metadata value.</dd>
  * 
  *   <dt>-u, --units UNITS</dt>
- *   <dd>The units for the color map, default is to read from the input file.</dd>
+ *   <dd>The units for the color map, the default is to read from the input file.</dd>
  *
  *   <dt>-V, --variable VARIABLE</dt>
  *   <dd>The variable data to animate.</dd>
@@ -231,40 +237,77 @@ import java.util.logging.Level;
  *   <li> Variable name not found </li>
  *   <li> No variable specified to animate </li>
  *   <li> Axis name not found </li>
+ *   <li> No color mapping specified </li>
+ *   <li> Axis not specified and no time axis found </li>
  * </ul>
  *
  * <h2>Examples</h2>
- * <ul>
- * 
- *   <li>Create a chlorophyll-a animation centered on the Gulf of Mexico 
- *   from a time series of NetCDF files:
- *   <pre> 
- *     $ cwanimate -v --zoom 24.7/-87.7/L5 --variable chlor_a 
+ *
+ * <p>Create a chlorophyll-a animation centered on the Gulf of Mexico 
+ * from a time series of NetCDF files:</p>
+ * <pre> 
+ *   phollema$ cwanimate -v --zoom 24.7/-87.7/L5 --variable chlor_a 
  *     --colormap NCCOS-chla/0.01/64/log dineof/*.nc output_dineof_chlor_a_gom.mp4
- *   </pre>
- *   </li>
+ *
+ *   [INFO] Accessing time series of inputs dineof/B2024001_A1_WW00_chlora.nc ...
+ *   [INFO] Found time axis for animation with 299 steps
+ *   [INFO] Creating animation of chlor_a with axes:
+ *   [INFO] time (milliseconds since 1970-01-01T00:00:00Z): [0 -> 298] = 2024-01-01T12:00:00Z -> 2024-12-16T12:00:00Z
+ *   [INFO] Centering output on 24.7000 N, 87.7000 W
+ *   [INFO] Setting data view to zoom level 5, 4.8919696875 km/pixel
+ *   [INFO] Encoding frame [1/299]: 2024-01-01T12:00:00Z
+ *   [INFO] Encoding frame [2/299]: 2024-01-02T12:00:00Z
+ *   ...
+ *   [INFO] Encoding frame [298/299]: 2024-12-15T12:00:00Z
+ *   [INFO] Encoding frame [299/299]: 2024-12-16T12:00:00Z
+ *   [INFO] Finishing encoding
+ *   [INFO] Writing metadata
+ * </pre> 
+ *  
+ * <p>Similar to above, but for weekly composited Hawaii data over a 10 
+ * month period and from a THREDDS server:</p>
+ * <pre>
+ *   cwanimate -v --zoom 20.6/-156.9/L7 --axis time_baseline/0/300 
+ *     --variable chlor_a --colormap NCCOS-chla/0.01/1/log 
+ *     https://coastwatch.noaa.gov/thredds/dodsC/CoastWatch/VIIRS/npp/chlora/WeeklySector/UY00 output_chlor_a_hawaii.mp4
+ *   [INFO] Accessing single input https://coastwatch.noaa.gov/thredds/dodsC/CoastWatch/VIIRS/npp/chlora/WeeklySector/UY00
+ *   [INFO] Creating animation of chlor_a with axes:
+ *   [INFO] time_baseline (milliseconds since 1970-01-01T00:00:00Z): [0 -> 300] = 2024-10-27T12:00:00Z -> 2025-09-12T12:00:00Z
+ *   [INFO] altitude (m): [0] = 0.0
+ *   [INFO] Centering output on 20.6000 N, 156.9000 W
+ *   [INFO] Setting data view to zoom level 7, 1.222992421875 km/pixel
+ *   [INFO] Accessing grid subset of stride 2
+ *   [INFO] Encoding frame [1/301]: 2024-10-27T12:00:00Z
+ *   [INFO] Encoding frame [2/301]: 2024-10-28T12:00:00Z
+ *   ...
+ *   [INFO] Encoding frame [300/301]: 2025-09-11T12:00:00Z
+ *   [INFO] Encoding frame [301/301]: 2025-09-12T12:00:00Z
+ *   [INFO] Finishing encoding
+ *   [INFO] Writing metadata
+ * </pre> 
  * 
- *   <li>Similar to above, but for monthly Hawaii data over a three year period 
- *   and from a THREDDS server:
- *   <pre>
- *     $ cwanimate -v --zoom 20.6/-156.9/L7 --axis time/0/36 --variable chlor_a 
- *     --colormap Turbo/0.01/1/log 
- *     https://oceanwatch.pifsc.noaa.gov/thredds/dodsC/noaa_snpp_chla/monthly 
- *     output_chlor_a_hawaii.mp4
- *   </pre> 
- *   </li>
- * 
- *   <li>Create a sea surface temperature animation centered on the Gulf of
- *   Mexico from a NetCDF 4 file containing multiple time steps downloaded 
- *   from a THREDDS server using the NetCDF Subset Service:
- *   <pre>
- *     $ cwanimate -v --title "SST Analysis Gulf of Mexico" --zoom 24.7/-87.7/L6 
+ * <p>Create a sea surface temperature animation centered on the Gulf of
+ * Mexico from a NetCDF 4 file containing multiple time steps downloaded 
+ * from a THREDDS server using the NetCDF Subset Service:</p>
+ * <pre>
+ *   phollema$ cwanimate -v --title "SST Analysis Gulf of Mexico" --zoom 24.7/-87.7/L6 
  *     --variable sst_analysis_night_only --colormap Turbo/8/35 
  *     CW_BLENDED_NIGHT_SST_cwblendednightsst.nc4 output_sst_gom.mp4
- *   </pre>
- *   </li>
  * 
- * </ul>
+ *   [INFO] Accessing single input CW_BLENDED_NIGHT_SST_cwblendednightsst.nc4
+ *   [INFO] Found time axis for animation with 331 steps
+ *   [INFO] Creating animation of sst_analysis_night_only with axes:
+ *   [INFO] time (milliseconds since 1970-01-01T00:00:00Z): [0 -> 330] = 2024-01-01T00:00:00Z -> 2024-12-16T00:00:00Z
+ *   [INFO] Centering output on 24.7000 N, 87.7000 W
+ *   [INFO] Setting data view to zoom level 6, 2.44598484375 km/pixel
+ *   [INFO] Encoding frame [1/331]: 2024-01-01T00:00:00Z
+ *   [INFO] Encoding frame [2/331]: 2024-01-02T00:00:00Z
+ *   ...
+ *   [INFO] Encoding frame [330/331]: 2024-12-15T00:00:00Z
+ *   [INFO] Encoding frame [331/331]: 2024-12-16T00:00:00Z
+ *   [INFO] Finishing encoding
+ *   [INFO] Writing metadata
+ * </pre>
  *
  * <!-- END MAN PAGE -->
  *
@@ -739,8 +782,17 @@ public final class cwanimate {
       var coast = new CoastOverlay (Color.BLACK);
       coast.setDropShadow (true);
       coast.setFillColor (noaa.coastwatch.render.ColorLookup.getInstance().getColor ("land"));
+
+
+      // var coast = new CoastOverlay (Color.BLACK);
+      // coast.setFillColor (new Color (113, 113, 113));
+
+
       view.addOverlay (coast);
       view.setMissingColor (new Color (64, 64 ,64));
+
+//      view.setMissingColor (new Color (50, 50, 50));
+
 
     	try {
 
