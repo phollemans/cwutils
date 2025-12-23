@@ -35,6 +35,8 @@ import noaa.coastwatch.io.SerializedObjectManager;
 import noaa.coastwatch.render.EarthDataOverlay;
 import noaa.coastwatch.render.GridContainerOverlay;
 
+import java.util.logging.Logger;
+
 /** 
  * The <code>OverlayGroupManager</code> class can be used to save,
  * load, delete, and get a list of overlay groups.  Bitmask overlays
@@ -47,6 +49,8 @@ import noaa.coastwatch.render.GridContainerOverlay;
  * @since 3.1.7
  */
 public class OverlayGroupManager {
+
+  private static final Logger LOGGER = Logger.getLogger (OverlayGroupManager.class.getName());
 
   // Constants
   // ---------
@@ -172,11 +176,27 @@ public class OverlayGroupManager {
       throw new IOException (e.getMessage());
     } // catch
 
-    // Fix overlays that need extra data
-    // ---------------------------------
-    for (EarthDataOverlay overlay : overlayList) {
-      if (overlay instanceof GridContainerOverlay)
+    LOGGER.fine ("Loaded overlay group '" + group + "'");
+    for (var overlay : overlayList) {
+      LOGGER.fine ("-- " + overlay.getName() + " (" + overlay.getClass().getName() + ")");
+    } // for
+
+    // Perform post loading operations by updating any overlays that need
+    // data sources, and upgrading any overlays that need it
+    for (int i = 0; i < overlayList.size(); i++) {
+
+      var overlay = overlayList.get (i);
+
+      if (overlay instanceof GridContainerOverlay) {
         ((GridContainerOverlay) overlay).setDataSource (reader, variableList);
+        LOGGER.fine ("Added data source and variables for " + overlay.getName());
+      } // if
+
+      if (overlay.isUpgradable()) {
+        var upgraded = overlay.getUpgraded();
+        overlayList.set (i, upgraded);
+      } // if
+
     } // for
 
     return (overlayList);

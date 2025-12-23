@@ -57,6 +57,8 @@ public class JavaExpressionMaskOverlay
   extends MaskOverlay
   implements GridContainerOverlay {
 
+  private static final long serialVersionUID = 2548077101262448802L;
+
   // Variables
   // ---------
 
@@ -80,6 +82,50 @@ public class JavaExpressionMaskOverlay
 
   /** The input variables for the current expression. */
   private transient Grid[] inputVars;
+
+  /** The legacy emulation mode. */
+  private transient boolean emulated;
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Upgrades an expression mask overlay to this new class.
+   * 
+   * @param overlay the existing expression mask instance.
+   * @param reader the data reader to use as the source.
+   * @param variableList the variable list to use from the reader.
+   * 
+   * @return an upgraded instance of the expression mask.
+   */
+  public static JavaExpressionMaskOverlay upgradeFrom (
+    ExpressionMaskOverlay overlay,
+    EarthDataReader reader,
+    List variableList
+  ) {
+
+    // Translate the legacy expression to Java syntax
+    var helper = new ParseHelper (variableList);
+    var emulationParser = ExpressionParserFactory.getFactoryInstance().create (ParserStyle.LEGACY_EMULATED);
+    emulationParser.init (helper);
+    var newExpression = emulationParser.translate (overlay.getExpression());
+    newExpression = newExpression.replaceFirst ("^\\((.*)\\)$", "$1");
+
+    // Construct the upgraded overlay and transfer properties
+    var upgraded = new JavaExpressionMaskOverlay (
+      overlay.getColor(),
+      reader,
+      variableList,
+      newExpression      
+    );
+    upgraded.setLayer (overlay.getLayer());
+    upgraded.setVisible (overlay.getVisible());
+    upgraded.setName (overlay.getName());
+    upgraded.setInverse (overlay.getInverse());
+    upgraded.alpha = overlay.alpha;
+
+    return (upgraded);
+
+  } // upgradeFrom
 
   ////////////////////////////////////////////////////////////
 
@@ -133,6 +179,56 @@ public class JavaExpressionMaskOverlay
   ////////////////////////////////////////////////////////////
 
   /**
+   * Constructs a new overlay with optional emulation parsing.  The layer 
+   * number is initialized to 0.
+   *
+   * @param color the overlay color.
+   * @param reader the reader to use for data variables.
+   * @param variableList the list of allowed data variable names.
+   * @param expression the mask expression.  Variables names in
+   * the expression must have corresponding grids in the list.
+   * @param emulated the emulation flag, true to parse expressions and
+   * emulate the legacy syntax using the new Java parser, of false
+   * to directly use Java style syntax parsing.
+   *
+   * @since 4.1.5
+   */
+  public JavaExpressionMaskOverlay (
+    Color color,
+    EarthDataReader reader,
+    List<String> variableList,
+    String expression,
+    boolean emulated
+  ) {
+
+    super (color);
+    this.reader = reader;
+    this.variableList = variableList;
+    this.emulated = emulated;
+    setExpression (expression);
+
+  } // JavaExpressionMaskOverlay
+
+   ////////////////////////////////////////////////////////////
+
+  /**
+   * Set the legacy emulation flag, by default false.
+   * 
+   * @param emulated the emulation flag, true to parse expressions and
+   * emulate the legacy syntax using the new Java parser, of false
+   * to directly use Java style syntax parsing.
+   *
+   * @since 4.1.5
+   */
+  public void setLegacyEmulated (boolean emulated) {
+
+    this.emulated = emulated;
+
+  } // setLegacyEmulated
+
+  ////////////////////////////////////////////////////////////
+
+  /**
    * Sets the expression used by the mask.
    *
    * @param newExpression the new math expression.
@@ -165,6 +261,11 @@ public class JavaExpressionMaskOverlay
     // Parse expression
     // ----------------
     helper = new ParseHelper (variableList);
+    if (emulated) {
+      ExpressionParser emulationParser = ExpressionParserFactory.getFactoryInstance().create (ParserStyle.LEGACY_EMULATED);
+      emulationParser.init (this.helper);
+      newExpression = emulationParser.translate (newExpression);
+    } // if
     parser = ExpressionParserFactory.getFactoryInstance().create (ParserStyle.JAVA);
     parser.init (helper);
     parser.parse (newExpression);
@@ -174,13 +275,10 @@ public class JavaExpressionMaskOverlay
         resultType + "', expecting a boolean result");
     } // if
     
-    // Check if required variables are available
-    // -----------------------------------------
+    // Get required variables as grids
     String[] inputVarNames = (String[]) parser.getVariables().toArray (new String[] {});
     Grid[] inputVars = new Grid[inputVarNames.length];
     for (int i = 0; i < inputVarNames.length; i++) {
-      if (variableList.indexOf (inputVarNames[i]) == -1)
-        throw new IllegalArgumentException ("Cannot find input variable for " + inputVarNames[i]);
       try { inputVars[i] = (Grid) reader.getVariable (inputVarNames[i]); }
       catch (IOException e) { throw (new RuntimeException (e)); }
     } // for

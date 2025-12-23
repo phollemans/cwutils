@@ -78,11 +78,16 @@ import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.Statistics;
 import noaa.coastwatch.util.expression.ExpressionParserFactory;
 import noaa.coastwatch.util.DataIterator;
+import noaa.coastwatch.util.DataIterator;
+import noaa.coastwatch.util.expression.ExpressionParser;
+import noaa.coastwatch.util.expression.ExpressionParserFactory;
+import noaa.coastwatch.util.expression.ExpressionParserFactory.ParserStyle;
+import noaa.coastwatch.util.expression.ParseHelper;
 
 import com.braju.format.Format;
 
-import org.nfunk.jep.JEP;
-import org.nfunk.jep.SymbolTable;
+// import org.nfunk.jep.JEP;
+// import org.nfunk.jep.SymbolTable;
 
 // Testing
 import noaa.coastwatch.gui.visual.MultiPointFeatureOverlayPropertyChooser;
@@ -349,50 +354,6 @@ public class MultiPointFeatureOverlayStatsPanel
   ////////////////////////////////////////////////////////////
 
   /**
-   * Parses the specified expression and checks for errors.
-   *
-   * @param expression the expression to parse.
-   *
-   * @return the expression parser to use for evaluation.
-   *
-   * @throws IllegalArgumentException if an error occurred parsing the 
-   * expression, or the expression contained an unknown attribute name.
-   */
-  private JEP parseExpression (
-    String expression
-  ) {
-  
-    // Parse expression
-    // ----------------
-    JEP parser = ExpressionParserFactory.getInstance();
-    parser.parseExpression (expression);
-    if (parser.hasError()) {
-      throw new IllegalArgumentException ("Error parsing expression: " + 
-        parser.getErrorInfo());
-    } // if
-
-    // Get required attribute names
-    // ----------------------------
-    HashSet<String> keySet = new HashSet<> (parser.getSymbolTable().keySet());
-    keySet.remove ("e");
-    keySet.remove ("pi");
-    keySet.remove ("nan");
-    
-    // Check if expression attributes are available in each feature
-    // ------------------------------------------------------------
-    Map<String, Integer> attNameMap = multiPointOverlay.getOverlayList().get(0).getSource().getAttributeNameMap();
-    keySet.forEach (attName -> {
-      if (!attNameMap.containsKey (attName))
-        throw new IllegalArgumentException ("Illegal attribute name: " + attName);
-    });
-  
-    return (parser);
-  
-  } // parseExpression
-
-  ////////////////////////////////////////////////////////////
-
-  /**
    * Shows an error dialog in response to a checking input data.
    *
    * @param errorMessage the error message.
@@ -601,43 +562,47 @@ public class MultiPointFeatureOverlayStatsPanel
     String expression
   ) {
 
-    // Parse expression
-    // ----------------
-    JEP parser = parseExpression (expression);
-    Map<String, Integer> attNameMap = multiPointOverlay.getOverlayList().get(0).getSource().getAttributeNameMap();
-    HashSet<String> keySet = new HashSet<> (parser.getSymbolTable().keySet());
-    keySet.remove ("e");
-    keySet.remove ("pi");
-    keySet.remove ("nan");
-
-    // Compute expression values
-    // -------------------------
+    // Try to parse the expression
+    var attNameMap = multiPointOverlay.getOverlayList().get(0).getSource().getAttributeNameMap();    
+    var validVariableNames = List.copyOf (attNameMap.keySet());
+    var helper = new ParseHelper (validVariableNames);
+    var parser = ExpressionParserFactory.getFactoryInstance().create (ParserStyle.JAVA);
+    parser.init (helper);
+    try { parser.parse (expression); }
+    catch (RuntimeException e) { 
+      throw new IllegalArgumentException (e);
+    } // catch
+  
+    // Compute the expression values by looping over each feature and computing
+    // the expression result using the required feature attribute values.
+    var variableList = parser.getVariables();
+    helper.data = new double[variableList.size()];
     int valueCount = matchingFeatures.size();
-    final double[] valueArray = new double[valueCount];
-    int index = 0;
+    var expressionOutputArray = new double[valueCount];
+    int expressionValueIndex = 0;
     for (Feature feature : matchingFeatures) {
-      keySet.forEach (attName -> {
-        Object obj = feature.getAttribute (attNameMap.get (attName));
-        Number value;
-        try { value = (Number) obj; }
+      for (int varIndex = 0; varIndex < variableList.size(); varIndex++) {
+        var varName = variableList.get (varIndex);
+        Object obj = feature.getAttribute (attNameMap.get (varName));
+        Number attValue;
+        try { attValue = (Number) obj; }
         catch (Exception e) {
-          throw new IllegalArgumentException ("Attribute " + attName + " cannot be converted to a number value");
+          throw new IllegalArgumentException ("Attribute " + varName + " value cannot be converted to a number");
         } // catch
-        if (value == null)
-          parser.addVariable (attName, Double.NaN);
+        if (attValue == null)
+          helper.data[varIndex] = Double.NaN;
         else
-          parser.addVariable (attName, value.doubleValue());
-      });
-      valueArray[index++] = parser.getValue();
+          helper.data[varIndex] = attValue.doubleValue();
+      } // for
+      expressionOutputArray[expressionValueIndex++] = parser.evaluateToDouble (helper);
     } // for
     
-    // Compute statistics
-    // ------------------
+    // Compute statistics for the array of expression output values
     Statistics stats = new Statistics (new DataIterator () {
       private int index = 0;
-      public boolean hasNext() { return (index < valueArray.length); }
+      public boolean hasNext() { return (index < expressionOutputArray.length); }
       public Double next() { return (Double.valueOf (nextDouble())); }
-      public double nextDouble () { return (valueArray[index++]); }
+      public double nextDouble () { return (expressionOutputArray[index++]); }
       public void reset() { index = 0; }
       public void remove () { throw new UnsupportedOperationException(); }
     });
@@ -796,8 +761,8 @@ public class MultiPointFeatureOverlayStatsPanel
   /** Starts a new stats computation. */
   private void startComputation() {
 
-    statsWorker = new StatsComputation();
-    statsWorker.execute();
+   statsWorker = new StatsComputation();
+   statsWorker.execute();
     
   } // startComputation
 
@@ -908,7 +873,7 @@ public class MultiPointFeatureOverlayStatsPanel
 
       boolean needsUpdate = false;
 
-      // Need tp update if the features have been invalidated
+      // Need to update if the features have been invalidated
       // ----------------------------------------------------
       if (matchingFeatures == null)
         needsUpdate = true;
@@ -987,7 +952,18 @@ public class MultiPointFeatureOverlayStatsPanel
     contentPanel.add (centerPanel, BorderLayout.CENTER);
     statsModel = new StatsTableModel();
     statsTable = new JTable (statsModel);
-    statsTable.setAutoCreateRowSorter (true);
+
+
+    // FIXME: Having this line in under Java 17.0.14 on Mac and Windows
+    // generated an error to stdout/err that said:
+    //
+    // WARNING: row index is bigger than sorter's row count. Most likely this is a wrong sorter usage.
+    // 
+    // No solution online worked, except to remove the automatic sorter.
+
+//    statsTable.setAutoCreateRowSorter (true);
+
+
     JScrollPane tableScroller = new JScrollPane (statsTable,
       JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     statsTable.setAutoResizeMode (JTable.AUTO_RESIZE_OFF);
@@ -1157,6 +1133,7 @@ public class MultiPointFeatureOverlayStatsPanel
     area.addAll();
     MultiPointFeatureOverlayStatsPanel panel =
       new MultiPointFeatureOverlayStatsPanel (overlay, area);
+    panel.setPreferredSize (new java.awt.Dimension (700,400));
     panel.overlayChanged();
     panel.addExpression ("sst");
     panel.addExpression ("quality_level");

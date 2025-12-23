@@ -107,6 +107,43 @@ public abstract class EarthDataOverlay
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Determines whether this overlay supports upgrading to a newer version.
+   * <p>
+   * By default, overlays are not upgradable.
+   * </p>
+   *
+   * @return {@code true} if this overlay supports upgrade, or 
+   * {@code false} otherwise.
+   * 
+   * @since 4.1.5
+   */
+  public boolean isUpgradable() { return (false); }
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Returns an upgraded version of this overlay if supported.
+   * <p>
+   * If {@link #isUpgradable()} returns {@code true}, this method is called to provide
+   * a replacement overlay object that represents the upgraded form. The default implementation
+   * throws {@link UnsupportedOperationException}.
+   * </p>
+   *
+   * @return the upgraded {@code EarthDataOverlay} instance.
+   * 
+   * @throws UnsupportedOperationException if upgrading is not supported.
+   * 
+   * @since 4.1.5
+   */
+  public EarthDataOverlay getUpgraded() {
+
+      throw new UnsupportedOperationException("Upgrade not supported for this overlay");
+
+  } // getUpgraded
+
+  ////////////////////////////////////////////////////////////
+
   /** 
    * Sets the overlay color.  Only opaque colors are allowed.  If the
    * color has an alpha component, the alpha value is set to 255 and

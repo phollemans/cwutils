@@ -32,7 +32,7 @@ import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
 import noaa.coastwatch.gui.visual.PointFeatureOverlayPropertyChooser;
 import noaa.coastwatch.gui.visual.MultiPointFeatureOverlayPropertyChooser;
 import noaa.coastwatch.render.EarthDataOverlay;
-import noaa.coastwatch.render.ExpressionMaskOverlay;
+import noaa.coastwatch.render.JavaExpressionMaskOverlay;
 import noaa.coastwatch.render.MultilayerBitmaskOverlay;
 import noaa.coastwatch.render.PointFeatureOverlay;
 import noaa.coastwatch.render.MultiPointFeatureOverlay;
@@ -77,9 +77,9 @@ public class OverlayPropertyChooserFactory {
     
     // Create expression mask chooser
     // ------------------------------
-    else if (overlay instanceof ExpressionMaskOverlay) {
+    else if (overlay instanceof JavaExpressionMaskOverlay) {
       chooser = new ExpressionMaskOverlayPropertyChooser (
-        (ExpressionMaskOverlay) overlay);
+        (JavaExpressionMaskOverlay) overlay);
     } // else if
     
     // Create point data overlay chooser

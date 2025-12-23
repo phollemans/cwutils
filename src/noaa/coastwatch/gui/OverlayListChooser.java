@@ -68,7 +68,7 @@ import noaa.coastwatch.render.feature.ESRIShapefileReader;
 import noaa.coastwatch.render.feature.IQuamNCReader;
 import noaa.coastwatch.render.feature.LatLonLineReader;
 import noaa.coastwatch.render.EarthDataOverlay;
-import noaa.coastwatch.render.ExpressionMaskOverlay;
+import noaa.coastwatch.render.JavaExpressionMaskOverlay;
 import noaa.coastwatch.render.GridContainerOverlay;
 import noaa.coastwatch.render.LatLonOverlay;
 import noaa.coastwatch.render.MultilayerBitmaskOverlay;
@@ -98,7 +98,7 @@ import java.util.logging.Logger;
  * @see TopographyOverlay
  * @see BitmaskOverlay
  * @see MultilayerBitmaskOverlay
- * @see ExpressionMaskOverlay
+ * @see JavaExpressionMaskOverlay
  * @see ESRIShapefileReader
  *
  * @author Peter Hollemans
@@ -282,7 +282,7 @@ public class OverlayListChooser
 
   private void addExprMaskEvent() {
 
-    var overlay = new ExpressionMaskOverlay (Color.GRAY, reader, variableList, "");
+    var overlay = new JavaExpressionMaskOverlay (Color.GRAY, reader, variableList, "");
     var chooserPanel = OverlayPropertyChooserFactory.create (overlay);
     listPanel.showDialog (chooserPanel, "Expression");
 
@@ -569,7 +569,7 @@ public class OverlayListChooser
           else if (command.equals (EXPRMASK_COMMAND)) {
             OverlayPropertyChooser chooserPanel =
               OverlayPropertyChooserFactory.create (
-                new ExpressionMaskOverlay (Color.GRAY, reader, variableList, ""));
+                new JavaExpressionMaskOverlay (Color.GRAY, reader, variableList, ""));
             showDialog (chooserPanel, command);
           } // else if
 

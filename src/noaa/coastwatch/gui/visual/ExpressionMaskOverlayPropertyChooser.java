@@ -31,13 +31,13 @@ import java.awt.event.FocusListener;
 import javax.swing.JTextField;
 import noaa.coastwatch.gui.visual.GenericOverlayPropertyChooser;
 import noaa.coastwatch.gui.visual.OverlayPropertyChooser;
-import noaa.coastwatch.render.ExpressionMaskOverlay;
+import noaa.coastwatch.render.JavaExpressionMaskOverlay;
 
 /** 
  * The <code>ExpressionMaskOverlayPropertyChooser</code> class is an
  * implementation of an <code>OverlayPropertyChooser</code> that
  * allows the user to edit the properties of an
- * <code>ExpressionMaskOverlay</code>.
+ * <code>JavaExpressionMaskOverlay</code>.
  *
  * @author Peter Hollemans
  * @since 3.2.1
@@ -53,9 +53,14 @@ public class ExpressionMaskOverlayPropertyChooser
 
   ////////////////////////////////////////////////////////////
 
+  @Override
+  protected String getTitle () { return ("Expression Mask"); }
+
+  ////////////////////////////////////////////////////////////
+
   /** Creates a new chooser panel. */
   public ExpressionMaskOverlayPropertyChooser (
-    ExpressionMaskOverlay newOverlay
+    JavaExpressionMaskOverlay newOverlay
   ) {
 
     super (newOverlay);
@@ -96,7 +101,7 @@ public class ExpressionMaskOverlayPropertyChooser
   protected void validateInput () {
 
     try {
-      ((ExpressionMaskOverlay) overlay).setExpression (field.getText());
+      ((JavaExpressionMaskOverlay) overlay).setExpression (field.getText());
     } // try
     catch (Exception e) {
       throw new IllegalStateException (e.getMessage());

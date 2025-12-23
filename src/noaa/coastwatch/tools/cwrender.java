@@ -189,7 +189,7 @@ import ucar.units.Unit;
  * -t, --topo=COLOR[/LEVEL1/LEVEL2/...] <br>
  * -u, --group=GROUP <br>
  * -w, --water=COLOR <br>
- * -X, --exprmask=EXPRESSION/COLOR <br>
+ * -X, --exprmask=EXPRESSION/COLOR[/TYPE] <br>
  * --watermark=TEXT[/COLOR[/SIZE[/ANGLE]]] <br>
  * --watermarkshadow
  * </p>
@@ -523,8 +523,9 @@ import ucar.units.Unit;
  *   <dt>-I, --imagecolors=NUMBER</dt>
  *
  *   <dd>The number of colors to use for the index color model of
- *   the data image, up to 256.  Normally the data image uses an
- *   unlimited number of colors because this achieves the best
+ *   the data image, up to 256.  Using this option results in 8-bit output
+ *   where as by default the data image is 24-bit and uses an
+ *   unrestricted number of colors because this achieves the best
  *   visual rendering quality.  But in some cases it may be
  *   desirable to make the output file smaller by limiting the
  *   number of colors to &lt;=256 values and using a index color
@@ -744,7 +745,7 @@ import ucar.units.Unit;
  *   sense of the land mask is inverted.  The default is not to render
  *   a water mask.</dd>
  *
- *   <dt>-X, --exprmask=EXPRESSION/COLOR</dt>
+ *   <dt>-X, --exprmask=EXPRESSION/COLOR[/TYPE]</dt>
  *
  *   <dd>Specifies that a mask should be rendered on top of the
  *   data image whose pixels are obtained by evaluating the
@@ -759,9 +760,9 @@ import ucar.units.Unit;
  *   the given color.  Multiple values of the <b>--exprmask</b>
  *   option may be given, in which case the masks are applied in
  *   the order that they are specified.  The syntax for the
- *   expression is identical to the right-hand-side of a
- *   <b>cwmath</b> legacy mode expression (see the <b>cwmath</b> tool manual
- *   page).</dd>
+ *   expression is determined by the optional type, which can be 'java' (the 
+ *   default) or 'emulated' for legacy emulated syntax.  Both syntax
+ *   types are documented in the <b>cwmath</b> tool manual page.</dd>
  *
  *   <dt>--watermark=TEXT[/COLOR[/SIZE[/ANGLE]]]</dt>
  *
@@ -1005,6 +1006,7 @@ import ucar.units.Unit;
  *   <li> Unrecognized color name </li>
  *   <li> Invalid palette name </li>
  *   <li> Invalid magnification center </li>
+ *   <li> Neither <b>--enhance</b> nor <b>--composite</b> were specified </li>
  * </ul>
  *
  * <h2>Examples</h2>
@@ -1886,6 +1888,17 @@ public class cwrender {
         for (Iterator iter = exprmaskList.iterator(); iter.hasNext();) {
           String exprmask = (String) iter.next();
 
+          // Test to see if the user specified the emulated syntax type, and
+          // and remove that if so and save the syntax type
+          boolean emulated = false;
+          if (exprmask.endsWith ("/emulated")) {
+            emulated = true;
+            exprmask = exprmask.substring (0, exprmask.lastIndexOf ("/emulated"));
+          } // if
+          else if (exprmask.endsWith ("/java")) {
+            exprmask = exprmask.substring (0, exprmask.lastIndexOf ("/java"));
+          } // else if
+
           // Get expression mask parameters
           // ------------------------------
           int index = exprmask.lastIndexOf ("/");
@@ -1899,9 +1912,9 @@ public class cwrender {
 
           // Add expression mask to overlays
           // -------------------------------
-          List gridNameList = reader.getAllGrids();
-          view.addOverlay (new ExpressionMaskOverlay (maskColor, reader, 
-            gridNameList, expression));
+          var gridNameList = reader.getAllGrids();
+          view.addOverlay (new JavaExpressionMaskOverlay (maskColor, reader, 
+            gridNameList, expression, emulated));
 
         } // for
       } // if
@@ -2363,15 +2376,15 @@ public class cwrender {
 
     // Set all dimensions
     // ------------------
-    List<String> paletteList = (List<String>) PaletteFactory.getPredefined();
+    var paletteList = PaletteFactory.getPredefined();
     int paletteCount = paletteList.size();
-    int barHeight = 36;
+    int barHeight = 52;
     int barWidth = barHeight * 4;
-    int space = 5;
+    int space = 10;
     int entryWidth = barWidth + space;
     int textHeight = 16;
     int entryHeight = textHeight + barHeight + space;
-    int maxHeight = 700;
+    int maxHeight = 800;
     int entriesPerColumn = (maxHeight - space) / entryHeight ;
     int columns = paletteCount / entriesPerColumn;
     if (paletteCount % entriesPerColumn != 0) columns++;
@@ -2383,7 +2396,7 @@ public class cwrender {
     // ------------
     BufferedImage image = new BufferedImage (width, height, BufferedImage.TYPE_INT_RGB);
     Graphics2D g = image.createGraphics();
-    g.setBackground​ (Color.WHITE);
+    g.setBackground (Color.WHITE);
     g.setColor (Color.BLACK);
     g.setFont (new Font ("Dialog", Font.PLAIN, fontSize));
     g.setRenderingHint (RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -2477,7 +2490,7 @@ public class cwrender {
     info.option ("-t, --topo=COLOR[/LEVEL1/LEVEL2/...]", "Render topographic contours");
     info.option ("-u, --group=GROUP", "Render overlay group from CDAT");
     info.option ("-w, --water=COLOR", "Render water mask");
-    info.option ("-X, --exprmask=EXPRESSION/COLOR", "Render expression mask");
+    info.option ("-X, --exprmask=EXPRESSION/COLOR[/TYPE]", "Render expression mask");
     info.option ("--watermark=TEXT[/COLOR[/SIZE[/ANGLE]]]", "Render watermark");
     info.option ("--watermarkshadow", "Add drop shadow to watermark");
  

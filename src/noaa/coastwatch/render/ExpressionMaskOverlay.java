@@ -51,10 +51,16 @@ import org.nfunk.jep.SymbolTable;
  *
  * @author Peter Hollemans
  * @since 3.2.1
+ * 
+ * @deprecated As of 4.1.5 use the {@link JavaExpressionMaskOverlay} class.
  */
+@Deprecated
 public class ExpressionMaskOverlay 
   extends MaskOverlay
   implements GridContainerOverlay {
+
+  /** The serialization constant. */
+  private static final long serialVersionUID = 4881065199205028892L;
 
   // Variables
   // ---------
@@ -76,6 +82,20 @@ public class ExpressionMaskOverlay
 
   /** The input variables for the current expression. */
   private transient Grid[] inputVars;
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public boolean isUpgradable() { return (true); }
+
+  ////////////////////////////////////////////////////////////
+
+  @Override
+  public EarthDataOverlay getUpgraded() { 
+
+    return (JavaExpressionMaskOverlay.upgradeFrom (this, reader, variableList)); 
+
+  } // getUpgraded
 
   ////////////////////////////////////////////////////////////
 
