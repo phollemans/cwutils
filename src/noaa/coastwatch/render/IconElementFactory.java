@@ -79,14 +79,10 @@ public class IconElementFactory {
   protected IconElementFactory () {
 
     resourceMap = new LinkedHashMap<>();
-    resourceMap.put ("NOAA", "noaa.png");
-//    resourceMap.put ("noaa_shaded", "noaa3d.gif");
-    resourceMap.put ("NASA", "nasa.gif");
-//    resourceMap.put ("nasa_shaded", "nasa3d.gif");
-    resourceMap.put ("NWS", "nws.gif");
-//    resourceMap.put ("nws_shaded", "nws3d.gif");
-    resourceMap.put ("DOC", "doc.gif");
-//    resourceMap.put ("doc_shaded", "doc3d.gif");
+    resourceMap.put ("NOAA", "logos/noaa.png");
+    resourceMap.put ("NASA", "logos/nasa.gif");
+    resourceMap.put ("NWS", "logos/nws.gif");
+    resourceMap.put ("DOC", "logos/doc.gif");
 
   } // IconElementFactory
 
