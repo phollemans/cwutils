@@ -77,6 +77,7 @@ import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JCheckBox;
 
 import noaa.coastwatch.gui.CompoundToolBar;
 import noaa.coastwatch.gui.ApplicationToolBar;
@@ -1530,6 +1531,51 @@ public final class cdat extends JFrame {
 
           op = "reading the user preferences";
           Preferences prefs = ResourceManager.getPreferences();
+
+          // Check if the user wants to upgrade the preferences here for
+          // certain versions.  Starting in version 4.1.5 we added extra
+          // palettes and overlay groups.
+          var prefsVersion = prefs.getVersion();
+          if (prefsVersion == null) prefsVersion = "0.0.0";
+          var thisVersion = ToolServices.getVersion();
+
+          if (ToolServices.compareVersions (thisVersion, "4.1.5") >= 0) {
+            if (ToolServices.compareVersions (prefsVersion, "4.1.5") < 0) {
+
+              var dontAskKey = "prefs_upgrade_4_1_5_dont_ask";
+              boolean dontAsk = GUIServices.recallBooleanSettingForClass (false, dontAskKey, cdat.class);
+              if (!dontAsk) {
+
+                JCheckBox dontAskBox = new JCheckBox ("Don't ask again");
+                String question = 
+                  "This software version includes new enhancement preferences\n" + 
+                  "and overlay groups.  Merge these into your preferences?\n" +
+                  "Any existing preferences and overlay groups will not be affected.";
+                Object[] options = {"Yes", "No", dontAskBox};
+                int result = JOptionPane.showOptionDialog (frame, question, "Merge Preferences",
+                  JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                  null, options, options[0]);
+
+                if (result == 0) {
+                  try {
+                    ResourceManager.mergeResources();
+                    prefs = ResourceManager.getPreferences();
+                  } // try
+                  catch (Exception e) { 
+                    String errorMessage = "Error merging preferences:\n" + e;
+                    JOptionPane.showMessageDialog (frame, 
+                      errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+                  } // catch
+                } // if
+                else if (result == 1 && dontAskBox.isSelected()) {
+                  GUIServices.storeBooleanSettingForClass (true, dontAskKey, cdat.class);
+                } // else if
+
+              } // if
+
+            } // if
+          } // if
+
           setEarthLocFormat (prefs);
           EarthDataReader.setUnitsMap (prefs.getUnitsMap());
 

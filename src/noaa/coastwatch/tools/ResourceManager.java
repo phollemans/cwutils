@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.jar.JarFile;
 import java.awt.Desktop;
 
@@ -262,7 +263,7 @@ public class ResourceManager {
       output.close();
     } // if
 
-  } // copy
+  } // copyStream
 
   ////////////////////////////////////////////////////////////
 
@@ -336,6 +337,61 @@ public class ResourceManager {
     return (null);
 
   } // checkResources
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Merges resources from the system default into the user's files.  This
+   * includes any overlay groups that aren't already contained in the user
+   * groups, plus any color enhancement preferences for variables not already
+   * in the user's variable list.  This method should only be called after 
+   * {@link #getPreferences} to make sure that the preferences have been built.
+   * 
+   * @since 4.1.5
+   */
+  public static void mergeResources () throws IOException {
+
+    // Merge overlays
+    if (OVERLAYS_DIR.exists()) {
+      var list = OVERLAYS_DIR.list();
+      if (list != null) {
+        var systemFiles = Arrays.asList (overlayFiles);
+        var remainingFiles = new ArrayList<> (systemFiles);
+        remainingFiles.removeAll (Arrays.asList (list));
+        for (var fileName : remainingFiles) {
+          var file = new File (OVERLAYS_DIR, fileName);
+          copyStream (
+            OverlayGroupManager.class.getResourceAsStream (OVERLAYS_DIR_NAME + "/" + fileName),
+            new FileOutputStream (file),
+            true
+          );
+          LOGGER.fine ("Merged in new overlay group file " + fileName);
+        } // for
+      } // if
+    } // if
+
+    // Merge preferences
+    File prefsFile = new File (PREFERENCES_DIR, PREFERENCES_FILE);
+    boolean prefsUpdated = false;
+    if (prefsFile.exists() && preferences != null) {
+      var userPrefs = preferences;
+      var systemPrefs = getDefaultPreferences();
+      var systemVars = systemPrefs.getEnhancementVariables();
+      var remainingVars = new ArrayList<>(systemVars);
+      remainingVars.removeAll (userPrefs.getEnhancementVariables());
+      for (var varName : remainingVars) {
+        var units = systemPrefs.getUnits (varName);
+        if (units != null) userPrefs.setUnits (varName, units);
+        userPrefs.setEnhancement (systemPrefs.getEnhancement (varName));
+        prefsUpdated = true;
+        LOGGER.fine ("Merged in new variable preferences for " + varName);
+      } // for
+    } // if
+    if (prefsUpdated)  {
+      preferences.write (new FileOutputStream (new File (PREFERENCES_DIR, PREFERENCES_FILE)));
+    } // if
+
+  } // mergeResources
 
   ////////////////////////////////////////////////////////////
 

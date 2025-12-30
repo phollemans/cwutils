@@ -281,6 +281,44 @@ public class ToolServices {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Compares two semantic version strings using only the first three numeric
+   * segments (major.minor.patch).
+   *
+   * @param a the first version string, expected format like "4.1.5".
+   * @param b the second version string, expected format like "4.1.0".
+   *
+   * @return a positive value if {@code a} is newer than {@code b}, a negative
+   * value if {@code a} is older than {@code b}, or zero if they are equal across
+   * the first three segments.
+   *
+   * @throws NumberFormatException if a non-numeric value is encountered within
+   * the first three dot-separated segments of either string.
+   * 
+   * @since 4.1.5
+   */
+  public static int compareVersions (
+    String a, 
+    String b
+  ) {
+
+    int answer = 0;
+    String[] aDigits = a.split ("\\.");
+    String[] bDigits = b.split ("\\.");
+    int len = 3;
+
+    for (int i = 0; i < len && answer == 0; i++) {
+      int aInt = i < aDigits.length ? Integer.parseInt (aDigits[i]) : 0;
+      int bInt = i < bDigits.length ? Integer.parseInt (bDigits[i]) : 0;
+      answer = Integer.compare (aInt, bInt);
+    } // for
+
+    return (answer);
+
+  } // compareVersions
+
+  ////////////////////////////////////////////////////////////
+
   /** 
    * Gets a tool version string.
    *

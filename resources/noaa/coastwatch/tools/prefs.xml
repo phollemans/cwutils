@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE preferences SYSTEM "http://coastwatch.noaa.gov/xml/preferences.dtd">
 
-<preferences>
+<preferences cwutils_version="4.1.5">
   <enhancement variable="avhrr_ch1" palette="BW-Linear" min="0.0" max="80.0" function="linear" />
   <enhancement variable="avhrr_ch2" palette="BW-Linear" min="0.0" max="80.0" function="linear" />
   <enhancement variable="avhrr_ch3a" palette="BW-Linear" min="0.0" max="80.0" function="linear" />

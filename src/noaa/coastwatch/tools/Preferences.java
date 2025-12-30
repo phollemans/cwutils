@@ -99,6 +99,21 @@ public class Preferences
   /** The plot legend logo. */
   private String logo = IconElementFactory.getInstance().getDefaultIcon();
 
+  /** The version of the code that wrote the preferences parsed by this object. */
+  private String version;
+
+  ////////////////////////////////////////////////////////////
+
+  /** 
+   * Gets the version of the code that wrote these preferences.  This is set
+   * to the current version if the {@link #write} method is called.
+   * 
+   * @return the version string or null if not found.
+   * 
+   * @since 4.1.5
+   */
+  public String getVersion () { return (version); }
+
   ////////////////////////////////////////////////////////////
 
   /** 
@@ -316,7 +331,8 @@ public class Preferences
     // ------------
     printStream.println ("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>");
     printStream.println ("<!DOCTYPE preferences SYSTEM \"http://coastwatch.noaa.gov/xml/preferences.dtd\">\n");
-    printStream.println ("<preferences>");
+    version = ToolServices.getVersion();
+    printStream.println ("<preferences cwutils_version=\"" + version + "\">");
 
     // Write enhancement settings
     // --------------------------
@@ -478,6 +494,19 @@ public class Preferences
         String qName,
         Attributes attributes
     ) throws SAXException {
+
+      // Get the version number
+      if (qName.equals ("preferences")) {
+        String thisVersion = attributes.getValue ("cwutils_version");
+        if (thisVersion != null) { 
+          version = thisVersion;
+          LOGGER.fine ("Read preferences with version " + version);
+        } // if
+        else {
+          LOGGER.fine ("Read preferences with unknown version");
+        } // else
+
+      } // if
 
       // Create new enhancement
       // ----------------------

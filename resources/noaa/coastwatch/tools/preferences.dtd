@@ -18,6 +18,7 @@
 -->
 
 <!ELEMENT preferences (enhancement*, general*, export*)>
+<!ATTLIST preferences cwutils_version CDATA #IMPLIED>
 <!ELEMENT enhancement EMPTY>
 <!ATTLIST enhancement variable CDATA #REQUIRED>
 <!ATTLIST enhancement palette CDATA #REQUIRED>
