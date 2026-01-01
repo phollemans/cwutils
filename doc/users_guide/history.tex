@@ -12,7 +12,59 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 4.1.0 -- June 2024}
+\section{Version 4.1.5 -- December 2025}
+
+\subsection*{\bigicon{box_software} Updates}
+
+\begin{itemize}
+
+\item The Java VM version for installation packages with bundled Java 
+VMs is now 17.0.17 for the latest bug and security fixes.
+
+\item The usage documentation was updated in various tools for clarity.
+
+\item New palettes, overlay groups, and preferences have been added for the 
+latest Coral Reef Watch data files.
+
+\item CDAT and cwrender now use a higher speed expression parser, resulting
+in 3x faster rendering in some cases of expression-based mask overlays.
+
+\item Saved bitmask overlays used for testing cloud and quality flags
+in CDAT now accept variable names with or without leading group names.
+This makes it possible to use the same quality flag overlay with data files
+that follow different variable group conventions.
+
+\item The iQuam SST data reading capability in CDAT was updated to handle
+the latest iQuam SST data files.
+
+\item New palettes and defaults were added to help with viewing the latest
+Coral Reef Watch data files.
+
+\item Various documentation was updated and corrected, including adding HTML
+pages for the command line tools.
+
+\item CDAT has an added window size shortcut (Ctrl-4) to more easily display
+wide aspect ratio global datasets.
+
+\item CDAT startup resource errors are now more accurately reported.
+
+\end{itemize}
+
+\subsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+\item Color palettes in CDAT and cwrender with few colors now map 
+data values to colors more accurately.  Previously rounding errors resulted
+in inaccurate mapping.
+
+\item The CDAT palette chooser search field now correctly displays 
+the clear button on Mac.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Version 4.1.0 -- June 2025}
 
 \subsection*{\bigicon{box_software} Updates}
 
