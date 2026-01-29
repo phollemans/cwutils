@@ -142,7 +142,7 @@ public class VisualColor
     /** Creates a new chooser. */
     public SimpleColorChooserMenuItem () {
 
-      super (5, 7, color);
+      super (9, 13, color);
       this.setBorder (new EmptyBorder (2, 2, 2, 2));
       chooserButton.addActionListener (new ActionListener() {
         public void actionPerformed (ActionEvent event) {
