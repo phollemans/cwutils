@@ -1,116 +1,125 @@
 \chapter{Data Format Compatibility}
 \label{compatible}
 
-Many of the tools automatically detect the input file format and
-perform the same operation for a number of different formats, for
-example viewing of HDF 4 and NOAA 1b files. The following table shows
-the file format compatibility of the various tools: \\
-\\
-\begin{tabular}{|l|p{5cm}|p{5cm}|}
-  \hline 
+Many CoastWatch tools automatically detect the input file format and
+perform the same operation for multiple formats. This chapter summarizes
+compatibility at a high level. For detailed behavior and command options,
+see the individual tool documentation.
 
-  TOOL & INPUT & OUTPUT \\ \hline
+\noindent\textbf{Legend:} A bold \textbf{X} indicates that a tool supports the
+given physical format for input or output.
 
-  cdat & HDF 4, NetCDF 3/4, NOAA 1b & HDF 4, NetCDF 3/4,
-  Binary, Text, ArcGIS, PNG, GIF, JPEG, PDF, GeoTIFF \\ \hline
+\section{Input Formats}
+\label{input_formats}
 
-  cwangles & HDF 4, NetCDF 3 & -- \\ \hline
+\begin{tabular}{lcccc}
+\hline
+\textbf{Tool} & \textbf{HDF4} & \textbf{NetCDF} & \textbf{NOAA 1b} & \textbf{OPeNDAP} \\
+\hline
+cdat & \textbf{X} & \textbf{X} & \textbf{X} &  \\
+cwangles & \textbf{X} & \textbf{X} &  &  \\
+cwanimate & \textbf{X} & \textbf{X} &  & \textbf{X} \\
+cwautonav & \textbf{X} & \textbf{X} &  &  \\
+cwcomposite & \textbf{X} & \textbf{X} &  &  \\
+cwcoverage & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} \\
+cwexport & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} \\
+cwgraphics & \textbf{X} & \textbf{X} & \textbf{X} &  \\
+cwimport & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} \\
+cwinfo & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} \\
+cwmaster & \textbf{X} & \textbf{X} &  &  \\
+cwmath & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} \\
+cwnavigate & \textbf{X} & \textbf{X} &  &  \\
+cwregister2 & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} \\
+cwrender & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} \\
+cwsample & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} \\
+cwscript & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} \\
+cwstats & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} \\
+cwtccorrect & \textbf{X} & \textbf{X} & & \textbf{X} \\
+hdatt & \textbf{X} & & & \\
+\hline
+\end{tabular}
 
-  cwautonav & HDF 4, NetCDF 3 & -- \\ \hline
+\newpage
 
-  cwcomposite & HDF 4, NetCDF 3/4 & HDF 4 \\ \hline
+\section{Output Formats}
+\label{output_formats}
 
-  cwcoverage & HDF 4, NetCDF 3/4, NOAA 1b & PNG \\ \hline
+\begin{tabular}{lccccccccccc}
+\hline
+\textbf{Tool} & \textbf{HDF4} & \textbf{NetCDF} & \textbf{Bin} & \textbf{Txt} & \textbf{ArcGIS} & \textbf{PNG} & \textbf{GIF} & \textbf{JPG} & \textbf{PDF} & \textbf{GeoTIFF} & \textbf{MP4} \\
+\hline
+cdat & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} &  \\
+cwangles &  &  &  &  &  &  &  &  &  &  &  \\
+cwanimate &  &  &  &  &  &  &  &  &  &  & \textbf{X} \\
+cwautonav &  &  &  &  &  &  &  &  &  &  &  \\
+cwcomposite & \textbf{X} &  &  &  &  &  &  &  &  &  &  \\
+cwcoverage &  &  &  &  &  & \textbf{X} &  &  &  &  &  \\
+cwexport &  & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} &  &  &  &  & \textbf{X} &  \\
+cwgraphics & \textbf{X} &  &  &  &  &  &  &  &  &  &  \\
+cwimport & \textbf{X} &  &  &  &  &  &  &  &  &  &  \\
+cwinfo &  &  &  &  &  &  &  &  &  &  &  \\
+cwmaster & \textbf{X} &  &  &  &  &  &  &  &  &  &  \\
+cwmath & \textbf{X} &  &  &  &  &  &  &  &  &  &  \\
+cwnavigate &  &  &  &  &  &  &  &  &  &  &  \\
+cwregister2 & \textbf{X} &  &  &  &  &  &  &  &  &  &  \\
+cwrender & & & & & & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \\
+cwsample & & & & \textbf{X} & & & & & & & \\
+cwscript & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} & \textbf{X} \\
+cwstats & & & & \textbf{X} & & & & & & & \\
+cwtccorrect & \textbf{X} &  &  &  &  &  &  &  &  &  &  \\
+hdatt & \textbf{X} &  &  &  &  &  &  &  &  &  &  \\
+\hline
+\end{tabular}
 
-%%  cwdownload & -- & -- \\ \hline
+\medskip
+\noindent\textbf{Notes:}
+\begin{itemize}
+  \item \textbf{NetCDF} refers to NetCDF 3/4 output where supported.
+  \item \textbf{Bin} and \textbf{Txt} are generic binary and text exports (for example,
+        gridded values and tabular output), as provided by tools such as cwexport
+        and CDAT.  Specific details on the binary and text output formats are found in
+        the \hyperlink{cwexport}{cwexport} manual page.
+\end{itemize}
 
-  cwexport & HDF 4, NetCDF 3/4, NOAA 1b & Binary, Text, ArcGIS,
-  NetCDF 3/4 \\ \hline
+\newpage
 
-  cwgraphics & HDF 4, NetCDF 3/4, NOAA 1b & HDF 4 \\ \hline
+\section{Format Variants and Metadata Profiles}
+\label{format_specs}
 
-  cwimport & HDF 4, NetCDF 3/4, NOAA 1b & HDF 4 \\ \hline
+The physical file formats supported by CoastWatch tools may appear with different
+metadata conventions or format variants. The following summary describes the
+most common variants supported.
 
-  cwinfo & HDF 4, NetCDF 3/4, NOAA 1b & -- \\ \hline
-
-  cwmaster & HDF 4, NetCDF 3/4 & HDF 4 \\ \hline
-
-  cwmath & HDF 4, NetCDF 3/4, NOAA 1b & HDF 4 \\ \hline
-
-  cwnavigate & HDF 4, NetCDF 3 & -- \\ \hline
-
-  cwregister & HDF 4, NetCDF 3/4, NOAA 1b & HDF 4 \\ \hline
-
-%\end{tabular}
-
-%\begin{tabular}{|l|p{5cm}|p{5cm}|}
-%  \hline
-
-%  TOOL & INPUT & OUTPUT \\ \hline
-
-  cwrender & HDF 4, NetCDF 3/4, NOAA 1b & PNG, GIF, JPEG, PDF,
-  GeoTIFF \\ \hline
-
-  cwsample & HDF 4, NetCDF 3/4, NOAA 1b & Text \\ \hline
-
-  cwstats & HDF 4, NetCDF 3/4, NOAA 1b & -- \\ \hline
-
-%  cwstatus & -- & -- \\ \hline
-
-\end{tabular} \\
-\\
-\\
-Note that the metadata and/or versions supported by the physical file formats
-are as follows: \\
-\\
+\medskip
 \begin{tabular}{|l|p{10cm}|}
-  \hline 
+\hline
+\textbf{Physical format} & \textbf{Metadata / versions supported} \\ \hline
 
-  PHYSICAL FORMAT & METADATA / VERSION \\ \hline
+HDF4 & CoastWatch 3.4 metadata and TeraScan metadata. For TeraScan files, support
+is limited to the {\tt rectangular}, {\tt polarstereo}, {\tt mercator}, 
+{\tt emercator}, and {\tt sensor\ scan} projections. \\ \hline
 
-  HDF 4 & CoastWatch 3.4, TeraScan (only {\tt rectangular}, {\tt polarstereo},
-  {\tt mercator}, {\tt emercator}, and {\tt sensor\ scan} projections), ACSPO \\ \hline
+NetCDF, OPeNDAP & CoastWatch 3.4 metadata, CF 1.4 metadata, and ACSPO metadata. \\ \hline
 
-  NetCDF 3 & CoastWatch 3.4, CF 1.4 \\ \hline
+NOAA 1b & AVHRR, AMSU-A, AMSU-B, HIRS 4, and MHS sensors; AVHRR LAC or GAC in 8/10/16-bit
+sensor word sizes; file format versions 1--5, with or without archive header. \\ \hline
 
-  NetCDF 4 & CoastWatch 3.4, CF 1.4, ACSPO \\ \hline
+ArcGIS & 32-bit IEEE floating point binary grid with accompanying header file. \\ \hline
 
-  NOAA 1b & AVHRR, AMSU-A, AMSU-B, HIRS 4, and MHS sensors \\
-  & AVHRR LAC or GAC in 8/10/16-bit sensor word sizes \\
-  & File format versions 1 through 5, with or without archive header \\ \hline
+GeoTIFF & TIFF spec 6.0 with GeoTIFF spec 1.8.2. Supports common compressions
+(Uncompressed, Deflate/LZW, PackBits) and data types (8/24-bit colour imagery and
+32-bit IEEE floating point grids). Geo-referencing supports many common map
+projections (for example Mercator, Lambert Conformal Conic, Polar Stereographic,
+Transverse Mercator / UTM, and Robinson). \\ \hline
 
-  ArcGIS & 32-bit IEEE float binary grid with accompanying header
-  file \\ \hline
+GIF & GIF 89a with LZW compression and optional world file. \\ \hline
 
-  GeoTIFF & TIFF spec 6.0, GeoTIFF spec 1.8.2 \\
-  & Uncompressed, Deflate/LZW (ZIP-style), and PackBits compression \\
-  & 8-bit or 24-bit colour, 32-bit IEEE floating point data \\
-  & Map projections supported: \\
-  & Alaska Conformal \\
-  & Albers Conical Equal Area \\
-  & Azimuthal Equidistant \\
-  & Equirectangular \\
-  & Gnomonic \\
-  & Lambert Azimuthal Equal Area \\
-  & Lambert Conformal Conic \\
-  & Mercator \\
-  & Miller Cylindrical \\
-  & Orthographic \\
-  & Polar Stereographic \\
-  & Polyconic \\
-  & Robinson \\
-  & Sinusoidal \\
-  & Stereographic \\
-  & Transverse Mercator \\
-  & Universal Transverse Mercator \\
-  & Van der Grinten \\ \hline
+JPEG & JFIF 1.02 with optional world file. \\ \hline
 
-  GIF & Version 89a with LZW compression and optional world file \\ \hline
+PDF & PDF 1.4 with LZW image compression. \\ \hline
 
-  JPEG & JFIF standard 1.02 with optional world file \\ \hline
+PNG & 8-bit and 24-bit PNG with LZW compression and optional world file. \\ \hline
 
-  PDF & Version 1.4 with LZW image compression \\ \hline
-
-  PNG & 8-bit, 24-bit with LZW compression and optional world file \\ \hline
+MP4 & H.264/AVC, 8-bit 4:2:0 \\ \hline
 
 \end{tabular}

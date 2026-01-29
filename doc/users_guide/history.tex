@@ -12,9 +12,13 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 4.1.5 -- December 2025}
+\section{Version 4}
 
-\subsection*{\bigicon{box_software} Updates}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection*{Version 4.1.5 -- December 2025}
+
+\subsubsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
 
@@ -37,11 +41,8 @@ that follow different variable group conventions.
 \item The iQuam SST data reading capability in CDAT was updated to handle
 the latest iQuam SST data files.
 
-\item New palettes and defaults were added to help with viewing the latest
-Coral Reef Watch data files.
-
 \item Various documentation was updated and corrected, including adding HTML
-pages for the command line tools.
+pages for the command-line tools.
 
 \item CDAT has an added window size shortcut (Ctrl-4) to more easily display
 wide aspect ratio global datasets.
@@ -50,7 +51,7 @@ wide aspect ratio global datasets.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
 \item Color palettes in CDAT and cwrender with few colors now map 
@@ -64,9 +65,9 @@ the clear button on Mac.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 4.1.0 -- June 2025}
+\subsection*{Version 4.1.0 -- June 2025}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
 
@@ -86,7 +87,7 @@ enhancement text fields and hits the TAB key to move to the next field.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
 \item The hybrid CoastWatch / CF metadata NetCDF data format reader now
@@ -103,9 +104,9 @@ correctly performs a latitude/longitude to row/column lookup in cases
 where 1D geographic location vectors are specified in descending order rather
 than ascending order.
 
-\item Command line calls written as metadata attributes into rendered images 
+\item command-line calls written as metadata attributes into rendered images 
 and output HDF and NetCDF data files now include quotes in parameters with
-spaces in order to properly recreate command line calls.
+spaces in order to properly recreate command-line calls.
 
 \item Output from the cwanimate tool now correctly labels the animation 
 axis for step values greater than 1.
@@ -141,9 +142,9 @@ it appeared mirrored.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 4.0.1 -- December 2024}
+\subsection*{Version 4.0.1 -- December 2024}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
 
@@ -162,7 +163,7 @@ files or datasets on ERDDAP, THREDDS, and OPeNDAP servers.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
 \item The hybrid CoastWatch / CF metadata NetCDF data format reader no 
@@ -173,9 +174,9 @@ floating-point data.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 4.0.0 -- May 2024}
+\subsection*{Version 4.0.0 -- May 2024}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
 
@@ -183,19 +184,19 @@ floating-point data.
 files of either 8-bit integer, 16-bit integer, or 32-bit IEEE float data.
 Previously only 32-bit float data was supported.
 
-\item New levels of verbose debugging messages from command line tools can be 
+\item New levels of verbose debugging messages from command-line tools can be 
 displayed using the -J-Dcw.debug=fine and -J-Dcw.debug=finer options.  The log
 message format can also be made longer by setting the -J-Dcw.log.format=long
 options.
 
 \item Network data access for files that start with HTTPS is now supported 
-by command line tools.  Network data is typically accessed on a THREDDS server
+by command-line tools.  Network data is typically accessed on a THREDDS server
 via OPeNDAP.  Previously only HTTP was supported.
 
 \item The data color scale in CDAT and output from cwrender now more 
 intelligently handles long tick label values.
 
-\item Installation of the command line tools under Windows now sets the 
+\item Installation of the command-line tools under Windows now sets the 
 user's PATH variable automatically.
 
 \item A new -{-}noinfo option was added to cwrender to turn off the plot 
@@ -229,7 +230,7 @@ and a new palette named Turbo.
 
 \item The CDAT color composite functionality is now more user friendly.
 
-\item A new functionality for showing the memory usage for command line tools 
+\item A new functionality for showing the memory usage for command-line tools 
 can be turned on using the -J-Dcw.memory.monitor=true option.
 
 \item The CDAT enhancement sliders are now smoother and more accurate and 
@@ -239,7 +240,7 @@ integer.
 
 \item Added a new behaviour to cwcomposite and cwmath to dynamically scale
 the number of parallel threads used to fit within the maximum heap space
-available.  This greatly simplifies command line operations when processing
+available.  This greatly simplifies command-line operations when processing
 many data files of unknown chunks sizes and data types.
 
 \item The cwsample tool now has new options -{-}statsvar and -{-}window 
@@ -251,7 +252,7 @@ map viewer and updated for overall ease of use.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
 \item Reading and writing NetCDF files with null attribute values in the
@@ -278,9 +279,13 @@ correctly.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.8.0 -- May 2023}
+\section{Version 3}
 
-\subsection*{\bigicon{box_software} Updates}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection*{Version 3.8.0 -- May 2023}
+
+\subsubsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
 
@@ -296,14 +301,14 @@ locations with a point symbol and text label.
 \item The cwrender tool -{-}size option now accepts a number of rows and
 columns for the output image size.
 
-\item A new command line tool named {\em cwtools} was created to list all the 
+\item A new command-line tool named {\em cwtools} was created to list all the 
 tools and their functions.
 
 \item The cwimport tool now has a -{-}nogroup option to eliminate the group
 structure if found in imported data files.  It has also been modified to better
 preserve earth location data in imported level 2 swath files.
 
-\item A new command line tool named {\em cwtccorrect} was created to help
+\item A new command-line tool named {\em cwtccorrect} was created to help
 with visualizing top-of-atmosphere true color data from VIIRS, MSI, OLCI, 
 and user-defined sensors. The correction accounts for molecular (Rayleigh) 
 scattering and gaseous absorption (water vapor, ozone).
@@ -323,7 +328,7 @@ for rendering contours.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
 \item In the CDAT trackbar, data value display was hard to read when the
@@ -360,9 +365,9 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.7.1 -- July 2022}
+\subsection*{Version 3.7.1 -- July 2022}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
   
@@ -387,7 +392,7 @@ and flagged as invalid.
   file contents.  It also includes a new tab with the ability to search for text
   in metadata names and values.
 
-  \item The cwcomposite, cwmath, and cwregister2 tools have new command line
+  \item The cwcomposite, cwmath, and cwregister2 tools have new command-line
   options -{-}threads and -{-}serial to control the amount of multithreading
   used for data processing.
 
@@ -399,7 +404,7 @@ and flagged as invalid.
   \item A new standardized NOAA logo is now included as the default
   for plot legends.  The new logo uses the official NOAA colors.
 
-  \item Various command line tools were updated for better info/verbose logging
+  \item Various command-line tools were updated for better info/verbose logging
   and for clearer and shorter error messages.
 
   \item The cwdownload and cwstatus tools were deprecated and removed.
@@ -409,7 +414,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
   \item When clicking the Help buttons in CDAT, help windows sometimes 
@@ -424,9 +429,9 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.7.0 -- September 2021}
+\subsection*{Version 3.7.0 -- September 2021}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
   
@@ -458,9 +463,9 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.6.1 -- March 2021}
+\subsection*{Version 3.6.1 -- March 2021}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
   
@@ -484,7 +489,7 @@ and flagged as invalid.
   
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
   \item There was an error produced in cwrender when rendering files that had
@@ -503,9 +508,9 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.6.0 -- August 2020}
+\subsection*{Version 3.6.0 -- August 2020}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
 
@@ -533,7 +538,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
   \item There was an issue reading NetCDF files with scaled variables that are
@@ -549,19 +554,19 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.5.1 -- November 2019}
+\subsection*{Version 3.5.1 -- November 2019}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
 
   \item The Mac and Linux installation sections in the user's guide have
-  new notes on using the command line program man pages.
+  new notes on using the command-line program man pages.
   
   \item The cwdownload tool has a new fallback behaviour to ignore an invalid
   SSL certificate when downloading over an SSL connection.
   
-  \item The command line tools have a new warning message when an out of
+  \item The command-line tools have a new warning message when an out of
   memory error occurs with advice on how to re-run the command with a higher
   memory setting.
   
@@ -591,7 +596,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
   \item CDAT and cwrender had an issue when overwriting existing output images
@@ -625,9 +630,9 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.5.0 -- April 2019}
+\subsection*{Version 3.5.0 -- April 2019}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
 
@@ -637,7 +642,7 @@ and flagged as invalid.
   \item The NOAA 1b format AVHRR reading has been updated to handle Metop-3
   files.
 
-  \item Some of the command line and GUI tools have started to be migrated to
+  \item Some of the command-line and GUI tools have started to be migrated to
   use a more flexible and standardized event logging system.  The migration
   will be complete in the next version.
 
@@ -645,7 +650,7 @@ and flagged as invalid.
   multithreaded registration with special handling for terrain-corrected data.
 
   \item Various code modules are being migrated and refactored towards
-  being able to run some of the command line tools from CDAT, based on
+  being able to run some of the command-line tools from CDAT, based on
   user requests.
 
   \item The cwcomposite tool has been completely re-written to perform fast
@@ -653,7 +658,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
   \item The composite tool exited with an error when attempting to combine
@@ -665,9 +670,9 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.4.1 -- October 2018}
+\subsection*{Version 3.4.1 -- October 2018}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \hspace{0.4cm} {\bf Graphical tools}
 \begin{itemize}
@@ -690,7 +695,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\hspace{0.4cm} {\bf Command line tools}
+\hspace{0.4cm} {\bf Command-line tools}
 \begin{itemize}
 
     \item The cwdownload and cwstatus tools now support SSL network connections
@@ -712,7 +717,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
   \item The CDAT window had an issue preserving the view contents after
@@ -742,9 +747,9 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.4.0 -- March 2018}
+\subsection*{Version 3.4.0 -- March 2018}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \hspace{0.4cm} {\bf Graphical tools}
 \begin{itemize}
@@ -763,7 +768,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\hspace{0.4cm} {\bf Command line tools}
+\hspace{0.4cm} {\bf Command-line tools}
 \begin{itemize}
 
   \item The cwmath tool has been largely re-written to improve performance.
@@ -777,13 +782,13 @@ and flagged as invalid.
   \item The cwrender tool now has a -{-}font option to set the legend and overlay
   font and a -{-}fontlist option to list system-specific fonts available.
 
-  \item The user's guide now has a section on hidden command line options for
-  the command line tools (after the tool manual pages), to be used for
+  \item The user's guide now has a section on hidden command-line options for
+  the command-line tools (after the tool manual pages), to be used for
   performance tuning.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
   \item CDAT full screen mode now works correctly on multi-monitor setups.
@@ -806,9 +811,9 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.3.2 -- October 2017}
+\subsection*{Version 3.3.2 -- October 2017}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \hspace{0.4cm} {\bf Graphical tools}
 
@@ -844,7 +849,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\hspace{0.4cm} {\bf Command line tools}
+\hspace{0.4cm} {\bf Command-line tools}
 
 \begin{itemize}
 
@@ -868,7 +873,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
   \item Long text lines in plot legends are now wrapped.
@@ -905,9 +910,9 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.3.1 -- January 2016}
+\subsection*{Version 3.3.1 -- January 2016}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \hspace{0.4cm} {\bf Graphical tools}
 
@@ -958,7 +963,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\hspace{0.4cm} {\bf Command line tools}
+\hspace{0.4cm} {\bf Command-line tools}
 
 \begin{itemize}
 
@@ -975,7 +980,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
   \item Fixed issues with memory leaking when closing some file formats.  This
@@ -1001,9 +1006,9 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.3.0 -- October 2013}
+\subsection*{Version 3.3.0 -- October 2013}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \hspace{0.4cm} {\bf Graphical tools}
 
@@ -1045,7 +1050,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\hspace{0.4cm} {\bf Command line tools}
+\hspace{0.4cm} {\bf Command-line tools}
 
 \begin{itemize}
 
@@ -1062,7 +1067,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
   \item Fixed the error message ``no parent window'' when opening data files.
@@ -1077,9 +1082,9 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.2.3 -- March 2009}
+\subsection*{Version 3.2.3 -- March 2009}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \begin{itemize}
 
@@ -1095,18 +1100,18 @@ and flagged as invalid.
   \item Improved expression parsing in cwmath to allow for symbol
     characters in variable names, such as minus signs.
 
-  \item Added geometric mean composite and explicit command line
+  \item Added geometric mean composite and explicit command-line
     ordering options in cwcomposite tool.
 
   \item Added 64-bit IEEE floating point output option in
     cwangles tool.
 
-  \item Created tool to automatically test command line tools and
+  \item Created tool to automatically test command-line tools and
     options (work in progress).
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
   \item Corrected problem with reading CoastWatch HDF swath
@@ -1140,9 +1145,9 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.2.2 -- November 2007}
+\subsection*{Version 3.2.2 -- November 2007}
 
-\subsection*{\bigicon{box_software} Updates}
+\subsubsection*{\bigicon{box_software} Updates}
 
 \hspace{0.4cm} {\bf Graphical tools}
 
@@ -1198,7 +1203,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\hspace{0.4cm} {\bf Command line tools}
+\hspace{0.4cm} {\bf Command-line tools}
 
 \begin{itemize}
 
@@ -1216,7 +1221,7 @@ and flagged as invalid.
 
 \end{itemize}
 
-\subsection*{\bigicon{bug_yellow} Bug fixes}
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
 \begin{itemize}
 
   \item Fixed problem with overlay groups not updating between CDAT
@@ -1234,7 +1239,7 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.2.1 -- November 2006}
+\subsection*{Version 3.2.1 -- November 2006}
 
 \subsection*{Updates}
 \begin{itemize}
@@ -1394,7 +1399,7 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.2.0 -- October 2005}
+\subsection*{Version 3.2.0 -- October 2005}
 
 \subsection*{Updates}
 \begin{itemize}
@@ -1471,7 +1476,7 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.1.9 -- April 2005}
+\subsection*{Version 3.1.9 -- April 2005}
 
 \subsection*{Updates}
 \begin{itemize}
@@ -1565,7 +1570,7 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.1.8 -- November 2004}
+\subsection*{Version 3.1.8 -- November 2004}
 
 \subsection*{Updates}
 \begin{itemize}
@@ -1673,7 +1678,7 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.1.5 -- September 2003}
+\subsection*{Version 3.1.5 -- September 2003}
 
 \begin{itemize}
 
@@ -1709,7 +1714,7 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.1.6 -- December 2003}
+\subsection*{Version 3.1.6 -- December 2003}
 
 \begin{itemize}
 
@@ -1727,7 +1732,7 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.1.7 -- June 2004}
+\subsection*{Version 3.1.7 -- June 2004}
 
 \begin{itemize}
 
@@ -1741,7 +1746,7 @@ and flagged as invalid.
   \item Created ContourGenerator and TopographyOverlay classes and
   added contouring to cwrender.
 
-  \item Changed command line tools to split multi-parameter options on
+  \item Changed command-line tools to split multi-parameter options on
   regular expression, including ',' and '/'.
 
   \item Added splash screen for cwmaster and cwstatus.
@@ -1797,7 +1802,7 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.1.4 -- May 2003}
+\subsection*{Version 3.1.4 -- May 2003}
 
 \begin{itemize}
 
@@ -1832,14 +1837,14 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.1.3 -- March 2003}
+\subsection*{Version 3.1.3 -- March 2003}
 
 \begin{itemize}
 
   \item Added new tool for server status monitoring.
 
   \item Optimized download and status tools for database usage and
-  updated command line options.
+  updated command-line options.
 
   \item Added GeoTIFF output for mapped projection data to cwrender.
 
@@ -1853,7 +1858,7 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.1.2 -- December 2002}
+\subsection*{Version 3.1.2 -- December 2002}
 
 \begin{itemize}
 
@@ -1880,7 +1885,7 @@ and flagged as invalid.
 
   \item Added navigation, master, sampling tools.
 
-  \item Modified download tool command line parameters for regular
+  \item Modified download tool command-line parameters for regular
   expression matching.
 
   \item Added angle calculation tool.
@@ -1892,7 +1897,7 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.1.1 -- October 2002}
+\subsection*{Version 3.1.1 -- October 2002}
 
 \begin{itemize}
 
@@ -1904,7 +1909,7 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 3.1.0 -- July 2002}
+\subsection*{Version 3.1.0 -- July 2002}
 
 \begin{itemize}
 
@@ -1919,7 +1924,11 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 2.4 -- June 2001 (internal release)}
+\section{Version 2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection*{Version 2.4 -- June 2001 (internal release)}
 
 \begin{itemize}
 
@@ -1951,7 +1960,7 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 2.3 -- October 1999}
+\subsection*{Version 2.3 -- October 1999}
 
 \begin{itemize}
 
@@ -1991,7 +2000,7 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 2.2 -- January 1999}
+\subsection*{Version 2.2 -- January 1999}
 
 \begin{itemize}
 
@@ -2018,9 +2027,13 @@ and flagged as invalid.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 2 -- September 1998 (first public release)}
+\subsection*{Version 2 -- September 1998 (first public release)}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Version 1 -- October 1997 (internal release)}
+\section{Version 1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection*{Version 1 -- October 1997 (internal release)}
 

@@ -74,10 +74,11 @@ fi
 echo "Making tool Latex pages"
 manual=users_guide/manual_pages.tex
 
-cat > $manual <<EOF
-\chapter{Manual Pages}
-\label{manual}
-EOF
+# cat > $manual <<EOF
+# \chapter{Manual Pages}
+# \label{manual}
+# EOF
+touch $manual
 
 categories=`cat tool_categories.txt | wc -l`
 

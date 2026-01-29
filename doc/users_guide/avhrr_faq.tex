@@ -352,7 +352,7 @@ CWF files to an HDF file with cwimport, then run the cwautonav tool on
 the new HDF file.  That way, you only have to run the navigation once
 and the results are applied to all the variables in the HDF file
 selected for navigation (see the question below about variables that
-should be navigated).  Use the cwautonav command line tool with the
+should be navigated).  Use the cwautonav command-line tool with the
 default options.  The key to successful autonavigation is to choose
 many navigation boxes with feature-rich coastline segments (rather
 than a flat coastline with no curves).  Use AVHRR visible channel 2
@@ -409,7 +409,7 @@ No, only certain variables should have navigation corrections applied,
 namely those from the AVHRR sensor and sensor data derived variables.
 Graphics, solar zenith, satellite zenith, and relative azimuth angles
 should {\em not} be corrected.  AVHRR channel data, SST, and cloud
-{\em should} be corrected.  If you're using the command line tools,
+{\em should} be corrected.  If you're using the command-line tools,
 you can use the following option to match only the sensor type data:
 {\file -{-}match "avhrr\_ch.*|sst|cloud"}.
 

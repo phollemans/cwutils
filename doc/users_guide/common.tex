@@ -1,4 +1,4 @@
-\chapter{Common Tasks}
+\chapter{Tool Guide by Task}
 \label{common}
 
 The first step in using the CoastWatch Utilities is to discover which
@@ -6,11 +6,14 @@ tool to use for the task at hand.  To help with this search, this
 section categorizes the tools by the most common tasks that data users
 perform.  Use this section as a guide to the functionality
 of the tools, while referring to the manual pages of \autoref{manual}
-for complete details on each tool's behaviour and command line
+for complete details on each tool's behaviour and command-line
 options.  You can also use the \hyperlink{cwtools}{cwtools} command to
 list all the tools in the package.
 
 \section{Information and Statistics}
+
+\noindent\textbf{Use when:} inspecting a data file, checking metadata, and doing quick quality checks.\par
+\noindent\textbf{Typical tools:} \hyperlink{cwinfo}{cwinfo}, \hyperlink{cwstats}{cwstats} (and \hyperlink{hdatt}{hdatt} for low-level HDF attributes).\par
 
 The \hyperlink{cwinfo}{cwinfo} tool lists data file contents,
 including various global file attributes and the full set of
@@ -53,6 +56,9 @@ when it may be required to modify or create attributes.
 \section{Data Processing}
 \label{processing}
 
+\noindent\textbf{Use when:} converting formats, exporting subsets, sampling values, masking, and building derived products.\par
+\noindent\textbf{Typical tools:} \hyperlink{cwimport}{cwimport}, \hyperlink{cwexport}{cwexport}, \hyperlink{cwsample}{cwsample}, \hyperlink{cwmath}{cwmath}, \hyperlink{cwcomposite}{cwcomposite}, \hyperlink{cwtccorrect}{cwtccorrect}.\par
+
 The \hyperlink{cwimport}{cwimport} tool converts data into CoastWatch
 HDF format.  Note that it is {\em not necessary} to convert all
 data into CoastWatch HDF before working with the data using the
@@ -60,11 +66,10 @@ CoastWatch Utilities.  In many cases, you can perform the same
 operations on the data in its native format, especially when the
 operation only reads information and performs no file modification.
 This is due to the design of the CoastWatch Utilities, which contains
-a software layer (called the {\em Earth Data Reader} or {\em EDR}
-layer) separating the tools from the physical input file format.
+an Earth data reading software layer separating the tools from the physical input file format.
 The \hyperlink{cwexport}{cwexport} tool complements cwimport -- it
 converts data into various simple text or binary formats.  The
-cwexport tool benefits from the EDR layer as well, and as such can
+cwexport tool benefits from the reading layer as well, and as such can
 export data from CoastWatch HDF, NetCDF, NOAA 1b, and
 others.
 
@@ -88,10 +93,18 @@ earth variable; for example to create a weekly composite of sea-surface
 temperature (SST), mask out all cloud contaminated SST from each
 file using the cwmath {\em mask} function, and follow by running
 cwcomposite on all the masked SST files to compute the mean or
-median.
+median.  When processing large collections of files or running tools in batch
+mode, it may be useful to adjust tool-wide runtime settings such as heap size 
+or caching behavior. These advanced options apply to all command-line tools 
+and are documented in \autoref{runtime} (\nameref*{runtime}).
+
+The special purpose tool \hyperlink{cwtccorrect}{cwtccorrect} corrects 
+top-of-atmosphere true color reflectance data for molecular (Rayleigh) scattering
+and gaseous absorption (water vapor and ozone). The input file contains red/green/blue 
+band data plus angles, and the output is a new set of corrected band reflectance data.
 
 Certain data processing tasks are beyond the capabilities of the
-CoastWatch Utilities command line tools.  In such a case, the recommendation
+CoastWatch Utilities command-line tools.  In such a case, the recommendation
 is to:
 \begin{enumerate}
 
@@ -112,13 +125,18 @@ implemented and generally transparent to the programmer.
 
 \section{Graphics and Visualization}
 
+\noindent\textbf{Use when:} creating images and overlays for reports, or producing visualization outputs in batch.\par
+\noindent\textbf{Typical tools:} \hyperlink{cwrender}{cwrender}, \hyperlink{cwgraphics}{cwgraphics}, \hyperlink{cwcoverage}{cwcoverage}, \hyperlink{cwanimate}{cwanimate}.\par
+\noindent\textbf{Often combined with:} interactive exploration in CDAT to choose variables, ranges, palettes, and overlays before automating batch rendering.\par
+
 The main interactive tool for displaying CoastWatch data files is the
 CoastWatch Data Analysis Tool (CDAT).  The complexity of CDAT is such
 that it deserves its own section -- see \autoref{cdatchap} for a
 complete discussion of CDAT and its features.  CDAT is mainly useful
 for creating unique plots of CoastWatch data, performing data
-surveys, and drawing annotations on top of the data image.  In
-contrast, the command line tools discussed in this section are designed
+surveys, and drawing annotations on top of the data image.  Interactive analysis 
+in CDAT is often used to inform subsequent batch processing with the command 
+line tools. In contrast, the command-line tools discussed in this section are designed
 for the automated creation of plots and graphics from CoastWatch data
 from a scripting language such as Unix shell, Perl, or Windows batch
 files.
@@ -128,7 +146,10 @@ variables, using either a palette or three channel composite mode.
 Many rendering options are available including coast line, land mask,
 grid line, topographic, and ESRI shapefile overlays, custom region
 enlargement, and units conversion.  Output formats supported include
-PNG, JPEG, GIF, GeoTIFF, and PDF.
+PNG, JPEG, GIF, GeoTIFF, and PDF.  To create MP4 movies of earth data, 
+the \hyperlink{cwanimate}{cwanimate} tool 
+can read one or more dataset (local or OPeNDAP) and render color mapped 
+data frame by frame from the series of timesteps found in the input.
 
 The \hyperlink{cwcoverage}{cwcoverage} tool creates
 graphics for documentation or web pages that show the physical area
@@ -143,6 +164,9 @@ for use in custom rendering or masking routines.
 
 \section{Registration and Navigation}
 \label{registration}
+
+\noindent\textbf{Use when:} projecting data to a common map grid or comparing products on a shared master.\par
+\noindent\textbf{Typical tools:} \hyperlink{cwmaster}{cwmaster}, \hyperlink{cwregister2}{cwregister2} (plus navigation/angle tools when needed).\par
 
 Earth data from two data files is said to be {\em in register} if
 every corresponding pair of pixels has the same earth location.  We
@@ -197,21 +221,3 @@ packages.  Note that text output from the cwexport tool (see
 \autoref{processing}) can also include the latitude and longitude
 of each pixel without having to run cwangles.
 
-%%\section{Network}
-%%
-%%The \hyperlink{cwdownload}{cwdownload} tool has a command line only
-%%interface and is recommended for advanced data users only.  You can
-%%use the tool to retrieve recent data files from a CoastWatch data
-%%server, or to maintain an archive of certain data files of interest.
-%%For regular data file retrieval, the tool can be run via the Unix
-%%cron daemon or Windows Task Scheduler (located under System Tools
-%%in newer versions of Windows).  Currently, only AVHRR data is handled
-%%by cwdownload.  You should contact the CoastWatch Help Desk
-%%(coastwatch.info@noaa.gov) for access to a CoastWatch data server
-%%to use with cwdownload.
-%%
-%%The \hyperlink{cwstatus}{cwstatus} tool shows a graphical view of the
-%%status of a CoastWatch data server, and is intended for use by
-%%CoastWatch staff only.  The status tool displays the current list of
-%%satellite passes, their properties, and a graphical view of the pass
-%%footprint on the earth along with a preview image.

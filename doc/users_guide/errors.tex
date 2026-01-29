@@ -1,0 +1,42 @@
+\section{Error handling, messages, and exit status}
+
+The CoastWatch Utilities command-line tools are designed to fail fast, report clearly, and avoid producing partial or silently corrupted output. When a tool encounters a condition it cannot safely recover from, execution stops at that point and the program exits.
+
+\subsection*{Error reporting}
+
+\begin{itemize}
+  \item Errors and warnings are written to standard error using the CoastWatch logging system, which is based on the Java logging framework.
+  \item Messages are classified by severity:
+    \begin{itemize}
+      \item \textbf{SEVERE} -- An unrecoverable error has occurred (for example, an unsupported file format, invalid parameters, or an internal exception). The tool terminates immediately.
+      \item \textbf{WARNING} -- A noteworthy condition occurred that alters normal operation (for example, missing optional metadata, partial variable availability, or fallback behavior). Processing may continue, but results may differ from expectations.
+      \item \textbf{INFO / FINE} -- Additional diagnostic output intended for verbose or debugging use. These messages are normally suppressed unless logging verbosity is increased.
+    \end{itemize}
+\end{itemize}
+
+By default, tools run with logging set to show warnings and unrecoverable errors only. This keeps normal output concise while still surfacing important problems. More detailed diagnostic output may be enabled for debugging by adjusting logging settings or using verbose options where supported.
+
+\subsection*{Program termination and exit codes}
+
+\begin{itemize}
+  \item On successful completion, tools exit with status code \texttt{0}.
+  \item On failure, tools exit with a non-zero status code.
+  \item On Unix-like systems, the exit status is available via the shell variable \texttt{\$?}, allowing tools to be used reliably in scripts and automated pipelines.
+\end{itemize}
+
+Because tools terminate immediately on unrecoverable errors, users can assume that:
+\begin{itemize}
+  \item Output files were not written, or were not modified, if an error occurs.
+  \item Any output produced before an error reflects only the processing completed up to that point.
+\end{itemize}
+
+\subsection*{Guidance for scripted and automated use}
+
+When running CoastWatch tools in batch workflows or scripts:
+\begin{itemize}
+  \item Always check the exit status before consuming output.
+  \item Treat warning messages as signals to review assumptions about input data, metadata completeness, or processing parameters.
+  \item Use sampling options and verbose modes when diagnosing unexpected results.
+\end{itemize}
+
+The manual pages for individual tools list common causes of failure and describe how specific options affect error handling where relevant.

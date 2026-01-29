@@ -1,0 +1,131 @@
+\section{Advanced tool-wide runtime options}
+\label{runtime}
+
+The command-line tools support a set of advanced options that apply uniformly
+across all tools. These options control tool-wide runtime behavior and are
+intentionally documented separately from individual manual pages, since they
+are not specific to any single utility.
+
+The options described in this section adjust internal runtime settings for which
+reasonable defaults are provided. Most users will never need to change these
+defaults, but advanced users may wish to tune them to better match available
+system resources or specific processing workloads.
+
+All options are specified using a {\file -J} prefix, which causes them to be
+passed directly to the Java virtual machine rather than processed as
+tool-specific command-line arguments. This mechanism allows the options to
+modify the Java execution environment in which the tool runs, and therefore
+affect behavior consistently across the entire tool suite.
+
+The available options are described below:
+
+\begin{description}[style=nextline]
+
+\item[{\file -J-XmxSIZE}] 
+
+Controls the maximum heap memory available to the Java virtual machine. This
+setting places an upper limit on the amount of memory the tool may use at
+runtime.
+
+Reasonable defaults are selected automatically based on the tool being
+executed, and most users do not need to specify this option. Tools with
+more memory-intensive workloads use larger default heap sizes; for example,
+{\file cwrender} allocates more heap memory by default than {\file cwinfo}.
+Increasing the heap size may be beneficial when processing very large datasets,
+building large composites, or performing memory-intensive operations.
+
+Example: {\file -J-Xmx8g}
+
+\item[{\file -J-Dcw.cache.size=SIZE}] 
+
+Controls the maximum size of the in-memory cache used to store tiles of
+two-dimensional data read from input files. This option is currently implemented
+for NetCDF input files only.
+
+The cache size is specified in megabytes, with a default value of 512~Mb.
+Increasing the cache size may be useful when working with files written using
+monolithic compression, where entire variables are compressed as a single chunk.
+In such cases, even small data accesses may require decompressing the full
+variable into memory, increasing memory usage and reducing performance during
+interactive display or automated processing.
+
+Example: {\file -J-Dcw.cache.size=1024}
+
+\item[{\file -J-Dcw.compress.mode=true$|$false}] 
+
+Controls whether compression is used when writing CoastWatch HDF data files.
+The default value is {\file true}.
+
+When enabled, HDF4 data variables are written using square chunked compression,
+which improves performance for interactive access and partial reads. In some
+workflows, compression may be unnecessary or undesirable. For example, when a
+file is written as an intermediate result in a longer computation and will be
+deleted afterward, disabling compression can reduce write time and improve
+overall processing speed.
+
+When set to {\file false}, HDF4 data files are written without chunking or
+compression.
+
+Example: {\file -J-Dcw.compress.mode=false}
+
+\item[{\file -J-Dcw.chunk.size=SIZE}] 
+
+Controls the chunk size, in kilobytes, used when writing CoastWatch HDF data
+files. The default value is 512~kb.
+
+This setting specifies the total byte size of each chunk, not the chunk
+dimensions. Chunk dimensions are determined automatically based on the data
+type and selected chunk size. For example, with a 512~kb chunk size, 16-bit
+integer data is written in 512$\times$512 chunks, since
+2~bytes $\times$ 512 $\times$ 512 $=$ 524{,}288~bytes. This choice reflects the
+historical characteristics of CoastWatch AVHRR data and provides a balance
+between efficient I/O and interactive performance.
+
+Using the same chunk size, 8-bit byte data is written in
+724$\times$724 chunks, 32-bit floating-point data in 362$\times$362 chunks, and
+so on.
+
+Example: {\file -J-Dcw.chunk.size=1024}
+
+\item[{\file -J-Dcw.debug=LEVEL}] 
+
+Controls the verbosity of diagnostic logging output. Valid values
+include {\file fine} and {\file finer}, with higher levels producing more
+detailed messages.
+
+By default, tools emit only warning and error messages. Enabling debug logging
+is useful when diagnosing unexpected behavior, performance issues, or data
+handling problems.
+
+This option affects logging output only and does not change processing results.
+
+\item[{\file -J-Dcw.log.format=FORMAT}] 
+
+Controls the format used for log messages written to the console. The default
+format is compact and intended for routine use.
+
+Setting this option to {\file long} enables more detailed log output, including
+additional contextual information useful during debugging or development.
+
+\item[{\file -J-Dcw.memory.monitor=true}] 
+
+Enables periodic reporting of memory usage during tool execution. When enabled,
+memory statistics are printed at intervals to help track resource consumption.
+
+This option is primarily intended for performance analysis and troubleshooting.
+It has no effect on processing results.
+
+\item[{\file-J-Dsun.java2d.uiScale=SCALE}] 
+
+Controls the scaling factor used for graphical user interface elements in
+Java-based graphical tools.
+
+This option may be useful on high-DPI displays or systems with display scaling
+enabled, where default UI sizing results in text or controls appearing too
+small.
+
+Typical values range from {\file 1.0} to {\file 2.0}.
+
+\end{description}
+
+

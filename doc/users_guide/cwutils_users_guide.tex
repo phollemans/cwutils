@@ -21,6 +21,8 @@
 \usepackage{datetime}
 \usdate
 
+\usepackage{enumitem}
+
 \renewcommand{\familydefault}{\sfdefault}
 
 \textheight 8.0in
@@ -52,8 +54,13 @@
 
 \appendix
 
+\chapter{Command-Line Reference}
+\label{manual}
+\input{manual_preamble}
+\input{errors}
 \input{manual_pages}
-\input{hidden_options}
+\input{runtime_options}
+
 \input{metadata_spec}
 \input{compatible}
 \input{misc_formats}
