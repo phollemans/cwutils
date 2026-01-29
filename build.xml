@@ -17,16 +17,13 @@
 
 -->
 
-<project name="cwutils" default="classes">
+<project name="cwutils" default="jar">
 
   <!-- Setup global properties -->
   <!-- *********************** -->
 
-  <buildnumber/>
+  <property file="build.number" prefix="current"/>
   <property file="cwutils.properties"/>
-  <tstamp>
-    <format property="current.time" pattern="yyyyMMdd_HHmmss"/>
-  </tstamp>
   <property file="${password.file}"/>
 
   <!-- Define tasks -->
@@ -57,50 +54,45 @@
 
   <!-- Define main compile targets -->
   <!-- *************************** -->
-  
-  <target name="classes"
-    description="Compiles main Java classes in src/">
+
+  <!-- Check if jar is current vs sources/resources -->
+  <uptodate property="jar.uptodate" targetfile="lib/java/cwutils.jar">
+    <srcfiles dir="src" includes="**/*.java"/>
+    <srcfiles dir="resources" includes="**/*"/>
+  </uptodate>
+
+  <target name="compile" description="Compiles main Java classes">
     <depend srcdir="src" destdir="classes"/>
     <mkdir dir="classes"/>
-    <javac 
-      srcdir="src" 
-      destdir="classes" 
-      classpathref="cp" 
-      debug="on" 
-      deprecation="on"
-      includeantruntime="false">
+    <javac srcdir="src" destdir="classes" classpathref="cp"
+           debug="on" deprecation="on" includeantruntime="false">
       <compilerarg line="${javac.args}"/>
+      <!-- <compilerarg value="-Xlint:unchecked"/> -->
     </javac>
-    <echo
-      file="resources/version.properties" 
-      message="cwutils.version=${version.full} ${current.time}${line.separator}"/>
-    <jar destfile="lib/java/cwutils.jar">
-      <fileset dir="classes"/>
-      <fileset dir="resources"/>
-    </jar>
   </target>
 
-  <target name="lint"
-    description="Compiles main Java classes in src/ with lint checking">
-    <depend srcdir="src" destdir="classes"/>
-    <mkdir dir="classes"/>
-    <javac 
-      srcdir="src" 
-      destdir="classes" 
-      classpathref="cp" 
-      debug="on" 
-      deprecation="on"
-      includeantruntime="false">
-      <compilerarg line="${javac.args}"/>
-      <compilerarg value="-Xlint:unchecked"/>
-    </javac>
-    <echo
-      file="resources/version.properties" 
-      message="cwutils.version=${version.full} ${current.time}${line.separator}"/>
+  <target name="write-version" unless="jar.uptodate">
+    <tstamp>
+      <format property="current.time" pattern="yyyyMMdd_HHmmss"/>
+    </tstamp>
+    <echo file="resources/version.properties"
+          message="cwutils.version=${version.full} ${current.time}${line.separator}"/>
+  </target>
+
+  <target name="jar" depends="compile,write-version" unless="jar.uptodate"
+          description="Builds cwutils jar and bumps build number">
+    <buildnumber/>
     <jar destfile="lib/java/cwutils.jar">
       <fileset dir="classes"/>
       <fileset dir="resources"/>
     </jar>
+    <echo>Built jar with version ${version.full} ${current.time}</echo>
+    <echo>Build number bumped to ${build.number} for next build</echo>
+  </target>
+
+  <!-- No-op when up-to-date -->
+  <target name="classes" depends="jar">
+    <echo message="Jar is up to date; skipping rebuild" if="jar.uptodate"/>
   </target>
 
   <!-- Define source and API targets -->
@@ -113,7 +105,7 @@
     </zip>
   </target>
 
-  <target name="api" depends="classes"
+  <target name="api" depends="compile"
     description="Creates Java API documentation">
     <delete dir="doc/api"/>
     <javadoc 
@@ -183,8 +175,8 @@
   </target>
 
   <target name="all"
-    description="Combines classes, doc, source, and api-zip targets"
-    depends="classes,doc,source,api-zip"/>
+    description="Combines jar, doc, source, and api-zip targets"
+    depends="jar,doc,source,api-zip"/>
 
   <!-- Define package targets -->
   <!-- ********************** -->
@@ -314,23 +306,6 @@
 
   </target>
 
-<!--
-  <target name="upload"
-    description="Uploads packages to the Terrenus server">
-    <input message="Password: " addproperty="password">
-      <handler type="secure"/>
-    </input>
-    <scp todir="terrenus:${password}@terrenus.ca:web/download" verbose="true" sftp="true">
-      <fileset dir="${pkg.dir}"/>
-    </scp>
-    <sshexec
-      host="terrenus.ca"
-      username="terrenus"
-      password="${password}"
-      command="cd web/download ; md5sum -c md5sums"/>
-  </target>
--->
-
   <target name="upload"
     description="Uploads the latest packages to the Terrenus server">
     <exec executable="${pkg.dir}/send.sh" dir="${pkg.dir}"/>
@@ -390,7 +365,7 @@
   <!-- Define test targets -->
   <!-- ******************* -->
   
-  <target name="test-jar" depends="classes"
+  <target name="test-jar" depends="jar"
     description="Copies the CW utilities jar file into the install directory for direct in-situ testing">
     <copy file="lib/java/cwutils.jar" todir="${install.dir}/lib/java"/>
   </target>
@@ -404,25 +379,55 @@
     <pathelement location="${install4j.dir}/resource/i4jruntime.jar"/>
   </path>
 
-  <target name="test" depends="classes"
+  <!-- LAF arguments from the command line -Dlaf value -->
+  <property name="laf" value="${default.laf}"/>
+  <condition property="laf.args" value="-Dswing.defaultlaf=com.formdev.flatlaf.FlatLightLaf">
+    <equals arg1="${laf}" arg2="flat"/>
+  </condition>
+  <condition property="laf.args" value="-Dswing.defaultlaf=com.formdev.flatlaf.FlatDarkLaf">
+    <equals arg1="${laf}" arg2="flat-dark"/>
+  </condition>
+  <condition property="laf.args" value="-Dapple.laf.useScreenMenuBar=true">
+    <equals arg1="${laf}" arg2="mac"/>
+  </condition>
+  <condition property="laf.args" value="-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Dapple.awt.showGrowBox=false">
+    <equals arg1="${laf}" arg2="gtk"/>
+  </condition>
+  <condition property="laf.args" value="-Dswing.defaultlaf=javax.swing.plaf.metal.MetalLookAndFeel -Dswing.metalTheme=steel -Dapple.awt.showGrowBox=false">
+    <equals arg1="${laf}" arg2="metal"/>
+  </condition>
+  <condition property="laf.args" value="-Dswing.defaultlaf=javax.swing.plaf.nimbus.NimbusLookAndFeel -Dapple.awt.showGrowBox=false">
+    <equals arg1="${laf}" arg2="nimbus"/>
+  </condition>
+  <condition property="laf.args" value="-Dswing.defaultlaf=com.sun.java.swing.plaf.motif.MotifLookAndFeel -Dapple.awt.showGrowBox=false">
+    <equals arg1="${laf}" arg2="motif"/>
+  </condition>
+  <if>
+    <not><isset property="laf.args"/></not>
+    <then>
+      <echo>Look and feel "${laf}" has no known configuration</echo>
+      <fail message="Aborting"/>
+    </then>
+  </if>
+  <property name="laf.args" value=""/>
+
+  <target name="test" depends="jar"
     description="Tests the Java class ${class} by calling its main() method with arguments ${args}">
-
-    <if>
-      <not><isset property="args"/></not>
-      <then>
-        <property name="args" value=""/>
-      </then>
-    </if>
-
+    <property name="args" value=""/>
+    <echo>Testing with:</echo>
+    <echo>  Class = ${class}</echo>
+    <echo>  Look and feel ${laf} args = ${laf.args}</echo>
+    <echo>  VM args = ${vm.args}</echo>
+    <echo>  Test debug args = ${test.debug.args}</echo>
+    <echo>  Command line args = ${args}</echo>
     <java 
       classname="${class}" 
       classpathref="test.class.path"
       fork="true">
       <env key="${ld.var}" value="${basedir}/lib/native/${os.libs}"/>
-      <jvmarg line="${vm.args} ${test.debug.args} -Djna.library.path='${basedir}/lib/native/${os.libs}' -ea:noaa.coastwatch..."/>
+      <jvmarg line="${laf.args} ${vm.args} ${test.debug.args} -Djna.library.path='${basedir}/lib/native/${os.libs}' -ea:noaa.coastwatch..."/>
       <arg line="${args}"/>
     </java>
-
   </target>
 
   <target name="test-cdat"
