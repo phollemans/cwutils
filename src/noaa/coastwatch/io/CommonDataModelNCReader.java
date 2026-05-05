@@ -90,6 +90,7 @@ import ucar.nc2.constants.FeatureType;
 import ucar.nc2.dataset.CoordinateAxis;
 import ucar.nc2.dataset.CoordinateAxis1D;
 import ucar.nc2.dataset.NetcdfDataset;
+import ucar.nc2.dataset.VariableDS;
 import ucar.nc2.dt.GridCoordSystem;
 import ucar.nc2.dt.GridDataset;
 import ucar.nc2.dt.GridDatatype;
@@ -1169,6 +1170,31 @@ utilities when:
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Returns true if the variable is a CDM enhanced variable whose external
+   * data type differs from the original packed type.  In that case, CDM has
+   * already applied scale/offset or unsigned conversion and we should not
+   * attach a second scaling pass.
+   */
+  private boolean isExternallyEnhanced (
+    Variable var
+  ) {
+
+    boolean enhanced = false;
+
+    if (var instanceof VariableDS) {
+      VariableDS varDS = (VariableDS) var;
+      enhanced =
+        varDS.hasScaleOffset() ||
+        varDS.getEnhanceMode().contains (NetcdfDataset.Enhance.ConvertUnsigned);
+    } // if
+
+    return (enhanced);
+
+  } // isExternallyEnhanced
+
+  ////////////////////////////////////////////////////////////
+
   protected DataVariable getPreviewImpl (
     int index
   ) throws IOException { 
@@ -1199,24 +1225,29 @@ utilities when:
       // Get calibration
       // ---------------
       double[] scaling;
-      try {
-        Number scale = (Number) getAttribute (var, "scale_factor");
-        Number offset = (Number) getAttribute (var, "add_offset");
-        if (offset == null) offset = 0;        
-        scaling = new double[] {scale.doubleValue(), offset.doubleValue()};
-        /**
-         * We re-arrange the CF scaling conventions here into HDF:
-         *
-         *   y = a'x + b'      (CF)
-         *   y = (x - b)*a     (HDF)
-         *   => a = a'
-         *      b = -b'/a'
-         */
-        scaling[1] = -scaling[1]/scaling[0];
-      } // try
-      catch (Exception e) {
+      if (isExternallyEnhanced (var)) {
         scaling = null;
-      } // catch
+      } // if
+      else {
+        try {
+          Number scale = (Number) getAttribute (var, "scale_factor");
+          Number offset = (Number) getAttribute (var, "add_offset");
+          if (offset == null) offset = 0;        
+          scaling = new double[] {scale.doubleValue(), offset.doubleValue()};
+          /**
+           * We re-arrange the CF scaling conventions here into HDF:
+           *
+           *   y = a'x + b'      (CF)
+           *   y = (x - b)*a     (HDF)
+           *   => a = a'
+           *      b = -b'/a'
+           */
+          scaling[1] = -scaling[1]/scaling[0];
+        } // try
+        catch (Exception e) {
+          scaling = null;
+        } // catch
+      } // else
 
       // Get missing value
       // -----------------
