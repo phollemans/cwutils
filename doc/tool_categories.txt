@@ -1,4 +1,4 @@
-Tool Help|cwtools
+Tool Help|cwtools cwagent
 Information and Statistics|cwinfo cwstats hdatt
 Data Processing|cwimport cwexport cwsample cwmath cwcomposite cwscript cwtccorrect
 Graphics and Visualization|cwanimate cdat cwrender cwcoverage cwgraphics
