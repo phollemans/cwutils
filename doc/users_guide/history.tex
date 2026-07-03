@@ -16,6 +16,42 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection*{Version 4.2.0 -- July 2026}
+
+\subsubsection*{\bigicon{box_software} Updates}
+
+\begin{itemize}
+
+\item The Java VM was updated to 17.0.19 for the latest bug and security fixes.
+
+\item The user's guide was largely revised for the new CDAT functionality and 
+better clarity and flow.
+
+\item The color chooser for overlays in CDAT was expanded to include a larger 
+and more useful color selection.
+
+\item A new command line tool {\em cwagent} now provides help with using the
+CoastWatch Utilities in a chat agent conversation.  The agent has access to 
+the current documentation and can provide advice on tools, options, metadata,
+and data processing workflows.  It can also be used to write automated data
+processing scripts.
+
+\end{itemize}
+
+\subsubsection*{\bigicon{bug_yellow} Bug fixes}
+\begin{itemize}
+
+\item NetCDF files read using NcML now correctly apply scale and 
+offset metadata when reading variable values.
+
+\item Polar projection data in cwrender and CDAT now more reliably render in 
+the native orientation of the data file, rather than displaying rotated by 
+180$^{\circ}$.
+
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% NEW VERSION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \subsection*{Version 4.1.5 -- December 2025}
 
 \subsubsection*{\bigicon{box_software} Updates}
@@ -472,7 +508,7 @@ and flagged as invalid.
   \item GeoTIFFs written by CDAT, cwrender, and cwexport now conform to the
   cloud-optimized GeoTIFF recommendations.
   
-  \item GeoTIFFs created by cwrender and cwxeport now have extra compression
+  \item GeoTIFFs created by cwrender and cwexport now have extra compression
   options available: LZW and JPEG.
 
   \item The cwmath, cwcomposite, and cwregister2 tools have been updated to
@@ -611,7 +647,7 @@ and flagged as invalid.
   has been fixed by truncating any attribute that exceeds this length with
   a warning, and also an option added to cwcomposite (see above).
   
-  \item Some Sentinal-1A data was being rendered in a mirrored orientation.
+  \item Some Sentinel-1A data was being rendered in a mirrored orientation.
   This has been fixed.
   
   \item CDAT and cwrender had issues when rendering land polygons near the
