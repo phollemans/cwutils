@@ -82,12 +82,13 @@
   <target name="jar" depends="compile,write-version" unless="jar.uptodate"
           description="Builds cwutils jar and bumps build number">
     <buildnumber/>
+    <property file="build.number" prefix="next"/>
     <jar destfile="lib/java/cwutils.jar">
       <fileset dir="classes"/>
       <fileset dir="resources"/>
     </jar>
     <echo>Built jar with version ${version.full} ${current.time}</echo>
-    <echo>Build number bumped to ${build.number} for next build</echo>
+    <echo>Build number bumped to ${next.build.number} for next build</echo>
   </target>
 
   <!-- No-op when up-to-date -->
@@ -120,7 +121,7 @@
       <bottom><![CDATA[<script>if (typeof useModuleDirectories !== 'undefined') { useModuleDirectories = false; }</script>]]></bottom>
       <arg line="--allow-script-in-comments"/>
       <packageset dir="src"/>
-      <arg line="-Xmaxwarns 10"/>
+      <!-- <arg line="-Xmaxwarns 10"/> -->
     </javadoc>
   </target>
 

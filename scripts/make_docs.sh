@@ -78,7 +78,7 @@ manual=users_guide/manual_pages.tex
 # \chapter{Manual Pages}
 # \label{manual}
 # EOF
-touch $manual
+rm -f $manual
 
 categories=`cat tool_categories.txt | wc -l`
 
