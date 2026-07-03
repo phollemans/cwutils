@@ -59,6 +59,7 @@ public final class cwtools {
       cwscript.getUsage(),
       cwstats.getUsage(),
       cwtccorrect.getUsage(),
+      cwtools.getUsage(),
       hdatt.getUsage()
     );
     System.out.println ("The CoastWatch Utilities contains the following tools:\n");
@@ -76,6 +77,18 @@ public final class cwtools {
   ////////////////////////////////////////////////////////////
 
   private cwtools () { }
+
+  ////////////////////////////////////////////////////////////
+
+  /** Gets the usage info for this tool. */
+  static UsageInfo getUsage () {
+
+    UsageInfo info = new UsageInfo ("cwtools");
+
+    info.func ("Lists all tools in the CoastWatch Utilities");
+    return (info);
+
+  } // getUsage
 
   ////////////////////////////////////////////////////////////
 
