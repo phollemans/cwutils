@@ -142,6 +142,9 @@ public class DateFormatter {
    * <code>SimpleDateFormat</code> class.
    *
    * @return a date object or null if the input string cannot be parsed.
+   *
+   * @throws ParseException if the input string cannot be parsed using the
+   * specified format.
    */ 
   public static Date parseDate (
     String input,

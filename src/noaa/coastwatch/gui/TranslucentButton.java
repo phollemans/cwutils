@@ -12,16 +12,22 @@ import javax.swing.JButton;
 import javax.swing.Icon;
 
 /**
- * 
- * 
- * 
+ * The <code>TranslucentButton</code> class is a button whose painting
+ * opacity may be controlled by an {@link OpacityHelper}.
+ *
  * @author Peter Hollemans
  * @since 3.8.1
+ * @serial exclude
  */
 public class TranslucentButton extends JButton implements TranslucentComponent {
 
   private OpacityHelper helper;
 
+  /**
+   * Creates a new translucent button.
+   *
+   * @param icon the button icon.
+   */
   public TranslucentButton (Icon icon) {
     super (icon);
     setOpaque (false);
@@ -35,6 +41,11 @@ public class TranslucentButton extends JButton implements TranslucentComponent {
     g2d.dispose();
   } // paintComponent
 
+  /**
+   * Sets the opacity helper.
+   *
+   * @param helper the opacity helper, or null for normal painting opacity.
+   */
   @Override
   public void setHelper (OpacityHelper helper) { this.helper = helper; }
 

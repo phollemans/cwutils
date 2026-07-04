@@ -57,7 +57,11 @@ public class AMSUA implements Radiometer {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the singleton instance of this class. */
+  /**
+   * Gets the singleton instance of this class.
+   *
+   * @return the singleton instance of this class.
+   */
   public static AMSUA getInstance() { return (instance); }
 
   ////////////////////////////////////////////////////////////

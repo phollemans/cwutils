@@ -110,7 +110,11 @@ public class PaletteFactory {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the list of predefined palette names. */
+  /**
+   * Gets the list of predefined palette names.
+   *
+   * @return the list of predefined palette names.
+   */
   public static List<String> getPredefined () { 
 
     return (List.copyOf (predefinedList));

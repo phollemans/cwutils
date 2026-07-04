@@ -31,7 +31,7 @@ import java.util.List;
 import noaa.coastwatch.render.feature.Feature;
 import noaa.coastwatch.util.EarthLocation;
 
-/*
+/**
  * An <code>AbstractFeature</code> can be extended by any concrete
  * <code>Feature</code> class.  It provides a default implementation
  * for the attribute interface and other methods.
@@ -105,6 +105,8 @@ public abstract class AbstractFeature
   /** 
    * Creates a new feature with no attributes.  The list of points is
    * created and initialized to be empty.
+   *
+   *
    */
   protected AbstractFeature () {
 
@@ -114,27 +116,54 @@ public abstract class AbstractFeature
 
   ////////////////////////////////////////////////////////////
 
-  /** Adds a new point to this feature. */
+  /**
+   * Adds a new point to this feature.
+   *
+   * @param point the earth location point to add.
+   *
+   */
   public void add (EarthLocation point) { points.add (point); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a point from this feature. */
+  /**
+   * Gets a point from this feature.
+   *
+   * @param index the point index.
+   *
+   * @return a point from this feature.
+   */
   public EarthLocation get (int index) { return (points.get (index)); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the total number of points in this feature. */
+  /**
+   * Gets the total number of points in this feature.
+   *
+   *
+   * @return the total number of points in this feature.
+   */
   public int size () { return (points.size()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Removes a point from this feature. */
+   /**
+    * Removes a point from this feature.
+    *
+    *
+    * @param index the point index.
+    *
+   * @return the removed point.
+   */
   public EarthLocation remove (int index) { return (points.remove (index)); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Adds a number of points from another feature to this feature. */
+  /**
+   * Adds a number of points from another feature to this feature.
+   *
+   * @param feature the feature containing points to add.
+   */
   public void addAll (Feature feature) { 
 
     for (Iterator<EarthLocation> iter = feature.iterator(); iter.hasNext(); )

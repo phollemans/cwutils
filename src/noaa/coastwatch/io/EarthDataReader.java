@@ -206,22 +206,40 @@ public abstract class EarthDataReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the earth data info object. */
+  /**
+   * Gets the earth data info object.
+   *
+   * @return the earth data info object.
+   */
   public EarthDataInfo getInfo () { return (info); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the total count of data variables. */
+  /**
+   * Gets the total count of data variables.
+   *
+   * @return the total count of data variables.
+   */
   public int getVariables () { return (variables.length); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the variable name at the specified index. */
+  /**
+   * Gets the variable name at the specified index.
+   *
+   * @param index the variable index.
+   *
+   * @return the variable name at the specified index.
+   */
   public String getName (int index) { return (variables[index]); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data format description. */
+  /**
+   * Gets the data format description.
+   *
+   * @return the data format description.
+   */
   public abstract String getDataFormat ();
 
   ////////////////////////////////////////////////////////////
@@ -244,7 +262,11 @@ public abstract class EarthDataReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Get the earth data source. */
+  /**
+   * Gets the earth data source.
+   *
+   * @return the earth data source.
+   */
   public String getSource () { return (source); }
 
   ////////////////////////////////////////////////////////////
@@ -370,7 +392,13 @@ public abstract class EarthDataReader {
   /**
    * Implementation for the subclass.
    *
+   * @param index the variable index.
+   *
+   * @return the variable preview.
+   *
    * @see #getPreview(int)
+   *
+   * @throws IOException if an error occurs reading the variable preview data.
    */
   protected abstract DataVariable getPreviewImpl (
     int index
@@ -384,6 +412,9 @@ public abstract class EarthDataReader {
    * @param name the variable name.
    *
    * @return a chunk producer for the specified variable.
+   *
+   * @throws IOException if the variable cannot be read, or if no chunk producer
+   * is available for the variable.
    *
    * @since 3.5.0
    */
@@ -595,6 +626,8 @@ public abstract class EarthDataReader {
    * Gets the detailed raw metadata.  Each key is an attribute name
    * and each value the corresponding wrapped primitive, primitive
    * array, or string value.
+   *
+   * @return the map of attribute name to attribute value.
    */
   public Map getRawMetadata () { return (rawMetadataMap); }
 
@@ -638,6 +671,8 @@ public abstract class EarthDataReader {
    * Gets the variable names for the specified NetCDF CDM style
    * coordinate systems accessed by this reader.
    *
+   * @param system the coordinate system.
+   *
    * @return the list of variable names, possibly empty.
    */
   public List<String> getVariablesForSystem (
@@ -659,6 +694,9 @@ public abstract class EarthDataReader {
    * @return the variable name with the best match for the search terms, or 
    * null if no variables could be found.  Match quality is measured based on how
    * similar the variable name or its long name are to one of to search terms.
+   *
+   * @throws IOException if an error occurs reading the variable list or variable
+   * previews.
    * 
    * @since 3.8.1
    */

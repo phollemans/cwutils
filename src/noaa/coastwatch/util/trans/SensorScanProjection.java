@@ -85,17 +85,29 @@ public abstract class SensorScanProjection
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a description of this sensor scan type. */
+  /**
+   * Gets a description of this sensor scan type.
+   *
+   * @return a description of this sensor scan type.
+   */
   public abstract String getSensorType ();
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a code for this sensor scan type. */
+  /**
+   * Gets a code for this sensor scan type.
+   *
+   * @return a code for this sensor scan type.
+   */
   public abstract int getSensorCode ();
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the parameters used to create this sensor scan projection. */
+  /**
+   * Gets the parameters used to create this sensor scan projection.
+   *
+   * @return the parameters used to create this sensor scan projection.
+   */
   public double[] getParameters () { return ((double[]) parameters.clone()); }
 
   ////////////////////////////////////////////////////////////

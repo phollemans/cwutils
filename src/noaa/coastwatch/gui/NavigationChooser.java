@@ -158,7 +158,11 @@ public class NavigationChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the navigation mode, or null if no mode is selected. */
+  /**
+   * Gets the navigation mode, or null if no mode is selected.
+   *
+   * @return the navigation mode, or null if no mode is selected.
+   */
   public String getMode () { 
 
     ButtonModel model = modeGroup.getSelection();
@@ -171,7 +175,11 @@ public class NavigationChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the list of selected variable names. */
+  /**
+   * Gets the list of selected variable names.
+   *
+   * @return the list of selected variable names.
+   */
   public List getVariables () { 
 
     return (variableList.getSelectedValuesList());

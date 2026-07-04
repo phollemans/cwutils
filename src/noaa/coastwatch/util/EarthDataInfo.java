@@ -85,7 +85,11 @@ public class EarthDataInfo
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data source. */
+  /**
+   * Gets the data source.
+   *
+   * @return the data source.
+   */
   public String getSource () { return (source); }
 
   ////////////////////////////////////////////////////////////
@@ -139,6 +143,8 @@ public class EarthDataInfo
    * occurred over a number of different time periods, the date
    * returned is the first date in the time period list.
    *
+   * @return the data recording date.
+   *
    * @see #getTimePeriods 
    */
   public Date getDate () { 
@@ -154,6 +160,8 @@ public class EarthDataInfo
    * Gets the data recording start date, the same value as the
    * getDate() method.
    *
+   * @return the data recording start date.
+   *
    * @see #getDate
    * @see #getEndDate
    */
@@ -163,6 +171,8 @@ public class EarthDataInfo
 
   /**
    * Gets the data recording ending date.
+   *
+   * @return the data recording ending date.
    *
    * @see #getStartDate
    */
@@ -176,8 +186,10 @@ public class EarthDataInfo
   ////////////////////////////////////////////////////////////
 
   /**
-   * Returns true if the data recording originated from one date
-   * and time with essentially no data recording duration.
+   * Determines if the data recording is instantaneous.
+   *
+   * @return true if the data recording originated from one date and time with
+   * essentially no data recording duration, or false otherwise.
    */
   public boolean isInstantaneous () {
 
@@ -198,6 +210,10 @@ public class EarthDataInfo
    * for classes that have no knowledge of multi-temporal data and may
    * be deprecated in the future.
    *
+   * @param format the date format.
+   *
+   * @return the formatted date.
+   *
    * @see #getDate
    * @see DateFormatter#formatDate(Date,String)
    */
@@ -215,6 +231,11 @@ public class EarthDataInfo
    * Formats the first date.  This method mainly exists as legacy code
    * for classes that have no knowledge of multi-temporal data and may
    * be deprecated in the future.
+   *
+   * @param format the date format.
+   * @param zone the time zone.
+   *
+   * @return the formatted date.
    *
    * @see #getDate
    * @see DateFormatter#formatDate(Date,String,TimeZone)
@@ -234,6 +255,11 @@ public class EarthDataInfo
    * Formats the first date.  This method mainly exists as legacy code
    * for classes that have no knowledge of multi-temporal data and may
    * be deprecated in the future.
+   *
+   * @param format the date format.
+   * @param loc the earth location for determining the time zone.
+   *
+   * @return the formatted date.
    *
    * @see #getDate
    * @see DateFormatter#formatDate(Date,String,EarthLocation)
@@ -282,17 +308,29 @@ public class EarthDataInfo
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the earth transform object. */
+  /**
+   * Gets the earth transform object.
+   *
+   * @return the earth transform object.
+   */
   public EarthTransform getTransform () { return (trans); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data origin. */
+  /**
+   * Gets the data origin.
+   *
+   * @return the data origin.
+   */
   public String getOrigin () { return (origin); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data command history. */
+  /**
+   * Gets the data command history.
+   *
+   * @return the data command history.
+   */
   public String getHistory () { return (history); }
 
   ////////////////////////////////////////////////////////////
@@ -506,6 +544,10 @@ public class EarthDataInfo
   /**
    * Appends another info object to this one in duplicate removal mode.
    *
+   * @param appendInfo the info object to append.
+   *
+   * @return the newly created object.
+   *
    * @see #append(EarthDataInfo, boolean)
    *
    * @since 3.5.0
@@ -522,6 +564,10 @@ public class EarthDataInfo
 
   /**
    * Appends another info object to this one in duplicate preserving mode.
+   *
+   * @param appendInfo the info object to append.
+   *
+   * @return the newly created object.
    *
    * @see #append(EarthDataInfo, boolean)
    *

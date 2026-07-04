@@ -79,6 +79,7 @@ public class WorldFileWriter {
    * 
    * @throws IllegalArgumentException if the earth transform is not a
    * map projection.
+   * @throws IOException if an error occurs writing world file data.
    */
   public WorldFileWriter (
     OutputStream output,

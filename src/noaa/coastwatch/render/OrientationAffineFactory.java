@@ -92,8 +92,13 @@ public class OrientationAffineFactory {
 
   /** The classification of pole orientation detected near the image center. */
   public static enum PoleOrientation {
+    /** The north pole is detected near the image center. */
     NORTH_POLE,
+
+    /** The south pole is detected near the image center. */
     SOUTH_POLE,
+
+    /** The pole orientation cannot be determined. */
     UNDETERMINED
   } // PoleOrientation enum
 
@@ -335,6 +340,8 @@ public class OrientationAffineFactory {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the orientation tests.
    */
   public static void main (String[] argv) throws Exception {
 

@@ -95,7 +95,11 @@ public class StepEnhancement
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the number of steps in the enhancement. */
+  /**
+   * Gets the number of steps in the enhancement.
+   *
+   * @return the number of steps in the enhancement.
+   */
   public int getSteps () {
 
     return ((int) Math.round (1.0/step));

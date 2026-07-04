@@ -51,27 +51,49 @@ public class ColorEnhancementSettings
   
   ////////////////////////////////////////////////////////////
 
-  /** Gets the variable name. */
+  /**
+   * Gets the variable name.
+   *
+   *
+   * @return the variable name.
+   */
   public String getName () { return (variableName); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the color enhancement palette. */
+  /**
+   * Gets the color enhancement palette.
+   *
+   * @return the color enhancement palette.
+   */
   public Palette getPalette () { return (palette); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the color enhancement palette. */
+  /**
+   * Sets the color enhancement palette.
+   *
+   * @param palette the color palette.
+   *
+   */
   public void setPalette (Palette palette) { this.palette = palette; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the color enhancement function. */
+  /**
+   * Gets the color enhancement function.
+   *
+   * @return the color enhancement function.
+   */
   public EnhancementFunction getFunction () { return (function); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the color enhancement function. */
+  /**
+   * Gets the color enhancement function.
+   *
+   * @param function the enhancement function.
+   */
   public void setFunction (
     EnhancementFunction function
   ) { 

@@ -74,7 +74,11 @@ public class SatellitePassCoveragePanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the currently displayed pass. */
+  /**
+   * Gets the currently displayed pass.
+   *
+   * @return the currently displayed pass.
+   */
   public SatellitePassInfo getPass () { return (pass); }
 
   ////////////////////////////////////////////////////////////

@@ -60,7 +60,11 @@ public interface FeatureSource
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the currently selected Earth area. */
+  /**
+   * Gets the currently selected Earth area.
+   *
+   * @return the currently selected Earth area.
+   */
   public EarthArea getArea();
 
   ////////////////////////////////////////////////////////////

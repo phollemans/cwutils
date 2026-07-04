@@ -73,6 +73,7 @@ public class TileCachedGrid
   /**
    * Get the tile source used by this grid.
    *
+   *
    * @return the tile source.
    *
    * @since 3.5.0
@@ -109,6 +110,9 @@ public class TileCachedGrid
    * Constructs a new grid from the specified tile source.
    *
    * @param source the tile source to use for tiles.
+   *
+   * @param grid the grid to cache by tile.
+   *
    */
   public TileCachedGrid (
     Grid grid,
@@ -268,6 +272,8 @@ public class TileCachedGrid
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the tile cached grid tests.
    */
   public static void main (String[] argv) throws Exception {
 

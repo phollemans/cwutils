@@ -81,12 +81,20 @@ public class CoastOverlay extends PolygonOverlay {
   /** The current GSHHS reader used for coastline data. */
   private transient BinnedGSHHSReader coast;
 
-  /** The flag for full rendering including small polygons. */
+  /**
+   * The flag for full rendering including small polygons.
+   *
+   */
   private boolean smallPolygons = false;
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the read factory for new coastline readers. */
+  /**
+   * Sets the read factory for new coastline readers.
+   *
+   * @param factory the reader factory for coastline data.
+   *
+   */
   public void setReaderFactory (BinnedGSHHSReaderFactory factory) {
 
     this.readerFactory = factory;
@@ -99,6 +107,9 @@ public class CoastOverlay extends PolygonOverlay {
    * Sets the small polygons flag which determines if polygons smaller
    * than 3x3 view pixels are rendered.  By default small polygons are
    * not rendered.
+   *
+   * @param flag true to render small polygons.
+   *
    */
   public void setSmallPolygons (boolean flag) { 
 
@@ -111,7 +122,11 @@ public class CoastOverlay extends PolygonOverlay {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the small polygons flag. */
+  /**
+   * Gets the small polygons flag.
+   *
+   * @return the small polygons flag.
+   */
   public boolean getSmallPolygons () { return (smallPolygons); }
 
   ////////////////////////////////////////////////////////////

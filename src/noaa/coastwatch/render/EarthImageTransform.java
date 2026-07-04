@@ -54,12 +54,20 @@ public class EarthImageTransform {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the earth transform. */
+  /**
+   * Gets the earth transform.
+   *
+   * @return the earth transform.
+   */
   public EarthTransform getEarthTransform () { return (earthTrans); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the image transform. */
+  /**
+   * Gets the image transform.
+   *
+   * @return the image transform.
+   */
   public ImageTransform getImageTransform () { return (imageTrans); }
 
   ////////////////////////////////////////////////////////////

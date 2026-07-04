@@ -102,12 +102,20 @@ public class PanelOutputStream
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the associated output panel. */
+  /**
+   * Gets the associated output panel.
+   *
+   * @return the associated output panel.
+   */
   public JPanel getPanel () { return (panel); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the associated text area. */
+  /**
+   * Gets the associated text area.
+   *
+   * @return the associated text area.
+   */
   public JTextArea getTextArea () { return (textArea); }
 
   ////////////////////////////////////////////////////////////

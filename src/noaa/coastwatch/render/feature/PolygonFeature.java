@@ -64,7 +64,11 @@ public class PolygonFeature
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the winding direction. */
+  /**
+   * Gets the winding direction.
+   *
+   * @return the winding direction.
+   */
   public int getDirection () { return (direction); }
 
   ////////////////////////////////////////////////////////////

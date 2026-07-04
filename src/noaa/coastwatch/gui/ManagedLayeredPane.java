@@ -19,24 +19,55 @@ import javax.swing.JLayeredPane;
 import java.util.logging.Logger;
 
 /**
+ * The <code>ManagedLayeredPane</code> class is a layered pane that
+ * manages component bounds using simple named positions.
+ *
+ * <p>Components may still be assigned to normal Swing layers using
+ * the inherited layered pane constraints.  This class adds a separate
+ * set of position constraints that place each managed component within
+ * the pane content area.  A managed component may fill the content
+ * area, align to one edge or corner using its preferred size, or fill
+ * the bottom edge using its preferred height.</p>
  *
  * @author Peter Hollemans
  * @since 3.8.1
+ * @serial exclude
  */
 public class ManagedLayeredPane extends JLayeredPane {
 
   private static final Logger LOGGER = Logger.getLogger (ManagedLayeredPane.class.getName());    
 
+  /** The managed component positions. */
   public enum Position {
+
+    /** Fill the full pane content area. */
     FULL,
+
+    /** Center the component along the north edge. */
     NORTH,
+
+    /** Center the component along the east edge. */
     EAST,
+
+    /** Center the component along the south edge. */
     SOUTH,
+
+    /** Fill the full width along the south edge using the preferred height. */
     SOUTH_FULL,
+
+    /** Center the component along the west edge. */
     WEST,
+
+    /** Align the component to the north-east corner. */
     NORTH_EAST,
+
+    /** Align the component to the north-west corner. */
     NORTH_WEST,
+
+    /** Align the component to the south-east corner. */
     SOUTH_EAST,
+
+    /** Align the component to the south-west corner. */
     SOUTH_WEST
   };
 
@@ -44,16 +75,35 @@ public class ManagedLayeredPane extends JLayeredPane {
 
   ////////////////////////////////////////////////////////////
 
-  /** Holds a set of contraints for a managed component. */
+  /** Holds a set of constraints for a managed component. */
   public static class Constraints {
+
+    /** The component position. */
     public Position pos;
+
+    /** The component insets, or null for no insets. */
     public Insets insets;
+
+    /**
+     * Creates a new constraints object.
+     *
+     * @param pos the component position.
+     * @param insets the component insets, or null for no insets.
+     */
     public Constraints (Position pos, Insets insets) { this.pos = pos; this.insets = insets; }
   };
 
   ////////////////////////////////////////////////////////////
 
-  /** Updates the bounds of the managed components. */
+  /**
+   * Updates the bounds of the managed components.
+   *
+   * <p>Each managed component is placed within the pane content area after
+   * subtracting the pane insets.  Except for {@link Position#FULL} and
+   * {@link Position#SOUTH_FULL}, component bounds use the component preferred
+   * size.  Position insets offset components from the matching content edge;
+   * null insets are treated as zero on all sides.</p>
+   */
   public void updateBounds() {
 
     var paneDims = this.getSize();
@@ -175,6 +225,7 @@ public class ManagedLayeredPane extends JLayeredPane {
 
   ////////////////////////////////////////////////////////////
 
+  /** Creates a new managed layered pane. */
   public ManagedLayeredPane () {
 
     constraintsMap = new HashMap<>();
@@ -187,6 +238,15 @@ public class ManagedLayeredPane extends JLayeredPane {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Sets the position constraints for a component already added to this pane.
+   *
+   * <p>If the component is not a child of this pane, no constraints are
+   * changed.</p>
+   *
+   * @param component the managed component.
+   * @param constraints the position constraints.
+   */
   public void setComponentConstraints (Component component, Constraints constraints) {
 
     if (component.getParent() == this)
@@ -196,6 +256,13 @@ public class ManagedLayeredPane extends JLayeredPane {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Sets the position constraints for a component already added to this pane.
+   *
+   * @param component the managed component.
+   * @param pos the component position.
+   * @param insets the component insets, or null for no insets.
+   */
   public void setComponentConstraints (Component component, Position pos, Insets insets) {
 
     setComponentConstraints (component, new Constraints (pos, insets));
@@ -204,6 +271,13 @@ public class ManagedLayeredPane extends JLayeredPane {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Adds a component to a Swing layer and manages it at the specified position.
+   *
+   * @param comp the component to add.
+   * @param constraints the Swing layered pane constraints.
+   * @param pos the component position.
+   */
   public void add (Component comp, Object constraints, Position pos) {
 
     add (comp, constraints, pos, null);
@@ -212,6 +286,14 @@ public class ManagedLayeredPane extends JLayeredPane {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Adds a component to a Swing layer and manages it at the specified position.
+   *
+   * @param comp the component to add.
+   * @param constraints the Swing layered pane constraints.
+   * @param pos the component position.
+   * @param insets the component insets, or null for no insets.
+   */
   public void add (Component comp, Object constraints, Position pos, Insets insets) {
 
     add (comp, constraints);
@@ -233,4 +315,3 @@ public class ManagedLayeredPane extends JLayeredPane {
   ////////////////////////////////////////////////////////////
 
 } // ManagedLayeredPane class
-

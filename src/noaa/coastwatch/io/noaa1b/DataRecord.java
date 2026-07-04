@@ -37,31 +37,67 @@ import terrenus.instrument.InstrumentData;
  */
 public interface DataRecord {
 
-  /** Gets the scan line number. */
+  /** 
+   * Gets the scan line number. 
+   *
+   * @return the scan line number.
+   */
   public int getScanLine();
 
-  /** Gets the record date. */
+  /** 
+   * Gets the record date. 
+   *
+   * @return the record date.
+   */
   public Date getDate();
 
-  /** Determines if the sensor data is usable based on quality flags. */
+  /** 
+   * Determines if the sensor data is usable based on quality flags. 
+   *
+   * @return true if the sensor data is usable, or false otherwise.
+   */
   public boolean isSensorDataUsable();
 
-  /** Gets the sensor data values as uncalibrated counts. */
+  /** 
+   * Gets the sensor data values as uncalibrated counts. 
+   *
+   * @return the sensor data values as uncalibrated counts.
+   */
   public short[] getSensorData();
 
-  /** Determines if the calibration data is usable based on quality flags. */
+  /** 
+   * Determines if the calibration data is usable based on quality flags. 
+   *
+   * @return true if the calibration data is usable, or false otherwise.
+   */
   public boolean isCalibrationUsable();
 
-  /** Gets the calibration data. */
+  /** 
+   * Gets the calibration data. 
+   *
+   * @return the calibration data.
+   */
   public float[] getCalibration();
 
-  /** Determines if the navigation data is usable based on quality flags. */
+  /** 
+   * Determines if the navigation data is usable based on quality flags. 
+   *
+   * @return true if the navigation data is usable, or false otherwise.
+   */
   public boolean isNavigationUsable();
 
-  /** Gets the navigation data. */
+  /** 
+   * Gets the navigation data. 
+   *
+   * @return the navigation data.
+   */
   public float[] getNavigation();
 
-  /** Gets the calibrated and earth located sensor data. */
+  /** 
+   * Gets the calibrated and earth located sensor data. 
+   *
+   * @return the calibrated and earth located sensor data.
+   */
   public InstrumentData getData();
 
 } // DataRecord interface

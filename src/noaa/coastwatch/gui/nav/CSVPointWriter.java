@@ -162,6 +162,9 @@ public class CSVPointWriter
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs opening input data or writing CSV
+   * navigation point data.
    */
   public static void main (String[] argv) throws Exception {
 
@@ -189,5 +192,4 @@ public class CSVPointWriter
 } // CSVPointWriter class
 
 ////////////////////////////////////////////////////////////////////////
-
 

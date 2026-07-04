@@ -44,6 +44,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public class ArcSavePanel
   extends DataSavePanel {
@@ -90,7 +91,7 @@ public class ArcSavePanel
 
   ////////////////////////////////////////////////////////////
 
-  /* 
+  /** 
    * Creates a new ArcGIS save panel.
    *
    * @param reader the reader to use as a source of data.

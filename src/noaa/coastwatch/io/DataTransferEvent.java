@@ -34,6 +34,8 @@ import java.util.EventObject;
  * operation.
  *
  * @author Peter Hollemans
+ *
+ *
  * @since 3.1.5
  */
 public class DataTransferEvent
@@ -41,7 +43,11 @@ public class DataTransferEvent
 
   ////////////////////////////////////////////////////////////
 
-  /** Create a new data transfer event. */
+  /**
+   * Create a new data transfer event.
+   *
+   * @param source the transfer that generated the event.
+   */
   public DataTransferEvent (
     Object source
   ) { 

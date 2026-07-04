@@ -346,6 +346,9 @@ public class ResourceManager {
    * groups, plus any color enhancement preferences for variables not already
    * in the user's variable list.  This method should only be called after 
    * {@link #getPreferences} to make sure that the preferences have been built.
+   *
+   * @throws IOException if an overlay group file cannot be copied or the merged
+   * preferences cannot be written.
    * 
    * @since 4.1.5
    */
@@ -473,6 +476,8 @@ public class ResourceManager {
    * from the user-specific resources.  User objects can keep up
    * to date on the current list of groups by listening for
    * change events from the overlay manager.
+   *
+   * @return an overlay group manager instance that reads overlays from the user-specific resources.
    */
   public static OverlayGroupManager getOverlayManager () {
 
@@ -500,6 +505,7 @@ public class ResourceManager {
 
   /**
    * Sets up the user-specified preferences.
+   *
    *
    * @throws IOException if an error occurred setting up the
    * preferences.  
@@ -535,6 +541,8 @@ public class ResourceManager {
    * preferences.  The preferences are also saved to the
    * user-specified resources.
    *
+   * @param preferences the preferences to write.
+   *
    * @throws RuntimeException if an error occurred writing the
    * preferences to disk.
    */
@@ -563,6 +571,8 @@ public class ResourceManager {
    * The same preferences will be returned each time this method is
    * invoked so that user objects may share the preferences.
    *
+   *
+   * @return a preferences instance from the user-specific resources.
    * @throws RuntimeException if an error occurred setting up the
    * initial preferences, or reading the preferences from disk.
    */
@@ -630,6 +640,8 @@ public class ResourceManager {
 
   /** 
    * Shows the user resources directory in the OS native file explorer.
+   *
+   * @throws IOException if the resources directory cannot be opened.
    * 
    * @since 3.8.1
    */

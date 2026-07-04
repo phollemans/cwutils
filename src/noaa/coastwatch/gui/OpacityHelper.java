@@ -15,9 +15,25 @@ import java.awt.Graphics;
  */
 public interface OpacityHelper {
 
+  /**
+   * Sets the opacity.
+   *
+   * @param alpha the opacity alpha value.
+   */
   void setOpacity (float alpha);
+
+  /**
+   * Gets the opacity.
+   *
+   * @return the opacity alpha value.
+   */
   float getOpacity();
+
+  /**
+   * Sets up a graphics context with the current opacity.
+   *
+   * @param graphics the graphics context.
+   */
   void setupGraphics (Graphics graphics);
 
 } // OpacityHelper
-

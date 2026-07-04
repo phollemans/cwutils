@@ -218,7 +218,11 @@ public class ExpressionMaskOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current expression. */
+  /**
+   * Gets the current expression.
+   *
+   * @return the current expression.
+   */
   public String getExpression () { return (expression); }
 
   ////////////////////////////////////////////////////////////

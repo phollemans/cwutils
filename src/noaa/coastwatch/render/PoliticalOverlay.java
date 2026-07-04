@@ -66,12 +66,20 @@ public class PoliticalOverlay
   private transient BinnedGSHHSReaderFactory readerFactory =
     BinnedGSHHSReaderFactory.getInstance();
 
-  /** The current GSHHS reader used for border data. */
+  /**
+   * The current GSHHS reader used for border data.
+   *
+   */
   private transient BinnedGSHHSLineReader border;
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the read factory for new border readers. */
+  /**
+   * Sets the read factory for new border readers.
+   *
+   * @param factory the reader factory for political boundary data.
+   *
+   */
   public void setReaderFactory (BinnedGSHHSReaderFactory factory) {
 
     this.readerFactory = factory;
@@ -80,7 +88,14 @@ public class PoliticalOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Reads the object data from the input stream. */
+  /**
+   * Reads the object data from the input stream.
+   *
+   * @param in the input stream.
+   *
+   * @throws IOException if an error occurs reading object data from the stream.
+   * @throws ClassNotFoundException if a serialized object class cannot be found.
+   */
   private void readObject (
     ObjectInputStream in
   ) throws IOException, ClassNotFoundException {
@@ -92,7 +107,12 @@ public class PoliticalOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the state borders flag. */
+  /**
+   * Gets the state borders flag.
+   *
+   *
+   * @return the state borders flag.
+   */
   public boolean getState () { return (showState); }
 
   ////////////////////////////////////////////////////////////
@@ -100,6 +120,9 @@ public class PoliticalOverlay
   /** 
    * Sets the state borders flag.  By default, no state borders are
    * drawn.
+   *
+   * @param flag true to draw state boundaries.
+   *
    */
   public void setState (boolean flag) { 
 
@@ -109,7 +132,12 @@ public class PoliticalOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the international borders flag. */
+  /**
+   * Gets the international borders flag.
+   *
+   *
+   * @return the international borders flag.
+   */
   public boolean getInternational () { return (showInternational); }
 
   ////////////////////////////////////////////////////////////
@@ -117,6 +145,9 @@ public class PoliticalOverlay
   /** 
    * Sets the international borders flag.  By default, international
    * borders are drawn.
+   *
+   * @param flag true to draw international boundaries.
+   *
    */
   public void setInternational (boolean flag) { 
 

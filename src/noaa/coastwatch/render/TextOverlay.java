@@ -61,7 +61,12 @@ public class TextOverlay
   
   ////////////////////////////////////////////////////////////
 
-  /** Gets the text drop shadow flag. */
+  /**
+   * Gets the text drop shadow flag.
+   *
+   *
+   * @return the text drop shadow flag.
+   */
   public boolean getTextDropShadow () { return (textDropShadow); }
 
   ////////////////////////////////////////////////////////////
@@ -70,6 +75,10 @@ public class TextOverlay
    * Sets the text drop shadow flag.  When drop shadow mode is on, a shadow
    * is drawn behind the text.  By default, drop shadow mode
    * is off.
+   *
+   *
+   * @param flag true to draw text with a drop shadow.
+   *
    */
   public void setTextDropShadow (boolean flag) { textDropShadow = flag; }
 
@@ -78,6 +87,9 @@ public class TextOverlay
   /** 
    * Sets the text font.  The font is set for each text element in the
    * list.
+   *
+   * @param font the text font.
+   *
    */
   public void setFont (Font font) { 
 
@@ -93,6 +105,8 @@ public class TextOverlay
   /** 
    * Gets the text font.  We assume that all text elements have the
    * same font, and that there is at least one text element.
+   *
+   * @return the text font.
    */
   public Font getFont () { 
 
@@ -118,7 +132,11 @@ public class TextOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets an iterator over the list of text elements. */
+  /**
+   * Gets an iterator over the list of text elements.
+   *
+   * @return an iterator over the list of text elements.
+   */
   public Iterator getElementIterator () { return (elementList.iterator()); }
 
   ////////////////////////////////////////////////////////////
@@ -127,6 +145,8 @@ public class TextOverlay
    * Removes an element from the list.
    *
    * @param element the element to remove from the list.
+   *
+   *
    */
   public void removeElement (
     TextElement element
@@ -141,6 +161,9 @@ public class TextOverlay
   /** 
    * Creates a new text overlay with the specified color.  The layer
    * number is initialized to 0.
+   *
+   * @param color the overlay color.
+   *
    */
   public TextOverlay (
     Color color

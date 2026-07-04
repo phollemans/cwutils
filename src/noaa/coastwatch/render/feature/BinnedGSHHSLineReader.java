@@ -116,7 +116,13 @@ public abstract class BinnedGSHHSLineReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a bin index using the specified earth location. */
+  /**
+   * Gets a bin index using the specified earth location.
+   *
+   * @param loc the earth location.
+   *
+   * @return the bin index.
+   */
   public int getBinIndex (
     EarthLocation loc
   ) {
@@ -153,12 +159,22 @@ public abstract class BinnedGSHHSLineReader
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the number of segments. */
+    /**
+     * Gets the number of segments.
+     *
+     * @return the number of segments.
+     */
     public int getSegments () { return (segments.size()); }
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the specified segment. */
+    /**
+     * Gets the specified segment.
+     *
+     * @param index the segment index.
+     *
+     * @return the specified segment.
+     */
     public Segment getSegment (int index) { 
 
       return ((Segment) segments.get (index)); 
@@ -167,7 +183,11 @@ public abstract class BinnedGSHHSLineReader
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the south-west corner earth location. */
+    /**
+     * Gets the south-west corner earth location.
+     *
+     * @return the south-west corner earth location.
+     */
     public EarthLocation getCorner () { return (corner); }
 
     ////////////////////////////////////////////////////////
@@ -177,9 +197,12 @@ public abstract class BinnedGSHHSLineReader
      * are read into the bin using the current maximum
      * hierarchical level.
      *
-     * @param binIndex the bin index.
+     * @param binIndex the index of the bin to read.
      *
      * @see #getBinIndex
+     *
+     * @throws IOException if an error occurs reading segment or point data for
+     * the bin.
      */
     public Bin (
       int binIndex
@@ -307,12 +330,20 @@ public abstract class BinnedGSHHSLineReader
 
       ////////////////////////////////////////////////////
 
-      /** Gets the segment level. */
+      /**
+       * Gets the segment level.
+       *
+       * @return the segment level.
+       */
       public byte getLevel () { return (level); }
 
       ////////////////////////////////////////////////////
 
-      /** Gets the earth vector for this segment. */
+      /**
+       * Gets the earth vector for this segment.
+       *
+       * @return the earth vector for this segment.
+       */
       public LineFeature getLineFeature () {
 
         LineFeature vector = new LineFeature();
@@ -331,12 +362,20 @@ public abstract class BinnedGSHHSLineReader
       
       ////////////////////////////////////////////////////
 
-      /** Gets the raw segment longitude offsets. */
+      /**
+       * Gets the raw segment longitude offsets.
+       *
+       * @return the raw segment longitude offsets.
+       */
       public short[] getDx () { return (dx); }
 
       ////////////////////////////////////////////////////
 
-      /** Gets the raw segment latitude offsets. */
+      /**
+       * Gets the raw segment latitude offsets.
+       *
+       * @return the raw segment latitude offsets.
+       */
       public short[] getDy () { return (dy); }
 
       ////////////////////////////////////////////////////
@@ -450,6 +489,8 @@ public abstract class BinnedGSHHSLineReader
    *
    * @param name the data file name.
    *
+   * @return the file ID.
+   *
    * @throws IOException if an error occurred opening the file.
    */
   protected abstract int openFile (
@@ -477,7 +518,12 @@ public abstract class BinnedGSHHSLineReader
   /** 
    * Initializes this reader using the specified database.
    *
+   * @param name the database name.
+   *
    * @see BinnedGSHHSReaderFactory#getDatabaseName
+   *
+   * @throws IOException if the database cannot be opened or the required
+   * datasets cannot be read.
    */
   protected void init (
     String name
@@ -593,7 +639,11 @@ public abstract class BinnedGSHHSLineReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the total number of bins. */
+  /**
+   * Gets the total number of bins.
+   *
+   * @return the total number of bins.
+   */
   public int getBins () { return (totalBins); }
 
   ////////////////////////////////////////////////////////////
@@ -637,7 +687,11 @@ public abstract class BinnedGSHHSLineReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the database name currently being used for selection. */
+  /**
+   * Gets the database name currently being used for selection.
+   *
+   * @return the database name currently being used for selection.
+   */
   public String getDatabase() { return (database); }
 
   ////////////////////////////////////////////////////////////

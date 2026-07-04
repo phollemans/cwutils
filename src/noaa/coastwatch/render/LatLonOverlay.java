@@ -67,7 +67,10 @@ public class LatLonOverlay
   /** The grid increment in degrees. */
   private int inc;
 
-  /** The manual grid increment flag. */
+  /**
+   * The manual grid increment flag.
+   *
+   */
   private boolean manualIncrement;
 
   ////////////////////////////////////////////////////////////
@@ -76,6 +79,9 @@ public class LatLonOverlay
    * Sets the manual grid increment mode flag.  When off, the grid
    * increment is calculated automatically at rendering time for an
    * optimal number of grid lines.
+   *
+   * @param flag true to use a manually specified grid increment.
+   *
    */
   public void setManualIncrement (boolean flag) { 
 
@@ -88,12 +94,21 @@ public class LatLonOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the manual grid increment mode flag. */
+  /**
+   * Gets the manual grid increment mode flag.
+   *
+   *
+   * @return the manual grid increment mode flag.
+   */
   public boolean getManualIncrement () { return (manualIncrement); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the grid increment in degrees. */
+  /**
+   * Sets the grid increment in degrees.
+   *
+   * @param inc the latitude/longitude grid increment.
+   */
   public void setIncrement (int inc) { 
 
     if (this.inc != inc) {
@@ -105,7 +120,11 @@ public class LatLonOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current grid increment value in degrees. */
+  /**
+   * Gets the current grid increment value in degrees.
+   *
+   * @return the current grid increment value in degrees.
+   */
   public int getIncrement () { return (inc); }
 
   ////////////////////////////////////////////////////////////

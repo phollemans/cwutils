@@ -36,10 +36,16 @@ public class ChunkComputationHelper {
 
   ////////////////////////////////////////////////////////////
 
+  /** Creates a new chunk computation helper. */
   protected ChunkComputationHelper () { }
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets a new chunk computation helper instance.
+   *
+   * @return the chunk computation helper instance.
+   */
   public static ChunkComputationHelper getInstance () { return (new ChunkComputationHelper()); }
 
   ////////////////////////////////////////////////////////////

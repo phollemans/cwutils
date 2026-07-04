@@ -532,7 +532,6 @@ public class GeoTIFFWriter {
    * GeoTIFF keys as lists of values within a set of GeoTIFF-specific TIFF
    * tags.
    * 
-   * @param keyList the list of GeoTIFF keys. Only TIFF types short,
    * ASCII, and double are allowed.
    *
    * @return the list of TIFF field objects to use as metadata in the TIFF

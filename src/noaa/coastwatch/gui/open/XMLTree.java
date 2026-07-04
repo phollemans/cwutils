@@ -54,6 +54,7 @@ import org.w3c.dom.NodeList;
  *
  * @author Xiaoming Liu
  * @since 3.3.0
+ * @serial exclude
  */
 public class XMLTree extends JTree {
 
@@ -207,7 +208,7 @@ public class XMLTree extends JTree {
     /**
      *  Should we show the given xml Element
      *
-     * @param xmlNode
+     * @param xmlNode the XML element to test for display.
      * @return Should we look at this node and turn it into a jtree node
      */
     protected boolean shouldProcess(Element xmlNode) {
@@ -271,7 +272,7 @@ public class XMLTree extends JTree {
     /**
      *  Should we recursiely descend the children of the given xml Element
      *
-     * @param xmlNode The xml node
+     * @param xmlNode the XML element to test for recursion.
      * @return    Should we recurse down
      */
     protected boolean shouldRecurse(Element xmlNode) {
@@ -352,8 +353,8 @@ public class XMLTree extends JTree {
     /**
      *  Return the xml tree node located at the given position
      *
-     * @param x x
-     * @param y y
+     * @param x the x coordinate.
+     * @param y the y coordinate.
      * @return The node or null
      */
     public XmlTreeNode getXmlTreeNodeAt(int x, int y) {
@@ -396,7 +397,7 @@ public class XMLTree extends JTree {
     /**
      * Get the non qualified tag name
      *
-     * @param element element
+     * @param element the node to examine.
      *
      * @return tag name
      */
@@ -557,7 +558,7 @@ public class XMLTree extends JTree {
      *
      *
      * @param node the xml node
-     * @param name name
+     * @param name the tag name to compare.
      *
      * @return is non qualified tag name the same
      */
@@ -592,6 +593,14 @@ public class XMLTree extends JTree {
         return ht;
     }
     
+    /**
+     * Compares two objects for equality.
+     *
+     * @param o1 the first object.
+     * @param o2 the second object.
+     *
+     * @return true if the objects are equal, or false otherwise.
+     */
     public boolean equals(Object o1, Object o2) {
         if ((o1 != null) && (o2 != null)) {
             return o1.equals(o2);

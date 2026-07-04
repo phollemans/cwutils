@@ -32,9 +32,21 @@ package noaa.coastwatch.util.chunk;
  * @since 3.6.1
  */
 public interface ScalingSchemeVisitor {
+
+  /**
+   * Visits a float scaling scheme.
+   *
+   * @param scheme the scaling scheme to visit.
+   */
   public void visitFloatScalingScheme (FloatScalingScheme scheme);
+
+  /**
+   * Visits a double scaling scheme.
+   *
+   * @param scheme the scaling scheme to visit.
+   */
   public void visitDoubleScalingScheme (DoubleScalingScheme scheme);
+
 } // ScalingSchemeVisitor interface
 
 ////////////////////////////////////////////////////////////////////////
-

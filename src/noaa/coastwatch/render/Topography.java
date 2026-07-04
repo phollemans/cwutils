@@ -38,6 +38,7 @@ public class Topography {
 
   ////////////////////////////////////////////////////////////
 
+  /** Creates a new topography object. */
   protected Topography () {}
 
   ////////////////////////////////////////////////////////////
@@ -46,6 +47,8 @@ public class Topography {
    * Gets an instance of the topography class.
    *
    * @return the topography object.
+   *
+   * @throws IOException if the topography data file cannot be found or read.
    */
   public static Topography getInstance () throws IOException {
 

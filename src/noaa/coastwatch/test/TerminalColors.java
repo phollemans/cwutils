@@ -35,14 +35,32 @@ public interface TerminalColors {
 
   // Constants
   // ---------
+
+  /** ANSI escape sequence to reset terminal colors. */
   public static final String ANSI_RESET = "\u001B[0m";
+
+  /** ANSI escape sequence for black terminal text. */
   public static final String ANSI_BLACK = "\u001B[30m";
+
+  /** ANSI escape sequence for red terminal text. */
   public static final String ANSI_RED = "\u001B[31m";
+
+  /** ANSI escape sequence for green terminal text. */
   public static final String ANSI_GREEN = "\u001B[32m";
+
+  /** ANSI escape sequence for yellow terminal text. */
   public static final String ANSI_YELLOW = "\u001B[33m";
+
+  /** ANSI escape sequence for blue terminal text. */
   public static final String ANSI_BLUE = "\u001B[34m";
+
+  /** ANSI escape sequence for purple terminal text. */
   public static final String ANSI_PURPLE = "\u001B[35m";
+
+  /** ANSI escape sequence for cyan terminal text. */
   public static final String ANSI_CYAN = "\u001B[36m";
+
+  /** ANSI escape sequence for white terminal text. */
   public static final String ANSI_WHITE = "\u001B[37m";
 
 } // TerminalColors interface

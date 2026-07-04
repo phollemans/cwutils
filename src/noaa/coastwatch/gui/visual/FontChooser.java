@@ -261,7 +261,12 @@ public class FontChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the font selected by this font chooser. */
+  /**
+   * Gets the font selected by this font chooser.
+   *
+   *
+   * @return the font selected by this font chooser.
+   */
   public Font getFontSelection () { return (font); }
 
   ////////////////////////////////////////////////////////////
@@ -269,6 +274,9 @@ public class FontChooser
   /** 
    * Sets the font selected by this font chooser.  The font may
    * be null, in which case this method has no effect.
+   *
+   * @param newFont the font to select.
+   *
    */
   public void setFontSelection (Font newFont) { 
 
@@ -334,4 +342,3 @@ public class FontChooser
 } // FontChooser
 
 ////////////////////////////////////////////////////////////////////////
-

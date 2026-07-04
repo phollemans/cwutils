@@ -48,12 +48,20 @@ public class Palette {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the palette name. */
+  /**
+   * Gets the palette name.
+   *
+   * @return the palette name.
+   */
   public String getName () { return (name); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the palette model data. */
+  /**
+   * Gets the palette model data.
+   *
+   * @return the palette model data.
+   */
   public IndexColorModel getModel () { return (model); }
 
   ////////////////////////////////////////////////////////////

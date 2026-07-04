@@ -121,7 +121,11 @@ public class ScriptConsole {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the singleton instance of this class. */
+  /**
+   * Gets the singleton instance of this class.
+   *
+   * @return the singleton instance of this class.
+   */
   public static ScriptConsole getInstance () {
   
     if (instance == null) instance = new ScriptConsole();

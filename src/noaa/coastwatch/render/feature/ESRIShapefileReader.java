@@ -131,6 +131,8 @@ public class ESRIShapefileReader {
    * Creates a new shapefile reader using a URL.
    *
    * @param shapeURL the URL for the shape file.
+   *
+   * @throws IOException if the shapefile cannot be opened or read.
    */
   public ESRIShapefileReader (
     URL shapeURL
@@ -570,6 +572,8 @@ public class ESRIShapefileReader {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs opening or reading the shapefile.
    */
   public static void main (String[] argv) throws Exception {
 
@@ -586,4 +590,3 @@ public class ESRIShapefileReader {
 } // ESRIShapefileReader class
 
 ////////////////////////////////////////////////////////////////////////
-

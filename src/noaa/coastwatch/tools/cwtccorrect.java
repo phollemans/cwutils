@@ -119,7 +119,7 @@ import java.util.logging.Level;
  *   the correct variables containing the angle data are detected from a 
  *   combination of the variable names and the long name (if any) specified in the 
  *   metadata.  Note that if relative azimuth angle data is found,
- *   it will be used instead of the individal solar and satellite azimuth 
+ *   it will be used instead of the individual solar and satellite azimuth 
  *   angles. </li>
  * 
  * </ul>
@@ -161,7 +161,7 @@ import java.util.logging.Level;
  * 
  *   <dd> The names of the band variables to use for each of red, green,
  *   and blue wavelengths.  By default when the sensor is known, the band names 
- *   are automatically determined.  Use this option to overrride the default
+ *   are automatically determined.  Use this option to override the default
  *   band names, or in case the sensor is unknown. </dd>
  * 
  *   <dt> -e, --esun=RED/GREEN/BLUE </dt>

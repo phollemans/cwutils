@@ -112,7 +112,10 @@ public class LocationEstimator {
   /** Temporary earth location for calculations. */
   private EarthLocation tempEarthLoc;
 
-  /** Temporary coordinate array for calculations. */
+  /**
+   * Temporary coordinate array for calculations.
+   *
+   */
   private double[] tempRefCoords;
 
   ////////////////////////////////////////////////////////////
@@ -120,6 +123,9 @@ public class LocationEstimator {
   /**
    * Sets the location query mode, <code>FAST</code> or
    * <code>ACCURATE</code>.
+   *
+   * @param mode the location query mode.
+   *
    */
   public void setQueryMode (int mode) { this.queryMode = mode; }
 
@@ -172,11 +178,9 @@ public class LocationEstimator {
    * Gets a list of target locations for the specified reference
    * locations.
    *
-   * @param the list of reference locations.  The list is modified
    * by removing any entries which did not transform to a valid target
    * location.
    *
-   * @param the list of valid target locations.
    */
   private List getTargets (
     List refLocs
@@ -219,8 +223,6 @@ public class LocationEstimator {
   /**
    * Gets a list of reference locations.
    *
-   * @param the minimum reference location.
-   * @param the maximum reference location.
    * @param intervals the number of intervals in each dimension.
    *
    * @return a list of reference locations.
@@ -259,7 +261,6 @@ public class LocationEstimator {
   /**
    * Creates a set of row and column estimators for each child partition.
    *
-   * @param targetNav the target navigation transform.  If not null,
    * this transformation is used to correct coordinate locations in
    * the target transform prior to calculating the polynomial
    * estimators.

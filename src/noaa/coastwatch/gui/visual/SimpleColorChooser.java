@@ -164,7 +164,12 @@ public class SimpleColorChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the color selected by this color chooser. */
+  /**
+   * Gets the color selected by this color chooser.
+   *
+   *
+   * @return the color selected by this color chooser.
+   */
   public Color getColor () { return (color); }
 
   ////////////////////////////////////////////////////////////
@@ -172,6 +177,9 @@ public class SimpleColorChooser
   /** 
    * Sets the color selected by this color chooser.  The color may be
    * null, in which case this method has no effect.
+   *
+   * @param newColor the color to select.
+   *
    */
   public void setColor (Color newColor) { 
 
@@ -778,4 +786,3 @@ public class SimpleColorChooser
 } // SimpleColorChooser
 
 ////////////////////////////////////////////////////////////////////////
-

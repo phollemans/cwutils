@@ -87,7 +87,10 @@ public class StrokeSwatch
   
   ////////////////////////////////////////////////////////////
 
-  /** Paints the icon to the specified graphics context. */
+  /**
+   * Paints the icon to the specified graphics context.
+   *
+   */
   public void paintIcon (Component c, Graphics g, int x, int y) { 
 
     // Draw line
@@ -103,7 +106,11 @@ public class StrokeSwatch
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the swatch stroke. */
+  /**
+   * Sets the swatch stroke.
+   *
+   * @param stroke the swatch stroke.
+   */
   public void setStroke (Stroke stroke) { this.stroke = stroke; }
 
   ////////////////////////////////////////////////////////////

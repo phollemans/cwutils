@@ -61,6 +61,8 @@ public abstract class AnnotationElement {
   /**
    * Gets the element bounding area.
    *
+   *
+   * @return the element bounding area.
    * @param g the graphics object for drawing.
    */
   public abstract Area getArea (
@@ -72,6 +74,8 @@ public abstract class AnnotationElement {
   /**
    * Gets the element bounding rectangle.
    *
+   *
+   * @return the element bounding rectangle.
    * @param g the graphics object for drawing.
    */
   public Rectangle getBounds (

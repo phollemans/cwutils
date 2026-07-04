@@ -51,7 +51,14 @@ public abstract class AbstractArchiveHeader implements ArchiveHeader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Determines if the byte buffer data is compatible with this header. */
+  /** 
+   * Determines if the byte buffer data is compatible with this header. 
+   *
+   * @param inputBuffer the buffer to check for compatible byte data.
+   *
+   * @return true if the buffer data is compatible with this header,
+   * or false otherwise.
+   */
   protected abstract boolean isCompatible (ByteBuffer inputBuffer);
 
   ////////////////////////////////////////////////////////////

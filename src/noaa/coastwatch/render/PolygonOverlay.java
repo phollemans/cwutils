@@ -93,7 +93,11 @@ public abstract class PolygonOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the polygon fill color with alpha component. */
+  /**
+   * Gets the polygon fill color with alpha component.
+   *
+   * @return the polygon fill color with alpha component.
+   */
   public Color getFillColorWithAlpha () { 
 
     return (getAlphaVersion (fillColor));

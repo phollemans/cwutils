@@ -109,12 +109,20 @@ public class HistogramPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current statistics. */
+  /**
+   * Gets the current statistics.
+   *
+   * @return the current statistics.
+   */
   public Statistics getStatistics () { return (stats); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the current statistics. */
+  /**
+   * Sets the current statistics.
+   *
+   * @param stats the statistics to display.
+   */
   public void setStatistics (Statistics stats) {
 
     this.stats = stats;

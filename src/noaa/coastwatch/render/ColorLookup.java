@@ -148,6 +148,7 @@ public class ColorLookup {
    *
    * @param stream the input stream to read palette data from.
    *
+   * @throws FileNotFoundException if a palette file cannot be found.
    * @throws IOException if the file had input format errors.
    */
   public ColorLookup (

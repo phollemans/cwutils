@@ -141,12 +141,20 @@ public class TilingScheme {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the global dimensions as [rows, columns]. */
+  /**
+   * Gets the global dimensions as [rows, columns].
+   *
+   * @return the global dimensions as [rows, columns].
+   */
   public int[] getDimensions () { return ((int[]) dims.clone()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the tile dimensions as [rows, columns]. */
+  /**
+   * Gets the tile dimensions as [rows, columns].
+   *
+   * @return the tile dimensions as [rows, columns].
+   */
   public int[] getTileDimensions () { return ((int[]) tileDims.clone()); }
 
   ////////////////////////////////////////////////////////////
@@ -202,6 +210,8 @@ public class TilingScheme {
    *
    * @throws IndexOutOfBoundsException if the coordinates do not reference
    * a valid tile in the tiling scheme.
+   *
+   * @return the new tile position.
    * 
    * @deprecated As of 3.8.1, use {@link #getTilePositionForCoords}.
    */
@@ -443,7 +453,11 @@ public class TilingScheme {
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the position coordinates. */
+    /**
+     * Gets the position coordinates.
+     *
+     * @return the position coordinates.
+     */
     public int[] getCoords () { return ((int[]) coords.clone()); }
 
     ////////////////////////////////////////////////////////
@@ -598,32 +612,54 @@ public class TilingScheme {
     /**
      * Sets the tile data. Only the reference is copied, not the
      * contents.
+     *
+     * @param data the tile data.
      */
     public void setData (Object data) { this.data = data; }   
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the tile data.  Only the reference is returned. */
+    /**
+     * Gets the tile data.  Only the reference is returned.
+     *
+     * @return the tile data.
+     */
     public Object getData () { return (data); }
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the tile dimensions. */
+    /**
+     * Gets the tile dimensions.
+     *
+     * @return the tile dimensions.
+     */
     public int[] getDimensions () { return ((int[]) dims.clone()); }
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the tile position. */
+    /**
+     * Gets the tile position.
+     *
+     * @return the tile position.
+     */
     public TilePosition getPosition () { return ((TilePosition) pos.clone()); }
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the tile dirty flag. */
+    /**
+     * Gets the tile dirty flag.
+     *
+     * @return the tile dirty flag.
+     */
     public boolean getDirty () { return (dirty); }
 
     ////////////////////////////////////////////////////////
 
-    /** Sets the tile dirty flag. */
+    /**
+     * Sets the tile dirty flag.
+     *
+     * @param flag the new tile dirty flag.
+     */
     public void setDirty (boolean flag) { dirty = flag; }
 
     ////////////////////////////////////////////////////////
@@ -753,6 +789,8 @@ public class TilingScheme {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the tiling scheme tests.
    */
   public static void main (String[] argv) throws Exception {
 

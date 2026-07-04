@@ -379,20 +379,29 @@ public abstract class EarthDataView
 
   ////////////////////////////////////////////////////////////
 
-  /** 
-   * Returns true if the view is currently being rendered, or false
-   * if not.
+  /**
+   * Determines if the view is currently being rendered.
+   *
+   * @return true if the view is currently being rendered, or false otherwise.
    */
   public synchronized boolean isRendering () { return (isRendering); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current list of overlays. */
+  /**
+   * Gets the current list of overlays.
+   *
+   * @return the current list of overlays.
+   */
   public List<EarthDataOverlay> getOverlays () { return ((List<EarthDataOverlay>) overlays.clone()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Adds a list of overlays to the view. */
+  /**
+   * Adds a list of overlays to the view.
+   *
+   * @param overlays the list of overlays to add.
+   */
   public void addOverlays (List overlays) {
 
     this.overlays.addAll (overlays);
@@ -402,7 +411,11 @@ public abstract class EarthDataView
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the verbose mode flag. */
+  /**
+   * Sets the verbose mode flag.
+   *
+   * @param flag the new verbose mode flag.
+   */
   public void setVerbose (boolean flag) {
     
     if (defaultLevel == null) defaultLevel = VERBOSE.getLevel();
@@ -414,7 +427,11 @@ public abstract class EarthDataView
 
   ////////////////////////////////////////////////////////////
   
-  /** Gets the rendering progress mode flag. */
+  /**
+   * Gets the rendering progress mode flag.
+   *
+   * @return the rendering progress mode flag.
+   */
   public boolean getProgress () { return (progress); }
 
   ////////////////////////////////////////////////////////////
@@ -424,13 +441,18 @@ public abstract class EarthDataView
    * mode is on, a call to <code>render</code> shows the progress of
    * rendering by drawing successive images to the destination
    * graphics device.
+   *
+   * @param flag the new rendering progress mode flag.
    */
   public void setProgress (boolean flag) { progress = flag; }
 
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Returns true if this view has coordinate caches available.
+   * Determines if this view has coordinate caches available.
+   *
+   * @return true if this view has coordinate caches available, or false
+   * otherwise.
    *
    * @see #transform(Point)
    */
@@ -439,10 +461,15 @@ public abstract class EarthDataView
   ////////////////////////////////////////////////////////////
 
   /**
-   * Returns true if this view has coordinate caches that are
+   * Determines if this view has coordinate caches that are
    * compatible with the specified grid navigation transform.
-   * Returns false if the coordinate caches are incompatible or if
-   * there are no coordinate caches.
+   *
+   * @param grid the grid whose navigation transform is checked.
+   *
+   * @return true if this view has coordinate caches that are compatible
+   * with the specified grid navigation transform, or false if the
+   * coordinate caches are incompatible or if there are no coordinate
+   * caches.
    * 
    * @see #hasCoordinateCaches
    * @see #computeCaches
@@ -607,7 +634,11 @@ public abstract class EarthDataView
 
   ////////////////////////////////////////////////////////////
 
-  /** Adds an overlay to the view. */
+  /**
+   * Adds an overlay to the view.
+   *
+   * @param overlay the overlay to add.
+   */
   public void addOverlay (
     EarthDataOverlay overlay
   ) { 
@@ -619,7 +650,11 @@ public abstract class EarthDataView
 
   ////////////////////////////////////////////////////////////
 
-  /** Removes an overlay from the view. */
+  /**
+   * Removes an overlay from the view.
+   *
+   * @param overlay the overlay to remove.
+   */
   public void removeOverlay (
     EarthDataOverlay overlay
   ) { 
@@ -631,7 +666,14 @@ public abstract class EarthDataView
 
   ////////////////////////////////////////////////////////////
 
-  /** Checks if this view contains the specified overlay. */
+  /**
+   * Determines if this view contains the specified overlay.
+   *
+   * @param overlay the overlay to check.
+   *
+   * @return true if this view contains the specified overlay, or false
+   * otherwise.
+   */
   public boolean containsOverlay (
     EarthDataOverlay overlay
   ) { 
@@ -642,13 +684,19 @@ public abstract class EarthDataView
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the earth image transform. */
+  /**
+   * Gets the earth image transform.
+   *
+   * @return the earth image transform.
+   */
   public EarthImageTransform getTransform() { return (trans); }
 
   ////////////////////////////////////////////////////////////
 
   /** 
    * Gets the data corners of this view as [upperLeft, lowerRight]. 
+   *
+   * @return the data corners of this view as [upperLeft, lowerRight].
    *
    * @deprecated As of 3.3.1, use {@link #getBounds}.
    */
@@ -695,7 +743,11 @@ public abstract class EarthDataView
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the center data location of this view. */
+  /**
+   * Gets the center data location of this view.
+   *
+   * @return the center data location of this view.
+   */
   public DataLocation getCenter () { return ((DataLocation) center.clone()); }
   
   ////////////////////////////////////////////////////////////
@@ -709,7 +761,11 @@ public abstract class EarthDataView
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the geographic area of this view. */
+  /**
+   * Gets the geographic area of this view.
+   *
+   * @return the geographic area of this view.
+   */
   public EarthArea getArea() { 
 
     // Create area if null
@@ -783,7 +839,8 @@ public abstract class EarthDataView
    * @param scale the new scaling factor for the view (desired ratio of
    * data pixels to image pixels).
    *
-   * @throws NoninvertibleTransformException
+   * @throws NoninvertibleTransformException if the center or scale cannot be
+   * used to compute an invertible image transform.
    *
    * @see #getCenter
    */
@@ -1241,6 +1298,8 @@ public abstract class EarthDataView
    * object.  This method is called when any changes have occurred
    * that require the view to be completely reconstructed, such as a
    * change in view size or data window.
+   *
+   * @param g the graphics object to use for preparation.
    */
   protected abstract void prepare (
     Graphics2D g
@@ -1254,6 +1313,9 @@ public abstract class EarthDataView
    * not, the render may require time to complete due to loading data
    * from disk or cache, converting earth locations to screen points,
    * and so on.
+   *
+   * @return true if the view and visible overlays are prepared, or false
+   * otherwise.
    */
   public synchronized boolean isPrepared () { 
 
@@ -1280,6 +1342,8 @@ public abstract class EarthDataView
    * Gets the status of the view changed flag.  If the view is modified
    * after rendering by resizing or changing overlays, then the view
    * is changed and may require re-rendering.
+   *
+   * @return the status of the view changed flag.
    */
   public synchronized boolean isChanged () { return (changed); }
 
@@ -1580,6 +1644,8 @@ public abstract class EarthDataView
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the data view tests.
    */
   public static void main (String[] argv) throws Exception {
 

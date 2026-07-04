@@ -51,12 +51,25 @@ public interface ExpressionParser {
 
   /** The enumeration of the possible expression result types. */
   public enum ResultType {
+    /** Boolean expression result type. */
     BOOLEAN,
+
+    /** Byte expression result type. */
     BYTE,
+
+    /** Short integer expression result type. */
     SHORT,
+
+    /** Integer expression result type. */
     INT,
+
+    /** Long integer expression result type. */
     LONG,
+
+    /** Single-precision floating-point expression result type. */
     FLOAT,
+
+    /** Double-precision floating-point expression result type. */
     DOUBLE
   }; // ResultType enum
 
@@ -95,10 +108,12 @@ public interface ExpressionParser {
    */
   default public void adapt (ResultType type) { throw new UnsupportedOperationException(); }
 
-  /**
-   * Translates the specified expression to Java Language syntax if possible.
-   *
+   /**
+    * Translates the specified expression to Java Language syntax if possible.
+    *
    * @param expr the expression to translate.
+   *
+   * @return the translated expression.
    *
    * @throws UnsupportedOperationException if the expression cannot be
    * translated, or expression translation is not supported.

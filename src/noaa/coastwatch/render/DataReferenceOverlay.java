@@ -67,7 +67,10 @@ public class DataReferenceOverlay
   /** The grid reference column locations in pixels. */
   private double[] cols;
 
-  /** The manual lines flag. */
+  /**
+   * The manual lines flag.
+   *
+   */
   private boolean manualLines;
 
   ////////////////////////////////////////////////////////////
@@ -76,6 +79,9 @@ public class DataReferenceOverlay
    * Sets the manual grid lines flag.  When off, the grid lines are
    * calculated automatically at rendering time for an optimal number
    * of grid lines in both the rows and columns directions.
+   *
+   * @param flag true to use manually specified reference lines.
+   *
    */
   public void setManualLines (boolean flag) { 
 
@@ -88,12 +94,21 @@ public class DataReferenceOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the manual grid increment mode flag. */
+  /**
+   * Gets the manual grid increment mode flag.
+   *
+   *
+   * @return the manual grid increment mode flag.
+   */
   public boolean getManualLines () { return (manualLines); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the reference row lines. */
+  /**
+   * Sets the reference row lines.
+   *
+   * @param rows the reference row lines.
+   */
   public void setRows (double[] rows) {
 
     if (!Arrays.equals (this.rows, rows)) {
@@ -105,12 +120,21 @@ public class DataReferenceOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current reference row lines. */
+  /**
+   * Gets the current reference row lines.
+   *
+   *
+   * @return the current reference row lines.
+   */
   public double[] getRows () { return ((double[]) rows.clone()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the reference row lines. */
+  /**
+   * Sets the reference row lines.
+   *
+   * @param cols the reference column lines.
+   */
   public void setCols (double[] cols) {
 
     if (!Arrays.equals (this.cols, cols)) {
@@ -122,7 +146,11 @@ public class DataReferenceOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current reference row lines. */
+  /**
+   * Gets the current reference row lines.
+   *
+   * @return the current reference row lines.
+   */
   public double[] getCols () { return ((double[]) cols.clone()); }
 
   ////////////////////////////////////////////////////////////

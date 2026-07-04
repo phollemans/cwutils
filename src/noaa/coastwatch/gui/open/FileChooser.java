@@ -131,12 +131,19 @@ public class FileChooser
   /** The stop navigation button. */
   private JButton stopButton;
   
-  /** The default panel cursor. */
+  /**
+   * The default panel cursor.
+   *
+   */
   private Cursor normalCursor;
 
   ////////////////////////////////////////////////////////////
   
-  /** Creates a new file chooser with no location. */
+  /**
+   * Creates a new file chooser with no location.
+   *
+   * @param lister the directory lister to use.
+   */
   public FileChooser (
     DirectoryLister lister
   ) {
@@ -238,10 +245,18 @@ public class FileChooser
    */
   public abstract static class Task {
 
-    /** Gets the status message for the task start. */
+    /**
+     * Gets the status message for the task start.
+     *
+     * @return the status message for the task start.
+     */
     public abstract String getMessage();
 
-    /** Performs the task. */
+    /**
+     * Performs the task.
+     *
+     * @throws IOException if an error occurs while running the task.
+     */
     public abstract void run() throws IOException;
 
     /** Performs the optional followup task (only if no exception). */
@@ -251,7 +266,10 @@ public class FileChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Refreshes the entry list. */
+  /**
+   * Refreshes the entry list.
+   *
+   */
   private void refresh () {
 
     runTask (new Task() {
@@ -283,6 +301,9 @@ public class FileChooser
    * the {@link Task} class for details.  Only one task may be running
    * at a time.  If a new task is started while an existing one is
    * running, the existing task's followup method is never called.
+   *
+   * @param task the task to run in the file chooser.
+   *
    */
   public void runTask (
     final Task task
@@ -538,12 +559,20 @@ public class FileChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current directory or null if no directory is set. */
+  /**
+   * Gets the current directory or null if no directory is set.
+   *
+   * @return the current directory or null if no directory is set.
+   */
   public String getDirectory () { return (lister.getDirectory()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the currently selected file or null if none is selected. */
+  /**
+   * Gets the currently selected file or null if none is selected.
+   *
+   * @return the currently selected file or null if none is selected.
+   */
   public String getFile () { 
 
     int row = fileTable.getSelectedRow();
@@ -569,6 +598,8 @@ public class FileChooser
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs creating or running the file chooser.
    */
   public static void main (String[] argv) throws Exception {
 

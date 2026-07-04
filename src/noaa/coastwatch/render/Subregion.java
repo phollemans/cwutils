@@ -29,7 +29,7 @@ import noaa.coastwatch.util.DataLocation;
 import noaa.coastwatch.util.EarthLocation;
 import noaa.coastwatch.util.trans.EarthTransform;
 
-/*
+/**
  * A <code>Subregion</code> holds position and geographic extent
  * information about some small part of a larger geographic
  * region.  To be projection-independent, a subregion specifies a
@@ -70,7 +70,7 @@ public class Subregion {
    * Creates a new subregion.
    *
    * @param centerLoc the subregion center location.
-   * @param radius the subregino radius in kilometers.
+   * @param radius the subregion radius in kilometers.
    * @param name the common subregion name, for example "Chesapeake Bay".
    * @param shortName an abbreviated subregion name for use in
    * software, for example "cb".
@@ -224,22 +224,38 @@ public class Subregion {
 
   ////////////////////////////////////////////////////////////
  
-  /** Gets this subregion center location. */
+  /**
+   * Gets this subregion center location.
+   *
+   * @return this subregion center location.
+   */
   public EarthLocation getCenter () { return (centerLoc); }
 
   ////////////////////////////////////////////////////////////
  
-  /** Gets this subregion radius in kilometers. */
+  /**
+   * Gets this subregion radius in kilometers.
+   *
+   * @return this subregion radius in kilometers.
+   */
   public double getRadius () { return (radius); }
 
   ////////////////////////////////////////////////////////////
  
-  /** Gets this subregion name. */
+  /**
+   * Gets this subregion name.
+   *
+   * @return this subregion name.
+   */
   public String getName () { return (name); }
 
   ////////////////////////////////////////////////////////////
  
-  /** Gets this subregion short name. */
+  /**
+   * Gets this subregion short name.
+   *
+   * @return this subregion short name.
+   */
   public String getShortName () { return (shortName); }
 
   ////////////////////////////////////////////////////////////

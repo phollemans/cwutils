@@ -66,6 +66,7 @@ import noaa.coastwatch.render.TextElement;
  *
  * @author Peter Hollemans
  * @since 3.2.2
+ * @serial exclude
  */
 public class FullScreenToolBar 
   extends JPanel {
@@ -401,6 +402,7 @@ public class FullScreenToolBar
    */
   public static class GhostImageFilter extends RGBImageFilter {
 
+    /** Creates a new ghost image filter. */
     public GhostImageFilter () { canFilterIndexColorModel = true; }
 
     public int filterRGB(int x, int y, int rgb) {

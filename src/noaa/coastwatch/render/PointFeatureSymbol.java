@@ -42,12 +42,19 @@ public abstract class PointFeatureSymbol
   // Variables
   // ---------
 
-  /** The current point feature to use for rendering. */
+  /**
+   * The current point feature to use for rendering.
+   *
+   */
   protected PointFeature feature;
 
   ////////////////////////////////////////////////////////////
   
-  /** Sets the point feature to use for attributes. */
+  /**
+   * Sets the point feature to use for attributes.
+   *
+   * @param feature the feature to symbolize.
+   */
   public void setFeature (
     PointFeature feature
   ) {

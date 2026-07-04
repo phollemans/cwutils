@@ -203,6 +203,7 @@ import java.util.logging.Level;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public final class cdat extends JFrame {
 

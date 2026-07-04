@@ -247,7 +247,10 @@ public class ImageViewPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Resets the image view to standard magnification. */
+  /**
+   * Resets the image view to standard magnification.
+   *
+   */
   public void reset () { 
 
     // Check for ready state
@@ -264,7 +267,11 @@ public class ImageViewPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Magnifies the view by the specified scale factor. */
+  /**
+   * Magnifies the view by the specified scale factor.
+   *
+   * @param factor the scale factor to apply.
+   */
   public void magnify (
     double factor
   ) {

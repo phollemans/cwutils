@@ -54,6 +54,11 @@ public class IconElementFactory {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the shared icon element factory instance.
+   *
+   * @return the shared instance.
+   */
   public static IconElementFactory getInstance() {
     if (instance == null) instance = new IconElementFactory();
     return (instance);
@@ -76,6 +81,7 @@ public class IconElementFactory {
 
   ////////////////////////////////////////////////////////////
 
+  /** Creates a new icon element factory. */
   protected IconElementFactory () {
 
     resourceMap = new LinkedHashMap<>();

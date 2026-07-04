@@ -540,7 +540,11 @@ public class GSHHSReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the database name currently being used for selection. */
+  /**
+   * Gets the database name currently being used for selection.
+   *
+   * @return the database name currently being used for selection.
+   */
   public String getDatabase() { return (database); }
 
   ////////////////////////////////////////////////////////////

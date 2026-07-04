@@ -42,7 +42,14 @@ public class NOAA1bServices {
   
   ////////////////////////////////////////////////////////////
 
-  /** Determines if a byte is a valid printable ASCII character. */
+  /**
+   * Determines if a byte is a valid printable ASCII character.
+   *
+   * @param b the byte to check.
+   *
+   * @return true if the byte is a valid printable ASCII character, or
+   * false otherwise.
+   */
   public static boolean isPrint (
     byte b
   ) {
@@ -54,7 +61,15 @@ public class NOAA1bServices {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a byte array from the specified byte buffer. */
+  /**
+   * Gets a byte array from the specified byte buffer.
+   *
+   * @param data the byte buffer to extract data from.
+   * @param offset the byte buffer offset.
+   * @param length the number of bytes to extract.
+   *
+   * @return the byte array.
+   */
   public static byte[] getBytes (
     ByteBuffer data,
     int offset,
@@ -70,7 +85,14 @@ public class NOAA1bServices {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets an unsigned 8-bit value from the specified byte buffer. */
+  /**
+   * Gets an unsigned 8-bit value from the specified byte buffer.
+   *
+   * @param data the byte buffer to extract data from.
+   * @param offset the byte buffer offset.
+   *
+   * @return the unsigned 8-bit value.
+   */
   public static short getUByte (
     ByteBuffer data,
     int offset
@@ -82,7 +104,14 @@ public class NOAA1bServices {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets an unsigned 16-bit value from the specified byte buffer. */
+  /**
+   * Gets an unsigned 16-bit value from the specified byte buffer.
+   *
+   * @param data the byte buffer to extract data from.
+   * @param offset the byte buffer offset.
+   *
+   * @return the unsigned 16-bit value.
+   */
   public static int getUShort (
     ByteBuffer data,
     int offset
@@ -94,7 +123,14 @@ public class NOAA1bServices {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a signed 16-bit value from the specified byte buffer. */
+  /**
+   * Gets a signed 16-bit value from the specified byte buffer.
+   *
+   * @param data the byte buffer to extract data from.
+   * @param offset the byte buffer offset.
+   *
+   * @return the signed 16-bit value.
+   */
   public static short getShort (
     ByteBuffer data,
     int offset
@@ -106,7 +142,14 @@ public class NOAA1bServices {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets an unsigned 32-bit value from the specified byte buffer. */
+  /**
+   * Gets an unsigned 32-bit value from the specified byte buffer.
+   *
+   * @param data the byte buffer to extract data from.
+   * @param offset the byte buffer offset.
+   *
+   * @return the unsigned 32-bit value.
+   */
   public static long getUInt (
     ByteBuffer data,
     int offset
@@ -127,6 +170,8 @@ public class NOAA1bServices {
    * @param valueOffset the number of n-bit values into the array to
    * extract an integer from.
    * @param bits the number of bits in each value in the range [1..64].
+   *
+   * @return the n-bit value.
    */
   public static long getNBit (
     ByteBuffer data,
@@ -165,7 +210,14 @@ public class NOAA1bServices {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a signed 32-bit value from the specified byte buffer. */
+  /**
+   * Gets a signed 32-bit value from the specified byte buffer.
+   *
+   * @param data the byte buffer to extract data from.
+   * @param offset the byte buffer offset.
+   *
+   * @return the signed 32-bit value.
+   */
   public static int getInt (
     ByteBuffer data,
     int offset

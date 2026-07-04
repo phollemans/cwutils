@@ -84,7 +84,10 @@ public class VisualOverlay
   /** The overlay object. */
   private EarthDataOverlay overlay;
 
-  /** The current chooser panel or null if none is showing. */
+  /**
+   * The current chooser panel or null if none is showing.
+   *
+   */
   private OverlayPropertyChooser chooserPanel;
 
   ////////////////////////////////////////////////////////////
@@ -92,6 +95,9 @@ public class VisualOverlay
   /** 
    * Creates a new visual overlay object using the specified
    * overlay. 
+   *
+   * @param overlay the overlay value to edit.
+   *
    */
   public VisualOverlay (
     EarthDataOverlay overlay

@@ -169,6 +169,8 @@ public class FloatScalingScheme implements ScalingScheme {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the scaling scheme tests.
    */
   public static void main (String[] argv) throws Exception {
 
@@ -205,6 +207,5 @@ public class FloatScalingScheme implements ScalingScheme {
 } // FloatScalingScheme class
 
 ////////////////////////////////////////////////////////////////////////
-
 
 

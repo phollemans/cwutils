@@ -63,7 +63,11 @@ public abstract class StatisticsPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current statistics. */
+  /**
+   * Gets the current statistics.
+   *
+   * @return the current statistics.
+   */
   public Statistics getStatistics () { return (stats); }
 
   ////////////////////////////////////////////////////////////

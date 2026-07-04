@@ -62,7 +62,11 @@ public class VariableOptionPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the list of selected variable names. */
+  /**
+   * Gets the list of selected variable names.
+   *
+   * @return the list of selected variable names.
+   */
   public List getVariables () { 
 
     return (variableList.getSelectedValuesList());

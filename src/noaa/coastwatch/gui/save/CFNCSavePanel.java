@@ -43,6 +43,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  *
  * @author Peter Hollemans
  * @since 3.3.1
+ * @serial exclude
  */
 public class CFNCSavePanel
   extends DataSavePanel {
@@ -77,7 +78,7 @@ public class CFNCSavePanel
 
   ////////////////////////////////////////////////////////////
 
-  /* 
+  /** 
    * Creates a new CF NetCDF save panel.
    *
    * @param reader the reader to use as a source of data.

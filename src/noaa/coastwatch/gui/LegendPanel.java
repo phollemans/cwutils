@@ -123,7 +123,11 @@ public class LegendPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the legned for this panel. */
+  /**
+   * Sets the legned for this panel.
+   *
+   * @param legend the legend to display.
+   */
   public void setLegend (Legend legend) { 
 
     this.legend = legend; 
@@ -134,8 +138,9 @@ public class LegendPanel
   ////////////////////////////////////////////////////////////
 
   /**
-   * 
-   * 
+   * Gets the legend displayed by this panel.
+   *
+   * @return the legend.
    * @since 3.8.1
    */
   public Legend getLegend () { return (legend); }
@@ -145,4 +150,3 @@ public class LegendPanel
 } // LegendPanel class
 
 ////////////////////////////////////////////////////////////////////////
-

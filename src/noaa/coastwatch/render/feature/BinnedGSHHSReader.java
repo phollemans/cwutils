@@ -125,7 +125,13 @@ public abstract class BinnedGSHHSReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a bin index using the specified earth location. */
+  /** 
+   * Gets a bin index using the specified earth location. 
+   *
+   * @param loc the earth location.
+   *
+   * @return the bin index.
+   */
   public int getBinIndex (
     EarthLocation loc
   ) {
@@ -264,12 +270,22 @@ public abstract class BinnedGSHHSReader
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the number of segments. */
+    /** 
+     * Gets the number of segments. 
+     *
+     * @return the number of segments.
+     */
     public int getSegments () { return (segments.size()); }
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the specified segment. */
+    /** 
+     * Gets the specified segment. 
+     *
+     * @param index the segment index.
+     *
+     * @return the specified segment.
+     */
     public Segment getSegment (int index) { 
 
       return ((Segment) segments.get (index)); 
@@ -278,12 +294,22 @@ public abstract class BinnedGSHHSReader
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the south-west corner earth location. */
+    /** 
+     * Gets the south-west corner earth location. 
+     *
+     * @return the south-west corner earth location.
+     */
     public EarthLocation getCorner () { return (corner); }
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the specified corner earth location. */
+    /** 
+     * Gets the specified corner earth location. 
+     *
+     * @param index the corner index.
+     *
+     * @return the specified corner earth location.
+     */
     public EarthLocation getCorner (
       int index
     ) {
@@ -294,7 +320,13 @@ public abstract class BinnedGSHHSReader
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the specified corner level. */
+    /** 
+     * Gets the specified corner level. 
+     *
+     * @param index the corner index.
+     *
+     * @return the specified corner level.
+     */
     public byte getCornerLevel (
       int index
     ) {
@@ -305,7 +337,11 @@ public abstract class BinnedGSHHSReader
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the minimum bin corner level. */
+    /** 
+     * Gets the minimum bin corner level. 
+     *
+     * @return the minimum bin corner level.
+     */
     public byte getMinimumLevel () { return (minLevel); }
 
     ////////////////////////////////////////////////////////
@@ -314,7 +350,9 @@ public abstract class BinnedGSHHSReader
      * Creates a new bin from the specified index.  The segments
      * are read into the bin using the current minimum area.
      *
-     * @param binIndex the bin index.
+     * @param binIndex the index of the bin to read.
+     *
+     * @throws IOException if an error occurred reading the bin data.
      *
      * @see #getBinIndex
      */
@@ -881,27 +919,47 @@ public abstract class BinnedGSHHSReader
 
       ////////////////////////////////////////////////////
 
-      /** Gets the segment level. */
+      /** 
+       * Gets the segment level. 
+       *
+       * @return the segment level.
+       */
       public byte getLevel () { return (level); }
 
       ////////////////////////////////////////////////////
 
-      /** Gets the segment entry side. */
+      /** 
+       * Gets the segment entry side. 
+       *
+       * @return the segment entry side.
+       */
       public byte getEntrySide () { return (entry); }
   
       ////////////////////////////////////////////////////
 
-      /** Gets the segment exit side. */
+      /** 
+       * Gets the segment exit side. 
+       *
+       * @return the segment exit side.
+       */
       public byte getExitSide () { return (exit); }
 
       ////////////////////////////////////////////////////
 
-      /** Gets the segment area in km^2. */
+      /** 
+       * Gets the segment area in km^2. 
+       *
+       * @return the segment area in km^2.
+       */
       public double getArea () { return (area); }
 
       ////////////////////////////////////////////////////
 
-      /** Gets the earth vector for this segment. */
+      /** 
+       * Gets the earth vector for this segment. 
+       *
+       * @return the earth vector for this segment.
+       */
       public LineFeature getLineFeature () {
 
         LineFeature vector = new LineFeature();
@@ -920,17 +978,29 @@ public abstract class BinnedGSHHSReader
       
       ////////////////////////////////////////////////////
 
-      /** Gets the raw segment longitude offsets. */
+      /** 
+       * Gets the raw segment longitude offsets. 
+       *
+       * @return the raw segment longitude offsets.
+       */
       public short[] getDx () { return (dx); }
 
       ////////////////////////////////////////////////////
 
-      /** Gets the raw segment latitude offsets. */
+      /** 
+       * Gets the raw segment latitude offsets. 
+       *
+       * @return the raw segment latitude offsets.
+       */
       public short[] getDy () { return (dy); }
 
       ////////////////////////////////////////////////////
 
-      /** Determines if this segment is closed. */
+      /** 
+       * Determines if this segment is closed. 
+       *
+       * @return true if this segment is closed, or false otherwise.
+       */
       public boolean isClosed () { return (entry == CLOSED); }
 
       ////////////////////////////////////////////////////
@@ -1009,23 +1079,41 @@ public abstract class BinnedGSHHSReader
 
       ////////////////////////////////////////////////////
 
-      /** Gets the entry sorting key. */
+      /** 
+       * Gets the entry sorting key. 
+       *
+       * @return the entry sorting key.
+       */
       public Integer getEntryKey () { return (entryKey); }
 
       ////////////////////////////////////////////////////
 
-      /** Gets the exit sorting key. */
+      /** 
+       * Gets the exit sorting key. 
+       *
+       * @return the exit sorting key.
+       */
       public Integer getExitKey () { return (exitKey); }
 
       ////////////////////////////////////////////////////
 
-      /** Determines if this polygon segment encloses land. */
+      /** 
+       * Determines if this polygon segment encloses land. 
+       *
+       * @return true if this polygon segment encloses land, or false
+       * otherwise.
+       */
       public boolean isLand () { return (level == LAND || 
         level == ISLAND_IN_LAKE); }
 
       ////////////////////////////////////////////////////
 
-      /** Determines if this polygon segment encloses water. */
+      /** 
+       * Determines if this polygon segment encloses water. 
+       *
+       * @return true if this polygon segment encloses water, or false
+       * otherwise.
+       */
       public boolean isWater () { return (level == LAKE || 
         level == POND_IN_ISLAND); }
 
@@ -1130,6 +1218,8 @@ public abstract class BinnedGSHHSReader
    * the <code>select()</code> call causes a set of polygons to be
    * created from segment data, which may then be rendered via a call
    * to <code>renderPolygons()</code>.
+   *
+   * @param flag the polygon rendering flag.
    */
   public void setPolygonRendering (boolean flag) { polygonRendering = flag; }
 
@@ -1151,6 +1241,8 @@ public abstract class BinnedGSHHSReader
    * Opens the data file and returns the file ID.
    *
    * @param name the data file name.
+   *
+   * @return the file ID.
    *
    * @throws IOException if an error occurred opening the file.
    */
@@ -1203,6 +1295,10 @@ public abstract class BinnedGSHHSReader
 
   /** 
    * Initializes this reader using the specified database.
+   *
+   * @param name the database name.
+   *
+   * @throws IOException if an error occurred reading the file.
    *
    * @see #BinnedGSHHSReader(String)
    */
@@ -1309,7 +1405,11 @@ public abstract class BinnedGSHHSReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the total number of bins. */
+  /** 
+   * Gets the total number of bins. 
+   *
+   * @return the total number of bins.
+   */
   public int getBins () { return (totalBins); }
 
   ////////////////////////////////////////////////////////////
@@ -1353,7 +1453,11 @@ public abstract class BinnedGSHHSReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the database name currently being used for selection. */
+  /** 
+   * Gets the database name currently being used for selection. 
+   *
+   * @return the database name currently being used for selection.
+   */
   public String getDatabase() { return (database); }
 
   ////////////////////////////////////////////////////////////

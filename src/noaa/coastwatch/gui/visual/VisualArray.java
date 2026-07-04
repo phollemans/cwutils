@@ -87,12 +87,19 @@ public class VisualArray
   /** The add button. */
   private JButton addButton;
 
-  /** The remove button. */
+  /**
+   * The remove button.
+   *
+   */
   private JButton removeButton;
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new visual array object using the specified array. */
+  /**
+   * Creates a new visual array object using the specified array.
+   *
+   * @param array the array value to edit.
+   */
   public VisualArray (
     Object array
   ) {                     

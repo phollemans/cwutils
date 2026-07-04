@@ -150,8 +150,18 @@ public class ResamplingDiagnostic implements ResamplingMapFactory {
       
     } // isOptimal
 
+    /**
+     * Gets the remapped pixel distance.
+     *
+     * @return the remapped pixel distance.
+     */
     public double getDistance() { return (actualDist); }
 
+    /**
+     * Gets the pixel distance error.
+     *
+     * @return the remapped pixel distance minus the optimal pixel distance.
+     */
     public double getDistanceError() { return (actualDist - optimalDist); }
 
     /**
@@ -468,4 +478,3 @@ public class ResamplingDiagnostic implements ResamplingMapFactory {
 } // ResamplingDiagnostic class
 
 ////////////////////////////////////////////////////////////////////////
-

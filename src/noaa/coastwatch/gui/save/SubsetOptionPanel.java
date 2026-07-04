@@ -239,7 +239,11 @@ public class SubsetOptionPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the subset type. */
+  /**
+   * Gets the subset type.
+   *
+   * @return the subset type.
+   */
   public int getSubsetType () {
 
     int type;

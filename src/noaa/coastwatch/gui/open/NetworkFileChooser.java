@@ -103,6 +103,8 @@ public class NetworkFileChooser
    * @param serverList the initial list of {@link
    * ServerTableModel.Entry} objects to display.
    * @param lister the directory lister to use for directory content
+   *
+   *
    * listing.
    */
   public NetworkFileChooser (
@@ -190,7 +192,11 @@ public class NetworkFileChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Runs a task in the file chooser. */
+  /**
+   * Runs a task in the file chooser.
+   *
+   * @param task the task to run in the file chooser.
+   */
   public void runTask (FileChooser.Task task) { fileChooser.runTask (task); }
 
   ////////////////////////////////////////////////////////////
@@ -204,7 +210,11 @@ public class NetworkFileChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current list of server entries. */
+  /**
+   * Gets the current list of server entries.
+   *
+   * @return the current list of server entries.
+   */
   public List getServerList () { return (serverChooser.getServerList()); }
 
   ////////////////////////////////////////////////////////////
@@ -213,6 +223,8 @@ public class NetworkFileChooser
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs creating the network file chooser.
    */
   public static void main (String[] argv) throws Exception {
 

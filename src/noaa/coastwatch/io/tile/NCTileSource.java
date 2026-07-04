@@ -331,6 +331,9 @@ public class NCTileSource
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the NetCDF tile source
+   * tests.
    */
   public static void main (String[] argv) throws Exception {
 

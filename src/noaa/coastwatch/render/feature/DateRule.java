@@ -55,7 +55,10 @@ public class DateRule
   
   /** The operators for this class of rule. */
   public enum Operator {
+    /** Selects values before the comparison date. */
     IS_BEFORE,
+
+    /** Selects values after the comparison date. */
     IS_AFTER;
     @Override
     public String toString() {
@@ -126,6 +129,8 @@ public class DateRule
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the date rule tests.
    */
   public static void main (String argv[]) throws Exception {
 

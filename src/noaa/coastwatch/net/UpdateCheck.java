@@ -71,6 +71,8 @@ public class UpdateCheck {
   /**
    * Gets the update message, or null if there is no update message
    * available.
+   *
+   * @return the update message, or null if there is no update message available.
    */
   public String getMessage () { return (message); }
 

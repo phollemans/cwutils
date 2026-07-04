@@ -100,9 +100,9 @@ public class SpaceObliqueMercatorProjection
    * @param lon longitude of ascending orbit at equator.
    * @param false_east the x offset in meters.
    * @param false_north the y offset in meters.
-   * @param time
-   * @param start1
-   * @param flag
+   * @param time the time at which the satellite is at the ascending node.
+   * @param start1 the start time.
+   * @param flag the initialization flag.
    *
    * @return OK on success, or not OK on failure.   
    */
@@ -254,9 +254,9 @@ public class SpaceObliqueMercatorProjection
    * @param path the Landsat path number.
    * @param alf_in orbit inclination angle.
    * @param lon longitude of ascending orbit at equator.
-   * @param time
-   * @param start1
-   * @param flag
+   * @param time the time at which the satellite is at the ascending node.
+   * @param start1 the start time.
+   * @param flag the initialization flag.
    * @param falseEast the false easting value.
    * @param falseNorth the false northing value.
    *

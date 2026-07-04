@@ -95,7 +95,10 @@ public class DataColorScale
   /** The text to use for scale annotation. */
   private String annotation;
 
-  /** An array of tick label strings. */
+  /**
+   * An array of tick label strings.
+   *
+   */
   private String[] labels;
 
   private int legendAxis;
@@ -103,8 +106,10 @@ public class DataColorScale
   ////////////////////////////////////////////////////////////
 
   /**
-   * 
-   * 
+   * Sets the axis used to draw the legend.
+   *
+   * @param axis the legend axis.
+   *
    * @since 3.8.1
    */
   public void setLegendAxis (int axis) { this.legendAxis = axis; }
@@ -112,8 +117,9 @@ public class DataColorScale
   ////////////////////////////////////////////////////////////
 
   /**
-   * 
-   * 
+   * Gets the axis used to draw the legend.
+   *
+   * @return the legend axis.
    * @since 3.8.1
    */
   public int getLegendAxis () { return (legendAxis); }

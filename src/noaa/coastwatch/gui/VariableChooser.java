@@ -89,7 +89,11 @@ public class VariableChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current variable name. */
+  /**
+   * Gets the current variable name.
+   *
+   * @return the current variable name.
+   */
   public String getVariable () { 
 
     return ((String) combo.getSelectedItem()); 

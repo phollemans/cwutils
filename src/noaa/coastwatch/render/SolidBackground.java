@@ -65,6 +65,8 @@ public class SolidBackground
      * entire Earth, centered at 0N, 0E.  It will likely never be used by
      * the drawing code (because routines using the color-only constructor
      * were never adding any overlays), but you never know, maybe some day.
+     *
+     *
      */
     try {
       defaultTransform = MapProjectionFactory.getInstance().create (
@@ -86,7 +88,11 @@ public class SolidBackground
   ////////////////////////////////////////////////////////////
 
 
-  /** Sets the background color. */
+  /**
+   * Sets the background color.
+   *
+   * @param color the background color.
+   */
   public void setBackground (
     Color color
   ) {
@@ -124,7 +130,11 @@ public class SolidBackground
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the background color. */
+  /**
+   * Gets the background color.
+   *
+   * @return the background color.
+   */
   public Color getBackground () { return (color); }
 
   ////////////////////////////////////////////////////////////

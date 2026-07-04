@@ -56,7 +56,10 @@ public class SelectionRuleFilter
   
   /** The mode that the filtering is operating under. */
   public enum FilterMode {
+    /** Selects features that match all rules. */
     MATCHES_ALL,
+
+    /** Selects features that match any rule. */
     MATCHES_ANY;
     @Override
     public String toString() {
@@ -207,6 +210,9 @@ public class SelectionRuleFilter
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the selection rule filter
+   * tests.
    */
   public static void main (String argv[]) throws Exception {
 

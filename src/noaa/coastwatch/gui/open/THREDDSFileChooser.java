@@ -56,6 +56,7 @@ import noaa.coastwatch.gui.open.XMLTree;
  *
  * @author Xiaoming Liu
  * @since 3.3.0
+ * @serial exclude
  */
 @Deprecated
 public class THREDDSFileChooser
@@ -192,7 +193,7 @@ public class THREDDSFileChooser
   /**
    *  Create a Document object with the given xml.
    *
-   *  @param xml The xml.
+   *  @param xml the XML text to parse.
    *  @return A new Document.
    *  @throws Exception When something goes wrong.
    */
@@ -220,10 +221,12 @@ public class THREDDSFileChooser
       */
   }
   
-  /**
-   * Read the bytes in the given input stream.
-   *
+   /**
+    * Read the bytes in the given input stream.
+    *
    * @param is The input stream
+   *
+   * @return the bytes read from the input stream.
    *
    * @throws IOException On badness
    */

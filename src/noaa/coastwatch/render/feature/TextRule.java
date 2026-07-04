@@ -54,10 +54,19 @@ public class TextRule
   
   /** The operators for this class of rule. */
   public enum Operator {
+    /** Selects values that contain the comparison text. */
     CONTAINS,
+
+    /** Selects values that do not contain the comparison text. */
     DOES_NOT_CONTAIN,
+
+    /** Selects values that begin with the comparison text. */
     BEGINS_WITH,
+
+    /** Selects values that end with the comparison text. */
     ENDS_WITH,
+
+    /** Selects values equal to the comparison text. */
     IS_EQUAL_TO;
     @Override
     public String toString() {
@@ -137,6 +146,8 @@ public class TextRule
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the text rule tests.
    */
   public static void main (String argv[]) throws Exception {
 

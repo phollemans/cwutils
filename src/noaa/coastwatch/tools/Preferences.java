@@ -119,6 +119,8 @@ public class Preferences
   /** 
    * Gets the legend logo. 
    * 
+   *
+   * @return the legend logo.
    * @since 3.8.1
    */
   public String getLogo () { return (logo); }
@@ -136,7 +138,11 @@ public class Preferences
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the map of variable name to units. */
+  /**
+   * Gets the map of variable name to units.
+   *
+   * @return the map of variable name to units.
+   */
   public Map<String, String> getUnitsMap() { return ((Map<String, String>) unitsMap.clone()); }
 
   ////////////////////////////////////////////////////////////
@@ -184,32 +190,59 @@ public class Preferences
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the earth location in decimal degrees flag. */
+  /**
+   * Gets the earth location in decimal degrees flag.
+   *
+   *
+   * @return the earth location in decimal degrees flag.
+   */
   public boolean getEarthLocDegrees () { return (earthLocDegrees); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the earth location in decimal degrees flag. */
+  /**
+   * Sets the earth location in decimal degrees flag.
+   *
+   * @param flag true to show earth locations in decimal degrees.
+   *
+   */
   public void setEarthLocDegrees (boolean flag) { earthLocDegrees = flag; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the heap size in megabytes. */
+  /**
+   * Sets the heap size in megabytes.
+   *
+   * @param heapSize the heap size in megabytes.
+   */
   public void setHeapSize (int heapSize) { this.heapSize = heapSize; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the heap size in megabytes. */
+  /**
+   * Gets the heap size in megabytes.
+   *
+   *
+   * @return the heap size in megabytes.
+   */
   public int getHeapSize () { return (heapSize); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the tile cache size in megabytes. */
+  /**
+   * Sets the tile cache size in megabytes.
+   *
+   * @param cacheSize the tile cache size in megabytes.
+   */
   public void setCacheSize (int cacheSize) { this.cacheSize = cacheSize; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the tile cache size in megabytes. */
+  /**
+   * Gets the tile cache size in megabytes.
+   *
+   * @return the tile cache size in megabytes.
+   */
   public int getCacheSize () { return (cacheSize); }
 
   ////////////////////////////////////////////////////////////

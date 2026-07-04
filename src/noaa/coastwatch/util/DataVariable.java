@@ -110,42 +110,74 @@ public abstract class DataVariable
   
   ////////////////////////////////////////////////////////////
 
-  /** Gets the short variable name. */
+  /**
+   * Gets the short variable name.
+   *
+   * @return the short variable name.
+   */
   public String getName () { return (name); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the short variable name. */
+  /**
+   * Sets the short variable name.
+   *
+   * @param name the short variable name.
+   */
   public void setName (String name) { this.name = name; }
   
   ////////////////////////////////////////////////////////////
 
-  /** Gets the descriptive variable name. */
+  /**
+   * Gets the descriptive variable name.
+   *
+   * @return the descriptive variable name.
+   */
   public String getLongName () { return (longName); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the descriptive variable name. */
+  /**
+   * Sets the descriptive variable name.
+   *
+   * @param longName the descriptive variable name.
+   */
   public void setLongName (String longName) { this.longName = longName; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the variable units. */
+  /**
+   * Gets the variable units.
+   *
+   * @return the variable units.
+   */
   public String getUnits () { return (units); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the variable units. */
+  /**
+   * Sets the variable units.
+   *
+   * @param units the variable units.
+   */
   public void setUnits (String units) { this.units = units; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the variable data array dimensions. */
+  /**
+   * Gets the variable data array dimensions.
+   *
+   * @return the variable data array dimensions.
+   */
   public int[] getDimensions () { return ((int[]) dims.clone ()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the variable data array rank. */
+  /**
+   * Gets the variable data array rank.
+   *
+   * @return the variable data array rank.
+   */
   public int getRank () { return (dims.length); }
 
   ////////////////////////////////////////////////////////////
@@ -153,29 +185,47 @@ public abstract class DataVariable
   /** 
    * Gets the variable data array.  The returned data is read-only -- the
    * result of attempting to set values in the data is undefined. 
+   *
+   * @return the variable data array.
    */
   public Object getData () { return (data); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the variable data array. */
+  /**
+   * Sets the variable data array.
+   *
+   * @param data the variable data array.
+   */
   public void setData (Object data) { this.data = data; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the scaling factor and offset. */
+  /**
+   * Gets the scaling factor and offset.
+   *
+   * @return the scaling factor and offset, or null if no scaling is set.
+   */
   public double[] getScaling () { 
     return ((scaling == null ? null : (double[]) scaling.clone ())); 
   } // getScaling
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data number format. */
+  /**
+   * Gets the data number format.
+   *
+   * @return the data number format.
+   */
   public NumberFormat getFormat () { return ((NumberFormat) format.clone ()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the data number format. */
+  /**
+   * Sets the data number format.
+   *
+   * @param format the data number format.
+   */
   public void setFormat (NumberFormat format) { 
 
     this.format = (NumberFormat) format.clone(); 
@@ -184,12 +234,20 @@ public abstract class DataVariable
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data missing value. */
+  /**
+   * Gets the data missing value.
+   *
+   * @return the data missing value.
+   */
   public Object getMissing () { return (missing); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the data missing value. */
+  /**
+   * Sets the data missing value.
+   *
+   * @param missing the data missing value.
+   */
   public void setMissing (Object missing) { this.missing = missing; }
 
   ////////////////////////////////////////////////////////////
@@ -276,7 +334,11 @@ public abstract class DataVariable
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the unsigned flag. */
+  /**
+   * Gets the unsigned flag.
+   *
+   * @return true if this variable is unsigned, or false otherwise.
+   */
   public boolean getUnsigned () { return (isUnsigned); }
 
   ////////////////////////////////////////////////////////////

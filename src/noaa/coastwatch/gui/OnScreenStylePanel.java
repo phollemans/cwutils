@@ -18,10 +18,17 @@ import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 
 /**
- * 
- * 
- * 
+ * The <code>OnScreenStylePanel</code> class draws a semi-transparent
+ * dark background for controls displayed over a view.
+ *
+ * <p>The panel is non-opaque and uses a <code>BoxLayout</code>.  The
+ * background is painted using the current background color with a fixed
+ * alpha value.  Depending on the constructor, the painted area is either
+ * a rounded rectangle with a border or a plain rectangle without a
+ * border.</p>
+ *
  * @since 3.8.1
+ * @serial exclude
  */
 public class OnScreenStylePanel extends JPanel {
 
@@ -30,14 +37,29 @@ public class OnScreenStylePanel extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a new on-screen style panel with a horizontal box layout.
+   */
   public OnScreenStylePanel () { this (BoxLayout.X_AXIS); }
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a new on-screen style panel with a horizontal box layout and the
+   * specified border mode.
+   *
+   * @param border the border mode, true to paint a rounded border or false to
+   * paint a rectangular background without a border.
+   */
   public OnScreenStylePanel (boolean border) { this(); this.border = border; }
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a new on-screen style panel with the specified box layout axis.
+   *
+   * @param axis the box layout axis.
+   */
   public OnScreenStylePanel (int axis) { 
 
     setLayout (new BoxLayout (this, axis));
@@ -48,6 +70,11 @@ public class OnScreenStylePanel extends JPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Sets the rounded corner diameter.
+   *
+   * @param diameter the rounded corner diameter.
+   */
   public void setDiameter (int diameter) { this.diameter = diameter; }
 
   ////////////////////////////////////////////////////////////
@@ -96,4 +123,3 @@ public class OnScreenStylePanel extends JPanel {
   ////////////////////////////////////////////////////////////
 
 } // OnScreenStylePanel class
-

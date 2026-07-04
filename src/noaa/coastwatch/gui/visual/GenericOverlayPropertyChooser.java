@@ -204,7 +204,11 @@ public class GenericOverlayPropertyChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new generic overlay property chooser panel. */
+  /**
+   * Creates a new generic overlay property chooser panel.
+   *
+   * @param newOverlay the overlay to edit.
+   */
   public GenericOverlayPropertyChooser (
     EarthDataOverlay newOverlay
   ) {
@@ -406,6 +410,8 @@ public class GenericOverlayPropertyChooser
    * Gets the list of overlay properties to display in the chooser.
    * The chooser will contain a label and visual property component
    * for each property in the list.
+   *
+   *
    */
   private List getProperties () {
 
@@ -426,6 +432,10 @@ public class GenericOverlayPropertyChooser
   /**
    * Gets the label for the specified property.  The label is used to
    * annotate the visual property component in the chooser.
+   *
+   * @param property the property name.
+   *
+   * @return the label for the specified property.
    */
   public static String getLabel (
     String property

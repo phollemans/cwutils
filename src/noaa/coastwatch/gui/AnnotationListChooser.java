@@ -113,6 +113,7 @@ import noaa.coastwatch.render.TextOverlay;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public class AnnotationListChooser
   extends JPanel
@@ -169,7 +170,9 @@ public class AnnotationListChooser
   ////////////////////////////////////////////////////////////
 
   /**
-   * 
+   * Creates the annotation toolbar buttons.
+   *
+   * @return the tool bar buttons.
    * @since 3.8.1
    */
   public static List<AbstractButton> getToolBarButtons () {

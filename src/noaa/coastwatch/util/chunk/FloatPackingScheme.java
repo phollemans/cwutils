@@ -520,6 +520,8 @@ public class FloatPackingScheme implements PackingScheme {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the packing scheme tests.
    */
   public static void main (String[] argv) throws Exception {
 
@@ -556,5 +558,4 @@ public class FloatPackingScheme implements PackingScheme {
 } // FloatPackingScheme class
 
 ////////////////////////////////////////////////////////////////////////
-
 

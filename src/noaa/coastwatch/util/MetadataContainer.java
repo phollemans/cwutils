@@ -50,7 +50,11 @@ public class MetadataContainer
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the user metadata map. */
+  /**
+   * Gets the user metadata map.
+   *
+   * @return the user metadata map.
+   */
   public Map getMetadataMap () { return (metadataMap); }
 
   ////////////////////////////////////////////////////////////

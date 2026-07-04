@@ -49,12 +49,19 @@ public class VisualInteger
   // Variables
   // ---------
 
-  /** The Integer spinner component. */
+  /**
+   * The Integer spinner component.
+   *
+   */
   private JSpinner spinner;
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new visual Integer object using the specified Integer. */
+  /**
+   * Creates a new visual Integer object using the specified Integer.
+   *
+   * @param value the Integer value to edit.
+   */
   public VisualInteger (
     Integer value
   ) {                     

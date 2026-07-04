@@ -82,12 +82,20 @@ public class ColorComposite
  
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data grid variables. */
+  /**
+   * Gets the data grid variables.
+   *
+   * @return the data grid variables.
+   */
   public Grid[] getGrids () { return ((Grid[]) grids.clone()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the enhancement functions. */
+  /**
+   * Gets the enhancement functions.
+   *
+   * @return the enhancement functions.
+   */
   public EnhancementFunction[] getFunctions () { 
     return ((EnhancementFunction[]) funcs.clone()); 
   } // getFunctions

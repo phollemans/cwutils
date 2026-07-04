@@ -81,7 +81,10 @@ public abstract class LabeledLineOverlay
   /** The collection of labels for rendering. */
   private transient List<TextElement> lineLabels;
 
-  /** The text drop shadow flag, true to draw a drop shadow for text. */
+  /**
+   * The text drop shadow flag, true to draw a drop shadow for text.
+   *
+   */
   private boolean textDropShadow = true;
 
   ////////////////////////////////////////////////////////////
@@ -91,6 +94,11 @@ public abstract class LabeledLineOverlay
    * are no problems when deserializing the overlay.  But when going
    * between operating systems with different fonts, the font may be
    * deserialized incorrectly and needs to be reset.
+   *
+   * @param in the input stream.
+   *
+   * @throws IOException if an error occurs reading object data from the stream.
+   * @throws ClassNotFoundException if a serialized object class cannot be found.
    */
   private void readObject (
     ObjectInputStream in
@@ -103,7 +111,12 @@ public abstract class LabeledLineOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the text drop shadow flag. */
+  /**
+   * Gets the text drop shadow flag.
+   *
+   *
+   * @return the text drop shadow flag.
+   */
   public boolean getTextDropShadow () { return (textDropShadow); }
 
   ////////////////////////////////////////////////////////////
@@ -112,12 +125,20 @@ public abstract class LabeledLineOverlay
    * Sets the text drop shadow flag.  When text drop shadow mode is
    * on, a shadow is drawn behind the text labels.  By default, text
    * drop shadow mode is on.
+   *
+   *
+   * @param flag true to draw text with a drop shadow.
+   *
    */
   public void setTextDropShadow (boolean flag) { textDropShadow = flag; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the line labels flag. */
+  /**
+   * Sets the line labels flag.
+   *
+   * @param drawLabels the draw labels flag.
+   */
   public void setDrawLabels (boolean drawLabels) { 
 
     if (this.drawLabels != drawLabels) {
@@ -129,12 +150,21 @@ public abstract class LabeledLineOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the line labels flag. */
+  /**
+   * Gets the line labels flag.
+   *
+   *
+   * @return the line labels flag.
+   */
   public boolean getDrawLabels () { return (drawLabels); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the line labels font. */
+  /**
+   * Sets the line labels font.
+   *
+   * @param font the label font.
+   */
   public void setFont (Font font) { 
 
     if (!this.font.equals (font)) {
@@ -146,7 +176,11 @@ public abstract class LabeledLineOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the line labels font. */
+  /**
+   * Gets the line labels font.
+   *
+   * @return the line labels font.
+   */
   public Font getFont () { return (font); }
 
   ////////////////////////////////////////////////////////////

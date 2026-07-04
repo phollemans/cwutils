@@ -513,6 +513,8 @@ public class CWOpendapReader
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs opening or reading the OPeNDAP dataset.
    */
   public static void main (String[] argv) throws Exception {
 
@@ -528,4 +530,3 @@ public class CWOpendapReader
 } // CWOpendapReader class
 
 ////////////////////////////////////////////////////////////////////////
-

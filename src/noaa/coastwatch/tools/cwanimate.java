@@ -112,7 +112,7 @@ import java.util.logging.Level;
  * can specify either a single file or URL to a THREDDS / DODS / ERDDAP server
  * or multiple files on the local file system as input.  The data is scaled
  * using a color map and output with standard annotations to an output MP4 file.
- * The defaut is to search for a time axis in the input for animation, but other
+ * The default is to search for a time axis in the input for animation, but other
  * axes can also be used.  Before animating, you can query the input for
  * variables and axes:
  * </p>
@@ -149,7 +149,7 @@ import java.util.logging.Level;
  *   <dt>-a, --axis NAME/INDEX | NAME/START/END[/STEP]</dt>
  *   <dd>The axis name and index/range for animation.  Only one axis can be specified 
  *   with a range and optional stepping value to animate, and all other axes with a single 
- *   index value.  If an axis name is not specfied, the zero index is assumed 
+ *   index value.  If an axis name is not specified, the zero index is assumed 
  *   for that axis.  For a time axis, the index or start/end can either be integer 
  *   indices or date values specified in one of several ISO date specifications:
  *   <ul>

@@ -228,17 +228,29 @@ public class EarthContextElement
   
   ////////////////////////////////////////////////////////////
 
-  /** Gets the font for rendering bounding box labels. */
+  /**
+   * Gets the font for rendering bounding box labels.
+   *
+   * @return the font for rendering bounding box labels.
+   */
   public Font getLabelFont() { return (labelFont); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the font for rendering bounding box labels. */
+  /**
+   * Sets the font for rendering bounding box labels.
+   *
+   * @param font the font for rendering bounding box labels.
+   */
   public void setLabelFont (Font font) { labelFont = font; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the context size to total size factor. */
+  /**
+   * Gets the context size to total size factor.
+   *
+   * @return the context size to total size factor.
+   */
   public double getSizeFactor () { return (sizeFactor); }
 
   ////////////////////////////////////////////////////////////
@@ -247,6 +259,8 @@ public class EarthContextElement
    * Sets the context size to total size factor.  This method must be
    * called prior to setting the context area in order to have any
    * effect.
+   *
+   * @param factor the context size to total size factor.
    */
   public void setSizeFactor (double factor) { sizeFactor = factor; }
 
@@ -255,6 +269,9 @@ public class EarthContextElement
   /** 
    * Sets the solar zenith fill colors.  If null, no filling is done
    * for the solar zenith day or night areas.
+   *
+   * @param dayColor the color for solar zenith day areas.
+   * @param nightColor the color for solar zenith night areas.
    *
    * @see #setSolarZenith
    */
@@ -270,12 +287,20 @@ public class EarthContextElement
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the edge flag to render the earth edges. */
+  /**
+   * Sets the edge flag to render the earth edges.
+   *
+   * @param flag the new edge flag.
+   */
   public void setEdge (boolean flag) { showEdge = flag; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the grid flag to render a global grid. */
+  /**
+   * Sets the grid flag to render a global grid.
+   *
+   * @param flag the new grid flag.
+   */
   public void setGrid (boolean flag) { showGrid = flag; }
 
   ////////////////////////////////////////////////////////////
@@ -283,6 +308,8 @@ public class EarthContextElement
   /** 
    * Sets the grid increment in degrees.  By default, the grid
    * increment is 30.
+   *
+   * @param inc the grid increment in degrees.
    */
   public void setGridIncrement (int inc) { gridInc = inc; }
 
@@ -291,6 +318,8 @@ public class EarthContextElement
   /** 
    * Sets the solar zenith object.  If null, no solar zenith line is
    * drawn. 
+   *
+   * @param sz the solar zenith object.
    */
   public void setSolarZenith (SolarZenith sz) { this.sz = sz; }
 
@@ -337,6 +366,8 @@ public class EarthContextElement
   /** 
    * Gets the upper-left corner of the context area.  This method is
    * only valid if a context area is defined.
+   *
+   * @return the upper-left corner of the context area.
    */
   public DataLocation getUpperLeft () { 
 
@@ -349,6 +380,8 @@ public class EarthContextElement
   /** 
    * Gets the lower-right corner of the context area.  This method is
    * only valid if a context area is defined.
+   *
+   * @return the lower-right corner of the context area.
    */
   public DataLocation getLowerRight () {
  
@@ -361,6 +394,8 @@ public class EarthContextElement
   /** 
    * Gets the earth transform used in the context area, or null if no
    * context area is defined. 
+   *
+   * @return the earth transform used in the context area, or null.
    */
   public EarthTransform getTransform() { return (contextTrans); }
 
@@ -723,7 +758,11 @@ public class EarthContextElement
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the context element center earth location. */
+  /**
+   * Gets the context element center earth location.
+   *
+   * @return the context element center earth location.
+   */
   public EarthLocation getCenter () {
 
     Dimension imageDims = 
@@ -1139,7 +1178,11 @@ public class EarthContextElement
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current number of polygon bounding boxes. */
+  /**
+   * Gets the current number of polygon bounding boxes.
+   *
+   * @return the current number of polygon bounding boxes.
+   */
   public int getBoundingBoxes () { return (polygons.size()); }
 
   ////////////////////////////////////////////////////////////
@@ -1165,7 +1208,11 @@ public class EarthContextElement
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current earth image transform for this element. */
+  /**
+   * Gets the current earth image transform for this element.
+   *
+   * @return the current earth image transform for this element.
+   */
   public EarthImageTransform getEarthImageTransform () { 
 
     return (earthImageTrans);

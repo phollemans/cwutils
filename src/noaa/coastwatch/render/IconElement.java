@@ -101,6 +101,7 @@ public class IconElement extends PictureElement {
 
   ////////////////////////////////////////////////////////////
 
+  /** Creates a new empty icon element. */
   protected IconElement () {
 
     super (new Point(), null);

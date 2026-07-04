@@ -475,12 +475,67 @@ public class ChunkDataAccessor implements ChunkVisitor {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Determines if a value is missing.
+   *
+   * @param index the value index.
+   *
+   * @return true if the value is missing, or false otherwise.
+   */
   public boolean isMissingValue (int index) { return (isMissingArray[index]); }
+
+  /**
+   * Gets a byte value.
+   *
+   * @param index the value index.
+   *
+   * @return the byte value.
+   */
   public byte getByteValue (int index) { return (byteArray[index]); }
+
+  /**
+   * Gets a short integer value.
+   *
+   * @param index the value index.
+   *
+   * @return the short integer value.
+   */
   public short getShortValue (int index) { return (shortArray[index]); }
+
+  /**
+   * Gets an integer value.
+   *
+   * @param index the value index.
+   *
+   * @return the integer value.
+   */
   public int getIntValue (int index) { return (intArray[index]); }
+
+  /**
+   * Gets a long integer value.
+   *
+   * @param index the value index.
+   *
+   * @return the long integer value.
+   */
   public long getLongValue (int index) { return (longArray[index]); }
+
+  /**
+   * Gets a single-precision floating-point value.
+   *
+   * @param index the value index.
+   *
+   * @return the single-precision floating-point value.
+   */
   public float getFloatValue (int index) { return (floatArray[index]); }
+
+  /**
+   * Gets a double-precision floating-point value.
+   *
+   * @param index the value index.
+   *
+   * @return the double-precision floating-point value.
+   */
   public double getDoubleValue (int index) { return (doubleArray[index]); }
 
   ////////////////////////////////////////////////////////////
@@ -511,6 +566,8 @@ public class ChunkDataAccessor implements ChunkVisitor {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the chunk accessor tests.
    *
    * @since 3.6.1
    */
@@ -638,4 +695,3 @@ public class ChunkDataAccessor implements ChunkVisitor {
 } // ChunkDataAccessor class
 
 ////////////////////////////////////////////////////////////////////////
-

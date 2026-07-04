@@ -252,7 +252,7 @@ public abstract class NOAA1bReader
   /** 
    * Gets the variable units.
    *
-   * @param index the variable index.
+   * @param name the short variable name.
    *
    * @return the variable units string.  If the variable has no known
    * units, an empty string is returned.
@@ -280,7 +280,13 @@ public abstract class NOAA1bReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the start of the record as a byte offset. */
+  /** 
+   * Gets the start of the record as a byte offset. 
+   *
+   * @param record the record index.
+   *
+   * @return the start of the record as a byte offset.
+   */
   protected int getRecordStart (
     int record
   ) {
@@ -294,22 +300,41 @@ public abstract class NOAA1bReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the variable names in this dataset. */
+  /** 
+   * Gets the variable names in this dataset. 
+   *
+   * @return the variable names in this dataset.
+   */
   protected abstract String[] getVariableNames ();
 
   ////////////////////////////////////////////////////////////
 
-  /** Checks for an archive header and returns true if so. */
+  /** 
+   * Checks for an archive header and returns true if so. 
+   *
+   * @return true if this dataset has an archive header, or false
+   * otherwise.
+   *
+   * @throws IOException if an error occurred reading the file data.
+   */
   protected abstract boolean getArchiveFlag () throws IOException;
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the number of scan lines in this dataset. */
+  /** 
+   * Gets the number of scan lines in this dataset. 
+   *
+   * @return the number of scan lines in this dataset.
+   */
   public int getLines () { return (lines); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the number of samples per scan line in this dataset. */
+  /** 
+   * Gets the number of samples per scan line in this dataset. 
+   *
+   * @return the number of samples per scan line in this dataset.
+   */
   public int getSamples () { return (samples); }
 
   ////////////////////////////////////////////////////////////
@@ -317,6 +342,8 @@ public abstract class NOAA1bReader
   /** 
    * Gets the archive header flag, true if the dataset has an archive
    * header.
+   *
+   * @return true if the dataset has an archive header, or false otherwise.
    */
   public boolean isArchive () { return (archive); }
 
@@ -371,6 +398,9 @@ public abstract class NOAA1bReader
   /** 
    * Checks the dataset format and throws an error if it is
    * incompatible with this reader.
+   *
+   * @throws IOException if an error occurred reading the file data,
+   * or if the dataset format is incompatible with this reader.
    */
   protected abstract void checkFormat () throws IOException;
 
@@ -400,6 +430,8 @@ public abstract class NOAA1bReader
    *
    * @return true if the line has usable navigation data, or false if
    * not.
+   *
+   * @throws IOException if an error occurred reading the file data.
    */
   protected abstract boolean isNavigationUsable (
     int record,
@@ -759,7 +791,14 @@ public abstract class NOAA1bReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Determines if a byte is a valid printable ASCII character. */
+  /** 
+   * Determines if a byte is a valid printable ASCII character. 
+   *
+   * @param b the byte to test.
+   *
+   * @return true if the byte is a valid printable ASCII character,
+   * or false otherwise.
+   */
   public static boolean isPrint (
     byte b
   ) {
@@ -771,7 +810,15 @@ public abstract class NOAA1bReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a byte array from the specified byte buffer. */
+  /** 
+   * Gets a byte array from the specified byte buffer. 
+   *
+   * @param data the byte buffer to read.
+   * @param offset the offset into the buffer.
+   * @param length the number of bytes to read.
+   *
+   * @return the byte array.
+   */
   public static byte[] getBytes (
     ByteBuffer data,
     int offset,
@@ -787,7 +834,14 @@ public abstract class NOAA1bReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets an unsigned 8-bit value from the specified byte buffer. */
+  /** 
+   * Gets an unsigned 8-bit value from the specified byte buffer. 
+   *
+   * @param data the byte buffer to read.
+   * @param offset the offset into the buffer.
+   *
+   * @return the unsigned 8-bit value.
+   */
   public static short getUByte (
     ByteBuffer data,
     int offset
@@ -799,7 +853,14 @@ public abstract class NOAA1bReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets an unsigned 16-bit value from the specified byte buffer. */
+  /** 
+   * Gets an unsigned 16-bit value from the specified byte buffer. 
+   *
+   * @param data the byte buffer to read.
+   * @param offset the offset into the buffer.
+   *
+   * @return the unsigned 16-bit value.
+   */
   public static int getUShort (
     ByteBuffer data,
     int offset
@@ -811,7 +872,14 @@ public abstract class NOAA1bReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a signed 16-bit value from the specified byte buffer. */
+  /** 
+   * Gets a signed 16-bit value from the specified byte buffer. 
+   *
+   * @param data the byte buffer to read.
+   * @param offset the offset into the buffer.
+   *
+   * @return the signed 16-bit value.
+   */
   public static short getShort (
     ByteBuffer data,
     int offset
@@ -823,7 +891,14 @@ public abstract class NOAA1bReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets an unsigned 32-bit value from the specified byte buffer. */
+  /** 
+   * Gets an unsigned 32-bit value from the specified byte buffer. 
+   *
+   * @param data the byte buffer to read.
+   * @param offset the offset into the buffer.
+   *
+   * @return the unsigned 32-bit value.
+   */
   public static long getUInt (
     ByteBuffer data,
     int offset
@@ -844,6 +919,8 @@ public abstract class NOAA1bReader
    * @param valueOffset the number of n-bit values into the array to
    * extract an integer from.
    * @param bits the number of bits in each value in the range [1..64].
+   *
+   * @return the n-bit value.
    */
   public static long getNBit (
     ByteBuffer data,
@@ -882,7 +959,14 @@ public abstract class NOAA1bReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a signed 32-bit value from the specified byte buffer. */
+  /** 
+   * Gets a signed 32-bit value from the specified byte buffer. 
+   *
+   * @param data the byte buffer to read.
+   * @param offset the offset into the buffer.
+   *
+   * @return the signed 32-bit value.
+   */
   public static int getInt (
     ByteBuffer data,
     int offset
@@ -1317,22 +1401,38 @@ public abstract class NOAA1bReader
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the scan line index, starting at 0. */
+    /** 
+     * Gets the scan line index, starting at 0. 
+     *
+     * @return the scan line index.
+     */
     public int getIndex () { return (lineIndex); }
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the raw scan line data. */
+    /** 
+     * Gets the raw scan line data. 
+     *
+     * @return the raw scan line data.
+     */
     public ByteBuffer getRawData () { return (data); }
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the sensor data usability flag. */
+    /** 
+     * Gets the sensor data usability flag. 
+     *
+     * @return true if the sensor data is usable, or false otherwise.
+     */
     public abstract boolean isSensorDataUsable ();
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the navigation data usability flag. */
+    /** 
+     * Gets the navigation data usability flag. 
+     *
+     * @return true if the navigation data is usable, or false otherwise.
+     */
     public abstract boolean isNavigationUsable ();
 
     ////////////////////////////////////////////////////////
@@ -1723,7 +1823,11 @@ public abstract class NOAA1bReader
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the raw header data. */
+    /** 
+     * Gets the raw header data. 
+     *
+     * @return the raw header data.
+     */
     public ByteBuffer getRawData () { return (data); }
 
     ////////////////////////////////////////////////////////
@@ -1794,7 +1898,11 @@ public abstract class NOAA1bReader
 
     ////////////////////////////////////////////////////////
 
-    /** Gets the raw header data. */
+    /** 
+     * Gets the raw header data. 
+     *
+     * @return the raw header data.
+     */
     public ByteBuffer getRawData () { return (data); }
 
     ////////////////////////////////////////////////////////

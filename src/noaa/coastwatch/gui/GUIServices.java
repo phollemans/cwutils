@@ -223,7 +223,14 @@ public class GUIServices {
 
   ////////////////////////////////////////////////////////////
 
-  /** Loads the icon properties file. */
+  /**
+   * Loads the icon properties file.
+   *
+   *
+   *
+   *
+   *
+   */
   static {
 
     // Get static properties
@@ -240,8 +247,16 @@ public class GUIServices {
   ////////////////////////////////////////////////////////////
 
   /**
-   * 
-   * 
+   * Creates an action with an icon, command, and optional short
+   * description.
+   *
+   * @param className the class name to include in the action command.
+   * @param command the command name to include in the action command.
+   * @param text the action text.
+   * @param iconPurpose the icon purpose used to look up the action icon.
+   * @param desc the short description, or null for none.
+   *
+   * @return the new action.
    * @since 3.8.1
    */
   public static Action createAction (
@@ -265,8 +280,10 @@ public class GUIServices {
   ////////////////////////////////////////////////////////////
 
   /**
-   * 
-   * 
+   * Centers a frame on the usable area of the default screen.
+   *
+   * @param frame the frame to center.
+   *
    * @since 3.8.1
    */
   public static void centerOnScreen (JFrame frame) {
@@ -385,6 +402,14 @@ public class GUIServices {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a modified image using a pixel operator.
+   *
+   * @param image the source image.
+   * @param operator the pixel operator.
+   *
+   * @return the modified image.
+   */
   public static Image createModifiedImage (
     Image image, 
     BiConsumer<int[],int[]> operator
@@ -2029,6 +2054,11 @@ public class GUIServices {
 
   } // enableOSXFullscreen
 
+  /**
+   * Toggles macOS full screen mode for a window.
+   *
+   * @param window the window to toggle.
+   */
   public static void toggleOSXFullscreen (Window window) {
 
     try {

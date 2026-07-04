@@ -85,7 +85,10 @@ public class ColorSwatch
   
   ////////////////////////////////////////////////////////////
 
-  /** Paints the icon to the specified graphics context. */
+  /**
+   * Paints the icon to the specified graphics context.
+   *
+   */
   public void paintIcon (Component c, Graphics g, int x, int y) { 
 
     // Paint null color
@@ -116,7 +119,11 @@ public class ColorSwatch
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the swatch color. */
+  /**
+   * Sets the swatch color.
+   *
+   * @param color the swatch color.
+   */
   public void setColor (Color color) { this.color = color; }
 
   ////////////////////////////////////////////////////////////

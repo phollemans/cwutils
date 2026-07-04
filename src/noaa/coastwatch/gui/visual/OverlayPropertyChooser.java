@@ -57,12 +57,19 @@ public abstract class OverlayPropertyChooser<T extends EarthDataOverlay>
   // Variables
   // ---------
 
-  /** The overlay to use for choosing properties. */
+  /**
+   * The overlay to use for choosing properties.
+   *
+   */
   protected T overlay;
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new overlay property chooser panel. */
+  /**
+   * Creates a new overlay property chooser panel.
+   *
+   * @param newOverlay the overlay to edit.
+   */
   protected OverlayPropertyChooser (
     T newOverlay
   ) {
@@ -87,6 +94,8 @@ public abstract class OverlayPropertyChooser<T extends EarthDataOverlay>
    * Gets the title that will be used to annotate the properties
    * panel.  The properties panel will be titled "XXX Overlay
    * Properties" where "XXX" is the string returned by this method.
+   *
+   * @return the title that will be used to annotate the properties panel.
    */
   protected abstract String getTitle();
 

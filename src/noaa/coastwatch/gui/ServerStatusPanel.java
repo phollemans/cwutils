@@ -59,6 +59,7 @@ import noaa.coastwatch.net.ServerQuery;
  *
  * @author Peter Hollemans
  * @since 3.1.3
+ * @serial exclude
  */
 public class ServerStatusPanel
   extends JPanel {
@@ -103,7 +104,10 @@ public class ServerStatusPanel
   /** The error condition sound effect. */
   private AudioClip errorSound;
 
-  /** The current update worker thread. */
+  /**
+   * The current update worker thread.
+   *
+   */
   private Thread worker;
 
   ////////////////////////////////////////////////////////////
@@ -111,6 +115,9 @@ public class ServerStatusPanel
   /** 
    * Sets the operator mode to show dialog panels when an error
    * occurs. By default operator mode is off.
+   *
+   * @param flag true to enable operator mode, or false to disable it.
+   *
    */
   public void setOperator (boolean flag) { operator = flag; }
 
@@ -460,4 +467,3 @@ public class ServerStatusPanel
 } // ServerStatusPanel class
 
 ////////////////////////////////////////////////////////////////////////
-

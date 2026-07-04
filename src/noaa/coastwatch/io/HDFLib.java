@@ -87,46 +87,147 @@ public class HDFLib {
    * singleton object is guaranteed to have thread-safe access to the library.
    */
 
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.HEprint</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized void HEprint (Object arg0, int arg1) throws HDFException {
     HDFLibrary.HEprint (arg0, arg1);
   } // HEprint
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDgetcompinfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDgetcompinfo (int arg0, HDFCompInfo arg1) throws HDFException {
     return (HDFLibrary.SDgetcompinfo (arg0, arg1));
   } // SDgetcompinfo
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.loadH4Lib</code>.
+   */
   public synchronized void loadH4Lib () {
     HDFLibrary.loadH4Lib ();
   } // loadH4Lib
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFPnpals</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int DFPnpals (String arg0) throws HDFException {
     return (HDFLibrary.DFPnpals (arg0));
   } // DFPnpals
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRstart</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int GRstart (int arg0) throws HDFException {
     return (HDFLibrary.GRstart (arg0));
   } // GRstart
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRend</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRend (int arg0) throws HDFException {
     return (HDFLibrary.GRend (arg0));
   } // GRend
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANcreate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int ANcreate (int arg0, short arg1, short arg2, int arg3) throws HDFException {
     return (HDFLibrary.ANcreate (arg0, arg1, arg2, arg3));
   } // ANcreate
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANannlen</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int ANannlen (int arg0) throws HDFException {
     return (HDFLibrary.ANannlen (arg0));
   } // ANannlen
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANnumann</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int ANnumann (int arg0, int arg1, short arg2, short arg3) throws HDFException {
     return (HDFLibrary.ANnumann (arg0, arg1, arg2, arg3));
   } // ANnumann
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANselect</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int ANselect (int arg0, int arg1, int arg2) throws HDFException {
     return (HDFLibrary.ANselect (arg0, arg1, arg2));
   } // ANselect
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Hishdf</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Hishdf (String arg0) throws HDFException {
 
     /**
@@ -160,46 +261,148 @@ public class HDFLib {
 
   } // Hishdf
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANend</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean ANend (int arg0) throws HDFException {
     return (HDFLibrary.ANend (arg0));
   } // ANend
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Hsync</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Hsync (int arg0) throws HDFException {
     return (HDFLibrary.Hsync (arg0));
   } // Hsync
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANstart</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int ANstart (int arg0) throws HDFException {
     return (HDFLibrary.ANstart (arg0));
   } // ANstart
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Hcache</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Hcache (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.Hcache (arg0, arg1));
   } // Hcache
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Hnumber</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Hnumber (int arg0) throws HDFException {
     return (HDFLibrary.Hnumber (arg0));
   } // Hnumber
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Hnumber</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Hnumber (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.Hnumber (arg0, arg1));
   } // Hnumber
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Hclose</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Hclose (int arg0) throws HDFException {
     return (HDFLibrary.Hclose (arg0));
   } // Hclose
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Hopen</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Hopen (String arg0) throws HDFException {
     return (HDFLibrary.Hopen (arg0));
   } // Hopen
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Hopen</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Hopen (String arg0, int arg1, int arg2) throws HDFException {
     return (HDFLibrary.Hopen (arg0, arg1, arg2));
   } // Hopen
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Hopen</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Hopen (String arg0, int arg1) throws HDFException {
     return (HDFLibrary.Hopen (arg0, arg1));
   } // Hopen
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.HDdont_atexit</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int HDdont_atexit () throws HDFException {
     return (HDFLibrary.HDdont_atexit ());
   } // HDdont_atexit
@@ -210,342 +413,1242 @@ public class HDFLib {
   } // getJHIVersion
 */
 
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFKNTsize</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int DFKNTsize (int arg0) throws HDFException {
     return (HDFLibrary.DFKNTsize (arg0));
   } // DFKNTsize
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.HDgetNTdesc</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized String HDgetNTdesc (int arg0) throws HDFException {
     return (HDFLibrary.HDgetNTdesc (arg0));
   } // HDgetNTdesc
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Hgetfileversion</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Hgetfileversion (int arg0, int[] arg1, String[] arg2) throws HDFException {
     return (HDFLibrary.Hgetfileversion (arg0, arg1, arg2));
   } // Hgetfileversion
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Hgetlibversion</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Hgetlibversion (int[] arg0, String[] arg1) throws HDFException {
     return (HDFLibrary.Hgetlibversion (arg0, arg1));
   } // Hgetlibversion
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Hsetaccesstype</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Hsetaccesstype (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.Hsetaccesstype (arg0, arg1));
   } // Hsetaccesstype
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANendaccess</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean ANendaccess (int arg0) throws HDFException {
     return (HDFLibrary.ANendaccess (arg0));
   } // ANendaccess
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANfileinfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean ANfileinfo (int arg0, int[] arg1) throws HDFException {
     return (HDFLibrary.ANfileinfo (arg0, arg1));
   } // ANfileinfo
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANatype2tag</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized short ANatype2tag (int arg0) throws HDFException {
     return (HDFLibrary.ANatype2tag (arg0));
   } // ANatype2tag
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANtag2atype</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int ANtag2atype (short arg0) throws HDFException {
     return (HDFLibrary.ANtag2atype (arg0));
   } // ANtag2atype
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANannlist</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int ANannlist (int arg0, int arg1, int arg2, int arg3, int[] arg4) throws HDFException {
     return (HDFLibrary.ANannlist (arg0, arg1, arg2, arg3, arg4));
   } // ANannlist
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANreadann</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean ANreadann (int arg0, String[] arg1, int arg2) throws HDFException {
     return (HDFLibrary.ANreadann (arg0, arg1, arg2));
   } // ANreadann
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANcreatef</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int ANcreatef (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.ANcreatef (arg0, arg1));
   } // ANcreatef
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANget_tagref</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int ANget_tagref (int arg0, int arg1, int arg2, short[] arg3) throws HDFException {
     return (HDFLibrary.ANget_tagref (arg0, arg1, arg2, arg3));
   } // ANget_tagref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANid2tagref</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean ANid2tagref (int arg0, short[] arg1) throws HDFException {
     return (HDFLibrary.ANid2tagref (arg0, arg1));
   } // ANid2tagref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANtagref2id</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int ANtagref2id (int arg0, short arg1, short arg2) throws HDFException {
     return (HDFLibrary.ANtagref2id (arg0, arg1, arg2));
   } // ANtagref2id
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.ANwriteann</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean ANwriteann (int arg0, String arg1, int arg2) throws HDFException {
     return (HDFLibrary.ANwriteann (arg0, arg1, arg2));
   } // ANwriteann
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFPaddpal</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFPaddpal (String arg0, byte[] arg1) throws HDFException {
     return (HDFLibrary.DFPaddpal (arg0, arg1));
   } // DFPaddpal
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFPgetpal</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFPgetpal (String arg0, byte[] arg1) throws HDFException {
     return (HDFLibrary.DFPgetpal (arg0, arg1));
   } // DFPgetpal
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFPlastref</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized short DFPlastref () throws HDFException {
     return (HDFLibrary.DFPlastref ());
   } // DFPlastref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFPputpal</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFPputpal (String arg0, byte[] arg1, boolean arg2, String arg3) throws HDFException {
     return (HDFLibrary.DFPputpal (arg0, arg1, arg2, arg3));
   } // DFPputpal
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFPputpal</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFPputpal (String arg0, byte[] arg1, int arg2, String arg3) throws HDFException {
     return (HDFLibrary.DFPputpal (arg0, arg1, arg2, arg3));
   } // DFPputpal
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFPreadref</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFPreadref (String arg0, short arg1) throws HDFException {
     return (HDFLibrary.DFPreadref (arg0, arg1));
   } // DFPreadref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFPrestart</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized short DFPrestart () throws HDFException {
     return (HDFLibrary.DFPrestart ());
   } // DFPrestart
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFPwriteref</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFPwriteref (String arg0, short arg1) throws HDFException {
     return (HDFLibrary.DFPwriteref (arg0, arg1));
   } // DFPwriteref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRfileinfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRfileinfo (int arg0, int[] arg1) throws HDFException {
     return (HDFLibrary.GRfileinfo (arg0, arg1));
   } // GRfileinfo
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRgetchunkinfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRgetchunkinfo (int arg0, HDFChunkInfo arg1, int[] arg2) throws HDFException {
     return (HDFLibrary.GRgetchunkinfo (arg0, arg1, arg2));
   } // GRgetchunkinfo
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRselect</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int GRselect (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.GRselect (arg0, arg1));
   } // GRselect
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRnametoindex</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int GRnametoindex (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.GRnametoindex (arg0, arg1));
   } // GRnametoindex
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRgetiminfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRgetiminfo (int arg0, String[] arg1, int[] arg2, int[] arg3) throws HDFException {
     return (HDFLibrary.GRgetiminfo (arg0, arg1, arg2, arg3));
   } // GRgetiminfo
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRreadimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRreadimage (int arg0, int[] arg1, int[] arg2, int[] arg3, byte[] arg4) throws HDFException {
     return (HDFLibrary.GRreadimage (arg0, arg1, arg2, arg3, arg4));
   } // GRreadimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRreadimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRreadimage (int arg0, int[] arg1, int[] arg2, int[] arg3, Object arg4) throws HDFException {
     return (HDFLibrary.GRreadimage (arg0, arg1, arg2, arg3, arg4));
   } // GRreadimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRendaccess</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRendaccess (int arg0) throws HDFException {
     return (HDFLibrary.GRendaccess (arg0));
   } // GRendaccess
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRidtoref</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized short GRidtoref (int arg0) throws HDFException {
     return (HDFLibrary.GRidtoref (arg0));
   } // GRidtoref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRreftoindex</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int GRreftoindex (int arg0, short arg1) throws HDFException {
     return (HDFLibrary.GRreftoindex (arg0, arg1));
   } // GRreftoindex
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRreqlutil</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRreqlutil (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.GRreqlutil (arg0, arg1));
   } // GRreqlutil
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRreqimageil</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRreqimageil (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.GRreqimageil (arg0, arg1));
   } // GRreqimageil
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRgetlutid</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int GRgetlutid (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.GRgetlutid (arg0, arg1));
   } // GRgetlutid
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRgetnluts</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int GRgetnluts (int arg0) throws HDFException {
     return (HDFLibrary.GRgetnluts (arg0));
   } // GRgetnluts
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRgetlutinfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRgetlutinfo (int arg0, int[] arg1) throws HDFException {
     return (HDFLibrary.GRgetlutinfo (arg0, arg1));
   } // GRgetlutinfo
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRreadlut</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRreadlut (int arg0, Object arg1) throws HDFException {
     return (HDFLibrary.GRreadlut (arg0, arg1));
   } // GRreadlut
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRreadlut</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRreadlut (int arg0, byte[] arg1) throws HDFException {
     return (HDFLibrary.GRreadlut (arg0, arg1));
   } // GRreadlut
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRattrinfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRattrinfo (int arg0, int arg1, String[] arg2, int[] arg3) throws HDFException {
     return (HDFLibrary.GRattrinfo (arg0, arg1, arg2, arg3));
   } // GRattrinfo
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRgetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRgetattr (int arg0, int arg1, byte[] arg2) throws HDFException {
     return (HDFLibrary.GRgetattr (arg0, arg1, arg2));
   } // GRgetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRgetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRgetattr (int arg0, int arg1, Object arg2) throws HDFException {
     return (HDFLibrary.GRgetattr (arg0, arg1, arg2));
   } // GRgetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRfindattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int GRfindattr (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.GRfindattr (arg0, arg1));
   } // GRfindattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRcreate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int GRcreate (int arg0, String arg1, int arg2, int arg3, int arg4, int[] arg5) throws HDFException {
     return (HDFLibrary.GRcreate (arg0, arg1, arg2, arg3, arg4, arg5));
   } // GRcreate
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRluttoref</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized short GRluttoref (int arg0) throws HDFException {
     return (HDFLibrary.GRluttoref (arg0));
   } // GRluttoref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRsetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRsetattr (int arg0, String arg1, int arg2, int arg3, Object arg4) throws HDFException {
     return (HDFLibrary.GRsetattr (arg0, arg1, arg2, arg3, arg4));
   } // GRsetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRsetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRsetattr (int arg0, String arg1, int arg2, int arg3, byte[] arg4) throws HDFException {
     return (HDFLibrary.GRsetattr (arg0, arg1, arg2, arg3, arg4));
   } // GRsetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRsetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRsetattr (int arg0, String arg1, int arg2, int arg3, String arg4) throws HDFException {
     return (HDFLibrary.GRsetattr (arg0, arg1, arg2, arg3, arg4));
   } // GRsetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRsetchunk</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRsetchunk (int arg0, HDFChunkInfo arg1, int arg2) throws HDFException {
     return (HDFLibrary.GRsetchunk (arg0, arg1, arg2));
   } // GRsetchunk
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRsetchunkcache</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int GRsetchunkcache (int arg0, int arg1, int arg2) throws HDFException {
     return (HDFLibrary.GRsetchunkcache (arg0, arg1, arg2));
   } // GRsetchunkcache
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRsetcompress</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRsetcompress (int arg0, int arg1, HDFCompInfo arg2) throws HDFException {
     return (HDFLibrary.GRsetcompress (arg0, arg1, arg2));
   } // GRsetcompress
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRgetcompress</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRgetcompress (int arg0, HDFCompInfo arg1) throws HDFException {
     return (HDFLibrary.GRgetcompress (arg0, arg1));
   } // GRgetcompress
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRsetexternalfile</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRsetexternalfile (int arg0, String arg1, int arg2) throws HDFException {
     return (HDFLibrary.GRsetexternalfile (arg0, arg1, arg2));
   } // GRsetexternalfile
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRwriteimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRwriteimage (int arg0, int[] arg1, int[] arg2, int[] arg3, Object arg4) throws HDFException {
     return (HDFLibrary.GRwriteimage (arg0, arg1, arg2, arg3, arg4));
   } // GRwriteimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRwriteimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRwriteimage (int arg0, int[] arg1, int[] arg2, int[] arg3, byte[] arg4) throws HDFException {
     return (HDFLibrary.GRwriteimage (arg0, arg1, arg2, arg3, arg4));
   } // GRwriteimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRwritelut</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRwritelut (int arg0, int arg1, int arg2, int arg3, int arg4, byte[] arg5) throws HDFException {
     return (HDFLibrary.GRwritelut (arg0, arg1, arg2, arg3, arg4, arg5));
   } // GRwritelut
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRwritelut</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRwritelut (int arg0, int arg1, int arg2, int arg3, int arg4, Object arg5) throws HDFException {
     return (HDFLibrary.GRwritelut (arg0, arg1, arg2, arg3, arg4, arg5));
   } // GRwritelut
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRreadchunk</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRreadchunk (int arg0, int[] arg1, Object arg2) throws HDFException {
     return (HDFLibrary.GRreadchunk (arg0, arg1, arg2));
   } // GRreadchunk
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.GRreadchunk</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean GRreadchunk (int arg0, int[] arg1, byte[] arg2) throws HDFException {
     return (HDFLibrary.GRreadchunk (arg0, arg1, arg2));
   } // GRreadchunk
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.HDFclose</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean HDFclose (int arg0) throws HDFException {
     return (HDFLibrary.HDFclose (arg0));
   } // HDFclose
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.HDFopen</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int HDFopen (String arg0, int arg1, short arg2) throws HDFException {
     return (HDFLibrary.HDFopen (arg0, arg1, arg2));
   } // HDFopen
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.HEvalue</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized short HEvalue (int arg0) throws HDFException {
     return (HDFLibrary.HEvalue (arg0));
   } // HEvalue
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.HEstring</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized String HEstring (int arg0) throws HDFException {
     return (HDFLibrary.HEstring (arg0));
   } // HEstring
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.HXsetcreatedir</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean HXsetcreatedir (String arg0) throws HDFException {
     return (HDFLibrary.HXsetcreatedir (arg0));
   } // HXsetcreatedir
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.HXsetdir</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean HXsetdir (String arg0) throws HDFException {
     return (HDFLibrary.HXsetdir (arg0));
   } // HXsetdir
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDstart</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int SDstart (String arg0, int arg1) throws HDFException {
     return (HDFLibrary.SDstart (arg0, arg1));
   } // SDstart
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDend</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDend (int arg0) throws HDFException {
     return (HDFLibrary.SDend (arg0));
   } // SDend
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDfileinfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDfileinfo (int arg0, int[] arg1) throws HDFException {
     return (HDFLibrary.SDfileinfo (arg0, arg1));
   } // SDfileinfo
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDselect</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int SDselect (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.SDselect (arg0, arg1));
   } // SDselect
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDnametoindex</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int SDnametoindex (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.SDnametoindex (arg0, arg1));
   } // SDnametoindex
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDgetinfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDgetinfo (int arg0, String[] arg1, int[] arg2, int[] arg3) throws HDFException {
     return (HDFLibrary.SDgetinfo (arg0, arg1, arg2, arg3));
   } // SDgetinfo
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDcheckempty</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDcheckempty (int arg0, int[] arg1) throws HDFException {
     return (HDFLibrary.SDcheckempty (arg0, arg1));
   } // SDcheckempty
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDreaddata</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDreaddata (int arg0, int[] arg1, int[] arg2, int[] arg3, byte[] arg4) throws HDFException {
     return (HDFLibrary.SDreaddata (arg0, arg1, arg2, arg3, arg4));
   } // SDreaddata
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDreaddata</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDreaddata (int arg0, int[] arg1, int[] arg2, int[] arg3, Object arg4) throws HDFException {
     return (HDFLibrary.SDreaddata (arg0, arg1, arg2, arg3, arg4));
   } // SDreaddata
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDendaccess</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDendaccess (int arg0) throws HDFException {
     return (HDFLibrary.SDendaccess (arg0));
   } // SDendaccess
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDgetdimid</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int SDgetdimid (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.SDgetdimid (arg0, arg1));
   } // SDgetdimid
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDdiminfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDdiminfo (int arg0, String[] arg1, int[] arg2) throws HDFException {
     return (HDFLibrary.SDdiminfo (arg0, arg1, arg2));
   } // SDdiminfo
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDidtoref</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int SDidtoref (int arg0) throws HDFException {
     return (HDFLibrary.SDidtoref (arg0));
   } // SDidtoref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDreftoindex</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int SDreftoindex (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.SDreftoindex (arg0, arg1));
   } // SDreftoindex
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDattrinfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDattrinfo (int arg0, int arg1, String[] arg2, int[] arg3) throws HDFException {
     return (HDFLibrary.SDattrinfo (arg0, arg1, arg2, arg3));
   } // SDattrinfo
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDreadattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDreadattr (int arg0, int arg1, Object arg2) throws HDFException {
     return (HDFLibrary.SDreadattr (arg0, arg1, arg2));
   } // SDreadattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDreadattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDreadattr (int arg0, int arg1, byte[] arg2) throws HDFException {
     return (HDFLibrary.SDreadattr (arg0, arg1, arg2));
   } // SDreadattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDfindattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int SDfindattr (int arg0, String arg1) throws HDFException {
 
     /** 
@@ -590,6 +1693,15 @@ public class HDFLib {
 
   } // SDfindattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDiscoordvar</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDiscoordvar (int arg0) throws HDFException {
 
     /** 
@@ -631,114 +1743,432 @@ public class HDFLib {
 
   } // SDiscoordvar
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDgetcal</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDgetcal (int arg0, double[] arg1, int[] arg2) throws HDFException {
     return (HDFLibrary.SDgetcal (arg0, arg1, arg2));
   } // SDgetcal
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDgetdatastrs</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDgetdatastrs (int arg0, String[] arg1, int arg2) throws HDFException {
     return (HDFLibrary.SDgetdatastrs (arg0, arg1, arg2));
   } // SDgetdatastrs
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDgetdimstrs</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDgetdimstrs (int arg0, String[] arg1, int arg2) throws HDFException {
     return (HDFLibrary.SDgetdimstrs (arg0, arg1, arg2));
   } // SDgetdimstrs
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDgetdimscale</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDgetdimscale (int arg0, Object arg1) throws HDFException {
     return (HDFLibrary.SDgetdimscale (arg0, arg1));
   } // SDgetdimscale
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDgetdimscale</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDgetdimscale (int arg0, byte[] arg1) throws HDFException {
     return (HDFLibrary.SDgetdimscale (arg0, arg1));
   } // SDgetdimscale
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDgetfillvalue</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDgetfillvalue (int arg0, byte[] arg1) throws HDFException {
     return (HDFLibrary.SDgetfillvalue (arg0, arg1));
   } // SDgetfillvalue
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDgetfillvalue</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDgetfillvalue (int arg0, Object[] arg1) throws HDFException {
     return (HDFLibrary.SDgetfillvalue (arg0, arg1));
   } // SDgetfillvalue
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDgetrange</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDgetrange (int arg0, byte[] arg1, byte[] arg2) throws HDFException {
     return (HDFLibrary.SDgetrange (arg0, arg1, arg2));
   } // SDgetrange
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDgetrange</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDgetrange (int arg0, double[] arg1) throws HDFException {
     return (HDFLibrary.SDgetrange (arg0, arg1));
   } // SDgetrange
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDcreate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int SDcreate (int arg0, String arg1, int arg2, int arg3, int[] arg4) throws HDFException {
     return (HDFLibrary.SDcreate (arg0, arg1, arg2, arg3, arg4));
   } // SDcreate
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDisrecord</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDisrecord (int arg0) throws HDFException {
     return (HDFLibrary.SDisrecord (arg0));
   } // SDisrecord
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetattr (int arg0, String arg1, int arg2, int arg3, byte[] arg4) throws HDFException {
     return (HDFLibrary.SDsetattr (arg0, arg1, arg2, arg3, arg4));
   } // SDsetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetattr (int arg0, String arg1, int arg2, int arg3, Object arg4) throws HDFException {
     return (HDFLibrary.SDsetattr (arg0, arg1, arg2, arg3, arg4));
   } // SDsetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetcal</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetcal (int arg0, double arg1, double arg2, double arg3, double arg4, int arg5) throws HDFException {
     return (HDFLibrary.SDsetcal (arg0, arg1, arg2, arg3, arg4, arg5));
   } // SDsetcal
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetdatastrs</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetdatastrs (int arg0, String arg1, String arg2, String arg3, String arg4) throws HDFException {
     return (HDFLibrary.SDsetdatastrs (arg0, arg1, arg2, arg3, arg4));
   } // SDsetdatastrs
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetdimname</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetdimname (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.SDsetdimname (arg0, arg1));
   } // SDsetdimname
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetdimscale</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetdimscale (int arg0, int arg1, int arg2, Object arg3) throws HDFException {
     return (HDFLibrary.SDsetdimscale (arg0, arg1, arg2, arg3));
   } // SDsetdimscale
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetdimscale</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetdimscale (int arg0, int arg1, int arg2, byte[] arg3) throws HDFException {
     return (HDFLibrary.SDsetdimscale (arg0, arg1, arg2, arg3));
   } // SDsetdimscale
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetdimstrs</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetdimstrs (int arg0, String arg1, String arg2, String arg3) throws HDFException {
     return (HDFLibrary.SDsetdimstrs (arg0, arg1, arg2, arg3));
   } // SDsetdimstrs
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetexternalfile</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetexternalfile (int arg0, String arg1, int arg2) throws HDFException {
     return (HDFLibrary.SDsetexternalfile (arg0, arg1, arg2));
   } // SDsetexternalfile
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetfillvalue</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetfillvalue (int arg0, byte[] arg1) throws HDFException {
     return (HDFLibrary.SDsetfillvalue (arg0, arg1));
   } // SDsetfillvalue
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetfillvalue</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetfillvalue (int arg0, Object arg1) throws HDFException {
     return (HDFLibrary.SDsetfillvalue (arg0, arg1));
   } // SDsetfillvalue
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetrange</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetrange (int arg0, Object arg1, Object arg2) throws HDFException {
     return (HDFLibrary.SDsetrange (arg0, arg1, arg2));
   } // SDsetrange
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetrange</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetrange (int arg0, byte[] arg1, byte[] arg2) throws HDFException {
     return (HDFLibrary.SDsetrange (arg0, arg1, arg2));
   } // SDsetrange
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDwritedata</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDwritedata (int arg0, int[] arg1, int[] arg2, int[] arg3, byte[] arg4) throws HDFException {
     return (HDFLibrary.SDwritedata (arg0, arg1, arg2, arg3, arg4));
   } // SDwritedata
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDwritedata</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDwritedata (int arg0, int[] arg1, int[] arg2, int[] arg3, Object arg4) throws HDFException {
     return (HDFLibrary.SDwritedata (arg0, arg1, arg2, arg3, arg4));
   } // SDwritedata
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetnbitdataset</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetnbitdataset (int arg0, int arg1, int arg2, int arg3, int arg4) throws HDFException {
     return (HDFLibrary.SDsetnbitdataset (arg0, arg1, arg2, arg3, arg4));
   } // SDsetnbitdataset
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetcompress</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetcompress (int arg0, int arg1, HDFCompInfo arg2) throws HDFException {
     return (HDFLibrary.SDsetcompress (arg0, arg1, arg2));
   } // SDsetcompress
@@ -749,38 +2179,130 @@ public class HDFLib {
   } // SDgetcompress
 */
 
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetaccesstype</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetaccesstype (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.SDsetaccesstype (arg0, arg1));
   } // SDsetaccesstype
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetblocksize</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetblocksize (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.SDsetblocksize (arg0, arg1));
   } // SDsetblocksize
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetfillmode</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetfillmode (int arg0, boolean arg1) throws HDFException {
     return (HDFLibrary.SDsetfillmode (arg0, arg1));
   } // SDsetfillmode
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetfillmode</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetfillmode (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.SDsetfillmode (arg0, arg1));
   } // SDsetfillmode
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetdimval_comp</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetdimval_comp (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.SDsetdimval_comp (arg0, arg1));
   } // SDsetdimval_comp
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDisdimval_bwcomp</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDisdimval_bwcomp (int arg0) throws HDFException {
     return (HDFLibrary.SDisdimval_bwcomp (arg0));
   } // SDisdimval_bwcomp
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetchunk</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDsetchunk (int arg0, HDFChunkInfo arg1, int arg2) throws HDFException {
     return (HDFLibrary.SDsetchunk (arg0, arg1, arg2));
   } // SDsetchunk
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDgetchunkinfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDgetchunkinfo (int arg0, HDFChunkInfo arg1, int[] arg2) throws HDFException {
     return (HDFLibrary.SDgetchunkinfo (arg0, arg1, arg2));
   } // SDgetchunkinfo
 
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDreadchunk</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDreadchunk (int arg0, int[] arg1, byte[] arg2) throws HDFException {
 
     /** 
@@ -792,542 +2314,1971 @@ public class HDFLib {
 
   } // SDreadchunk
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDreadchunk</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDreadchunk (int arg0, int[] arg1, Object arg2) throws HDFException {
     return (HDFLibrary.SDreadchunk (arg0, arg1, arg2));
   } // SDreadchunk
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDsetchunkcache</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int SDsetchunkcache (int arg0, int arg1, int arg2) throws HDFException {
     return (HDFLibrary.SDsetchunkcache (arg0, arg1, arg2));
   } // SDsetchunkcache
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDwritechunk</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDwritechunk (int arg0, int[] arg1, byte[] arg2) throws HDFException {
     return (HDFLibrary.SDwritechunk (arg0, arg1, arg2));
   } // SDwritechunk
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDwritechunk</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDwritechunk (int arg0, int[] arg1, Object arg2) throws HDFException {
     return (HDFLibrary.SDwritechunk (arg0, arg1, arg2));
   } // SDwritechunk
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VFfieldesize</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VFfieldesize (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.VFfieldesize (arg0, arg1));
   } // VFfieldesize
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VFfieldisize</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VFfieldisize (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.VFfieldisize (arg0, arg1));
   } // VFfieldisize
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VFfieldname</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized String VFfieldname (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.VFfieldname (arg0, arg1));
   } // VFfieldname
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VFfieldorder</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VFfieldorder (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.VFfieldorder (arg0, arg1));
   } // VFfieldorder
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VFfieldtype</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VFfieldtype (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.VFfieldtype (arg0, arg1));
   } // VFfieldtype
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VFnfields</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VFnfields (int arg0) throws HDFException {
     return (HDFLibrary.VFnfields (arg0));
   } // VFnfields
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VHmakegroup</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VHmakegroup (int arg0, int[] arg1, int[] arg2, int arg3, String arg4, String arg5) throws HDFException {
     return (HDFLibrary.VHmakegroup (arg0, arg1, arg2, arg3, arg4, arg5));
   } // VHmakegroup
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VHstoredata</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VHstoredata (int arg0, String arg1, Object arg2, int arg3, int arg4, String arg5, String arg6) throws HDFException {
     return (HDFLibrary.VHstoredata (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // VHstoredata
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VHstoredata</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VHstoredata (int arg0, String arg1, byte[] arg2, int arg3, int arg4, String arg5, String arg6) throws HDFException {
     return (HDFLibrary.VHstoredata (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // VHstoredata
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VHstoredatam</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   * @param arg7 the eighth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VHstoredatam (int arg0, String arg1, Object arg2, int arg3, int arg4, String arg5, String arg6, int arg7) throws HDFException {
     return (HDFLibrary.VHstoredatam (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
   } // VHstoredatam
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VHstoredatam</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   * @param arg7 the eighth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VHstoredatam (int arg0, String arg1, byte[] arg2, int arg3, int arg4, String arg5, String arg6, int arg7) throws HDFException {
     return (HDFLibrary.VHstoredatam (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
   } // VHstoredatam
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VQueryref</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VQueryref (int arg0) throws HDFException {
     return (HDFLibrary.VQueryref (arg0));
   } // VQueryref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VQuerytag</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VQuerytag (int arg0) throws HDFException {
     return (HDFLibrary.VQuerytag (arg0));
   } // VQuerytag
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSQuerycount</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSQuerycount (int arg0, int[] arg1) throws HDFException {
     return (HDFLibrary.VSQuerycount (arg0, arg1));
   } // VSQuerycount
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSQueryfields</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSQueryfields (int arg0, String[] arg1) throws HDFException {
     return (HDFLibrary.VSQueryfields (arg0, arg1));
   } // VSQueryfields
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSQueryinterlace</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSQueryinterlace (int arg0, int[] arg1) throws HDFException {
     return (HDFLibrary.VSQueryinterlace (arg0, arg1));
   } // VSQueryinterlace
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSQueryname</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSQueryname (int arg0, String[] arg1) throws HDFException {
     return (HDFLibrary.VSQueryname (arg0, arg1));
   } // VSQueryname
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSQueryref</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSQueryref (int arg0) throws HDFException {
     return (HDFLibrary.VSQueryref (arg0));
   } // VSQueryref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSQuerytag</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSQuerytag (int arg0) throws HDFException {
     return (HDFLibrary.VSQuerytag (arg0));
   } // VSQuerytag
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSQueryvsize</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSQueryvsize (int arg0, int[] arg1) throws HDFException {
     return (HDFLibrary.VSQueryvsize (arg0, arg1));
   } // VSQueryvsize
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSattach</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSattach (int arg0, int arg1, String arg2) throws HDFException {
     return (HDFLibrary.VSattach (arg0, arg1, arg2));
   } // VSattach
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSdetach</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized void VSdetach (int arg0) throws HDFException {
     HDFLibrary.VSdetach (arg0);
   } // VSdetach
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSgetid</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSgetid (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.VSgetid (arg0, arg1));
   } // VSgetid
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSgetclass</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized void VSgetclass (int arg0, String[] arg1) throws HDFException {
     HDFLibrary.VSgetclass (arg0, arg1);
   } // VSgetclass
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSgetname</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized void VSgetname (int arg0, String[] arg1) throws HDFException {
     HDFLibrary.VSgetname (arg0, arg1);
   } // VSgetname
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSelts</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSelts (int arg0) throws HDFException {
     return (HDFLibrary.VSelts (arg0));
   } // VSelts
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSfdefine</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSfdefine (int arg0, String arg1, int arg2, int arg3) throws HDFException {
     return (HDFLibrary.VSfdefine (arg0, arg1, arg2, arg3));
   } // VSfdefine
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSfexist</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSfexist (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.VSfexist (arg0, arg1));
   } // VSfexist
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSfind</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSfind (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.VSfind (arg0, arg1));
   } // VSfind
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSsetblocksize</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSsetblocksize (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.VSsetblocksize (arg0, arg1));
   } // VSsetblocksize
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSsetnumblocks</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSsetnumblocks (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.VSsetnumblocks (arg0, arg1));
   } // VSsetnumblocks
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSgetfields</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSgetfields (int arg0, String[] arg1) throws HDFException {
     return (HDFLibrary.VSgetfields (arg0, arg1));
   } // VSgetfields
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSgetinterlace</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSgetinterlace (int arg0) throws HDFException {
     return (HDFLibrary.VSgetinterlace (arg0));
   } // VSgetinterlace
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSinquire</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSinquire (int arg0, int[] arg1) throws HDFException {
     return (HDFLibrary.VSinquire (arg0, arg1));
   } // VSinquire
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSinquire</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSinquire (int arg0, int[] arg1, String[] arg2) throws HDFException {
     return (HDFLibrary.VSinquire (arg0, arg1, arg2));
   } // VSinquire
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSlone</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSlone (int arg0, int[] arg1, int arg2) throws HDFException {
     return (HDFLibrary.VSlone (arg0, arg1, arg2));
   } // VSlone
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSread</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSread (int arg0, byte[] arg1, int arg2, int arg3) throws HDFException {
     return (HDFLibrary.VSread (arg0, arg1, arg2, arg3));
   } // VSread
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSread</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSread (int arg0, Object arg1, int arg2, int arg3) throws HDFException {
     return (HDFLibrary.VSread (arg0, arg1, arg2, arg3));
   } // VSread
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSseek</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSseek (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.VSseek (arg0, arg1));
   } // VSseek
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSsetfields</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSsetfields (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.VSsetfields (arg0, arg1));
   } // VSsetfields
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSsetinterlace</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSsetinterlace (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.VSsetinterlace (arg0, arg1));
   } // VSsetinterlace
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSsizeof</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSsizeof (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.VSsizeof (arg0, arg1));
   } // VSsizeof
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSappendable</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSappendable (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.VSappendable (arg0, arg1));
   } // VSappendable
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSfindclass</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSfindclass (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.VSfindclass (arg0, arg1));
   } // VSfindclass
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSgetversion</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSgetversion (int arg0) throws HDFException {
     return (HDFLibrary.VSgetversion (arg0));
   } // VSgetversion
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSsetclass</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized void VSsetclass (int arg0, String arg1) throws HDFException {
     HDFLibrary.VSsetclass (arg0, arg1);
   } // VSsetclass
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSsetexternalfile</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSsetexternalfile (int arg0, String arg1, int arg2) throws HDFException {
     return (HDFLibrary.VSsetexternalfile (arg0, arg1, arg2));
   } // VSsetexternalfile
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSsetname</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized void VSsetname (int arg0, String arg1) throws HDFException {
     HDFLibrary.VSsetname (arg0, arg1);
   } // VSsetname
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSwrite</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSwrite (int arg0, Object arg1, int arg2, int arg3) throws HDFException {
     return (HDFLibrary.VSwrite (arg0, arg1, arg2, arg3));
   } // VSwrite
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSwrite</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSwrite (int arg0, byte[] arg1, int arg2, int arg3) throws HDFException {
     return (HDFLibrary.VSwrite (arg0, arg1, arg2, arg3));
   } // VSwrite
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vstart</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Vstart (int arg0) throws HDFException {
     return (HDFLibrary.Vstart (arg0));
   } // Vstart
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vattach</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vattach (int arg0, int arg1, String arg2) throws HDFException {
     return (HDFLibrary.Vattach (arg0, arg1, arg2));
   } // Vattach
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vdetach</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized void Vdetach (int arg0) throws HDFException {
     HDFLibrary.Vdetach (arg0);
   } // Vdetach
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vend</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized void Vend (int arg0) throws HDFException {
     HDFLibrary.Vend (arg0);
   } // Vend
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vgetid</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vgetid (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.Vgetid (arg0, arg1));
   } // Vgetid
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vgetclass</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized void Vgetclass (int arg0, String[] arg1) throws HDFException {
     HDFLibrary.Vgetclass (arg0, arg1);
   } // Vgetclass
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vgetname</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized void Vgetname (int arg0, String[] arg1) throws HDFException {
     HDFLibrary.Vgetname (arg0, arg1);
   } // Vgetname
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Visvg</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Visvg (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.Visvg (arg0, arg1));
   } // Visvg
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Visvs</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Visvs (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.Visvs (arg0, arg1));
   } // Visvs
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vgettagrefs</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vgettagrefs (int arg0, int[] arg1, int[] arg2, int arg3) throws HDFException {
     return (HDFLibrary.Vgettagrefs (arg0, arg1, arg2, arg3));
   } // Vgettagrefs
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vgettagref</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Vgettagref (int arg0, int arg1, int[] arg2) throws HDFException {
     return (HDFLibrary.Vgettagref (arg0, arg1, arg2));
   } // Vgettagref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vntagrefs</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vntagrefs (int arg0) throws HDFException {
     return (HDFLibrary.Vntagrefs (arg0));
   } // Vntagrefs
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vinqtagref</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Vinqtagref (int arg0, int arg1, int arg2) throws HDFException {
     return (HDFLibrary.Vinqtagref (arg0, arg1, arg2));
   } // Vinqtagref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vlone</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vlone (int arg0, int[] arg1, int arg2) throws HDFException {
     return (HDFLibrary.Vlone (arg0, arg1, arg2));
   } // Vlone
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vaddtagref</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vaddtagref (int arg0, int arg1, int arg2) throws HDFException {
     return (HDFLibrary.Vaddtagref (arg0, arg1, arg2));
   } // Vaddtagref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vdeletetagref</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vdeletetagref (int arg0, int arg1, int arg2) throws HDFException {
     return (HDFLibrary.Vdeletetagref (arg0, arg1, arg2));
   } // Vdeletetagref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vfind</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vfind (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.Vfind (arg0, arg1));
   } // Vfind
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vfindclass</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vfindclass (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.Vfindclass (arg0, arg1));
   } // Vfindclass
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vflocate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vflocate (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.Vflocate (arg0, arg1));
   } // Vflocate
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vgetnext</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vgetnext (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.Vgetnext (arg0, arg1));
   } // Vgetnext
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vinquire</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Vinquire (int arg0, int[] arg1, String[] arg2) throws HDFException {
     return (HDFLibrary.Vinquire (arg0, arg1, arg2));
   } // Vinquire
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vinsert</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vinsert (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.Vinsert (arg0, arg1));
   } // Vinsert
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vnrefs</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vnrefs (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.Vnrefs (arg0, arg1));
   } // Vnrefs
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vsetclass</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Vsetclass (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.Vsetclass (arg0, arg1));
   } // Vsetclass
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vsetname</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Vsetname (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.Vsetname (arg0, arg1));
   } // Vsetname
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vattrinfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Vattrinfo (int arg0, int arg1, String[] arg2, int[] arg3) throws HDFException {
     return (HDFLibrary.Vattrinfo (arg0, arg1, arg2, arg3));
   } // Vattrinfo
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vfindattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vfindattr (int arg0, String arg1) throws HDFException {
     return (HDFLibrary.Vfindattr (arg0, arg1));
   } // Vfindattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vgetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Vgetattr (int arg0, int arg1, Object arg2) throws HDFException {
     return (HDFLibrary.Vgetattr (arg0, arg1, arg2));
   } // Vgetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vgetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Vgetattr (int arg0, int arg1, byte[] arg2) throws HDFException {
     return (HDFLibrary.Vgetattr (arg0, arg1, arg2));
   } // Vgetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vgetversion</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vgetversion (int arg0) throws HDFException {
     return (HDFLibrary.Vgetversion (arg0));
   } // Vgetversion
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vnattrs</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int Vnattrs (int arg0) throws HDFException {
     return (HDFLibrary.Vnattrs (arg0));
   } // Vnattrs
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vsetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Vsetattr (int arg0, String arg1, int arg2, int arg3, String arg4) throws HDFException {
     return (HDFLibrary.Vsetattr (arg0, arg1, arg2, arg3, arg4));
   } // Vsetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vsetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Vsetattr (int arg0, String arg1, int arg2, int arg3, Object arg4) throws HDFException {
     return (HDFLibrary.Vsetattr (arg0, arg1, arg2, arg3, arg4));
   } // Vsetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.Vsetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean Vsetattr (int arg0, String arg1, int arg2, int arg3, byte[] arg4) throws HDFException {
     return (HDFLibrary.Vsetattr (arg0, arg1, arg2, arg3, arg4));
   } // Vsetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSattrinfo</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSattrinfo (int arg0, int arg1, int arg2, String[] arg3, int[] arg4) throws HDFException {
     return (HDFLibrary.VSattrinfo (arg0, arg1, arg2, arg3, arg4));
   } // VSattrinfo
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSfindex</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSfindex (int arg0, String arg1, int[] arg2) throws HDFException {
     return (HDFLibrary.VSfindex (arg0, arg1, arg2));
   } // VSfindex
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSfindattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSfindattr (int arg0, int arg1, String arg2) throws HDFException {
     return (HDFLibrary.VSfindattr (arg0, arg1, arg2));
   } // VSfindattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSfnattrs</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSfnattrs (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.VSfnattrs (arg0, arg1));
   } // VSfnattrs
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSgetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSgetattr (int arg0, int arg1, int arg2, byte[] arg3) throws HDFException {
     return (HDFLibrary.VSgetattr (arg0, arg1, arg2, arg3));
   } // VSgetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSgetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSgetattr (int arg0, int arg1, int arg2, Object arg3) throws HDFException {
     return (HDFLibrary.VSgetattr (arg0, arg1, arg2, arg3));
   } // VSgetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSisattr</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSisattr (int arg0) throws HDFException {
     return (HDFLibrary.VSisattr (arg0));
   } // VSisattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSnattrs</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int VSnattrs (int arg0) throws HDFException {
     return (HDFLibrary.VSnattrs (arg0));
   } // VSnattrs
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSsetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSsetattr (int arg0, int arg1, String arg2, int arg3, int arg4, Object arg5) throws HDFException {
     return (HDFLibrary.VSsetattr (arg0, arg1, arg2, arg3, arg4, arg5));
   } // VSsetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSsetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSsetattr (int arg0, int arg1, String arg2, int arg3, int arg4, byte[] arg5) throws HDFException {
     return (HDFLibrary.VSsetattr (arg0, arg1, arg2, arg3, arg4, arg5));
   } // VSsetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.VSsetattr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean VSsetattr (int arg0, int arg1, String arg2, int arg3, int arg4, String arg5) throws HDFException {
     return (HDFLibrary.VSsetattr (arg0, arg1, arg2, arg3, arg4, arg5));
   } // VSsetattr
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24getdims</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DF24getdims (String arg0, int[] arg1) throws HDFException {
     return (HDFLibrary.DF24getdims (arg0, arg1));
   } // DF24getdims
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24reqil</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DF24reqil (int arg0) throws HDFException {
     return (HDFLibrary.DF24reqil (arg0));
   } // DF24reqil
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24getimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DF24getimage (String arg0, Object arg1, int arg2, int arg3) throws HDFException {
     return (HDFLibrary.DF24getimage (arg0, arg1, arg2, arg3));
   } // DF24getimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24getimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DF24getimage (String arg0, byte[] arg1, int arg2, int arg3) throws HDFException {
     return (HDFLibrary.DF24getimage (arg0, arg1, arg2, arg3));
   } // DF24getimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24lastref</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized short DF24lastref () throws HDFException {
     return (HDFLibrary.DF24lastref ());
   } // DF24lastref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24restart</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DF24restart () throws HDFException {
     return (HDFLibrary.DF24restart ());
   } // DF24restart
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24readref</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DF24readref (String arg0, int arg1) throws HDFException {
     return (HDFLibrary.DF24readref (arg0, arg1));
   } // DF24readref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24nimages</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int DF24nimages (String arg0) throws HDFException {
     return (HDFLibrary.DF24nimages (arg0));
   } // DF24nimages
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24addimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DF24addimage (String arg0, Object arg1, int arg2, int arg3) throws HDFException {
     return (HDFLibrary.DF24addimage (arg0, arg1, arg2, arg3));
   } // DF24addimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24addimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DF24addimage (String arg0, byte[] arg1, int arg2, int arg3) throws HDFException {
     return (HDFLibrary.DF24addimage (arg0, arg1, arg2, arg3));
   } // DF24addimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24putimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DF24putimage (String arg0, byte[] arg1, int arg2, int arg3) throws HDFException {
     return (HDFLibrary.DF24putimage (arg0, arg1, arg2, arg3));
   } // DF24putimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24putimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DF24putimage (String arg0, Object arg1, int arg2, int arg3) throws HDFException {
     return (HDFLibrary.DF24putimage (arg0, arg1, arg2, arg3));
   } // DF24putimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24setcompress</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DF24setcompress (int arg0, HDFCompInfo arg1) throws HDFException {
     return (HDFLibrary.DF24setcompress (arg0, arg1));
   } // DF24setcompress
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24setdims</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DF24setdims (int arg0, int arg1) throws HDFException {
     return (HDFLibrary.DF24setdims (arg0, arg1));
   } // DF24setdims
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DF24setil</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DF24setil (int arg0) throws HDFException {
     return (HDFLibrary.DF24setil (arg0));
   } // DF24setil
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8getdims</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFR8getdims (String arg0, int[] arg1, boolean[] arg2) throws HDFException {
     return (HDFLibrary.DFR8getdims (arg0, arg1, arg2));
   } // DFR8getdims
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8getimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFR8getimage (String arg0, Object arg1, int arg2, int arg3, byte[] arg4) throws HDFException {
     return (HDFLibrary.DFR8getimage (arg0, arg1, arg2, arg3, arg4));
   } // DFR8getimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8getimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFR8getimage (String arg0, byte[] arg1, int arg2, int arg3, byte[] arg4) throws HDFException {
     return (HDFLibrary.DFR8getimage (arg0, arg1, arg2, arg3, arg4));
   } // DFR8getimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8lastref</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized short DFR8lastref () throws HDFException {
     return (HDFLibrary.DFR8lastref ());
   } // DFR8lastref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8restart</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFR8restart () throws HDFException {
     return (HDFLibrary.DFR8restart ());
   } // DFR8restart
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8readref</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFR8readref (String arg0, int arg1) throws HDFException {
     return (HDFLibrary.DFR8readref (arg0, arg1));
   } // DFR8readref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8nimages</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int DFR8nimages (String arg0) throws HDFException {
     return (HDFLibrary.DFR8nimages (arg0));
   } // DFR8nimages
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8addimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFR8addimage (String arg0, Object arg1, int arg2, int arg3, short arg4) throws HDFException {
     return (HDFLibrary.DFR8addimage (arg0, arg1, arg2, arg3, arg4));
   } // DFR8addimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8addimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFR8addimage (String arg0, byte[] arg1, int arg2, int arg3, short arg4) throws HDFException {
     return (HDFLibrary.DFR8addimage (arg0, arg1, arg2, arg3, arg4));
   } // DFR8addimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8putimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFR8putimage (String arg0, byte[] arg1, int arg2, int arg3, short arg4) throws HDFException {
     return (HDFLibrary.DFR8putimage (arg0, arg1, arg2, arg3, arg4));
   } // DFR8putimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8putimage</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFR8putimage (String arg0, Object arg1, int arg2, int arg3, short arg4) throws HDFException {
     return (HDFLibrary.DFR8putimage (arg0, arg1, arg2, arg3, arg4));
   } // DFR8putimage
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8setcompress</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFR8setcompress (int arg0, HDFCompInfo arg1) throws HDFException {
     return (HDFLibrary.DFR8setcompress (arg0, arg1));
   } // DFR8setcompress
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8getpalref</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFR8getpalref (short[] arg0) throws HDFException {
     return (HDFLibrary.DFR8getpalref (arg0));
   } // DFR8getpalref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8setpalette</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFR8setpalette (byte[] arg0) throws HDFException {
     return (HDFLibrary.DFR8setpalette (arg0));
   } // DFR8setpalette
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.DFR8writeref</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean DFR8writeref (String arg0, short arg1) throws HDFException {
     return (HDFLibrary.DFR8writeref (arg0, arg1));
   } // DFR8writeref
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDreaddata_short</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDreaddata_short (int arg0, int[] arg1, int[] arg2, int[] arg3, short[] arg4) throws HDFException {
     return (HDFLibrary.SDreaddata_short (arg0, arg1, arg2, arg3, arg4));
   } // SDreaddata_short
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDreaddata_int</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDreaddata_int (int arg0, int[] arg1, int[] arg2, int[] arg3, int[] arg4) throws HDFException {
     return (HDFLibrary.SDreaddata_int (arg0, arg1, arg2, arg3, arg4));
   } // SDreaddata_int
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDreaddata_long</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDreaddata_long (int arg0, int[] arg1, int[] arg2, int[] arg3, long[] arg4) throws HDFException {
     return (HDFLibrary.SDreaddata_long (arg0, arg1, arg2, arg3, arg4));
   } // SDreaddata_long
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDreaddata_float</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDreaddata_float (int arg0, int[] arg1, int[] arg2, int[] arg3, float[] arg4) throws HDFException {
     return (HDFLibrary.SDreaddata_float (arg0, arg1, arg2, arg3, arg4));
   } // SDreaddata_float
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.SDreaddata_double</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized boolean SDreaddata_double (int arg0, int[] arg1, int[] arg2, int[] arg3, double[] arg4) throws HDFException {
     return (HDFLibrary.SDreaddata_double (arg0, arg1, arg2, arg3, arg4));
   } // SDreaddata_double
   
+  /**
+   * Thread-safe wrapper for <code>HDFLibrary.HCget_config_info</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDFException if thrown by the wrapped method.
+   */
   public synchronized int HCget_config_info (int arg0) throws HDFException {
     return (HDFLibrary.HCget_config_info (arg0));
   } // HCget_config_info
@@ -1337,7 +4288,6 @@ public class HDFLib {
   /**
    * Gets a class type name.
    *
-   * @param classType the class type to get a name for.
    *
    * @return the class type name as it would appear in source code.
    */

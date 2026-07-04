@@ -85,7 +85,10 @@ public class MultilayerBitmaskOverlayPropertyChooser
   // Variables
   // ---------
 
-  /** The list used for storing all bitmask overlays. */
+  /**
+   * The list used for storing all bitmask overlays.
+   *
+   */
   private BitmaskListPanel listPanel;
 
   ////////////////////////////////////////////////////////////
@@ -94,6 +97,9 @@ public class MultilayerBitmaskOverlayPropertyChooser
    * Creates a new multilayer overlay property chooser panel.  The
    * assumption is that the number of bitmasks in the list is a
    * multiple of 8.
+   *
+   * @param multilayer the multilayer bitmask overlay to edit.
+   *
    */
   public MultilayerBitmaskOverlayPropertyChooser (
     MultilayerBitmaskOverlay multilayer
@@ -272,6 +278,9 @@ public class MultilayerBitmaskOverlayPropertyChooser
    * @param length the number of desired bitmask overlays.
    * @param reader the reader to use for bitmask data.
    * @param variableList the list of variables to use for bitmask data.
+   *
+   * @return a list of bitmask overlays using the specified starting bit and
+   * length.
    * @param gridName the initial bitmask grid name.
    */
   public static List createBitmaskList (

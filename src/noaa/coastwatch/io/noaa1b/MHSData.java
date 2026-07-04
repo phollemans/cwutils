@@ -64,7 +64,10 @@ public class MHSData
   /** The data record for this data. */
   private MHSRecord record;
 
-  /** The temporary count data array. */
+  /**
+   * The temporary count data array.
+   *
+   */
   private int[] countData = new int[MHS.SAMPLES];
 
   ////////////////////////////////////////////////////////////
@@ -73,6 +76,9 @@ public class MHSData
    * Creates a new data object for the specified record.
    *
    * @param record the data record for source data.
+   *
+   * @param header the data header for this instrument.
+   *
    */
   public MHSData (
     MHSHeader header,

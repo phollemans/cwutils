@@ -103,6 +103,7 @@ import java.util.logging.Logger;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public class OverlayListChooser
   extends JPanel
@@ -182,7 +183,9 @@ public class OverlayListChooser
   ////////////////////////////////////////////////////////////
 
   /**
-   * 
+   * Creates the overlay and mask toolbar buttons.
+   *
+   * @return the tool bar buttons.
    * @since 3.8.1
    */
   public static List<AbstractButton> getToolBarButtons () {
@@ -358,14 +361,23 @@ public class OverlayListChooser
   
   ////////////////////////////////////////////////////////////
 
-  /** Gets the list of overlays. */
+  /**
+   * Gets the list of overlays.
+   *
+   *
+   * @return the list of overlays.
+   */
   public List getOverlays(){
 	  return listPanel.getOverlayList();
   }
   
   ////////////////////////////////////////////////////////////
 
-  /** Gets a list of overlays to the chooser. */
+  /**
+   * Gets a list of overlays to the chooser.
+   *
+   * @param overlays the overlays to add to the chooser.
+   */
   public void addOverlays(List overlays){
 	  for (Iterator iter = overlays.iterator(); iter.hasNext(); ) {
 		  EarthDataOverlay overlay = (EarthDataOverlay) iter.next();

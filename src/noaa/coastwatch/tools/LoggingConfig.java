@@ -40,6 +40,8 @@ import java.io.InputStream;
  * @since 3.5.0
  */
 public class LoggingConfig {
+
+  /** Creates a new logging configuration. */
   public LoggingConfig () {
 
     // Read the main log config from our custom file

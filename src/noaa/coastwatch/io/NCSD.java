@@ -37,10 +37,18 @@ import ucar.nc2.dataset.NetcdfDataset;
  */
 public interface NCSD {
 
-  /** Gets the NetCDF scientific dataset. */
+  /**
+   * Gets the NetCDF scientific dataset.
+   *
+   * @return the NetCDF scientific dataset.
+   */
   public NetcdfDataset getDataset ();
 
-  /** Gets the NetCDF scientific dataset file name. */
+  /**
+   * Gets the NetCDF scientific dataset file name.
+   *
+   * @return the NetCDF scientific dataset file name.
+   */
   public String getFilename ();
 
 } // NCSD interface

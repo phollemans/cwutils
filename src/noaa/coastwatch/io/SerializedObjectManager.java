@@ -79,7 +79,11 @@ public class SerializedObjectManager {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the list of object names available. */
+  /**
+   * Gets the list of object names available.
+   *
+   * @return the list of object names available.
+   */
   public List<String> getObjectNames () {
     
     // List the object file names, strip the file extension, and 
@@ -178,6 +182,8 @@ public class SerializedObjectManager {
    * Deletes the specified object.  A subsequent call to
    * <code>getObjectNames()</code> will not include thie specified
    * name in the list.
+   *
+   * @param objectName the name of the object to delete.
    *
    * @throws IOException if an error occurred deleting the object file.
    */

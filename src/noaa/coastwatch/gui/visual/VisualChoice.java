@@ -50,12 +50,19 @@ public class VisualChoice
   // Variables
   // ---------
 
-  /** The combo box component. */
+  /**
+   * The combo box component.
+   *
+   */
   private JComboBox combo;
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new visual choice object using the specified value. */
+  /**
+   * Creates a new visual choice object using the specified value.
+   *
+   * @param value the choice value to edit.
+   */
   public VisualChoice (
     Object value
   ) {                     

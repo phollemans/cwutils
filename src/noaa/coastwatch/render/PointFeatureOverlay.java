@@ -106,17 +106,27 @@ public class PointFeatureOverlay<T extends PointFeatureSymbol>
    * Sets the feature filter to use in this overlay.
    *
    * @param filter the feature filter or null for no filtering.
+   *
+   *
    */
   public void setFilter (SelectionRuleFilter filter) { this.filter = filter; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the point symbol. */
+  /**
+   * Gets the point symbol.
+   *
+   * @return the point symbol.
+   */
   public T getSymbol () { return (symbol); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the point symbol. */
+  /**
+   * Sets the point symbol.
+   *
+   * @param symbol the point feature symbol.
+   */
   public void setSymbol (T symbol) { this.symbol = symbol; }
 
   ////////////////////////////////////////////////////////////

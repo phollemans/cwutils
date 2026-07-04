@@ -71,12 +71,20 @@ public class DataProjection
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the latitude variable used in this projection. */
+  /**
+   * Gets the latitude variable used in this projection.
+   *
+   * @return the latitude variable used in this projection.
+   */
   public DataVariable getLat() { return (lat); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the longitude variable used in this projection. */
+  /**
+   * Gets the longitude variable used in this projection.
+   *
+   * @return the longitude variable used in this projection.
+   */
   public DataVariable getLon() { return (lon); }
 
   ////////////////////////////////////////////////////////////

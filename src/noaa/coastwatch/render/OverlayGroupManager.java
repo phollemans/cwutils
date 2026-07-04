@@ -143,7 +143,11 @@ public class OverlayGroupManager {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the list of group names available. */
+  /**
+   * Gets the list of group names available.
+   *
+   * @return the list of group names available.
+   */
   public List<String> getGroups () { 
 
     return (manager.getObjectNames());
@@ -233,6 +237,8 @@ public class OverlayGroupManager {
   /** 
    * Deletes the specified group.  A subsequent call to {@link
    * #getGroups} will not include thie specified name in the list.
+   *
+   * @param group the overlay group to delete.
    *
    * @throws IOException if an error occurred deleting the group file.
    */

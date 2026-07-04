@@ -69,7 +69,10 @@ public class DataVariableTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new table model with no data. */
+  /**
+   * Creates a new table model with no data.
+   *
+   */
   public DataVariableTableModel () {
 
     this.variableList = new ArrayList<>();
@@ -78,7 +81,11 @@ public class DataVariableTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new table model using the varible list. */
+  /**
+   * Creates a new table model using the varible list.
+   *
+   * @param variableList the data variables to show in the table.
+   */
   public DataVariableTableModel (List<DataVariable> variableList) { 
 
     this.variableList = variableList;
@@ -87,12 +94,19 @@ public class DataVariableTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Clears the variable list so that no data is contained. */
+  /**
+   * Clears the variable list so that no data is contained.
+   *
+   */
   public void clear () { setVariableList (new ArrayList<DataVariable>()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the variable list for this model. */
+  /**
+   * Sets the variable list for this model.
+   *
+   * @param variableList the data variables to show in the table.
+   */
   public void setVariableList (List<DataVariable> variableList) {
 
     this.variableList = variableList;
@@ -112,7 +126,11 @@ public class DataVariableTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the table data value. */
+  /**
+   * Gets the table data value.
+   *
+   * @param row the table row.
+   */
   public Object getValueAt (int row, int column) {
 
     DataVariable var = variableList.get (row);
@@ -127,7 +145,13 @@ public class DataVariableTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the variable at the specified row. */
+  /**
+   * Gets the variable at the specified row.
+   *
+   * @param row the table row.
+   *
+   * @return the variable at the specified row.
+   */
   public DataVariable getVariable (int row) { 
 
     return (variableList.get (row));
@@ -154,6 +178,9 @@ public class DataVariableTableModel
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs opening input data or creating the
+   * table model.
    */
   public static void main (String[] argv) throws Exception {
 

@@ -38,6 +38,7 @@ import java.util.logging.Logger;
  * 
  * @author Peter Hollemans
  * @since 3.8.1
+ * @serial exclude
  */
 public class DropDownButton extends JButton {
 
@@ -187,6 +188,11 @@ public class DropDownButton extends JButton {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a new drop-down button.
+   *
+   * @param action the button action.
+   */
   public DropDownButton (Action action) { 
 
     this.menu = new JPopupMenu();
@@ -211,6 +217,11 @@ public class DropDownButton extends JButton {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Adds an action as a menu item.
+   *
+   * @param action the menu item action.
+   */
   public void addItem (Action action) {
 
     var item = new JMenuItem (action);
@@ -221,6 +232,13 @@ public class DropDownButton extends JButton {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Adds a menu item.
+   *
+   * @param text the menu item text.
+   * @param icon the menu item icon.
+   * @param command the menu item action command.
+   */
   public void addItem (String text, Icon icon, String command) {
 
     var item = new JMenuItem (text, icon);

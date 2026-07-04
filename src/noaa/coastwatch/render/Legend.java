@@ -124,6 +124,8 @@ public abstract class Legend {
   /** 
    * Gets the actual required legend size.
    *
+   *
+   * @return the actual required legend size.
    * @param g the graphics device that the legend will be rendered on.
    */
   public abstract Dimension getSize (

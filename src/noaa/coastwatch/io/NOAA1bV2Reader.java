@@ -149,12 +149,23 @@ public class NOAA1bV2Reader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data format version. */
+  /**
+   * Gets the data format version.
+   *
+   *
+   * @return the data format version.
+   */
   protected int getDataFormatVersion () { return (2); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Checks the data format description. */
+  /**
+   * Checks the data format description.
+   *
+   * @param format the format description to validate.
+   *
+   * @return true if valid format description, or false otherwise.
+   */
   protected boolean isValidFormatDescription (String format) {
 
     String ver = Integer.toString (getDataFormatVersion());

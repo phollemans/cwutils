@@ -81,6 +81,7 @@ import java.util.logging.Level;
  *
  * @author Peter Hollemans
  * @since 3.1.6
+ * @serial exclude
  */
 public class PaletteChooser
   extends JPanel
@@ -430,6 +431,7 @@ public class PaletteChooser
   /** 
    * Gets the currently selected palette.
    * 
+   *
    * @return the selected palette, or if the selection is empty, the last
    * valid selected palette, or null if no palette has ever been selected.
    */
@@ -445,6 +447,9 @@ public class PaletteChooser
    * Sets the selected palette.  The palette must have been obtained
    * using the {@link noaa.coastwatch.render.PaletteFactory#create(String)} method or 
    * be a value previously returned by {@link getPalette}.
+   *
+   * @param palette the palette to select.
+   *
    */
   public void setPalette (
     Palette palette

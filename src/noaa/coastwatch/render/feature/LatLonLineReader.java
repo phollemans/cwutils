@@ -156,6 +156,9 @@ public class LatLonLineReader {
    * Creates a new lat/lon line reader from data in a file.
    *
    * @param filename the filename for the lat/lon line file.
+   *
+   * @throws IOException if the file cannot be read or does not contain valid
+   * latitude/longitude line data.
    */
   public LatLonLineReader (
     String filename
@@ -217,6 +220,9 @@ public class LatLonLineReader {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs opening or reading the lat/lon line
+   * file.
    */
   public static void main (String[] argv) throws Exception {
 
@@ -231,4 +237,3 @@ public class LatLonLineReader {
   ////////////////////////////////////////////////////////////
 
 } // LatLonLineReader class
-

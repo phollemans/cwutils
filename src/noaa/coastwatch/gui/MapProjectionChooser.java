@@ -158,12 +158,20 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the currently selected projection system. */
+  /**
+   * Gets the currently selected projection system.
+   *
+   * @return the currently selected projection system.
+   */
   public int getSystem () { return (systemCombo.getSelectedIndex()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the projection system. */
+  /**
+   * Sets the projection system.
+   *
+   * @param system the projection system.
+   */
   public void setSystem (
     int system
   ) {
@@ -266,6 +274,8 @@ public class MapProjectionChooser
   /** 
    * Sets the projection spheroid.
    *
+   * @param spheroid the projection spheroid.
+   *
    * @throws IllegalArgumentException if the spheroid code is out of range,
    * or invalid for the current projection system.
    */
@@ -288,7 +298,11 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the currently selected zone. */
+  /**
+   * Gets the currently selected zone.
+   *
+   * @return the currently selected zone.
+   */
   public int getZone () throws NumberFormatException { 
 
     if (zoneField == null) return (0);
@@ -299,7 +313,11 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the projection zone. */
+  /**
+   * Sets the projection zone.
+   *
+   * @param zone the projection zone.
+   */
   public void setZone (
     int zone
   ) {
@@ -312,7 +330,11 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current projection parameters. */
+  /**
+   * Gets the current projection parameters.
+   *
+   * @return the current projection parameters.
+   */
   public double[] getParameters () throws NumberFormatException {
 
     // Get requirements
@@ -345,7 +367,11 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the projection parameters. */
+  /**
+   * Sets the projection parameters.
+   *
+   * @param parameters the projection parameters.
+   */
   public void setParameters (
     double[] parameters
   ) {
@@ -368,7 +394,11 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current dimensions. */
+  /**
+   * Gets the current dimensions.
+   *
+   * @return the current dimensions.
+   */
   public int[] getDimensions () throws NumberFormatException { 
 
     int[] dims = new int[] {
@@ -381,7 +411,11 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the dimensions. */
+  /**
+   * Sets the dimensions.
+   *
+   * @param dims the dimensions.
+   */
   public void setDimensions (
     int[] dims
   ) {
@@ -393,7 +427,11 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current center earth location. */
+  /**
+   * Gets the current center earth location.
+   *
+   * @return the current center earth location.
+   */
   public EarthLocation getCenter () throws NumberFormatException { 
 
     EarthLocation center = new EarthLocation (
@@ -407,7 +445,11 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the projection center earth location. */
+  /**
+   * Sets the projection center earth location.
+   *
+   * @param center the projection center earth location.
+   */
   public void setCenter (
     EarthLocation center
   ) {
@@ -419,7 +461,11 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current pixel dimensions. */
+  /**
+   * Gets the current pixel dimensions.
+   *
+   * @return the current pixel dimensions.
+   */
   public double[] getPixelDimensions () throws NumberFormatException { 
 
     double factor = (getSystem() == GCTP.GEO ? 1 : 1e3);
@@ -433,7 +479,11 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the projection pixel dimensions. */
+  /**
+   * Sets the projection pixel dimensions.
+   *
+   * @param pixelDims the projection pixel dimensions.
+   */
   public void setPixelDimensions (
     double[] pixelDims
   ) {
@@ -449,7 +499,14 @@ public class MapProjectionChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the currently selected map projection. */
+  /**
+   * Gets the currently selected map projection.
+   *
+   * @return the currently selected map projection.
+   *
+   * @throws NoninvertibleTransformException if the selected projection
+   * transform cannot be inverted.
+   */
   public MapProjection getMapProjection () 
     throws NumberFormatException, NoninvertibleTransformException { 
 

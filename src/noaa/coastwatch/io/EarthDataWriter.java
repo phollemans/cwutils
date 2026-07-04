@@ -154,7 +154,11 @@ public abstract class EarthDataWriter {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the earth data destination. */
+  /**
+   * Gets the earth data destination.
+   *
+   * @return the earth data destination.
+   */
   public String getDestination () { return (destination); }
 
   ////////////////////////////////////////////////////////////

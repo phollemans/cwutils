@@ -43,6 +43,7 @@ public class EllipsoidMercator extends ProjectionImpl {
 
   /////////////////////////////////////////////////////////////////
 
+  /** Creates a new ellipsoid Mercator projection. */
   protected EllipsoidMercator () { super ("Mercator", false); }
 
   /////////////////////////////////////////////////////////////////
@@ -263,5 +264,4 @@ public class EllipsoidMercator extends ProjectionImpl {
   /////////////////////////////////////////////////////////////////
 
 } // EllipsoidMercator class
-
 

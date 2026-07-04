@@ -35,11 +35,22 @@ public interface DataChunk {
 
   /** The enumeration of the possible chunk external data types. */
   public enum DataType {
+    /** Byte chunk data type. */
     BYTE,
+
+    /** Short integer chunk data type. */
     SHORT,
+
+    /** Integer chunk data type. */
     INT,
+
+    /** Long integer chunk data type. */
     LONG,
+
+    /** Single-precision floating-point chunk data type. */
     FLOAT,
+
+    /** Double-precision floating-point chunk data type. */
     DOUBLE
   }; // DataType enum
 
@@ -94,6 +105,8 @@ public interface DataChunk {
    * Checks if this chunk is compatible with another.  Compatible chunks
    * share the same primitive data type and other properties.
    *
+   *
+   * @return true if this chunk is compatible with another, or false otherwise.
    * @param chunk the data chunk to check.
    * 
    * @since 3.8.0

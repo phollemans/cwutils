@@ -42,11 +42,58 @@ package noaa.coastwatch.util.expression;
  */
 public interface EvaluateImp {
 
+  /**
+   * Gets a byte variable value.
+   *
+   * @param varIndex the variable index.
+   *
+   * @return the variable value.
+   */
   default public byte getByteProperty (int varIndex) { throw new UnsupportedOperationException(); }
+
+  /**
+   * Gets a short integer variable value.
+   *
+   * @param varIndex the variable index.
+   *
+   * @return the variable value.
+   */
   default public short getShortProperty (int varIndex) { throw new UnsupportedOperationException(); }
+
+  /**
+   * Gets an integer variable value.
+   *
+   * @param varIndex the variable index.
+   *
+   * @return the variable value.
+   */
   default public int getIntegerProperty (int varIndex) { throw new UnsupportedOperationException(); }
+
+  /**
+   * Gets a long integer variable value.
+   *
+   * @param varIndex the variable index.
+   *
+   * @return the variable value.
+   */
   default public long getLongProperty (int varIndex) { throw new UnsupportedOperationException(); }
+
+  /**
+   * Gets a single-precision floating-point variable value.
+   *
+   * @param varIndex the variable index.
+   *
+   * @return the variable value.
+   */
   default public float getFloatProperty (int varIndex) { throw new UnsupportedOperationException(); }
+
+  /**
+   * Gets a double-precision floating-point variable value.
+   *
+   * @param varIndex the variable index.
+   *
+   * @return the variable value.
+   */
   default public double getDoubleProperty (int varIndex) { throw new UnsupportedOperationException(); }
 
 } // EvaluateImp interface

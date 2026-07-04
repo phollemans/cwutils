@@ -148,10 +148,16 @@ public class MultiPointFeatureOverlayStatsPanel
    */
   private List<String> expressionList;
 
-  /** The buttons for manipulating expressions in the table. */
+  /** The button for adding expressions to the table. */
   private JButton addButton;
+
+  /** The button for editing expressions in the table. */
   private JButton editButton;
+
+  /** The button for duplicating expressions in the table. */
   private JButton dupButton;
+
+  /** The button for removing expressions from the table. */
   private JButton removeButton;
 
   /** The worker used for computing stats in the background. */
@@ -1147,4 +1153,3 @@ public class MultiPointFeatureOverlayStatsPanel
 } // MultiPointFeatureOverlayStatsPanel class
 
 ////////////////////////////////////////////////////////////////////////
-

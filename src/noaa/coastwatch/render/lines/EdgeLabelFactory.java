@@ -73,7 +73,11 @@ public class EdgeLabelFactory implements LineLabelFactory {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the singleton instance of this class. */
+  /**
+   * Gets the singleton instance of this class.
+   *
+   * @return the singleton instance of this class.
+   */
   public static EdgeLabelFactory getInstance() {
   
     if (instance == null) instance = new EdgeLabelFactory();

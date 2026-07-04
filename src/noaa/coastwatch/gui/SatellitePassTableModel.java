@@ -146,6 +146,8 @@ public class SatellitePassTableModel
    * @param protocol the communication protocol.
    * @param host the server host.
    * @param path the query script path.
+   *
+   *
    */
   public synchronized void setSource (
     String protocol,
@@ -176,7 +178,13 @@ public class SatellitePassTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the pass at the specified index. */
+  /**
+   * Gets the pass at the specified index.
+   *
+   * @param index the pass index.
+   *
+   * @return the pass at the specified index.
+   */
   public SatellitePassInfo getPass (
     int index
   ) { 

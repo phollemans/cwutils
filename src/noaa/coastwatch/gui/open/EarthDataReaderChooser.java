@@ -87,13 +87,16 @@ import java.util.logging.Level;
  *
  * @author Peter Hollemans
  * @since 3.8.1
+ * @serial exclude
  */
 public class EarthDataReaderChooser extends JPanel {
 
   private static final Logger LOGGER = Logger.getLogger (EarthDataReaderChooser.class.getName());
 
-  // This is the state property that is updated when a new reader and list of
-  // variables becomes available.
+  /**
+   * The state property name -- the property value is updated when a new reader 
+   * and list of variables becomes available.
+   */
   public static final String STATE_PROPERTY = "state";
 
   private JFileChooser fileChooser;
@@ -113,14 +116,29 @@ public class EarthDataReaderChooser extends JPanel {
   private EarthDataReader selectedReader;
   private Map<EarthDataReader, Integer> readerRefs;
   private List<DataViewRenderingContext> viewRenderingContextList;
+
+  /** The singleton reader chooser instance. */
   public static EarthDataReaderChooser instance;
 
   ////////////////////////////////////////////////////////////
 
-  public enum State { UNSELECTED, READY, SELECTED };
+  /** The reader chooser states. */
+  public enum State {
+    /** No reader is selected. */
+    UNSELECTED,
+    /** A reader is ready for selection. */
+    READY,
+    /** A reader is selected. */
+    SELECTED
+  };
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the singleton reader chooser instance.
+   *
+   * @return the singleton reader chooser instance.
+   */
   public static EarthDataReaderChooser getInstance () {
 
     if (instance == null) instance = new EarthDataReaderChooser();
@@ -177,6 +195,8 @@ public class EarthDataReaderChooser extends JPanel {
    * user cancelled the dialog, or the file selected is not a valid reader.  
    * The <code>State.SELECTED</code> value indicates that a valid reader can
    * be obtained from {@link #getReader}.
+   *
+   * @return the state of the chooser after being shown by the {@link #showDialog} method.
    */
   public State getState() { return (state); }
 
@@ -1362,6 +1382,8 @@ public class EarthDataReaderChooser extends JPanel {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs creating the reader chooser.
    */
   public static void main (String[] argv) throws Exception {
 

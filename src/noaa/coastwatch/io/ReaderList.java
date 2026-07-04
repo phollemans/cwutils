@@ -45,12 +45,20 @@ public interface ReaderList {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the earth transform for this list. */
+  /**
+   * Gets the earth transform for this list.
+   *
+   * @return the earth transform for this list.
+   */
   public EarthTransform getTransform();
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the number of readers in this list. */
+  /**
+   * Gets the number of readers in this list.
+   *
+   * @return the number of readers in this list.
+   */
   public int size();
 
   ////////////////////////////////////////////////////////////

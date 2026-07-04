@@ -112,6 +112,10 @@ public abstract class AbstractDirectoryLister
   /** 
    * Builds the list of directory entries. 
    *
+   * @param name the directory name.
+   *
+   * @return the list of directory entries.
+   *
    * @throws IOException if an error occurred getting the entries for
    * the new directory.
    */

@@ -237,6 +237,8 @@ public final class cwinfo {
    * Performs the main function.
    *
    * @param argv the list of command line parameters.
+   *
+   * @throws IOException if an error occurs reading input data or writing output.
    */
   public static void main (String argv[]) throws IOException {
 

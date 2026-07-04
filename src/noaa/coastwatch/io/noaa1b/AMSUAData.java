@@ -64,7 +64,10 @@ public class AMSUAData
   /** The data record for this data. */
   private AMSUARecord record;
 
-  /** The temporary count data array. */
+  /**
+   * The temporary count data array.
+   *
+   */
   private int[] countData = new int[AMSUA.SAMPLES];
 
   ////////////////////////////////////////////////////////////
@@ -73,6 +76,9 @@ public class AMSUAData
    * Creates a new data object for the specified record.
    *
    * @param record the data record for source data.
+   *
+   * @param header the data header for this instrument.
+   *
    */
   public AMSUAData (
     AMSUAHeader header,

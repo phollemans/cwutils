@@ -64,6 +64,7 @@ import noaa.coastwatch.util.trans.EarthTransform;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public abstract class DataSavePanel
   extends SavePanel {
@@ -83,12 +84,19 @@ public abstract class DataSavePanel
   /** The subset panel used for creating data subsets. */
   protected SubsetOptionPanel subsetPanel;
 
-  /** The variable option panel. */
+  /**
+   * The variable option panel.
+   *
+   */
   protected VariableOptionPanel variablePanel;
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the list of selected variable names. */
+  /**
+   * Sets the list of selected variable names.
+   *
+   * @param nameList the selected variable names.
+   */
   public void setVariables (List nameList) { 
 
     variablePanel.setVariables (nameList);
@@ -101,18 +109,22 @@ public abstract class DataSavePanel
    * Returns true if this class requires single variable selection in
    * the variable list.  By default this method returns false unless
    * overridden in the child class.
+   *
+   * @return true if this class requires single variable selection in the variable list.
    */
   protected boolean isSingleVariable() { return (false); }
 
   ////////////////////////////////////////////////////////////
 
-  /* 
+  /** 
    * Creates a new panel appropriate for the specified format. 
    *
    * @param reader the reader to use as a source of data.
    * @param variableList the list of available variables to export.
    * @param view the current data view.
    * @param format the file format.
+   *
+   * @return the new panel.
    */
   public static DataSavePanel create (
     EarthDataReader reader,
@@ -145,7 +157,7 @@ public abstract class DataSavePanel
 
   ////////////////////////////////////////////////////////////
 
-  /* 
+  /** 
    * Creates a new image save panel.
    *
    * @param reader the reader to use as a source of data.
@@ -322,7 +334,6 @@ public abstract class DataSavePanel
    *
    * @param corners the data location corners as <code>[upper-left,
    * lower-right]</code> (modified).
-   * @param lowerRightLoc the lower-right data location.
    * @param upperLeft the upper-left data coordinate as <code>[row,
    * column]</code> (modified).
    * @param dimensions the data dimensions as <code>[rows,

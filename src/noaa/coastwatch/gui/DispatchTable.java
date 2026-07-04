@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.HashMap;
 
 /**
+ * The <code>DispatchTable</code> class dispatches request commands to
+ * registered runnable actions.
  *
- * 
- * 
  * @author Peter Hollemans
  * @since 3.8.1
  */
@@ -21,6 +21,11 @@ public class DispatchTable implements RequestHandler {
   private String typeID;
   private Map<String, Runnable> commandToRunnableMap;
 
+  /**
+   * Creates a new dispatch table.
+   *
+   * @param typeID the request type ID handled by this table.
+   */
   public DispatchTable (String typeID) { 
 
     this.typeID = typeID; 
@@ -28,6 +33,12 @@ public class DispatchTable implements RequestHandler {
 
   } // DispatchTable
 
+  /**
+   * Adds a command dispatch action.
+   *
+   * @param command the request command.
+   * @param runnable the action to run for the command.
+   */
   public void addDispatch (String command, Runnable runnable) { commandToRunnableMap.put (command, runnable); }
 
   @Override

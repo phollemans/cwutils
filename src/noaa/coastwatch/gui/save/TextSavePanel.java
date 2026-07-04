@@ -44,6 +44,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public class TextSavePanel
   extends DataSavePanel {
@@ -100,7 +101,7 @@ public class TextSavePanel
 
   ////////////////////////////////////////////////////////////
 
-  /* 
+  /** 
    * Creates a new text save panel.
    *
    * @param reader the reader to use as a source of data.

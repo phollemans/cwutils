@@ -89,6 +89,8 @@ public class RenderOptionPanel
   /** 
    * Gets the info legends flag. 
    * 
+   *
+   * @return the info legends flag.
    * @since 3.8.1
    */
   public boolean getInfoLegend () { 
@@ -100,7 +102,11 @@ public class RenderOptionPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the legends flag. */
+  /**
+   * Gets the legends flag.
+   *
+   * @return the legends flag.
+   */
   public boolean getLegends () { 
 
     if (nolegendsCheck == null) return (false);
@@ -110,7 +116,11 @@ public class RenderOptionPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the smooth flag. */
+  /**
+   * Gets the smooth flag.
+   *
+   * @return the smooth flag.
+   */
   public boolean getSmooth () { 
     
     if (nosmoothCheck == null) return (false);
@@ -120,7 +130,11 @@ public class RenderOptionPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the world file flag. */
+  /**
+   * Gets the world file flag.
+   *
+   * @return the world file flag.
+   */
   public boolean getWorld () { 
 
     if (worldCheck == null) return (false);
@@ -130,7 +144,11 @@ public class RenderOptionPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the number of colors or 0 for unlimited. */
+  /**
+   * Gets the number of colors or 0 for unlimited.
+   *
+   * @return the number of colors or 0 for unlimited.
+   */
   public int getColors () { 
 
     if (colorCheck == null) return (0);
@@ -141,7 +159,11 @@ public class RenderOptionPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the TIFF compression type. */
+  /**
+   * Gets the TIFF compression type.
+   *
+   * @return the TIFF compression type.
+   */
   public String getCompress () { 
 
     if (compressCheck == null) return (null);

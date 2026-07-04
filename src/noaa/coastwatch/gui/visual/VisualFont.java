@@ -56,7 +56,10 @@ public class VisualFont
   /** The font object. */
   private Font font;
 
-  /** The font component button. */
+  /**
+   * The font component button.
+   *
+   */
   private JButton button;
 
   /** The font chooser panel. */
@@ -64,7 +67,11 @@ public class VisualFont
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new visual font object using the specified font. */
+  /**
+   * Creates a new visual font object using the specified font.
+   *
+   * @param font the font value to edit.
+   */
   public VisualFont (
     Font font
   ) {                     
@@ -122,6 +129,8 @@ public class VisualFont
    * Sets the font and fires a property change event if the new font
    * is different.  The new font may be null, in which case nothing
    * is changed.
+   *
+   *
    */
   private void setFont (
     Font newFont
@@ -137,7 +146,13 @@ public class VisualFont
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a font description. */
+  /**
+   * Gets a font description.
+   *
+   * @param font the font to describe.
+   *
+   * @return a font description.
+   */
   public static String getFontDescription (
     Font font
   ) {

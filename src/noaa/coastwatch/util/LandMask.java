@@ -91,7 +91,11 @@ public class LandMask {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets an instance of the <code>LandMask</code> class. */
+  /**
+   * Gets an instance of the <code>LandMask</code> class.
+   *
+   * @return an instance of the <code>LandMask</code> class.
+   */
   public static LandMask getInstance () {
 
     if (instance == null) instance = new LandMask();

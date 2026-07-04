@@ -69,7 +69,11 @@ public class DataTransfer
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current count of transferred data in bytes. */
+  /**
+   * Gets the current count of transferred data in bytes.
+   *
+   * @return the current count of transferred data in bytes.
+   */
   public int getTransferred () { return (transferred); }
 
   ////////////////////////////////////////////////////////////
@@ -77,12 +81,19 @@ public class DataTransfer
   /** 
    * Gets the transfer start time in milliseconds.  If the data
    * transfer is not yet running, the start time is -1.
+   *
+   * @return the transfer start time in milliseconds.
    */
   public long getStartTime () { return (startTime); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the average transfer rate in kilobytes per second. */
+  /**
+   * Gets the average transfer rate in kilobytes per second.
+   *
+   *
+   * @return the average transfer rate in kilobytes per second.
+   */
   public double getRate () { 
   
     return ((transferred / 1024.0) / 
@@ -92,7 +103,11 @@ public class DataTransfer
 
   ////////////////////////////////////////////////////////////
 
-  /** Adds a data transfer listener to the list. */
+  /**
+   * Adds a data transfer listener to the list.
+   *
+   * @param listener the listener to add.
+   */
   public void addDataTransferListener (
     DataTransferListener listener
   ) {
@@ -103,7 +118,11 @@ public class DataTransfer
 
   ////////////////////////////////////////////////////////////
 
-  /** Removes a data transfer listener from the list. */
+  /**
+   * Removes a data transfer listener from the list.
+   *
+   * @param listener the listener to remove.
+   */
   public void removeDataTransferListener (
     DataTransferListener listener
   ) {
@@ -114,7 +133,12 @@ public class DataTransfer
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new empty transfer. */
+  /**
+   * Creates a new empty transfer.
+   *
+   *
+   *
+   */
   protected DataTransfer () {
 
     listeners = new ArrayList();
@@ -126,7 +150,13 @@ public class DataTransfer
 
   ////////////////////////////////////////////////////////////
 
-  /** Initializes a transfer with new input and output streams. */
+  /**
+   * Initializes a transfer with new input and output streams.
+   *
+   * @param input the input stream.
+   * @param output the output stream.
+   * @param bufferSize the transfer buffer size.
+   */
   protected void setStreams (
     InputStream input,
     OutputStream output,
@@ -167,6 +197,8 @@ public class DataTransfer
    * is transferred.  By default, it does nothing unless overridden in
    * the child class.  The state after this method runs should be that
    * the input and output streams are assigned valid stream values.
+   *
+   * @throws IOException if an error occurs preparing the input or output stream.
    */
   protected void setupIO () 
     throws IOException { 
@@ -254,7 +286,11 @@ public class DataTransfer
 
   ////////////////////////////////////////////////////////////
 
-  /** Closes the input and output streams. */
+  /**
+   * Closes the input and output streams.
+   *
+   * @throws IOException if an error occurs closing either stream.
+   */
   public void close () throws IOException {
 
     if (input != null) input.close();

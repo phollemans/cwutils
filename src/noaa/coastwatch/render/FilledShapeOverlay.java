@@ -71,7 +71,11 @@ public class FilledShapeOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets an iterator over the list of shapes. */
+  /**
+   * Gets an iterator over the list of shapes.
+   *
+   * @return an iterator over the list of shapes.
+   */
   public Iterator getShapeIterator () { return (shapeList.iterator()); }
 
   ////////////////////////////////////////////////////////////
@@ -80,6 +84,8 @@ public class FilledShapeOverlay
    * Removes a shape from the list.
    *
    * @param shape the shape to remove from the list.
+   *
+   *
    */
   public void removeShape (
     Shape shape
@@ -95,6 +101,9 @@ public class FilledShapeOverlay
    * Creates a new shape overlay with the specified color.  The layer
    * number is initialized to 0, and the stroke to the default
    * <code>BasicStroke</code>, and the fill color to null.
+   *
+   * @param color the overlay color.
+   *
    */
   public FilledShapeOverlay (
     Color color

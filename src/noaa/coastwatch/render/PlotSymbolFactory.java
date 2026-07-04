@@ -109,7 +109,11 @@ public class PlotSymbolFactory {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the list of plot symbol names. */
+  /**
+   * Gets the list of plot symbol names.
+   *
+   * @return the list of plot symbol names.
+   */
   public static Iterator<String> getSymbolNames () {
 
     return (Arrays.asList (SYMBOL_NAMES).iterator());

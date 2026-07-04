@@ -129,7 +129,8 @@ public class UniversalTransverseMercatorProjection
    * @param affine the affine transform for translating data
    * <code>[row, column]</code> to map <code>[x, y]</code>.
    * @param scale_fact the scale factor.
-   * @param zone the zone number.
+   *
+   * @param zone the UTM zone.
    *
    * @throws NoninvertibleTransformException if the map
    * projection to data coordinate affine transform is not

@@ -54,11 +54,22 @@ public class NumberRule
   
   /** The operators for this class of rule. */
   public enum Operator {
+    /** Selects values greater than the comparison value. */
     IS_GREATER_THAN,
+
+    /** Selects values less than the comparison value. */
     IS_LESS_THAN,
+
+    /** Selects values equal to the comparison value. */
     IS_EQUAL_TO,
+
+    /** Selects values not equal to the comparison value. */
     IS_NOT_EQUAL_TO,
+
+    /** Selects values that contain bits from the comparison value. */
     CONTAINS_BITS_FROM,
+
+    /** Selects values that do not contain bits from the comparison value. */
     DOES_NOT_CONTAIN_BITS_FROM;
     @Override
     public String toString() {
@@ -160,6 +171,8 @@ public class NumberRule
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the number rule tests.
    */
   public static void main (String argv[]) throws Exception {
 

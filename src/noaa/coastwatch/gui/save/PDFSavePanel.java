@@ -39,6 +39,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public class PDFSavePanel
   extends ImageSavePanel {
@@ -67,7 +68,7 @@ public class PDFSavePanel
 
   ////////////////////////////////////////////////////////////
 
-  /* 
+  /** 
    * Creates a new PDF save panel.
    *
    * @param view the earth data view to save.

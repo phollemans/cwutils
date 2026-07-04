@@ -103,6 +103,8 @@ public class BitmaskOverlay
    * Sets the internal grid based on the grid name. This method may
    * only be used if the overlay was constructed using a reader and
    * grid name list.
+   *
+   *
    */
   private void setGrid () {
 
@@ -120,12 +122,20 @@ public class BitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the bit mask value. */
+  /**
+   * Gets the bit mask value.
+   *
+   * @return the bit mask value.
+   */
   public int getMask () { return (mask); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the bit mask value. */
+  /**
+   * Sets the bit mask value.
+   *
+   * @param mask the bit mask value.
+   */
   public void setMask (
     int mask
   ) { 
@@ -140,12 +150,18 @@ public class BitmaskOverlay
   /** 
    * Gets the reader used to fetch the data for this bitmask, or null
    * if no reader was explicitly given to the constructor.
+   *
+   * @return the reader used to fetch the data for this bitmask, or null if no reader was explicitly given to the constructor.
    */
   public EarthDataReader getReader () { return (reader); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the grid variable name. */
+  /**
+   * Gets the grid variable name.
+   *
+   * @return the grid variable name.
+   */
   public String getGridName () { return (gridName); }
 
   ////////////////////////////////////////////////////////////
@@ -153,6 +169,9 @@ public class BitmaskOverlay
   /** 
    * Gets the possible grid variable names, or null if no list was
    * explicitly given to the constructor.
+   *
+   *
+   * @return the possible grid variable names, or null if no list was explicitly given to the constructor.
    */
   public List getGridNameValues () { 
 
@@ -166,6 +185,9 @@ public class BitmaskOverlay
    * Sets the grid variable based on the name.  This method may only
    * be used if the overlay was constructed using a reader and grid
    * name list.
+   *
+   * @param name the grid name.
+   *
    */
   public void setGridName (String name) { 
 
@@ -201,7 +223,11 @@ public class BitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the active grid variable. */
+  /**
+   * Gets the active grid variable.
+   *
+   * @return the active grid variable.
+   */
   public Grid getGrid () { 
 
     if (grid == null) setGrid();

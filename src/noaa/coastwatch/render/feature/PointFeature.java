@@ -31,7 +31,7 @@ import java.util.List;
 import noaa.coastwatch.render.feature.AbstractFeature;
 import noaa.coastwatch.util.EarthLocation;
 
-/*
+/**
  * A <code>PointFeature</code> is a single geographic point with
  * attributes.
  *
@@ -49,7 +49,10 @@ public class PointFeature
 
   ////////////////////////////////////////////////////////////
     
-  /** Gets an iterator over the one point in this feature. */
+  /**
+   * Gets an iterator over the one point in this feature.
+   *
+   */
   public Iterator iterator () { 
 
     return (Arrays.asList (new Object[] {point}).iterator());
@@ -58,12 +61,20 @@ public class PointFeature
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the earth location point. */
+  /**
+   * Gets the earth location point.
+   *
+   * @return the earth location point.
+   */
   public EarthLocation getPoint () { return (point); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the earth location point. */
+  /**
+   * Sets the earth location point.
+   *
+   * @param point the earth location point.
+   */
   public void setPoint (EarthLocation point) { this.point = point; }
 
   ////////////////////////////////////////////////////////////

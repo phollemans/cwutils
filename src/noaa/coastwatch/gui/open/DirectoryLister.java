@@ -41,17 +41,31 @@ public interface DirectoryLister extends Cloneable {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the directory name. */
+  /**
+   * Gets the directory name.
+   *
+   * @return the directory name.
+   */
   public String getDirectory();
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets an independent copy of this lister. */
+  /**
+   * Gets an independent copy of this lister.
+   *
+   * @return an independent copy of this lister.
+   */
   public Object clone();
   
   ////////////////////////////////////////////////////////////
 
-  /** Sets the directory name. */
+  /**
+   * Sets the directory name.
+   *
+   * @param name the directory name.
+   *
+   * @throws IOException if the directory cannot be accessed.
+   */
   public void setDirectory (String name) throws IOException;
 
   ////////////////////////////////////////////////////////////
@@ -82,7 +96,11 @@ public interface DirectoryLister extends Cloneable {
 
   ////////////////////////////////////////////////////////////
 
-  /** Refreshes the entry list based on the current directory name. */
+  /**
+   * Refreshes the entry list based on the current directory name.
+   *
+   * @throws IOException if the directory entries cannot be listed.
+   */
   public void refresh () throws IOException;
 
   ////////////////////////////////////////////////////////////
@@ -92,7 +110,11 @@ public interface DirectoryLister extends Cloneable {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the list of directory entries. */
+  /**
+   * Gets the list of directory entries.
+   *
+   * @return the list of directory entries.
+   */
   public List getEntries();
 
   ////////////////////////////////////////////////////////////
@@ -111,7 +133,14 @@ public interface DirectoryLister extends Cloneable {
     private long size;
     private boolean isDir;
 
-    /** Creates a new entry. */
+    /**
+     * Creates a new entry.
+     *
+     * @param n the directory entry name.
+     * @param m the date that the directory entry was last modified.
+     * @param s the size of the directory entry.
+     * @param d the directory flag.
+     */
     protected Entry (String n, Date m, long s, boolean d) { 
       name = n;
       modified = m;
@@ -119,16 +148,32 @@ public interface DirectoryLister extends Cloneable {
       isDir = d;
     } // Entry
 
-    /** Gets the directory entry name. */
+    /**
+     * Gets the directory entry name.
+     *
+     * @return the directory entry name.
+     */
     public String getName() { return (name); }
 
-    /** Get the date that the directory entry was last modified. */
+    /**
+     * Gets the date that the directory entry was last modified.
+     *
+     * @return the date that the directory entry was last modified.
+     */
     public Date getModified() { return (modified); } 
 
-    /** Gets the size of the directory entry (if applicable). */
+    /**
+     * Gets the size of the directory entry (if applicable).
+     *
+     * @return the size of the directory entry.
+     */
     public long getSize() { return (size); }
 
-    /** Returns true if the entry is a subdirectory. */
+    /**
+     * Determines if the entry is a subdirectory.
+     *
+     * @return true if the entry is a subdirectory, or false otherwise.
+     */
     public boolean isDirectory() { return (isDir); }
 
     /** Compares this entry to another. */

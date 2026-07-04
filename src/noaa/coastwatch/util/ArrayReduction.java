@@ -36,11 +36,70 @@ public interface ArrayReduction {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Reduces a range of byte values.
+   *
+   * @param array the array of values.
+   * @param from the first index to use, inclusive.
+   * @param to the index after the last value to use.
+   *
+   * @return the reduced value.
+   */
   public byte reduce (byte[] array, int from, int to);
+
+  /**
+   * Reduces a range of short integer values.
+   *
+   * @param array the array of values.
+   * @param from the first index to use, inclusive.
+   * @param to the index after the last value to use.
+   *
+   * @return the reduced value.
+   */
   public short reduce (short[] array, int from, int to);
+
+  /**
+   * Reduces a range of integer values.
+   *
+   * @param array the array of values.
+   * @param from the first index to use, inclusive.
+   * @param to the index after the last value to use.
+   *
+   * @return the reduced value.
+   */
   public int reduce (int[] array, int from, int to);
+
+  /**
+   * Reduces a range of long integer values.
+   *
+   * @param array the array of values.
+   * @param from the first index to use, inclusive.
+   * @param to the index after the last value to use.
+   *
+   * @return the reduced value.
+   */
   public long reduce (long[] array, int from, int to);
+
+  /**
+   * Reduces a range of single-precision floating-point values.
+   *
+   * @param array the array of values.
+   * @param from the first index to use, inclusive.
+   * @param to the index after the last value to use.
+   *
+   * @return the reduced value.
+   */
   public float reduce (float[] array, int from, int to);
+
+  /**
+   * Reduces a range of double-precision floating-point values.
+   *
+   * @param array the array of values.
+   * @param from the first index to use, inclusive.
+   * @param to the index after the last value to use.
+   *
+   * @return the reduced value.
+   */
   public double reduce (double[] array, int from, int to);
 
   ////////////////////////////////////////////////////////////

@@ -140,7 +140,11 @@ public class LabeledLine
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the number of segments in this line. */
+  /**
+   * Gets the number of segments in this line.
+   *
+   * @return the number of segments in this line.
+   */
   public int getSegmentCount () { return (lineSegments.size()); }
 
   ////////////////////////////////////////////////////////////

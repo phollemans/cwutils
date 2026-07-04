@@ -67,7 +67,10 @@ public class VisualStroke
   /** The stroke component button. */
   private JButton button;
 
-  /** The stroke swatch icon. */
+  /**
+   * The stroke swatch icon.
+   *
+   */
   private StrokeSwatch swatch;
 
   /** The stroke chooser panel. */
@@ -75,7 +78,11 @@ public class VisualStroke
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new visual stroke object using the specified stroke. */
+  /**
+   * Creates a new visual stroke object using the specified stroke.
+   *
+   * @param stroke the stroke value to edit.
+   */
   public VisualStroke (
     Stroke stroke
   ) {                     

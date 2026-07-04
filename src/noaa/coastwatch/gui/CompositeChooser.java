@@ -71,6 +71,7 @@ import noaa.coastwatch.io.EarthDataReaderFactory;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public class CompositeChooser
   extends JPanel

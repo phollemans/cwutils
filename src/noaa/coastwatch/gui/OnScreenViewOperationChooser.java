@@ -37,21 +37,40 @@ import java.util.logging.Logger;
  *
  * @author Peter Hollemans
  * @since 3.8.1
+ * @serial exclude
  */
 public class OnScreenViewOperationChooser extends TranslucentPanel {
 
   private static final Logger LOGGER = Logger.getLogger (OnScreenViewOperationChooser.class.getName());    
 
+  /** The property name for view operation changes. */
   public static final String OPERATION_PROPERTY = "operation";
 
+  /** The view operation modes. */
   public enum Mode {
+
+    /** Magnifies the view. */
   	MAGNIFY,
+
+    /** Shrinks the view. */
   	SHRINK,
+
+    /** Shows the view at actual size. */
   	ONE_TO_ONE,
+
+    /** Zooms the view to a selection. */
   	ZOOM,
+
+    /** Pans the view. */
   	PAN,
+
+    /** Resets the view. */
   	RESET,
+
+    /** Fits the view to the window. */
   	FIT,
+
+    /** Closes the on-screen operation chooser. */
     CLOSE
   };
 
@@ -80,6 +99,12 @@ public class OnScreenViewOperationChooser extends TranslucentPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Sets the opacity helper for this chooser and its translucent child
+   * components.
+   *
+   * @param helper the opacity helper, or null for normal painting opacity.
+   */
   @Override
   public void setHelper (OpacityHelper helper) { 
 
@@ -90,6 +115,7 @@ public class OnScreenViewOperationChooser extends TranslucentPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /** Creates a new on-screen view operation chooser. */
   public OnScreenViewOperationChooser () { this (BoxLayout.Y_AXIS, false); }
 
   ////////////////////////////////////////////////////////////
@@ -151,6 +177,15 @@ public class OnScreenViewOperationChooser extends TranslucentPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Reconfigures this chooser using the specified layout and modes.
+   *
+   * @param axis the box layout axis.
+   * @param large true to use large icons and spacing.
+   * @param closeAction the close action, or null for no close button.
+   * @param modes the operation modes to show, with null values used as
+   * separators.
+   */
   public void reconfigure (
     int axis,
     boolean large,
@@ -187,6 +222,11 @@ public class OnScreenViewOperationChooser extends TranslucentPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the default set of operation modes.
+   *
+   * @return the default set of operation modes.
+   */
   public Mode[] defaultModes() { 
 
     return (new Mode[] {
@@ -204,6 +244,11 @@ public class OnScreenViewOperationChooser extends TranslucentPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the subset set of operation modes.
+   *
+   * @return the subset set of operation modes.
+   */
   public Mode[] subsetModes() { 
 
     return (new Mode[] {
@@ -217,6 +262,12 @@ public class OnScreenViewOperationChooser extends TranslucentPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a new on-screen view operation chooser.
+   *
+   * @param axis the box layout axis.
+   * @param large true to use large icons and spacing.
+   */
   public OnScreenViewOperationChooser (int axis, boolean large) {
 
     infoMap = new HashMap<>();
@@ -234,10 +285,20 @@ public class OnScreenViewOperationChooser extends TranslucentPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the last selected view operation.
+   *
+   * @return the last selected view operation.
+   */
   public Mode getViewOperation () { return (lastOperation); }
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Performs a view operation and fires a view operation property change.
+   *
+   * @param operation the view operation to perform.
+   */
   public void performViewOperation (Mode operation) {
 
 		lastOperation = operation;
@@ -257,4 +318,3 @@ public class OnScreenViewOperationChooser extends TranslucentPanel {
   ////////////////////////////////////////////////////////////
 
 } // ViewOperationChooser class
-

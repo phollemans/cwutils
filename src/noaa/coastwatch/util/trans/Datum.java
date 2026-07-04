@@ -84,8 +84,8 @@ public class Datum
    * Creates a new geodetic datum based on user-specified spheroid
    * parameters.
    *
-   * @param datumName the datum name.
-   * @param spheroidName the spheroid name.
+   * @param datumName the geodetic datum name.
+   * @param spheroidName the spheroid name for the datum.
    * @param axis the spheroid semi-major axis (meters).
    * @param invFlat the spheroid inverse flattening.
    * @param dx the x-axis shift (meters).
@@ -123,7 +123,7 @@ public class Datum
   /** 
    * Creates a new geodetic datum based on a spheroid code.
    *
-   * @param datumName the datum name.
+   * @param datumName the geodetic datum name.
    * @param spheroid the spheroid code for the datum.
    * @param dx the x-axis shift (meters).
    * @param dy the y-axis shift (meters).
@@ -155,22 +155,38 @@ public class Datum
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the semi-major axis in meters. */
+  /**
+   * Gets the semi-major axis in meters.
+   *
+   * @return the semi-major axis in meters.
+   */
   public double getAxis () { return (axis); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the flattening value. */
+  /**
+   * Gets the flattening value.
+   *
+   * @return the flattening value.
+   */
   public double getFlat () { return (flat); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the eccentricity value squared. */
+  /**
+   * Gets the eccentricity value squared.
+   *
+   * @return the eccentricity value squared.
+   */
   public double getE2 () { return (e2); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the datum name. */
+  /**
+   * Gets the datum name.
+   *
+   * @return the datum name.
+   */
   public String getDatumName() { return (datumName); }
 
   ////////////////////////////////////////////////////////////

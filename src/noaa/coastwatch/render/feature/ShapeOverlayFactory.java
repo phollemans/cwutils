@@ -35,10 +35,16 @@ public class ShapeOverlayFactory {
 
   ////////////////////////////////////////////////////////////
 
+  /** Creates a new shape overlay factory. */
   protected ShapeOverlayFactory () {}
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the shared shape overlay factory instance.
+   *
+   * @return the shared instance.
+   */
   public static ShapeOverlayFactory getInstance() { 
 
 	  if (instance == null) instance = new ShapeOverlayFactory(); 
@@ -54,6 +60,8 @@ public class ShapeOverlayFactory {
    * @param filename the filename of the shape data file to read.
    * 
    * @return the overlay of shape data.
+   *
+   * @throws IOException if the shape data file cannot be opened or read.
    */
   public EarthDataOverlay create (
     String filename

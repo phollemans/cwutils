@@ -442,9 +442,9 @@ import java.util.logging.Level;
  * <p>Note that in legacy parser expressions, boolean result values from
  * operators (==, !=, &gt;, &lt;, &gt;=, &lt;=, &amp;&amp;, ||, !)
  * evaluated to either 1.0 (true) or 0.0 (false).  As a result, legacy parser
- * expressions could treat boolean values as numbers in arithmatic expressions
+ * expressions could treat boolean values as numbers in arithmetic expressions
  * such as addition, subtraction, etc.  This is not the case with the Java
- * parser, and even when emulating the legacy parser, arithmatic operations
+ * parser, and even when emulating the legacy parser, arithmetic operations
  * on boolean values generate a parsing error.  The only solution for this is
  * to modify the expression.  For example:</p>
  * <pre>

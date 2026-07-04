@@ -259,7 +259,7 @@ public class StrokeChooser
    * range [1..10] and the dash pattern must be an entry in the
    * <code>DASH_PATTERNS</code> array.
    *
-   * @param lineWidth the line width.
+   * @param lineWidth the stroke line width.
    * @param dashPattern a dash pattern from the
    * <code>DASH_PATTERNS</code> array.
    *
@@ -322,7 +322,12 @@ public class StrokeChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the stroke selected by this stroke chooser. */
+  /**
+   * Gets the stroke selected by this stroke chooser.
+   *
+   *
+   * @return the stroke selected by this stroke chooser.
+   */
   public Stroke getStroke () { return (stroke); }
 
   ////////////////////////////////////////////////////////////
@@ -333,6 +338,9 @@ public class StrokeChooser
    * must be a stroke object obtained from the
    * <code>getBasicStroke()</code> method in order to be compatible
    * with the chooser.
+   *
+   * @param newStroke the stroke to select.
+   *
    */
   public void setStroke (Stroke newStroke) { 
 
@@ -382,4 +390,3 @@ public class StrokeChooser
 } // StrokeChooser
 
 ////////////////////////////////////////////////////////////////////////
-

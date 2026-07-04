@@ -41,6 +41,8 @@ public class XSymbol
 
   /** The point array for drawing the filled version. */
   private int[] xPoints = new int[4];
+
+  /** The point array for drawing the filled version. */
   private int[] yPoints = new int[4];
 
   ////////////////////////////////////////////////////////////

@@ -47,12 +47,19 @@ public class VisualBoolean
   // Variables
   // ---------
 
-  /** The boolean component button. */
+  /**
+   * The boolean component button.
+   *
+   */
   private JCheckBox checkBox;
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new visual Boolean object using the specified Boolean. */
+  /**
+   * Creates a new visual Boolean object using the specified Boolean.
+   *
+   * @param value the Boolean value to edit.
+   */
   public VisualBoolean (
     Boolean value
   ) {                     

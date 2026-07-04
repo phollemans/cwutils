@@ -324,26 +324,65 @@ public class JELParser implements ExpressionParser {
     /** The Not-a-Number value as a double. */
     public static double NaN = Double.NaN;
   
-    /** Computes the inverse hyperbolic sin of a value. */
+    /** 
+     * Computes the inverse hyperbolic sin of a value. 
+     *
+     * @param x the value to transform.
+     *
+     * @return the inverse hyperbolic sin.
+     */
     public static double asinh (double x) { return (Math.log (x + Math.sqrt (x*x + 1.0))); }
 
-    /** Computes the inverse hyperbolic cosine of a value. */
+    /** 
+     * Computes the inverse hyperbolic cosine of a value. 
+     *
+     * @param x the value to transform.
+     *
+     * @return the inverse hyperbolic cosine.
+     */
     public static double acosh (double x) { return (Math.log (x + Math.sqrt (x*x - 1.0))); }
 
-    /** Computes the inverse hyperbolic tangent of a value. */
+    /** 
+     * Computes the inverse hyperbolic tangent of a value. 
+     *
+     * @param x the value to transform.
+     *
+     * @return the inverse hyperbolic tangent.
+     */
     public static double atanh (double x) { return (0.5*Math.log ((x + 1.0) / (x - 1.0))); }
 
-    /** Computes a sum of values. */
+    /** 
+     * Computes a sum of values. 
+     *
+     * @param values the values to sum.
+     *
+     * @return the sum of the values.
+     */
     public static double sum (double[] values) {
       double sum = 0;
       for (int i = 0; i < values.length; i++) sum += values[i];
       return (sum);
     } // sum
 
-    /** Determines if a double is the NaN value. */
+    /** 
+     * Determines if a double is the NaN value. 
+     *
+     * @param value the value to test.
+     *
+     * @return true if the value is NaN, or false otherwise.
+     */
     public static boolean isNaN (double value) { return (Double.isNaN (value)); }
 
-    /** Computes the physical distance between two locations in kilometers. */
+    /** 
+     * Computes the physical distance between two locations in kilometers. 
+     *
+     * @param lat1 the first latitude.
+     * @param lon1 the first longitude.
+     * @param lat2 the second latitude.
+     * @param lon2 the second longitude.
+     *
+     * @return the distance between the two locations in kilometers.
+     */
     public static double dist (double lat1, double lon1, double lat2, double lon2) {
       return (EarthLocation.distance (lat1, lon1, lat2, lon2));
     } // dist
@@ -351,6 +390,10 @@ public class JELParser implements ExpressionParser {
     /**
      * Gets the index of the minimum value in the array, or -1 if there is no
      * minimum (ie: all values are NaN).
+     *
+     * @param values the values to search.
+     *
+     * @return the index of the minimum value.
      */
     public static int indexOfMin (double[] values) {
 
@@ -371,6 +414,10 @@ public class JELParser implements ExpressionParser {
     /**
      * Gets the index of the maximum value in the array, or -1 if there is no
      * maximum (ie: all values are NaN).
+     *
+     * @param values the values to search.
+     *
+     * @return the index of the maximum value.
      */
     public static int indexOfMax (double[] values) {
 
@@ -388,12 +435,26 @@ public class JELParser implements ExpressionParser {
 
     } // indexOfMax
 
-    /** Gets the specified value from the array, or NaN if the index is -1. */
+    /** 
+     * Gets the specified value from the array, or NaN if the index is -1. 
+     *
+     * @param index the array index.
+     * @param array the array of values.
+     *
+     * @return the array value, or NaN if the index is -1.
+     */
     public static double getValue (int index, double[] array) {
       return (index == -1 ? Double.NaN : array[index]);
     } // getValue
 
-    /** Gets the specified value from the array, or NaN if the index is -1. */
+    /** 
+     * Gets the specified value from the array, or NaN if the index is -1. 
+     *
+     * @param index the array index.
+     * @param array the array of values.
+     *
+     * @return the array value, or NaN if the index is -1.
+     */
     public static float getValue (int index, float[] array) {
       return (index == -1 ? Float.NaN : array[index]);
     } // getValue
@@ -406,6 +467,8 @@ public class JELParser implements ExpressionParser {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurred running the tests.
    */
   public static void main (String[] argv) throws Exception {
 
@@ -471,4 +534,3 @@ public class JELParser implements ExpressionParser {
 } // JELParser class
 
 ////////////////////////////////////////////////////////////////////////
-

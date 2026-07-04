@@ -154,6 +154,11 @@ public class EarthDataViewController {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the navigation analysis panel.
+   *
+   * @return the navigation analysis panel.
+   */
   public NavigationAnalysisPanel getNavAnalysisPanel () { return (navAnalysisPanel); }
 
   ////////////////////////////////////////////////////////////
@@ -182,6 +187,9 @@ public class EarthDataViewController {
   ////////////////////////////////////////////////////////////
 
   /**
+   * Gets the survey chooser.
+   *
+   * @return the survey chooser.
    * @since 3.8.1
    */
   public SurveyListChooser getSurveyChooser () { return (surveyChooser); }
@@ -189,32 +197,65 @@ public class EarthDataViewController {
   ////////////////////////////////////////////////////////////
 
   /**
+   * Gets the annotation chooser.
+   *
+   * @return the annotation chooser.
    * @since 3.8.1
    */
   public AnnotationListChooser getAnnotationChooser () { return (annotationChooser); }
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the variable chooser.
+   *
+   * @return the variable chooser.
+   */
   public VariableChooser getVariableChooser () { return (variableChooser); }
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the view panel.
+   *
+   * @return the view panel.
+   */
   public EarthDataViewPanel getViewPanel () { return (viewPanel); }
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the light table.
+   *
+   * @return the light table.
+   */
   public LightTable getLightTable () { return (lightTable); }
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the legend panel.
+   *
+   * @return the legend panel.
+   */
   public LegendPanel getLegendPanel () { return (legendPanel); }
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the view operation chooser.
+   *
+   * @return the view operation chooser.
+   */
   public OnScreenViewOperationChooser getViewOperationChooser() { return (viewOperationChooser); }
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the message display operation.
+   *
+   * @return the message display operation.
+   */
   public MessageDisplayOperation getMessageOperation() { return (messageOperation); }
 
   ////////////////////////////////////////////////////////////

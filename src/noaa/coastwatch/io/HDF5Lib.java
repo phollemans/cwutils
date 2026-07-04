@@ -102,1910 +102,7170 @@ public class HDF5Lib {
    * singleton object is guaranteed to have thread-safe access to the library.
    */
 
+  /**
+   * Thread-safe wrapper for <code>H5.H5open</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5open () throws HDF5LibraryException {
     return (H5.H5open ());
   } // H5open
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Acopy</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Acopy (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Acopy (arg0, arg1));
   } // H5Acopy
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aclose</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Aclose (int arg0) throws HDF5LibraryException {
     return (H5.H5Aclose (arg0));
   } // H5Aclose
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5close</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5close () throws HDF5LibraryException {
     return (H5.H5close ());
   } // H5close
   
+  /**
+   * Thread-safe wrapper for <code>H5.loadH5Lib</code>.
+   */
   public synchronized void loadH5Lib () {
     H5.loadH5Lib ();
   } // loadH5Lib
   
+  /**
+   * Thread-safe wrapper for <code>H5.getOpenIDCount</code>.
+   *
+   * @return the value returned by the wrapped method.
+   */
   public synchronized int getOpenIDCount () {
     return (H5.getOpenIDCount ());
   } // getOpenIDCount
   
+  /**
+   * Thread-safe wrapper for <code>H5.getOpenIDs</code>.
+   *
+   * @return the value returned by the wrapped method.
+   */
   public synchronized Collection getOpenIDs () {
     return (H5.getOpenIDs ());
   } // getOpenIDs
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5check_version</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   */
   public synchronized int H5check_version (int arg0, int arg1, int arg2) {
     return (H5.H5check_version (arg0, arg1, arg2));
   } // H5check_version
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5error_off</code>.
+   *
+   * @return the value returned by the wrapped method.
+   */
   public synchronized int H5error_off () {
     return (H5.H5error_off ());
   } // H5error_off
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5garbage_collect</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5garbage_collect () throws HDF5LibraryException {
     return (H5.H5garbage_collect ());
   } // H5garbage_collect
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5get_libversion</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5get_libversion (int[] arg0) throws HDF5LibraryException {
     return (H5.H5get_libversion (arg0));
   } // H5get_libversion
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5set_free_list_limits</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5set_free_list_limits (int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) throws HDF5LibraryException {
     return (H5.H5set_free_list_limits (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5set_free_list_limits
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5export_dataset</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5export_dataset (String arg0, String arg1, String arg2, int arg3) throws HDF5LibraryException {
     H5.H5export_dataset (arg0, arg1, arg2, arg3);
   } // H5export_dataset
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Acreate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Acreate (int arg0, String arg1, int arg2, int arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Acreate (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Acreate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Acreate_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   * @param arg7 the eighth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Acreate_by_name (int arg0, String arg1, String arg2, int arg3, int arg4, int arg5, int arg6, int arg7) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Acreate_by_name (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
   } // H5Acreate_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Adelete</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Adelete (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Adelete (arg0, arg1));
   } // H5Adelete
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Adelete_by_idx</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Adelete_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Adelete_by_idx (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Adelete_by_idx
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Adelete_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Adelete_by_name (int arg0, String arg1, String arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Adelete_by_name (arg0, arg1, arg2, arg3));
   } // H5Adelete_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aexists</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Aexists (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aexists (arg0, arg1));
   } // H5Aexists
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aexists_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Aexists_by_name (int arg0, String arg1, String arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aexists_by_name (arg0, arg1, arg2, arg3));
   } // H5Aexists_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aget_info</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized H5A_info_t H5Aget_info (int arg0) throws HDF5LibraryException {
     return (H5.H5Aget_info (arg0));
   } // H5Aget_info
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aget_info_by_idx</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized H5A_info_t H5Aget_info_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aget_info_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Aget_info_by_idx
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aget_info_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized H5A_info_t H5Aget_info_by_name (int arg0, String arg1, String arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aget_info_by_name (arg0, arg1, arg2, arg3));
   } // H5Aget_info_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aget_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws ArrayIndexOutOfBoundsException if thrown by the wrapped method.
+   * @throws ArrayStoreException if thrown by the wrapped method.
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized long H5Aget_name (int arg0, String[] arg1) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Aget_name (arg0, arg1));
   } // H5Aget_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aget_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws ArrayIndexOutOfBoundsException if thrown by the wrapped method.
+   * @throws ArrayStoreException if thrown by the wrapped method.
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized long H5Aget_name (int arg0, long arg1, String[] arg2) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Aget_name (arg0, arg1, arg2));
   } // H5Aget_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aget_name_by_idx</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized String H5Aget_name_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aget_name_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Aget_name_by_idx
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aget_space</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Aget_space (int arg0) throws HDF5LibraryException {
     return (H5.H5Aget_space (arg0));
   } // H5Aget_space
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aget_storage_size</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Aget_storage_size (int arg0) throws HDF5LibraryException {
     return (H5.H5Aget_storage_size (arg0));
   } // H5Aget_storage_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aget_type</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Aget_type (int arg0) throws HDF5LibraryException {
     return (H5.H5Aget_type (arg0));
   } // H5Aget_type
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aopen</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Aopen (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aopen (arg0, arg1, arg2));
   } // H5Aopen
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aopen_by_idx</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Aopen_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5, int arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aopen_by_idx (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Aopen_by_idx
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aopen_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Aopen_by_name (int arg0, String arg1, String arg2, int arg3, int arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aopen_by_name (arg0, arg1, arg2, arg3, arg4));
   } // H5Aopen_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aread</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Aread (int arg0, int arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aread (arg0, arg1, arg2));
   } // H5Aread
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aread</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Aread (int arg0, int arg1, Object arg2) throws HDF5Exception, NullPointerException {
     return (H5.H5Aread (arg0, arg1, arg2));
   } // H5Aread
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5AreadVL</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5AreadVL (int arg0, int arg1, String[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5AreadVL (arg0, arg1, arg2));
   } // H5AreadVL
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5AreadComplex</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5AreadComplex (int arg0, int arg1, String[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5AreadComplex (arg0, arg1, arg2));
   } // H5AreadComplex
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Arename</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Arename (int arg0, String arg1, String arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Arename (arg0, arg1, arg2));
   } // H5Arename
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Arename_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Arename_by_name (int arg0, String arg1, String arg2, String arg3, int arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Arename_by_name (arg0, arg1, arg2, arg3, arg4));
   } // H5Arename_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Awrite</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Awrite (int arg0, int arg1, Object arg2) throws HDF5Exception, NullPointerException {
     return (H5.H5Awrite (arg0, arg1, arg2));
   } // H5Awrite
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Awrite</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Awrite (int arg0, int arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Awrite (arg0, arg1, arg2));
   } // H5Awrite
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5AwriteVL</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5AwriteVL (int arg0, int arg1, String[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5AwriteVL (arg0, arg1, arg2));
   } // H5AwriteVL
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aget_create_plist</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Aget_create_plist (int arg0) throws HDF5LibraryException {
     return (H5.H5Aget_create_plist (arg0));
   } // H5Aget_create_plist
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aiterate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Aiterate (int arg0, int arg1, int arg2, long arg3, H5A_iterate_cb arg4, H5A_iterate_t arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aiterate (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Aiterate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Aiterate_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   * @param arg7 the eighth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Aiterate_by_name (int arg0, String arg1, int arg2, int arg3, long arg4, H5A_iterate_cb arg5, H5A_iterate_t arg6, int arg7) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Aiterate_by_name (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
   } // H5Aiterate_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dcopy</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Dcopy (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Dcopy (arg0, arg1));
   } // H5Dcopy
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dclose</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Dclose (int arg0) throws HDF5LibraryException {
     return (H5.H5Dclose (arg0));
   } // H5Dclose
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dcreate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dcreate (int arg0, String arg1, int arg2, int arg3, int arg4, int arg5, int arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dcreate (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dcreate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dcreate_anon</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Dcreate_anon (int arg0, int arg1, int arg2, int arg3, int arg4) throws HDF5LibraryException {
     return (H5.H5Dcreate_anon (arg0, arg1, arg2, arg3, arg4));
   } // H5Dcreate_anon
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dfill</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Dfill (byte[] arg0, int arg1, byte[] arg2, int arg3, int arg4) throws HDF5LibraryException, NullPointerException {
     H5.H5Dfill (arg0, arg1, arg2, arg3, arg4);
   } // H5Dfill
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dget_access_plist</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Dget_access_plist (int arg0) throws HDF5LibraryException {
     return (H5.H5Dget_access_plist (arg0));
   } // H5Dget_access_plist
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dget_create_plist</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Dget_create_plist (int arg0) throws HDF5LibraryException {
     return (H5.H5Dget_create_plist (arg0));
   } // H5Dget_create_plist
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dget_offset</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Dget_offset (int arg0) throws HDF5LibraryException {
     return (H5.H5Dget_offset (arg0));
   } // H5Dget_offset
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dget_space</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Dget_space (int arg0) throws HDF5LibraryException {
     return (H5.H5Dget_space (arg0));
   } // H5Dget_space
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dget_space_status</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dget_space_status (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dget_space_status (arg0, arg1));
   } // H5Dget_space_status
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dget_space_status</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Dget_space_status (int arg0) throws HDF5LibraryException {
     return (H5.H5Dget_space_status (arg0));
   } // H5Dget_space_status
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dget_storage_size</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized long H5Dget_storage_size (int arg0) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Dget_storage_size (arg0));
   } // H5Dget_storage_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dget_type</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Dget_type (int arg0) throws HDF5LibraryException {
     return (H5.H5Dget_type (arg0));
   } // H5Dget_type
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Diterate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Diterate (byte[] arg0, int arg1, int arg2, H5D_iterate_cb arg3, H5D_iterate_t arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Diterate (arg0, arg1, arg2, arg3, arg4));
   } // H5Diterate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dopen</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dopen (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dopen (arg0, arg1, arg2));
   } // H5Dopen
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread (int arg0, int arg1, int arg2, int arg3, int arg4, Object arg5) throws HDF5Exception, HDF5LibraryException, NullPointerException {
     return (H5.H5Dread (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread (int arg0, int arg1, int arg2, int arg3, int arg4, Object arg5, boolean arg6) throws HDF5Exception, HDF5LibraryException, NullPointerException {
     return (H5.H5Dread (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dread
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread (int arg0, int arg1, int arg2, int arg3, int arg4, byte[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread (int arg0, int arg1, int arg2, int arg3, int arg4, byte[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dread
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread_double</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread_double (int arg0, int arg1, int arg2, int arg3, int arg4, double[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_double (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_double
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread_double</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread_double (int arg0, int arg1, int arg2, int arg3, int arg4, double[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_double (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dread_double
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread_float</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread_float (int arg0, int arg1, int arg2, int arg3, int arg4, float[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_float (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dread_float
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread_float</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread_float (int arg0, int arg1, int arg2, int arg3, int arg4, float[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_float (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_float
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread_int</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread_int (int arg0, int arg1, int arg2, int arg3, int arg4, int[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_int (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_int
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread_int</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread_int (int arg0, int arg1, int arg2, int arg3, int arg4, int[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_int (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dread_int
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread_long</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread_long (int arg0, int arg1, int arg2, int arg3, int arg4, long[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_long (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_long
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread_long</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread_long (int arg0, int arg1, int arg2, int arg3, int arg4, long[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_long (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dread_long
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread_reg_ref</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread_reg_ref (int arg0, int arg1, int arg2, int arg3, int arg4, String[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_reg_ref (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_reg_ref
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread_reg_ref_data</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread_reg_ref_data (int arg0, int arg1, int arg2, int arg3, int arg4, String[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_reg_ref_data (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_reg_ref_data
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread_short</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread_short (int arg0, int arg1, int arg2, int arg3, int arg4, short[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_short (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_short
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread_short</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread_short (int arg0, int arg1, int arg2, int arg3, int arg4, short[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_short (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dread_short
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dread_string</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dread_string (int arg0, int arg1, int arg2, int arg3, int arg4, String[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dread_string (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dread_string
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5DreadVL</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5DreadVL (int arg0, int arg1, int arg2, int arg3, int arg4, Object[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5DreadVL (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5DreadVL
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dset_extent</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Dset_extent (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
     H5.H5Dset_extent (arg0, arg1);
   } // H5Dset_extent
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dvlen_get_buf_size</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Dvlen_get_buf_size (int arg0, int arg1, int arg2, int[] arg3) throws HDF5LibraryException {
     return (H5.H5Dvlen_get_buf_size (arg0, arg1, arg2, arg3));
   } // H5Dvlen_get_buf_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dvlen_get_buf_size_long</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Dvlen_get_buf_size_long (int arg0, int arg1, int arg2) throws HDF5LibraryException {
     return (H5.H5Dvlen_get_buf_size_long (arg0, arg1, arg2));
   } // H5Dvlen_get_buf_size_long
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dvlen_reclaim</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dvlen_reclaim (int arg0, int arg1, int arg2, byte[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dvlen_reclaim (arg0, arg1, arg2, arg3));
   } // H5Dvlen_reclaim
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite (int arg0, int arg1, int arg2, int arg3, int arg4, byte[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dwrite
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite (int arg0, int arg1, int arg2, int arg3, int arg4, Object arg5, boolean arg6) throws HDF5Exception, HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dwrite
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite (int arg0, int arg1, int arg2, int arg3, int arg4, Object arg5) throws HDF5Exception, HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dwrite
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite (int arg0, int arg1, int arg2, int arg3, int arg4, byte[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dwrite
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite_double</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite_double (int arg0, int arg1, int arg2, int arg3, int arg4, double[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_double (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dwrite_double
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite_double</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite_double (int arg0, int arg1, int arg2, int arg3, int arg4, double[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_double (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dwrite_double
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite_float</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite_float (int arg0, int arg1, int arg2, int arg3, int arg4, float[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_float (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dwrite_float
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite_float</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite_float (int arg0, int arg1, int arg2, int arg3, int arg4, float[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_float (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dwrite_float
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite_int</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite_int (int arg0, int arg1, int arg2, int arg3, int arg4, int[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_int (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dwrite_int
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite_int</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite_int (int arg0, int arg1, int arg2, int arg3, int arg4, int[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_int (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dwrite_int
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite_long</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite_long (int arg0, int arg1, int arg2, int arg3, int arg4, long[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_long (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dwrite_long
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite_long</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite_long (int arg0, int arg1, int arg2, int arg3, int arg4, long[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_long (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dwrite_long
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite_short</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite_short (int arg0, int arg1, int arg2, int arg3, int arg4, short[] arg5, boolean arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_short (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Dwrite_short
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Dwrite_short</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Dwrite_short (int arg0, int arg1, int arg2, int arg3, int arg4, short[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Dwrite_short (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Dwrite_short
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5DwriteString</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5DwriteString (int arg0, int arg1, int arg2, int arg3, int arg4, String[] arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5DwriteString (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5DwriteString
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eauto_is_v2</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Eauto_is_v2 (int arg0) throws HDF5LibraryException {
     return (H5.H5Eauto_is_v2 (arg0));
   } // H5Eauto_is_v2
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eclear</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Eclear (int arg0) throws HDF5LibraryException {
     H5.H5Eclear (arg0);
   } // H5Eclear
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eclear</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Eclear () throws HDF5LibraryException {
     return (H5.H5Eclear ());
   } // H5Eclear
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eclear2</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Eclear2 (int arg0) throws HDF5LibraryException {
     H5.H5Eclear2 (arg0);
   } // H5Eclear2
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eclose_msg</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Eclose_msg (int arg0) throws HDF5LibraryException {
     H5.H5Eclose_msg (arg0);
   } // H5Eclose_msg
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eclose_stack</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Eclose_stack (int arg0) throws HDF5LibraryException {
     H5.H5Eclose_stack (arg0);
   } // H5Eclose_stack
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Ecreate_msg</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Ecreate_msg (int arg0, int arg1, String arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Ecreate_msg (arg0, arg1, arg2));
   } // H5Ecreate_msg
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Ecreate_stack</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Ecreate_stack () throws HDF5LibraryException {
     return (H5.H5Ecreate_stack ());
   } // H5Ecreate_stack
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eget_class_name</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized String H5Eget_class_name (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Eget_class_name (arg0));
   } // H5Eget_class_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eget_current_stack</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Eget_current_stack () throws HDF5LibraryException {
     return (H5.H5Eget_current_stack ());
   } // H5Eget_current_stack
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eset_current_stack</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Eset_current_stack (int arg0) throws HDF5LibraryException {
     H5.H5Eset_current_stack (arg0);
   } // H5Eset_current_stack
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eget_msg</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized String H5Eget_msg (int arg0, int[] arg1) throws HDF5LibraryException {
     return (H5.H5Eget_msg (arg0, arg1));
   } // H5Eget_msg
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eget_num</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized long H5Eget_num (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Eget_num (arg0));
   } // H5Eget_num
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eprint2</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Eprint2 (int arg0, Object arg1) throws HDF5LibraryException {
     H5.H5Eprint2 (arg0, arg1);
   } // H5Eprint2
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Epop</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Epop (int arg0, long arg1) throws HDF5LibraryException {
     H5.H5Epop (arg0, arg1);
   } // H5Epop
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Epush</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   * @param arg7 the eighth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Epush (int arg0, String arg1, String arg2, int arg3, int arg4, int arg5, int arg6, String arg7) throws HDF5LibraryException, NullPointerException {
     H5.H5Epush (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
   } // H5Epush
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Epush2</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   * @param arg7 the eighth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Epush2 (int arg0, String arg1, String arg2, int arg3, int arg4, int arg5, int arg6, String arg7) throws HDF5LibraryException, NullPointerException {
     H5.H5Epush2 (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);
   } // H5Epush2
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eregister_class</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Eregister_class (String arg0, String arg1, String arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Eregister_class (arg0, arg1, arg2));
   } // H5Eregister_class
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Eunregister_class</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Eunregister_class (int arg0) throws HDF5LibraryException {
     H5.H5Eunregister_class (arg0);
   } // H5Eunregister_class
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Ewalk</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Ewalk (int arg0, int arg1, H5E_walk_cb arg2, H5E_walk_t arg3) throws HDF5LibraryException, NullPointerException {
     H5.H5Ewalk (arg0, arg1, arg2, arg3);
   } // H5Ewalk
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Ewalk2</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Ewalk2 (int arg0, int arg1, H5E_walk_cb arg2, H5E_walk_t arg3) throws HDF5LibraryException, NullPointerException {
     H5.H5Ewalk2 (arg0, arg1, arg2, arg3);
   } // H5Ewalk2
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fclose</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Fclose (int arg0) throws HDF5LibraryException {
     return (H5.H5Fclose (arg0));
   } // H5Fclose
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fopen</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Fopen (String arg0, int arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Fopen (arg0, arg1, arg2));
   } // H5Fopen
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Freopen</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Freopen (int arg0) throws HDF5LibraryException {
     return (H5.H5Freopen (arg0));
   } // H5Freopen
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fcreate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Fcreate (String arg0, int arg1, int arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Fcreate (arg0, arg1, arg2, arg3));
   } // H5Fcreate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fflush</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Fflush (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Fflush (arg0, arg1));
   } // H5Fflush
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_access_plist</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Fget_access_plist (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_access_plist (arg0));
   } // H5Fget_access_plist
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_create_plist</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Fget_create_plist (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_create_plist (arg0));
   } // H5Fget_create_plist
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_filesize</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Fget_filesize (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_filesize (arg0));
   } // H5Fget_filesize
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_freespace</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Fget_freespace (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_freespace (arg0));
   } // H5Fget_freespace
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_intent</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Fget_intent (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_intent (arg0));
   } // H5Fget_intent
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_mdc_hit_rate</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized double H5Fget_mdc_hit_rate (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_mdc_hit_rate (arg0));
   } // H5Fget_mdc_hit_rate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_mdc_size</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Fget_mdc_size (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Fget_mdc_size (arg0, arg1));
   } // H5Fget_mdc_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized String H5Fget_name (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Fget_name (arg0, arg1));
   } // H5Fget_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_name</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized String H5Fget_name (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_name (arg0));
   } // H5Fget_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_obj_count</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Fget_obj_count (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Fget_obj_count (arg0, arg1));
   } // H5Fget_obj_count
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_obj_count_long</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Fget_obj_count_long (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Fget_obj_count_long (arg0, arg1));
   } // H5Fget_obj_count_long
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_obj_ids</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Fget_obj_ids (int arg0, int arg1, int arg2, int[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Fget_obj_ids (arg0, arg1, arg2, arg3));
   } // H5Fget_obj_ids
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_obj_ids_long</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized long H5Fget_obj_ids_long (int arg0, int arg1, long arg2, int[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Fget_obj_ids_long (arg0, arg1, arg2, arg3));
   } // H5Fget_obj_ids_long
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fis_hdf5</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Fis_hdf5 (String arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Fis_hdf5 (arg0));
   } // H5Fis_hdf5
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fmount</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Fmount (int arg0, String arg1, int arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Fmount (arg0, arg1, arg2, arg3));
   } // H5Fmount
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Funmount</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Funmount (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Funmount (arg0, arg1));
   } // H5Funmount
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Freset_mdc_hit_rate_stats</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Freset_mdc_hit_rate_stats (int arg0) throws HDF5LibraryException {
     H5.H5Freset_mdc_hit_rate_stats (arg0);
   } // H5Freset_mdc_hit_rate_stats
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fget_info</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized H5F_info_t H5Fget_info (int arg0) throws HDF5LibraryException {
     return (H5.H5Fget_info (arg0));
   } // H5Fget_info
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Fclear_elink_file_cache</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Fclear_elink_file_cache (int arg0) throws HDF5LibraryException {
     H5.H5Fclear_elink_file_cache (arg0);
   } // H5Fclear_elink_file_cache
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gclose</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Gclose (int arg0) throws HDF5LibraryException {
     return (H5.H5Gclose (arg0));
   } // H5Gclose
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gcreate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Gcreate (int arg0, String arg1, int arg2, int arg3, int arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gcreate (arg0, arg1, arg2, arg3, arg4));
   } // H5Gcreate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gcreate_anon</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Gcreate_anon (int arg0, int arg1, int arg2) throws HDF5LibraryException {
     return (H5.H5Gcreate_anon (arg0, arg1, arg2));
   } // H5Gcreate_anon
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gget_create_plist</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Gget_create_plist (int arg0) throws HDF5LibraryException {
     return (H5.H5Gget_create_plist (arg0));
   } // H5Gget_create_plist
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gget_info</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized H5G_info_t H5Gget_info (int arg0) throws HDF5LibraryException {
     return (H5.H5Gget_info (arg0));
   } // H5Gget_info
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gget_info_by_idx</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized H5G_info_t H5Gget_info_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_info_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Gget_info_by_idx
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gget_info_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized H5G_info_t H5Gget_info_by_name (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_info_by_name (arg0, arg1, arg2));
   } // H5Gget_info_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gget_obj_info_all</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   * @param arg7 the eighth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Gget_obj_info_all (int arg0, String arg1, String[] arg2, int[] arg3, int[] arg4, long[] arg5, long[] arg6, int arg7) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_obj_info_all (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
   } // H5Gget_obj_info_all
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gget_obj_info_all</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Gget_obj_info_all (int arg0, String arg1, String[] arg2, int[] arg3, int[] arg4, long[] arg5, int arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_obj_info_all (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Gget_obj_info_all
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gget_obj_info_all</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Gget_obj_info_all (int arg0, String arg1, String[] arg2, int[] arg3, long[] arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_obj_info_all (arg0, arg1, arg2, arg3, arg4));
   } // H5Gget_obj_info_all
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gget_obj_info_full</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   * @param arg7 the eighth argument.
+   * @param arg8 the ninth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Gget_obj_info_full (int arg0, String arg1, String[] arg2, int[] arg3, int[] arg4, long[] arg5, long[] arg6, int arg7, int arg8) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_obj_info_full (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8));
   } // H5Gget_obj_info_full
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gget_obj_info_idx</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Gget_obj_info_idx (int arg0, String arg1, int arg2, String[] arg3, int[] arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_obj_info_idx (arg0, arg1, arg2, arg3, arg4));
   } // H5Gget_obj_info_idx
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gget_obj_info_max</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Gget_obj_info_max (int arg0, String[] arg1, int[] arg2, int[] arg3, long[] arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gget_obj_info_max (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Gget_obj_info_max
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gn_members_long</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized long H5Gn_members_long (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gn_members_long (arg0, arg1));
   } // H5Gn_members_long
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gn_members</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Gn_members (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gn_members (arg0, arg1));
   } // H5Gn_members
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Gopen</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Gopen (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Gopen (arg0, arg1, arg2));
   } // H5Gopen
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Iget_file_id</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Iget_file_id (int arg0) throws HDF5LibraryException {
     return (H5.H5Iget_file_id (arg0));
   } // H5Iget_file_id
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Iget_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized long H5Iget_name (int arg0, String[] arg1, long arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Iget_name (arg0, arg1, arg2));
   } // H5Iget_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Iget_ref</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Iget_ref (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Iget_ref (arg0));
   } // H5Iget_ref
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Idec_ref</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Idec_ref (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Idec_ref (arg0));
   } // H5Idec_ref
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Iinc_ref</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Iinc_ref (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Iinc_ref (arg0));
   } // H5Iinc_ref
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Iget_type</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Iget_type (int arg0) throws HDF5LibraryException {
     return (H5.H5Iget_type (arg0));
   } // H5Iget_type
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Iget_type_ref</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Iget_type_ref (int arg0) throws HDF5LibraryException {
     return (H5.H5Iget_type_ref (arg0));
   } // H5Iget_type_ref
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Idec_type_ref</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Idec_type_ref (int arg0) throws HDF5LibraryException {
     return (H5.H5Idec_type_ref (arg0));
   } // H5Idec_type_ref
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Iinc_type_ref</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Iinc_type_ref (int arg0) throws HDF5LibraryException {
     return (H5.H5Iinc_type_ref (arg0));
   } // H5Iinc_type_ref
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Inmembers</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Inmembers (int arg0) throws HDF5LibraryException {
     return (H5.H5Inmembers (arg0));
   } // H5Inmembers
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Iis_valid</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Iis_valid (int arg0) throws HDF5LibraryException {
     return (H5.H5Iis_valid (arg0));
   } // H5Iis_valid
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Itype_exists</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Itype_exists (int arg0) throws HDF5LibraryException {
     return (H5.H5Itype_exists (arg0));
   } // H5Itype_exists
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Iclear_type</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Iclear_type (int arg0, boolean arg1) throws HDF5LibraryException {
     H5.H5Iclear_type (arg0, arg1);
   } // H5Iclear_type
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Idestroy_type</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Idestroy_type (int arg0) throws HDF5LibraryException {
     H5.H5Idestroy_type (arg0);
   } // H5Idestroy_type
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lcopy</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Lcopy (int arg0, String arg1, int arg2, String arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Lcopy (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Lcopy
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lcreate_external</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Lcreate_external (String arg0, String arg1, int arg2, String arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Lcreate_external (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Lcreate_external
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lcreate_hard</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Lcreate_hard (int arg0, String arg1, int arg2, String arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Lcreate_hard (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Lcreate_hard
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lcreate_soft</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Lcreate_soft (String arg0, int arg1, String arg2, int arg3, int arg4) throws HDF5LibraryException, NullPointerException {
     H5.H5Lcreate_soft (arg0, arg1, arg2, arg3, arg4);
   } // H5Lcreate_soft
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Ldelete</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Ldelete (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     H5.H5Ldelete (arg0, arg1, arg2);
   } // H5Ldelete
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Ldelete_by_idx</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Ldelete_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Ldelete_by_idx (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Ldelete_by_idx
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lexists</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Lexists (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lexists (arg0, arg1, arg2));
   } // H5Lexists
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lget_info</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized H5L_info_t H5Lget_info (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lget_info (arg0, arg1, arg2));
   } // H5Lget_info
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lget_info_by_idx</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized H5L_info_t H5Lget_info_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lget_info_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Lget_info_by_idx
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lget_name_by_idx</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized String H5Lget_name_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lget_name_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Lget_name_by_idx
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lget_val</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Lget_val (int arg0, String arg1, String[] arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lget_val (arg0, arg1, arg2, arg3));
   } // H5Lget_val
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lget_val_by_idx</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Lget_val_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, String[] arg5, int arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lget_val_by_idx (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Lget_val_by_idx
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Literate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Literate (int arg0, int arg1, int arg2, long arg3, H5L_iterate_cb arg4, H5L_iterate_t arg5) throws HDF5LibraryException {
     return (H5.H5Literate (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Literate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Literate_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   * @param arg7 the eighth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Literate_by_name (int arg0, String arg1, int arg2, int arg3, long arg4, H5L_iterate_cb arg5, H5L_iterate_t arg6, int arg7) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Literate_by_name (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
   } // H5Literate_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lmove</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Lmove (int arg0, String arg1, int arg2, String arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Lmove (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Lmove
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lvisit</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Lvisit (int arg0, int arg1, int arg2, H5L_iterate_cb arg3, H5L_iterate_t arg4) throws HDF5LibraryException {
     return (H5.H5Lvisit (arg0, arg1, arg2, arg3, arg4));
   } // H5Lvisit
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lvisit_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Lvisit_by_name (int arg0, String arg1, int arg2, int arg3, H5L_iterate_cb arg4, H5L_iterate_t arg5, int arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Lvisit_by_name (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Lvisit_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lis_registered</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Lis_registered (int arg0) throws HDF5LibraryException {
     return (H5.H5Lis_registered (arg0));
   } // H5Lis_registered
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Lunregister</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Lunregister (int arg0) throws HDF5LibraryException {
     H5.H5Lunregister (arg0);
   } // H5Lunregister
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Oclose</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Oclose (int arg0) throws HDF5LibraryException {
     return (H5.H5Oclose (arg0));
   } // H5Oclose
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Ocopy</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Ocopy (int arg0, String arg1, int arg2, String arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Ocopy (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Ocopy
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Oget_comment</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized String H5Oget_comment (int arg0) throws HDF5LibraryException {
     return (H5.H5Oget_comment (arg0));
   } // H5Oget_comment
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Oget_comment_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized String H5Oget_comment_by_name (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Oget_comment_by_name (arg0, arg1, arg2));
   } // H5Oget_comment_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Oget_info</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized H5O_info_t H5Oget_info (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Oget_info (arg0));
   } // H5Oget_info
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Oget_info_by_idx</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized H5O_info_t H5Oget_info_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Oget_info_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Oget_info_by_idx
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Oget_info_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized H5O_info_t H5Oget_info_by_name (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Oget_info_by_name (arg0, arg1, arg2));
   } // H5Oget_info_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Olink</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Olink (int arg0, int arg1, String arg2, int arg3, int arg4) throws HDF5LibraryException, NullPointerException {
     H5.H5Olink (arg0, arg1, arg2, arg3, arg4);
   } // H5Olink
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Oopen</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Oopen (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Oopen (arg0, arg1, arg2));
   } // H5Oopen
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Ovisit</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Ovisit (int arg0, int arg1, int arg2, H5O_iterate_cb arg3, H5O_iterate_t arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Ovisit (arg0, arg1, arg2, arg3, arg4));
   } // H5Ovisit
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Ovisit_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Ovisit_by_name (int arg0, String arg1, int arg2, int arg3, H5O_iterate_cb arg4, H5O_iterate_t arg5, int arg6) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Ovisit_by_name (arg0, arg1, arg2, arg3, arg4, arg5, arg6));
   } // H5Ovisit_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Oexists_by_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Oexists_by_name (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Oexists_by_name (arg0, arg1, arg2));
   } // H5Oexists_by_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Odecr_refcount</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Odecr_refcount (int arg0) throws HDF5LibraryException {
     H5.H5Odecr_refcount (arg0);
   } // H5Odecr_refcount
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Oincr_refcount</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Oincr_refcount (int arg0) throws HDF5LibraryException {
     H5.H5Oincr_refcount (arg0);
   } // H5Oincr_refcount
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Oopen_by_addr</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Oopen_by_addr (int arg0, long arg1) throws HDF5LibraryException {
     return (H5.H5Oopen_by_addr (arg0, arg1));
   } // H5Oopen_by_addr
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Oopen_by_idx</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Oopen_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Oopen_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Oopen_by_idx
   
+  /**
+   * Thread-safe wrapper for <code>H5._H5Oopen_by_idx</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int _H5Oopen_by_idx (int arg0, String arg1, int arg2, int arg3, long arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     return (H5._H5Oopen_by_idx (arg0, arg1, arg2, arg3, arg4, arg5));
   } // _H5Oopen_by_idx
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_class_name</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized String H5Pget_class_name (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_class_name (arg0));
   } // H5Pget_class_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pcreate</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pcreate (int arg0) throws HDF5LibraryException {
     return (H5.H5Pcreate (arg0));
   } // H5Pcreate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget (int arg0, String arg1) throws HDF5LibraryException {
     return (H5.H5Pget (arg0, arg1));
   } // H5Pget
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset (int arg0, String arg1, int arg2) throws HDF5LibraryException {
     return (H5.H5Pset (arg0, arg1, arg2));
   } // H5Pset
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pexist</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pexist (int arg0, String arg1) throws HDF5LibraryException {
     return (H5.H5Pexist (arg0, arg1));
   } // H5Pexist
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_size</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Pget_size (int arg0, String arg1) throws HDF5LibraryException {
     return (H5.H5Pget_size (arg0, arg1));
   } // H5Pget_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_nprops</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Pget_nprops (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_nprops (arg0));
   } // H5Pget_nprops
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_class</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_class (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_class (arg0));
   } // H5Pget_class
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_class_parent</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_class_parent (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_class_parent (arg0));
   } // H5Pget_class_parent
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pequal</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pequal (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Pequal (arg0, arg1));
   } // H5Pequal
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5P_equal</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5P_equal (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5P_equal (arg0, arg1));
   } // H5P_equal
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pisa_class</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pisa_class (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Pisa_class (arg0, arg1));
   } // H5Pisa_class
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pcopy_prop</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pcopy_prop (int arg0, int arg1, String arg2) throws HDF5LibraryException {
     return (H5.H5Pcopy_prop (arg0, arg1, arg2));
   } // H5Pcopy_prop
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Premove</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Premove (int arg0, String arg1) throws HDF5LibraryException {
     return (H5.H5Premove (arg0, arg1));
   } // H5Premove
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Punregister</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Punregister (int arg0, String arg1) throws HDF5LibraryException {
     return (H5.H5Punregister (arg0, arg1));
   } // H5Punregister
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pclose_class</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pclose_class (int arg0) throws HDF5LibraryException {
     return (H5.H5Pclose_class (arg0));
   } // H5Pclose_class
   
+  /**
+   * Thread-safe wrapper for <code>H5._H5Pclose_class</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int _H5Pclose_class (int arg0) throws HDF5LibraryException {
     return (H5._H5Pclose_class (arg0));
   } // _H5Pclose_class
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pclose</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pclose (int arg0) throws HDF5LibraryException {
     return (H5.H5Pclose (arg0));
   } // H5Pclose
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pcopy</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pcopy (int arg0) throws HDF5LibraryException {
     return (H5.H5Pcopy (arg0));
   } // H5Pcopy
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pcreate_class_nocb</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pcreate_class_nocb (int arg0, String arg1) throws HDF5LibraryException {
     return (H5.H5Pcreate_class_nocb (arg0, arg1));
   } // H5Pcreate_class_nocb
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pregister2_nocb</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Pregister2_nocb (int arg0, String arg1, long arg2, byte[] arg3) throws HDF5LibraryException {
     H5.H5Pregister2_nocb (arg0, arg1, arg2, arg3);
   } // H5Pregister2_nocb
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pinsert2_nocb</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Pinsert2_nocb (int arg0, String arg1, long arg2, byte[] arg3) throws HDF5LibraryException {
     H5.H5Pinsert2_nocb (arg0, arg1, arg2, arg3);
   } // H5Pinsert2_nocb
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Piterate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Piterate (int arg0, int[] arg1, H5P_iterate_cb arg2, H5P_iterate_t arg3) throws HDF5LibraryException {
     return (H5.H5Piterate (arg0, arg1, arg2, arg3));
   } // H5Piterate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_attr_phase_change</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_attr_phase_change (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_attr_phase_change (arg0, arg1));
   } // H5Pget_attr_phase_change
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_attr_phase_change</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Pset_attr_phase_change (int arg0, int arg1, int arg2) throws HDF5LibraryException {
     H5.H5Pset_attr_phase_change (arg0, arg1, arg2);
   } // H5Pset_attr_phase_change
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_attr_creation_order</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_attr_creation_order (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_attr_creation_order (arg0));
   } // H5Pget_attr_creation_order
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_attr_creation_order</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_attr_creation_order (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Pset_attr_creation_order (arg0, arg1));
   } // H5Pset_attr_creation_order
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_obj_track_times</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Pget_obj_track_times (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_obj_track_times (arg0));
   } // H5Pget_obj_track_times
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_obj_track_times</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Pset_obj_track_times (int arg0, boolean arg1) throws HDF5LibraryException {
     H5.H5Pset_obj_track_times (arg0, arg1);
   } // H5Pset_obj_track_times
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pmodify_filter</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pmodify_filter (int arg0, int arg1, int arg2, long arg3, int[] arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pmodify_filter (arg0, arg1, arg2, arg3, arg4));
   } // H5Pmodify_filter
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_filter</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_filter (int arg0, int arg1, int arg2, long arg3, int[] arg4) throws HDF5LibraryException {
     return (H5.H5Pset_filter (arg0, arg1, arg2, arg3, arg4));
   } // H5Pset_filter
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_nfilters</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_nfilters (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_nfilters (arg0));
   } // H5Pget_nfilters
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_filter</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   * @param arg7 the eighth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws ArrayIndexOutOfBoundsException if thrown by the wrapped method.
+   * @throws ArrayStoreException if thrown by the wrapped method.
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_filter (int arg0, int arg1, int[] arg2, long[] arg3, int[] arg4, long arg5, String[] arg6, int[] arg7) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_filter (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
   } // H5Pget_filter
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_filter_by_id</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   * @param arg7 the eighth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws ArrayIndexOutOfBoundsException if thrown by the wrapped method.
+   * @throws ArrayStoreException if thrown by the wrapped method.
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_filter_by_id (int arg0, int arg1, int[] arg2, long[] arg3, int[] arg4, long arg5, String[] arg6, int[] arg7) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_filter_by_id (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
   } // H5Pget_filter_by_id
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_filter_by_id2</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   * @param arg6 the seventh argument.
+   * @param arg7 the eighth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_filter_by_id2 (int arg0, int arg1, int[] arg2, long[] arg3, int[] arg4, long arg5, String[] arg6, int[] arg7) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_filter_by_id2 (arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7));
   } // H5Pget_filter_by_id2
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pall_filters_avail</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Pall_filters_avail (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pall_filters_avail (arg0));
   } // H5Pall_filters_avail
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Premove_filter</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Premove_filter (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Premove_filter (arg0, arg1));
   } // H5Premove_filter
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_deflate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_deflate (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Pset_deflate (arg0, arg1));
   } // H5Pset_deflate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fletcher32</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_fletcher32 (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_fletcher32 (arg0));
   } // H5Pset_fletcher32
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_userblock</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_userblock (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_userblock (arg0, arg1));
   } // H5Pget_userblock
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_userblock</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_userblock (int arg0, long arg1) throws HDF5LibraryException {
     return (H5.H5Pset_userblock (arg0, arg1));
   } // H5Pset_userblock
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_sizes</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_sizes (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Pget_sizes (arg0, arg1));
   } // H5Pget_sizes
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_sizes</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_sizes (int arg0, int arg1, int arg2) throws HDF5LibraryException {
     return (H5.H5Pset_sizes (arg0, arg1, arg2));
   } // H5Pset_sizes
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_sym_k</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_sym_k (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Pget_sym_k (arg0, arg1));
   } // H5Pget_sym_k
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_sym_k</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_sym_k (int arg0, int arg1, int arg2) throws HDF5LibraryException {
     return (H5.H5Pset_sym_k (arg0, arg1, arg2));
   } // H5Pset_sym_k
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_istore_k</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_istore_k (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_istore_k (arg0, arg1));
   } // H5Pget_istore_k
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_istore_k</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_istore_k (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Pset_istore_k (arg0, arg1));
   } // H5Pset_istore_k
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_shared_mesg_nindexes</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_shared_mesg_nindexes (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_shared_mesg_nindexes (arg0));
   } // H5Pget_shared_mesg_nindexes
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_shared_mesg_nindexes</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_shared_mesg_nindexes (int arg0, int arg1) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Pset_shared_mesg_nindexes (arg0, arg1));
   } // H5Pset_shared_mesg_nindexes
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_shared_mesg_index</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_shared_mesg_index (int arg0, int arg1, int[] arg2) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Pget_shared_mesg_index (arg0, arg1, arg2));
   } // H5Pget_shared_mesg_index
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_shared_mesg_index</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_shared_mesg_index (int arg0, int arg1, int arg2, int arg3) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Pset_shared_mesg_index (arg0, arg1, arg2, arg3));
   } // H5Pset_shared_mesg_index
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_shared_mesg_phase_change</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_shared_mesg_phase_change (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_shared_mesg_phase_change (arg0, arg1));
   } // H5Pget_shared_mesg_phase_change
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_shared_mesg_phase_change</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_shared_mesg_phase_change (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Pset_shared_mesg_phase_change (arg0, arg1, arg2));
   } // H5Pset_shared_mesg_phase_change
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_alignment</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_alignment (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Pget_alignment (arg0, arg1));
   } // H5Pget_alignment
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_alignment</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_alignment (int arg0, long arg1, long arg2) throws HDF5LibraryException {
     return (H5.H5Pset_alignment (arg0, arg1, arg2));
   } // H5Pset_alignment
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_driver</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_driver (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_driver (arg0));
   } // H5Pget_driver
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_family_offset</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized long H5Pget_family_offset (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_family_offset (arg0));
   } // H5Pget_family_offset
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_family_offset</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_family_offset (int arg0, long arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_family_offset (arg0, arg1));
   } // H5Pset_family_offset
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_cache</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_cache (int arg0, int[] arg1, long[] arg2, long[] arg3, double[] arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_cache (arg0, arg1, arg2, arg3, arg4));
   } // H5Pget_cache
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_cache</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_cache (int arg0, int arg1, long arg2, long arg3, double arg4) throws HDF5LibraryException {
     return (H5.H5Pset_cache (arg0, arg1, arg2, arg3, arg4));
   } // H5Pset_cache
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_mdc_config</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized H5AC_cache_config_t H5Pget_mdc_config (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_mdc_config (arg0));
   } // H5Pget_mdc_config
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_mdc_config</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Pset_mdc_config (int arg0, H5AC_cache_config_t arg1) throws HDF5LibraryException {
     H5.H5Pset_mdc_config (arg0, arg1);
   } // H5Pset_mdc_config
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_gc_references</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_gc_references (int arg0, boolean[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_gc_references (arg0, arg1));
   } // H5Pget_gc_references
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_gcreferences</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Pget_gcreferences (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_gcreferences (arg0));
   } // H5Pget_gcreferences
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_gc_reference</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_gc_reference (int arg0, boolean[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_gc_reference (arg0, arg1));
   } // H5Pget_gc_reference
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_gc_references</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_gc_references (int arg0, boolean arg1) throws HDF5LibraryException {
     return (H5.H5Pset_gc_references (arg0, arg1));
   } // H5Pset_gc_references
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_fclose_degree</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_fclose_degree (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_fclose_degree (arg0));
   } // H5Pget_fclose_degree
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fclose_degree</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_fclose_degree (int arg0, int arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_fclose_degree (arg0, arg1));
   } // H5Pset_fclose_degree
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_meta_block_size</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Pget_meta_block_size (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_meta_block_size (arg0));
   } // H5Pget_meta_block_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_meta_block_size</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Pset_meta_block_size (int arg0, long arg1) throws HDF5LibraryException {
     H5.H5Pset_meta_block_size (arg0, arg1);
   } // H5Pset_meta_block_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_sieve_buf_size</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Pget_sieve_buf_size (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_sieve_buf_size (arg0));
   } // H5Pget_sieve_buf_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_sieve_buf_size</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Pset_sieve_buf_size (int arg0, long arg1) throws HDF5LibraryException {
     H5.H5Pset_sieve_buf_size (arg0, arg1);
   } // H5Pset_sieve_buf_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_small_data_block_size</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_small_data_block_size (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_small_data_block_size (arg0, arg1));
   } // H5Pget_small_data_block_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_small_data_block_size_long</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Pget_small_data_block_size_long (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_small_data_block_size_long (arg0));
   } // H5Pget_small_data_block_size_long
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_small_data_block_size</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_small_data_block_size (int arg0, long arg1) throws HDF5LibraryException {
     return (H5.H5Pset_small_data_block_size (arg0, arg1));
   } // H5Pset_small_data_block_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_libver_bounds</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_libver_bounds (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_libver_bounds (arg0, arg1));
   } // H5Pget_libver_bounds
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_libver_bounds</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_libver_bounds (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Pset_libver_bounds (arg0, arg1, arg2));
   } // H5Pset_libver_bounds
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_elink_file_cache_size</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_elink_file_cache_size (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_elink_file_cache_size (arg0));
   } // H5Pget_elink_file_cache_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_elink_file_cache_size</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Pset_elink_file_cache_size (int arg0, int arg1) throws HDF5LibraryException {
     H5.H5Pset_elink_file_cache_size (arg0, arg1);
   } // H5Pset_elink_file_cache_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_layout</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_layout (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_layout (arg0));
   } // H5Pget_layout
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_layout</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_layout (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Pset_layout (arg0, arg1));
   } // H5Pset_layout
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_chunk</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_chunk (int arg0, int arg1, long[] arg2) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Pget_chunk (arg0, arg1, arg2));
   } // H5Pget_chunk
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_chunk</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_chunk (int arg0, int arg1, long[] arg2) throws HDF5Exception, NullPointerException, IllegalArgumentException {
     return (H5.H5Pset_chunk (arg0, arg1, arg2));
   } // H5Pset_chunk
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_chunk</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_chunk (int arg0, int arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Pset_chunk (arg0, arg1, arg2));
   } // H5Pset_chunk
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_external</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws ArrayIndexOutOfBoundsException if thrown by the wrapped method.
+   * @throws ArrayStoreException if thrown by the wrapped method.
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_external (int arg0, int arg1, long arg2, String[] arg3, long[] arg4) throws ArrayIndexOutOfBoundsException, ArrayStoreException, HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Pget_external (arg0, arg1, arg2, arg3, arg4));
   } // H5Pget_external
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_external</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_external (int arg0, String arg1, long arg2, long arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_external (arg0, arg1, arg2, arg3));
   } // H5Pset_external
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_external_count</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_external_count (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_external_count (arg0));
   } // H5Pget_external_count
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_szip</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_szip (int arg0, int arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_szip (arg0, arg1, arg2));
   } // H5Pset_szip
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_shuffle</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_shuffle (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_shuffle (arg0));
   } // H5Pset_shuffle
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_nbit</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_nbit (int arg0) throws HDF5LibraryException {
     return (H5.H5Pset_nbit (arg0));
   } // H5Pset_nbit
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_scaleoffset</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_scaleoffset (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Pset_scaleoffset (arg0, arg1, arg2));
   } // H5Pset_scaleoffset
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_fill_value</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_fill_value (int arg0, int arg1, Object arg2) throws HDF5Exception {
     return (H5.H5Pget_fill_value (arg0, arg1, arg2));
   } // H5Pget_fill_value
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_fill_value</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_fill_value (int arg0, int arg1, byte[] arg2) throws HDF5Exception {
     return (H5.H5Pget_fill_value (arg0, arg1, arg2));
   } // H5Pget_fill_value
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fill_value</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_fill_value (int arg0, int arg1, byte[] arg2) throws HDF5Exception {
     return (H5.H5Pset_fill_value (arg0, arg1, arg2));
   } // H5Pset_fill_value
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fill_value</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_fill_value (int arg0, int arg1, Object arg2) throws HDF5Exception {
     return (H5.H5Pset_fill_value (arg0, arg1, arg2));
   } // H5Pset_fill_value
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pfill_value_defined</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pfill_value_defined (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pfill_value_defined (arg0, arg1));
   } // H5Pfill_value_defined
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_alloc_time</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_alloc_time (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_alloc_time (arg0, arg1));
   } // H5Pget_alloc_time
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_alloc_time</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_alloc_time (int arg0, int arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_alloc_time (arg0, arg1));
   } // H5Pset_alloc_time
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_fill_time</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_fill_time (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_fill_time (arg0, arg1));
   } // H5Pget_fill_time
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fill_time</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_fill_time (int arg0, int arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_fill_time (arg0, arg1));
   } // H5Pset_fill_time
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_chunk_cache</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Pget_chunk_cache (int arg0, long[] arg1, long[] arg2, double[] arg3) throws HDF5LibraryException, NullPointerException {
     H5.H5Pget_chunk_cache (arg0, arg1, arg2, arg3);
   } // H5Pget_chunk_cache
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_chunk_cache</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Pset_chunk_cache (int arg0, long arg1, long arg2, double arg3) throws HDF5LibraryException {
     H5.H5Pset_chunk_cache (arg0, arg1, arg2, arg3);
   } // H5Pset_chunk_cache
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_data_transform</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized long H5Pget_data_transform (int arg0, String[] arg1, long arg2) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Pget_data_transform (arg0, arg1, arg2));
   } // H5Pget_data_transform
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_data_transform</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_data_transform (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_data_transform (arg0, arg1));
   } // H5Pset_data_transform
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_buffer</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_buffer (int arg0, byte[] arg1, byte[] arg2) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Pget_buffer (arg0, arg1, arg2));
   } // H5Pget_buffer
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_buffer_size</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized long H5Pget_buffer_size (int arg0) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Pget_buffer_size (arg0));
   } // H5Pget_buffer_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_buffer_size</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized void H5Pset_buffer_size (int arg0, long arg1) throws HDF5LibraryException, IllegalArgumentException {
     H5.H5Pset_buffer_size (arg0, arg1);
   } // H5Pset_buffer_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_edc_check</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_edc_check (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_edc_check (arg0));
   } // H5Pget_edc_check
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_edc_check</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_edc_check (int arg0, int arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_edc_check (arg0, arg1));
   } // H5Pset_edc_check
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_btree_ratios</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_btree_ratios (int arg0, double[] arg1, double[] arg2, double[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_btree_ratios (arg0, arg1, arg2, arg3));
   } // H5Pget_btree_ratios
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_btree_ratios</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_btree_ratios (int arg0, double arg1, double arg2, double arg3) throws HDF5LibraryException {
     return (H5.H5Pset_btree_ratios (arg0, arg1, arg2, arg3));
   } // H5Pset_btree_ratios
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_hyper_vector_size</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_hyper_vector_size (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_hyper_vector_size (arg0, arg1));
   } // H5Pget_hyper_vector_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_hyper_vector_size</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_hyper_vector_size (int arg0, long arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_hyper_vector_size (arg0, arg1));
   } // H5Pset_hyper_vector_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_create_intermediate_group</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Pget_create_intermediate_group (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_create_intermediate_group (arg0));
   } // H5Pget_create_intermediate_group
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_create_intermediate_group</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_create_intermediate_group (int arg0, boolean arg1) throws HDF5LibraryException {
     return (H5.H5Pset_create_intermediate_group (arg0, arg1));
   } // H5Pset_create_intermediate_group
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_local_heap_size_hint</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Pget_local_heap_size_hint (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_local_heap_size_hint (arg0));
   } // H5Pget_local_heap_size_hint
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_local_heap_size_hint</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_local_heap_size_hint (int arg0, long arg1) throws HDF5LibraryException {
     return (H5.H5Pset_local_heap_size_hint (arg0, arg1));
   } // H5Pset_local_heap_size_hint
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_link_phase_change</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_link_phase_change (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_link_phase_change (arg0, arg1));
   } // H5Pget_link_phase_change
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_link_phase_change</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_link_phase_change (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Pset_link_phase_change (arg0, arg1, arg2));
   } // H5Pset_link_phase_change
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_est_link_info</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_est_link_info (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_est_link_info (arg0, arg1));
   } // H5Pget_est_link_info
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_est_link_info</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_est_link_info (int arg0, int arg1, int arg2) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Pset_est_link_info (arg0, arg1, arg2));
   } // H5Pset_est_link_info
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_link_creation_order</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_link_creation_order (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_link_creation_order (arg0));
   } // H5Pget_link_creation_order
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_link_creation_order</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_link_creation_order (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Pset_link_creation_order (arg0, arg1));
   } // H5Pset_link_creation_order
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_char_encoding</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_char_encoding (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_char_encoding (arg0));
   } // H5Pget_char_encoding
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_char_encoding</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Pset_char_encoding (int arg0, int arg1) throws HDF5LibraryException {
     H5.H5Pset_char_encoding (arg0, arg1);
   } // H5Pset_char_encoding
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_nlinks</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Pget_nlinks (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_nlinks (arg0));
   } // H5Pget_nlinks
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_nlinks</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_nlinks (int arg0, long arg1) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Pset_nlinks (arg0, arg1));
   } // H5Pset_nlinks
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_elink_prefix</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized long H5Pget_elink_prefix (int arg0, String[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_elink_prefix (arg0, arg1));
   } // H5Pget_elink_prefix
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_elink_prefix</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_elink_prefix (int arg0, String arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_elink_prefix (arg0, arg1));
   } // H5Pset_elink_prefix
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_elink_fapl</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_elink_fapl (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_elink_fapl (arg0));
   } // H5Pget_elink_fapl
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_elink_fapl</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_elink_fapl (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Pset_elink_fapl (arg0, arg1));
   } // H5Pset_elink_fapl
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_elink_acc_flags</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_elink_acc_flags (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_elink_acc_flags (arg0));
   } // H5Pget_elink_acc_flags
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_elink_acc_flags</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_elink_acc_flags (int arg0, int arg1) throws HDF5LibraryException, IllegalArgumentException {
     return (H5.H5Pset_elink_acc_flags (arg0, arg1));
   } // H5Pset_elink_acc_flags
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_copy_object</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_copy_object (int arg0) throws HDF5LibraryException {
     return (H5.H5Pget_copy_object (arg0));
   } // H5Pget_copy_object
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_copy_object</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Pset_copy_object (int arg0, int arg1) throws HDF5LibraryException {
     H5.H5Pset_copy_object (arg0, arg1);
   } // H5Pset_copy_object
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_version</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_version (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Pget_version (arg0, arg1));
   } // H5Pget_version
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_fapl_core</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Pget_fapl_core (int arg0, long[] arg1, boolean[] arg2) throws HDF5LibraryException, NullPointerException {
     H5.H5Pget_fapl_core (arg0, arg1, arg2);
   } // H5Pget_fapl_core
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fapl_core</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_fapl_core (int arg0, long arg1, boolean arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_fapl_core (arg0, arg1, arg2));
   } // H5Pset_fapl_core
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_fapl_direct</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_fapl_direct (int arg0, long[] arg1) throws HDF5LibraryException {
     return (H5.H5Pget_fapl_direct (arg0, arg1));
   } // H5Pget_fapl_direct
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fapl_direct</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_fapl_direct (int arg0, long arg1, long arg2, long arg3) throws HDF5LibraryException {
     return (H5.H5Pset_fapl_direct (arg0, arg1, arg2, arg3));
   } // H5Pset_fapl_direct
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_fapl_family</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pget_fapl_family (int arg0, long[] arg1, int[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_fapl_family (arg0, arg1, arg2));
   } // H5Pget_fapl_family
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fapl_family</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_fapl_family (int arg0, long arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_fapl_family (arg0, arg1, arg2));
   } // H5Pset_fapl_family
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pget_fapl_multi</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Pget_fapl_multi (int arg0, int[] arg1, int[] arg2, String[] arg3, long[] arg4) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pget_fapl_multi (arg0, arg1, arg2, arg3, arg4));
   } // H5Pget_fapl_multi
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fapl_multi</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Pset_fapl_multi (int arg0, int[] arg1, int[] arg2, String[] arg3, long[] arg4, boolean arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Pset_fapl_multi (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Pset_fapl_multi
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fapl_log</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Pset_fapl_log (int arg0, String arg1, long arg2, long arg3) throws HDF5LibraryException, NullPointerException {
     H5.H5Pset_fapl_log (arg0, arg1, arg2, arg3);
   } // H5Pset_fapl_log
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fapl_sec2</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_fapl_sec2 (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_fapl_sec2 (arg0));
   } // H5Pset_fapl_sec2
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fapl_split</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Pset_fapl_split (int arg0, String arg1, int arg2, String arg3, int arg4) throws HDF5LibraryException, NullPointerException {
     H5.H5Pset_fapl_split (arg0, arg1, arg2, arg3, arg4);
   } // H5Pset_fapl_split
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fapl_stdio</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_fapl_stdio (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_fapl_stdio (arg0));
   } // H5Pset_fapl_stdio
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Pset_fapl_windows</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Pset_fapl_windows (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Pset_fapl_windows (arg0));
   } // H5Pset_fapl_windows
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5PLset_loading_state</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5PLset_loading_state (int arg0) throws HDF5LibraryException {
     H5.H5PLset_loading_state (arg0);
   } // H5PLset_loading_state
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5PLget_loading_state</code>.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5PLget_loading_state () throws HDF5LibraryException {
     return (H5.H5PLget_loading_state ());
   } // H5PLget_loading_state
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Rcreate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized byte[] H5Rcreate (int arg0, String arg1, int arg2, int arg3) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Rcreate (arg0, arg1, arg2, arg3));
   } // H5Rcreate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Rdereference</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Rdereference (int arg0, int arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Rdereference (arg0, arg1, arg2));
   } // H5Rdereference
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Rget_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized long H5Rget_name (int arg0, int arg1, byte[] arg2, String[] arg3, long arg4) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Rget_name (arg0, arg1, arg2, arg3, arg4));
   } // H5Rget_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Rget_obj_type</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Rget_obj_type (int arg0, int arg1, byte[] arg2, int[] arg3) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Rget_obj_type (arg0, arg1, arg2, arg3));
   } // H5Rget_obj_type
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Rget_region</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Rget_region (int arg0, int arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Rget_region (arg0, arg1, arg2));
   } // H5Rget_region
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sclose</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Sclose (int arg0) throws HDF5LibraryException {
     return (H5.H5Sclose (arg0));
   } // H5Sclose
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Scopy</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Scopy (int arg0) throws HDF5LibraryException {
     return (H5.H5Scopy (arg0));
   } // H5Scopy
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Screate</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Screate (int arg0) throws HDF5LibraryException {
     return (H5.H5Screate (arg0));
   } // H5Screate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Screate_simple</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Screate_simple (int arg0, long[] arg1, long[] arg2) throws HDF5Exception, NullPointerException {
     return (H5.H5Screate_simple (arg0, arg1, arg2));
   } // H5Screate_simple
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sdecode</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Sdecode (byte[] arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sdecode (arg0));
   } // H5Sdecode
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sencode</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized byte[] H5Sencode (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sencode (arg0));
   } // H5Sencode
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sextent_copy</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Sextent_copy (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Sextent_copy (arg0, arg1));
   } // H5Sextent_copy
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sextent_equal</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Sextent_equal (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Sextent_equal (arg0, arg1));
   } // H5Sextent_equal
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sget_select_bounds</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Sget_select_bounds (int arg0, long[] arg1, long[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sget_select_bounds (arg0, arg1, arg2));
   } // H5Sget_select_bounds
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sget_select_elem_npoints</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Sget_select_elem_npoints (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_select_elem_npoints (arg0));
   } // H5Sget_select_elem_npoints
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sget_select_elem_pointlist</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Sget_select_elem_pointlist (int arg0, long arg1, long arg2, long[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sget_select_elem_pointlist (arg0, arg1, arg2, arg3));
   } // H5Sget_select_elem_pointlist
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sget_select_hyper_blocklist</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Sget_select_hyper_blocklist (int arg0, long arg1, long arg2, long[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sget_select_hyper_blocklist (arg0, arg1, arg2, arg3));
   } // H5Sget_select_hyper_blocklist
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sget_select_hyper_nblocks</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Sget_select_hyper_nblocks (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_select_hyper_nblocks (arg0));
   } // H5Sget_select_hyper_nblocks
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sget_select_npoints</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Sget_select_npoints (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_select_npoints (arg0));
   } // H5Sget_select_npoints
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sget_select_type</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Sget_select_type (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_select_type (arg0));
   } // H5Sget_select_type
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sget_simple_extent_dims</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Sget_simple_extent_dims (int arg0, long[] arg1, long[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sget_simple_extent_dims (arg0, arg1, arg2));
   } // H5Sget_simple_extent_dims
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sget_simple_extent_ndims</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Sget_simple_extent_ndims (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_simple_extent_ndims (arg0));
   } // H5Sget_simple_extent_ndims
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sget_simple_extent_npoints</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Sget_simple_extent_npoints (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_simple_extent_npoints (arg0));
   } // H5Sget_simple_extent_npoints
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sget_simple_extent_type</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Sget_simple_extent_type (int arg0) throws HDF5LibraryException {
     return (H5.H5Sget_simple_extent_type (arg0));
   } // H5Sget_simple_extent_type
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sis_simple</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Sis_simple (int arg0) throws HDF5LibraryException {
     return (H5.H5Sis_simple (arg0));
   } // H5Sis_simple
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Soffset_simple</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Soffset_simple (int arg0, byte[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Soffset_simple (arg0, arg1));
   } // H5Soffset_simple
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Soffset_simple</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Soffset_simple (int arg0, long[] arg1) throws HDF5Exception, NullPointerException {
     return (H5.H5Soffset_simple (arg0, arg1));
   } // H5Soffset_simple
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sselect_all</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Sselect_all (int arg0) throws HDF5LibraryException {
     return (H5.H5Sselect_all (arg0));
   } // H5Sselect_all
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sselect_elements</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5Exception if thrown by the wrapped method.
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Sselect_elements (int arg0, int arg1, int arg2, long[][] arg3) throws HDF5Exception, HDF5LibraryException, NullPointerException {
     return (H5.H5Sselect_elements (arg0, arg1, arg2, arg3));
   } // H5Sselect_elements
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sselect_hyperslab</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Sselect_hyperslab (int arg0, int arg1, long[] arg2, long[] arg3, long[] arg4, long[] arg5) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Sselect_hyperslab (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Sselect_hyperslab
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sselect_hyperslab</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Sselect_hyperslab (int arg0, int arg1, byte[] arg2, byte[] arg3, byte[] arg4, byte[] arg5) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Sselect_hyperslab (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Sselect_hyperslab
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sselect_none</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Sselect_none (int arg0) throws HDF5LibraryException {
     return (H5.H5Sselect_none (arg0));
   } // H5Sselect_none
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sselect_valid</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Sselect_valid (int arg0) throws HDF5LibraryException {
     return (H5.H5Sselect_valid (arg0));
   } // H5Sselect_valid
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sset_extent_none</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Sset_extent_none (int arg0) throws HDF5LibraryException {
     return (H5.H5Sset_extent_none (arg0));
   } // H5Sset_extent_none
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sset_extent_simple</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Sset_extent_simple (int arg0, int arg1, long[] arg2, long[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sset_extent_simple (arg0, arg1, arg2, arg3));
   } // H5Sset_extent_simple
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Sset_extent_simple</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Sset_extent_simple (int arg0, int arg1, byte[] arg2, byte[] arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Sset_extent_simple (arg0, arg1, arg2, arg3));
   } // H5Sset_extent_simple
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tarray_create</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Tarray_create (int arg0, int arg1, long[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tarray_create (arg0, arg1, arg2));
   } // H5Tarray_create
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tclose</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tclose (int arg0) throws HDF5LibraryException {
     return (H5.H5Tclose (arg0));
   } // H5Tclose
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tcommit</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Tcommit (int arg0, String arg1, int arg2, int arg3, int arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Tcommit (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Tcommit
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tcommit_anon</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Tcommit_anon (int arg0, int arg1, int arg2, int arg3) throws HDF5LibraryException {
     H5.H5Tcommit_anon (arg0, arg1, arg2, arg3);
   } // H5Tcommit_anon
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tcommitted</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Tcommitted (int arg0) throws HDF5LibraryException {
     return (H5.H5Tcommitted (arg0));
   } // H5Tcommitted
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tcompiler_conv</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Tcompiler_conv (int arg0, int arg1) throws HDF5LibraryException {
     H5.H5Tcompiler_conv (arg0, arg1);
   } // H5Tcompiler_conv
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tconvert</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Tconvert (int arg0, int arg1, long arg2, byte[] arg3, byte[] arg4, int arg5) throws HDF5LibraryException, NullPointerException {
     H5.H5Tconvert (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Tconvert
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tcopy</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tcopy (int arg0) throws HDF5LibraryException {
     return (H5.H5Tcopy (arg0));
   } // H5Tcopy
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tcreate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tcreate (int arg0, long arg1) throws HDF5LibraryException {
     return (H5.H5Tcreate (arg0, arg1));
   } // H5Tcreate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tcreate</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tcreate (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tcreate (arg0, arg1));
   } // H5Tcreate
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tdecode</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Tdecode (byte[] arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tdecode (arg0));
   } // H5Tdecode
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tdetect_class</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Tdetect_class (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tdetect_class (arg0, arg1));
   } // H5Tdetect_class
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tencode</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Tencode (int arg0, byte[] arg1, long arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tencode (arg0, arg1, arg2));
   } // H5Tencode
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tenum_create</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tenum_create (int arg0) throws HDF5LibraryException {
     return (H5.H5Tenum_create (arg0));
   } // H5Tenum_create
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tenum_insert</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Tenum_insert (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tenum_insert (arg0, arg1, arg2));
   } // H5Tenum_insert
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tenum_insert</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Tenum_insert (int arg0, String arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException {
     H5.H5Tenum_insert (arg0, arg1, arg2);
   } // H5Tenum_insert
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tenum_insert</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Tenum_insert (int arg0, String arg1, int[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tenum_insert (arg0, arg1, arg2));
   } // H5Tenum_insert
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tenum_nameof</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Tenum_nameof (int arg0, int[] arg1, String[] arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tenum_nameof (arg0, arg1, arg2, arg3));
   } // H5Tenum_nameof
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tenum_nameof</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized String H5Tenum_nameof (int arg0, byte[] arg1, long arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tenum_nameof (arg0, arg1, arg2));
   } // H5Tenum_nameof
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tenum_valueof</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Tenum_valueof (int arg0, String arg1, int[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tenum_valueof (arg0, arg1, arg2));
   } // H5Tenum_valueof
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tenum_valueof</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Tenum_valueof (int arg0, String arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException {
     H5.H5Tenum_valueof (arg0, arg1, arg2);
   } // H5Tenum_valueof
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tequal</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Tequal (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tequal (arg0, arg1));
   } // H5Tequal
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_array_dims</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_array_dims (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tget_array_dims (arg0, arg1));
   } // H5Tget_array_dims
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_array_dims2</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_array_dims2 (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tget_array_dims2 (arg0, arg1));
   } // H5Tget_array_dims2
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_array_ndims</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_array_ndims (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_array_ndims (arg0));
   } // H5Tget_array_ndims
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_class</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_class (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_class (arg0));
   } // H5Tget_class
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_class_name</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   */
   public synchronized String H5Tget_class_name (int arg0) {
     return (H5.H5Tget_class_name (arg0));
   } // H5Tget_class_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_create_plist</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_create_plist (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_create_plist (arg0));
   } // H5Tget_create_plist
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_cset</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_cset (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_cset (arg0));
   } // H5Tget_cset
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_cset</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tset_cset (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_cset (arg0, arg1));
   } // H5Tset_cset
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_ebias</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_ebias (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_ebias (arg0));
   } // H5Tget_ebias
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_ebias</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Tset_ebias (int arg0, long arg1) throws HDF5LibraryException {
     H5.H5Tset_ebias (arg0, arg1);
   } // H5Tset_ebias
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_ebias</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tset_ebias (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_ebias (arg0, arg1));
   } // H5Tset_ebias
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_ebias_long</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Tget_ebias_long (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_ebias_long (arg0));
   } // H5Tget_ebias_long
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_fields</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized void H5Tget_fields (int arg0, long[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     H5.H5Tget_fields (arg0, arg1);
   } // H5Tget_fields
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_fields</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   * @throws IllegalArgumentException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_fields (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException, IllegalArgumentException {
     return (H5.H5Tget_fields (arg0, arg1));
   } // H5Tget_fields
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_fields</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Tset_fields (int arg0, long arg1, long arg2, long arg3, long arg4, long arg5) throws HDF5LibraryException {
     H5.H5Tset_fields (arg0, arg1, arg2, arg3, arg4, arg5);
   } // H5Tset_fields
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_fields</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   * @param arg4 the fifth argument.
+   * @param arg5 the sixth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tset_fields (int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) throws HDF5LibraryException {
     return (H5.H5Tset_fields (arg0, arg1, arg2, arg3, arg4, arg5));
   } // H5Tset_fields
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_inpad</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_inpad (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_inpad (arg0));
   } // H5Tget_inpad
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_inpad</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tset_inpad (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_inpad (arg0, arg1));
   } // H5Tset_inpad
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_member_class</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_member_class (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tget_member_class (arg0, arg1));
   } // H5Tget_member_class
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_member_index</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   */
   public synchronized int H5Tget_member_index (int arg0, String arg1) {
     return (H5.H5Tget_member_index (arg0, arg1));
   } // H5Tget_member_index
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_member_name</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   */
   public synchronized String H5Tget_member_name (int arg0, int arg1) {
     return (H5.H5Tget_member_name (arg0, arg1));
   } // H5Tget_member_name
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_member_offset</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Tget_member_offset (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tget_member_offset (arg0, arg1));
   } // H5Tget_member_offset
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_member_type</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_member_type (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tget_member_type (arg0, arg1));
   } // H5Tget_member_type
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_member_value</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_member_value (int arg0, int arg1, int[] arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tget_member_value (arg0, arg1, arg2));
   } // H5Tget_member_value
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_member_value</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized void H5Tget_member_value (int arg0, int arg1, byte[] arg2) throws HDF5LibraryException, NullPointerException {
     H5.H5Tget_member_value (arg0, arg1, arg2);
   } // H5Tget_member_value
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_native_type</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_native_type (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_native_type (arg0));
   } // H5Tget_native_type
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_native_type</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_native_type (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tget_native_type (arg0, arg1));
   } // H5Tget_native_type
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_nmembers</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_nmembers (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_nmembers (arg0));
   } // H5Tget_nmembers
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_norm</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_norm (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_norm (arg0));
   } // H5Tget_norm
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_norm</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tset_norm (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_norm (arg0, arg1));
   } // H5Tset_norm
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_offset</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_offset (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_offset (arg0));
   } // H5Tget_offset
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_offset</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Tset_offset (int arg0, long arg1) throws HDF5LibraryException {
     H5.H5Tset_offset (arg0, arg1);
   } // H5Tset_offset
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_offset</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tset_offset (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_offset (arg0, arg1));
   } // H5Tset_offset
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_order</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_order (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_order (arg0));
   } // H5Tget_order
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_order</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tset_order (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_order (arg0, arg1));
   } // H5Tset_order
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_pad</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_pad (int arg0, int[] arg1) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tget_pad (arg0, arg1));
   } // H5Tget_pad
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_pad</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tset_pad (int arg0, int arg1, int arg2) throws HDF5LibraryException {
     return (H5.H5Tset_pad (arg0, arg1, arg2));
   } // H5Tset_pad
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_precision</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_precision (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_precision (arg0));
   } // H5Tget_precision
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_precision</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Tset_precision (int arg0, long arg1) throws HDF5LibraryException {
     H5.H5Tset_precision (arg0, arg1);
   } // H5Tset_precision
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_precision</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tset_precision (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_precision (arg0, arg1));
   } // H5Tset_precision
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_precision_long</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Tget_precision_long (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_precision_long (arg0));
   } // H5Tget_precision_long
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_sign</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_sign (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_sign (arg0));
   } // H5Tget_sign
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_sign</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tset_sign (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_sign (arg0, arg1));
   } // H5Tset_sign
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_size</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_size (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_size (arg0));
   } // H5Tget_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_size</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tset_size (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_size (arg0, arg1));
   } // H5Tset_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_size</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized void H5Tset_size (int arg0, long arg1) throws HDF5LibraryException {
     H5.H5Tset_size (arg0, arg1);
   } // H5Tset_size
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_size_long</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized long H5Tget_size_long (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_size_long (arg0));
   } // H5Tget_size_long
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_strpad</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_strpad (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_strpad (arg0));
   } // H5Tget_strpad
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_strpad</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tset_strpad (int arg0, int arg1) throws HDF5LibraryException {
     return (H5.H5Tset_strpad (arg0, arg1));
   } // H5Tset_strpad
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_super</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tget_super (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_super (arg0));
   } // H5Tget_super
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tget_tag</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized String H5Tget_tag (int arg0) throws HDF5LibraryException {
     return (H5.H5Tget_tag (arg0));
   } // H5Tget_tag
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tset_tag</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tset_tag (int arg0, String arg1) throws HDF5LibraryException {
     return (H5.H5Tset_tag (arg0, arg1));
   } // H5Tset_tag
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tinsert</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   * @param arg3 the fourth argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Tinsert (int arg0, String arg1, long arg2, int arg3) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Tinsert (arg0, arg1, arg2, arg3));
   } // H5Tinsert
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tis_variable_str</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized boolean H5Tis_variable_str (int arg0) throws HDF5LibraryException {
     return (H5.H5Tis_variable_str (arg0));
   } // H5Tis_variable_str
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tlock</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tlock (int arg0) throws HDF5LibraryException {
     return (H5.H5Tlock (arg0));
   } // H5Tlock
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Topen</code>.
+   *
+   * @param arg0 the first argument.
+   * @param arg1 the second argument.
+   * @param arg2 the third argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Topen (int arg0, String arg1, int arg2) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Topen (arg0, arg1, arg2));
   } // H5Topen
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tpack</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tpack (int arg0) throws HDF5LibraryException {
     return (H5.H5Tpack (arg0));
   } // H5Tpack
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Tvlen_create</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Tvlen_create (int arg0) throws HDF5LibraryException {
     return (H5.H5Tvlen_create (arg0));
   } // H5Tvlen_create
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Zfilter_avail</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Zfilter_avail (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Zfilter_avail (arg0));
   } // H5Zfilter_avail
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Zget_filter_info</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   */
   public synchronized int H5Zget_filter_info (int arg0) throws HDF5LibraryException {
     return (H5.H5Zget_filter_info (arg0));
   } // H5Zget_filter_info
   
+  /**
+   * Thread-safe wrapper for <code>H5.H5Zunregister</code>.
+   *
+   * @param arg0 the first argument.
+   *
+   * @return the value returned by the wrapped method.
+   *
+   * @throws HDF5LibraryException if thrown by the wrapped method.
+   * @throws NullPointerException if thrown by the wrapped method.
+   */
   public synchronized int H5Zunregister (int arg0) throws HDF5LibraryException, NullPointerException {
     return (H5.H5Zunregister (arg0));
   } // H5Zunregister
@@ -2015,7 +7275,6 @@ public class HDF5Lib {
   /**
    * Gets a class type name.
    *
-   * @param classType the class type to get a name for.
    *
    * @return the class type name as it would appear in source code.
    */

@@ -66,12 +66,19 @@ public class AnnotationOverlay
   /** The list of annotation elements. */
   protected List elements;
 
-  /** The annotation reference frame. */
+  /**
+   * The annotation reference frame.
+   *
+   */
   private int reference;
 
   ////////////////////////////////////////////////////////////
 
-  /** Adds an annotation element to the list. */
+  /**
+   * Adds an annotation element to the list.
+   *
+   * @param element the annotation element to add.
+   */
   public void addElement (AnnotationElement element) { elements.add(element); }
 
   ////////////////////////////////////////////////////////////

@@ -48,7 +48,10 @@ public class ExpressionMaskOverlayPropertyChooser
   // Variables
   // ---------
 
-  /** The text field for expression input. */
+  /**
+   * The text field for expression input.
+   *
+   */
   private JTextField field;
 
   ////////////////////////////////////////////////////////////
@@ -58,7 +61,11 @@ public class ExpressionMaskOverlayPropertyChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new chooser panel. */
+  /**
+   * Creates a new chooser panel.
+   *
+   * @param newOverlay the overlay to edit.
+   */
   public ExpressionMaskOverlayPropertyChooser (
     JavaExpressionMaskOverlay newOverlay
   ) {

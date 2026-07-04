@@ -251,6 +251,9 @@ public class TileCacheManager {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the tile cache manager
+   * tests.
    */
   public static void main (String[] argv) throws Exception {
 
@@ -365,4 +368,3 @@ public class TileCacheManager {
 } // TileCacheManager class
 
 ////////////////////////////////////////////////////////////////////////
-

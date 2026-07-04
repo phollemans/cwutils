@@ -111,6 +111,8 @@ public class LocalDirectoryLister
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs listing the local directory.
    */
   public static void main (String[] argv) throws Exception {
 

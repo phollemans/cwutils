@@ -329,7 +329,11 @@ public class GCTP
 
     ///////////////////////////////////////////////////////////
 
-    /** Gets the total number of required parameters. */
+    /**
+     * Gets the total number of required parameters.
+     *
+     * @return the total number of required parameters.
+     */
     public int getParameters () {   
 
       // Count required parameters
@@ -770,6 +774,14 @@ public class GCTP
    *
    * <p>Refer to the {@link #gctp} routine output parameters for details.</p>
    *
+   * @param NAD1927_zonefile the nad1927 zonefile.
+   * @param NAD1983_zonefile the nad1983 zonefile.
+   *
+   * @param output_system the output system.
+   * @param output_zone the output zone.
+   * @param output_parameters the output parameters.
+   * @param output_spheroid the output spheroid.
+   *
    * @deprecated The native methods of GCTP are no longer supported.  Use
    * the {@link noaa.coastwatch.util.trans.MapProjectionFactory} to create 
    * and work with map projections.
@@ -796,6 +808,13 @@ public class GCTP
    * projection parameters.</p>
    *
    * <p>Refer to the {@link #gctp} routine input parameters for details.</p>
+   *
+   * @param input_system the input system.
+   * @param input_zone the input zone.
+   * @param input_parameters the input parameters.
+   * @param input_spheroid the input spheroid.
+   * @param NAD1927_zonefile the nad1927 zonefile.
+   * @param NAD1983_zonefile the nad1983 zonefile.
    *
    * @deprecated The native methods of GCTP are no longer supported.  Use
    * the {@link noaa.coastwatch.util.trans.MapProjectionFactory} to create 
@@ -945,6 +964,8 @@ public class GCTP
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the projection tests.
    */
   public static void main (String[] argv) throws Exception {
 

@@ -79,10 +79,16 @@ public class ReaderSummaryProducer {
 
   /////////////////////////////////////////////////////////////////
 
+  /** Creates a new reader summary producer. */
   protected ReaderSummaryProducer () {}
 
   /////////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the shared reader summary producer instance.
+   *
+   * @return the shared instance.
+   */
   public static ReaderSummaryProducer getInstance() {
 
     if (instance == null) instance = new ReaderSummaryProducer();
@@ -98,10 +104,19 @@ public class ReaderSummaryProducer {
    */
   public static class Summary {
 
+    /** The data source name. */
     public String source;
-    public Map<String, String> global;    
+
+    /** The map of global property names to values. */
+    public Map<String, String> global;
+
+    /** The map of transform property names to values. */
     public Map<String, String> transform;
+
+    /** The list of coordinate system property maps. */
     public List<Map<String, String>> coordinate;
+
+    /** The variable information table. */
     public SummaryTable variable;
 
   } // Summary class
@@ -567,7 +582,10 @@ public class ReaderSummaryProducer {
    */
   public static class SummaryTable {
 
+    /** The table column names. */
     public String[] columnNames;
+
+    /** The table row values. */
     public List<String[]> rowList;
 
   } // SummaryTable
@@ -653,5 +671,4 @@ public class ReaderSummaryProducer {
   /////////////////////////////////////////////////////////////////
 
 } // ReaderSummaryProducer class
-
 

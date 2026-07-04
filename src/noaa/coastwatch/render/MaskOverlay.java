@@ -66,7 +66,11 @@ public abstract class MaskOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the inverse flag. */
+  /**
+   * Gets the inverse flag.
+   *
+   * @return the inverse flag.
+   */
   public boolean getInverse () { return (inverse); }
       
   ////////////////////////////////////////////////////////////
@@ -161,6 +165,8 @@ public abstract class MaskOverlay
    * @param color the color to use for the non-transparent color.
    * @param inverse the inverse flag, true to invert the transparent
    * and non-transparent colors.
+   *
+   * @return a new two-color indexed color model.
    */
   public static IndexColorModel createColorModel (
     Color color,

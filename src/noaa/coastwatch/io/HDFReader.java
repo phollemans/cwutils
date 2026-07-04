@@ -1066,11 +1066,11 @@ public abstract class HDFReader
 
   ////////////////////////////////////////////////////////////
 
-  /*
+  /**
    * Gets the variable dimensions.
    * 
    * @param sdid the HDF dataset to read.
-   * @param name the variable name.
+   * @param varName the variable name.
    *
    * @return the dimensions of the specified variable.
    * 

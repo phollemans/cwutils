@@ -83,6 +83,7 @@ import noaa.coastwatch.util.EarthArea;
  *
  * @author Peter Hollemans
  * @since 3.3.2
+ * @serial exclude
  */
 public class MultiPointFeatureOverlayPropertyChooser
   extends OverlayPropertyChooser<MultiPointFeatureOverlay<SimpleSymbol>> {

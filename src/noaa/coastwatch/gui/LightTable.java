@@ -91,6 +91,7 @@ import java.util.logging.Level;
  *
  * @author Peter Hollemans
  * @since 3.1.2
+ * @serial exclude
  */
 public class LightTable 
   extends JLayeredPane {
@@ -100,6 +101,7 @@ public class LightTable
   // Constants
   // ---------
 
+  /** The drawing modes. */
   public enum Mode {
 
     /** The non-drawing mode. */
@@ -249,7 +251,10 @@ public class LightTable
   /** The polyline started flag, true if a polyline is started. */
   private boolean polyStarted;
 
-  /** The initial image affine transform when dragging started. */
+  /**
+   * The initial image affine transform when dragging started.
+   *
+   */
   private AffineTransform initialAffine;
   
 
@@ -263,8 +268,10 @@ public class LightTable
   ////////////////////////////////////////////////////////////
 
   /**
-   * 
-   * 
+   * Adds a listener for double-click mouse events.
+   *
+   * @param listener the listener to notify on a double click.
+   *
    * @since 3.8.1
    */
   public void addDoubleClickListener (MouseListener listener) {
@@ -275,7 +282,11 @@ public class LightTable
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the component used as a base layer for this table. */
+  /**
+   * Gets the component used as a base layer for this table.
+   *
+   * @return the component used as a base layer for this table.
+   */
   public JComponent getComponent () { return (component); }
   
   ////////////////////////////////////////////////////////////
@@ -297,6 +308,8 @@ public class LightTable
    * drawing lines and annnotations in the layered pane.  It
    * floats over top of the base component and receives mouse
    * events when active.
+   *
+   * @serial exclude
    */
   private class GlassPane extends JPanel {
     public void paintComponent (Graphics g) {
@@ -529,6 +542,8 @@ LOGGER.fine ("wheelRotationTotal = " + wheelRotationTotal);
   /** 
    * Overrides the parent to add the listener to the base layer
    * component.
+   *
+   *
    */
   public void addMouseMotionListener (MouseMotionListener l) { 
 
@@ -540,6 +555,9 @@ LOGGER.fine ("wheelRotationTotal = " + wheelRotationTotal);
 
   /**
    * Removes the specified change listener from the listeners list.
+   *
+   * @param listener the listener to remove.
+   *
    */
   public void removeChangeListener (
     ChangeListener listener
@@ -555,6 +573,9 @@ LOGGER.fine ("wheelRotationTotal = " + wheelRotationTotal);
    * Adds a change listener to the listeners list.  A change event
    * is fired when the light table detects the finished drawing.
    * The finished shape may be retrieved using <code>getShape</code>.
+   *
+   * @param listener the listener to add.
+   *
    */
   public void addChangeListener (
     ChangeListener listener
@@ -566,12 +587,21 @@ LOGGER.fine ("wheelRotationTotal = " + wheelRotationTotal);
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the light table activity mode. */
+  /**
+   * Gets the light table activity mode.
+   *
+   *
+   * @return the light table activity mode.
+   */
   public boolean getActive () { return (active); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the light table active or inactive. */
+  /**
+   * Sets the light table active or inactive.
+   *
+   * @param flag true to activate the light table, or false to deactivate it.
+   */
   public void setActive (boolean flag) { 
 
     active = flag; 
@@ -908,12 +938,21 @@ LOGGER.fine ("wheelRotationTotal = " + wheelRotationTotal);
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the drawing mode. */
+  /**
+   * Gets the drawing mode.
+   *
+   *
+   * @return the drawing mode.
+   */
   public Mode getDrawingMode () { return (drawingMode); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the drawing mode to the specified mode. */
+  /**
+   * Sets the drawing mode to the specified mode.
+   *
+   * @param mode the drawing mode to set.
+   */
   public void setDrawingMode (Mode mode) {
 
     // Check mode

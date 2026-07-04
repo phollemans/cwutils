@@ -78,7 +78,7 @@ public class SolarZenith {
   /**
    * Creates a new solar zenith object using the specified date.
    *
-   * @param date the date.
+   * @param date the date for solar zenith calculations.
    */
   public SolarZenith (
     Date date

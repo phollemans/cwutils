@@ -58,6 +58,7 @@ import noaa.coastwatch.tools.ResourceManager;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public abstract class ImageSavePanel
   extends SavePanel {
@@ -76,13 +77,15 @@ public abstract class ImageSavePanel
 
   ////////////////////////////////////////////////////////////
 
-  /* 
+  /** 
    * Creates a new panel appropriate for the specified format. 
    *
    * @param view the earth data view to save.
    * @param info the earth data information to use for the
    * legends.
    * @param format the file format.
+   *
+   * @return the new panel.
    */
   public static ImageSavePanel create (
     EarthDataView view,
@@ -225,7 +228,7 @@ public abstract class ImageSavePanel
 
   ////////////////////////////////////////////////////////////
 
-  /* 
+  /** 
    * Creates a new image save panel.
    *
    * @param view the earth data view to save.

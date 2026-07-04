@@ -40,6 +40,8 @@ public interface PackingScheme {
   /**
    * Gets the unpacked data type that values in this packing scheme will
    * be unpacked to.
+   *
+   * @return the unpacked data type that values in this packing scheme will be unpacked to.
    */
   public DataType getUnpackedType();
 

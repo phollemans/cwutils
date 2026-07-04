@@ -91,16 +91,34 @@ public class ServerTableModel
     /** The server name. */
     private String name;
 
-    /** The server location. */
+    /**
+     * The server location.
+     *
+     *
+     */
     private String location;
 
-    /** Creates a new server entry. */
+    /**
+     * Creates a new server entry.
+     *
+     * @param n the server name.
+     * @param l the server location.
+     *
+     */
     public Entry (String n, String l) { name = n; location = l; }
 
-    /** Gets the server name. */
+    /**
+     * Gets the server name.
+     *
+     * @return the server name.
+     */
     public String getName () { return (name); }
     
-    /** Gets the server location. */
+    /**
+     * Gets the server location.
+     *
+     * @return the server location.
+     */
     public String getLocation () { return (location); }
 
     /** Converts the entry to a string. */
@@ -116,7 +134,10 @@ public class ServerTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new table model with no data. */
+  /**
+   * Creates a new table model with no data.
+   *
+   */
   public ServerTableModel () {
 
     this.serverList = new LinkedList();
@@ -125,7 +146,11 @@ public class ServerTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new table model using the server list. */
+  /**
+   * Creates a new table model using the server list.
+   *
+   * @param serverList the servers to show in the table.
+   */
   public ServerTableModel (List serverList) { 
 
     this.serverList = serverList;
@@ -144,7 +169,11 @@ public class ServerTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the table data value. */
+  /**
+   * Gets the table data value.
+   *
+   * @param row the table row.
+   */
   public Object getValueAt (int row, int column) {
 
     // Get empty value
@@ -165,7 +194,13 @@ public class ServerTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the server list entry at the specified row. */
+  /**
+   * Gets the server list entry at the specified row.
+   *
+   * @param row the table row.
+   *
+   * @return the server list entry at the specified row.
+   */
   public Entry getServerEntry (
     int row
   ) {
@@ -246,12 +281,21 @@ public class ServerTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the list of server entries. */
+  /**
+   * Gets the list of server entries.
+   *
+   *
+   * @return the list of server entries.
+   */
   public List getServerList () { return (new ArrayList (serverList)); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Removes the specified row from the table model. */
+  /**
+   * Removes the specified row from the table model.
+   *
+   * @param row the table row to remove.
+   */
   public void removeRow (int row) {
 
     if (row == serverList.size()) return;
@@ -450,6 +494,8 @@ public class ServerTableModel
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs creating the server table model.
    */
   public static void main (String[] argv) throws Exception {
 

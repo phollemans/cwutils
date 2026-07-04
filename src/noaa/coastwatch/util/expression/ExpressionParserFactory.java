@@ -81,11 +81,20 @@ public class ExpressionParserFactory {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the singleton instance of this class. */
+  /**
+   * Gets the singleton instance of this class.
+   *
+   * @return the singleton instance.
+   */
   public static ExpressionParserFactory getFactoryInstance() { return (instance); }
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets a legacy JEP parser object.
+   *
+   * @return the legacy JEP parser object.
+   */
   @Deprecated
   public static org.nfunk.jep.JEP getInstance() {
     JEPParser parser = new JEPParser();
@@ -108,7 +117,11 @@ public class ExpressionParserFactory {
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new expression parser in the default style. */
+  /**
+   * Creates a new expression parser in the default style.
+   *
+   * @return the expression parser.
+   */
   public ExpressionParser create() {
 
     return (create (defaultStyle));

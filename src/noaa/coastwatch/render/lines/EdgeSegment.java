@@ -44,10 +44,17 @@ public class EdgeSegment
 
   /** The types of edges possible for edge segments. */
   public enum EdgeType {
-    TOP,        // The top edge
-    BOTTOM,     // The bottom edge
-    LEFT,       // The left edge
-    RIGHT       // The right edge
+    /** The top edge. */
+    TOP,
+
+    /** The bottom edge. */
+    BOTTOM,
+
+    /** The left edge. */
+    LEFT,
+
+    /** The right edge. */
+    RIGHT
   }
 
   /** The line label offset as a fraction of the label size. */
@@ -144,6 +151,8 @@ public class EdgeSegment
    * Gets a label for this edge segment using the specified
    * text.
    *
+   *
+   * @return a label for this edge segment using the specified text.
    * @param text the text string for the label, or null if the
    * label is not valid.
    */

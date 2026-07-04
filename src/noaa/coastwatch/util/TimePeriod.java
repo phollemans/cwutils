@@ -85,17 +85,29 @@ public class TimePeriod implements Comparable {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the time period starting date. */
+  /**
+   * Gets the time period starting date.
+   *
+   * @return the time period starting date.
+   */
   public Date getStartDate () { return ((Date) startDate.clone()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the time period duration in milliseconds. */
+  /**
+   * Gets the time period duration in milliseconds.
+   *
+   * @return the time period duration in milliseconds.
+   */
   public long getDuration () { return (duration); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the time period ending date. */
+  /**
+   * Gets the time period ending date.
+   *
+   * @return the time period ending date.
+   */
   public Date getEndDate () { 
 
     return (new Date (startDate.getTime() + duration));

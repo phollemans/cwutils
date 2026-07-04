@@ -39,6 +39,8 @@ public interface ComponentProducer {
   /**
    * Gets the visual component used to display the object's
    * properties.
+   *
+   * @return the visual component used to display the object's properties.
    */
   public Component getComponent ();
 

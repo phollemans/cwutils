@@ -84,7 +84,10 @@ public class FileTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Clears the entry list so that no data is contained. */
+  /**
+   * Clears the entry list so that no data is contained.
+   *
+   */
   public void clear () { 
     
     this.entryList = new ArrayList();
@@ -94,7 +97,11 @@ public class FileTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the entry list for this model. */
+  /**
+   * Sets the entry list for this model.
+   *
+   * @param entryList the directory entries to show in the table.
+   */
   public void setEntryList (List entryList) {
       
     this.entryList = entryList;
@@ -110,12 +117,21 @@ public class FileTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the number of directory entry columns. */
+  /**
+   * Gets the number of directory entry columns.
+   *
+   */
   public int getColumnCount () { return (3); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the directory entry at the specified row. */
+  /**
+   * Gets the directory entry at the specified row.
+   *
+   * @param row the table row.
+   *
+   * @return the directory entry at the specified row.
+   */
   public Entry getEntry (int row) {
 
     return ((Entry) entryList.get (row));

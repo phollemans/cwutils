@@ -49,7 +49,11 @@ public class VariableStatisticsGenerator {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets an instance of this factory. */
+  /**
+   * Gets an instance of this factory.
+   *
+   * @return an instance of this factory.
+   */
   public static VariableStatisticsGenerator getInstance () {
 
     if (instance == null) instance = new VariableStatisticsGenerator();

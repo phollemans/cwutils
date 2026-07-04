@@ -57,12 +57,19 @@ public class VisualSymbol
   // Variables
   // ---------
 
-  /** The symbol component combo box. */
+  /**
+   * The symbol component combo box.
+   *
+   */
   private JComboBox symbolCombo;
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new visual symbol object using the specified symbol. */
+  /**
+   * Creates a new visual symbol object using the specified symbol.
+   *
+   * @param symbol the symbol value to edit.
+   */
   public VisualSymbol (
     PlotSymbol symbol
   ) {                     

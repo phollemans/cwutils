@@ -78,7 +78,11 @@ public class VIIRSBowtieFilter implements LocationFilter {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the singleton instance of this class. */
+  /**
+   * Gets the singleton instance of this class.
+   *
+   * @return the singleton instance of this class.
+   */
   public static VIIRSBowtieFilter getInstance() {
   
     if (instance == null) {

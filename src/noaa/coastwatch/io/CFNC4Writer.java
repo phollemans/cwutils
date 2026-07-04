@@ -714,8 +714,6 @@ public class CFNC4Writer
      * Create an entry with the specified properties.
      *
      * @param varName the variable name to write data to for this entry.
-     * @param the starting index, same dimensions as the variable.
-     * @param the data to write, must be compatible with NetCDF data types
      * and match the variable named.
      */
     public DataEntry (
@@ -1556,7 +1554,6 @@ public class CFNC4Writer
   /**
    * Gets a multiple-value CF attribute string.
    *
-   * @param candidateAray the array of attribute names to use as
    * candidates for source strings in the value map.
    * @param valueMap the map of attribute names to values.  The
    * map will be searched for the list of candidates.
@@ -1672,6 +1669,8 @@ public class CFNC4Writer
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the writer tests.
    */
   public static void main (String[] argv) throws Exception {
 

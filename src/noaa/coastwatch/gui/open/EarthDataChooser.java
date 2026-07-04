@@ -860,7 +860,11 @@ LOGGER.fine ("Setting the data view in the preview panel");
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the currently selected reader, or null for none. */
+  /**
+   * Gets the currently selected reader, or null for none.
+   *
+   * @return the currently selected reader, or null for none.
+   */
   public EarthDataReader getReader () { return (reader); }
 
   ////////////////////////////////////////////////////////////
@@ -995,6 +999,8 @@ LOGGER.fine ("Setting the data view in the preview panel");
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs creating the chooser.
    */
   public static void main (String[] argv) throws Exception {
 

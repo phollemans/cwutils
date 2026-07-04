@@ -57,6 +57,7 @@ public class TimeWindowRule
   
   /** The operators for this class of rule. */
   public enum Operator {
+    /** Selects values within the time window. */
     IS_WITHIN;
     @Override
     public String toString() {
@@ -124,6 +125,9 @@ public class TimeWindowRule
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the time window rule
+   * tests.
    */
   public static void main (String argv[]) throws Exception {
 

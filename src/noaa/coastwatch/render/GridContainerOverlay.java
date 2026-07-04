@@ -41,7 +41,11 @@ public interface GridContainerOverlay {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the active list of grid variables. */
+  /**
+   * Gets the active list of grid variables.
+   *
+   * @return the active list of grid variables.
+   */
   public List<Grid> getGridList ();
 
   ////////////////////////////////////////////////////////////

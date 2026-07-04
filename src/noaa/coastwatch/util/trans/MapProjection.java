@@ -94,22 +94,38 @@ public abstract class MapProjection
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the projection system name. */
+  /**
+   * Gets the projection system name.
+   *
+   * @return the projection system name.
+   */
   public String getSystemName () { return (PROJECTION_NAMES[system]); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the projection system. */
+  /**
+   * Gets the projection system.
+   *
+   * @return the projection system.
+   */
   public int getSystem () { return (system); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the projection zone. */
+  /**
+   * Gets the projection zone.
+   *
+   * @return the projection zone.
+   */
   public int getZone () { return (zone); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the projection spheroid name. */
+  /**
+   * Gets the projection spheroid name.
+   *
+   * @return the projection spheroid name.
+   */
   public String getSpheroidName () { 
 
     return (spheroid == -1 ? "User defined" : SPHEROID_NAMES[spheroid]);
@@ -118,7 +134,11 @@ public abstract class MapProjection
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the projection spheroid code. */
+  /**
+   * Gets the projection spheroid code.
+   *
+   * @return the projection spheroid code.
+   */
   public int getSpheroid () { return (spheroid); }
 
   ////////////////////////////////////////////////////////////
@@ -131,6 +151,8 @@ public abstract class MapProjection
   /**
    * Gets the data <code>[row, column]</code> to map <code>[x,
    * y]</code> affine transform.
+   *
+   * @return the data <code>[row, column]</code> to map <code>[x, y]</code> affine transform.
    */
   public AffineTransform getAffine () { 
 

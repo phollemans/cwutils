@@ -64,7 +64,10 @@ public class AMSUBData
   /** The data record for this data. */
   private AMSUBRecord record;
 
-  /** The temporary count data array. */
+  /**
+   * The temporary count data array.
+   *
+   */
   private int[] countData = new int[AMSUB.SAMPLES];
 
   ////////////////////////////////////////////////////////////
@@ -73,6 +76,9 @@ public class AMSUBData
    * Creates a new data object for the specified record.
    *
    * @param record the data record for source data.
+   *
+   * @param header the data header for this instrument.
+   *
    */
   public AMSUBData (
     AMSUBHeader header,

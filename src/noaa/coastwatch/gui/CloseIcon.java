@@ -51,13 +51,27 @@ public class CloseIcon implements Icon {
    * HOVER renders an "x" and a square for when the mouse cursor is hovering
    * over the icon, and PRESSED for when the icon is pressed.
    */
-  public enum Mode {NORMAL, HOVER, PRESSED};
+  public enum Mode {
+    /** Renders the normal close icon. */
+    NORMAL,
+    /** Renders the hover close icon. */
+    HOVER,
+    /** Renders the pressed close icon. */
+    PRESSED
+  };
 
   /**
    * The shape constants for the icon highlight rendeing.  SQUARE renders a 
    * square, ROUNDED renders a rounded rectangle, and CIRCLE renders a circle.
    */
-  public enum Shape {SQUARE, ROUNDED, CIRCLE};
+  public enum Shape {
+    /** Renders a square highlight. */
+    SQUARE,
+    /** Renders a rounded rectangle highlight. */
+    ROUNDED,
+    /** Renders a circular highlight. */
+    CIRCLE
+  };
 
   /** The mode for icon rendering. */
   private Mode mode;
@@ -156,5 +170,4 @@ public class CloseIcon implements Icon {
 } // CloseIcon class
 
 ////////////////////////////////////////////////////////////////////////
-
 

@@ -429,6 +429,7 @@ public class GeographicProjection
    *
    * @param lon the longitude value to adjust.
    *
+   *
    * @return the adjusted longitude value.
    *
    * @since 3.5.1
@@ -498,7 +499,14 @@ public class GeographicProjection
 
   ////////////////////////////////////////////////////////////
 
-  /** The geographic implementation of the boundary cut test. */
+  /**
+   * The geographic implementation of the boundary cut test.
+   *
+   * @param a the first earth location.
+   * @param b the second earth location.
+   *
+   * @return true if boundary cut, or false otherwise.
+   */
   public boolean isBoundaryCut (
     EarthLocation a,
     EarthLocation b

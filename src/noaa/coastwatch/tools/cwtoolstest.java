@@ -104,7 +104,11 @@ public class cwtoolstest {
 
   ////////////////////////////////////////////////////////////
   
-  /** Constructs a new instance of this class. */
+  /**
+   * Constructs a new instance of this class.
+   *
+   * @throws IOException if a test data file cannot be found.
+   */
   public cwtoolstest () throws IOException {
     
     // Set absolute path to test files
@@ -666,12 +670,19 @@ public class cwtoolstest {
 
     // Variables
     // ---------
-    /** The exit status code. */
+    /**
+     * The exit status code.
+     *
+     */
     private final int exitStatus;
 
     ////////////////////////////////////////////////////////////
     
-    /** Create a new exception with the specifid exit status. */
+    /**
+     * Create a new exception with the specifid exit status.
+     *
+     * @param exitStatus the process exit status.
+     */
     public SystemExitException (int exitStatus) {
 
       this.exitStatus = exitStatus;
@@ -680,7 +691,11 @@ public class cwtoolstest {
 
     ////////////////////////////////////////////////////////////
     
-    /** Gets the exit status. */
+    /**
+     * Gets the exit status.
+     *
+     * @return the exit status.
+     */
     public int getExitStatus () { return (exitStatus); }
 
     ////////////////////////////////////////////////////////////

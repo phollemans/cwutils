@@ -41,7 +41,7 @@ public interface DoubleIterator
 
   ////////////////////////////////////////////////////////////
 
-  /*
+  /**
    * Gets the next value.
    *
    * @return the next double value.

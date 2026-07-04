@@ -183,6 +183,9 @@ public class XMLPointWriter
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs opening input data or writing XML
+   * navigation point data.
    */
   public static void main (String[] argv) throws Exception {
 
@@ -210,5 +213,4 @@ public class XMLPointWriter
 } // XMLPointWriter class
 
 ////////////////////////////////////////////////////////////////////////
-
 

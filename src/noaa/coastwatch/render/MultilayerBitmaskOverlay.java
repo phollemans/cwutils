@@ -107,6 +107,8 @@ public class MultilayerBitmaskOverlay
   /** 
    * Gets the reader used to fetch the data for the bitmasks, or null
    * if no reader was explicitly given to the bitmask constructor.
+   *
+   * @return the reader used to fetch the data for the bitmasks, or null if no reader was explicitly given to the bitmask constructor.
    */
   public EarthDataReader getReader () { 
 
@@ -116,7 +118,11 @@ public class MultilayerBitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the possible grid variable names. */
+  /**
+   * Gets the possible grid variable names.
+   *
+   * @return the possible grid variable names.
+   */
   public List getGridNameValues () { 
 
     return (((BitmaskOverlay) overlayList.get (0)).getGridNameValues());
@@ -125,7 +131,11 @@ public class MultilayerBitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the grid variable name. */
+  /**
+   * Gets the grid variable name.
+   *
+   * @return the grid variable name.
+   */
   public String getGridName () { 
 
     return (((BitmaskOverlay) overlayList.get (0)).getGridName());
@@ -134,7 +144,12 @@ public class MultilayerBitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the active grid variable. */
+  /**
+   * Gets the active grid variable.
+   *
+   *
+   * @return the active grid variable.
+   */
   public Grid getGrid () { 
 
     return (((BitmaskOverlay) overlayList.get (0)).getGrid());
@@ -146,6 +161,9 @@ public class MultilayerBitmaskOverlay
   /** 
    * Sets the grid variable in each bitmask overlay based on the
    * name. 
+   *
+   * @param name the grid name.
+   *
    */
   public void setGridName (String name) { 
 
@@ -159,7 +177,10 @@ public class MultilayerBitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Clears the list of overlays. */
+  /**
+   * Clears the list of overlays.
+   *
+   */
   public void clearOverlays () {
 
     overlayList.clear();
@@ -169,7 +190,12 @@ public class MultilayerBitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Adds a list of overlays to the list. */
+  /**
+   * Adds a list of overlays to the list.
+   *
+   * @param overlays the bitmask overlays to add.
+   *
+   */
   public void addOverlays (List overlays) {
 
     overlayList.addAll (overlays);
@@ -179,7 +205,11 @@ public class MultilayerBitmaskOverlay
 
   ////////////////////////////////////////////////////////////
   
-  /** Adds a new bit mask overlay to the list. */
+  /**
+   * Adds a new bit mask overlay to the list.
+   *
+   * @param overlay the bitmask overlay to add.
+   */
   public void addOverlay (
     BitmaskOverlay overlay
   ) {
@@ -191,7 +221,11 @@ public class MultilayerBitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Removes an overlay from the list. */
+  /**
+   * Removes an overlay from the list.
+   *
+   * @param overlay the bitmask overlay to remove.
+   */
   public void removeOverlay (
     BitmaskOverlay overlay
   ) {
@@ -203,7 +237,11 @@ public class MultilayerBitmaskOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current list of overlays. */
+  /**
+   * Gets the current list of overlays.
+   *
+   * @return the current list of overlays.
+   */
   public List getOverlays () { return ((List) overlayList.clone()); }
 
   ////////////////////////////////////////////////////////////

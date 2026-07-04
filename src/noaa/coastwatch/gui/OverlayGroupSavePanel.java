@@ -76,12 +76,20 @@ public class OverlayGroupSavePanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the selected group name. */
+  /**
+   * Gets the selected group name.
+   *
+   * @return the selected group name.
+   */
   public String getGroupName () { return ((String) groupCombo.getSelectedItem()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the selected overlays. */
+  /**
+   * Gets the selected overlays.
+   *
+   * @return the selected overlays.
+   */
   public List<EarthDataOverlay> getSelectedOverlays () { 
 
     return (overlayJList.getSelectedValuesList()); 

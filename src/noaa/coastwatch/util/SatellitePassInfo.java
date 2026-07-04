@@ -193,42 +193,74 @@ public class SatellitePassInfo
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the pass center point. */
+  /**
+   * Gets the pass center point.
+   *
+   * @return the pass center point.
+   */
   public EarthLocation getCenter () { return ((EarthLocation)center.clone()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the pass identifier. */
+  /**
+   * Gets the pass identifier.
+   *
+   * @return the pass identifier.
+   */
   public String getPassID () { return (passID); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the orbit type: 'ascending' or 'descending'. */
+  /**
+   * Gets the orbit type: 'ascending' or 'descending'.
+   *
+   * @return the orbit type.
+   */
   public String getOrbitType () { return (orbitType); }
   
   ////////////////////////////////////////////////////////////
 
-  /** Gets the pass dimensions as [lines, samples]. */
+  /**
+   * Gets the pass dimensions as [lines, samples].
+   *
+   * @return the pass dimensions as [lines, samples].
+   */
   public int[] getDimensions () { return (new int[] {lines, samples}); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the pass ground capture station. */
+  /**
+   * Gets the pass ground capture station.
+   *
+   * @return the pass ground capture station.
+   */
   public String getGroundStation () { return (groundStation); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the pass coverage polygon. */
+  /**
+   * Gets the pass coverage polygon.
+   *
+   * @return the pass coverage polygon.
+   */
   public LineFeature getCoveragePolygon () { return (coveragePolygon); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the pass preview URL. */
+  /**
+   * Gets the pass preview URL.
+   *
+   * @return the pass preview URL.
+   */
   public String getPreviewURL () { return (previewURL); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the pass scene time: 'day', 'night', or 'day/night'. */
+  /**
+   * Gets the pass scene time: 'day', 'night', or 'day/night'.
+   *
+   * @return the pass scene time.
+   */
   public String getSceneTime () { return (sceneTime); }
 
   ////////////////////////////////////////////////////////////

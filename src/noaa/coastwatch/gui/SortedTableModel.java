@@ -154,12 +154,20 @@ public class SortedTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current sorting column, or -1 for no sorting. */
+  /**
+   * Gets the current sorting column, or -1 for no sorting.
+   *
+   * @return the current sorting column, or -1 for no sorting.
+   */
   public int getSortColumn () { return (sortColumn); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current sorting order. */
+  /**
+   * Gets the current sorting order.
+   *
+   * @return the current sorting order.
+   */
   public boolean getIsAscending () { return (isAscending); }
 
   ////////////////////////////////////////////////////////////

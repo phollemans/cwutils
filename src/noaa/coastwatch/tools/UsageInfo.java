@@ -81,6 +81,11 @@ public class UsageInfo {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a usage information object.
+   *
+   * @param command the command name.
+   */
   public UsageInfo (String command) {
 
     this.command = command;
@@ -91,14 +96,47 @@ public class UsageInfo {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Sets the command function text.
+   *
+   * @param func the command function text.
+   */
   public void func (String func) { this.func = func; }
+
+  /**
+   * Adds a command parameter in the default parameter group.
+   *
+   * @param param the parameter name.
+   * @param desc the parameter description.
+   */
   public void param (String param, String desc) { param (param, desc, 1); }
+
+  /**
+   * Adds a command parameter.
+   *
+   * @param param the parameter name.
+   * @param desc the parameter description.
+   * @param group the parameter group number.
+   */
   public void param (String param, String desc, int group) {
     Map<String, String> map = paramMap.get (group);
     if (map == null) { map = new LinkedHashMap<>(); paramMap.put (group, map); }
     map.put (param, desc);
   } // param
+
+  /**
+   * Adds a command option.
+   *
+   * @param option the option name.
+   * @param desc the option description.
+   */
   public void option (String option, String desc) { optionMap.put (option, desc); }
+
+  /**
+   * Adds an option section heading.
+   *
+   * @param section the section heading.
+   */
   public void section (String section) { optionMap.put (section, null); }
 
   ////////////////////////////////////////////////////////////

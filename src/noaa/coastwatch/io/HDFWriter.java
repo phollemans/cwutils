@@ -158,12 +158,20 @@ public abstract class HDFWriter
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the HDF chunking flag. */
+  /**
+   * Gets the HDF chunking flag.
+   *
+   * @return the HDF chunking flag.
+   */
   public boolean getChunked () { return (chunked); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the HDF compression flag. */
+  /**
+   * Gets the HDF compression flag.
+   *
+   * @return the HDF compression flag.
+   */
   public boolean getCompressed () { return (compressed); }
 
   ////////////////////////////////////////////////////////////
@@ -415,7 +423,11 @@ public abstract class HDFWriter
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current chunk size in bytes. */
+  /**
+   * Gets the current chunk size in bytes.
+   *
+   * @return the current chunk size in bytes.
+   */
   public int getChunkSize () { return (chunkSize); }
 
   ////////////////////////////////////////////////////////////

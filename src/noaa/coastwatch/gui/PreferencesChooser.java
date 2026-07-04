@@ -116,6 +116,7 @@ import java.util.logging.Logger;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public class PreferencesChooser
   extends JPanel {
@@ -387,6 +388,8 @@ public class PreferencesChooser
   /**
    * The <code>GeneralPreferencesChooser</code> lets the user change
    * just the preferences relating to general settings.
+   *
+   * @serial exclude
    */
   private class GeneralPreferencesChooser
     extends JPanel {
@@ -537,6 +540,8 @@ public class PreferencesChooser
    * The <code>EnhancementPreferencesChooser</code> lets the user
    * change just the preferences relating to default data
    * enhancements.
+   *
+   * @serial exclude
    */
   private class EnhancementPreferencesChooser
     extends JPanel {
@@ -1220,6 +1225,7 @@ public class PreferencesChooser
    * just the preferences relating to export settings.
    * 
    * @since 3.8.1
+   * @serial exclude
    */
   private class ExportPreferencesChooser extends JPanel {
 
@@ -1401,6 +1407,11 @@ public class PreferencesChooser
 
     ////////////////////////////////////////////////////////
 
+    /**
+     * The logo panel displays the export logo preview.
+     *
+     * @serial exclude
+     */
     private class LogoPanel extends JPanel {
 
       int SPACE_SIZE = 5;

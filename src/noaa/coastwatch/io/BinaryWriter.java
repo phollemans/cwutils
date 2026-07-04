@@ -174,7 +174,13 @@ abstract public class BinaryWriter
 
   ////////////////////////////////////////////////////////////
 
-  /** Performs a byte swap on a byte array. */
+  /**
+   * Performs a byte swap on a byte array.
+   *
+   * @param array the byte array to swap.
+   *
+   * @return the swapped byte array.
+   */
   public static byte[] byteSwap (
     byte[] array
   ) {
@@ -188,7 +194,13 @@ abstract public class BinaryWriter
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the bytes representing an integer in MSB order. */
+  /**
+   * Gets the bytes representing an integer in MSB order.
+   *
+   * @param value the integer value.
+   *
+   * @return the bytes representing the integer in MSB order.
+   */
   public static byte[] getBytes (
     int value
   ) {
@@ -204,7 +216,13 @@ abstract public class BinaryWriter
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the bytes representing a short integer in MSB order. */
+  /**
+   * Gets the bytes representing a short integer in MSB order.
+   *
+   * @param value the short integer value.
+   *
+   * @return the bytes representing the short integer in MSB order.
+   */
   public static byte[] getBytes (
     short value
   ) {
@@ -264,22 +282,38 @@ abstract public class BinaryWriter
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the type minimum as a double. */
+  /**
+   * Gets the type minimum as a double.
+   *
+   * @return the type minimum as a double.
+   */
   public abstract double getTypeMin ();
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the type maximum as a double. */
+  /**
+   * Gets the type maximum as a double.
+   *
+   * @return the type maximum as a double.
+   */
   public abstract double getTypeMax ();
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the type range as a double. */
+  /**
+   * Gets the type range as a double.
+   *
+   * @return the type range as a double.
+   */
   public abstract double getTypeRange ();
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the default missing value. */
+  /**
+   * Gets the default missing value.
+   *
+   * @return the default missing value.
+   */
   public abstract Number getDefaultMissing ();
 
   ////////////////////////////////////////////////////////////

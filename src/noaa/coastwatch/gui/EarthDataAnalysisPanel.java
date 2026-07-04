@@ -126,6 +126,7 @@ import noaa.coastwatch.util.VariableStatisticsGenerator;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public class EarthDataAnalysisPanel
   extends JPanel
@@ -170,7 +171,9 @@ public class EarthDataAnalysisPanel
   ////////////////////////////////////////////////////////////
 
   /**
-   * 
+   * Creates the toolbar buttons for the analysis panel.
+   *
+   * @return the tool bar buttons.
    * @since 3.8.1
    */
   public static List<AbstractButton> getToolBarButtons () {
@@ -186,12 +189,25 @@ public class EarthDataAnalysisPanel
 
   ////////////////////////////////////////////////////////////
 
+  /** Resets the view. */
   public void resetView () { controller.getViewOperationChooser().performViewOperation (OnScreenViewOperationChooser.Mode.RESET); }
+
+  /** Shows the view at actual size. */
   public void actualSizeView () { controller.getViewOperationChooser().performViewOperation (OnScreenViewOperationChooser.Mode.ONE_TO_ONE); }
+
+  /** Fills the window with the view. */
   public void fillWindowView () { controller.getViewOperationChooser().performViewOperation (OnScreenViewOperationChooser.Mode.FIT); }
+
+  /** Magnifies the view. */
   public void magnifyView () { controller.getViewOperationChooser().performViewOperation (OnScreenViewOperationChooser.Mode.MAGNIFY); }
+
+  /** Shrinks the view. */
   public void shrinkView () { controller.getViewOperationChooser().performViewOperation (OnScreenViewOperationChooser.Mode.SHRINK); }
+
+  /** Zooms the view to a selection. */
   public void zoomSelectionView () { controller.getViewOperationChooser().performViewOperation (OnScreenViewOperationChooser.Mode.ZOOM); }
+
+  /** Pans the view. */
   public void panView () { controller.getViewOperationChooser().performViewOperation (OnScreenViewOperationChooser.Mode.PAN); }
 
   ////////////////////////////////////////////////////////////

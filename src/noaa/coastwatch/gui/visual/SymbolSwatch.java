@@ -89,7 +89,10 @@ public class SymbolSwatch
   
   ////////////////////////////////////////////////////////////
 
-  /** Paints the icon to the specified graphics context. */
+  /**
+   * Paints the icon to the specified graphics context.
+   *
+   */
   public void paintIcon (Component c, Graphics g, int x, int y) { 
 
     // Draw symbol
@@ -110,7 +113,11 @@ public class SymbolSwatch
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the swatch symbol. */
+  /**
+   * Sets the swatch symbol.
+   *
+   * @param symbol the swatch symbol.
+   */
   public void setSymbol (PlotSymbol symbol) { this.symbol = symbol; }
 
   ////////////////////////////////////////////////////////////

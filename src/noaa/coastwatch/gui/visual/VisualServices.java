@@ -46,6 +46,12 @@ public class VisualServices {
   /** 
    * Returns the first method for the specified object with the
    * specified name, or null if one cannot be found.
+   *
+   * @param object the object to search for methods.
+   *
+   * @param methodName the method name to search for.
+   *
+   * @return the first method for the specified object with the specified name, or null if one cannot be found.
    */
   public static Method findMethod (
     Object object,
@@ -65,6 +71,11 @@ public class VisualServices {
   /** 
    * Returns the get method for the specified object and property, or
    * null if no method can be found.
+   *
+   * @param object the object to search for a get method.
+   * @param property the property name.
+   *
+   * @return the get method for the specified object and property, or null if no method can be found.
    */
   public static Method findGetMethod (
     Object object,
@@ -81,6 +92,11 @@ public class VisualServices {
   /** 
    * Returns the get values method for the specified object and
    * property, or null if no method can be found.
+   *
+   * @param object the object to search for a get values method.
+   * @param property the property name.
+   *
+   * @return the get values method for the specified object and property, or null if no method can be found.
    */
   public static Method findGetValuesMethod (
     Object object,
@@ -98,6 +114,11 @@ public class VisualServices {
   /** 
    * Returns the set method for the specified object and property, or
    * null if no method can be found.
+   *
+   * @param object the object to search for a set method.
+   * @param property the property name.
+   *
+   * @return the set method for the specified object and property, or null if no method can be found.
    */
   public static Method findSetMethod (
     Object object,
@@ -137,6 +158,10 @@ public class VisualServices {
    * Returns a list of properties for the specified object.
    * Properties are defined as those values which have corresponding
    * get and set methods.
+   *
+   * @param object the object to search for properties.
+   *
+   * @return a list of properties for the specified object.
    */
   public static List getProperties (
     Object object
@@ -177,6 +202,11 @@ public class VisualServices {
   /** 
    * Gets the class of the specified property, or null if the object
    * has no property with the specified name. 
+   *
+   * @param object the object to search for the property.
+   * @param property the property name.
+   *
+   * @return the class of the specified property, or null if the object has no property with the specified name.
    */
   public static Class getPropertyType ( 
     Object object, 

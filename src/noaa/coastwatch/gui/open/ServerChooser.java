@@ -97,13 +97,19 @@ public class ServerChooser
   /** The table model of server name and location. */
   private ServerTableModel serverModel;
 
-  /** The table of servers. */
+  /**
+   * The table of servers.
+   *
+   */
   private JTable serverTable;
 
   ////////////////////////////////////////////////////////////
 
   /** 
    * Creates a new chooser with the specified server list.
+   *
+   * @param serverList the servers to show in the chooser.
+   *
    */
   public ServerChooser (
     List serverList
@@ -220,7 +226,11 @@ public class ServerChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current list of server entries. */
+  /**
+   * Gets the current list of server entries.
+   *
+   * @return the current list of server entries.
+   */
   public List getServerList () { return (serverModel.getServerList()); }
 
   ////////////////////////////////////////////////////////////
@@ -234,6 +244,8 @@ public class ServerChooser
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs creating the server chooser.
    */
   public static void main (String[] argv) throws Exception {
 

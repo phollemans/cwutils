@@ -49,12 +49,19 @@ public class UpdateAgent
   // Variables
   // ---------
 
-  /** The tool name for the update check. */
+  /**
+   * The tool name for the update check.
+   *
+   */
   private String tool;
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new update agent for the specified tool name. */
+  /**
+   * Creates a new update agent for the specified tool name.
+   *
+   * @param tool the tool name to check for updates.
+   */
   public UpdateAgent (
     String tool
   ) {

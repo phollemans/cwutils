@@ -48,12 +48,21 @@ public class LogEnhancement
   /** Function slope. */
   private double slope;
 
-  /** Function y intercept. */
+  /**
+   * Function y intercept.
+   *
+   */
   private double inter;
 
   ////////////////////////////////////////////////////////////
 
-  /** Computes the log base 10 of a number. */
+  /**
+   * Computes the log base 10 of a number.
+   *
+   * @param x the input value.
+   *
+   * @return the log base 10 of the number.
+   */
   public static double log10 (
     double x
   ) {

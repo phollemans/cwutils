@@ -48,7 +48,11 @@ public class DataChunkFactory {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the singleton instance of this class. */
+  /**
+   * Gets the singleton instance of this class.
+   *
+   * @return the singleton instance of this class.
+   */
   public static DataChunkFactory getInstance() { return (instance); }
 
   ////////////////////////////////////////////////////////////
@@ -93,6 +97,9 @@ public class DataChunkFactory {
    * @param packing the packing scheme for floating point data values packed as
    * integer values in the chunk, or null for none.
    * @param scaling the scaling scheme for floating point data values or
+   *
+   * @param <T> the type of data chunk.
+   *
    * null for none.  Either packing or scaling may be specified but not both.
    *
    * @return the data chunk wrapping the primitive array.

@@ -182,6 +182,8 @@ public class TextElement
   /**
    * Gets the text layout object for this element.
    * 
+   *
+   * @return the text layout object for this element.
    * @param g the graphics device for drawing.
    */
   public TextLayout getLayout (
@@ -198,6 +200,8 @@ public class TextElement
    * Prepares the text affine transform and bounds for rendering.
    *
    * @param g the graphics device for drawing.
+   *
+   *
    */
   private void prepare (
     Graphics2D g
@@ -231,17 +235,30 @@ public class TextElement
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the text string. */
+  /**
+   * Gets the text string.
+   *
+   * @return the text string.
+   */
   public String getText () { return (text); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the text string. */
+  /**
+   * Sets the text string.
+   *
+   * @param text the text string.
+   *
+   */
   public void setText (String text) { this.text = text; invalidate(); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the text base point. */
+  /**
+   * Sets the text base point.
+   *
+   * @param base the base point.
+   */
   public void setBasePoint (Point2D base) { 
     this.base = (Point2D)base.clone(); 
     invalidate();
@@ -249,27 +266,50 @@ public class TextElement
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the text base point. */
+  /**
+   * Gets the text base point.
+   *
+   *
+   * @return the text base point.
+   */
   public Point2D getBasePoint () { return ((Point2D) base.clone()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the text orientation angle. */
+  /**
+   * Sets the text orientation angle.
+   *
+   * @param angle the rotation angle.
+   *
+   */
   public void setAngle (double angle) { this.angle = angle; invalidate(); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the text font. */
+  /**
+   * Sets the text font.
+   *
+   * @param font the text font.
+   */
   public void setFont (Font font) { this.font = font; invalidate(); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the text font. */
+  /**
+   * Gets the text font.
+   *
+   *
+   * @return the text font.
+   */
   public Font getFont () { return (font); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the text alignment. */
+  /**
+   * Sets the text alignment.
+   *
+   * @param align the text alignment.
+   */
   public void setAlignment (double[] align) {
     this.align = (align == null ? new double[]{0,0} : (double[])align.clone());
     invalidate();

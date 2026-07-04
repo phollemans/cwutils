@@ -49,10 +49,19 @@ public interface EarthGridSet {
    * select a 2D grid in the set.
    */
   public class Axis<T> implements Iterable<T> {
+    /** The axis name. */
     private String name;
+
+    /** The axis type. */
     private String axisType;
+
+    /** The axis units. */
     private String units;
+
+    /** The list of axis coordinate values. */
     private List<T> values;
+
+    /** The axis coordinate value data type. */
     private Class<T> dataType;
 
     /** 
@@ -72,14 +81,63 @@ public interface EarthGridSet {
       this.dataType = dataType;
     } // Axis 
 
+    /**
+     * Gets the axis name.
+     *
+     * @return the axis name.
+     */
     public String getName() { return (name); }
+
+    /**
+     * Gets the axis type.
+     *
+     * @return the axis type.
+     */
     public String getAxisType() { return (axisType); }
+
+    /**
+     * Gets the axis units.
+     *
+     * @return the axis units.
+     */
     public String getUnits() { return (units); }
+
+    /**
+     * Gets an iterator over the axis coordinate values.
+     *
+     * @return the axis coordinate value iterator.
+     */
     @Override
     public Iterator<T> iterator() { return (values.iterator()); }
+
+    /**
+     * Gets an axis coordinate value.
+     *
+     * @param index the axis coordinate value index.
+     *
+     * @return the axis coordinate value.
+     */
     public T getValue (int index) { return (values.get (index)); }
+
+    /**
+     * Gets the number of axis coordinate values.
+     *
+     * @return the number of axis coordinate values.
+     */
     public int getSize() { return (values.size()); }
+
+    /**
+     * Gets the axis coordinate value data type.
+     *
+     * @return the axis coordinate value data type.
+     */
     public Class<T> getDataType() { return (dataType); }
+
+    /**
+     * Gets a string representation of this axis.
+     *
+     * @return the axis name.
+     */
     public String toString () { return (name); }
 
   } // Axis class
@@ -148,6 +206,8 @@ public interface EarthGridSet {
    * Returns the status of support for calling the {@link #accessGridSubset} 
    * method.
    * 
+   *
+   * @return the status of support for calling the {@link #accessGridSubset} method.
    * @since 4.1.0
    */
   default public boolean gridSubsetSupported () { return (false); }

@@ -94,6 +94,7 @@ import noaa.coastwatch.util.HTMLReportFormatter;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public class SurveyListChooser
   extends JPanel
@@ -150,7 +151,9 @@ public class SurveyListChooser
   ////////////////////////////////////////////////////////////
 
   /**
-   * 
+   * Creates the survey toolbar buttons.
+   *
+   * @return the tool bar buttons.
    * @since 3.8.1
    */
   public static List<AbstractButton> getToolBarButtons () {
@@ -189,7 +192,12 @@ public class SurveyListChooser
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the last survey command executed. */
+  /**
+   * Gets the last survey command executed.
+   *
+   *
+   * @return the last survey command executed.
+   */
   public String getSurveyCommand () { return (surveyCommand); }
 
   ////////////////////////////////////////////////////////////
@@ -197,6 +205,9 @@ public class SurveyListChooser
   /** 
    * Adds the specified listener for receiving survey input action
    * commands. 
+   *
+   * @param listener the listener to receive survey input action commands.
+   *
    */
   public void addSurveyActionListener (
     ActionListener listener

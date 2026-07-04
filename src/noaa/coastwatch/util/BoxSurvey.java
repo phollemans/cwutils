@@ -51,7 +51,11 @@ public class BoxSurvey
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the survey type for results reporting. */
+  /**
+   * Gets the survey type for results reporting.
+   *
+   * @return the survey type for results reporting.
+   */
   protected String getSurveyType () { return ("Rectangle"); }
 
   ////////////////////////////////////////////////////////////
@@ -59,6 +63,8 @@ public class BoxSurvey
   /** 
    * Gets the sample size (total values sampled divided by the total
    * values in the area) in percent. 
+   *
+   * @return the sample size (total values sampled divided by the total values in the area) in percent.
    */
   protected double getSampleSize () {
 

@@ -41,11 +41,13 @@ public class MODISSourceImp extends GenericSourceImp {
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Creates a new MODIS resampling helper using the specified transform.
-   *
+   /**
+    * Creates a new MODIS resampling helper using the specified transform.
+    *
    * @param sourceTrans the source transform to use for MODIS swath location
    * data.
+   *
+   * @return a new MODIS resampling helper using the specified transform.
    */
   public static MODISSourceImp getInstance (
     EarthTransform sourceTrans
@@ -91,5 +93,4 @@ public class MODISSourceImp extends GenericSourceImp {
 } // MODISSourceImp class
 
 ////////////////////////////////////////////////////////////////////////
-
 

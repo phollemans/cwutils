@@ -364,6 +364,8 @@ public class WindBarbSymbol
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while rendering the test symbol.
    */
   public static void main (String[] argv) throws Exception {
 

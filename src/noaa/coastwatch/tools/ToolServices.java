@@ -72,7 +72,7 @@ public class ToolServices {
 
   /** The software copyright. */
   public static final String COPYRIGHT = 
-    "(c) 1998-2025 National Oceanic and Atmospheric Administration";
+    "(c) 1998-2026 National Oceanic and Atmospheric Administration";
 
   /** The software copyright (short version). */
   public static final String COPYRIGHT_SHORT = COPYRIGHT;
@@ -336,7 +336,11 @@ public class ToolServices {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a Java runtime and OS version. */
+  /**
+   * Gets a Java runtime and OS version.
+   *
+   * @return a Java runtime and OS version.
+   */
   public static String getJavaVersion () {
 
     return (
@@ -429,7 +433,11 @@ public class ToolServices {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the current tool command line, or null if none has been set. */
+  /**
+   * Gets the current tool command line, or null if none has been set.
+   *
+   * @return the current tool command line, or null if none has been set.
+   */
   public static String getCommandLine () { return (commandLine); }
 
   ////////////////////////////////////////////////////////////

@@ -406,6 +406,8 @@ public class NCCachedGrid
   /** 
    * TESTING: Traverses an HDF tree structure and prints out the node names,
    * classes, dimensions, and compression/chunking information.
+   *
+   *
    */
   private static void traverse (
     TreeNode node,
@@ -470,6 +472,10 @@ public class NCCachedGrid
   /** 
    * TESTING: Traverses an HDF file's structure and prints out dataset 
    * information.
+   *
+   * @param argv the command line parameters.
+   *
+   * @throws Exception if an error occurs opening or traversing the HDF file.
    */
   public static void main (String argv[]) throws Exception {
   

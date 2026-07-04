@@ -181,7 +181,12 @@ public abstract class EarthDataOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the overlay color with alpha component. */
+  /**
+   * Gets the overlay color with alpha component.
+   *
+   *
+   * @return the overlay color with alpha component.
+   */
   public Color getColorWithAlpha () { 
 
     return (getAlphaVersion (color));
@@ -190,32 +195,58 @@ public abstract class EarthDataOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the overlay layer. */
+  /**
+   * Sets the overlay layer.
+   *
+   * @param layer the overlay layer number.
+   */
   public void setLayer (int layer) { this.layer = layer; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the overlay layer. */
+  /**
+   * Gets the overlay layer.
+   *
+   *
+   * @return the overlay layer.
+   */
   public int getLayer () { return (layer); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the overlay name. */
+  /**
+   * Sets the overlay name.
+   *
+   * @param name the overlay name.
+   */
   public void setName (String name) { this.name = name; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the overlay name. */
+  /**
+   * Gets the overlay name.
+   *
+   *
+   * @return the overlay name.
+   */
   public String getName () { return (name); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the overlay visibility flag. */
+  /**
+   * Sets the overlay visibility flag.
+   *
+   * @param flag true to make the overlay visible.
+   */
   public void setVisible (boolean flag) { this.isVisible = flag; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the overlay visibility flag. */
+  /**
+   * Gets the overlay visibility flag.
+   *
+   * @return the overlay visibility flag.
+   */
   public boolean getVisible () { return (isVisible); }
 
   ////////////////////////////////////////////////////////////
@@ -281,6 +312,8 @@ public abstract class EarthDataOverlay
    * from disk or cache, converting earth locations to screen points,
    * and so on.
    *
+   *
+   * @return the status of the overlay preparation.
    * @param view the earth data view for the next rendering operation.
    */
   public boolean isPrepared (
@@ -428,6 +461,7 @@ public abstract class EarthDataOverlay
    *
    * @param color the color to convert.
    *
+   *
    * @return a new version of the color with the alpha component set
    * to the transparency of the overlay.
    */
@@ -449,6 +483,11 @@ public abstract class EarthDataOverlay
    * Reads the object data from the input stream.  If the overlay was
    * serialized without an alpha value, than the alpha value is set to
    * 255.
+   *
+   * @param in the input stream.
+   *
+   * @throws IOException if an error occurs reading object data from the stream.
+   * @throws ClassNotFoundException if a serialized object class cannot be found.
    */
   private void readObject (
     ObjectInputStream in

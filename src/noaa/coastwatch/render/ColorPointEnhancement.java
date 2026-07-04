@@ -66,7 +66,11 @@ public class ColorPointEnhancement
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the enhancement color palette. */
+  /**
+   * Gets the enhancement color palette.
+   *
+   * @return the enhancement color palette.
+   */
   public Palette getPalette () { 
 
     return (((ColorEnhanced) overlay.getSymbol()).getPalette()); 
@@ -75,7 +79,12 @@ public class ColorPointEnhancement
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the enhancement function. */
+  /**
+   * Gets the enhancement function.
+   *
+   *
+   * @return the enhancement function.
+   */
   public EnhancementFunction getFunction () { 
 
     return (((ColorEnhanced) overlay.getSymbol()).getFunction()); 
@@ -84,7 +93,12 @@ public class ColorPointEnhancement
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the enhancement color palette. */
+  /**
+   * Sets the enhancement color palette.
+   *
+   * @param pal the palette.
+   *
+   */
   public void setPalette (Palette pal) { 
 
     ((ColorEnhanced) overlay.getSymbol()).setPalette (pal); 
@@ -93,7 +107,11 @@ public class ColorPointEnhancement
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the missing value color. */
+  /**
+   * Sets the missing value color.
+   *
+   * @param missingColor the missing value color.
+   */
   public void setMissingColor (Color missingColor) { 
 
     ((ColorEnhanced) overlay.getSymbol()).setMissingColor (missingColor); 
@@ -102,7 +120,12 @@ public class ColorPointEnhancement
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the missing value color. */
+  /**
+   * Gets the missing value color.
+   *
+   *
+   * @return the missing value color.
+   */
   public Color getMissingColor () {
 
     return (((ColorEnhanced) overlay.getSymbol()).getMissingColor());
@@ -111,7 +134,11 @@ public class ColorPointEnhancement
 
   ////////////////////////////////////////////////////////////
   
-  /** Sets the enhancement function. */
+  /**
+   * Sets the enhancement function.
+   *
+   * @param func the enhancement function.
+   */
   public void setFunction (EnhancementFunction func) { 
 
     ((ColorEnhanced) overlay.getSymbol()).setFunction (func);
@@ -208,7 +235,11 @@ public class ColorPointEnhancement
 
   ////////////////////////////////////////////////////////////
 
-  /** Saves and returns the current settings. */
+   /**
+    * Saves and returns the current settings.
+    *
+   * @return the current settings.
+   */
   public ColorEnhancementSettings saveSettings () {
 
     return (new ColorEnhancementSettings (name, getPalette(), 

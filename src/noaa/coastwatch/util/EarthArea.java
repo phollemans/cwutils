@@ -95,7 +95,11 @@ public class EarthArea implements Cloneable, Iterable<int[]> {
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns true if this earth area contains no grid squares. */
+  /**
+   * Returns true if this earth area contains no grid squares.
+   *
+   * @return true if this earth area contains no grid squares.
+   */
   public boolean isEmpty () { return (bits.isEmpty()); }
 
   ////////////////////////////////////////////////////////////
@@ -109,10 +113,13 @@ public class EarthArea implements Cloneable, Iterable<int[]> {
 
     // Variables
     // ---------
+
+    /** The current and next set bit indexes. */
     private int index, nextIndex;
 
     //////////////////////////////////////////////////////////
 
+    /** Creates a new earth area iterator. */
     public EarthAreaIterator () {
 
       nextIndex = bits.nextSetBit(0);
@@ -159,6 +166,8 @@ public class EarthArea implements Cloneable, Iterable<int[]> {
    * Returns an iterator over the grid square elements.  Each object
    * returned by the iterator contains the lower-left
    * <code>int[]</code> coordinates of the grid square as [lat, lon].
+   *
+   * @return an iterator over the grid square elements.
    */
   public Iterator<int[]> getIterator () {
 

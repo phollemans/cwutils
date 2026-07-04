@@ -32,9 +32,21 @@ package noaa.coastwatch.util.chunk;
  * @since 3.4.0
  */
 public interface PackingSchemeVisitor {
+
+  /**
+   * Visits a float packing scheme.
+   *
+   * @param scheme the packing scheme to visit.
+   */
   public void visitFloatPackingScheme (FloatPackingScheme scheme);
+
+  /**
+   * Visits a double packing scheme.
+   *
+   * @param scheme the packing scheme to visit.
+   */
   public void visitDoublePackingScheme (DoublePackingScheme scheme);
+
 } // PackingSchemeVisitor interface
 
 ////////////////////////////////////////////////////////////////////////
-

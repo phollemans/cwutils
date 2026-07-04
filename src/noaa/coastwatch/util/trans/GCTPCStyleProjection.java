@@ -53,15 +53,23 @@ public abstract class GCTPCStyleProjection
 
   /** The indices into return value array for forward transforms. */
   public static final int X = 0;
+
+  /** The y index into return value array for forward transforms. */
   public static final int Y = 1;
 
   /** The indices into return value array for inverse transforms. */
   public static final int LON = 0;
+
+  /** The latitude index into return value array for inverse transforms. */
   public static final int LAT = 1;
 
   /** The return codes for GCTPC functions. */
   public static final int OK = 0;
+
+  /** The error return code for GCTPC functions. */
   public static final int ERROR = -1;
+
+  /** The interrupted break return code for GCTPC functions. */
   public static final int IN_BREAK = -2;
 
   // Variables
@@ -84,6 +92,9 @@ public abstract class GCTPCStyleProjection
    * columns]</code>.
    * @param affine the affine transform for translating data
    * <code>[row, column]</code> to map <code>[x, y]</code>.
+   *
+   * @throws NoninvertibleTransformException if the affine transform
+   * cannot be inverted.
    */
   protected GCTPCStyleProjection (
     int system,
@@ -187,6 +198,13 @@ public abstract class GCTPCStyleProjection
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Formats text into a character buffer.
+   *
+   * @param buffer the character buffer to modify.
+   * @param format the format string.
+   * @param args the format arguments.
+   */
   protected static void sprintf (char buffer[], String format, Object... args) {
     String str = String.format (format, args);
     str.getChars​ (0, str.length(), buffer, 0);
@@ -206,16 +224,34 @@ public abstract class GCTPCStyleProjection
    * message string is needed.
    */
 
+  /**
+   * Logs a GCTP error message.
+   *
+   * @param what the error message.
+   * @param where the routine where the error occurred.
+   */
   protected static void p_error (char what[], char where[]) {
     if (LOGGER.isLoggable (Level.FINER))
       LOGGER.finer (String.format ("[%s] %s", new String (where), new String (what)));
   }
 
+  /**
+   * Logs a GCTP error message.
+   *
+   * @param what the error message.
+   * @param where the routine where the error occurred.
+   */
   protected static void p_error (String what, String where) {
     if (LOGGER.isLoggable (Level.FINER))
       LOGGER.finer (String.format ("[%s] %s", where, what));
   }
 
+  /**
+   * Logs a GCTP error message.
+   *
+   * @param what the error message.
+   * @param where the routine where the error occurred.
+   */
   protected static void p_error (char what[], String where) {
     if (LOGGER.isLoggable (Level.FINER))
       LOGGER.finer (String.format ("[%s] %s", where, new String (what)));
@@ -225,53 +261,118 @@ public abstract class GCTPCStyleProjection
 
   /** These are some GCTP parameter reporting methods that log at the FINE level. */
 
+  /**
+   * Logs a projection parameter title.
+   *
+   * @param title the projection title.
+   */
   protected static void ptitle (String title) {
     LOGGER.fine (String.format ("%s PROJECTION PARAMETERS:", title));
   }
 
+  /**
+   * Logs a sphere radius.
+   *
+   * @param r the sphere radius.
+   */
   protected void radius (double r) {
     LOGGER.fine (String.format ("   Radius of Sphere:     %f meters", r));
   }
   
+  /**
+   * Logs ellipsoid radii.
+   *
+   * @param rmaj the semi-major axis.
+   * @param rmin the semi-minor axis.
+   */
   protected void radius2 (double rmaj, double  rmin) {
     LOGGER.fine (String.format ("   Semi-Major Axis of Ellipsoid:     %f meters", rmaj));
     LOGGER.fine (String.format ("   Semi-Minor Axis of Ellipsoid:     %f meters", rmin));
   }
   
+  /**
+   * Logs a center longitude.
+   *
+   * @param lon the center longitude in radians.
+   */
   protected void cenlon (double lon) {
     LOGGER.fine (String.format ("   Longitude of Center:     %f degrees", lon*R2D));
   }
   
+  /**
+   * Logs a central meridian longitude.
+   *
+   * @param lon the central meridian longitude in radians.
+   */
   protected void cenlonmer (double lon) {
     LOGGER.fine (String.format ("   Longitude of Central Meridian:     %f degrees", lon*R2D));
   }
   
+  /**
+   * Logs a center latitude.
+   *
+   * @param lat the center latitude in radians.
+   */
   protected void cenlat (double lat) {
     LOGGER.fine (String.format ("   Latitude  of Center:     %f degrees", lat*R2D));
   }
   
+  /**
+   * Logs an origin latitude.
+   *
+   * @param lat the origin latitude in radians.
+   */
   protected void origin (double lat) {
     LOGGER.fine (String.format ("   Latitude of Origin:     %f degrees", lat*R2D));
   }
   
+  /**
+   * Logs two standard parallels.
+   *
+   * @param lat1 the first standard parallel in radians.
+   * @param lat2 the second standard parallel in radians.
+   */
   protected void stanparl (double lat1, double lat2) {
     LOGGER.fine (String.format ("   1st Standard Parallel:     %f degrees", lat1*R2D));
     LOGGER.fine (String.format ("   2nd Standard Parallel:     %f degrees", lat2*R2D));
   }
   
+  /**
+   * Logs one standard parallel.
+   *
+   * @param lat the standard parallel in radians.
+   */
   protected void stparl1 (double lat) {
     LOGGER.fine (String.format ("   Standard Parallel:     %f degrees", lat*R2D));
   }
   
+  /**
+   * Logs false easting and false northing offsets.
+   *
+   * @param fe the false easting.
+   * @param fn the false northing.
+   */
   protected void offsetp (double fe, double fn) {
     LOGGER.fine (String.format ("   False Easting:      %f meters", fe));
     LOGGER.fine (String.format ("   False Northing:     %f meters", fn));
   }
   
+  /**
+   * Logs a general double-valued projection parameter.
+   *
+   * @param a the parameter value.
+   * @param what the parameter name.
+   */
   protected static void genrpt (double a, String what) {
     LOGGER.fine (String.format ("   %s %f", what, a));
   }
 
+  /**
+   * Logs a general long-valued projection parameter.
+   *
+   * @param a the parameter value.
+   * @param what the parameter name.
+   */
   protected static void genrpt_long (long a, String what) {
     LOGGER.fine (String.format ("   %s %d", what, a));
   }
@@ -299,7 +400,15 @@ public abstract class GCTPCStyleProjection
 
   ////////////////////////////////////////////////////////////
 
-  /** Convenience function for phi1z. */
+  /** 
+   * Convenience function for phi1z. 
+   *
+   * @param eccent the eccentricity.
+   * @param qs the q value.
+   * @param flag the error flag, modified on return.
+   *
+   * @return the phi1z result.
+   */
   public static double phi1z (
     double eccent,
     double qs,
@@ -314,7 +423,15 @@ public abstract class GCTPCStyleProjection
 
   ////////////////////////////////////////////////////////////
 
-  /** Convenience function for phi2z. */
+  /** 
+   * Convenience function for phi2z. 
+   *
+   * @param eccent the eccentricity.
+   * @param ts the t value.
+   * @param flag the error flag, modified on return.
+   *
+   * @return the phi2z result.
+   */
   public static double phi2z (
     double eccent,
     double ts,
@@ -329,7 +446,18 @@ public abstract class GCTPCStyleProjection
 
   ////////////////////////////////////////////////////////////
 
-  /** Convenience function for phi3z. */
+  /** 
+   * Convenience function for phi3z. 
+   *
+   * @param ml the meridional length.
+   * @param e0 the e0 coefficient.
+   * @param e1 the e1 coefficient.
+   * @param e2 the e2 coefficient.
+   * @param e3 the e3 coefficient.
+   * @param flag the error flag, modified on return.
+   *
+   * @return the phi3z result.
+   */
   public static double phi3z (
     double ml,
     double e0,
@@ -347,7 +475,21 @@ public abstract class GCTPCStyleProjection
 
   ////////////////////////////////////////////////////////////
 
-  /** Convenience function for phi4z. */
+  /** 
+   * Convenience function for phi4z. 
+   *
+   * @param eccent the eccentricity.
+   * @param e0 the e0 coefficient.
+   * @param e1 the e1 coefficient.
+   * @param e2 the e2 coefficient.
+   * @param e3 the e3 coefficient.
+   * @param a the a coefficient.
+   * @param b the b coefficient.
+   * @param c the output c value, modified on return.
+   * @param phi the output phi value, modified on return.
+   *
+   * @return OK on success, or an error code on failure.
+   */
   public static long phi4z (
     double eccent,
     double e0,

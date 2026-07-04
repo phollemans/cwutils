@@ -72,6 +72,8 @@ public abstract class DirectionSymbol
   /**
    * Gets the direction-is-from flag.
    *
+   *
+   * @return the direction-is-from flag.
    * @see #setDirectionIsFrom
    */
   public boolean getDirectionIsFrom () { return (directionIsFrom); }
@@ -113,7 +115,11 @@ public abstract class DirectionSymbol
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the magnitude of the vector feature. */
+  /**
+   * Gets the magnitude of the vector feature.
+   *
+   * @return the magnitude of the vector feature.
+   */
   public abstract double getMagnitude();
 
   ////////////////////////////////////////////////////////////
@@ -251,6 +257,8 @@ public abstract class DirectionSymbol
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while rendering the test symbol.
    */
   public static void main (String[] argv) throws Exception {
 

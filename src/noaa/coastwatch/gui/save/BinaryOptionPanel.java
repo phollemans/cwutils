@@ -155,7 +155,11 @@ public class BinaryOptionPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the missing value. */
+  /**
+   * Gets the missing value.
+   *
+   * @return the missing value.
+   */
   public double getMissing () { 
 
     String text = missingField.getText();
@@ -182,22 +186,38 @@ public class BinaryOptionPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the dimension header flag. */
+  /**
+   * Gets the dimension header flag.
+   *
+   * @return the dimension header flag.
+   */
   public boolean getHeader () { return (headerCheck.isSelected()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data type. */
+  /**
+   * Gets the data type.
+   *
+   * @return the data type.
+   */
   public int getDataType () { return (dataTypeCombo.getSelectedIndex()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the byte order. */
+  /**
+   * Gets the byte order.
+   *
+   * @return the byte order.
+   */
   public int getByteOrder () { return (byteOrderCombo.getSelectedIndex()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the scaling type. */
+  /**
+   * Gets the scaling type.
+   *
+   * @return the scaling type.
+   */
   public int getScalingType () { 
 
     int type;

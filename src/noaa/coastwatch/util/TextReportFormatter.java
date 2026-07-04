@@ -22,10 +22,16 @@ public class TextReportFormatter implements ReportFormatter {
 
   /////////////////////////////////////////////////////////////////
 
+  /** Creates a new text report formatter. */
   protected TextReportFormatter () { content = new StringBuffer(); }
 
   /////////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a new text report formatter.
+   *
+   * @return the text report formatter.
+   */
   public static TextReportFormatter create () { return (new TextReportFormatter()); }
 
   /////////////////////////////////////////////////////////////////

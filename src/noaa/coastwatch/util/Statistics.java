@@ -86,7 +86,13 @@ public class Statistics {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a test statistics object with normal distribution. */
+  /**
+   * Gets a test statistics object with normal distribution.
+   *
+   * @param seed the random seed.
+   *
+   * @return the test statistics object.
+   */
   public static Statistics getTestData (
     final long seed
   ) {
@@ -112,42 +118,72 @@ public class Statistics {
   /** 
    * Gets the total number of data values sampled, including invalid
    * data.
+   *
+   * @return the total number of data values sampled.
    */
   public int getValues () { return (values); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the total number of valid data values sampled. */
+  /**
+   * Gets the total number of valid data values sampled.
+   *
+   * @return the total number of valid data values sampled.
+   */
   public int getValid () { return (valid); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the minimum data value. */
+  /**
+   * Gets the minimum data value.
+   *
+   * @return the minimum data value.
+   */
   public double getMin () { return (min); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the maximum data value. */
+  /**
+   * Gets the maximum data value.
+   *
+   * @return the maximum data value.
+   */
   public double getMax () { return (max); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the mean data value. */
+  /**
+   * Gets the mean data value.
+   *
+   * @return the mean data value.
+   */
   public double getMean () { return (mean); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the standard deviation from the mean. */
+  /**
+   * Gets the standard deviation from the mean.
+   *
+   * @return the standard deviation from the mean.
+   */
   public double getStdev () { return (stdev); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the average deviation from the mean. */
+  /**
+   * Gets the average deviation from the mean.
+   *
+   * @return the average deviation from the mean.
+   */
   public double getAdev () { return (adev); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the median value of the data. */
+  /**
+   * Gets the median value of the data.
+   *
+   * @return the median value of the data.
+   */
   public double getMedian () { return (median); }
 
   ////////////////////////////////////////////////////////////
@@ -406,7 +442,11 @@ public class Statistics {
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class with a very simple data set. */
+  /**
+   * Tests this class with a very simple data set.
+   *
+   * @param argv the command line parameters.
+   */
   public static void main (String[] argv) {
 
     Statistics stats = new Statistics (new DataIterator () {

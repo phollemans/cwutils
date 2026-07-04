@@ -87,17 +87,29 @@ public class TextOptionPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the dimension header flag. */
+  /**
+   * Gets the dimension header flag.
+   *
+   * @return the dimension header flag.
+   */
   public boolean getHeader () { return (headerCheck.isSelected()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the geographic coordinates flag. */
+  /**
+   * Gets the geographic coordinates flag.
+   *
+   * @return the geographic coordinates flag.
+   */
   public boolean getCoords () { return (coordsCheck.isSelected()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the geographic coordinate order. */
+  /**
+   * Gets the geographic coordinate order.
+   *
+   * @return the geographic coordinate order.
+   */
   public int getCoordOrder () { 
 
     int type;
@@ -111,7 +123,11 @@ public class TextOptionPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the missing value. */
+  /**
+   * Gets the missing value.
+   *
+   * @return the missing value.
+   */
   public double getMissing () { 
 
     String text = missingField.getText();

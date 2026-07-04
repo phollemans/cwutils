@@ -48,12 +48,19 @@ public class VisualString
   // Variables
   // ---------
 
-  /** The text field component. */
+  /**
+   * The text field component.
+   *
+   */
   private JTextField field;
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new visual string object using the specified String. */
+  /**
+   * Creates a new visual string object using the specified String.
+   *
+   * @param text the string value to edit.
+   */
   public VisualString (
     String text
   ) {                     

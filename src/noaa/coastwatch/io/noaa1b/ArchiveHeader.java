@@ -35,13 +35,25 @@ package noaa.coastwatch.io.noaa1b;
  */
 public interface ArchiveHeader {
 
-  /** Get the sensor channel data selection flags. */
+  /** 
+   * Get the sensor channel data selection flags. 
+   *
+   * @return the array of sensor channel data selection flags.
+   */
   public boolean[] getChannelSelection();
 
-  /** Gets the sensor word size in bits. */
+  /** 
+   * Gets the sensor word size in bits. 
+   *
+   * @return the sensor word size in bits.
+   */
   public int getSensorWordSize();
 
-  /** Gets the header size in bytes. */
+  /** 
+   * Gets the header size in bytes. 
+   *
+   * @return the header size in bytes.
+   */
   public int getHeaderSize();
 
 } // ArchiveHeader interface

@@ -44,6 +44,15 @@ public class Line
   /**
    * Constructs a new line with the specified properties.
    *
+   * @param name the short variable name.
+   * @param longName the descriptive variable name.
+   * @param units the variable units.
+   * @param length the line length.
+   * @param data the data array.
+   * @param format the number format for data values.
+   * @param scaling the scale and offset for packed data values.
+   * @param missing the missing data value.
+   *
    * @see DataVariable
    */
   public Line (

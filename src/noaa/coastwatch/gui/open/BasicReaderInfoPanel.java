@@ -72,12 +72,19 @@ public class BasicReaderInfoPanel
   /** The list of [name,value] entries to show in the table. */
   private List<String[]> dataList;
   
-  /** The table data model with two columns. */
+  /**
+   * The table data model with two columns.
+   *
+   */
   private AbstractTableModel dataModel;
   
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new info panel initialized with the specified reader. */
+  /**
+   * Creates a new info panel initialized with the specified reader.
+   *
+   * @param reader the reader to summarize.
+   */
   public BasicReaderInfoPanel (EarthDataReader reader) {
 
     this();
@@ -229,6 +236,9 @@ public class BasicReaderInfoPanel
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs opening input data or creating the
+   * test panel.
    */
   public static void main (String[] argv) throws Exception {
 

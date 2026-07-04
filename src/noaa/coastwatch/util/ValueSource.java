@@ -29,11 +29,19 @@ package noaa.coastwatch.util;
  * DataLocation} objects.
  *
  * @author Peter Hollemans
+ *
+ *
  * @since 3.2.1
  */
 public interface ValueSource {
 
-  /** Gets a data value for the specified location. */
+  /**
+   * Gets a data value for the specified location.
+   *
+   * @param loc the location.
+   *
+   * @return a data value for the specified location.
+   */
   public double getValue (DataLocation loc);
 
 } // ValueSource class

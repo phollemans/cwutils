@@ -65,7 +65,11 @@ public class TestRunner {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the singleton instance of this class. */
+  /**
+   * Gets the singleton instance of this class.
+   *
+   * @return the singleton instance of this class.
+   */
   public static TestRunner getInstance() { return (instance); }
 
   ////////////////////////////////////////////////////////////
@@ -83,7 +87,11 @@ public class TestRunner {
 
   ////////////////////////////////////////////////////////////
 
-  /** Runs the tests for the classes registered for testing. */
+  /**
+   * Runs the tests for the classes registered for testing.
+   *
+   * @throws Exception if a registered test class cannot be inspected or invoked.
+   */
   public void runTests () throws Exception {
   
     // Check assertions
@@ -147,7 +155,13 @@ public class TestRunner {
 
   ////////////////////////////////////////////////////////////
 
-  /** Runs the main method. */
+  /**
+   * Runs the main method.
+   *
+   * @param argv the command line arguments.
+   *
+   * @throws Exception if a test class cannot be loaded or invoked.
+   */
   public static void main (String[] argv) throws Exception {
 
     TestRunner runner = TestRunner.getInstance();

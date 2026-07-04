@@ -89,6 +89,8 @@ public class BinnedGSHHSReaderFactory {
   /** 
    * Gets an instance of this factory the uses local HDF files for
    * reader data.
+   *
+   * @return an instance of this factory the uses local HDF files for reader data.
    */
   public static BinnedGSHHSReaderFactory getInstance () {
 
@@ -103,6 +105,8 @@ public class BinnedGSHHSReaderFactory {
    * Gets an instance of this factory the uses the specified
    * OPeNDAP server path for reader data.
    *
+   *
+   * @return an instance of this factory the uses the specified OPeNDAP server path for reader data.
    * @param serverPath the full path to the OPeNDAP server and
    * subdirectory, for example "http://server.com/data".
    */
@@ -234,6 +238,8 @@ public class BinnedGSHHSReaderFactory {
    * #getDatabaseName}.
    *
    * @return the reader object.
+   *
+   * @throws IOException if the polygon database cannot be opened.
    */
   public BinnedGSHHSReader getPolygonReader (
     String name
@@ -272,6 +278,8 @@ public class BinnedGSHHSReaderFactory {
    * #getDatabaseName}.
    *
    * @return the reader object.
+   *
+   * @throws IOException if the line database cannot be opened.
    */
   public BinnedGSHHSLineReader getLineReader (
     String name

@@ -329,7 +329,11 @@ public class DataLocation
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data location dimension rank. */
+  /**
+   * Gets the data location dimension rank.
+   *
+   * @return the data location dimension rank.
+   */
   public int getRank () { return (coords.length); }
 
   ////////////////////////////////////////////////////////////
@@ -597,15 +601,17 @@ public class DataLocation
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * Performs a 2D translation on this data location.
-   *
+   /**
+    * Performs a 2D translation on this data location.
+    *
    * @param trans0 the translation for index 0.
    * @param trans1 the translation for index 1.
    * @param outputLoc the output translated data location.  This location
    * and the output data location are assumed to both be 2D.  It is safe to
    * pass this location as the output location, in which case the translation
    * is performed in-place.
+   *
+   * @return the output translated data location.
    *
    * @since 3.4.1
    */
@@ -674,12 +680,21 @@ public class DataLocation
 
   ////////////////////////////////////////////////////////////
 
-  /** Constructs a new data location. */
+  /**
+   * Constructs a new data location.
+   *
+   */
   protected DataLocation () { }
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new data location without cloning. */
+   /**
+    * Creates a new data location without cloning.
+    *
+    * @param coords the coordinate array to use without cloning.
+    *
+   * @return a new data location without cloning.
+   */
   protected static DataLocation create (
     double[] coords
   ) {

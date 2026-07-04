@@ -35,6 +35,8 @@ import noaa.coastwatch.io.DataTransferEvent;
  * transfer progress, and ending.
  *
  * @author Peter Hollemans
+ *
+ *
  * @since 3.1.5
  */
 public interface DataTransferListener
@@ -42,28 +44,44 @@ public interface DataTransferListener
 
   ////////////////////////////////////////////////////////////
 
-  /** Responds to a data transfer starting. */
+  /**
+   * Responds to a data transfer starting.
+   *
+   * @param event the transfer event.
+   */
   public void transferStarted (
     DataTransferEvent event
   );
 
   ////////////////////////////////////////////////////////////
 
-  /** Responds to a data transfer in progress. */
+  /**
+   * Responds to a data transfer in progress.
+   *
+   * @param event the transfer event.
+   */
   public void transferProgress (
     DataTransferEvent event
   );
 
   ////////////////////////////////////////////////////////////
 
-  /** Responds to a data transfer ending. */
+  /**
+   * Responds to a data transfer ending.
+   *
+   * @param event the transfer event.
+   */
   public void transferEnded (
     DataTransferEvent event
   );
 
   ////////////////////////////////////////////////////////////
 
-  /** Responds to a data transfer error. */
+  /**
+   * Responds to a data transfer error.
+   *
+   * @param event the transfer event.
+   */
   public void transferError (
     DataTransferEvent event
   );

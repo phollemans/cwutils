@@ -91,12 +91,20 @@ public abstract class XYPlotPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the x-axis label. */
+  /**
+   * Gets the x-axis label.
+   *
+   * @return the x-axis label.
+   */
   protected abstract String getXLabel();
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the y-axis label. */
+  /**
+   * Gets the y-axis label.
+   *
+   * @return the y-axis label.
+   */
   protected abstract String getYLabel();
 
   ////////////////////////////////////////////////////////////
@@ -104,6 +112,8 @@ public abstract class XYPlotPanel
   /** 
    * Gets the x-axis value range as [min, max].  If the range has
    * invalid values or min==max, no plot is drawn.
+   *
+   * @return the x-axis value range as [min, max].
    */
   protected abstract double[] getXRange();
 
@@ -112,6 +122,8 @@ public abstract class XYPlotPanel
   /** 
    * Gets the y-axis value range as [min, max].  If the range has
    * invalid values or min==max, no plot is drawn.
+   *
+   * @return the y-axis value range as [min, max].
    */
   protected abstract double[] getYRange();
 
@@ -165,7 +177,11 @@ public abstract class XYPlotPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the rectangle used to display the plot data. */
+  /**
+   * Gets the rectangle used to display the plot data.
+   *
+   * @return the rectangle used to display the plot data.
+   */
   protected Rectangle getPlotBounds() { return (plotBounds); }
 
   ////////////////////////////////////////////////////////////
@@ -173,14 +189,19 @@ public abstract class XYPlotPanel
   /** 
    * Gets the affine transform for translating data coordinates to
    * plot coordinates.
+   *
+   * @return the affine transform for translating data coordinates to
+   * plot coordinates.
    */
   protected AffineTransform getPlotAffine() { return (plotAffine); }
 
   ////////////////////////////////////////////////////////////
 
   /** 
-   * Returns true if the plot is valid, or false if not.  If the plot
-   * is invalid, there is no need to draw any data.
+   * Gets the plot valid flag.  If the plot is invalid, there is no need
+   * to draw any data.
+   *
+   * @return true if the plot is valid, or false otherwise.
    */
   protected boolean getValid() { return (isValid); }
 

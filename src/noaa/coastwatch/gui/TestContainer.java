@@ -52,6 +52,8 @@ public class TestContainer {
    * Performs the main function.
    *
    * @param argv the list of command line parameters.  
+   *
+   *
    */
   public static void main (String argv[]) {
 
@@ -84,7 +86,11 @@ public class TestContainer {
 
   ////////////////////////////////////////////////////////////
 
-  /** Puts the specified container into a frame and displays it. */
+  /**
+   * Puts the specified container into a frame and displays it.
+   *
+   * @param container the container to display in a frame.
+   */
   public static void showFrame (
     Container container
   ) {

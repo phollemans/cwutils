@@ -70,7 +70,12 @@ public abstract class LineOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the drop shadow flag. */
+  /**
+   * Gets the drop shadow flag.
+   *
+   *
+   * @return the drop shadow flag.
+   */
   public boolean getDropShadow () { return (dropShadow); }
 
   ////////////////////////////////////////////////////////////
@@ -78,6 +83,9 @@ public abstract class LineOverlay
   /** 
    * Sets the drop shadow flag.  When drop shadow mode is on, a shadow
    * is drawn behind the lines.  By default, drop shadow mode is off.
+   *
+   * @param flag true to draw lines with a drop shadow.
+   *
    */
   public void setDropShadow (boolean flag) { dropShadow = flag; }
 
@@ -157,6 +165,7 @@ public abstract class LineOverlay
    * 
    * @param foreground the foreground color in question.
    *
+   *
    * @return the shadow color, white if the foreground is dark or
    * black if the foreground is light.
    */
@@ -176,7 +185,13 @@ public abstract class LineOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Writes the vector stroke data to the output stream. */
+  /**
+   * Writes the vector stroke data to the output stream.
+   *
+   * @param out the output stream.
+   *
+   * @throws IOException if an error occurs writing stroke data to the stream.
+   */
   private void writeObject (
     ObjectOutputStream out
   ) throws IOException {
@@ -193,7 +208,15 @@ public abstract class LineOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Reads the vector stroke data from the input stream. */
+  /**
+   * Reads the vector stroke data from the input stream.
+   *
+   * @param in the input stream.
+   *
+   * @throws IOException if an error occurs reading stroke data from the stream.
+   * @throws ClassNotFoundException if the serialized dash array class cannot be
+   * found.
+   */
   private void readObject (
     ObjectInputStream in
   ) throws IOException, ClassNotFoundException {
@@ -211,12 +234,20 @@ public abstract class LineOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the vector path stroke. */
+  /**
+   * Sets the vector path stroke.
+   *
+   * @param stroke the line stroke.
+   */
   public void setStroke (Stroke stroke) { this.stroke = stroke; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the vector path stroke. */
+  /**
+   * Gets the vector path stroke.
+   *
+   * @return the vector path stroke.
+   */
   public Stroke getStroke () { return (stroke); }
 
   ////////////////////////////////////////////////////////////

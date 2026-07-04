@@ -67,32 +67,56 @@ public abstract class EarthDataSurvey {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the survey variable name. */
+  /**
+   * Gets the survey variable name.
+   *
+   * @return the survey variable name.
+   */
   public String getVariableName () { return (name); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the survey variable units. */
+  /**
+   * Gets the survey variable units.
+   *
+   * @return the survey variable units.
+   */
   public String getVariableUnits () { return (units); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the survey variable number formatter. */
+  /**
+   * Gets the survey variable number formatter.
+   *
+   * @return the survey variable number formatter.
+   */
   public NumberFormat getVariableFormat () { return (format); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the survey variable earth transform. */
+  /**
+   * Gets the survey variable earth transform.
+   *
+   * @return the survey variable earth transform.
+   */
   public EarthTransform getTransform () { return (trans); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the survey statistics. */
+  /**
+   * Gets the survey statistics.
+   *
+   * @return the survey statistics.
+   */
   public Statistics getStatistics () { return (stats); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the survey extents as [start, end]. */
+  /**
+   * Gets the survey extents as [start, end].
+   *
+   * @return the survey extents as [start, end].
+   */
   public DataLocation[] getExtents () { 
 
     return ((DataLocation[]) extents.clone()); 

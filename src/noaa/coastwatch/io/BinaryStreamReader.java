@@ -725,7 +725,14 @@ public class BinaryStreamReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a byte value (convenience method for {@link #getValue}). */
+  /** 
+   * Gets a byte value (convenience method for {@link #getValue}). 
+   *
+   * @param name the name of the value to retrieve.
+   * @param buffer the buffer to read for byte data.
+   *
+   * @return the byte value.
+   */
   public byte getByte (String name, ByteBuffer buffer) { 
 
     return (((Byte) getValue (name, buffer)).byteValue());
@@ -734,7 +741,14 @@ public class BinaryStreamReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a byte array (convenience method for {@link #getValue}). */
+  /** 
+   * Gets a byte array (convenience method for {@link #getValue}). 
+   *
+   * @param name the name of the value to retrieve.
+   * @param buffer the buffer to read for byte data.
+   *
+   * @return the byte array.
+   */
   public byte[] getByteArray (String name, ByteBuffer buffer) { 
 
     return ((byte[]) getValue (name, buffer));
@@ -743,7 +757,14 @@ public class BinaryStreamReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a short value (convenience method for {@link #getValue}). */
+  /** 
+   * Gets a short value (convenience method for {@link #getValue}). 
+   *
+   * @param name the name of the value to retrieve.
+   * @param buffer the buffer to read for byte data.
+   *
+   * @return the short value.
+   */
   public short getShort (String name, ByteBuffer buffer) { 
 
     return (((Short) getValue (name, buffer)).shortValue());
@@ -752,7 +773,14 @@ public class BinaryStreamReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a short array (convenience method for {@link #getValue}). */
+  /** 
+   * Gets a short array (convenience method for {@link #getValue}). 
+   *
+   * @param name the name of the value to retrieve.
+   * @param buffer the buffer to read for byte data.
+   *
+   * @return the short array.
+   */
   public short[] getShortArray (String name, ByteBuffer buffer) { 
 
     return ((short[]) getValue (name, buffer));
@@ -761,7 +789,14 @@ public class BinaryStreamReader {
 
   ////////////////////////////////////////////////////////////
   
-  /** Gets an integer value (convenience method for {@link #getValue}). */
+  /** 
+   * Gets an integer value (convenience method for {@link #getValue}). 
+   *
+   * @param name the name of the value to retrieve.
+   * @param buffer the buffer to read for byte data.
+   *
+   * @return the integer value.
+   */
   public int getInt (String name, ByteBuffer buffer) { 
 
     return (((Integer) getValue (name, buffer)).intValue());
@@ -770,7 +805,14 @@ public class BinaryStreamReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets an integer array (convenience method for {@link #getValue}). */
+  /** 
+   * Gets an integer array (convenience method for {@link #getValue}). 
+   *
+   * @param name the name of the value to retrieve.
+   * @param buffer the buffer to read for byte data.
+   *
+   * @return the integer array.
+   */
   public int[] getIntArray (String name, ByteBuffer buffer) { 
 
     return ((int[]) getValue (name, buffer));
@@ -779,7 +821,14 @@ public class BinaryStreamReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a long value (convenience method for {@link #getValue}). */
+  /** 
+   * Gets a long value (convenience method for {@link #getValue}). 
+   *
+   * @param name the name of the value to retrieve.
+   * @param buffer the buffer to read for byte data.
+   *
+   * @return the long value.
+   */
   public long getLong (String name, ByteBuffer buffer) { 
 
     return (((Long) getValue (name, buffer)).longValue());
@@ -788,7 +837,14 @@ public class BinaryStreamReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a long array (convenience method for {@link #getValue}). */
+  /** 
+   * Gets a long array (convenience method for {@link #getValue}). 
+   *
+   * @param name the name of the value to retrieve.
+   * @param buffer the buffer to read for byte data.
+   *
+   * @return the long array.
+   */
   public long[] getLongArray (String name, ByteBuffer buffer) { 
 
     return ((long[]) getValue (name, buffer));
@@ -797,7 +853,14 @@ public class BinaryStreamReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a float value (convenience method for {@link #getValue}). */
+  /** 
+   * Gets a float value (convenience method for {@link #getValue}). 
+   *
+   * @param name the name of the value to retrieve.
+   * @param buffer the buffer to read for byte data.
+   *
+   * @return the float value.
+   */
   public float getFloat (String name, ByteBuffer buffer) { 
 
     return (((Float) getValue (name, buffer)).floatValue());
@@ -806,7 +869,14 @@ public class BinaryStreamReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a float array (convenience method for {@link #getValue}). */
+  /** 
+   * Gets a float array (convenience method for {@link #getValue}). 
+   *
+   * @param name the name of the value to retrieve.
+   * @param buffer the buffer to read for byte data.
+   *
+   * @return the float array.
+   */
   public float[] getFloatArray (String name, ByteBuffer buffer) { 
 
     return ((float[]) getValue (name, buffer));
@@ -815,7 +885,14 @@ public class BinaryStreamReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a double value (convenience method for {@link #getValue}). */
+  /** 
+   * Gets a double value (convenience method for {@link #getValue}). 
+   *
+   * @param name the name of the value to retrieve.
+   * @param buffer the buffer to read for byte data.
+   *
+   * @return the double value.
+   */
   public double getDouble (String name, ByteBuffer buffer) { 
 
     return (((Double) getValue (name, buffer)).doubleValue());
@@ -824,7 +901,14 @@ public class BinaryStreamReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a double array (convenience method for {@link #getValue}). */
+  /** 
+   * Gets a double array (convenience method for {@link #getValue}). 
+   *
+   * @param name the name of the value to retrieve.
+   * @param buffer the buffer to read for byte data.
+   *
+   * @return the double array.
+   */
   public double[] getDoubleArray (String name, ByteBuffer buffer) { 
 
     return ((double[]) getValue (name, buffer));
@@ -833,7 +917,14 @@ public class BinaryStreamReader {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a string value (convenience method for {@link #getValue}). */
+  /** 
+   * Gets a string value (convenience method for {@link #getValue}). 
+   *
+   * @param name the name of the value to retrieve.
+   * @param buffer the buffer to read for byte data.
+   *
+   * @return the string value.
+   */
   public String getString (String name, ByteBuffer buffer) { 
 
     return ((String) getValue (name, buffer));
@@ -1099,6 +1190,8 @@ public class BinaryStreamReader {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurred reading or printing data.
    */
   public static void main (String[] argv) throws Exception {
 
@@ -1152,5 +1245,4 @@ public class BinaryStreamReader {
 } // BinaryStreamReader class
 
 ////////////////////////////////////////////////////////////////////////
-
 

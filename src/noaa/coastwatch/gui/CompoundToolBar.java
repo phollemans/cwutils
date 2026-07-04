@@ -49,6 +49,7 @@ import noaa.coastwatch.gui.ViewOperationChooser;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public class CompoundToolBar
   extends JToolBar {

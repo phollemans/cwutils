@@ -27,7 +27,7 @@ package noaa.coastwatch.render.feature;
 // -------
 import noaa.coastwatch.render.feature.Feature;
 
-/*
+/**
  * A <code>SelectionRule</code> provides a selection mechanism for 
  * features.
  *

@@ -312,6 +312,9 @@ public class FeatureGroupFilter
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the feature group filter
+   * tests.
    */
   public static void main (String argv[]) throws Exception {
 

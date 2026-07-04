@@ -61,7 +61,11 @@ public class DataLocationIteratorFactory {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets an instance of this factory. */
+  /**
+   * Gets an instance of this factory.
+   *
+   * @return an instance of this factory.
+   */
   public static DataLocationIteratorFactory getInstance () {
 
     if (instance == null) instance = new DataLocationIteratorFactory();
@@ -269,6 +273,8 @@ public class DataLocationIteratorFactory {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the iterator factory tests.
    */
   public static void main (String[] argv) throws Exception {
 

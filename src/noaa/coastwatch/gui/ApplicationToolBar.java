@@ -28,6 +28,7 @@ import java.util.logging.Logger;
  * 
  * @author Peter Hollemans
  * @since 3.8.1
+ * @serial exclude
  */
 public class ApplicationToolBar extends JToolBar {
 
@@ -38,6 +39,11 @@ public class ApplicationToolBar extends JToolBar {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a new application tool bar.
+   *
+   * @param buttonGroupList the list of button groups.
+   */
   public ApplicationToolBar (
     List<List<AbstractButton>> buttonGroupList
   ) {
@@ -86,6 +92,11 @@ public class ApplicationToolBar extends JToolBar {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Adds an action listener.
+   *
+   * @param listener the action listener to add.
+   */
   public void addActionListener (ActionListener listener) {
 
     actionListenerList.add (listener);
@@ -94,6 +105,11 @@ public class ApplicationToolBar extends JToolBar {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Sets the button text visibility.
+   *
+   * @param show true to show button text, or false to hide it.
+   */
   public void setShowText (boolean show) {
 
     for (var button : buttonList) {

@@ -231,6 +231,9 @@ operations to perform.
   /** 
    * Implements the data to geographic transform.
    *
+   * @param dataLoc the data location.
+   * @param earthLoc the earth location.
+   *
    * @see #transform(DataLocation,EarthLocation)
    */
   protected abstract void transformImpl (
@@ -293,6 +296,9 @@ operations to perform.
   /** 
    * Implements the geographic to data transform.
    *
+   * @param earthLoc the earth location.
+   * @param dataLoc the data location.
+   *
    * @see #transform(EarthLocation,DataLocation)
    */
   protected abstract void transformImpl (
@@ -302,7 +308,11 @@ operations to perform.
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a string describing the earth transform type. */
+  /**
+   * Gets a string describing the earth transform type.
+   *
+   * @return a string describing the earth transform type.
+   */
   public abstract String describe ();
 
   ////////////////////////////////////////////////////////////
@@ -339,6 +349,8 @@ operations to perform.
    *
    * @param newOrigin the new data location origin.
    * @param newDims the new data location dimensions.
+   *
+   * @return a new subset transform.
    *
    * @throws UnsupportedOperationException if the underlying Earth
    * transform class does not support the creation of subset
@@ -401,7 +413,11 @@ operations to perform.
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the transform data location dimensions. */
+  /**
+   * Gets the transform data location dimensions.
+   *
+   * @return the transform data location dimensions.
+   */
   public int[] getDimensions () {
 
     return ((int[]) dims.clone());

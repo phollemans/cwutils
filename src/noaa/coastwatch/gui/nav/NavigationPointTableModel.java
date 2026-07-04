@@ -78,6 +78,8 @@ public class NavigationPointTableModel
    * Creates a new table using the specified point list.
    *
    * @param pointList the initial point list data.
+   *
+   *
    */
   public NavigationPointTableModel (
     List<NavigationPoint> pointList
@@ -89,7 +91,12 @@ public class NavigationPointTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Adds a point to the list. */
+  /**
+   * Adds a point to the list.
+   *
+   * @param point the navigation point to add.
+   *
+   */
   public void addPoint (NavigationPoint point) { 
 
     pointList.add (point); 
@@ -99,12 +106,23 @@ public class NavigationPointTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a point from the list. */
+  /**
+   * Gets a point from the list.
+   *
+   * @param row the table row.
+   *
+   * @return a point from the list.
+   */
   public NavigationPoint getPoint (int row) { return (pointList.get (row)); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the list of navigation points. */
+  /**
+   * Gets the list of navigation points.
+   *
+   *
+   * @return the list of navigation points.
+   */
   public List<NavigationPoint> getPointList () {
 
     return (new ArrayList<NavigationPoint> (pointList));
@@ -113,7 +131,13 @@ public class NavigationPointTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Removes a point from the list. */
+   /**
+    * Removes a point from the list.
+    *
+    * @param row the table row.
+    *
+   * @return the removed point.
+   */
   public NavigationPoint removePoint (int row) { 
 
     NavigationPoint point = pointList.remove (row);
@@ -124,7 +148,10 @@ public class NavigationPointTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Removes all points from the list. */
+  /**
+   * Removes all points from the list.
+   *
+   */
   public void clear () {
 
     int rows = pointList.size();
@@ -137,7 +164,11 @@ public class NavigationPointTableModel
 
   ////////////////////////////////////////////////////////////
 
-  /** Notifies listeners that a point has changed. */
+  /**
+   * Notifies listeners that a point has changed.
+   *
+   * @param point the navigation point that changed.
+   */
   public void changePoint (NavigationPoint point) {
 
     int row = pointList.indexOf (point);

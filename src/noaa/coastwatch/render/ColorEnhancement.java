@@ -116,6 +116,8 @@ public class ColorEnhancement
   /** 
    * Gets the number of colors in color model.
    *
+   *
+   * @return the number of colors in color model.
    * @see #setColors
    */
   public int getColors () { return (colors+1); }
@@ -142,27 +144,49 @@ public class ColorEnhancement
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the index color model used for images. */
+  /**
+   * Gets the index color model used for images.
+   *
+   * @return the index color model used for images.
+   */
   public IndexColorModel getColorModel () { return (colorModel); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data grid variable. */
+  /**
+   * Gets the data grid variable.
+   *
+   * @return the data grid variable.
+   */
   public Grid getGrid () { return (grid); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the enhancement color palette. */
+  /**
+   * Gets the enhancement color palette.
+   *
+   * @return the enhancement color palette.
+   */
   public Palette getPalette () { return (pal); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the enhancement function. */
+  /**
+   * Gets the enhancement function.
+   *
+   *
+   * @return the enhancement function.
+   */
   public EnhancementFunction getFunction () { return (func); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the data grid variable. */
+  /**
+   * Sets the data grid variable.
+   *
+   * @param grid the data grid to enhance.
+   *
+   */
   public void setGrid (Grid grid) { 
 
     this.grid = grid;
@@ -173,7 +197,12 @@ public class ColorEnhancement
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the enhancement color palette. */
+  /**
+   * Sets the enhancement color palette.
+   *
+   * @param pal the palette.
+   *
+   */
   public void setPalette (Palette pal) { 
 
     this.pal = pal;
@@ -184,7 +213,11 @@ public class ColorEnhancement
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the missing value color. */
+  /**
+   * Sets the missing value color.
+   *
+   * @param missingColor the missing value color.
+   */
   public void setMissingColor (Color missingColor) {
 
     this.missingColor = missingColor;
@@ -205,6 +238,8 @@ public class ColorEnhancement
    * normal.
    *
    * @param adjFunc the adjusting function.
+   *
+   *
    */
   public void setAdjustingFunction (
     EnhancementFunction adjFunc
@@ -249,7 +284,11 @@ public class ColorEnhancement
 
   ////////////////////////////////////////////////////////////
   
-  /** Sets the enhancement function. */
+  /**
+   * Sets the enhancement function.
+   *
+   * @param func the enhancement function.
+   */
   public void setFunction (EnhancementFunction func) { 
 
     this.func = func;
@@ -541,7 +580,11 @@ public class ColorEnhancement
 
   ////////////////////////////////////////////////////////////
 
-  /** Saves and returns the current settings. */
+   /**
+    * Saves and returns the current settings.
+    *
+   * @return the current settings.
+   */
   public ColorEnhancementSettings saveSettings () {
 
     return (new ColorEnhancementSettings (grid.getName(), getPalette(), 

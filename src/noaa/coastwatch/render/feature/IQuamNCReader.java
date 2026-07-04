@@ -192,7 +192,6 @@ public class IQuamNCReader
   /**
    * Gets an attribute value from a dataset.
    *
-   * @param dataset the dataset to retrieve the attribute.
    * @param attName the attribute name to retrieve.
    *
    * @return the attribute value or null if the attribute doesn't exist
@@ -264,6 +263,9 @@ public class IQuamNCReader
    * Creates a new reader for an iQuam point data file.
    *
    * @param filename the name of the file.
+   *
+   * @throws IOException if the file cannot be opened, does not contain the
+   * expected iQuam metadata or datasets, or contains an unsupported datatype.
    */
   public IQuamNCReader (
     String filename
@@ -622,6 +624,8 @@ public class IQuamNCReader
    * have the effect of speeding up subsequent select operations significantly,
    * as the point data will be returned from memory and not read on-demand.
    * This operation may take some time to complete.
+   *
+   * @throws IOException if an error occurs selecting or reading point data.
    */
   public void precache () throws IOException {
   
@@ -1020,6 +1024,8 @@ variable before accessing any part of it.
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs reading or selecting point data.
    */
   public static void main (String[] argv) throws Exception {
 

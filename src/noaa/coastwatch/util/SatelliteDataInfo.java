@@ -54,12 +54,20 @@ public class SatelliteDataInfo
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the satellite name. */
+  /**
+   * Gets the satellite name.
+   *
+   * @return the satellite name.
+   */
   public String getSatellite () { return (sat); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the sensor name. */
+  /**
+   * Gets the sensor name.
+   *
+   * @return the sensor name.
+   */
   public String getSensor () { return (sensor); }
 
   ////////////////////////////////////////////////////////////

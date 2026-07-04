@@ -239,7 +239,11 @@ public class EarthLocation
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the coordinates as [lat, lon]. */
+  /**
+   * Gets the coordinates as [lat, lon].
+   *
+   * @return the coordinates as [lat, lon].
+   */
   public double[] getCoords () { return (new double[] {lat, lon}); }
 
   ////////////////////////////////////////////////////////////
@@ -781,6 +785,7 @@ public class EarthLocation
    * Marks this location as invalid.  Subsequent calls to check
    * for validity will reflect the new state.
    *
+   *
    * @see #isValid
    *
    * @since 3.3.1
@@ -794,7 +799,14 @@ public class EarthLocation
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns a latitude in the range [-90..90]. */
+  /**
+   * Returns a latitude in the range [-90..90].
+   *
+   *
+   * @param lat the latitude value to limit.
+   *
+   * @return a latitude in the range [-90.
+   */
   public static double latRange (
     double lat
   ) {
@@ -807,7 +819,13 @@ public class EarthLocation
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns a longitude value in the range [-180..180). */
+  /**
+   * Returns a longitude value in the range [-180..180).
+   *
+   * @param lon the longitude value to wrap.
+   *
+   * @return a longitude value in the range [-180.
+   */
   public static double lonRange (
     double lon
   ) {
@@ -862,6 +880,8 @@ public class EarthLocation
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the earth location tests.
    */
   public static void main (String[] argv) throws Exception {
 

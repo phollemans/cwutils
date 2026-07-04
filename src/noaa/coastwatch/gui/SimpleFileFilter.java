@@ -106,6 +106,7 @@ public class SimpleFileFilter extends FileFilter {
      * Creates a file filter. If no filters are added, then all
      * files are accepted.
      *
+     *
      * @see #addExtension
      */
     public SimpleFileFilter() {
@@ -115,6 +116,8 @@ public class SimpleFileFilter extends FileFilter {
     /**
      * Creates a file filter that accepts files with the given extension.
      * Example: new SimpleFileFilter("jpg");
+     *
+     * @param extension the file extension to accept.
      *
      * @see #addExtension
      */
@@ -128,6 +131,10 @@ public class SimpleFileFilter extends FileFilter {
      *
      * Note that the "." before the extension is not needed. If
      * provided, it will be ignored.
+     *
+     *
+     * @param extension the file extension to accept.
+     * @param description the human-readable filter description.
      *
      * @see #addExtension
      */
@@ -144,6 +151,8 @@ public class SimpleFileFilter extends FileFilter {
      * Note that the "." before the extension is not needed adn
      * will be ignored.
      *
+     * @param filters the file extensions to accept.
+     *
      * @see #addExtension
      */
     public SimpleFileFilter(String[] filters) {
@@ -155,6 +164,9 @@ public class SimpleFileFilter extends FileFilter {
      * Example: new SimpleFileFilter(String {"gif", "jpg"}, "Gif and JPG Images");
      *
      * Note that the "." before the extension is not needed and will be ignored.
+     *
+     * @param filters the file extensions to accept.
+     * @param description the human-readable filter description.
      *
      * @see #addExtension
      */
@@ -172,6 +184,8 @@ public class SimpleFileFilter extends FileFilter {
      * false if it shouldn't.
      *
      * Files that begin with "." are ignored.
+     *
+     * @param f the file to test against this filter.
      *
      * @see #getExtension
      * @see FileFilter#accept
@@ -192,6 +206,11 @@ public class SimpleFileFilter extends FileFilter {
     /**
      * Return the extension portion of the file's name .
      *
+     *
+     *
+     * @param f the file to examine for an extension.
+     *
+     * @return the extension.
      * @see #getExtension
      * @see FileFilter#accept
      */
@@ -217,6 +236,9 @@ public class SimpleFileFilter extends FileFilter {
      *   filter.addExtension("tif");
      *
      * Note that the "." before the extension is not needed and will be ignored.
+     *
+     * @param extension the file extension to add.
+     *
      */
     public void addExtension(String extension) {
 	if(filters == null) {
@@ -230,6 +252,7 @@ public class SimpleFileFilter extends FileFilter {
     /**
      * Returns the human readable description of this filter. For
      * example: "JPEG and GIF Image Files (*.jpg, *.gif)"
+     *
      *
      * @see #setDescription
      * @see #setExtensionListInDescription
@@ -260,6 +283,9 @@ public class SimpleFileFilter extends FileFilter {
      * Sets the human readable description of this filter. For
      * example: filter.setDescription("Gif and JPG Images");
      *
+     *
+     * @param description the human-readable filter description.
+     *
      * @see #setDescription
      * @see #setExtensionListInDescription
      * @see #isExtensionListInDescription
@@ -275,6 +301,8 @@ public class SimpleFileFilter extends FileFilter {
      *
      * Only relevent if a description was provided in the constructor
      * or using setDescription();
+     *
+     * @param b true to show file extensions in the description.
      *
      * @see #getDescription
      * @see #setDescription
@@ -292,6 +320,8 @@ public class SimpleFileFilter extends FileFilter {
      * Only relevent if a description was provided in the constructor
      * or using setDescription();
      *
+     *
+     * @return whether the extension list (.
      * @see #getDescription
      * @see #setDescription
      * @see #setExtensionListInDescription

@@ -53,12 +53,25 @@ public class SensorIdentifier {
 
   /** Types of sensors. */
   public static enum Sensor {
+    /** Advanced Very High Resolution Radiometer sensor data. */
     AVHRR,
+
+    /** Moderate Resolution Imaging Spectroradiometer sensor data. */
     MODIS,
+
+    /** Visible Infrared Imaging Radiometer Suite M-band SDR sensor data. */
     VIIRS_MBAND_SDR,
+
+    /** Visible Infrared Imaging Radiometer Suite M-band EDR sensor data. */
     VIIRS_MBAND_EDR,
+
+    /** Visible Infrared Imaging Radiometer Suite I-band SDR sensor data. */
     VIIRS_IBAND_SDR,
+
+    /** Visible Infrared Imaging Radiometer Suite I-band EDR sensor data. */
     VIIRS_IBAND_EDR,
+
+    /** Unknown or unsupported sensor data. */
     UNKNOWN
   } // Sensor
 
@@ -137,6 +150,7 @@ public class SensorIdentifier {
    *
    * @param trans the earth transform from a sensor scan.
    *
+   *
    * @return the matching sensor type or unknown.
    */
   public static Sensor getSensorFromScan (
@@ -169,7 +183,14 @@ public class SensorIdentifier {
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests this class. */
+  /**
+   * Tests this class.
+   *
+   * @param argv the command line parameters.
+   *
+   * @throws Exception if an error occurs opening the input data or identifying
+   * the sensor.
+   */
   public static void main (String[] argv) throws Exception {
     
     EarthDataReader.setDataProjection (true);
@@ -183,4 +204,3 @@ public class SensorIdentifier {
 } // SensorIdentifier class
 
 ////////////////////////////////////////////////////////////////////////
-

@@ -47,6 +47,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public class BinarySavePanel
   extends DataSavePanel {
@@ -161,7 +162,7 @@ public class BinarySavePanel
 
   ////////////////////////////////////////////////////////////
 
-  /* 
+  /** 
    * Creates a new binary save panel.
    *
    * @param reader the reader to use as a source of data.

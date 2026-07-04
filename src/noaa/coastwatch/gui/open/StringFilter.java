@@ -32,7 +32,13 @@ package noaa.coastwatch.gui.open;
  */
 public interface StringFilter {
 
-  /** Filters the input string. */
+  /**
+   * Filters the input string.
+   *
+   * @param input the input string.
+   *
+   * @return the filtered string.
+   */
   public String filter (String input);
 
 } // StringFilter interface

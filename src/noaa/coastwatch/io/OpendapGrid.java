@@ -75,6 +75,9 @@ public class OpendapGrid
    *
    * @param grid the prototype grid upon which to base this one.
    * @param url the OPeNDAP dataset URL to use for data.
+   *
+   * @throws IOException if an error occurs opening or reading the OPeNDAP
+   * dataset.
    */
   public OpendapGrid (
     Grid grid,

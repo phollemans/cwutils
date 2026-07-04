@@ -88,7 +88,10 @@ public class EarthPlotInfo
   /** The earth data information for legend text. */
   private String[] labels;
 
-  /** The earth context element for the bottom of the legend, possibly null. */
+  /**
+   * The earth context element for the bottom of the legend, possibly null.
+   *
+   */
   private EarthContextElement context;
 
   ////////////////////////////////////////////////////////////
@@ -103,6 +106,9 @@ public class EarthPlotInfo
    * @param info the earth data information for text annotations.
    * @param area the earth area for geographic bounds.
    * @param context the earth context for the bottom of the legend, or null
+   *
+   * @param center the center.
+   *
    * for no context element.
    */
   public EarthPlotInfo (

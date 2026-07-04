@@ -81,12 +81,22 @@ public class TopographyOverlay
   /** The contour generator used for topography lines. */
   private transient ContourGenerator topo;
 
-  /** The contour levels for contouring. */
+  /**
+   * The contour levels for contouring.
+   *
+   */
   private int[] levels;
 
   ////////////////////////////////////////////////////////////
 
-  /** Reads the object data from the input stream. */
+  /**
+   * Reads the object data from the input stream.
+   *
+   * @param in the input stream.
+   *
+   * @throws IOException if an error occurs reading object data from the stream.
+   * @throws ClassNotFoundException if a serialized object class cannot be found.
+   */
   private void readObject (
     ObjectInputStream in
   ) throws IOException, ClassNotFoundException {
@@ -99,12 +109,20 @@ public class TopographyOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the topography levels. */
+  /**
+   * Gets the topography levels.
+   *
+   * @return the topography levels.
+   */
   public int[] getLevels () { return (levels); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the levels in the contour generator. */
+  /**
+   * Sets the levels in the contour generator.
+   *
+   * @param levels the topography contour levels.
+   */
   private void setTopoLevels (int[] levels) {
 
     double[] dblLevels = new double[levels.length];
@@ -116,7 +134,11 @@ public class TopographyOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the topography levels. */
+  /**
+   * Sets the topography levels.
+   *
+   * @param levels the topography contour levels.
+   */
   public void setLevels (int[] levels) { 
 
     if (!Arrays.equals (this.levels, levels)) {

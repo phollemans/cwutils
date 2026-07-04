@@ -196,6 +196,7 @@ import java.util.logging.Level;
  *
  * @author Peter Hollemans
  * @since 3.1.2
+ * @serial exclude
  */
  public final class cwmaster
   extends JFrame {

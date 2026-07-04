@@ -70,23 +70,43 @@ public class EarthPartition
   /** Partition data. */
   private Object data;
 
-  /** The last partition found. */
+  /**
+   * The last partition found.
+   *
+   */
   private EarthPartition lastFound;
 
   ////////////////////////////////////////////////////////////
 
   // Simple functions
   // ----------------
-  /** Gets the partition data. */
+  /**
+   * Gets the partition data.
+   *
+   * @return the partition data.
+   */
   public Object getData () { return (data); }
 
-  /** Sets the partition data. */
+  /**
+   * Sets the partition data.
+   *
+   * @param data the partition data object.
+   *
+   */
   public void setData (Object data) { this.data = data; }
 
-  /** Gets the partition minimum bounds. */
+  /**
+   * Gets the partition minimum bounds.
+   *
+   * @return the partition minimum bounds.
+   */
   public DataLocation getMin () { return ((DataLocation) min.clone()); }
 
-  /** Gets the partition maximum bounds. */
+  /**
+   * Gets the partition maximum bounds.
+   *
+   * @return the partition maximum bounds.
+   */
   public DataLocation getMax () { return ((DataLocation) max.clone()); }
 
   /** Constructs an empty earth partition. */
@@ -420,7 +440,6 @@ public class EarthPartition
    * @param data the data list specifying partition data.
    * @param index offset into the encoding to start.
    * 
-   * @param return the index after decoding.
    */
   private int preorderDecoding (
     BitSet bits,
@@ -461,6 +480,8 @@ public class EarthPartition
 
   /**
    * Gets the number of child partitions.
+   *
+   * @return the number of child partitions.
    */
   public int partitions () {
  
@@ -538,7 +559,6 @@ public class EarthPartition
    * individual elements of the list.
    * @param index offset into the encoding to start.
    * 
-   * @param return the index after encoding.
    */
   private int preorderEncoding (
     BitSet bits,

@@ -285,7 +285,13 @@ public abstract class OpendapReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns true if the OPeNDAP primitive type is unsigned. */
+  /**
+   * Returns true if the OPeNDAP primitive type is unsigned.
+   *
+   * @param base the base attribute name.
+   *
+   * @return true if the OPeNDAP primitive type is unsigned.
+   */
   protected static boolean isUnsigned (
     BaseType base
   ) { 
@@ -367,6 +373,8 @@ public abstract class OpendapReader
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs opening or reading the OPeNDAP dataset.
    */
   public static void main (String[] argv) throws Exception {
 

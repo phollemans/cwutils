@@ -116,6 +116,8 @@ public class ToolSplashWindow
    * Creates a new splash window.
    * 
    * @param app the application name.
+   *
+   *
    */
   public ToolSplashWindow (
     String app
@@ -159,7 +161,11 @@ public class ToolSplashWindow
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new splash window in a test mode. */
+  /**
+   * Creates a new splash window in a test mode.
+   *
+   * @param argv the command line parameters.
+   */
   public static void main (
     String[] argv
   ) {

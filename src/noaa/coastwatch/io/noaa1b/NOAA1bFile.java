@@ -237,12 +237,20 @@ public class NOAA1bFile {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the number of data records in this file. */
+  /**
+   * Gets the number of data records in this file.
+   *
+   * @return the number of data records in this file.
+   */
   public int getRecordCount () { return (dataHeader.getRecordCount()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the instrument whose data is recorded in this file. */
+  /**
+   * Gets the instrument whose data is recorded in this file.
+   *
+   * @return the instrument whose data is recorded in this file.
+   */
   public Instrument getInstrument() { return (dataHeader.getInstrument()); }
 
   ////////////////////////////////////////////////////////////
@@ -253,6 +261,8 @@ public class NOAA1bFile {
    * @param recordIndex the record index for instrument data.
    *
    * @return the instrument data for the specified record.
+   *
+   * @throws IOException if an error occurs reading the data record.
    */
   public InstrumentData getData (
     int recordIndex
@@ -264,7 +274,11 @@ public class NOAA1bFile {
 
   ////////////////////////////////////////////////////////////
 
-  /** Closes the file. */
+  /**
+   * Closes the file.
+   *
+   * @throws IOException if an error occurs closing the input channel.
+   */
   public void close () throws IOException { inputChannel.close(); }
 
   ////////////////////////////////////////////////////////////
@@ -273,6 +287,8 @@ public class NOAA1bFile {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs opening or reading the file.
    */
   public static void main (String[] argv) throws Exception {
 

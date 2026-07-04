@@ -49,7 +49,10 @@ public class GraphicsServices {
 
   ////////////////////////////////////////////////////////////
 
-  /** Tests for the <code>PdfGraphics2D</code> class. */
+  /**
+   * Tests for the <code>PdfGraphics2D</code> class.
+   *
+   */
   static {
 
     try {
@@ -67,6 +70,10 @@ public class GraphicsServices {
   /** 
    * Determines if the graphics device supports colors with an alpha
    * component.
+   *
+   * @param g the graphics context.
+   *
+   * @return true if the graphics device supports colors with an alpha component, or false otherwise.
    */
   public static boolean supportsAlpha (
     Graphics2D g
@@ -101,6 +108,10 @@ public class GraphicsServices {
   /**
    * Determines if the graphics device is raster-based as opposed to
    * vector-based.
+   *
+   * @param g the graphics context.
+   *
+   * @return true if the graphics device is raster-based as opposed to vector-based, or false otherwise.
    */
   public static boolean isRasterDevice (
     Graphics2D g
@@ -139,6 +150,10 @@ public class GraphicsServices {
    * transparent.  This does not work with all Java implementations,
    * in which case a BufferedImage.TYPE_BYTE_INDEXED type must be used
    * which requires more space in memory.
+   *
+   * @param g the graphics context.
+   *
+   * @return true if the graphics device supports a binary mask with a transparent color, or false otherwise.
    */
   public static boolean supportsBinaryWithTransparency (
     Graphics2D g

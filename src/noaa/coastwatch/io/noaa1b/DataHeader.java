@@ -39,22 +39,46 @@ import terrenus.instrument.Instrument;
  */
 public interface DataHeader {
 
-  /** Gets the data spacecraft name. */
+  /** 
+   * Gets the data spacecraft name. 
+   *
+   * @return the data spacecraft name.
+   */
   public String getSpacecraft();
 
-  /** Gets the data instrument. */
+  /** 
+   * Gets the data instrument. 
+   *
+   * @return the data instrument.
+   */
   public Instrument getInstrument();
 
-  /** Gets the data start date. */
+  /** 
+   * Gets the data start date. 
+   *
+   * @return the data start date.
+   */
   public Date getStartDate();
 
-  /** Gets the data end date. */
+  /** 
+   * Gets the data end date. 
+   *
+   * @return the data end date.
+   */
   public Date getEndDate();
 
-  /** Gets the number of data records in the data file. */
+  /** 
+   * Gets the number of data records in the data file. 
+   *
+   * @return the number of data records in the data file.
+   */
   public int getRecordCount();
 
-  /** Gets the number of header records in the data file. */
+  /** 
+   * Gets the number of header records in the data file. 
+   *
+   * @return the number of header records in the data file.
+   */
   public int getHeaderCount();
 
   /** 
@@ -65,13 +89,19 @@ public interface DataHeader {
    */
   public int getFormatVersion();
     
-  /** Gets the size of each header and data record in bytes. */
+  /** 
+   * Gets the size of each header and data record in bytes. 
+   *
+   * @return the size of each header and data record in bytes.
+   */
   public int getRecordSize();
 
   /** 
    * Creates a data record using the specified data.
    *
    * @param inputBuffer the buffer to read for byte data.
+   *
+   * @return the data record read from the specified byte data.
    */
   public DataRecord getDataRecord (
     ByteBuffer inputBuffer
@@ -83,16 +113,30 @@ public interface DataHeader {
    * reading the entire data record.  The attribute bytes must contain
    * enough data from the record to return the scan line, date, and
    * sensor, navigation, and calibration quality flags.
+   *
+   * @return the size of the data record attributes in bytes.
    */
   public int getRecordAttSize();
 
-  /** Gets the calibration data in the header. */
+  /** 
+   * Gets the calibration data in the header. 
+   *
+   * @return the calibration data in the header.
+   */
   public float[] getCalibration();
 
-  /** Gets the dataset name as stored in the header. */
+  /** 
+   * Gets the dataset name as stored in the header. 
+   *
+   * @return the dataset name as stored in the header.
+   */
   public String getDatasetName();
 
-  /** Gets the dataset creation site. */
+  /** 
+   * Gets the dataset creation site. 
+   *
+   * @return the dataset creation site.
+   */
   public String getCreationSite();
 
 } // DataHeader interface

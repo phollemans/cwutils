@@ -187,6 +187,8 @@ public abstract class NCReader
    * @param att the attribute to convert.
    * @param asArray the array flag, true to return single values as an
    * array, false to return as a wrapped primitive.
+   *
+   * @return the converted attribute value.
    */
   protected static Object convertAttributeValue (
     Attribute att, 
@@ -320,7 +322,12 @@ public abstract class NCReader
 
   ////////////////////////////////////////////////////////////
 
-  /** Returns true if this reader is network-connected. */
+  /**
+   * Returns true if this reader is network-connected.
+   *
+   *
+   * @return true if this reader is network-connected.
+   */
   public boolean isNetwork () { return (isNetwork); }
 
   ////////////////////////////////////////////////////////////
@@ -330,6 +337,12 @@ public abstract class NCReader
    * implemented in the child class and is only called if the variable
    * is not already in the cache.  See {@link #getVariable} for the
    * required behaviour.
+   *
+   *
+   * @param index the variable index.
+   *
+   * @return the actual variable with data.
+   * @throws IOException if an error occurs reading the variable data.
    */
   protected abstract DataVariable getActualVariable (
     int index
@@ -502,4 +515,3 @@ public abstract class NCReader
 } // NCReader class
 
 ////////////////////////////////////////////////////////////////////////
-

@@ -1080,7 +1080,7 @@ import ucar.units.Unit;
  *   [INFO] Writing output 2002_288_1435_n17_er_sst_mag.png
  * </pre>
  * <p>For an example of true color rendering, the next example shows the use
- * of the <b>--compositehint</b> option for rendering top of atmopshere
+ * of the <b>--compositehint</b> option for rendering top of atmosphere
  * OLCI radiance data to a JPEG image:</p>
  * <pre>
  *   phollema$ cwrender --verbose --nolegends --size 1024

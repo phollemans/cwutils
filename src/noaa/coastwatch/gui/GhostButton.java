@@ -55,6 +55,7 @@ import noaa.coastwatch.gui.TestContainer;
  *
  * @author Peter Hollemans
  * @since 3.2.2
+ * @serial exclude
  */
 public class GhostButton
   extends JButton {
@@ -120,6 +121,7 @@ public class GhostButton
    */
   public static class GhostImageFilter extends RGBImageFilter {
 
+    /** Creates a new ghost image filter. */
     public GhostImageFilter () { canFilterIndexColorModel = true; }
 
     public int filterRGB(int x, int y, int rgb) {

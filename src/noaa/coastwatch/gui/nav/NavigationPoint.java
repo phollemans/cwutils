@@ -76,32 +76,58 @@ public class NavigationPoint {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the earth location. */
+  /**
+   * Gets the earth location.
+   *
+   * @return the earth location.
+   */
   public EarthLocation getEarthLoc () { return (earthLoc); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the data location. */
+  /**
+   * Gets the data location.
+   *
+   * @return the data location.
+   */
   public DataLocation getDataLoc () { return (dataLoc); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the offset. */
+  /**
+   * Gets the offset.
+   *
+   *
+   * @return the offset.
+   */
   public double[] getOffset () { return (offset); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the comment. */
+  /**
+   * Gets the comment.
+   *
+   * @return the comment.
+   */
   public String getComment () { return (comment); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the comment. */
+  /**
+   * Sets the comment.
+   *
+   * @param comment the comment text.
+   *
+   */
   public void setComment (String comment) { this.comment = comment; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the offset. */
+  /**
+   * Sets the offset.
+   *
+   * @param offset the navigation offset.
+   */
   public void setOffset (double[] offset) { this.offset = offset; }
 
   ////////////////////////////////////////////////////////////

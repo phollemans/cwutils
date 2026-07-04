@@ -170,6 +170,8 @@ public class SwathProjection
    * latitude values increase as row index increases.  This is a
    * useful flag for rendering code that presents the data in a way
    * that is familiar to the user.
+   *
+   * @return true if north is at the top of the data.
    */
   public boolean getNorthIsUp () { return (northIsUp); }
 
@@ -976,6 +978,9 @@ public class SwathProjection
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs reading the input data or running the
+   * swath projection tests.
    */
   public static void main (String[] argv) throws Exception {
 

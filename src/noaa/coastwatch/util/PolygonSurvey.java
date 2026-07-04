@@ -81,7 +81,11 @@ public class PolygonSurvey
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the shape defining this polygon. */
+  /**
+   * Gets the shape defining this polygon.
+   *
+   * @return the shape defining this polygon.
+   */
   public Shape getShape () { return (shape); }
 
   ////////////////////////////////////////////////////////////

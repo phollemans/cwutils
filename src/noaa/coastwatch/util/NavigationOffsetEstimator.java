@@ -127,13 +127,19 @@ public class NavigationOffsetEstimator {
    * for the navigation box to be used in the correlation.
    *
    * @param frac the new minimum class fraction in the range
+   *
+   *
    * [0..1].
    */
   public void setMinFraction (double frac) { minClassFraction = frac; }
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the verbose flag to print verbose output during estimation. */
+  /**
+   * Sets the verbose flag to print verbose output during estimation.
+   *
+   * @param flag true to print verbose output during estimation.
+   */
   public void setVerbose (boolean flag) {
     
     if (defaultLevel == null) defaultLevel = VERBOSE.getLevel();

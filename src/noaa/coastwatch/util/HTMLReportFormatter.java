@@ -29,6 +29,7 @@ public class HTMLReportFormatter implements ReportFormatter {
 
   /////////////////////////////////////////////////////////////////
 
+  /** Creates a new HTML report formatter. */
   protected HTMLReportFormatter () { 
 
     content = new StringBuffer(); 
@@ -39,6 +40,11 @@ public class HTMLReportFormatter implements ReportFormatter {
 
   /////////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a new HTML report formatter.
+   *
+   * @return the HTML report formatter.
+   */
   public static HTMLReportFormatter create () { return (new HTMLReportFormatter()); }
 
   /////////////////////////////////////////////////////////////////

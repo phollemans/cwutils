@@ -1379,7 +1379,6 @@ public class CFNCWriter
   /**
    * Gets a multiple-value CF attribute string.
    *
-   * @param candidateAray the array of attribute names to use as
    * candidates for source strings in the value map.
    * @param valueMap the map of attribute names to values.  The
    * map will be searched for the list of candidates.
@@ -1481,6 +1480,8 @@ public class CFNCWriter
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the writer tests.
    */
   public static void main (String[] argv) throws Exception {
 

@@ -91,14 +91,22 @@ public class Grid
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the navigation correction affine transform. */
+  /**
+   * Gets the navigation correction affine transform.
+   *
+   * @return the navigation correction affine transform.
+   */
   public AffineTransform getNavigation () { 
     return ((AffineTransform) nav.clone ());
   } // getNavigation
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the navigation correction affine transform. */
+  /**
+   * Sets the navigation correction affine transform.
+   *
+   * @param nav the navigation correction affine transform.
+   */
   public void setNavigation (AffineTransform nav) { 
 
     this.nav = (nav == null ? new AffineTransform() : 
@@ -113,6 +121,16 @@ public class Grid
    * Constructs a new 2D grid with the specified properties.  The
    * <code>rows</code> and <code>cols</code> specify the grid
    * dimensions.  The inital affine transform is set to the identity.
+   *
+   * @param name the short variable name.
+   * @param longName the descriptive variable name.
+   * @param units the variable units.
+   * @param rows the number of grid rows.
+   * @param cols the number of grid columns.
+   * @param data the data array.
+   * @param format the number format for data values.
+   * @param scaling the scale and offset for packed data values.
+   * @param missing the missing data value.
    *
    * @see DataVariable
    */
@@ -533,6 +551,8 @@ public class Grid
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the grid tests.
    */
   public static void main (String[] argv) throws Exception {
 

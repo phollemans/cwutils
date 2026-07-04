@@ -72,12 +72,53 @@ public class ChunkDataModifier implements ChunkVisitor {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Sets the array of missing value flags.
+   *
+   * @param isMissingArray the missing value flags.
+   */
   public void setMissingData (boolean[] isMissingArray) { this.isMissingArray = isMissingArray; }
+
+  /**
+   * Sets the array of byte values.
+   *
+   * @param byteArray the byte values.
+   */
   public void setByteData (byte[] byteArray) { this.byteArray = byteArray; }
+
+  /**
+   * Sets the array of short integer values.
+   *
+   * @param shortArray the short integer values.
+   */
   public void setShortData (short[] shortArray) { this.shortArray = shortArray; }
+
+  /**
+   * Sets the array of integer values.
+   *
+   * @param intArray the integer values.
+   */
   public void setIntData (int[] intArray) { this.intArray = intArray; }
+
+  /**
+   * Sets the array of long integer values.
+   *
+   * @param longArray the long integer values.
+   */
   public void setLongData (long[] longArray) { this.longArray = longArray; }
+
+  /**
+   * Sets the array of single-precision floating-point values.
+   *
+   * @param floatArray the single-precision floating-point values.
+   */
   public void setFloatData (float[] floatArray) { this.floatArray = floatArray; }
+
+  /**
+   * Sets the array of double-precision floating-point values.
+   *
+   * @param doubleArray the double-precision floating-point values.
+   */
   public void setDoubleData (double[] doubleArray) { this.doubleArray = doubleArray; }
 
   ////////////////////////////////////////////////////////////
@@ -401,6 +442,8 @@ public class ChunkDataModifier implements ChunkVisitor {
    *
    * @param argv the array of command line parameters.
    *
+   * @throws Exception if an error occurs while running the chunk modifier tests.
+   *
    * @since 3.6.1
    */
   public static void main (String[] argv) throws Exception {
@@ -619,5 +662,3 @@ public class ChunkDataModifier implements ChunkVisitor {
 } // ChunkDataModifier class
 
 ////////////////////////////////////////////////////////////////////////
-
-

@@ -54,14 +54,26 @@ public class IconFactory {
    * shape.  HOVER renders a highlighted version of the icon for whern the
    * mouse cursor is opver it, and PRESSED renders a pressed icon.
    */
-  public enum Mode {NORMAL, HOVER, PRESSED};
+  public enum Mode {
+    /** Renders the normal icon. */
+    NORMAL,
+    /** Renders the hover icon. */
+    HOVER,
+    /** Renders the pressed icon. */
+    PRESSED
+  };
 
   /** The purpose constants for the icon rendering. */
   public enum Purpose {
+    /** A close icon with a square hover or pressed highlight. */
     CLOSE_SQUARE, 
+    /** A close icon with a rounded rectangle hover or pressed highlight. */
     CLOSE_ROUNDED, 
+    /** A close icon with a circular hover or pressed highlight. */
     CLOSE_CIRCLE,
+    /** A vertical separator icon. */
     SEPARATOR_VERTICAL,
+    /** A horizontal separator icon. */
     SEPARATOR_HORIZONTAL
   };
 
@@ -69,10 +81,16 @@ public class IconFactory {
 
   ////////////////////////////////////////////////////////////
 
+  /** Creates a new icon factory. */
   protected IconFactory () { }
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the singleton icon factory instance.
+   *
+   * @return the singleton icon factory instance.
+   */
   public static IconFactory getInstance() { 
 
     if (instance == null) instance = new IconFactory();
@@ -82,6 +100,15 @@ public class IconFactory {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates an icon with the specified purpose, mode, and size.
+   *
+   * @param purpose the icon purpose.
+   * @param mode the icon rendering mode.
+   * @param size the icon size in pixels.
+   *
+   * @return the new icon.
+   */
   public Icon createIcon (
     Purpose purpose,
     Mode mode,
@@ -244,5 +271,3 @@ public class IconFactory {
 } // IconFactory class
 
 ////////////////////////////////////////////////////////////////////////
-
-

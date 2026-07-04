@@ -70,7 +70,7 @@ import java.util.logging.Level;
  * <p> The script tool runs a shell script written in the
  * <a href="http://beanshell.org">BeanShell</a> language, which
  * is a simplified variant of Java.  All of the CoastWatch API is available
- * to the code using import statments.  The arguments passed on the
+ * to the code using import statements.  The arguments passed on the
  * command line of the tool are available in the shell script by
  * accessing the <code>String[] args</code> array starting with
  * <code>args[0]</code> as the first argument.</p>
@@ -250,6 +250,9 @@ import java.util.logging.Level;
    * Performs the main function.
    *
    * @param argv the list of command line parameters.
+   *
+   * @throws EvalError if the BeanShell script cannot be evaluated.
+   * @throws IOException if an error occurs reading the script file.
    */
   public static void main (String argv[]) throws EvalError, IOException {
 

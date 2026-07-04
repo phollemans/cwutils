@@ -43,6 +43,7 @@ import noaa.coastwatch.util.EarthDataInfo;
  *
  * @author Peter Hollemans
  * @since 3.1.7
+ * @serial exclude
  */
 public class CWHDFSavePanel
   extends DataSavePanel {
@@ -77,7 +78,7 @@ public class CWHDFSavePanel
 
   ////////////////////////////////////////////////////////////
 
-  /* 
+  /** 
    * Creates a new CoastWatch HDF save panel.
    *
    * @param reader the reader to use as a source of data.

@@ -109,6 +109,7 @@ import java.util.logging.Logger;
  *
  * @author Peter Hollemans
  * @since 3.1.2
+ * @serial exclude
  */
 public class EarthDataViewPanel
   extends JPanel
@@ -1041,8 +1042,9 @@ public class EarthDataViewPanel
   ////////////////////////////////////////////////////////////
 
   /**
-   * 
-   * 
+   * Creates a new on-screen track bar for this view panel.
+   *
+   * @return the new track bar.
    * @since 3.8.1
    */
   public OnScreenTrackBar createTrackBar() { return (new OnScreenTrackBar()); }
@@ -1053,12 +1055,14 @@ public class EarthDataViewPanel
    * 
    * 
    * @since 3.8.1
+   * @serial exclude
    */
   public class OnScreenTrackBar extends OnScreenStylePanel {
 
     private JLabel leftLabel;
     private JLabel rightLabel;
 
+    /** Creates a new on-screen track bar. */
     public OnScreenTrackBar () {
 
       super (false);
@@ -1156,6 +1160,11 @@ public class EarthDataViewPanel
       rightLabel.setText ("");
     } // clearTracking
 
+    /**
+     * Sets the left label text.
+     *
+     * @param text the left label text.
+     */
     public void setLeftLabelText (String text) { leftLabel.setText (text); }
 
   } // OnScreenTrackBar
@@ -1167,6 +1176,8 @@ public class EarthDataViewPanel
    * data view panel.  The track bar is configurable and can show the
    * cursor position as latitude/longitude and row/column, and the
    * data value at the cursor position.
+   *
+   * @serial exclude
    */
   public class TrackBar
     extends JPanel {

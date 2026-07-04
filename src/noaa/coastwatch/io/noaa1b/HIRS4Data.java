@@ -64,7 +64,10 @@ public class HIRS4Data
   /** The data record for this data. */
   private HIRS4Record record;
 
-  /** The temporary count data array. */
+  /**
+   * The temporary count data array.
+   *
+   */
   private int[] countData = new int[HIRS4.SAMPLES];
 
   ////////////////////////////////////////////////////////////
@@ -73,6 +76,9 @@ public class HIRS4Data
    * Creates a new data object for the specified record.
    *
    * @param record the data record for source data.
+   *
+   * @param header the data header for this instrument.
+   *
    */
   public HIRS4Data (
     HIRS4Header header,

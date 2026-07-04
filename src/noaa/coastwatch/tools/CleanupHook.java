@@ -70,7 +70,11 @@ public class CleanupHook
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the one and only instance of this class. */
+  /**
+   * Gets the one and only instance of this class.
+   *
+   * @return the one and only instance of this class.
+   */
   public static CleanupHook getInstance () {
 
     if (instance == null) {

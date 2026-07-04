@@ -120,6 +120,8 @@ public abstract class EarthTransform2D
    * Gets a polygon bounding box for this transform using the
    * specified data coordinate limits.
    *
+   *
+   * @return a polygon bounding box for this transform using the specified data coordinate limits.
    * @param upperLeft the upper-left corner of the data window.
    * @param lowerRight the lower-right corner of the data window.
    * @param segments the number of segments along each side of the
@@ -282,6 +284,8 @@ public abstract class EarthTransform2D
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the transform tests.
    */
   public static void main (String[] argv) throws Exception {
 

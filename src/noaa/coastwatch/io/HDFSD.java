@@ -33,10 +33,18 @@ package noaa.coastwatch.io;
  */
 public interface HDFSD {
 
-  /** Gets the HDF scientific dataset ID. */
+  /**
+   * Gets the HDF scientific dataset ID.
+   *
+   * @return the HDF scientific dataset ID.
+   */
   public int getSDID ();
 
-  /** Gets the HDF scientific dataset file name. */
+  /**
+   * Gets the HDF scientific dataset file name.
+   *
+   * @return the HDF scientific dataset file name.
+   */
   public String getFilename ();
 
 } // HDFSD interface

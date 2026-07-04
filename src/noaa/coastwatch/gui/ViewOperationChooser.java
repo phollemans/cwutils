@@ -279,6 +279,8 @@ public class ViewOperationChooser
 
   /** 
    * Gets the selected operation, or null if no operation is selected.
+   *
+   * @return the selected operation, or null if no operation is selected.
    */
   public String getOperation () { 
 
@@ -307,6 +309,8 @@ public class ViewOperationChooser
   /** 
    * Creates a static instance of this class using the default
    * constructor. 
+   *
+   * @return a static instance of this class.
    */
   public static ViewOperationChooser getInstance () {
 

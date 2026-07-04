@@ -40,22 +40,51 @@ import noaa.coastwatch.render.Palette;
  */
 public interface ColorEnhanced {
 
-  /** Gets the enhancement color palette. */
+  /**
+   * Gets the enhancement color palette.
+   *
+   *
+   * @return the enhancement color palette.
+   */
   public Palette getPalette ();
 
-  /** Sets the enhancement color palette. */
+  /**
+   * Sets the enhancement color palette.
+   *
+   * @param pal the palette.
+   *
+   */
   public void setPalette (Palette pal);
 
-  /** Gets the enhancement function. */
+  /**
+   * Gets the enhancement function.
+   *
+   *
+   * @return the enhancement function.
+   */
   public EnhancementFunction getFunction ();
 
-  /** Sets the enhancement function. */
+  /**
+   * Sets the enhancement function.
+   *
+   * @param func the enhancement function.
+   *
+   */
   public void setFunction (EnhancementFunction func);
 
-  /** Gets the missing value color. */
+  /**
+   * Gets the missing value color.
+   *
+   *
+   * @return the missing value color.
+   */
   public Color getMissingColor ();
 
-  /** Sets the missing value color. */
+  /**
+   * Sets the missing value color.
+   *
+   * @param missingColor the missing value color.
+   */
   public void setMissingColor (Color missingColor);
 
 } // ColorEnhanced

@@ -101,7 +101,11 @@ public class ServerQuery {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the number of values in each result. */
+  /**
+   * Gets the number of values in each result.
+   *
+   * @return the number of values in each result.
+   */
   public int getValues () {
 
     return (keyNames.length);
@@ -127,7 +131,11 @@ public class ServerQuery {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the number of query results. */
+  /**
+   * Gets the number of query results.
+   *
+   * @return the number of query results.
+   */
   public int getResults () {
 
     return (resultTable.length);
@@ -178,7 +186,7 @@ public class ServerQuery {
    * Gets a result value.
    * 
    * @param result the result index.
-   * @param valueKey the value key.
+   * @param valueKey the key for the value to retrieve.
    *
    * @return the value string.
    */
@@ -193,12 +201,20 @@ public class ServerQuery {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the host name used for the query. */
+  /**
+   * Gets the host name used for the query.
+   *
+   * @return the host name used for the query.
+   */
   public String getHost() { return (url.getHost()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the query URL as a string. */
+  /**
+   * Gets the query URL as a string.
+   *
+   * @return the query URL as a string.
+   */
   public String getURL() { return (url.toString()); }
 
   ////////////////////////////////////////////////////////////

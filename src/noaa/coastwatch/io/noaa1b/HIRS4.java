@@ -57,7 +57,11 @@ public class HIRS4 implements Radiometer {
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the singleton instance of this class. */
+  /**
+   * Gets the singleton instance of this class.
+   *
+   * @return the singleton instance of this class.
+   */
   public static HIRS4 getInstance() { return (instance); }
 
   ////////////////////////////////////////////////////////////

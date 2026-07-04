@@ -73,7 +73,12 @@ public class SurveyOverlay
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the survey for this overlay. */
+  /**
+   * Gets the survey for this overlay.
+   *
+   *
+   * @return the survey for this overlay.
+   */
   public EarthDataSurvey getSurvey () { return (survey); }
   
   ////////////////////////////////////////////////////////////
@@ -82,6 +87,10 @@ public class SurveyOverlay
    * Creates a new survey overlay with the specified survey and color.
    * The layer number is initialized to 0, and the stroke to the
    * default <code>BasicStroke</code>.
+   *
+   * @param survey the survey to overlay.
+   * @param color the overlay color.
+   *
    */
   public SurveyOverlay (
     EarthDataSurvey survey,

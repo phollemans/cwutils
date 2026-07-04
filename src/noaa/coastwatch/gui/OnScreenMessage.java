@@ -20,6 +20,7 @@ import java.util.logging.Logger;
  *
  * @author Peter Hollemans
  * @since 3.8.1
+ * @serial exclude
  */
 public class OnScreenMessage extends TranslucentPanel {
 
@@ -27,6 +28,12 @@ public class OnScreenMessage extends TranslucentPanel {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Creates a new on-screen message.
+   *
+   * @param message the message text.
+   * @param closeAction the action to run when the message is closed.
+   */
   public OnScreenMessage (String message, Runnable closeAction) {
 
     super (BoxLayout.X_AXIS);
@@ -53,4 +60,3 @@ public class OnScreenMessage extends TranslucentPanel {
   ////////////////////////////////////////////////////////////
 
 } // OnScreenMessage class
-

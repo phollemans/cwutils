@@ -30,7 +30,7 @@ import noaa.coastwatch.render.feature.SelectionRule;
 import noaa.coastwatch.util.EarthArea;
 import noaa.coastwatch.util.EarthLocation;
 
-/*
+/**
  * An <code>AreaRule</code> provides a selection mechanism for
  * features based on an earth area.  If a feature has at least one
  * location contained within the earth area, it is considered a matching

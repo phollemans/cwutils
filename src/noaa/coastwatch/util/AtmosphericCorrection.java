@@ -131,6 +131,11 @@ public class AtmosphericCorrection {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets the shared atmospheric correction instance.
+   *
+   * @return the shared instance.
+   */
   public static AtmosphericCorrection getInstance() {
   
     if (instance == null) instance = new AtmosphericCorrection();

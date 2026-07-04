@@ -65,13 +65,18 @@ public abstract class EnhancementFunction
    * Gets the enhancement reversal flag.  When an enhancement is
    * reversed, the mapping is to [1..0] rather than [0..1].
    *
+   *
+   * @return the enhancement reversal flag.
    * @see #setReverse
    */
   public boolean getReverse() { return (reverse); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates and returns a copy of this object. */
+  /**
+   * Creates and returns a copy of this object.
+   *
+   */
   public Object clone () {
 
     try {
@@ -90,6 +95,9 @@ public abstract class EnhancementFunction
   /** 
    * Sets the enhancement reversal flag.  When an enhancement is
    * reversed, the mapping is to [1..0] rather than [0..1].
+   *
+   * @param flag the flag.
+   *
    */
   public void setReverse (boolean flag) { 
     
@@ -212,20 +220,25 @@ public abstract class EnhancementFunction
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the enhancement range. */
+  /**
+   * Gets the enhancement range.
+   *
+   * @return the enhancement range.
+   */
   public double[] getRange () { return ((double[]) range.clone()); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets a description of the function. */
+  /**
+   * Gets a description of the function.
+   *
+   * @return a description of the function.
+   */
   public abstract String describe();
 
   ////////////////////////////////////////////////////////////
 
-  /**
-   * 
-   * @since 4.1.5
-   */
+  @Override
   public String toString () { 
 
     return (getClass().getName() + "[" +

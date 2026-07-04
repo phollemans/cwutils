@@ -55,7 +55,11 @@ public class ArcOptionPanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the dimension header flag. */
+  /**
+   * Gets the dimension header flag.
+   *
+   * @return the dimension header flag.
+   */
   public boolean getHeader () { return (headerCheck.isSelected()); }
 
   ////////////////////////////////////////////////////////////

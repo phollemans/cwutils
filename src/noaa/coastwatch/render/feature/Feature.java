@@ -28,7 +28,7 @@ package noaa.coastwatch.render.feature;
 import java.util.Iterator;
 import noaa.coastwatch.util.EarthLocation;
 
-/*
+/**
  * A <code>Feature</code> represents any geographic object with a list
  * of points and a set of attributes.  The names and types of the
  * attributes are accessed through the feature source.

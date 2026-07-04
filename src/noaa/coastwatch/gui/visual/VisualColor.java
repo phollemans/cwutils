@@ -83,12 +83,19 @@ public class VisualColor
   /** The popup menu used to show the simple color chooser. */
   private JPopupMenu popup;
 
-  /** The simple color chooser panel. */
+  /**
+   * The simple color chooser panel.
+   *
+   */
   private SimpleColorChooser chooser;
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new visual color object using the specified color. */
+  /**
+   * Creates a new visual color object using the specified color.
+   *
+   * @param color the color value to edit.
+   */
   public VisualColor (
     Color color
   ) {                     

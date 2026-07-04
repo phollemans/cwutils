@@ -59,7 +59,10 @@ public class PalettePanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new palette panel with no initial palette. */
+  /**
+   * Creates a new palette panel with no initial palette.
+   *
+   */
   public PalettePanel () { 
 
     palette = null; 
@@ -72,6 +75,9 @@ public class PalettePanel
 
   /** 
    * Creates a new palette panel with the specified initial palette.
+   *
+   * @param palette the initial palette to display.
+   *
    */
   public PalettePanel (
     Palette palette
@@ -116,6 +122,7 @@ public class PalettePanel
    *
    * @param dims the dimensions of the image to create.
    *
+   *
    * @return the palette image of the specified dimensions.
    *
    * @since 3.5.1
@@ -156,7 +163,11 @@ public class PalettePanel
 
   ////////////////////////////////////////////////////////////
 
-  /** Sets the current palette. */
+  /**
+   * Sets the current palette.
+   *
+   * @param palette the palette to display.
+   */
   public void setPalette (Palette palette) {
 
     this.palette = palette;

@@ -51,7 +51,8 @@ public class IOServices {
    * Gets a file path for a resource name.
    * 
    * @param resourceClass the class requesting the resource.
-   * @param resourceName the resource name.
+   * @param resourceName the resource name to locate.
+   *
    *
    * @return the full path to the resource file.
    *
@@ -88,6 +89,11 @@ public class IOServices {
 
   /** 
    * Converts octal escape sequences in the string to Java
+   * characters.
+   *
+   * @param value the octal value to convert.
+   *
+   * @return the string with octal escape sequences converted to Java
    * characters.
    */
   public static String convertOctal (

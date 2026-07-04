@@ -96,6 +96,8 @@ public class MapProjectionFactory
    * {@link MapProjection} because it allows the factory to
    * possibly return a performance-enhanced pure Java version of
    * a {@link GCTPStyleProjection} object.
+   *
+   * @return an instance of this factory with no GCTP forcing.
    */
   public static MapProjectionFactory getInstance () {
 

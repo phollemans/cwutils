@@ -720,6 +720,8 @@ public class NOAA1bFileReader extends EarthDataReader {
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs opening or summarizing the NOAA 1b file.
    */
   public static void main (String argv[]) throws Exception {
 

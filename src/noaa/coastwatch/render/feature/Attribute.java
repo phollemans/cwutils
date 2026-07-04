@@ -23,7 +23,7 @@
 // -------
 package noaa.coastwatch.render.feature;
 
-/*
+/**
  * An <code>Attribute</code> acts as an annotation element for 
  * <code>Feature</code> objects produced by a <code>FeatureSource</code>.
  * All attributes have a name and data type.  Once created, attributes are
@@ -101,6 +101,11 @@ public class Attribute {
 
   ////////////////////////////////////////////////////////////
 
+  /**
+   * Gets a debugging string for this attribute.
+   *
+   * @return the debugging string.
+   */
   public String toDebugString () { 
 
     return ("Attribute[" +

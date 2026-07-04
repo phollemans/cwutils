@@ -559,6 +559,8 @@ public class CDMGridMappedProjection
    * Tests this class.
    *
    * @param argv the array of command line parameters.
+   *
+   * @throws Exception if an error occurs while running the projection tests.
    */
   public static void main (String[] argv) throws Exception {
 

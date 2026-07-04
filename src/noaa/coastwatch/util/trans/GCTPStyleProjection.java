@@ -137,6 +137,9 @@ public abstract class GCTPStyleProjection
    * columns]</code>.
    * @param affine the affine transform for translating data
    * <code>[row, column]</code> to map <code>[x, y]</code>.
+   *
+   * @throws NoninvertibleTransformException if the affine transform cannot be
+   * inverted.
    */
   public GCTPStyleProjection (
     int system,

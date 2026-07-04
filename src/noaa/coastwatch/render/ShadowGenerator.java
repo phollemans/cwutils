@@ -28,8 +28,14 @@ public class ShadowGenerator {
 
   private static ShadowGenerator instance;
 
+  /** Creates a new shadow generator. */
   protected ShadowGenerator() { }
 
+  /**
+   * Gets the shared shadow generator instance.
+   *
+   * @return the shared instance.
+   */
   public static ShadowGenerator getInstance() {
     if (instance == null) instance = new ShadowGenerator();
     return (instance);
@@ -85,6 +91,13 @@ public class ShadowGenerator {
 
   /////////////////////////////////////////////////////////////////
 
+  /**
+   * Runs a test program that creates a shadow image from an input image.
+   *
+   * @param argv the command line arguments.
+   *
+   * @throws Exception if an error occurs reading or writing image data.
+   */
   public static void main (String[] argv) throws Exception {
 
     var source = ImageIO.read (new File (argv[0]));
@@ -100,4 +113,3 @@ public class ShadowGenerator {
   /////////////////////////////////////////////////////////////////
 
 } // ShadowGenerator class
-

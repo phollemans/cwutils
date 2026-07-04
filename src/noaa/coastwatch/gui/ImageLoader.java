@@ -62,7 +62,11 @@ public class ImageLoader
 
   ////////////////////////////////////////////////////////////////
 
-  /** Gets the image dimensions. */
+  /**
+   * Gets the image dimensions.
+   *
+   * @return the image dimensions.
+   */
   public Dimension getDims () { 
   
     return (imageDims == null ? null : (Dimension) imageDims.clone()); 
@@ -71,12 +75,23 @@ public class ImageLoader
 
   ////////////////////////////////////////////////////////////
 
-  /** Gets the image loading status. */
+  /**
+   * Gets the image loading status.
+   *
+   *
+   * @return the image loading status.
+   */
   public boolean getLoading () { return (producer != null); }
 
   ////////////////////////////////////////////////////////////
 
-  /** Creates a new image loader for the specified image. */
+  /**
+   * Creates a new image loader for the specified image.
+   *
+   * @param image the image to load.
+   *
+   * @param observer the observer to notify of loading progress.
+   */
   public ImageLoader (
     Image image,
     ImageLoaderObserver observer
@@ -212,5 +227,4 @@ public class ImageLoader
 } // ImageLoader class
 
 ////////////////////////////////////////////////////////////////////////
-
 
