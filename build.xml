@@ -292,6 +292,7 @@
       <variable name="appleIssuerId" value="${install4j.apple.issuer.id}"/>
       <variable name="appleKeyId" value="${install4j.apple.key.id}"/>
       <variable name="applePrivateKey" value="${install4j.apple.private.key}"/>
+      <variable name="sys.ext.suppress.pack200NotUsed" value="true"/>
     </install4j>
 
     <!-- Tag the package version -->
