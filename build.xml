@@ -448,6 +448,27 @@
     </antcall>
   </target>
 
+  <target name="test-splash"
+    depends="compile"
+    description="Tests the JVM splash screen updater using the CW Utilities splash graphics">
+    <echo>Testing splash screen with:</echo>
+    <echo>  Image = resources/noaa/coastwatch/gui/cwutils_splash.png</echo>
+    <echo>  Class = noaa.coastwatch.gui.SplashScreenManager</echo>
+    <java 
+      classname="noaa.coastwatch.gui.SplashScreenManager" 
+      fork="true">
+      <classpath>
+        <pathelement location="classes"/>
+        <pathelement location="resources"/>
+        <path refid="test.class.path"/>
+      </classpath>
+      <jvmarg value="-splash:resources/noaa/coastwatch/gui/cwutils_splash.png"/>
+      <arg value="CoastWatch Utilities GUI Tool"/>
+      <arg value="${version.full}"/>
+      <arg value="5000"/>
+    </java>
+  </target>
+
   <target name="test-info"
     description="Tests the cwinfo tool by calling its main() method with arguments ${args}">
     <antcall target="test">

@@ -40,6 +40,17 @@ import java.awt.Font;
 public class SplashScreenManager {
 
   ////////////////////////////////////////////////////////////
+
+  /** The default test tool name. */
+  private static final String TEST_LONG_NAME = "CoastWatch Utilities";
+
+  /** The default test version. */
+  private static final String TEST_VERSION = "test mode";
+
+  /** The default time to show the test splash in milliseconds. */
+  private static final long TEST_DELAY = 5000;
+
+  ////////////////////////////////////////////////////////////
   
   /** 
    * Updates the Java splash screen if present.  The screen is updated
@@ -87,8 +98,8 @@ public class SplashScreenManager {
         var font = g2d.getFont();
 //        g2d.setFont (font.deriveFont (Font.BOLD));
 
-        int x = 36;
-        int y = 232;
+        int x = 23;
+        int y = 213;
         float offset = 0.6f;
         g2d.setColor (new Color (0, 0, 0, 128));
         g2d.drawString (initText, x+offset, y+offset);
@@ -110,6 +121,31 @@ public class SplashScreenManager {
     } // if
 
   } // updateSplash
+
+  ////////////////////////////////////////////////////////////
+
+  /**
+   * Tests the splash screen update.  The JVM must be started with
+   * {@code -splash:<image>} for the test splash to be visible.
+   *
+   * @param argv the command line parameters.
+   *
+   * @throws InterruptedException if interrupted while pausing.
+   *
+   * @since 4.2.0
+   */
+  public static void main (
+    String[] argv
+  ) throws InterruptedException {
+
+    String longName = (argv.length >= 1 ? argv[0] : TEST_LONG_NAME);
+    String version = (argv.length >= 2 ? argv[1] : TEST_VERSION);
+    long delay = (argv.length >= 3 ? Long.parseLong (argv[2]) : TEST_DELAY);
+
+    updateSplash (longName, version);
+    Thread.sleep (delay);
+
+  } // main
 
   ////////////////////////////////////////////////////////////
 
