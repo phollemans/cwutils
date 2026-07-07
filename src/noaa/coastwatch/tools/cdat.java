@@ -224,7 +224,7 @@ public final class cdat extends JFrame {
   private static final String LONG_NAME = "CoastWatch Data Analysis Tool";
 
   /** The URL to use for the online course. */
-  private static final String COURSE_URL = "https://umd.instructure.com/courses/1336575/pages/coastwatch-utilities-tutorials";
+  private static final String COURSE_URL = "https://coastwatch-training.github.io/CoastWatch-Utilities/";
 
   /** The help index file. */
   private static final String HELP_INDEX = "cdat_index.html";

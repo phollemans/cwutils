@@ -158,6 +158,12 @@ public final class cwagent {
   /** The hidden software version override property. */
   private static final String SOFTWARE_VERSION_PROPERTY = "cw.agent.software.version";
 
+  /** The system level style. */
+  private static final String SYSTEM_STYLE = Ansi.FG_BRIGHT_BLUE;
+
+  /** The status level style. */
+  private static final String STATUS_STYLE = Ansi.FG_BRIGHT_RED;
+
   ////////////////////////////////////////////////////////////
 
   /** Prevents construction. */
@@ -307,7 +313,7 @@ public final class cwagent {
     boolean colorEnabled
   ) {
 
-    printMessage (Ansi.FG_BRIGHT_BLUE, message, out, colorEnabled);
+    printMessage (SYSTEM_STYLE, message, out, colorEnabled);
 
   } // printSystem
 
@@ -319,7 +325,7 @@ public final class cwagent {
     boolean colorEnabled
   ) {
 
-    printMessage (Ansi.FG_BRIGHT_RED, message, out, colorEnabled);
+    printMessage (STATUS_STYLE, message, out, colorEnabled);
     out.println();
     out.flush();
 
@@ -445,6 +451,10 @@ public final class cwagent {
       LineReader reader = LineReaderBuilder.builder().terminal (terminal).build();
       PrintWriter terminalOut = terminal.writer();
 
+      // Print an initial connecting message
+      printSystem ("This is CoastWatch Utilities " + ToolServices.getVersion(), terminalOut, colorEnabled);
+      printSystem ("Making initial connection to chat service ...", terminalOut, colorEnabled);
+
       // Create the client and initial session
       client = new ChatAgentClient (serviceUrl);
       sessionId = createSession (client, softwareVersion, storeName, model);
@@ -462,7 +472,6 @@ public final class cwagent {
         } // if
         printSystem ("", terminalOut, colorEnabled);
       };
-      printSystem ("This is CoastWatch Utilities " + ToolServices.getVersion(), terminalOut, colorEnabled);
       sessionPrinter.accept (sessionId);
 
       printSystem (

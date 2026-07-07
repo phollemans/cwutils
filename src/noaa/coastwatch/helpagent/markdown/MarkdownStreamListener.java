@@ -350,10 +350,10 @@ public class MarkdownStreamListener implements ChatAgentClient.StreamListener {
       targetIndex = traversal.size() - 1;
     } // if
 
-    // Otherwise, render only up to the second last content node and assume
-    // that the last content node is incomplete
+    // Otherwise, render only up to but not including the last two content node and assume
+    // that the last content nodes are incomplete or changing.
     else {
-      targetIndex = traversal.size() - 2;
+      targetIndex = (traversal.size() - 1) - 2;
     } // else
 
     // If we have a valid target index, render from the previous to this 
