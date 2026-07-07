@@ -482,10 +482,10 @@ public final class cwagent {
         "and related scripting.\n" +
         "\n" +
         "Enter a question or a system command:\n" +
-        "  /quit, CTRL-D     Quit\n" +
-        "  /reset            Start a new chat session\n" +
-        "  /multi            Enter multiline input mode\n" +
         "  /example          Show an example question\n" +
+        "  /multi            Enter multiline input mode\n" +
+        "  /reset            Start a new chat session\n" +
+        "  /quit, CTRL-D     Quit\n" +
         "\n" +
         "Responses are generated from available documentation and may\n" + 
         "occasionally be incomplete, mistaken, or misinterpreted.\n" + 
