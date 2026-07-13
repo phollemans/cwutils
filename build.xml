@@ -181,7 +181,7 @@
 
   <!-- Define package targets -->
   <!-- ********************** -->
-  <property name="builds.default" value="linux64,linux64.novm,windows64,macosx64"/>
+  <property name="builds.default" value="linux64,linux64.novm,linux64.deb,windows64,macosx64"/>
   <property name="builds.all" value="linux64,linux64.novm,linux64.deb,windows64,macosx64"/>
   <property name="build.id.linux64" value="288"/>
   <property name="build.id.linux64.novm" value="710"/>
@@ -194,6 +194,19 @@
   <target name="packages-help" description="Lists packages available to build">
     <echo>Default build set: ${builds.default}</echo>
     <echo>All packages: ${builds.all}</echo>
+  </target>
+
+  <!-- Read the release number written into cwutils.jar, omitting its timestamp. -->
+  <target name="package-version">
+    <loadproperties srcfile="resources/version.properties" prefix="package"/>
+    <propertyregex
+      property="package.version"
+      input="${package.cwutils.version}"
+      regexp="^(\S+)"
+      select="\1"/>
+    <fail unless="package.version"
+      message="Cannot determine package version from resources/version.properties"/>
+    <echo message="Using package version ${package.version}"/>
   </target>
 
   <target name="mac"
@@ -217,7 +230,7 @@
     </antcall>
   </target>
 
-  <target name="packages" depends="all"
+  <target name="packages" depends="all,package-version"
     description="Creates package files specified by ${builds}, or default set if no builds specified (-Dtag=true tags the build in git, -Dsign=true signs the packages)">
 
     <!-- Check builds -->
@@ -280,7 +293,7 @@
     <!-- Call install4j task -->
     <install4j
       projectfile="cwutils.install4j"
-      release="${version.full}"
+      release="${package.version}"
       buildids="${build.ids}"
       disableSigning="${disable.signing}"
       disableNotarization="${disable.signing}"
@@ -299,9 +312,9 @@
     <if>
       <equals arg1="${tag}" arg2="true"/>
       <then>
-        <echo message="Tagging package with version ${version.full} under git"/>
+        <echo message="Tagging package with version ${package.version} under git"/>
         <exec executable="git">
-          <arg line="tag ${version.full}"/>
+          <arg line="tag ${package.version}"/>
         </exec>
       </then>
     </if>

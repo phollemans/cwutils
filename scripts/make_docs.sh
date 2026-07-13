@@ -23,6 +23,47 @@ fi
 echo "Making tool HTML pages"
 mkdir tools
 
+cat > tools/stylesheet.css <<EOF
+h1, h2, p, body, a, dt, dd, li, td {
+  font-family: Helvetica;
+  line-height: 1.5;
+}
+
+h1 {
+  color: #d18400;
+  font-size: 125%;
+}
+
+h2 {
+  color: #000000;
+  font-size: 110%;
+  text-decoration-line: underline; 
+}
+
+body {
+  background-color: #ffffff;
+  color: #444444;
+}
+
+a {
+  color: #2600aa;
+}
+
+dt {
+  padding-bottom: 5px;
+  color: #006060;
+}
+
+dd {
+  text-indent: 0px;
+  padding-bottom: 10px;
+}
+
+li {
+  padding-bottom: 5px;
+}
+EOF
+
 # Extract HTML from API pages
 # ---------------------------
 for fname in api/noaa/coastwatch/tools/*.html ; do
@@ -38,7 +79,7 @@ for fname in api/noaa/coastwatch/tools/*.html ; do
 
 <head>
   <title>CoastWatch Software Library and Utilities v$version: $tool</title>
-  <link rel="stylesheet" href="../stylesheet.css" type="text/css" />
+  <link rel="stylesheet" href="stylesheet.css" type="text/css" />
 </head>
 
 <body>
@@ -61,6 +102,53 @@ EOF
   sed -e 's/<br>/<br\/>/g' $newfname > $newfname.new
   mv $newfname.new $newfname
 done
+
+# Create HTML index page
+# ----------------------
+index=tools/index.html
+cat > $index <<EOF
+<html>
+
+<head>
+  <title>CoastWatch Software Library and Utilities v$version Tools</title>
+  <link rel="stylesheet" href="stylesheet.css" type="text/css" />
+</head>
+
+<body>
+
+<h1>CoastWatch Software Library and Utilities v$version Tools</h1>
+
+EOF
+
+categories=`cat tool_categories.txt | wc -l`
+
+for (( n = 1; n <= $categories; n++ )) do
+  category="`awk -F '|' '{ print $1 }' tool_categories.txt | head -$n | tail -1`"
+  tools="`awk -F '|' '{ print $2 }' tool_categories.txt | head -$n | tail -1`"
+
+  echo "<h2>$category</h2>\n\n" >> $index
+
+  for tool in $tools ; do
+    fname="tools/$tool.html"
+
+    $awk '
+      BEGIN { copy = 0; }
+      $0 ~ /END NAME/ { copy = 0; }
+      { if (copy == 1) print $0 }
+      $0 ~ /START NAME/ { copy = 1; }
+    ' $fname >> $index
+    echo "<br/>" >> $index
+
+  done
+done
+
+cat >> $index <<EOF
+</body>
+
+</html>
+EOF
+sed -e 's/^ *\([^ ]*\) - /<a href=\"\1.html\">\1<\/a> - /' $index > $index.new
+mv $index.new $index
 
 # Check for JRE for next part
 # ---------------------------
@@ -118,6 +206,9 @@ mkdir -p man/man1
 date="`date +'%b %e, %Y'`"
 package="CoastWatch Utilities"
 for fname in tools/*.html ; do
+  if [ `basename $fname` = "index.html" ] ; then
+    continue
+  fi
   tool=`basename $fname .html`
   echo "--> $tool"
   $saxon \
@@ -165,7 +256,7 @@ done
 # Comment this out for debugging
 rm -rf html
 mkdir html
-cp tools/*.html html
+cp tools/*.{html,css} html
 rm -rf tools
 
 # Create user guide
