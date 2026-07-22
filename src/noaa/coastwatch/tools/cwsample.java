@@ -334,7 +334,7 @@ public class cwsample {
     Option delimitOpt = cmd.addStringOption ('D', "delimit");
     Option imagecoordsOpt = cmd.addBooleanOption ('i', "imagecoords");
     Option variableOpt = cmd.addStringOption ('V', "variable");
-    Option statsOpt = cmd.addStringOption ('t', "stats");
+    Option statsOpt = cmd.addStringOption ('t', "statsvar");
     Option windowOpt = cmd.addIntegerOption ('w', "window");
     Option versionOpt = cmd.addBooleanOption ("version");
     try { cmd.parse (argv); }
